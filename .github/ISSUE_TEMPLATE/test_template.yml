@@ -1,0 +1,43 @@
+name: 테스트 작성
+description: 작성할 테스트에 대해 설명해주세요
+title: "Test: "
+
+body:
+  - type: textarea
+    id: what-to-test
+    validations:
+      required: true
+    attributes:
+      label: 🧪 작성할 테스트
+      description: 테스트를 통해 확인하고자 하는 시나리오를 작성해주세요
+      value: |
+        - Given
+        - When
+        - Then
+
+  - type: textarea
+    id: todo-list
+    validations:
+      required: true
+    attributes:
+      label: 📝 TODO
+      description: 진행할 작업 목록에 대해 작성해주세요 
+      placeholder: 작업의 단위를 세분화하여 작성해주세요
+      value: |
+        - [ ] example todo
+
+  - type: textarea
+    id: backlog
+    validations:
+      required: true
+    attributes:
+      label: 🗂️ 관련 백로그
+      description: 관련된 백로그 링크를 작성해주세요
+      value: |
+        - 링크: 
+
+  - type: textarea
+    id: etc
+    attributes:
+      label: ⚙️ 기타
+      description: 기타 참고할 만한 사안이 있으면 작성해주세요
