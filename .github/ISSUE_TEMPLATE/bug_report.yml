@@ -1,0 +1,36 @@
+name: 🐞 버그 리포트
+description: 발생한 버그에 대해 설명해주세요
+title: "Bug: "
+labels: [":lady_beetle: 버그"]
+
+body:
+  - type: textarea
+    id: bug-info
+    attributes:
+      label: 🤸 버그 정보
+      description: 발생한 버그에 대해 작성해주세요
+      value: |
+        -
+
+  - type: textarea
+    id: todo-list
+    attributes:
+      label: 📝 TODO
+      description: 진행할 작업 목록에 대해 작성해주세요
+      placeholder: 작업의 단위를 세분화하여 작성해주세요
+      value: |
+        - [ ]
+
+  - type: textarea
+    id: backlog
+    attributes:
+      label: 🧨 관련 버그 트리아지
+      description: 관련된 버그 트리아지 링크를 작성해주세요
+      value: |
+        - 링크:
+
+  - type: textarea
+    id: etc
+    attributes:
+      label: ⚙️ 기타
+      description: 기타 참고할 만한 사안이 있으면 작성해주세요
