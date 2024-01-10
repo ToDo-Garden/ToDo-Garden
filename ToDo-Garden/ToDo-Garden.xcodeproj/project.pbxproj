@@ -56,8 +56,7 @@
 		4F0DF12A2B4EABCE00097B7D /* ToDo-Garden */ = {
 			isa = PBXGroup;
 			children = (
-				4F0DF12B2B4EABCE00097B7D /* AppDelegate.swift */,
-				4F0DF12D2B4EABCE00097B7D /* SceneDelegate.swift */,
+				4F0DF13F2B4EB64C00097B7D /* Application */,
 				4F0DF12F2B4EABCE00097B7D /* ViewController.swift */,
 				4F0DF1312B4EABCE00097B7D /* Main.storyboard */,
 				4F0DF1342B4EABD000097B7D /* Assets.xcassets */,
@@ -65,6 +64,15 @@
 				4F0DF1392B4EABD000097B7D /* Info.plist */,
 			);
 			path = "ToDo-Garden";
+			sourceTree = "<group>";
+		};
+		4F0DF13F2B4EB64C00097B7D /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				4F0DF12B2B4EABCE00097B7D /* AppDelegate.swift */,
+				4F0DF12D2B4EABCE00097B7D /* SceneDelegate.swift */,
+			);
+			path = Application;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
