@@ -55,7 +55,6 @@
 				4F0DF1362B4EABD000097B7D /* LaunchScreen.storyboard */,
 				4FDA5E372B4FF1B0006506ED /* Resource */,
 				4F0DF13F2B4EB64C00097B7D /* Application */,
-				4F0DF1392B4EABD000097B7D /* Info.plist */,
 			);
 			path = "ToDo-Garden";
 			sourceTree = "<group>";
@@ -72,6 +71,7 @@
 		4FDA5E372B4FF1B0006506ED /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				4F0DF1392B4EABD000097B7D /* Info.plist */,
 				4FDA5E382B4FF1E4006506ED /* Asset.xcassets */,
 			);
 			path = Resource;
@@ -294,7 +294,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7J855UGZA4;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "ToDo-Garden/Info.plist";
+				INFOPLIST_FILE = "ToDo-Garden/Resource/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -321,7 +321,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7J855UGZA4;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "ToDo-Garden/Info.plist";
+				INFOPLIST_FILE = "ToDo-Garden/Resource/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
