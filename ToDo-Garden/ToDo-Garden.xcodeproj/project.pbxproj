@@ -53,7 +53,7 @@
 			isa = PBXGroup;
 			children = (
 				4FDA5E372B4FF1B0006506ED /* Resources */,
-				4F0DF13F2B4EB64C00097B7D /* Application */,
+				4F6C8B862B73685000F209BC /* Sources */,
 			);
 			path = "ToDo-Garden";
 			sourceTree = "<group>";
@@ -65,6 +65,14 @@
 				4F0DF12D2B4EABCE00097B7D /* SceneDelegate.swift */,
 			);
 			path = Application;
+			sourceTree = "<group>";
+		};
+		4F6C8B862B73685000F209BC /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				4F0DF13F2B4EB64C00097B7D /* Application */,
+			);
+			path = Sources;
 			sourceTree = "<group>";
 		};
 		4FDA5E372B4FF1B0006506ED /* Resources */ = {
