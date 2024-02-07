@@ -52,7 +52,7 @@
 		4F0DF12A2B4EABCE00097B7D /* ToDo-Garden */ = {
 			isa = PBXGroup;
 			children = (
-				4FDA5E372B4FF1B0006506ED /* Resource */,
+				4FDA5E372B4FF1B0006506ED /* Resources */,
 				4F0DF13F2B4EB64C00097B7D /* Application */,
 			);
 			path = "ToDo-Garden";
@@ -67,14 +67,14 @@
 			path = Application;
 			sourceTree = "<group>";
 		};
-		4FDA5E372B4FF1B0006506ED /* Resource */ = {
+		4FDA5E372B4FF1B0006506ED /* Resources */ = {
 			isa = PBXGroup;
 			children = (
 				4F0DF1362B4EABD000097B7D /* LaunchScreen.storyboard */,
 				4F0DF1392B4EABD000097B7D /* Info.plist */,
 				4FDA5E382B4FF1E4006506ED /* Asset.xcassets */,
 			);
-			path = Resource;
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
