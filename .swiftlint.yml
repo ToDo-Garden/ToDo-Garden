@@ -1,0 +1,33 @@
+disabled_rules:
+  - todo
+  - trailing_whitespace
+
+opt_in_rules:
+  - force_unwrapping
+  - indentation_width
+  - sorted_imports
+  - multiline_arguments
+  - multiline_parameters_brackets
+
+analyzer_rules:
+  - explicit_self
+
+included:
+  - ToDo-Garden/ToDo-Garden/
+
+excluded:
+    - ToDo-Garden/*/Package.swift
+
+indentation_width:
+  indentation_width: 2
+
+force_unwrapping:
+  severity: error
+
+function_body_length:
+  - 25 # warning
+  - 35 # error
+
+type_body_length:
+  - 300 # warning
+  - 400 # error
