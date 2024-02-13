@@ -1,0 +1,62 @@
+#!/bin/sh
+# written by Noah
+
+LINT=$(which swiftlint)
+
+if [[ -e "${LINT}" ]]; then
+	echo "🚀  SwiftLint 시작..."
+	echo "🔍  lint 적용 경로: $(pwd)"
+else
+	echo "SwiftLint가 존재하지 않습니다, 공식문서를 확인해주세요. 🌐 https://github.com/realm/SwiftLint"
+	exit 1
+fi
+
+normalfiles=$(git diff --stat --cached)
+targets=$(git diff --stat --cached --diff-filter=d --name-only $(git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)) | grep -F ".swift")
+
+if [ -n "$normalfiles" -a -z "$targets" ]; then
+  printf "✨ 고생하셨어요👏 👏 👏\n"
+  exit 0
+
+elif [ -z "${normalfiles}" ]; then
+  printf "🏷️  Staging Area에 파일이 없어요"
+  printf "\n ✔ git add를 먼저 진행해주세요:)"
+  exit 1
+
+elif [ -z "$targets" ]; then
+  printf "🏷️  Staging Area에 파일이 없어요"
+  printf "\n ✔ git add를 먼저 진행해주세요:)"
+  exit 1
+fi
+
+# lint rule 정의 파일
+RESULT=$($LINT lint --quiet --config .swiftlint.yml)
+
+if [ "$RESULT" == '' ]; then
+	printf "✨  SwiftLint 적용을 완료했어요! 고생하셨습니다🙇‍♂️\n"
+else
+	echo ""
+	printf "✔ SwiftLint Failed 아래 내용을 확인해주세요:\n"
+  while read -r line; do
+    FILEPATH=$(echo $line | cut -d : -f 1)
+    L=$(echo $line | cut -d : -f 2)
+    C=$(echo $line | cut -d : -f 3)
+    TYPE=$(echo $line | cut -d : -f 4 | cut -c 2-)
+    MESSAGE=$(echo $line | cut -d : -f 5 | cut -c 2-)
+    DESCRIPTION=$(echo $line | cut -d : -f 6 | cut -c 2-)
+    if [ $TYPE == 'warning' ]; then
+      printf "\n 🚧  $TYPE\n"
+      # warning 타입은 오류메시지만 표시하고 커밋을 허용하고 싶다면 line 40~42 주석 해제.
+      # printf "    $FILEPATH:$L:$C\n"
+      # printf "    📌  $MESSAGE: - $DESCRIPTION\n"
+      # exit 0
+    elif [ $TYPE == 'error' ]; then
+      printf "\n 🚨  $TYPE\n"
+    fi
+    printf "    ✔ $FILEPATH:$L:$C\n"
+    printf "    📌 $MESSAGE: - $DESCRIPTION\n"
+  done <<< "$RESULT"
+
+  printf "\n 🚑  커밋실패!! Swiftlint rule에 맞게 코드를 변경해주세요:)\n"
+  exit 1
+fi
