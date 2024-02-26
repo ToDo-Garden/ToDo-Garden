@@ -33,6 +33,7 @@
 		4FC8C1062B8336A100BA223E /* ToDo-GardenTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ToDo-GardenTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FC8C1082B8336A100BA223E /* ToDoGardenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoGardenTests.swift; sourceTree = "<group>"; };
 		4FC8C10F2B83375500BA223E /* ToDo-GardenTestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "ToDo-GardenTestPlan.xctestplan"; sourceTree = "<group>"; };
+		4FC8C14A2B87562600BA223E /* ToDoGardenUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ToDoGardenUI; sourceTree = "<group>"; };
 		4FDA5E382B4FF1E4006506ED /* Asset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Asset.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -57,6 +58,7 @@
 		4F0DF11F2B4EABCE00097B7D = {
 			isa = PBXGroup;
 			children = (
+				4FC8C14A2B87562600BA223E /* ToDoGardenUI */,
 				4F0DF12A2B4EABCE00097B7D /* ToDo-Garden */,
 				4FC8C1072B8336A100BA223E /* ToDo-GardenTests */,
 				4F0DF1292B4EABCE00097B7D /* Products */,
