@@ -11,6 +11,7 @@
 		4F0DF12E2B4EABCE00097B7D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0DF12D2B4EABCE00097B7D /* SceneDelegate.swift */; };
 		4F0DF1382B4EABD000097B7D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4F0DF1362B4EABD000097B7D /* LaunchScreen.storyboard */; };
 		4FC8C1092B8336A100BA223E /* ToDoGardenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC8C1082B8336A100BA223E /* ToDoGardenTests.swift */; };
+		4FC8C1512B8C575A00BA223E /* ToDoGardenUIAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 4FC8C1502B8C575A00BA223E /* ToDoGardenUIAPI */; };
 		4FDA5E392B4FF1E4006506ED /* Asset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FDA5E382B4FF1E4006506ED /* Asset.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -33,6 +34,7 @@
 		4FC8C1062B8336A100BA223E /* ToDo-GardenTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ToDo-GardenTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FC8C1082B8336A100BA223E /* ToDoGardenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoGardenTests.swift; sourceTree = "<group>"; };
 		4FC8C10F2B83375500BA223E /* ToDo-GardenTestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "ToDo-GardenTestPlan.xctestplan"; sourceTree = "<group>"; };
+		4FC8C14A2B87562600BA223E /* ToDoGardenUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ToDoGardenUI; sourceTree = "<group>"; };
 		4FDA5E382B4FF1E4006506ED /* Asset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Asset.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -41,6 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4FC8C1512B8C575A00BA223E /* ToDoGardenUIAPI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -57,9 +60,11 @@
 		4F0DF11F2B4EABCE00097B7D = {
 			isa = PBXGroup;
 			children = (
+				4FC8C14A2B87562600BA223E /* ToDoGardenUI */,
 				4F0DF12A2B4EABCE00097B7D /* ToDo-Garden */,
 				4FC8C1072B8336A100BA223E /* ToDo-GardenTests */,
 				4F0DF1292B4EABCE00097B7D /* Products */,
+				4FC8C14F2B8C575A00BA223E /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -107,6 +112,13 @@
 			path = "ToDo-GardenTests";
 			sourceTree = "<group>";
 		};
+		4FC8C14F2B8C575A00BA223E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		4FDA5E372B4FF1B0006506ED /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -133,6 +145,9 @@
 			dependencies = (
 			);
 			name = "ToDo-Garden";
+			packageProductDependencies = (
+				4FC8C1502B8C575A00BA223E /* ToDoGardenUIAPI */,
+			);
 			productName = "ToDo-Garden";
 			productReference = 4F0DF1282B4EABCE00097B7D /* ToDo-Garden.app */;
 			productType = "com.apple.product-type.application";
@@ -492,6 +507,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4FC8C1502B8C575A00BA223E /* ToDoGardenUIAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ToDoGardenUIAPI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4F0DF1202B4EABCE00097B7D /* Project object */;
 }
