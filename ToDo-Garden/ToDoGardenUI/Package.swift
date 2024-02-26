@@ -5,4 +5,14 @@ import PackageDescription
 
 let package = Package(
 	name: "ToDoGardenUI",
+	platforms: [.iOS(.v15)],
+	products: [
+		.library(
+			name: "ToDoGardenUIAPI",
+			targets: ["ToDoGardenUIAPI"]
+		)
+	],
+	targets: [
+		.target(name: "ToDoGardenUIAPI")
+	]
 )
