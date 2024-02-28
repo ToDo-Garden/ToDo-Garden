@@ -10,6 +10,7 @@
 		4F0DF12C2B4EABCE00097B7D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0DF12B2B4EABCE00097B7D /* AppDelegate.swift */; };
 		4F0DF12E2B4EABCE00097B7D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0DF12D2B4EABCE00097B7D /* SceneDelegate.swift */; };
 		4F0DF1382B4EABD000097B7D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4F0DF1362B4EABD000097B7D /* LaunchScreen.storyboard */; };
+		4F3D03862B8EF89800C495E5 /* ToDoGardenUIResource in Frameworks */ = {isa = PBXBuildFile; productRef = 4F3D03852B8EF89800C495E5 /* ToDoGardenUIResource */; };
 		4FC8C1092B8336A100BA223E /* ToDoGardenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC8C1082B8336A100BA223E /* ToDoGardenTests.swift */; };
 		4FC8C1512B8C575A00BA223E /* ToDoGardenUIAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 4FC8C1502B8C575A00BA223E /* ToDoGardenUIAPI */; };
 		4FDA5E392B4FF1E4006506ED /* Asset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FDA5E382B4FF1E4006506ED /* Asset.xcassets */; };
@@ -44,6 +45,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4FC8C1512B8C575A00BA223E /* ToDoGardenUIAPI in Frameworks */,
+				4F3D03862B8EF89800C495E5 /* ToDoGardenUIResource in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -147,6 +149,7 @@
 			name = "ToDo-Garden";
 			packageProductDependencies = (
 				4FC8C1502B8C575A00BA223E /* ToDoGardenUIAPI */,
+				4F3D03852B8EF89800C495E5 /* ToDoGardenUIResource */,
 			);
 			productName = "ToDo-Garden";
 			productReference = 4F0DF1282B4EABCE00097B7D /* ToDo-Garden.app */;
@@ -509,6 +512,10 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		4F3D03852B8EF89800C495E5 /* ToDoGardenUIResource */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ToDoGardenUIResource;
+		};
 		4FC8C1502B8C575A00BA223E /* ToDoGardenUIAPI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ToDoGardenUIAPI;

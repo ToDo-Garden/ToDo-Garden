@@ -7,6 +7,8 @@
 
 import UIKit
 
+import ToDoGardenUIResource
+
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 	var window: UIWindow?
@@ -16,7 +18,18 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		willConnectTo session: UISceneSession,
 		options connectionOptions: UIScene.ConnectionOptions
 	) {
+		self.registerCustomFonts()
+		self.setupWindow(with: scene)
+	}
+}
+
+extension SceneDelegate {
+	private func setupWindow(with scene: UIScene) {
 		guard let windowScene = (scene as? UIWindowScene) else { return }
 		self.window = UIWindow(windowScene: windowScene)
+	}
+	
+	private func registerCustomFonts() {
+		PretendardFont.register()
 	}
 }
