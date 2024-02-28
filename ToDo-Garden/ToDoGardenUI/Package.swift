@@ -10,9 +10,19 @@ let package = Package(
 		.library(
 			name: "ToDoGardenUIAPI",
 			targets: ["ToDoGardenUIAPI"]
+		),
+		.library(
+			name: "ToDoGardenUIResource",
+			targets: ["ToDoGardenUIResource"]
 		)
 	],
 	targets: [
-		.target(name: "ToDoGardenUIAPI")
+		.target(name: "ToDoGardenUIAPI"),
+		.target(
+			name: "ToDoGardenUIResource",
+			resources: [
+				.process("Fonts")
+			]
+		)
 	]
 )
