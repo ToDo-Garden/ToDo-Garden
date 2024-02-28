@@ -27,14 +27,14 @@ extension UIButton {
 	private func setupDestructiveStyleBackgroundImage() {
 		self.setBackgroundImage(
 			UIImage.timerControlButtonDestructiveBackground,
-			for: .normal
+			for: UIControl.State.normal
 		)
 	}
 	
 	private func setupDefaultStyleBackgroundImage() {
 		self.setBackgroundImage(
 			UIImage.timerControlButtonDefaultBackground,
-			for: .normal
+			for: UIControl.State.normal
 		)
 	}
 	
@@ -47,6 +47,6 @@ extension UIButton {
 			]
 		)
 		
-		self.setAttributedTitle(attributedTitle, for: .normal)
+		self.setAttributedTitle(attributedTitle, for: UIControl.State.normal)
 	}
 }
