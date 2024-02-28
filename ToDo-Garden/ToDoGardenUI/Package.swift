@@ -12,12 +12,20 @@ let package = Package(
 			targets: ["ToDoGardenUIAPI"]
 		),
 		.library(
+			name: "ToDoGardenUIComponent",
+			targets: ["ToDoGardenUIComponent"]
+		),
+		.library(
 			name: "ToDoGardenUIResource",
 			targets: ["ToDoGardenUIResource"]
 		)
 	],
 	targets: [
 		.target(name: "ToDoGardenUIAPI"),
+		.target(
+			name: "ToDoGardenUIComponent",
+			dependencies: ["ToDoGardenUIResource"]
+		),
 		.target(
 			name: "ToDoGardenUIResource",
 			resources: [
