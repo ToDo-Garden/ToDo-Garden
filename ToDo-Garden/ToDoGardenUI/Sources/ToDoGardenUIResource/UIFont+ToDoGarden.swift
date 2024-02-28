@@ -82,7 +82,27 @@ public enum PretendardFont: String, CaseIterable {
 	case semibold = "Pretendard-SemiBold"
 	case thin = "Pretendard-Thin"
 	
+	static let extensionName: String = "otf"
+	
 	var name: String {
 		return self.rawValue
+	}
+	
+	/// Font의 register는 한번만 되어야하기 때문에 아래의 flag 변수를 사용합니다.
+	static var isPretendardFontRegisterd: Bool = false
+	
+	public static func register() {
+		guard PretendardFont.isPretendardFontRegisterd == false
+		else { return }
+		
+		PretendardFont.allCases.forEach { font in
+			guard let url = Bundle.module.url(
+				forResource: font.name,
+				withExtension: PretendardFont.extensionName
+			)
+			else { return }
+			
+			CTFontManagerRegisterFontsForURL(url as CFURL, .process, nil)
+		}
 	}
 }
