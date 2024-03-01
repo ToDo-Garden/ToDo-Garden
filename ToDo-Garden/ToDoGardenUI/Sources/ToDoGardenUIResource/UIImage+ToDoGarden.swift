@@ -14,4 +14,7 @@ extension UIImage {
 	public static let timerControlButtonDefaultBackground = UIImage(
 		resource: .timerControlButtonDefaultStyleBackground
 	)
+  public static let addButton = UIImage(
+    resource: .addButton
+  )
 }
