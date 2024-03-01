@@ -89,11 +89,12 @@ public enum PretendardFont: String, CaseIterable {
 	}
 	
 	/// Font의 register는 한번만 되어야하기 때문에 아래의 flag 변수를 사용합니다.
-	private static var isPretendardFontRegisterd: Bool = false
+	private static var isPretendardFontRegistered: Bool = false
 	
 	public static func register() {
-		guard PretendardFont.isPretendardFontRegisterd == false
+		guard PretendardFont.isPretendardFontRegistered == false
 		else { return }
+		defer { PretendardFont.isPretendardFontRegistered = true }
 		
 		PretendardFont.allCases.forEach { font in
 			guard let url = Bundle.module.url(
