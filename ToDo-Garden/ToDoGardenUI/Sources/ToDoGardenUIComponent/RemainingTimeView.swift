@@ -42,8 +42,8 @@ extension RemainingTimeView {
 }
 
 /// RemainingTimeView의 UI Style을 설정해주는 타입입니다.
-fileprivate enum RemainingTimeViewStyle {
-	fileprivate static func apply(for remainingTimeView: UIView, with remainingTimeLabel: UILabel) {
+private enum RemainingTimeViewStyle {
+	fileprivate static func apply(for remainingTimeView: RemainingTimeView, with remainingTimeLabel: UILabel) {
 		RemainingTimeViewStyle.roundedCorner(remainingTimeView)
 		RemainingTimeViewStyle.setupRemainingTimeLabelLayout(for: remainingTimeView, with: remainingTimeLabel)
 		RemainingTimeViewStyle.setupFontForRemainingTimeLabel(remainingTimeLabel)
@@ -51,12 +51,12 @@ fileprivate enum RemainingTimeViewStyle {
 }
 
 extension RemainingTimeViewStyle {
-	fileprivate static func roundedCorner(_ view: UIView) {
+	private static func roundedCorner(_ view: RemainingTimeView) {
 		view.clipsToBounds = true
 		view.layer.cornerRadius = 6
 	}
 	
-	fileprivate static func setupRemainingTimeLabelLayout(for remainingTimeView: UIView, with remainingTimeLabel: UILabel) {
+	private static func setupRemainingTimeLabelLayout(for remainingTimeView: RemainingTimeView, with remainingTimeLabel: UILabel) {
 		remainingTimeView.addSubview(remainingTimeLabel)
 		remainingTimeLabel.usingAutolayout()
 		
@@ -66,7 +66,7 @@ extension RemainingTimeViewStyle {
 		])
 	}
 	
-	fileprivate static func setupFontForRemainingTimeLabel(_ remainingTimeLabel: UILabel) {
+	private static func setupFontForRemainingTimeLabel(_ remainingTimeLabel: UILabel) {
 		remainingTimeLabel.font = UIFont.pretendardBodyBold
 	}
 }
