@@ -30,4 +30,8 @@ extension RemainingTimeViewStyle {
 		view.clipsToBounds = true
 		view.layer.cornerRadius = 6
 	}
+	
+	fileprivate static func setupFontForRemainingTimeLabel(_ remainingTimeLabel: UILabel) {
+		remainingTimeLabel.font = UIFont.pretendardBodyBold
+	}
 }
