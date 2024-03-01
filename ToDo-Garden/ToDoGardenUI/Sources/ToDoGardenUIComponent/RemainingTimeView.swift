@@ -13,16 +13,27 @@ public final class RemainingTimeView: UIView {
 	public init() {
 		self.remainingTimeLabel = UILabel()
 		super.init(frame: CGRect.zero)
+		self.setupUIAppearance()
 	}
 	
 	public required init?(coder: NSCoder) {
 		self.remainingTimeLabel = UILabel()
 		super.init(coder: coder)
+		self.setupUIAppearance()
+	}
+extension RemainingTimeView {
+	private func setupUIAppearance() {
+		RemainingTimeViewStyle.apply(for: self, with: self.remainingTimeLabel)
 	}
 }
 
 /// RemainingTimeView의 UI Style을 설정해주는 타입입니다.
 fileprivate enum RemainingTimeViewStyle {
+	fileprivate static func apply(for remainingTimeView: UIView, with remainingTimeLabel: UILabel) {
+		RemainingTimeViewStyle.roundedCorner(remainingTimeView)
+		RemainingTimeViewStyle.setupRemainingTimeLabelLayout(for: remainingTimeView, with: remainingTimeLabel)
+		RemainingTimeViewStyle.setupFontForRemainingTimeLabel(remainingTimeLabel)
+	}
 }
 
 extension RemainingTimeViewStyle {
