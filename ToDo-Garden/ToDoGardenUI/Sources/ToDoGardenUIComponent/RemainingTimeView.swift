@@ -22,7 +22,7 @@ public final class RemainingTimeView: UIView {
 		self.setupUIAppearance()
 	}
 	
-	public func updateRemainigTime(with time: String) {
+	public func updateRemainingTime(with time: String) {
 		self.remainingTimeLabel.text = time
 	}
 	
