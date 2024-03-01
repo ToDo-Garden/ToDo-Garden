@@ -56,7 +56,10 @@ extension RemainingTimeViewStyle {
 		view.layer.cornerRadius = 6
 	}
 	
-	private static func setupRemainingTimeLabelLayout(for remainingTimeView: RemainingTimeView, with remainingTimeLabel: UILabel) {
+	private static func setupRemainingTimeLabelLayout(
+		for remainingTimeView: RemainingTimeView,
+		with remainingTimeLabel: UILabel
+	) {
 		remainingTimeView.addSubview(remainingTimeLabel)
 		remainingTimeLabel.usingAutolayout()
 		
