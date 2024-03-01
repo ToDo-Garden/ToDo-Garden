@@ -31,6 +31,16 @@ extension RemainingTimeViewStyle {
 		view.layer.cornerRadius = 6
 	}
 	
+	fileprivate static func setupRemainingTimeLabelLayout(for remainingTimeView: UIView, with remainingTimeLabel: UILabel) {
+		remainingTimeView.addSubview(remainingTimeLabel)
+		remainingTimeLabel.usingAutolayout()
+		
+		NSLayoutConstraint.activate([
+			remainingTimeLabel.centerXAnchor.constraint(equalTo: remainingTimeView.centerXAnchor),
+			remainingTimeLabel.centerYAnchor.constraint(equalTo: remainingTimeView.centerYAnchor)
+		])
+	}
+	
 	fileprivate static func setupFontForRemainingTimeLabel(_ remainingTimeLabel: UILabel) {
 		remainingTimeLabel.font = UIFont.pretendardBodyBold
 	}
