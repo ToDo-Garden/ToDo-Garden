@@ -21,6 +21,20 @@ public final class RemainingTimeView: UIView {
 		super.init(coder: coder)
 		self.setupUIAppearance()
 	}
+	
+	public func updateRemainigTime(with time: String) {
+		self.remainingTimeLabel.text = time
+	}
+	
+	public func updateBackgroundColorForBreakTime() {
+		self.backgroundColor = UIColor.toDoGardenLeaf
+	}
+	
+	public func updateBackgroundColorForFoucsTime() {
+		self.backgroundColor = UIColor.toDoGardenLightRed
+	}
+}
+
 extension RemainingTimeView {
 	private func setupUIAppearance() {
 		RemainingTimeViewStyle.apply(for: self, with: self.remainingTimeLabel)
