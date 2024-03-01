@@ -8,7 +8,7 @@
 import UIKit.UIView
 
 extension UIView {
-	func usingAutolayout() {
+	public func usingAutolayout() {
 		self.translatesAutoresizingMaskIntoConstraints = false
 	}
 }
