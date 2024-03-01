@@ -23,5 +23,11 @@ public final class RemainingTimeView: UIView {
 
 /// RemainingTimeView의 UI Style을 설정해주는 타입입니다.
 fileprivate enum RemainingTimeViewStyle {
+}
 
+extension RemainingTimeViewStyle {
+	fileprivate static func roundedCorner(_ view: UIView) {
+		view.clipsToBounds = true
+		view.layer.cornerRadius = 6
+	}
 }
