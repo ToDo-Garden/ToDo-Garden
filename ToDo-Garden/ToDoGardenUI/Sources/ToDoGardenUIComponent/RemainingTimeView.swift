@@ -20,3 +20,8 @@ public final class RemainingTimeView: UIView {
 		super.init(coder: coder)
 	}
 }
+
+/// RemainingTimeView의 UI Style을 설정해주는 타입입니다.
+fileprivate enum RemainingTimeViewStyle {
+
+}
