@@ -51,4 +51,6 @@ extension UIColor {
   public static let toDoGardenEditButtonYellow = UIColor(resource: .toDoGardenEditButtonYellow)
   
   public static let toDoGardenLightRed = UIColor(resource: .toDoGardenLightRed)
+  
+  public static let toDoGardenWhite = UIColor(resource: .toDoGardenWhite)
 }
