@@ -94,6 +94,7 @@ public enum PretendardFont: String, CaseIterable {
 	public static func register() {
 		guard PretendardFont.isPretendardFontRegistered == false
 		else { return }
+		defer { PretendardFont.isPretendardFontRegistered = true }
 		
 		PretendardFont.allCases.forEach { font in
 			guard let url = Bundle.module.url(
