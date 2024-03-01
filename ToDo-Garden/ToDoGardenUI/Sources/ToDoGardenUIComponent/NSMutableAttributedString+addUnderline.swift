@@ -20,8 +20,8 @@ extension NSMutableAttributedString {
   ) {
     self.addAttributes(
       [
-        NSAttributedString.Key.underlineStyle : NSUnderlineStyle.single.rawValue,
-        NSAttributedString.Key.underlineColor : color,
+        NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue,
+        NSAttributedString.Key.underlineColor: color
       ],
       range: NSRange(location: location, length: length)
     )
