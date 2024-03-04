@@ -26,7 +26,7 @@ extension NSMutableAttributedString {
     attributedString.addAttributes(
       [
         NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue,
-        NSAttributedString.Key.underlineColor: underlineColor,
+        NSAttributedString.Key.underlineColor: underlineColor
       ],
       range: NSRange(location: location, length: length)
     )
