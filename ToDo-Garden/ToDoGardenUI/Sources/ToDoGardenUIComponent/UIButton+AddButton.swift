@@ -25,3 +25,15 @@ private enum AddButtonStyle {
     
   }
 }
+
+extension AddButtonStyle {
+  private static func setupImage(for button: UIButton) {
+    let renderingMode = UIImage.RenderingMode.alwaysTemplate
+    let imagePadding: CGFloat = 4.0
+    var configuration = UIButton.Configuration.plain()
+    configuration.image = UIImage.addButton.withRenderingMode(renderingMode)
+    configuration.imagePadding = imagePadding
+    configuration.imagePlacement = NSDirectionalRectEdge.leading
+    button.configuration = configuration
+  }
+}
