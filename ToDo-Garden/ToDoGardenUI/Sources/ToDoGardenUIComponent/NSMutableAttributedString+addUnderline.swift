@@ -18,7 +18,7 @@ extension NSMutableAttributedString {
     from location: Int,
     to length: Int
   ) -> NSMutableAttributedString? {
-    guard self.checkRangeToAddUnderlineIsValid(with: location, and: length) else {
+    guard self.isValidRangeToAddUnderline(with: location, and: length) else {
       return nil
     }
 
@@ -34,7 +34,7 @@ extension NSMutableAttributedString {
     return attributedString
   }
 
-  private func checkRangeToAddUnderlineIsValid(
+  private func isValidRangeToAddUnderline(
     with location: Int,
     and length: Int
   ) -> Bool {
