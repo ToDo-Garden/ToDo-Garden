@@ -16,6 +16,11 @@ extension UIButton {
 
 extension UIButton {
   private func setupUIAppearance(with title: String) {
+    AddButtonStyle.apply(for: self, with: title)
+  }
+}
+
+private enum AddButtonStyle {
   }
 }
   }
