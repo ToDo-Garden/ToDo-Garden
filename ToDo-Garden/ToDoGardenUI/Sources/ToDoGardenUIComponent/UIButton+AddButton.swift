@@ -10,5 +10,13 @@ import UIKit.UIButton
 
 extension UIButton {
   public func addButtonStyle(with title: String) {
+    self.setupUIAppearance(with: title)
+  }
+}
+
+extension UIButton {
+  private func setupUIAppearance(with title: String) {
+  }
+}
   }
 }
