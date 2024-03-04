@@ -21,7 +21,7 @@ extension UIButton {
 }
 
 private enum AddButtonStyle {
-  }
-}
+  fileprivate static func apply(for button: UIButton, with title: String) {
+    
   }
 }
