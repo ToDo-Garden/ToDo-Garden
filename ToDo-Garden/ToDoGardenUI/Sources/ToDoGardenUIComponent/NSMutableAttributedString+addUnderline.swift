@@ -17,13 +17,36 @@ extension NSMutableAttributedString {
     with color: UIColor,
     from location: Int,
     to length: Int
-  ) {
-    self.addAttributes(
+  ) -> NSMutableAttributedString? {
+    guard self.checkRangeToAddUnderlineIsValid(with: location, and: length) else {
+      return nil
+    }
+
+    let attributedString = self
+    attributedString.addAttributes(
       [
-        NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue,
-        NSAttributedString.Key.underlineColor: color
+        NSAttributedString.Key.underlineStyle : NSUnderlineStyle.single.rawValue,
+        NSAttributedString.Key.underlineColor : color,
       ],
       range: NSRange(location: location, length: length)
     )
+
+    return attributedString
+  }
+
+  private func checkRangeToAddUnderlineIsValid(
+    with location: Int,
+    and length: Int
+  ) -> Bool {
+    let minimumLocation = 0
+    guard minimumLocation <= location && location < self.length else {
+      return false
+    }
+    
+    guard location < length && length <= self.length else {
+      return false
+    }
+    
+    return true
   }
 }
