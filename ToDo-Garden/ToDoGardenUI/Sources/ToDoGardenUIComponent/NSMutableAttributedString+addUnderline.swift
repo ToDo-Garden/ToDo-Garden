@@ -10,11 +10,11 @@ import UIKit.UIColor
 extension NSMutableAttributedString {
   /// 밑줄을 추가하는 함수입니다.
   /// - Parameters:
-  ///   - color: 추가할 밑줄의 색상입니다.
+  ///   - underlineColor: 추가할 밑줄의 색상입니다.
   ///   - location: 추가할 밑줄의 시작점입니다.
   ///   - length: 추가할 밑줄의 끝점입니다.
   public func addUnderline(
-    with color: UIColor,
+    with underlineColor: UIColor,
     from location: Int,
     to length: Int
   ) -> NSMutableAttributedString? {
@@ -26,7 +26,7 @@ extension NSMutableAttributedString {
     attributedString.addAttributes(
       [
         NSAttributedString.Key.underlineStyle : NSUnderlineStyle.single.rawValue,
-        NSAttributedString.Key.underlineColor : color,
+        NSAttributedString.Key.underlineColor : underlineColor,
       ],
       range: NSRange(location: location, length: length)
     )
