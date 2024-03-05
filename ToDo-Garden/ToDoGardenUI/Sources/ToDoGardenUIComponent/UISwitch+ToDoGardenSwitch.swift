@@ -9,7 +9,7 @@ import UIKit.UISwitch
 import ToDoGardenUIResource
 
 extension UISwitch {
-  public func ToDoGardenSwitchStyle(isOn: Bool) {
+  public func toDoGardenSwitchStyle(isOn: Bool) {
     self.isOn = isOn
     self.setupOnTintColor()
     self.setupOffTintColor()
