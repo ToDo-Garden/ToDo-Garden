@@ -51,4 +51,9 @@ extension AddButtonStyle {
       }
     }
   }
+
+  private static func setupTitle(for button: UIButton, with title: String) {
+    AddButtonStyle.setupTitleForNormalState(for: button, with: title)
+    AddButtonStyle.setupTitleForHighlightedState(for: button, with: title)
+  }
 }
