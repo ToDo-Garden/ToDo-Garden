@@ -10,6 +10,7 @@ import ToDoGardenUIResource
 
 extension UISwitch {
   public func ToDoGardenSwitchStyle() {
+    self.setupOnTintColor()
   }
 }
 
@@ -17,6 +18,7 @@ extension UISwitch {
 
 extension UISwitch {
   private func setupOnTintColor() {
+    self.onTintColor = UIColor.toDoGardenGreenDark
   }
   
   private func setupOffTintColor() {
