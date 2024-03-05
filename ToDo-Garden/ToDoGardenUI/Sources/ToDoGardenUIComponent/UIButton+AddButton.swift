@@ -36,4 +36,19 @@ extension AddButtonStyle {
     configuration.imagePlacement = NSDirectionalRectEdge.leading
     button.configuration = configuration
   }
+
+  /// 버튼의 상태에 따라 tintColor를 변경해 이미지 색상을 변화시키도록 설정하는 메서드입니다.
+  private static func setupTintColorWhenStateChanged(for button: UIButton) {
+    button.configurationUpdateHandler = { button in
+      switch button.state {
+      case UIControl.State.normal:
+        button.tintColor = UIColor.toDoGardenGreenDark
+      case UIControl.State.highlighted:
+        let alphaWhenHighlighted: CGFloat = 0.5
+        button.tintColor = UIColor.toDoGardenGreenDark.withAlphaComponent(alphaWhenHighlighted)
+      default:
+        return
+      }
+    }
+  }
 }
