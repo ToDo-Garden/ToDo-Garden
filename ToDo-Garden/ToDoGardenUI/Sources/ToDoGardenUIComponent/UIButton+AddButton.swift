@@ -68,14 +68,20 @@ extension AddButtonStyle {
     button.setAttributedTitle(attributedTitle, for: UIControl.State.normal)
   }
 
-  private static func setupTitleForHighlightedState(for button: UIButton, with title: String) {
+  private static func setupTitleForHighlightedState(
+    for button: UIButton,
+    with title: String
+  ) {
     let alphaWhenHighlighted: CGFloat = 0.5
     guard let attributedTitle = AddButtonStyle.convertAttributedTitle(from: title, with: UIColor.toDoGardenGreenDark.withAlphaComponent(alphaWhenHighlighted))
     else { return }
     button.setAttributedTitle(attributedTitle, for: UIControl.State.highlighted)
   }
 
-  private static func convertAttributedTitle(from title: String, with titleColor: UIColor) -> NSMutableAttributedString? {
+  private static func convertAttributedTitle(
+    from title: String,
+    with titleColor: UIColor
+  ) -> NSMutableAttributedString? {
     let baselineOffset: CGFloat = 5.0
     let startPoint = 0
     let endPoint = title.count
