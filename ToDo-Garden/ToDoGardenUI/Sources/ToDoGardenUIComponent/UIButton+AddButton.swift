@@ -56,4 +56,13 @@ extension AddButtonStyle {
     AddButtonStyle.setupTitleForNormalState(for: button, with: title)
     AddButtonStyle.setupTitleForHighlightedState(for: button, with: title)
   }
+
+  private static func setupTitleForNormalState(
+    for button: UIButton,
+    with title: String
+  ) {
+    guard let attributedTitle = AddButtonStyle.convertAttributedTitle(from: title, with: UIColor.toDoGardenGreenDark)
+    else { return }
+    button.setAttributedTitle(attributedTitle, for: UIControl.State.normal)
+  }
 }
