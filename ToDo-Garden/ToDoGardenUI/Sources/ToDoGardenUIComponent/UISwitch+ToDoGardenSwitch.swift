@@ -11,6 +11,7 @@ import ToDoGardenUIResource
 extension UISwitch {
   public func ToDoGardenSwitchStyle() {
     self.setupOnTintColor()
+    self.setupOffTintColor()
   }
 }
 
@@ -22,5 +23,6 @@ extension UISwitch {
   }
   
   private func setupOffTintColor() {
+    self.subviews.first?.subviews.first?.backgroundColor = UIColor.toDoGardenGreenGray
   }
 }
