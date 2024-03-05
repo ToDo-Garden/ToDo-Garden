@@ -22,7 +22,9 @@ extension UIButton {
 
 private enum AddButtonStyle {
   fileprivate static func apply(for button: UIButton, with title: String) {
-    
+    AddButtonStyle.setupImage(for: button)
+    AddButtonStyle.setupTintColorWhenStateChanged(for: button)
+    AddButtonStyle.setupTitle(for: button, with: title)
   }
 }
 
@@ -71,5 +73,25 @@ extension AddButtonStyle {
     guard let attributedTitle = AddButtonStyle.convertAttributedTitle(from: title, with: UIColor.toDoGardenGreenDark.withAlphaComponent(alphaWhenHighlighted))
     else { return }
     button.setAttributedTitle(attributedTitle, for: UIControl.State.highlighted)
+  }
+
+  private static func convertAttributedTitle(from title: String, with titleColor: UIColor) -> NSMutableAttributedString? {
+    let baselineOffset: CGFloat = 5.0
+    let startPoint = 0
+    let endPoint = title.count
+    let attributedString = NSMutableAttributedString(
+      string: title,
+      attributes: [
+        NSAttributedString.Key.baselineOffset: baselineOffset,
+        NSAttributedString.Key.font: UIFont.pretendardBodySemiBold,
+        NSAttributedString.Key.foregroundColor: titleColor
+      ]
+    )
+
+    return attributedString.addUnderline(
+      with: titleColor,
+      from: startPoint,
+      to: endPoint
+    )
   }
 }
