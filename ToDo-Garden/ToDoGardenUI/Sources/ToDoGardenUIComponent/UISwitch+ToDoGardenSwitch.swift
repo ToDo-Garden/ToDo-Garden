@@ -5,8 +5,8 @@
 //  Created by SONG on 3/1/24.
 //
 
-import UIKit.UISwitch
 import ToDoGardenUIResource
+import UIKit.UISwitch
 
 extension UISwitch {
   public func toDoGardenSwitchStyle(isOn: Bool) {
