@@ -38,6 +38,7 @@ extension ToDoGardenSwitch {
   }
   
   private func setupOffTintColor() {
-      self.subviews.first?.subviews.first?.backgroundColor = UIColor.toDoGardenGreenGray
+    let offBackgroundView = self.subviews.first?.subviews.first
+    offBackgroundView?.backgroundColor = UIColor.toDoGardenGreenGray
   }
 }
