@@ -20,7 +20,7 @@ public final class ToDoGardenSwitch: UISwitch {
     self.isOn = isOn
   }
   
-  required init?(coder: NSCoder) {
+  public required init?(coder: NSCoder) {
     super.init(coder: coder)
     self.setupOnTintColor()
   }
