@@ -1,5 +1,5 @@
 //
-//  UISwitch+ToDoGardenSwitch.swift
+//  ToDoGardenSwitch.swift
 //
 //
 //  Created by SONG on 3/1/24.
