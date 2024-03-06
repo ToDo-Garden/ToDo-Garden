@@ -10,16 +10,18 @@ import UIKit.UISwitch
 import ToDoGardenUIResource
 
 public final class ToDoGardenSwitch: UISwitch {
-  public init(isOn: Bool) {
+  public init() {
     super.init(frame: .zero)
-    self.isOn = isOn
     self.setupOnTintColor()
   }
+  
+  public convenience init(isOn: Bool) {
+    self.init()
+    self.isOn = isOn
   }
   
   required init?(coder: NSCoder) {
     super.init(coder: coder)
-    self.isOn = false
     self.setupOnTintColor()
   }
   
