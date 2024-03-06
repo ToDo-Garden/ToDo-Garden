@@ -14,14 +14,13 @@ public final class ToDoGardenSwitch: UISwitch {
     super.init(frame: .zero)
     self.isOn = isOn
     self.setupOnTintColor()
-    self.setupOffTintColor()
+  }
   }
   
   required init?(coder: NSCoder) {
     super.init(coder: coder)
     self.isOn = false
     self.setupOnTintColor()
-    self.setupOffTintColor()
   }
   
   public override func layoutSubviews() {
