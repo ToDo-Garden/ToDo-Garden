@@ -28,7 +28,10 @@ let package = Package(
 		.target(name: "ToDoGardenUIAPI"),
 		.target(
 			name: "ToDoGardenUIComponent",
-			dependencies: ["ToDoGardenUIResource"]
+			dependencies: [
+        "ToDoGardenUIResource",
+        "ToDoGardenUIConstant"
+      ]
 		),
 		.target(
 			name: "ToDoGardenUIResource",
