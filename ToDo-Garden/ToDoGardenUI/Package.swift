@@ -18,19 +18,27 @@ let package = Package(
 		.library(
 			name: "ToDoGardenUIResource",
 			targets: ["ToDoGardenUIResource"]
-		)
+		),
+    .library(
+      name: "ToDoGardenUIConstant",
+      targets: ["ToDoGardenUIConstant"]
+    )
 	],
 	targets: [
 		.target(name: "ToDoGardenUIAPI"),
 		.target(
 			name: "ToDoGardenUIComponent",
-			dependencies: ["ToDoGardenUIResource"]
+			dependencies: [
+        "ToDoGardenUIResource",
+        "ToDoGardenUIConstant"
+      ]
 		),
 		.target(
 			name: "ToDoGardenUIResource",
 			resources: [
 				.process("Fonts")
 			]
-		)
+		),
+    .target(name: "ToDoGardenUIConstant")
 	]
 )
