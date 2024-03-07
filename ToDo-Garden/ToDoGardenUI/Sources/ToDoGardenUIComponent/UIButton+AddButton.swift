@@ -79,7 +79,7 @@ extension AddButtonStyle {
       from: title,
       with: UIColor.toDoGardenGreenDark
     )
-    self.addUnderline(
+    AddButtonStyle.addUnderline(
       to: attributedTitle,
       with: UIColor.toDoGardenGreenDark
     )
@@ -96,7 +96,7 @@ extension AddButtonStyle {
       from: title,
       with: UIColor.toDoGardenGreenDark.withAlphaComponent(alphaWhenHighlighted)
     )
-    self.addUnderline(
+    AddButtonStyle.addUnderline(
       to: attributedTitle,
       with: UIColor.toDoGardenGreenDark.withAlphaComponent(alphaWhenHighlighted)
     )
@@ -104,7 +104,7 @@ extension AddButtonStyle {
     button.setAttributedTitle(attributedTitle, for: UIControl.State.highlighted)
   }
 
-  private static func convertAttributedTitle(
+  private static func makeAttributedTitle(
     from title: String,
     with titleColor: UIColor
   ) -> NSMutableAttributedString {
