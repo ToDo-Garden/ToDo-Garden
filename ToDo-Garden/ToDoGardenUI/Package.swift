@@ -39,7 +39,6 @@ let package = Package(
 				.process("Fonts")
 			]
 		),
-    .target(
-        name: "ToDoGardenUIConstant")
+    .target(name: "ToDoGardenUIConstant")
 	]
 )
