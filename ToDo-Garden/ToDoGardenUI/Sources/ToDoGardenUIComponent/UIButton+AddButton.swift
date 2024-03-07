@@ -16,7 +16,15 @@ extension UIButton {
 }
 
 private enum AddButtonStyle {
-  fileprivate static func apply(for button: UIButton, with title: String) {
+  fileprivate static func apply(
+    for button: UIButton,
+    with title: String
+  ) {
+    AddButtonStyle.applyConfiguration(
+      for: button,
+      with: UIButton.Configuration.plain()
+    )
+    AddButtonStyle.configureImage(for: button)
     AddButtonStyle.setupImage(for: button)
     AddButtonStyle.setupTintColorWhenStateChanged(for: button)
     AddButtonStyle.setupTitle(for: button, with: title)
@@ -24,14 +32,23 @@ private enum AddButtonStyle {
 }
 
 extension AddButtonStyle {
+  private static func applyConfiguration(
+    for button: UIButton,
+    with configuration: UIButton.Configuration
+  ) {
+    button.configuration = configuration
+  }
+
+  private static func configureImage(for button: UIButton) {
+    let imagePadding: CGFloat = 4.0
+    button.configuration?.imagePadding = imagePadding
+    button.configuration?.imagePlacement = NSDirectionalRectEdge.leading
+  }
+
   private static func setupImage(for button: UIButton) {
     let renderingMode = UIImage.RenderingMode.alwaysTemplate
-    let imagePadding: CGFloat = 4.0
-    var configuration = UIButton.Configuration.plain()
-    configuration.image = UIImage.addButton.withRenderingMode(renderingMode)
-    configuration.imagePadding = imagePadding
-    configuration.imagePlacement = NSDirectionalRectEdge.leading
-    button.configuration = configuration
+    let addButtonImage = UIImage.addButton.withRenderingMode(renderingMode)
+    button.setImage(addButtonImage, for: UIControl.State.normal)
   }
 
   /// 버튼의 상태에 따라 tintColor를 변경해 이미지 색상을 변화시키도록 설정하는 메서드입니다.
