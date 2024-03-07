@@ -18,7 +18,11 @@ let package = Package(
 		.library(
 			name: "ToDoGardenUIResource",
 			targets: ["ToDoGardenUIResource"]
-		)
+		),
+    .library(
+      name: "ToDoGardenUIConstant",
+      targets: ["ToDoGardenUIConstant"]
+    )
 	],
 	targets: [
 		.target(name: "ToDoGardenUIAPI"),
@@ -31,6 +35,8 @@ let package = Package(
 			resources: [
 				.process("Fonts")
 			]
-		)
+		),
+    .target(
+        name: "ToDoGardenUIConstant")
 	]
 )
