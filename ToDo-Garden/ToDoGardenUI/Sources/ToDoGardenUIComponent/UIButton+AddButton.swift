@@ -75,11 +75,14 @@ extension AddButtonStyle {
     for button: UIButton,
     with title: String
   ) {
-    guard let attributedTitle = AddButtonStyle.convertAttributedTitle(
+    let attributedTitle = AddButtonStyle.makeAttributedTitle(
       from: title,
       with: UIColor.toDoGardenGreenDark
     )
-    else { return }
+    self.addUnderline(
+      to: attributedTitle,
+      with: UIColor.toDoGardenGreenDark
+    )
 
     button.setAttributedTitle(attributedTitle, for: UIControl.State.normal)
   }
@@ -89,11 +92,14 @@ extension AddButtonStyle {
     with title: String
   ) {
     let alphaWhenHighlighted: CGFloat = 0.5
-    guard let attributedTitle = AddButtonStyle.convertAttributedTitle(
+    let attributedTitle = AddButtonStyle.makeAttributedTitle(
       from: title,
       with: UIColor.toDoGardenGreenDark.withAlphaComponent(alphaWhenHighlighted)
     )
-    else { return }
+    self.addUnderline(
+      to: attributedTitle,
+      with: UIColor.toDoGardenGreenDark.withAlphaComponent(alphaWhenHighlighted)
+    )
 
     button.setAttributedTitle(attributedTitle, for: UIControl.State.highlighted)
   }
@@ -101,7 +107,7 @@ extension AddButtonStyle {
   private static func convertAttributedTitle(
     from title: String,
     with titleColor: UIColor
-  ) -> NSMutableAttributedString? {
+  ) -> NSMutableAttributedString {
     let baselineOffset: CGFloat = 5.0
     let startPoint = 0
     let endPoint = title.count
@@ -114,8 +120,17 @@ extension AddButtonStyle {
       ]
     )
 
-    return attributedString.addUnderline(
-      with: titleColor,
+    return attributedString
+  }
+  
+  private static func addUnderline(
+    to title: NSMutableAttributedString,
+    with unedrlineColor: UIColor
+  ) {
+    let startPoint = 0
+    let endPoint = title.length
+    title.addUnderline(
+      with: unedrlineColor,
       from: startPoint,
       to: endPoint
     )
