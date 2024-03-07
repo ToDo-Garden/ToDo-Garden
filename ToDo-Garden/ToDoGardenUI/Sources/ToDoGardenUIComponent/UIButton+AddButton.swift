@@ -63,6 +63,7 @@ extension AddButtonStyle {
       with: UIColor.toDoGardenGreenDark
     )
     else { return }
+
     button.setAttributedTitle(attributedTitle, for: UIControl.State.normal)
   }
 
