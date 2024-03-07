@@ -77,6 +77,7 @@ extension AddButtonStyle {
       with: UIColor.toDoGardenGreenDark.withAlphaComponent(alphaWhenHighlighted)
     )
     else { return }
+
     button.setAttributedTitle(attributedTitle, for: UIControl.State.highlighted)
   }
 
