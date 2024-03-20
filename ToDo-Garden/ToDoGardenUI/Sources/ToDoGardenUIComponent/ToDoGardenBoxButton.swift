@@ -55,9 +55,13 @@ extension ToDoGardenBoxButton {
   ) {
     self.isRoundRect = isRoundRect
     self.setTitle(text, for: UIControl.State.normal)
-    self.titleLabel?.font = UIFont.pretendardHeadBold
+    self.setupFont()
     self.setCornerRadius(value: sizeType.cornerRadius)
     self.setupActionToChangeAlpha()
+  }
+  
+  private func setupFont() {
+    self.titleLabel?.font = UIFont.pretendardHeadBold
   }
   
   private func setupActionToChangeAlpha() {
