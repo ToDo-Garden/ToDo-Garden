@@ -57,8 +57,26 @@ extension ToDoGardenBoxButton {
     self.setTitle(text, for: UIControl.State.normal)
     self.titleLabel?.font = UIFont.pretendardHeadBold
     self.setCornerRadius(value: sizeType.cornerRadius)
+    self.setupActionToChangeAlpha()
   }
   
+  private func setupActionToChangeAlpha() {
+    let touchDownAction = UIAction { [weak self] _ in
+      self?.alpha = ToDoGardenBoxButtonConstant.Alpha.highlighted.value
+    }
+    
+    let touchUpAction = UIAction { [weak self] _ in
+      self?.alpha = ToDoGardenBoxButtonConstant.Alpha.normal.value
+    }
+    
+    self.addAction(touchDownAction, for: UIControl.Event.touchDown)
+    
+    self.addAction(touchUpAction, for: [
+      UIControl.Event.touchUpInside,
+      UIControl.Event.touchUpOutside,
+      UIControl.Event.touchCancel
+    ])
+  }
   
   private func setCornerRadius(value: CGFloat) {
     if self.isRoundRect {
