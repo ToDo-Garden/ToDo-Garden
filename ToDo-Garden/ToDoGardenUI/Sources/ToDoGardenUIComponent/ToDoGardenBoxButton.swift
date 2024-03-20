@@ -10,8 +10,15 @@ import UIKit.UIButton
 import ToDoGardenUIConstant
 
 public class ToDoGardenBoxButton: UIButton {
+  public override var isEnabled: Bool {
+    didSet{
+      self.updateBackgroundColor()
+    }
+  }
+  
   init() {
     super.init(frame: CGRect.zero)
+    self.enable()
   }
   
   public convenience init(
@@ -24,6 +31,27 @@ public class ToDoGardenBoxButton: UIButton {
   
   required init?(coder: NSCoder) {
     super.init(coder: coder)
+    self.enable()
   }
   
+  public func enable() {
+    self.isEnabled = true
+  }
+  
+  public func disable() {
+    self.isEnabled = false
+  }
+}
+
+//private method
+
+extension ToDoGardenBoxButton {
+  private func updateBackgroundColor() {
+    if self.isEnabled {
+      self.backgroundColor = UIColor.toDoGardenGreenDark
+    }
+    else {
+      self.backgroundColor = UIColor.toDoGardenGreenGray
+    }
+  }
 }
