@@ -29,6 +29,11 @@ public class ToDoGardenBoxButton: UIButton {
     sizeType: ToDoGardenBoxButtonConstant.Size
   ) {
     self.init()
+    self.setup(
+      isRoundRect,
+      text,
+      sizeType
+    )
   }
   
   required init?(coder: NSCoder) {
