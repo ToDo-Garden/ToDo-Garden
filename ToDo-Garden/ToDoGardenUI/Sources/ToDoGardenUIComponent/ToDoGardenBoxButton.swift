@@ -16,6 +16,8 @@ public class ToDoGardenBoxButton: UIButton {
     }
   }
   
+  private var isRoundRect: Bool = true
+  
   init() {
     super.init(frame: CGRect.zero)
     self.enable()
@@ -46,6 +48,24 @@ public class ToDoGardenBoxButton: UIButton {
 //private method
 
 extension ToDoGardenBoxButton {
+  private func setup(
+    _ isRoundRect: Bool,
+    _ text: String,
+    _ sizeType: ToDoGardenBoxButtonConstant.Size
+  ) {
+    self.isRoundRect = isRoundRect
+    self.setTitle(text, for: UIControl.State.normal)
+    self.titleLabel?.font = UIFont.pretendardHeadBold
+    self.setCornerRadius(value: sizeType.cornerRadius)
+  }
+  
+  
+  private func setCornerRadius(value: CGFloat) {
+    if self.isRoundRect {
+      self.layer.cornerRadius = value
+    }
+  }
+  
   private func updateBackgroundColor() {
     if self.isEnabled {
       self.backgroundColor = UIColor.toDoGardenGreenDark
