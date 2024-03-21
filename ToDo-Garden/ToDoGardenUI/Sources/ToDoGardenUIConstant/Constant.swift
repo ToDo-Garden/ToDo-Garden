@@ -6,5 +6,5 @@
 //
 
 public enum Constant {
-  
+  public enum ToDoGardenBoxButton{ }
 }
