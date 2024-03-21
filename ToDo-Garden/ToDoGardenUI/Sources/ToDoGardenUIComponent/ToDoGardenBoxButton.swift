@@ -70,15 +70,22 @@ extension ToDoGardenBoxButton {
   }
   
   private func setupActionToChangeAlpha() {
+    self.setupTouchDownAction()
+    self.setupTouchUpAction()
+  }
+  
+  private func setupTouchDownAction() {
     let touchDownAction = UIAction { [weak self] _ in
       self?.alpha = ToDoGardenBoxButtonConstant.Alpha.highlighted.value
     }
     
+    self.addAction(touchDownAction, for: UIControl.Event.touchDown)
+  }
+  
+  private func setupTouchUpAction() {
     let touchUpAction = UIAction { [weak self] _ in
       self?.alpha = ToDoGardenBoxButtonConstant.Alpha.normal.value
     }
-    
-    self.addAction(touchDownAction, for: UIControl.Event.touchDown)
     
     self.addAction(
       touchUpAction,
