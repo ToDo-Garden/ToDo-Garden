@@ -61,7 +61,7 @@ extension ToDoGardenBoxButton {
     self.isRoundRect = isRoundRect
     self.setTitle(text, for: UIControl.State.normal)
     self.setupFont()
-    self.setCornerRadius(value: sizeType.cornerRadius)
+    self.setupCornerRadius(value: sizeType.cornerRadius)
     self.setupActionToChangeAlpha()
   }
   
@@ -72,6 +72,22 @@ extension ToDoGardenBoxButton {
   private func setupActionToChangeAlpha() {
     self.setupTouchDownAction()
     self.setupTouchUpAction()
+  }
+  
+  private func setupCornerRadius(value: CGFloat) {
+    guard let isRoundRect = self.isRoundRect else { return }
+    
+    if isRoundRect {
+      self.layer.cornerRadius = value
+    }
+  }
+  
+  private func updateBackgroundColor() {
+    if self.isEnabled {
+      self.backgroundColor = UIColor.toDoGardenGreenDark
+    } else {
+      self.backgroundColor = UIColor.toDoGardenGreenGray
+    }
   }
   
   private func setupTouchDownAction() {
@@ -95,21 +111,5 @@ extension ToDoGardenBoxButton {
         UIControl.Event.touchCancel
       ]
     )
-  }
-  
-  private func setCornerRadius(value: CGFloat) {
-    guard let isRoundRect = self.isRoundRect else { return }
-    
-    if isRoundRect {
-      self.layer.cornerRadius = value
-    }
-  }
-  
-  private func updateBackgroundColor() {
-    if self.isEnabled {
-      self.backgroundColor = UIColor.toDoGardenGreenDark
-    } else {
-      self.backgroundColor = UIColor.toDoGardenGreenGray
-    }
   }
 }
