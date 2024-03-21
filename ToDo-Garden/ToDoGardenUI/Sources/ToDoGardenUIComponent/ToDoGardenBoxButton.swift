@@ -9,14 +9,14 @@ import UIKit.UIButton
 
 import ToDoGardenUIConstant
 
-public class ToDoGardenBoxButton: UIButton {
+public final class ToDoGardenBoxButton: UIButton {
   public override var isEnabled: Bool {
-    didSet{
+    didSet {
       self.updateBackgroundColor()
     }
   }
   
-  private var isRoundRect: Bool = true
+  private var isRoundRect: Bool?
   
   init() {
     super.init(frame: CGRect.zero)
@@ -50,7 +50,7 @@ public class ToDoGardenBoxButton: UIButton {
   }
 }
 
-//private method
+// private method
 
 extension ToDoGardenBoxButton {
   private func setup(
@@ -80,15 +80,20 @@ extension ToDoGardenBoxButton {
     
     self.addAction(touchDownAction, for: UIControl.Event.touchDown)
     
-    self.addAction(touchUpAction, for: [
-      UIControl.Event.touchUpInside,
-      UIControl.Event.touchUpOutside,
-      UIControl.Event.touchCancel
-    ])
+    self.addAction(
+      touchUpAction,
+      for: [
+        UIControl.Event.touchUpInside,
+        UIControl.Event.touchUpOutside,
+        UIControl.Event.touchCancel
+      ]
+    )
   }
   
   private func setCornerRadius(value: CGFloat) {
-    if self.isRoundRect {
+    guard let isRoundRect = self.isRoundRect else { return }
+    
+    if isRoundRect {
       self.layer.cornerRadius = value
     }
   }
@@ -96,8 +101,7 @@ extension ToDoGardenBoxButton {
   private func updateBackgroundColor() {
     if self.isEnabled {
       self.backgroundColor = UIColor.toDoGardenGreenDark
-    }
-    else {
+    } else {
       self.backgroundColor = UIColor.toDoGardenGreenGray
     }
   }
