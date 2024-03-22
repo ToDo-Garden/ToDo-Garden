@@ -7,6 +7,8 @@
 
 import UIKit.UIButton
 
+import ToDoGardenUIConstant
+
 public final class ToDoGardenBoxButton: UIButton {
   public override var isEnabled: Bool {
     didSet {
@@ -60,6 +62,7 @@ extension ToDoGardenBoxButton {
     self.setTitle(text, for: UIControl.State.normal)
     self.setupFont()
     self.setupCornerRadius(with: size.height / 2)
+    self.setupActionToChangeAlpha()
   }
   
   private func setupFont() {
@@ -72,6 +75,34 @@ extension ToDoGardenBoxButton {
     if isRoundRect {
       self.layer.cornerRadius = value
     }
+  }
+  
+  private func setupActionToChangeAlpha() {
+    self.setupTouchDownAction()
+    self.setupTouchUpAction()
+  }
+  
+  private func setupTouchDownAction() {
+    let touchDownAction = UIAction { [weak self] _ in
+      self?.alpha = Constant.ToDoGardenBoxButton.Alpha.highlighted
+    }
+    
+    self.addAction(touchDownAction, for: UIControl.Event.touchDown)
+  }
+  
+  private func setupTouchUpAction() {
+    let touchUpAction = UIAction { [weak self] _ in
+      self?.alpha = Constant.ToDoGardenBoxButton.Alpha.normal
+    }
+    
+    self.addAction(
+      touchUpAction,
+      for: [
+        UIControl.Event.touchUpInside,
+        UIControl.Event.touchUpOutside,
+        UIControl.Event.touchCancel
+      ]
+    )
   }
   
   private func updateBackgroundColor() {
