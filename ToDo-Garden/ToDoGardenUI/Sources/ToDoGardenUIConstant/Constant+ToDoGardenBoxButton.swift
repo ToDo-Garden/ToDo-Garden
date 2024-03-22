@@ -14,8 +14,8 @@ extension Constant.ToDoGardenBoxButton {
   }
   
   public enum Size {
-    public static let primary = CGSize(width: 302.0, height: 49.0)
-    public static let secondary = CGSize(width: 287.0, height: 55.0)
-    public static let tertiary = CGSize(width: 288.0, height: 49.0)
+    public static let primary: CGSize = CGSize(width: 302.0, height: 49.0)
+    public static let secondary: CGSize = CGSize(width: 287.0, height: 55.0)
+    public static let tertiary: CGSize = CGSize(width: 288.0, height: 49.0)
   }
 }
