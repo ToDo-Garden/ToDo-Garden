@@ -5,7 +5,7 @@
 //  Created by SONG on 3/21/24.
 //
 
-import CoreGraphics
+import Foundation
 
 extension Constant.ToDoGardenBoxButton {
   public enum Alpha {
