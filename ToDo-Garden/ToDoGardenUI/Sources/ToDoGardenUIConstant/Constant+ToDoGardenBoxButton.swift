@@ -14,41 +14,8 @@ extension Constant.ToDoGardenBoxButton {
   }
   
   public enum Size {
-    case primary
-    case secondary
-    case tertiary
-    
-    public var width: CGFloat {
-      switch self {
-      case Constant.ToDoGardenBoxButton.Size.primary:
-        return 302.0
-      case Constant.ToDoGardenBoxButton.Size.secondary:
-        return 287.0
-      case Constant.ToDoGardenBoxButton.Size.tertiary:
-        return 288.0
-      }
-    }
-    
-    public var height: CGFloat {
-      switch self {
-      case Constant.ToDoGardenBoxButton.Size.primary:
-        return 49.0
-      case Constant.ToDoGardenBoxButton.Size.secondary:
-        return 55.0
-      case Constant.ToDoGardenBoxButton.Size.tertiary:
-        return 49.0
-      }
-    }
-    
-    public var cornerRadius: CGFloat {
-      switch self {
-      case Constant.ToDoGardenBoxButton.Size.primary:
-        return 49.0 / 2
-      case Constant.ToDoGardenBoxButton.Size.secondary:
-        return 55.0 / 2
-      case Constant.ToDoGardenBoxButton.Size.tertiary:
-        return 49.0 / 2
-      }
-    }
+    public static let primary = CGSize(width: 302.0, height: 49.0)
+    public static let secondary = CGSize(width: 287.0, height: 55.0)
+    public static let tertiary = CGSize(width: 288.0, height: 49.0)
   }
 }
