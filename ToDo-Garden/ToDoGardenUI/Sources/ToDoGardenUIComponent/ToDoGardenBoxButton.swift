@@ -48,7 +48,7 @@ public final class ToDoGardenBoxButton: UIButton {
   }
 }
 
-// private method
+// MARK: - private functions
 
 extension ToDoGardenBoxButton {
   private func setup(
