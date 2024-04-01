@@ -60,11 +60,11 @@ extension ToDoGardenBoxButton {
       self.setupCornerRadius(with: size.height / 2)
     }
     self.setTitle(text, for: UIControl.State.normal)
-    self.setupFont()
+    self.setupTitleFont()
     self.setupActionToChangeAlpha()
   }
   
-  private func setupFont() {
+  private func setupTitleFont() {
     self.titleLabel?.font = UIFont.pretendardHeadBold
   }
   
