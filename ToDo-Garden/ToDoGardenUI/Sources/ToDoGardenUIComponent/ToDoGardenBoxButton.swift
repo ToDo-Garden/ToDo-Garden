@@ -20,15 +20,16 @@ public final class ToDoGardenBoxButton: UIButton {
   
   init() {
     super.init(frame: CGRect.zero)
-    enable()
   }
   
   public convenience init(
     isRoundRect: Bool,
     text: String,
     sizeType: CGSize
+    isEnabled: Bool
   ) {
     self.init()
+    self.isEnabled = isEnabled
     self.setup(
       isRoundRect,
       text,
@@ -38,7 +39,6 @@ public final class ToDoGardenBoxButton: UIButton {
   
   required init?(coder: NSCoder) {
     super.init(coder: coder)
-    enable()
   }
   
   public func enable() {
