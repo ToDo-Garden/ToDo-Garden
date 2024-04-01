@@ -25,15 +25,15 @@ public final class ToDoGardenBoxButton: UIButton {
   public convenience init(
     isRoundRect: Bool,
     text: String,
-    sizeType: CGSize
+    size: CGSize,
     isEnabled: Bool
   ) {
     self.init()
     self.isEnabled = isEnabled
     self.setup(
-      isRoundRect,
-      text,
-      sizeType
+      isRoundRect: isRoundRect,
+      text: text,
+      size: size
     )
   }
   
@@ -54,9 +54,9 @@ public final class ToDoGardenBoxButton: UIButton {
 
 extension ToDoGardenBoxButton {
   private func setup(
-    _ isRoundRect: Bool,
-    _ text: String,
-    _ size: CGSize
+      isRoundRect: Bool,
+      text: String,
+      size : CGSize
   ) {
     self.isRoundRect = isRoundRect
     self.setTitle(text, for: UIControl.State.normal)
