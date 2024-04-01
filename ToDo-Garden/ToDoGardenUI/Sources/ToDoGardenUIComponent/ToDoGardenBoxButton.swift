@@ -15,9 +15,7 @@ public final class ToDoGardenBoxButton: UIButton {
       self.updateBackgroundColor()
     }
   }
-  
-  private var isRoundRect: Bool?
-  
+
   init() {
     super.init(frame: CGRect.zero)
   }
@@ -58,10 +56,11 @@ extension ToDoGardenBoxButton {
       text: String,
       size : CGSize
   ) {
-    self.isRoundRect = isRoundRect
+    if isRoundRect {
+      self.setupCornerRadius(with: size.height / 2)
+    }
     self.setTitle(text, for: UIControl.State.normal)
     self.setupFont()
-    self.setupCornerRadius(with: size.height / 2)
     self.setupActionToChangeAlpha()
   }
   
@@ -70,11 +69,7 @@ extension ToDoGardenBoxButton {
   }
   
   private func setupCornerRadius(with value: CGFloat) {
-    guard let isRoundRect = self.isRoundRect else { return }
-    
-    if isRoundRect {
       self.layer.cornerRadius = value
-    }
   }
   
   private func setupActionToChangeAlpha() {
