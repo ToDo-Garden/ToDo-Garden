@@ -106,13 +106,11 @@ extension AddUnderlinedTextButtonStyle {
     from title: String,
     with titleColor: UIColor
   ) -> NSMutableAttributedString {
-    let baselineOffset: CGFloat = 5.0
-    let startPoint = 0
     let endPoint = title.count
     let attributedString = NSMutableAttributedString(
       string: title,
       attributes: [
-        NSAttributedString.Key.baselineOffset: baselineOffset,
+        NSAttributedString.Key.baselineOffset: Constant.AddUnderlinedTextButton.Title.baselineOffset,
         NSAttributedString.Key.font: UIFont.pretendardBodySemiBold,
         NSAttributedString.Key.foregroundColor: titleColor
       ]
@@ -120,16 +118,15 @@ extension AddUnderlinedTextButtonStyle {
 
     return attributedString
   }
-  
+
   private static func addUnderline(
     to title: NSMutableAttributedString,
     with unedrlineColor: UIColor
   ) {
-    let startPoint = 0
     let endPoint = title.length
     title.addUnderline(
       with: unedrlineColor,
-      from: startPoint,
+      from: Constant.AddUnderlinedTextButton.Title.startPoint,
       to: endPoint
     )
   }
