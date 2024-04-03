@@ -58,7 +58,9 @@ extension AddUnderlinedTextButtonStyle {
       case UIControl.State.normal:
         button.tintColor = UIColor.toDoGardenGreenDark
       case UIControl.State.highlighted:
-        button.tintColor = UIColor.toDoGardenGreenDark.withAlphaComponent(Constant.AddUnderlinedTextButton.Alpha.highlighted)
+        button.tintColor = UIColor.toDoGardenGreenDark.withAlphaComponent(
+          Constant.AddUnderlinedTextButton.Alpha.highlighted
+        )
       default:
         return
       }
@@ -92,11 +94,15 @@ extension AddUnderlinedTextButtonStyle {
   ) {
     let attributedTitle = AddUnderlinedTextButtonStyle.makeAttributedTitle(
       from: title,
-      with: UIColor.toDoGardenGreenDark.withAlphaComponent(Constant.AddUnderlinedTextButton.Alpha.highlighted)
+      with: UIColor.toDoGardenGreenDark.withAlphaComponent(
+        Constant.AddUnderlinedTextButton.Alpha.highlighted
+      )
     )
     AddUnderlinedTextButtonStyle.addUnderline(
       to: attributedTitle,
-      with: UIColor.toDoGardenGreenDark.withAlphaComponent(Constant.AddUnderlinedTextButton.Alpha.highlighted)
+      with: UIColor.toDoGardenGreenDark.withAlphaComponent(
+        Constant.AddUnderlinedTextButton.Alpha.highlighted
+      )
     )
 
     button.setAttributedTitle(attributedTitle, for: UIControl.State.highlighted)
