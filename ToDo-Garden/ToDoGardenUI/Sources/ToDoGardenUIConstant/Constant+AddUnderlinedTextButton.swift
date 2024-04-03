@@ -23,5 +23,5 @@ extension Constant.AddUnderlinedTextButton.Alpha {
 
 extension Constant.AddUnderlinedTextButton.Title {
   public static let baselineOffset: CGFloat = 5.0
-  public static let startPoint: CGFloat = 0
+  public static let startPoint: Int = 0
 }
