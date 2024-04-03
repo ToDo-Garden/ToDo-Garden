@@ -7,6 +7,7 @@
 
 import UIKit.UIButton
 
+import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 extension UIButton {
@@ -40,8 +41,7 @@ extension AddUnderlinedTextButtonStyle {
   }
 
   private static func configureImage(for button: UIButton) {
-    let imagePadding: CGFloat = 4.0
-    button.configuration?.imagePadding = imagePadding
+    button.configuration?.imagePadding = Constant.AddUnderlinedTextButton.Layout.imagePadding
     button.configuration?.imagePlacement = NSDirectionalRectEdge.leading
   }
 
