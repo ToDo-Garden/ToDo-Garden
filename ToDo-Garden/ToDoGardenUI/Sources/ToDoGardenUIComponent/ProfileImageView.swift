@@ -20,3 +20,9 @@ public final class ProfileImageView: UIImageView {
     super.init(coder: coder)
   }
 }
+
+private enum ProfileImageViewStyle {
+  fileprivate static func apply(to imageView: UIImageView, with size: CGSize) {
+    
+  }
+}
