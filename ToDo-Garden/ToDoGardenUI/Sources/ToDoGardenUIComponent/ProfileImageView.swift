@@ -23,6 +23,12 @@ public final class ProfileImageView: UIImageView {
 
 private enum ProfileImageViewStyle {
   fileprivate static func apply(to imageView: UIImageView, with size: CGSize) {
-    
+    self.setupRoundedCorner(to: imageView, with: size)
+  }
+}
+
+extension ProfileImageViewStyle {
+  private static func setupRoundedCorner(to imageView: UIImageView, with size: CGSize) {
+    imageView.layer.cornerRadius = size.height / 2
   }
 }
