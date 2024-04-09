@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "ProfileImageViewFriendDefault.png",
+      "filename" : "default_friend_profile_image.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "ProfileImageViewFriendDefault2x.png",
+      "filename" : "default_friend_profile_image@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "ProfileImageViewFriendDefault3x.png",
+      "filename" : "default_friend_profile_image@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
