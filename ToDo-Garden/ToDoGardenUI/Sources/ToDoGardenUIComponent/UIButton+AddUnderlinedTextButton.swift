@@ -1,5 +1,5 @@
 //
-//  UIButton+addButton.swift
+//  UIButton+AddUnderlinedTextButton.swift
 //
 //
 //  Created by Wood on 3/4/24.
@@ -7,31 +7,32 @@
 
 import UIKit.UIButton
 
+import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 extension UIButton {
-  public func applyAddButtonStyle(with title: String) {
-    AddButtonStyle.apply(for: self, with: title)
+  public func applyAddUnderlinedTextButtonStyle(with title: String) {
+    AddUnderlinedTextButtonStyle.apply(for: self, with: title)
   }
 }
 
-private enum AddButtonStyle {
+private enum AddUnderlinedTextButtonStyle {
   fileprivate static func apply(
     for button: UIButton,
     with title: String
   ) {
-    AddButtonStyle.applyConfiguration(
+    AddUnderlinedTextButtonStyle.applyConfiguration(
       for: button,
       with: UIButton.Configuration.plain()
     )
-    AddButtonStyle.configureImage(for: button)
-    AddButtonStyle.setupImage(for: button)
-    AddButtonStyle.setupTintColorWhenStateChanged(for: button)
-    AddButtonStyle.setupTitle(for: button, with: title)
+    AddUnderlinedTextButtonStyle.configureImage(for: button)
+    AddUnderlinedTextButtonStyle.setupImage(for: button)
+    AddUnderlinedTextButtonStyle.setupTintColorWhenStateChanged(for: button)
+    AddUnderlinedTextButtonStyle.setupTitle(for: button, with: title)
   }
 }
 
-extension AddButtonStyle {
+extension AddUnderlinedTextButtonStyle {
   private static func applyConfiguration(
     for button: UIButton,
     with configuration: UIButton.Configuration
@@ -40,8 +41,7 @@ extension AddButtonStyle {
   }
 
   private static func configureImage(for button: UIButton) {
-    let imagePadding: CGFloat = 4.0
-    button.configuration?.imagePadding = imagePadding
+    button.configuration?.imagePadding = Constant.AddUnderlinedTextButton.Layout.imagePadding
     button.configuration?.imagePlacement = NSDirectionalRectEdge.leading
   }
 
@@ -58,8 +58,9 @@ extension AddButtonStyle {
       case UIControl.State.normal:
         button.tintColor = UIColor.toDoGardenGreenDark
       case UIControl.State.highlighted:
-        let alphaWhenHighlighted: CGFloat = 0.5
-        button.tintColor = UIColor.toDoGardenGreenDark.withAlphaComponent(alphaWhenHighlighted)
+        button.tintColor = UIColor.toDoGardenGreenDark.withAlphaComponent(
+          Constant.AddUnderlinedTextButton.Alpha.highlighted
+        )
       default:
         return
       }
@@ -67,19 +68,19 @@ extension AddButtonStyle {
   }
 
   private static func setupTitle(for button: UIButton, with title: String) {
-    AddButtonStyle.setupTitleForNormalState(for: button, with: title)
-    AddButtonStyle.setupTitleForHighlightedState(for: button, with: title)
+    AddUnderlinedTextButtonStyle.setupTitleForNormalState(for: button, with: title)
+    AddUnderlinedTextButtonStyle.setupTitleForHighlightedState(for: button, with: title)
   }
 
   private static func setupTitleForNormalState(
     for button: UIButton,
     with title: String
   ) {
-    let attributedTitle = AddButtonStyle.makeAttributedTitle(
+    let attributedTitle = AddUnderlinedTextButtonStyle.makeAttributedTitle(
       from: title,
       with: UIColor.toDoGardenGreenDark
     )
-    AddButtonStyle.addUnderline(
+    AddUnderlinedTextButtonStyle.addUnderline(
       to: attributedTitle,
       with: UIColor.toDoGardenGreenDark
     )
@@ -91,14 +92,17 @@ extension AddButtonStyle {
     for button: UIButton,
     with title: String
   ) {
-    let alphaWhenHighlighted: CGFloat = 0.5
-    let attributedTitle = AddButtonStyle.makeAttributedTitle(
+    let attributedTitle = AddUnderlinedTextButtonStyle.makeAttributedTitle(
       from: title,
-      with: UIColor.toDoGardenGreenDark.withAlphaComponent(alphaWhenHighlighted)
+      with: UIColor.toDoGardenGreenDark.withAlphaComponent(
+        Constant.AddUnderlinedTextButton.Alpha.highlighted
+      )
     )
-    AddButtonStyle.addUnderline(
+    AddUnderlinedTextButtonStyle.addUnderline(
       to: attributedTitle,
-      with: UIColor.toDoGardenGreenDark.withAlphaComponent(alphaWhenHighlighted)
+      with: UIColor.toDoGardenGreenDark.withAlphaComponent(
+        Constant.AddUnderlinedTextButton.Alpha.highlighted
+      )
     )
 
     button.setAttributedTitle(attributedTitle, for: UIControl.State.highlighted)
@@ -108,13 +112,11 @@ extension AddButtonStyle {
     from title: String,
     with titleColor: UIColor
   ) -> NSMutableAttributedString {
-    let baselineOffset: CGFloat = 5.0
-    let startPoint = 0
     let endPoint = title.count
     let attributedString = NSMutableAttributedString(
       string: title,
       attributes: [
-        NSAttributedString.Key.baselineOffset: baselineOffset,
+        NSAttributedString.Key.baselineOffset: Constant.AddUnderlinedTextButton.Title.baselineOffset,
         NSAttributedString.Key.font: UIFont.pretendardBodySemiBold,
         NSAttributedString.Key.foregroundColor: titleColor
       ]
@@ -122,16 +124,15 @@ extension AddButtonStyle {
 
     return attributedString
   }
-  
+
   private static func addUnderline(
     to title: NSMutableAttributedString,
     with unedrlineColor: UIColor
   ) {
-    let startPoint = 0
     let endPoint = title.length
     title.addUnderline(
       with: unedrlineColor,
-      from: startPoint,
+      from: Constant.AddUnderlinedTextButton.Title.startPoint,
       to: endPoint
     )
   }

@@ -9,4 +9,5 @@ public enum Constant {
   public enum ToDoGardenBoxButton {}
   public enum AddUnderlinedTextButton {}
   public enum PeriodSegmentedControl {}
+  public enum ProfileImageView {}
 }
