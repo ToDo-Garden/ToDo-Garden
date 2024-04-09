@@ -17,10 +17,10 @@ extension UIImage {
   public static let addButton = UIImage(
     resource: .addButton
   )
-  public static let profileImageViewDefault = UIImage(
-    resource: .profileImageViewDefault
+  public static let defaultProfileImage = UIImage(
+    resource: .defaultProfile
   )
-  public static let profileImageViewFriendDefault = UIImage(
-    resource: .profileImageViewFriendDefault
+  public static let defaultFriendProfileImage = UIImage(
+    resource: .defaultFriendProfile
   )
 }
