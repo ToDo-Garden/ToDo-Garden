@@ -23,4 +23,10 @@ extension UIImage {
   public static let periodSegmentedControlIndicator = UIImage(
     resource: .periodSegmentedControlIndicator
   )
+  public static let defaultProfileImage = UIImage(
+    resource: .defaultProfile
+  )
+  public static let defaultFriendProfileImage = UIImage(
+    resource: .defaultFriendProfile
+  )
 }
