@@ -50,8 +50,7 @@ extension ProfileImageView {
   private func setupDefaultImage() {
     if self.size == Constant.ProfileImageView.Size.small {
       self.setupImage(with: UIImage.defaultFriendProfileImage)
-    }
-    else {
+    } else {
       self.setupImage(with: UIImage.defaultProfileImage)
     }
   }
