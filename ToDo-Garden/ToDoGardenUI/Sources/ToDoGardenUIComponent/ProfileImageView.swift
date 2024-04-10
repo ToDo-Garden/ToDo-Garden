@@ -18,18 +18,20 @@ public final class ProfileImageView: UIImageView {
     self.size = size
     super.init(frame: CGRect.zero)
     ProfileImageViewStyle.apply(to: self, with: self.size)
+    self.setupDefaultImage()
   }
 
   required init?(coder: NSCoder) {
     self.size = CGSize()
     super.init(coder: coder)
     ProfileImageViewStyle.apply(to: self, with: self.size)
+    self.setupDefaultImage()
   }
 
   public func setupImage(with image: UIImage) {
     guard self.imageLoadTask == nil || self.imageLoadTask?.isCancelled == false
     else { return }
-    
+
     self.imageLoadTask = Task { [weak self] in
       guard let self else { return }
 
@@ -38,9 +40,20 @@ public final class ProfileImageView: UIImageView {
       }
     }
   }
-  
+
   deinit {
     self.imageLoadTask?.cancel()
+  }
+}
+
+extension ProfileImageView {
+  private func setupDefaultImage() {
+    if self.size == Constant.ProfileImageView.Size.small {
+      self.setupImage(with: UIImage.defaultFriendProfileImage)
+    }
+    else {
+      self.setupImage(with: UIImage.defaultProfileImage)
+    }
   }
 }
 
