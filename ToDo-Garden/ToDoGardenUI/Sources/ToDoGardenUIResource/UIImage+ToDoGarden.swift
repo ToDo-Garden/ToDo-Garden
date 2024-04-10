@@ -17,4 +17,10 @@ extension UIImage {
   public static let addButton = UIImage(
     resource: .addButton
   )
+  public static let periodSegmentedControlBackground = UIImage(
+    resource: .periodSegmentedControlBackground
+  )
+  public static let periodSegmentedControlIndicator = UIImage(
+    resource: .periodSegmentedControlIndicator
+  )
 }
