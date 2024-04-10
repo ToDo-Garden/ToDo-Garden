@@ -7,8 +7,12 @@
 
 import UIKit.UIImageView
 
+import ToDoGardenUIConstant
+import ToDoGardenUIResource
+
 public final class ProfileImageView: UIImageView {
   private var size: CGSize
+  private var imageLoadTask: Task<(), Error>?
 
   public init(size: CGSize) {
     self.size = size
@@ -20,6 +24,23 @@ public final class ProfileImageView: UIImageView {
     self.size = CGSize()
     super.init(coder: coder)
     ProfileImageViewStyle.apply(to: self, with: self.size)
+  }
+
+  public func setupImage(with image: UIImage) {
+    guard self.imageLoadTask == nil || self.imageLoadTask?.isCancelled == false
+    else { return }
+    
+    self.imageLoadTask = Task { [weak self] in
+      guard let self else { return }
+
+      if let preparedImage = await image.byPreparingThumbnail(ofSize: self.size) {
+        self.image = preparedImage
+      }
+    }
+  }
+  
+  deinit {
+    self.imageLoadTask?.cancel()
   }
 }
 
