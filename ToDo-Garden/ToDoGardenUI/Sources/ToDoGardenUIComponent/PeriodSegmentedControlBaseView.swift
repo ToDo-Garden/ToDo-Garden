@@ -43,6 +43,11 @@ final class PeriodSegmentedControlBaseView: UIImageView {
     super.layoutSubviews()
     self.indicatorView.center.x = self.indicatorViewCurrentX
   }
+  
+  func moveIndicatorView(to x: CGFloat) {
+    self.indicatorViewCurrentX = x
+    self.indicatorView.center.x = self.indicatorViewCurrentX
+  }
 }
 
 //MARK: - private functions
