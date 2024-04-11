@@ -44,13 +44,13 @@ final class PeriodSegmentedControlBaseView: UIImageView {
     self.indicatorView.center.x = self.indicatorViewCurrentX
   }
   
-  func moveIndicatorView(to x: CGFloat) {
-    self.indicatorViewCurrentX = x
+  func moveIndicatorView(to xPosition: CGFloat) {
+    self.indicatorViewCurrentX = xPosition
     self.indicatorView.center.x = self.indicatorViewCurrentX
   }
 }
 
-//MARK: - private functions
+// MARK: - private functions
 
 extension PeriodSegmentedControlBaseView {
   private func setup(with items: [String]) {
@@ -90,8 +90,8 @@ extension PeriodSegmentedControlBaseView {
     self.itemsStackView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate(
       [
-        self.itemsStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor,constant: padding),
-        self.itemsStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor,constant: -padding),
+        self.itemsStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding),
+        self.itemsStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -padding),
         self.itemsStackView.centerYAnchor.constraint(equalTo: self.centerYAnchor)
       ]
     )
@@ -118,14 +118,14 @@ extension PeriodSegmentedControlBaseView {
   }
 }
 
-//MARK: - for customizing
+// MARK: - for customizing
 
 extension PeriodSegmentedControlBaseView {
-  public func changeBackgroundImage(_ image : UIImage){
+  public func changeBackgroundImage(_ image: UIImage) {
     self.image = image
   }
   
-  public func changeIndicatorImage(_ image : UIImage){
+  public func changeIndicatorImage(_ image: UIImage) {
     self.indicatorView.image = image
   }
   
@@ -143,4 +143,3 @@ extension PeriodSegmentedControlBaseView {
     self.indicatorViewCurrentX = startPoint + additionalWeight
   }
 }
-
