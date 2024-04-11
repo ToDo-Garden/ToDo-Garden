@@ -11,7 +11,7 @@ import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 public final class ProfileImageView: UIImageView {
-  private var size: CGSize
+  private let size: CGSize
   private var imageLoadTask: Task<(), Error>?
 
   public init(size: CGSize) {
