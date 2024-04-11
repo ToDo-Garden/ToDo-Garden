@@ -12,9 +12,11 @@ import ToDoGardenUIResource
 
 final class PeriodSegmentedControlBaseView: UIImageView {
   var indicatorView: UIImageView
+  var itemsStackView: UIStackView
   
   init() {
     self.indicatorView = UIImageView(image: UIImage.periodSegmentedControlIndicator)
+    self.itemsStackView = UIStackView()
     super.init(frame: CGRect.zero)
   }
   
@@ -25,6 +27,7 @@ final class PeriodSegmentedControlBaseView: UIImageView {
   
   required init?(coder: NSCoder) {
     self.indicatorView = UIImageView(image: UIImage.periodSegmentedControlIndicator)
+    self.itemsStackView = UIStackView()
     super.init(coder: coder)
   }
 }
@@ -34,6 +37,7 @@ extension PeriodSegmentedControlBaseView {
   private func setup(with items: [String]) {
     self.setupBackgroundView()
     self.setupIndicatorView()
+    self.setupStackView()
   }
   
   private func setupBackgroundView() {
@@ -52,6 +56,23 @@ extension PeriodSegmentedControlBaseView {
         self.indicatorView.widthAnchor.constraint(equalToConstant: indicatorViewWidth),
         self.indicatorView.heightAnchor.constraint(equalToConstant: indicatorViewWidth),
         self.indicatorView.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+      ]
+    )
+  }
+  
+  private func setupStackView() {
+    let padding = Constant.PeriodSegmentedControl.Layout.innerPadding
+    
+    self.itemsStackView.axis = NSLayoutConstraint.Axis.horizontal
+    self.itemsStackView.distribution = UIStackView.Distribution.fillEqually
+    self.addSubview(self.itemsStackView)
+    
+    self.itemsStackView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate(
+      [
+        self.itemsStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor,constant: padding),
+        self.itemsStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor,constant: -padding),
+        self.itemsStackView.centerYAnchor.constraint(equalTo: self.centerYAnchor)
       ]
     )
   }
