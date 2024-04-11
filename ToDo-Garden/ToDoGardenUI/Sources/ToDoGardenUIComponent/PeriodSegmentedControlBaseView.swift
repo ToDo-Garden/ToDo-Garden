@@ -51,6 +51,7 @@ final class PeriodSegmentedControlBaseView: UIImageView {
 }
 
 //MARK: - private functions
+
 extension PeriodSegmentedControlBaseView {
   private func setup(with items: [String]) {
     self.setupBackgroundView()
@@ -116,3 +117,30 @@ extension PeriodSegmentedControlBaseView {
     }
   }
 }
+
+//MARK: - for customizing
+
+extension PeriodSegmentedControlBaseView {
+  public func changeBackgroundImage(_ image : UIImage){
+    self.image = image
+  }
+  
+  public func changeIndicatorImage(_ image : UIImage){
+    self.indicatorView.image = image
+  }
+  
+  public func changeInitialSelectedItem(index: Int, numberOfSegments: Int) {
+    if index >= numberOfSegments || index < Int.zero {
+      return
+    }
+    
+    let startPoint = Constant.PeriodSegmentedControl.Layout.firstItemCenterXPosition
+    let additionalWeight = (
+      Constant.PeriodSegmentedControl.Layout.itemWidth *
+      CGFloat(index)
+    )
+    
+    self.indicatorViewCurrentX = startPoint + additionalWeight
+  }
+}
+
