@@ -38,6 +38,7 @@ extension PeriodSegmentedControlBaseView {
     self.setupBackgroundView()
     self.setupIndicatorView()
     self.setupStackView()
+    self.setupLabels(with: items)
   }
   
   private func setupBackgroundView() {
@@ -75,5 +76,25 @@ extension PeriodSegmentedControlBaseView {
         self.itemsStackView.centerYAnchor.constraint(equalTo: self.centerYAnchor)
       ]
     )
+  }
+  
+  private func setupLabels(with items: [String]) {
+    let segmentWidth = Constant.PeriodSegmentedControl.Layout.itemWidth
+    
+    for item in items {
+      let label = UILabel()
+      label.frame.size.width = segmentWidth
+      
+      let attributedTitle = NSAttributedString(
+        string: item,
+        attributes: [
+          NSAttributedString.Key.font: UIFont.pretendardBodyMedium,
+          NSAttributedString.Key.foregroundColor: UIColor.toDoGardenGreenDark
+        ]
+      )
+      label.attributedText = attributedTitle
+      label.textAlignment = NSTextAlignment.center
+      self.itemsStackView.addArrangedSubview(label)
+    }
   }
 }
