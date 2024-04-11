@@ -12,7 +12,7 @@ import ToDoGardenUIResource
 
 public final class ProfileImageView: UIImageView {
   private let size: CGSize
-  private var imageLoadTask: Task<(), Error>?
+  private var imageLoadTask: Task<(), Never>?
 
   public init(size: CGSize) {
     self.size = size
@@ -32,13 +32,7 @@ public final class ProfileImageView: UIImageView {
     guard self.imageLoadTask == nil || self.imageLoadTask?.isCancelled == false
     else { return }
 
-    self.imageLoadTask = Task { [weak self] in
-      guard let self else { return }
-
-      if let preparedImage = await image.byPreparingThumbnail(ofSize: self.size) {
-        self.image = preparedImage
-      }
-    }
+    self.imageLoadTask = self.createImageLoadTask(with: image)
   }
 
   deinit {
@@ -48,10 +42,21 @@ public final class ProfileImageView: UIImageView {
 
 extension ProfileImageView {
   private func setupDefaultImage() {
-    if self.size == Constant.ProfileImageView.Size.small {
-      self.setupImage(with: UIImage.defaultFriendProfileImage)
-    } else {
-      self.setupImage(with: UIImage.defaultProfileImage)
+    let defaultImage = self.size == Constant.ProfileImageView.Size.small ?
+    UIImage.defaultFriendProfileImage : UIImage.defaultProfileImage
+
+    self.imageLoadTask = self.createImageLoadTask(with: defaultImage)
+  }
+
+  private func createImageLoadTask(with image: UIImage) -> Task<(), Never> {
+    return Task { [weak self] in
+      guard let self = self else { return }
+
+      if let resizedImage = await image.byPreparingThumbnail(ofSize: self.size) {
+        self.image = resizedImage
+      } else {
+        self.image = image
+      }
     }
   }
 }
