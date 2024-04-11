@@ -14,6 +14,14 @@ final class PeriodSegmentedControlBaseView: UIImageView {
   var indicatorView: UIImageView
   var itemsStackView: UIStackView
   
+  private var indicatorViewCurrentX: CGFloat = {
+    let initialPosition = (
+      Constant.PeriodSegmentedControl.Layout.firstItemCenterXPosition +
+      Constant.PeriodSegmentedControl.Layout.itemWidth
+    )
+    return initialPosition
+  }()
+  
   init() {
     self.indicatorView = UIImageView(image: UIImage.periodSegmentedControlIndicator)
     self.itemsStackView = UIStackView()
@@ -29,6 +37,11 @@ final class PeriodSegmentedControlBaseView: UIImageView {
     self.indicatorView = UIImageView(image: UIImage.periodSegmentedControlIndicator)
     self.itemsStackView = UIStackView()
     super.init(coder: coder)
+  }
+  
+  public override func layoutSubviews() {
+    super.layoutSubviews()
+    self.indicatorView.center.x = self.indicatorViewCurrentX
   }
 }
 
