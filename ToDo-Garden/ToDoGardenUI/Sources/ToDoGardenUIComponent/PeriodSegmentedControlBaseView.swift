@@ -55,7 +55,7 @@ final class PeriodSegmentedControlBaseView: UIImageView {
 extension PeriodSegmentedControlBaseView {
   private func setup(with items: [String]) {
     self.setupBackgroundView()
-    self.setupIndicatorView()
+    self.setupIndicatorViewLayout()
     self.setupStackView()
     self.setupLabels(with: items)
   }
@@ -66,7 +66,7 @@ extension PeriodSegmentedControlBaseView {
     self.contentMode = ContentMode.scaleToFill
   }
   
-  private func setupIndicatorView() {
+  private func setupIndicatorViewLayout() {
     let indicatorViewWidth = Constant.PeriodSegmentedControl.Layout.indicatorViewWidth
     self.addSubview(self.indicatorView)
     
