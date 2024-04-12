@@ -130,7 +130,7 @@ extension PeriodSegmentedControlBaseView {
   }
   
   func changeInitialSelectedItem(index: Int, numberOfItems: Int) {
-    if index >= numberOfItems || index < Int.zero {
+    guard index < numberOfItems && index >= Int.zero else {
       return
     }
     
