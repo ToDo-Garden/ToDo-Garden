@@ -11,8 +11,8 @@ import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 final class PeriodSegmentedControlBaseView: UIImageView {
-  var indicatorView: UIImageView
-  var itemsStackView: UIStackView
+  private let indicatorView: UIImageView
+  private let itemsStackView: UIStackView
   
   private var indicatorViewCurrentX: CGFloat = {
     let initialPosition = (
