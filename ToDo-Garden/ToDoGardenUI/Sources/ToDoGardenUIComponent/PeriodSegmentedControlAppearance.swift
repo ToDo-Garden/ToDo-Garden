@@ -10,7 +10,7 @@ import UIKit.UIView
 import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
-final class PeriodSegmentedControlBaseView: UIImageView {
+final class PeriodSegmentedControlAppearance: UIImageView {
   private let indicatorView: UIImageView
   private let itemsStackView: UIStackView
   
@@ -64,7 +64,7 @@ final class PeriodSegmentedControlBaseView: UIImageView {
 
 // MARK: - private functions
 
-extension PeriodSegmentedControlBaseView {
+extension PeriodSegmentedControlAppearance {
   private func setup(with items: [String]) {
     self.setupBackgroundView()
     self.setupIndicatorViewLayout()
@@ -132,7 +132,7 @@ extension PeriodSegmentedControlBaseView {
 
 // MARK: - for customizing
 
-extension PeriodSegmentedControlBaseView {
+extension PeriodSegmentedControlAppearance {
   func changeBackgroundImage(_ image: UIImage) {
     self.image = image
   }
