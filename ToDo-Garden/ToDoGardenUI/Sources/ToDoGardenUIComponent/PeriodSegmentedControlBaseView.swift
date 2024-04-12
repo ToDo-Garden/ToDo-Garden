@@ -112,12 +112,12 @@ extension PeriodSegmentedControlBaseView {
   private func setupLabels(with items: [String]) {
     let segmentWidth = Constant.PeriodSegmentedControl.Layout.itemWidth
     
-    for item in items {
+    for labelTitle in items {
       let label = UILabel()
       label.frame.size.width = segmentWidth
       
       let attributedTitle = NSAttributedString(
-        string: item,
+        string: labelTitle,
         attributes: [
           NSAttributedString.Key.font: UIFont.pretendardBodyMedium,
           NSAttributedString.Key.foregroundColor: UIColor.toDoGardenGreenDark
