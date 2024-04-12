@@ -11,6 +11,7 @@ import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 final class PeriodSegmentedControlAppearance {
+  private let backgroundView: UIImageView
   private let indicatorView: UIImageView
   private let itemsStackView: UIStackView
   
@@ -23,6 +24,7 @@ final class PeriodSegmentedControlAppearance {
   }()
   
   init(with items: [String]) {
+    self.backgroundView = UIImageView(image: UIImage.periodSegmentedControlBackground)
     self.indicatorView = UIImageView(image: UIImage.periodSegmentedControlIndicator)
     self.itemsStackView = UIStackView()
     self.setup(with: items)
@@ -57,21 +59,20 @@ extension PeriodSegmentedControlAppearance {
   }
   
   private func setupBackgroundView() {
-    self.image = UIImage.periodSegmentedControlBackground
-    self.isUserInteractionEnabled = true
-    self.contentMode = ContentMode.scaleToFill
+    self.backgroundView.isUserInteractionEnabled = true
+    self.backgroundView.contentMode = UIView.ContentMode.scaleToFill
   }
   
   private func setupIndicatorViewLayout() {
     let indicatorViewWidth = Constant.PeriodSegmentedControl.Layout.indicatorViewWidth
-    self.addSubview(self.indicatorView)
+    self.backgroundView.addSubview(self.indicatorView)
     
     self.indicatorView.usingAutolayout()
     NSLayoutConstraint.activate(
       [
         self.indicatorView.widthAnchor.constraint(equalToConstant: indicatorViewWidth),
         self.indicatorView.heightAnchor.constraint(equalToConstant: indicatorViewWidth),
-        self.indicatorView.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+        self.indicatorView.centerYAnchor.constraint(equalTo: self.backgroundView.centerYAnchor)
       ]
     )
   }
@@ -81,14 +82,14 @@ extension PeriodSegmentedControlAppearance {
     
     self.itemsStackView.axis = NSLayoutConstraint.Axis.horizontal
     self.itemsStackView.distribution = UIStackView.Distribution.fillEqually
-    self.addSubview(self.itemsStackView)
+    self.backgroundView.addSubview(self.itemsStackView)
     
     self.itemsStackView.usingAutolayout()
     NSLayoutConstraint.activate(
       [
-        self.itemsStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding),
-        self.itemsStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -padding),
-        self.itemsStackView.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+        self.itemsStackView.leadingAnchor.constraint(equalTo: self.backgroundView.leadingAnchor,constant: padding),
+        self.itemsStackView.trailingAnchor.constraint(equalTo: self.backgroundView.trailingAnchor,constant: -padding),
+        self.itemsStackView.centerYAnchor.constraint(equalTo: self.backgroundView.centerYAnchor)
       ]
     )
   }
@@ -118,7 +119,7 @@ extension PeriodSegmentedControlAppearance {
 
 extension PeriodSegmentedControlAppearance {
   func changeBackgroundImage(_ image: UIImage) {
-    self.image = image
+    self.backgroundView.image = image
   }
   
   func changeIndicatorImage(_ image: UIImage) {
