@@ -30,6 +30,10 @@ final class PeriodSegmentedControlAppearance {
     self.setup(with: items)
   }
   
+  func getAssembledView() -> UIView {
+    return self.backgroundView
+  }
+  
   func moveIndicatorView(to xPosition: CGFloat) {
     self.indicatorViewCurrentX = xPosition
     self.indicatorView.center.x = self.indicatorViewCurrentX
