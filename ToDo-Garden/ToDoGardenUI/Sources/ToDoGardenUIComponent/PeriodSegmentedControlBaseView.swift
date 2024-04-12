@@ -121,16 +121,16 @@ extension PeriodSegmentedControlBaseView {
 // MARK: - for customizing
 
 extension PeriodSegmentedControlBaseView {
-  public func changeBackgroundImage(_ image: UIImage) {
+  func changeBackgroundImage(_ image: UIImage) {
     self.image = image
   }
   
-  public func changeIndicatorImage(_ image: UIImage) {
+  func changeIndicatorImage(_ image: UIImage) {
     self.indicatorView.image = image
   }
   
-  public func changeInitialSelectedItem(index: Int, numberOfSegments: Int) {
-    if index >= numberOfSegments || index < Int.zero {
+  func changeInitialSelectedItem(index: Int, numberOfItems: Int) {
+    if index >= numberOfItems || index < Int.zero {
       return
     }
     
