@@ -48,6 +48,18 @@ final class PeriodSegmentedControlBaseView: UIImageView {
     self.indicatorViewCurrentX = xPosition
     self.indicatorView.center.x = self.indicatorViewCurrentX
   }
+  
+  func transformIndicatorViewDownScale() {
+    self.indicatorView.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+  }
+  
+  func transformIndicatorViewOriginalScale() {
+    self.indicatorView.transform = CGAffineTransform.identity
+  }
+  
+  func getIndicatorViewCenter() -> CGFloat {
+    return self.indicatorViewCurrentX
+  }
 }
 
 // MARK: - private functions
