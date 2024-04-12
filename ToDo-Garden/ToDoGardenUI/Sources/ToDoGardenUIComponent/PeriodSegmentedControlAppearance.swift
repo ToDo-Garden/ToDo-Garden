@@ -10,7 +10,7 @@ import UIKit.UIView
 import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
-final class PeriodSegmentedControlAppearance: UIImageView {
+final class PeriodSegmentedControlAppearance {
   private let indicatorView: UIImageView
   private let itemsStackView: UIStackView
   
@@ -22,26 +22,10 @@ final class PeriodSegmentedControlAppearance: UIImageView {
     return initialPosition
   }()
   
-  init() {
+  init(with items: [String]) {
     self.indicatorView = UIImageView(image: UIImage.periodSegmentedControlIndicator)
     self.itemsStackView = UIStackView()
-    super.init(frame: CGRect.zero)
-  }
-  
-  convenience init(with items: [String]) {
-    self.init()
     self.setup(with: items)
-  }
-  
-  required init?(coder: NSCoder) {
-    self.indicatorView = UIImageView(image: UIImage.periodSegmentedControlIndicator)
-    self.itemsStackView = UIStackView()
-    super.init(coder: coder)
-  }
-  
-  public override func layoutSubviews() {
-    super.layoutSubviews()
-    self.indicatorView.center.x = self.indicatorViewCurrentX
   }
   
   func moveIndicatorView(to xPosition: CGFloat) {
