@@ -70,7 +70,7 @@ extension PeriodSegmentedControlBaseView {
     let indicatorViewWidth = Constant.PeriodSegmentedControl.Layout.indicatorViewWidth
     self.addSubview(self.indicatorView)
     
-    self.indicatorView.translatesAutoresizingMaskIntoConstraints = false
+    self.indicatorView.usingAutolayout()
     NSLayoutConstraint.activate(
       [
         self.indicatorView.widthAnchor.constraint(equalToConstant: indicatorViewWidth),
@@ -87,7 +87,7 @@ extension PeriodSegmentedControlBaseView {
     self.itemsStackView.distribution = UIStackView.Distribution.fillEqually
     self.addSubview(self.itemsStackView)
     
-    self.itemsStackView.translatesAutoresizingMaskIntoConstraints = false
+    self.itemsStackView.usingAutolayout()
     NSLayoutConstraint.activate(
       [
         self.itemsStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: padding),
