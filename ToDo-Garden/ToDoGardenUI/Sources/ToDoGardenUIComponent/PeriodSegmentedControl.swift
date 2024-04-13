@@ -27,6 +27,14 @@ public final class PeriodSegmentedControl: UIControl {
     super.init(coder: coder)
     self.setup()
   }
+  
+  public override var intrinsicContentSize: CGSize {
+    let constants = Constant.PeriodSegmentedControl.Layout.self
+    let itemsWidth = constants.itemWidth * CGFloat(self.items.count)
+    let width = constants.innerPadding + itemsWidth + constants.innerPadding
+    let height = constants.height
+    return CGSize(width: width, height: height)
+  }
 }
 
 //MARK: - private functions
