@@ -35,6 +35,11 @@ public final class PeriodSegmentedControl: UIControl {
     let height = constants.height
     return CGSize(width: width, height: height)
   }
+  
+  override public func draw(_ rect: CGRect) {
+    super.draw(rect)
+    self.periodSegmentedControlAppearance.moveIndicatorView(to: self.periodSegmentedControlAppearance.getIndicatorViewCenter())
+  }
 }
 
 //MARK: - private functions
