@@ -62,4 +62,27 @@ extension PeriodSegmentedControl {
       ]
     )
   }
+  
+  private func calculateClosestX(from touchX: CGFloat) -> CGFloat {
+    let itemWidth = Constant.PeriodSegmentedControl.Layout.itemWidth
+    let firstCenter = Constant.PeriodSegmentedControl.Layout.firstItemCenterXPosition
+    var targetXArray: [CGFloat] = []
+    
+    for index in 0..<self.items.count {
+      targetXArray.append(firstCenter + (itemWidth * CGFloat(index)))
+    }
+          
+    var closestX = targetXArray[0]
+    var shortestDistance = abs(targetXArray[0] - touchX)
+    
+    for targetX in targetXArray {
+      let distance = abs(targetX - touchX)
+      if distance < shortestDistance {
+        shortestDistance = distance
+        closestX = targetX
+      }
+    }
+    return closestX
+  }
+
 }
