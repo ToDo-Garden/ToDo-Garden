@@ -22,9 +22,14 @@ final class PeriodSegmentedControlGestureRecognizer {
     target.addGestureRecognizer(longpressRecognizer)
     
     self.setupPanRecognizer(with: target as? UIGestureRecognizerDelegate)
+    self.setupLongpressRecognizer()
   }
   
   private func setupPanRecognizer(with target: UIGestureRecognizerDelegate?) {
     self.panRecognizer.delegate = target
+  }
+  
+  private func setupLongpressRecognizer() {
+    self.longpressRecognizer.minimumPressDuration = 0.2
   }
 }
