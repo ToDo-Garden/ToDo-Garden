@@ -112,7 +112,6 @@ extension AddUnderlinedTextButtonStyle {
     from title: String,
     with titleColor: UIColor
   ) -> NSMutableAttributedString {
-    let endPoint = title.count
     let attributedString = NSMutableAttributedString(
       string: title,
       attributes: [
