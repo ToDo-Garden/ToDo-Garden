@@ -17,5 +17,8 @@ final class PeriodSegmentedControlGestureRecognizer {
     self.tapRecognizer = UITapGestureRecognizer(target: target, action: tapAction)
     self.longpressRecognizer = UILongPressGestureRecognizer(target: target, action: longpressAction)
     
+    target.addGestureRecognizer(panRecognizer)
+    target.addGestureRecognizer(tapRecognizer)
+    target.addGestureRecognizer(longpressRecognizer)
   }
 }
