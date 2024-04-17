@@ -12,7 +12,12 @@ final class PeriodSegmentedControlGestureRecognizer {
   private let tapRecognizer: UITapGestureRecognizer
   private let longpressRecognizer: UILongPressGestureRecognizer
   
-  init(target: UIControl, panAction: Selector?, tapAction: Selector?, longpressAction: Selector?) {
+  init(
+    target: UIControl,
+    panAction: Selector?,
+    tapAction: Selector?,
+    longpressAction: Selector?
+  ) {
     self.panRecognizer = UIPanGestureRecognizer(target: target, action: panAction)
     self.tapRecognizer = UITapGestureRecognizer(target: target, action: tapAction)
     self.longpressRecognizer = UILongPressGestureRecognizer(target: target, action: longpressAction)
