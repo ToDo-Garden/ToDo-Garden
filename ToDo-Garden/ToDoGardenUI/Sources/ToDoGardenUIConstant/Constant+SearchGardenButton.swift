@@ -20,5 +20,5 @@ extension Constant.SearchGardenButton.Layout {
 }
 
 extension Constant.SearchGardenButton.Layout.ImageView {
-  public static let trailingConstraint: CGFloat = -12.5
+  public static let trailingMargin: CGFloat = 12.5
 }
