@@ -186,6 +186,13 @@ extension PeriodSegmentedControl {
   }
 }
 
+// MARK: - about UIGestureRecognizerDelegate
+
+extension PeriodSegmentedControl: UIGestureRecognizerDelegate {
+  public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    return gestureRecognizer is UIPanGestureRecognizer && otherGestureRecognizer is UILongPressGestureRecognizer
+  }
+}
 private extension CGFloat {
   func calculateHighlightedIndex() -> Int? {
     let firstItemCenterX = Int(Constant.PeriodSegmentedControl.Layout.firstItemCenterXPosition)
