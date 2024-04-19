@@ -80,7 +80,7 @@ extension PeriodSegmentedControl {
     self.periodSegmentedControlGestureRecognizer = PeriodSegmentedControlGestureRecognizer(
       target: self,
       panAction: #selector(self.panned),
-      tapAction: nil,
+      tapAction: #selector(self.tapped),
       longpressAction: nil
     )
   }
@@ -142,6 +142,21 @@ extension PeriodSegmentedControl {
       UIView.animate(withDuration: 0.3) {
         self.periodSegmentedControlAppearance.transformIndicatorViewOriginalScale()
       }
+    default: break
+    }
+  }
+  
+  @objc private func tapped(_ recognizer: UITapGestureRecognizer) {
+    switch recognizer.state {
+    case .recognized:
+      let touchLocation: CGPoint = recognizer.location(in: self)
+      let closestX = self.calculateClosestX(from: touchLocation.x)
+      
+      UIView.animate(withDuration: 0.15) {
+        self.periodSegmentedControlAppearance.moveIndicatorView(to: closestX)
+      }
+      self.hapticGenerator.selectionChanged()
+      self.expectedXPosition = closestX
     default: break
     }
   }
