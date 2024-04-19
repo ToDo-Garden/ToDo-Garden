@@ -11,12 +11,14 @@ import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 public final class PeriodSegmentedControl: UIControl {
+  private let items: [String]
+  private let feedbackGenerator: UISelectionFeedbackGenerator
   private let periodSegmentedControlAppearance: PeriodSegmentedControlAppearance
   private var periodSegmentedControlGestureRecognizer: PeriodSegmentedControlGestureRecognizer?
-  private let items: [String]
   
   public init(items: [String] = Constant.PeriodSegmentedControl.Content.defaultItems) {
     self.items = items
+    self.feedbackGenerator = UISelectionFeedbackGenerator()
     self.periodSegmentedControlAppearance = PeriodSegmentedControlAppearance(with: self.items)
     self.periodSegmentedControlGestureRecognizer = nil
     super.init(frame: CGRect.zero)
@@ -25,6 +27,7 @@ public final class PeriodSegmentedControl: UIControl {
   
   required init?(coder: NSCoder) {
     self.items = Constant.PeriodSegmentedControl.Content.defaultItems
+    self.feedbackGenerator = UISelectionFeedbackGenerator()
     self.periodSegmentedControlAppearance = PeriodSegmentedControlAppearance(with: self.items)
     self.periodSegmentedControlGestureRecognizer = nil
     super.init(coder: coder)
@@ -48,6 +51,7 @@ public final class PeriodSegmentedControl: UIControl {
 //MARK: - private functions
 extension PeriodSegmentedControl {
   private func setup() {
+    self.setupFeedbackGenerator()
     self.setupAppearance()
     self.setupGestureRecognizer()
   }
@@ -97,4 +101,9 @@ extension PeriodSegmentedControl {
     }
     return closestX
   }
+  
+  private func setupFeedbackGenerator() {
+    self.feedbackGenerator.prepare()
+  }
+}
 }
