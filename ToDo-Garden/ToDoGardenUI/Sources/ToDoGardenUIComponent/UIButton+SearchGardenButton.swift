@@ -21,6 +21,7 @@ private enum SearchGardenButtonStyle {
     self.setupBackgroundColor(to: button)
     self.setupRoundedCorner(to: button)
     self.setupNormalStateImage(to: button)
+    self.setupButtonImageViewLayout(to: button)
   }
 }
 
@@ -35,5 +36,14 @@ extension SearchGardenButtonStyle {
 
   private static func setupNormalStateImage(to button: UIButton) {
     button.setImage(UIImage.searchIconImage, for: UIControl.State.normal)
+  }
+
+  private static func setupButtonImageViewLayout(to button: UIButton) {
+    button.imageView?.translatesAutoresizingMaskIntoConstraints = false
+
+    button.imageView?.trailingAnchor.constraint(
+      equalTo: button.trailingAnchor,
+      constant: -Constant.SearchGardenButton.Layout.ImageView.trailingMargin
+    ).isActive = true
   }
 }
