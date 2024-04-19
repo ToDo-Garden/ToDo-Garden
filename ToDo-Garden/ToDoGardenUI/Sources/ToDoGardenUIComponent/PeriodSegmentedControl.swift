@@ -86,7 +86,7 @@ extension PeriodSegmentedControl {
       target: self,
       panAction: #selector(self.panned),
       tapAction: #selector(self.tapped),
-      longpressAction: nil
+      longpressAction: #selector(self.longpressed)
     )
   }
   
