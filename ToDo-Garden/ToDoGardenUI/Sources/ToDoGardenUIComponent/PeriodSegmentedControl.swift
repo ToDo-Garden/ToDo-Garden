@@ -193,6 +193,23 @@ extension PeriodSegmentedControl: UIGestureRecognizerDelegate {
     return gestureRecognizer is UIPanGestureRecognizer && otherGestureRecognizer is UILongPressGestureRecognizer
   }
 }
+
+// MARK: - for customizing
+
+extension PeriodSegmentedControl {
+  public func setBackgroundImage(image : UIImage) {
+    self.periodSegmentedControlAppearance.changeBackgroundImage(image)
+  }
+  
+  public func setIndicatorImage(image : UIImage) {
+    self.periodSegmentedControlAppearance.changeIndicatorImage(image)
+  }
+  
+  public func setInitialSelectedItem(index: Int) {
+    self.periodSegmentedControlAppearance.changeInitialSelectedItem(index: index, numberOfItems: self.items.count)
+  }
+}
+
 private extension CGFloat {
   func calculateHighlightedIndex() -> Int? {
     let firstItemCenterX = Int(Constant.PeriodSegmentedControl.Layout.firstItemCenterXPosition)
