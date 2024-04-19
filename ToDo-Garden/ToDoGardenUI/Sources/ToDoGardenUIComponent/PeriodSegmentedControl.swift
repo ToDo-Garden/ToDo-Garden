@@ -12,11 +12,13 @@ import ToDoGardenUIResource
 
 public final class PeriodSegmentedControl: UIControl {
   private let periodSegmentedControlAppearance: PeriodSegmentedControlAppearance
+  private var periodSegmentedControlGestureRecognizer: PeriodSegmentedControlGestureRecognizer?
   private let items: [String]
   
   public init(items: [String] = Constant.PeriodSegmentedControl.Content.defaultItems) {
     self.items = items
     self.periodSegmentedControlAppearance = PeriodSegmentedControlAppearance(with: self.items)
+    self.periodSegmentedControlGestureRecognizer = nil
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -24,6 +26,7 @@ public final class PeriodSegmentedControl: UIControl {
   required init?(coder: NSCoder) {
     self.items = Constant.PeriodSegmentedControl.Content.defaultItems
     self.periodSegmentedControlAppearance = PeriodSegmentedControlAppearance(with: self.items)
+    self.periodSegmentedControlGestureRecognizer = nil
     super.init(coder: coder)
     self.setup()
   }
@@ -46,6 +49,7 @@ public final class PeriodSegmentedControl: UIControl {
 extension PeriodSegmentedControl {
   private func setup() {
     self.setupAppearance()
+    self.setupGestureRecognizer()
   }
   
   private func setupAppearance() {
@@ -60,6 +64,15 @@ extension PeriodSegmentedControl {
         appearance.centerXAnchor.constraint(equalTo: self.centerXAnchor),
         appearance.centerYAnchor.constraint(equalTo: self.centerYAnchor)
       ]
+    )
+  }
+  
+  private func setupGestureRecognizer() {
+    self.periodSegmentedControlGestureRecognizer = PeriodSegmentedControlGestureRecognizer(
+      target: self,
+      panAction: nil,
+      tapAction: nil,
+      longpressAction: nil
     )
   }
   
@@ -84,5 +97,4 @@ extension PeriodSegmentedControl {
     }
     return closestX
   }
-
 }
