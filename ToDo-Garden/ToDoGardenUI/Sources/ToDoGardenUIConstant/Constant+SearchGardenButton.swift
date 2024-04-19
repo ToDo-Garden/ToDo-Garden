@@ -8,4 +8,9 @@
 import Foundation
 
 extension Constant.SearchGardenButton {
+  public enum Layout {}
+}
+
+extension Constant.SearchGardenButton.Layout {
+  public static let cornerRadius: CGFloat = 12
 }
