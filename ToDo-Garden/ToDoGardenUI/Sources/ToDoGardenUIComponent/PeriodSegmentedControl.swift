@@ -51,6 +51,11 @@ public final class PeriodSegmentedControl: UIControl {
     super.draw(rect)
     self.periodSegmentedControlAppearance.moveIndicatorView(to: self.periodSegmentedControlAppearance.getIndicatorViewCenter())
   }
+  
+  public func highlightedIndex() -> Int? {
+    let currentX = self.calculateClosestX(from: self.expectedXPosition)
+    return currentX.calculateHighlightedIndex()
+  }
 }
 
 //MARK: - private functions
@@ -178,5 +183,14 @@ extension PeriodSegmentedControl {
       
     default: break
     }
+  }
+}
+
+private extension CGFloat {
+  func calculateHighlightedIndex() -> Int? {
+    let firstItemCenterX = Int(Constant.PeriodSegmentedControl.Layout.firstItemCenterXPosition)
+    let itemWidth = Int(Constant.PeriodSegmentedControl.Layout.itemWidth)
+    
+    return (Int(self) - firstItemCenterX) / itemWidth
   }
 }
