@@ -155,8 +155,27 @@ extension PeriodSegmentedControl {
       UIView.animate(withDuration: 0.15) {
         self.periodSegmentedControlAppearance.moveIndicatorView(to: closestX)
       }
-      self.hapticGenerator.selectionChanged()
+      self.feedbackGenerator.selectionChanged()
       self.expectedXPosition = closestX
+    default: break
+    }
+  }
+  
+  @objc private func longpressed(_ recognizer: UILongPressGestureRecognizer) {
+    switch recognizer.state {
+    case UIGestureRecognizer.State.began:
+      UIView.animate(withDuration: 0.3) {
+        self.periodSegmentedControlAppearance.transformIndicatorViewDownScale()
+      }
+      self.feedbackGenerator.selectionChanged()
+      
+    case UIGestureRecognizer.State.ended,
+      UIGestureRecognizer.State.cancelled,
+      UIGestureRecognizer.State.failed:
+      UIView.animate(withDuration: 0.3) {
+        self.periodSegmentedControlAppearance.transformIndicatorViewOriginalScale()
+      }
+      
     default: break
     }
   }
