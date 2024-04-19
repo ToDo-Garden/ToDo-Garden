@@ -29,7 +29,7 @@ extension UIImage {
   public static let defaultFriendProfileImage = UIImage(
     resource: .defaultFriendProfile
   )
-  public static let searchGardenButtonImage = UIImage(
-    resource: .searchGardenButton
+  public static let searchIconImage = UIImage(
+    resource: .searchIcon
   )
 }

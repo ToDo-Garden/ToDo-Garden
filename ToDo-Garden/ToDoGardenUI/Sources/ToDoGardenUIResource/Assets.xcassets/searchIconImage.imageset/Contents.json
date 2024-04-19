@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "search_garden_button.png",
+      "filename" : "search_icon_image.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "search_garden_button@2x.png",
+      "filename" : "search_icon_image@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "search_garden_button@3x.png",
+      "filename" : "search_icon_image@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
