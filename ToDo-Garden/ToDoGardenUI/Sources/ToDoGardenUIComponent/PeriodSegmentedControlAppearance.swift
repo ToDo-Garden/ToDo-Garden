@@ -78,7 +78,7 @@ extension PeriodSegmentedControlAppearance {
   }
   
   private func setupStackView() {
-    let padding = Constant.PeriodSegmentedControl.Layout.innerPadding
+    let margin = Constant.PeriodSegmentedControl.Layout.innerPadding
     
     self.itemsStackView.axis = NSLayoutConstraint.Axis.horizontal
     self.itemsStackView.distribution = UIStackView.Distribution.fillEqually
@@ -87,8 +87,8 @@ extension PeriodSegmentedControlAppearance {
     self.itemsStackView.usingAutolayout()
     NSLayoutConstraint.activate(
       [
-        self.itemsStackView.leadingAnchor.constraint(equalTo: self.backgroundView.leadingAnchor, constant: padding),
-        self.itemsStackView.trailingAnchor.constraint(equalTo: self.backgroundView.trailingAnchor, constant: -padding),
+        self.itemsStackView.leadingAnchor.constraint(equalTo: self.backgroundView.leadingAnchor, constant: margin),
+        self.itemsStackView.trailingAnchor.constraint(equalTo: self.backgroundView.trailingAnchor, constant: -margin),
         self.itemsStackView.centerYAnchor.constraint(equalTo: self.backgroundView.centerYAnchor)
       ]
     )
