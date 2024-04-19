@@ -7,6 +7,8 @@
 
 import UIKit.UIButton
 
+import ToDoGardenUIResource
+
 extension UIButton {
   public func searchGardenButtonStyle() {
     SearchGardenButtonStyle.apply(to: self)
@@ -15,6 +17,12 @@ extension UIButton {
 
 private enum SearchGardenButtonStyle {
   fileprivate static func apply(to button: UIButton) {
-    
+    SearchGardenButtonStyle.setupBackgroundColor(to: button)
+  }
+}
+
+extension SearchGardenButtonStyle {
+  private static func setupBackgroundColor(to button: UIButton) {
+    button.backgroundColor = UIColor.toDoGardenGreenBackground
   }
 }
