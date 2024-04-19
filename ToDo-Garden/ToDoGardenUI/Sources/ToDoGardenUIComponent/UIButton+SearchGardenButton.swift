@@ -7,6 +7,7 @@
 
 import UIKit.UIButton
 
+import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 extension UIButton {
@@ -17,12 +18,17 @@ extension UIButton {
 
 private enum SearchGardenButtonStyle {
   fileprivate static func apply(to button: UIButton) {
-    SearchGardenButtonStyle.setupBackgroundColor(to: button)
+    self.setupBackgroundColor(to: button)
+    self.setupRoundedCorner(to: button)
   }
 }
 
 extension SearchGardenButtonStyle {
   private static func setupBackgroundColor(to button: UIButton) {
     button.backgroundColor = UIColor.toDoGardenGreenBackground
+  }
+
+  private static func setupRoundedCorner(to button: UIButton) {
+    button.layer.cornerRadius = Constant.SearchGardenButton.Layout.cornerRadius
   }
 }
