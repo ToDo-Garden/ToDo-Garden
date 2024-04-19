@@ -15,12 +15,15 @@ public final class PeriodSegmentedControl: UIControl {
   private let feedbackGenerator: UISelectionFeedbackGenerator
   private let periodSegmentedControlAppearance: PeriodSegmentedControlAppearance
   private var periodSegmentedControlGestureRecognizer: PeriodSegmentedControlGestureRecognizer?
+  private var expectedXPosition: CGFloat
   
   public init(items: [String] = Constant.PeriodSegmentedControl.Content.defaultItems) {
     self.items = items
     self.feedbackGenerator = UISelectionFeedbackGenerator()
     self.periodSegmentedControlAppearance = PeriodSegmentedControlAppearance(with: self.items)
     self.periodSegmentedControlGestureRecognizer = nil
+    self.expectedXPosition = Constant.PeriodSegmentedControl.Layout.firstItemCenterXPosition +
+      Constant.PeriodSegmentedControl.Layout.itemWidth
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -30,6 +33,8 @@ public final class PeriodSegmentedControl: UIControl {
     self.feedbackGenerator = UISelectionFeedbackGenerator()
     self.periodSegmentedControlAppearance = PeriodSegmentedControlAppearance(with: self.items)
     self.periodSegmentedControlGestureRecognizer = nil
+    self.expectedXPosition = Constant.PeriodSegmentedControl.Layout.firstItemCenterXPosition +
+      Constant.PeriodSegmentedControl.Layout.itemWidth
     super.init(coder: coder)
     self.setup()
   }
