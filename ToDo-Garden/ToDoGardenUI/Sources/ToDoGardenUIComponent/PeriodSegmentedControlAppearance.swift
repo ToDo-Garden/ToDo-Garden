@@ -15,18 +15,14 @@ final class PeriodSegmentedControlAppearance {
   private let indicatorView: UIImageView
   private let itemsStackView: UIStackView
   
-  private var indicatorViewCurrentX: CGFloat = {
-    let initialPosition = (
-      Constant.PeriodSegmentedControl.Layout.firstItemCenterXPosition +
-      Constant.PeriodSegmentedControl.Layout.itemWidth
-    )
-    return initialPosition
-  }()
+  private var indicatorViewCurrentX: CGFloat
   
   init(with items: [String]) {
     self.backgroundView = UIImageView(image: UIImage.periodSegmentedControlBackground)
     self.indicatorView = UIImageView(image: UIImage.periodSegmentedControlIndicator)
     self.itemsStackView = UIStackView()
+    self.indicatorViewCurrentX = Constant.PeriodSegmentedControl.Layout.firstItemCenterXPosition +
+    Constant.PeriodSegmentedControl.Layout.itemWidth
     self.setup(with: items)
   }
   
