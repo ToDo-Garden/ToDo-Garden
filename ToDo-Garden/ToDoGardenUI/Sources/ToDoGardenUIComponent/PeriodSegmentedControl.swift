@@ -79,7 +79,7 @@ extension PeriodSegmentedControl {
   private func setupGestureRecognizer() {
     self.periodSegmentedControlGestureRecognizer = PeriodSegmentedControlGestureRecognizer(
       target: self,
-      panAction: nil,
+      panAction: #selector(self.panned),
       tapAction: nil,
       longpressAction: nil
     )
@@ -111,4 +111,38 @@ extension PeriodSegmentedControl {
     self.feedbackGenerator.prepare()
   }
 }
+
+// MARK: - gesture event functions
+
+extension PeriodSegmentedControl {
+  @objc private func panned(_ recognizer: UIPanGestureRecognizer) {
+    switch recognizer.state {
+    case .began:
+      UIView.animate(withDuration: 0.3) {
+        self.periodSegmentedControlAppearance.transformIndicatorViewDownScale()
+      }
+    case .changed:
+      let translation = recognizer.translation(in: self)
+      let indicatorViewCenterX = self.periodSegmentedControlAppearance.getIndicatorViewCenter()
+      
+      let newX = self.expectedXPosition + translation.x
+      let closestX = self.calculateClosestX(from: newX)
+      
+      if indicatorViewCenterX != closestX {
+        UIView.animate(withDuration: 0.15) {
+          self.periodSegmentedControlAppearance.moveIndicatorView(to: closestX)
+        }
+        self.feedbackGenerator.selectionChanged()
+        self.expectedXPosition = closestX
+      }
+      self.expectedXPosition = newX
+      
+      recognizer.setTranslation(CGPoint.zero, in: self)
+    case .ended, .cancelled, .failed:
+      UIView.animate(withDuration: 0.3) {
+        self.periodSegmentedControlAppearance.transformIndicatorViewOriginalScale()
+      }
+    default: break
+    }
+  }
 }
