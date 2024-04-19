@@ -91,8 +91,8 @@ extension PeriodSegmentedControlAppearance {
     self.itemsStackView.usingAutolayout()
     NSLayoutConstraint.activate(
       [
-        self.itemsStackView.leadingAnchor.constraint(equalTo: self.backgroundView.leadingAnchor,constant: padding),
-        self.itemsStackView.trailingAnchor.constraint(equalTo: self.backgroundView.trailingAnchor,constant: -padding),
+        self.itemsStackView.leadingAnchor.constraint(equalTo: self.backgroundView.leadingAnchor, constant: padding),
+        self.itemsStackView.trailingAnchor.constraint(equalTo: self.backgroundView.trailingAnchor, constant: -padding),
         self.itemsStackView.centerYAnchor.constraint(equalTo: self.backgroundView.centerYAnchor)
       ]
     )
