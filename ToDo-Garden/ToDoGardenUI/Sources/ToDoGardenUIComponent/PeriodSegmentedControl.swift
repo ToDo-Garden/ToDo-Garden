@@ -49,7 +49,9 @@ public final class PeriodSegmentedControl: UIControl {
   
   override public func draw(_ rect: CGRect) {
     super.draw(rect)
-    self.periodSegmentedControlAppearance.moveIndicatorView(to: self.periodSegmentedControlAppearance.getIndicatorViewCenter())
+    self.periodSegmentedControlAppearance.moveIndicatorView(
+      to: self.periodSegmentedControlAppearance.getIndicatorViewCenter()
+    )
   }
   
   public func highlightedIndex() -> Int? {
@@ -58,7 +60,7 @@ public final class PeriodSegmentedControl: UIControl {
   }
 }
 
-//MARK: - private functions
+// MARK: - private functions
 extension PeriodSegmentedControl {
   private func setup() {
     self.setupFeedbackGenerator()
@@ -189,7 +191,10 @@ extension PeriodSegmentedControl {
 // MARK: - about UIGestureRecognizerDelegate
 
 extension PeriodSegmentedControl: UIGestureRecognizerDelegate {
-  public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+  public func gestureRecognizer(
+    _ gestureRecognizer: UIGestureRecognizer,
+    shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+  ) -> Bool {
     return gestureRecognizer is UIPanGestureRecognizer && otherGestureRecognizer is UILongPressGestureRecognizer
   }
 }
@@ -197,11 +202,11 @@ extension PeriodSegmentedControl: UIGestureRecognizerDelegate {
 // MARK: - for customizing
 
 extension PeriodSegmentedControl {
-  public func setBackgroundImage(image : UIImage) {
+  public func setBackgroundImage(image: UIImage) {
     self.periodSegmentedControlAppearance.changeBackgroundImage(image)
   }
   
-  public func setIndicatorImage(image : UIImage) {
+  public func setIndicatorImage(image: UIImage) {
     self.periodSegmentedControlAppearance.changeIndicatorImage(image)
   }
   
