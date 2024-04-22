@@ -44,7 +44,7 @@ extension SearchGardenButtonStyle {
   }
 
   private static func setupButtonImageViewLayout(to button: UIButton) {
-    button.imageView?.translatesAutoresizingMaskIntoConstraints = false
+    button.imageView?.usingAutolayout()
 
     button.imageView?.trailingAnchor.constraint(
       equalTo: button.trailingAnchor,
