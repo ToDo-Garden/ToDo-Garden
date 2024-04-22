@@ -27,10 +27,7 @@ extension Styled {
     }
     
     private func buildLeftImageMargin(_ rect: CGRect) -> CGRect {
-      if
-        let leftImage = configuration.leftImage,
-        let trailing = leftImage.trailing
-      {
+      if let leftImage = configuration.leftImage, let trailing = leftImage.trailing {
         var insets = UIEdgeInsets.zero
         insets.left = trailing
         return rect.inset(by: insets)
@@ -50,26 +47,24 @@ extension Styled {
     
     private func build() {
       clearButtonMode = .whileEditing
-      /// MAKRK: - Border
+      // MAKRK: - Border
       if let border = configuration.border {
         layer.cornerRadius = border.cornerRadius
         layer.borderWidth = border.lineWidth
       }
       
-      /// MAKRK: - Left Image
+      // MAKRK: - Left Image
       if let leftImage = configuration.leftImage {
         leftView = UIImageView(image: leftImage.image)
         leftViewMode = .always
       }
       
-      /// MARK: - Right Image
-      if let rightImage = configuration.rightImage {
-        if let button = value(forKeyPath: "_clearButton") as? UIButton {
-          button.setImage(rightImage.image, for: .normal)
-        }
+      // MARK: - Right Image
+      if let rightImage = configuration.rightImage, let button = value(forKeyPath: "_clearButton") as? UIButton {
+        button.setImage(rightImage.tintedImage, for: .normal)
       }
       
-      /// MARK: - Bottom Line
+      // MARK: - Bottom Line
       if let color = configuration.bottomLineColor {
         buildBottomLine(color: color)
       }
@@ -93,40 +88,8 @@ extension Styled {
 extension Styled.UITextField {
   public struct Configuration {
     let border: Border?
-    public struct Border {
-      let cornerRadius: CGFloat
-      let lineWidth: CGFloat
-      
-      public init(
-        cornerRadius: CGFloat,
-        lineWidth: CGFloat
-      ) {
-        self.cornerRadius = cornerRadius
-        self.lineWidth = lineWidth
-      }
-    }
-    
     let leftImage: ImageData?
     var rightImage: ImageData?
-    public struct ImageData {
-      let leading: CGFloat
-      let trailing: CGFloat?
-      let image: UIImage?
-      var imageColor: UIColor?
-      
-      public init(
-        leading: CGFloat,
-        trailing: CGFloat? = nil,
-        image: UIImage?,
-        imageColor: UIColor? = nil
-      ) {
-        self.leading = leading
-        self.trailing = trailing
-        self.image = image
-        self.imageColor = imageColor
-      }
-    }
-    
     let bottomLineColor: UIColor?
     
     public init(
@@ -144,7 +107,45 @@ extension Styled.UITextField {
 }
 
 extension Styled.UITextField.Configuration {
-  static let primaryStyle: Self = .init(
+  public struct Border {
+    let cornerRadius: CGFloat
+    let lineWidth: CGFloat
+    
+    public init(
+      cornerRadius: CGFloat,
+      lineWidth: CGFloat
+    ) {
+      self.cornerRadius = cornerRadius
+      self.lineWidth = lineWidth
+    }
+  }
+  
+  public struct ImageData {
+    let leading: CGFloat
+    let trailing: CGFloat?
+    
+    let image: UIImage?
+    var imageColor: UIColor?
+    var tintedImage: UIImage? {
+      image?.withTintColor(imageColor ?? .toDoGardenGreenDark)
+    }
+    
+    public init(
+      leading: CGFloat,
+      trailing: CGFloat? = nil,
+      image: UIImage?,
+      imageColor: UIColor? = nil
+    ) {
+      self.leading = leading
+      self.trailing = trailing
+      self.image = image
+      self.imageColor = imageColor
+    }
+  }
+}
+
+extension Styled.UITextField.Configuration {
+  static let primary: Self = .init(
     border: .init(
       cornerRadius: 10,
       lineWidth: 0
@@ -159,7 +160,7 @@ extension Styled.UITextField.Configuration {
   static let groupEdit: Self = .init(
     rightImage: .init(
       leading: 0,
-      image: UIImage(systemName: "xmark.circle.fill")?.withTintColor(.toDoGardenGreenDark, renderingMode: .alwaysOriginal),
+      image: UIImage(systemName: "xmark.circle.fill"),
       imageColor: .toDoGardenGreenDark
     ),
     bottomLineColor: .toDoGardenGreenDark
@@ -172,7 +173,7 @@ import SwiftUI
 #Preview {
   VStack {
     WrappedView {
-      let textField = Styled.UITextField(configuration: .primaryStyle)
+      let textField = Styled.UITextField(configuration: .primary)
       textField.placeholder = "아이디를 입력해주세요"
       textField.backgroundColor = .toDoGardenGreenBackground
       
