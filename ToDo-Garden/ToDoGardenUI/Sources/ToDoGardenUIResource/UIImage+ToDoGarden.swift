@@ -32,4 +32,7 @@ extension UIImage {
   public static let searchIconImage = UIImage(
     resource: .searchIcon
   )
+  public static let timerButtonImage = UIImage(
+    resource: .timerButton
+  )
 }
