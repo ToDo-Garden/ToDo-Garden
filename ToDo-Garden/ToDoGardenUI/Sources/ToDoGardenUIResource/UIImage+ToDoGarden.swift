@@ -35,6 +35,9 @@ extension UIImage {
   public static let forwardButtonImage = UIImage(
     resource: .forwardButton
   )
+  public static let downwardButtonImage = UIImage(
+    resource: .downwardButton
+  )
   public static let timerButtonImage = UIImage(
     resource: .timerButton
   )
