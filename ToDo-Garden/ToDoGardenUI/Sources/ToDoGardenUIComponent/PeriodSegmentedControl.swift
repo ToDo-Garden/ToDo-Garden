@@ -30,7 +30,7 @@ public final class PeriodSegmentedControl: UIControl {
     self.setup()
   }
   
-  required init?(coder: NSCoder) {
+  public required init?(coder: NSCoder) {
     self.items = Constant.PeriodSegmentedControl.Content.defaultItems
     self.feedbackGenerator = UISelectionFeedbackGenerator()
     self.targetXPositions = []
