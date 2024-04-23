@@ -14,12 +14,14 @@ public final class PeriodSegmentedControl: UIControl {
   private let items: [String]
   private let feedbackGenerator: UISelectionFeedbackGenerator
   private let periodSegmentedControlAppearance: PeriodSegmentedControlAppearance
+  private var targetXPosition: [CGFloat]
   private var periodSegmentedControlGestureRecognizer: PeriodSegmentedControlGestureRecognizer?
   private var expectedXPosition: CGFloat
   
   public init(items: [String] = Constant.PeriodSegmentedControl.Content.defaultItems) {
     self.items = items
     self.feedbackGenerator = UISelectionFeedbackGenerator()
+    self.targetXPosition = []
     self.periodSegmentedControlAppearance = PeriodSegmentedControlAppearance(with: self.items)
     self.periodSegmentedControlGestureRecognizer = nil
     self.expectedXPosition = Constant.PeriodSegmentedControl.Layout.firstItemCenterXPosition +
@@ -31,6 +33,7 @@ public final class PeriodSegmentedControl: UIControl {
   required init?(coder: NSCoder) {
     self.items = Constant.PeriodSegmentedControl.Content.defaultItems
     self.feedbackGenerator = UISelectionFeedbackGenerator()
+    self.targetXPosition = []
     self.periodSegmentedControlAppearance = PeriodSegmentedControlAppearance(with: self.items)
     self.periodSegmentedControlGestureRecognizer = nil
     self.expectedXPosition = Constant.PeriodSegmentedControl.Layout.firstItemCenterXPosition +
@@ -63,9 +66,21 @@ public final class PeriodSegmentedControl: UIControl {
 // MARK: - private functions
 extension PeriodSegmentedControl {
   private func setup() {
+    self.setupTargetXPosition()
     self.setupFeedbackGenerator()
     self.setupAppearanceLayout()
     self.setupGestureRecognizer()
+  }
+  
+  private func setupTargetXPosition(){
+    let itemWidth = Constant.PeriodSegmentedControl.Layout.itemWidth
+    let firstCenter = Constant.PeriodSegmentedControl.Layout.firstItemCenterXPosition
+    var targets: [CGFloat] = []
+    
+    for index in 0..<self.items.count {
+      targets.append(firstCenter + (itemWidth * CGFloat(index)))
+    }
+    self.targetXPosition = targets
   }
   
   private func setupAppearanceLayout() {
@@ -93,18 +108,10 @@ extension PeriodSegmentedControl {
   }
   
   private func calculateClosestX(from touchX: CGFloat) -> CGFloat {
-    let itemWidth = Constant.PeriodSegmentedControl.Layout.itemWidth
-    let firstCenter = Constant.PeriodSegmentedControl.Layout.firstItemCenterXPosition
-    var targetXArray: [CGFloat] = []
+    var closestX = self.targetXPosition[0]
+    var shortestDistance = abs(self.targetXPosition[0] - touchX)
     
-    for index in 0..<self.items.count {
-      targetXArray.append(firstCenter + (itemWidth * CGFloat(index)))
-    }
-          
-    var closestX = targetXArray[0]
-    var shortestDistance = abs(targetXArray[0] - touchX)
-    
-    for targetX in targetXArray {
+    for targetX in self.targetXPosition {
       let distance = abs(targetX - touchX)
       if distance < shortestDistance {
         shortestDistance = distance
