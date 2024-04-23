@@ -72,7 +72,7 @@ extension PeriodSegmentedControl {
     self.setupGestureRecognizer()
   }
   
-  private func setupTargetXPosition(){
+  private func setupTargetXPosition() {
     let itemWidth = Constant.PeriodSegmentedControl.Layout.itemWidth
     let firstCenter = Constant.PeriodSegmentedControl.Layout.firstItemCenterXPosition
     var targets: [CGFloat] = []
