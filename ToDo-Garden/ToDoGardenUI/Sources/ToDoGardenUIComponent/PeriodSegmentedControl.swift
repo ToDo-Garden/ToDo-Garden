@@ -72,7 +72,7 @@ extension PeriodSegmentedControl {
     let appearance = self.periodSegmentedControlAppearance.getAssembledView()
     self.addSubview(appearance)
     
-    appearance.translatesAutoresizingMaskIntoConstraints = false
+    appearance.usingAutolayout()
     NSLayoutConstraint.activate(
       [
         appearance.widthAnchor.constraint(equalTo: self.widthAnchor),
