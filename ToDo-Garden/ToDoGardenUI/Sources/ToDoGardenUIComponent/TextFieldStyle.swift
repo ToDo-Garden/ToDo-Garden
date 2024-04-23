@@ -1,194 +1,178 @@
+import Combine
 import UIKit
 
 public enum Styled { }
 
+private typealias ViewMode = UIKit.UITextField.ViewMode
+
 extension Styled {
   open class UITextField: UIKit.UITextField {
-    public var configuration: Configuration
+    public var mainColor: UIColor? {
+      get {
+        if case let .groupEdit(model) = self.configuration {
+          return model.mainColor
+        }
+        return nil
+      }
+      set {
+        if case var .groupEdit(model) = self.configuration, let newValue {
+          model.mainColor = newValue
+          self.configuration = .groupEdit(model)
+        }
+      }
+    }
+    
+    @Published private var configuration: Configuration
+    private var cancellables: Set<AnyCancellable> = []
     
     public init(configuration: Configuration) {
       self.configuration = configuration
-      super.init(frame: .zero)
-      build()
+      super.init(frame: CGRect.zero)
+      self.build()
     }
     
     public required init?(coder: NSCoder) {
       fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+      self.cancellables.removeAll()
+    }
+    
     open override func textRect(forBounds bounds: CGRect) -> CGRect {
       let rect = super.textRect(forBounds: bounds)
-      return buildLeftImageMargin(rect)
+      return self.buildLeftImageMargin(rect)
     }
     
     open override func editingRect(forBounds bounds: CGRect) -> CGRect {
       let rect = super.textRect(forBounds: bounds)
-      return buildLeftImageMargin(rect)
+      return self.buildLeftImageMargin(rect)
     }
     
     private func buildLeftImageMargin(_ rect: CGRect) -> CGRect {
-      if let leftImage = configuration.leftImage, let trailing = leftImage.trailing {
-        var insets = UIEdgeInsets.zero
-        insets.left = trailing
-        return rect.inset(by: insets)
-      }
-      
-      return rect
+      let containedRect = self.configuration.primaryModel
+        .map { model in
+          var insets = UIEdgeInsets.zero
+          insets.left = model.imageTrailingConstant
+          return rect.inset(by: insets)
+        }
+      return containedRect ?? rect
     }
     
     open override func leftViewRect(forBounds bounds: CGRect) -> CGRect {
       var rect = super.leftViewRect(forBounds: bounds)
-      if let leftImage = configuration.leftImage {
-        rect.origin.x = leftImage.leading
-      }
-      
+      self.configuration.primaryModel
+        .map { model in
+          rect.origin.x = model.imageLeadingConstant
+        }
       return rect
     }
     
     private func build() {
-      clearButtonMode = .whileEditing
-      // MAKRK: - Border
-      if let border = configuration.border {
-        layer.cornerRadius = border.cornerRadius
-        layer.borderWidth = border.lineWidth
+      self.clearButtonMode = ViewMode.whileEditing
+      switch configuration {
+      case let .primary(primaryModel):
+        self.buildPrimaryView(model: primaryModel)
+        
+      case let .groupEdit(groupEditModel):
+        self.buildClearButton(model: groupEditModel)
+        self.buildBottomLine(color: groupEditModel.mainColor)
       }
-      
-      // MAKRK: - Left Image
-      if let leftImage = configuration.leftImage {
-        leftView = UIImageView(image: leftImage.image)
-        leftViewMode = .always
-      }
-      
-      // MARK: - Right Image
-      if let rightImage = configuration.rightImage, let button = value(forKeyPath: "_clearButton") as? UIButton {
-        button.setImage(rightImage.tintedImage, for: .normal)
-      }
-      
-      // MARK: - Bottom Line
-      if let color = configuration.bottomLineColor {
-        buildBottomLine(color: color)
+    }
+    
+    private func buildPrimaryView(model: Configuration.PrimaryModel) {
+      self.layer.cornerRadius = model.cornerRadius
+      self.leftView = UIImageView(image: model.image)
+      self.leftViewMode = ViewMode.always
+    }
+    
+    private func buildClearButton(model: Configuration.GroupEditModel) {
+      if let button = self.value(forKeyPath: "_clearButton") as? UIButton {
+        button.setImage(model.image, for: .normal)
+        button.tintColor = model.mainColor
+        self.$configuration
+          .compactMap(\.groupEditModel)
+          .sink { [weak button] model in
+            button?.tintColor = model.mainColor
+          }
+          .store(in: &self.cancellables)
       }
     }
     
     private func buildBottomLine(color: UIColor) {
       let line = UIView()
       line.backgroundColor = color
-      line.translatesAutoresizingMaskIntoConstraints = false
-      addSubview(line)
+      line.usingAutolayout()
+      self.addSubview(line)
       NSLayoutConstraint.activate([
         line.bottomAnchor.constraint(equalTo: bottomAnchor),
         line.leadingAnchor.constraint(equalTo: leadingAnchor),
         line.trailingAnchor.constraint(equalTo: trailingAnchor),
         line.heightAnchor.constraint(equalToConstant: 1)
       ])
+      self.$configuration
+        .compactMap(\.groupEditModel)
+        .removeDuplicates()
+        .sink { [weak line] model in
+          line?.backgroundColor = model.mainColor
+        }
+        .store(in: &self.cancellables)
     }
   }
 }
 
 extension Styled.UITextField {
-  public struct Configuration {
-    let border: Border?
-    let leftImage: ImageData?
-    var rightImage: ImageData?
-    let bottomLineColor: UIColor?
-    
-    public init(
-      border: Border? = nil,
-      leftImage: ImageData? = nil,
-      rightImage: ImageData? = nil,
-      bottomLineColor: UIColor? = nil
-    ) {
-      self.border = border
-      self.leftImage = leftImage
-      self.rightImage = rightImage
-      self.bottomLineColor = bottomLineColor
+  public enum Configuration: Equatable {
+    var primaryModel: PrimaryModel? {
+      if case let .primary(model) = self {
+        return model
+      }
+      return nil
     }
+    
+    var groupEditModel: GroupEditModel? {
+      if case let .groupEdit(model) = self {
+        return model
+      }
+      return nil
+    }
+    
+    case primary(PrimaryModel)
+    case groupEdit(GroupEditModel)
   }
 }
 
 extension Styled.UITextField.Configuration {
-  public struct Border {
-    let cornerRadius: CGFloat
-    let lineWidth: CGFloat
-    
-    public init(
-      cornerRadius: CGFloat,
-      lineWidth: CGFloat
-    ) {
-      self.cornerRadius = cornerRadius
-      self.lineWidth = lineWidth
-    }
-  }
-  
-  public struct ImageData {
-    let leading: CGFloat
-    let trailing: CGFloat?
-    
-    let image: UIImage?
-    var imageColor: UIColor?
-    var tintedImage: UIImage? {
-      image?.withTintColor(imageColor ?? .toDoGardenGreenDark)
-    }
-    
-    public init(
-      leading: CGFloat,
-      trailing: CGFloat? = nil,
-      image: UIImage?,
-      imageColor: UIColor? = nil
-    ) {
-      self.leading = leading
-      self.trailing = trailing
-      self.image = image
-      self.imageColor = imageColor
-    }
-  }
-}
-
-extension Styled.UITextField.Configuration {
-  static let primary: Self = .init(
-    border: .init(
+  public struct PrimaryModel: Equatable {
+    public static let standard = Self(
       cornerRadius: 10,
-      lineWidth: 0
-    ),
-    leftImage: .init(
-      leading: 7,
-      trailing: 4,
-      image: .searchIconImage
+      image: UIImage.searchIconImage,
+      imageLeadingConstant: 7,
+      imageTrailingConstant: 4
     )
-  )
+    
+    let cornerRadius: CGFloat
+    let image: UIImage?
+    let imageLeadingConstant: CGFloat
+    let imageTrailingConstant: CGFloat
+  }
   
-  static let groupEdit: Self = .init(
-    rightImage: .init(
-      leading: 0,
-      image: UIImage(systemName: "xmark.circle.fill"),
-      imageColor: .toDoGardenGreenDark
-    ),
-    bottomLineColor: .toDoGardenGreenDark
-  )
+  public struct GroupEditModel: Equatable {
+    public static let standard = Self(
+      mainColor: .toDoGardenGreenDark,
+      image: UIImage(systemName: "xmark.circle.fill") ?? UIImage.searchIconImage
+    )
+    
+    var mainColor: UIColor
+    let image: UIImage
+  }
 }
 
 #if DEBUG
-import SwiftUI
-
+@available(iOS 17.0, *)
 #Preview {
-  VStack {
-    WrappedView {
-      let textField = Styled.UITextField(configuration: .primary)
-      textField.placeholder = "아이디를 입력해주세요"
-      textField.backgroundColor = .toDoGardenGreenBackground
-      
-      return textField
-    }
-    .frame(height: 40)
-    
-    WrappedView {
-      let textField = Styled.UITextField(configuration: .groupEdit)
-      textField.placeholder = "그룹명을 입력해주세요"
-      
-      return textField
-    }
-    .frame(height: 40)
-  }
-  .padding()
+  let textField = Styled.UITextField(configuration: .primary(.standard))
+  textField.placeholder = "아이디를 입력해주세요."
+  return textField
 }
 #endif
