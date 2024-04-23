@@ -131,11 +131,11 @@ extension PeriodSegmentedControl {
 extension PeriodSegmentedControl {
   @objc private func panned(_ recognizer: UIPanGestureRecognizer) {
     switch recognizer.state {
-    case .began:
+    case UIGestureRecognizer.State.began:
       UIView.animate(withDuration: 0.3) {
         self.periodSegmentedControlAppearance.transformIndicatorViewDownScale()
       }
-    case .changed:
+    case UIGestureRecognizer.State.changed:
       let translation = recognizer.translation(in: self)
       let indicatorViewCenterX = self.periodSegmentedControlAppearance.getIndicatorViewCenter()
       
@@ -152,7 +152,9 @@ extension PeriodSegmentedControl {
       self.expectedXPosition = newX
       
       recognizer.setTranslation(CGPoint.zero, in: self)
-    case .ended, .cancelled, .failed:
+    case UIGestureRecognizer.State.ended,
+      UIGestureRecognizer.State.cancelled,
+      UIGestureRecognizer.State.failed:
       UIView.animate(withDuration: 0.3) {
         self.periodSegmentedControlAppearance.transformIndicatorViewOriginalScale()
       }
@@ -162,7 +164,7 @@ extension PeriodSegmentedControl {
   
   @objc private func tapped(_ recognizer: UITapGestureRecognizer) {
     switch recognizer.state {
-    case .recognized:
+    case UIGestureRecognizer.State.recognized:
       let touchLocation: CGPoint = recognizer.location(in: self)
       let closestX = self.calculateClosestX(from: touchLocation.x)
       
