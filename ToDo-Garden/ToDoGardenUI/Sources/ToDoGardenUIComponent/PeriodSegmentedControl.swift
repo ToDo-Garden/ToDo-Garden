@@ -14,14 +14,14 @@ public final class PeriodSegmentedControl: UIControl {
   private let items: [String]
   private let feedbackGenerator: UISelectionFeedbackGenerator
   private let periodSegmentedControlAppearance: PeriodSegmentedControlAppearance
-  private var targetXPosition: [CGFloat]
+  private var targetXPositions: [CGFloat]
   private var periodSegmentedControlGestureRecognizer: PeriodSegmentedControlGestureRecognizer?
   private var expectedXPosition: CGFloat
   
   public init(items: [String] = Constant.PeriodSegmentedControl.Content.defaultItems) {
     self.items = items
     self.feedbackGenerator = UISelectionFeedbackGenerator()
-    self.targetXPosition = []
+    self.targetXPositions = []
     self.periodSegmentedControlAppearance = PeriodSegmentedControlAppearance(with: self.items)
     self.periodSegmentedControlGestureRecognizer = nil
     self.expectedXPosition = Constant.PeriodSegmentedControl.Layout.firstItemCenterXPosition +
@@ -33,7 +33,7 @@ public final class PeriodSegmentedControl: UIControl {
   required init?(coder: NSCoder) {
     self.items = Constant.PeriodSegmentedControl.Content.defaultItems
     self.feedbackGenerator = UISelectionFeedbackGenerator()
-    self.targetXPosition = []
+    self.targetXPositions = []
     self.periodSegmentedControlAppearance = PeriodSegmentedControlAppearance(with: self.items)
     self.periodSegmentedControlGestureRecognizer = nil
     self.expectedXPosition = Constant.PeriodSegmentedControl.Layout.firstItemCenterXPosition +
@@ -43,10 +43,10 @@ public final class PeriodSegmentedControl: UIControl {
   }
   
   public override var intrinsicContentSize: CGSize {
-    let constants = Constant.PeriodSegmentedControl.Layout.self
-    let itemsWidth = constants.itemWidth * CGFloat(self.items.count)
-    let width = constants.innerPadding + itemsWidth + constants.innerPadding
-    let height = constants.height
+    let layoutConstants = Constant.PeriodSegmentedControl.Layout.self
+    let itemsWidth = layoutConstants.itemWidth * CGFloat(self.items.count)
+    let width = layoutConstants.innerPadding + itemsWidth + layoutConstants.innerPadding
+    let height = layoutConstants.height
     return CGSize(width: width, height: height)
   }
   
@@ -80,7 +80,7 @@ extension PeriodSegmentedControl {
     for index in 0..<self.items.count {
       targets.append(firstCenter + (itemWidth * CGFloat(index)))
     }
-    self.targetXPosition = targets
+    self.targetXPositions = targets
   }
   
   private func setupAppearanceLayout() {
@@ -108,10 +108,10 @@ extension PeriodSegmentedControl {
   }
   
   private func calculateClosestX(from touchX: CGFloat) -> CGFloat {
-    var closestX = self.targetXPosition[0]
-    var shortestDistance = abs(self.targetXPosition[0] - touchX)
+    var closestX = self.targetXPositions[0]
+    var shortestDistance = abs(self.targetXPositions[0] - touchX)
     
-    for targetX in self.targetXPosition {
+    for targetX in self.targetXPositions {
       let distance = abs(targetX - touchX)
       if distance < shortestDistance {
         shortestDistance = distance
@@ -168,7 +168,9 @@ extension PeriodSegmentedControl {
       self.handleGestureStateBegan()
     case UIGestureRecognizer.State.changed:
       self.handleGestureStateChanged(with: recognizer)
-    case UIGestureRecognizer.State.ended, UIGestureRecognizer.State.cancelled, UIGestureRecognizer.State.failed:
+    case UIGestureRecognizer.State.ended,
+      UIGestureRecognizer.State.cancelled,
+      UIGestureRecognizer.State.failed:
       self.handleGestureStateEnded()
     default:
       break
@@ -196,7 +198,9 @@ extension PeriodSegmentedControl {
     case UIGestureRecognizer.State.began:
       self.handleGestureStateBegan()
       self.feedbackGenerator.selectionChanged()
-    case UIGestureRecognizer.State.ended, UIGestureRecognizer.State.cancelled, UIGestureRecognizer.State.failed:
+    case UIGestureRecognizer.State.ended,
+      UIGestureRecognizer.State.cancelled,
+      UIGestureRecognizer.State.failed:
       self.handleGestureStateEnded()
     default:
       break
