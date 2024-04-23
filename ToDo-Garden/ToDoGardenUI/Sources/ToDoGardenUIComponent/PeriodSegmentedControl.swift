@@ -25,7 +25,7 @@ public final class PeriodSegmentedControl: UIControl {
     self.periodSegmentedControlAppearance = PeriodSegmentedControlAppearance(with: self.items)
     self.periodSegmentedControlGestureRecognizer = nil
     self.expectedXPosition = Constant.PeriodSegmentedControl.Layout.firstItemCenterXPosition +
-      Constant.PeriodSegmentedControl.Layout.itemWidth
+    Constant.PeriodSegmentedControl.Layout.itemWidth
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -37,7 +37,7 @@ public final class PeriodSegmentedControl: UIControl {
     self.periodSegmentedControlAppearance = PeriodSegmentedControlAppearance(with: self.items)
     self.periodSegmentedControlGestureRecognizer = nil
     self.expectedXPosition = Constant.PeriodSegmentedControl.Layout.firstItemCenterXPosition +
-      Constant.PeriodSegmentedControl.Layout.itemWidth
+    Constant.PeriodSegmentedControl.Layout.itemWidth
     super.init(coder: coder)
     self.setup()
   }
@@ -129,43 +129,56 @@ extension PeriodSegmentedControl {
 // MARK: - gesture event functions
 
 extension PeriodSegmentedControl {
+  private func handleGestureStateBegan() {
+    UIView.animate(withDuration: 0.3) {
+      self.periodSegmentedControlAppearance.transformIndicatorViewDownScale()
+    }
+  }
+  
+  private func handleGestureStateChanged(with recognizer: UIGestureRecognizer) {
+    guard let panRecognizer = recognizer as? UIPanGestureRecognizer else { return }
+    
+    let translation = panRecognizer.translation(in: self)
+    let indicatorViewCenterX = self.periodSegmentedControlAppearance.getIndicatorViewCenter()
+    let newX = self.expectedXPosition + translation.x
+    let closestX = self.calculateClosestX(from: newX)
+    
+    if indicatorViewCenterX != closestX {
+      UIView.animate(withDuration: 0.15) {
+        self.periodSegmentedControlAppearance.moveIndicatorView(to: closestX)
+      }
+      self.feedbackGenerator.selectionChanged()
+      self.expectedXPosition = closestX
+    }
+    
+    self.expectedXPosition = newX
+    panRecognizer.setTranslation(.zero, in: self)
+  }
+  
+  private func handleGestureStateEnded() {
+    UIView.animate(withDuration: 0.3) {
+      self.periodSegmentedControlAppearance.transformIndicatorViewOriginalScale()
+    }
+    self.feedbackGenerator.selectionChanged()
+  }
+  
   @objc private func panned(_ recognizer: UIPanGestureRecognizer) {
     switch recognizer.state {
     case UIGestureRecognizer.State.began:
-      UIView.animate(withDuration: 0.3) {
-        self.periodSegmentedControlAppearance.transformIndicatorViewDownScale()
-      }
+      self.handleGestureStateBegan()
     case UIGestureRecognizer.State.changed:
-      let translation = recognizer.translation(in: self)
-      let indicatorViewCenterX = self.periodSegmentedControlAppearance.getIndicatorViewCenter()
-      
-      let newX = self.expectedXPosition + translation.x
-      let closestX = self.calculateClosestX(from: newX)
-      
-      if indicatorViewCenterX != closestX {
-        UIView.animate(withDuration: 0.15) {
-          self.periodSegmentedControlAppearance.moveIndicatorView(to: closestX)
-        }
-        self.feedbackGenerator.selectionChanged()
-        self.expectedXPosition = closestX
-      }
-      self.expectedXPosition = newX
-      
-      recognizer.setTranslation(CGPoint.zero, in: self)
-    case UIGestureRecognizer.State.ended,
-      UIGestureRecognizer.State.cancelled,
-      UIGestureRecognizer.State.failed:
-      UIView.animate(withDuration: 0.3) {
-        self.periodSegmentedControlAppearance.transformIndicatorViewOriginalScale()
-      }
-    default: break
+      self.handleGestureStateChanged(with: recognizer)
+    case UIGestureRecognizer.State.ended, UIGestureRecognizer.State.cancelled, UIGestureRecognizer.State.failed:
+      self.handleGestureStateEnded()
+    default:
+      break
     }
   }
   
   @objc private func tapped(_ recognizer: UITapGestureRecognizer) {
     switch recognizer.state {
     case UIGestureRecognizer.State.recognized:
-      let touchLocation: CGPoint = recognizer.location(in: self)
+      let touchLocation = recognizer.location(in: self)
       let closestX = self.calculateClosestX(from: touchLocation.x)
       
       UIView.animate(withDuration: 0.15) {
@@ -173,26 +186,20 @@ extension PeriodSegmentedControl {
       }
       self.feedbackGenerator.selectionChanged()
       self.expectedXPosition = closestX
-    default: break
+    default:
+      break
     }
   }
   
   @objc private func longpressed(_ recognizer: UILongPressGestureRecognizer) {
     switch recognizer.state {
     case UIGestureRecognizer.State.began:
-      UIView.animate(withDuration: 0.3) {
-        self.periodSegmentedControlAppearance.transformIndicatorViewDownScale()
-      }
+      self.handleGestureStateBegan()
       self.feedbackGenerator.selectionChanged()
-      
-    case UIGestureRecognizer.State.ended,
-      UIGestureRecognizer.State.cancelled,
-      UIGestureRecognizer.State.failed:
-      UIView.animate(withDuration: 0.3) {
-        self.periodSegmentedControlAppearance.transformIndicatorViewOriginalScale()
-      }
-      
-    default: break
+    case UIGestureRecognizer.State.ended, UIGestureRecognizer.State.cancelled, UIGestureRecognizer.State.failed:
+      self.handleGestureStateEnded()
+    default:
+      break
     }
   }
 }
