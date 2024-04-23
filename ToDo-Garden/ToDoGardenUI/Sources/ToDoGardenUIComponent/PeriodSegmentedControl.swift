@@ -64,11 +64,11 @@ public final class PeriodSegmentedControl: UIControl {
 extension PeriodSegmentedControl {
   private func setup() {
     self.setupFeedbackGenerator()
-    self.setupAppearance()
+    self.setupAppearanceLayout()
     self.setupGestureRecognizer()
   }
   
-  private func setupAppearance() {
+  private func setupAppearanceLayout() {
     let appearance = self.periodSegmentedControlAppearance.getAssembledView()
     self.addSubview(appearance)
     
