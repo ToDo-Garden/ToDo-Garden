@@ -8,12 +8,12 @@
 import UIKit.UIImage
 
 extension UIImage {
-	public static let timerControlButtonDestructiveBackground = UIImage(
-		resource: .timerControlButtonDestructiveStyleBackground
-	)
-	public static let timerControlButtonDefaultBackground = UIImage(
-		resource: .timerControlButtonDefaultStyleBackground
-	)
+  public static let timerControlButtonDestructiveBackground = UIImage(
+    resource: .timerControlButtonDestructiveStyleBackground
+  )
+  public static let timerControlButtonDefaultBackground = UIImage(
+    resource: .timerControlButtonDefaultStyleBackground
+  )
   public static let addButton = UIImage(
     resource: .addButton
   )
@@ -34,6 +34,15 @@ extension UIImage {
   )
   public static let forwardButtonImage = UIImage(
     resource: .forwardButton
+  )
+  public static let downwardButtonImage = UIImage(
+    resource: .downwardButton
+  )
+  public static let pomodoroInformationButtonImage = UIImage(
+    resource: .pomodoroInformationButton
+  )
+  public static let pomodoroInformationCloseButtonImage = UIImage(
+    resource: .pomodoroInformationCloseButton
   )
   public static let timerButtonImage = UIImage(
     resource: .timerButton
