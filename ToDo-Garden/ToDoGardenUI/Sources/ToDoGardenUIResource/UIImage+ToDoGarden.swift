@@ -8,12 +8,12 @@
 import UIKit.UIImage
 
 extension UIImage {
-	public static let timerControlButtonDestructiveBackground = UIImage(
-		resource: .timerControlButtonDestructiveStyleBackground
-	)
-	public static let timerControlButtonDefaultBackground = UIImage(
-		resource: .timerControlButtonDefaultStyleBackground
-	)
+  public static let timerControlButtonDestructiveBackground = UIImage(
+    resource: .timerControlButtonDestructiveStyleBackground
+  )
+  public static let timerControlButtonDefaultBackground = UIImage(
+    resource: .timerControlButtonDefaultStyleBackground
+  )
   public static let addButton = UIImage(
     resource: .addButton
   )
