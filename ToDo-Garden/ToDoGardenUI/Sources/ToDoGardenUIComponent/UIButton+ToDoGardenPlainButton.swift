@@ -15,6 +15,12 @@ extension UIButton {
 
 private enum ToDoGardenPlainButtonStyle {
   static func apply(to button: UIButton, with image: UIImage) {
-    
+    self.setupNormalStateImage(to: button, with: image)
+  }
+}
+
+extension ToDoGardenPlainButtonStyle {
+  private static func setupNormalStateImage(to button: UIButton, with image: UIImage) {
+    button.setImage(image, for: UIControl.State.normal)
   }
 }
