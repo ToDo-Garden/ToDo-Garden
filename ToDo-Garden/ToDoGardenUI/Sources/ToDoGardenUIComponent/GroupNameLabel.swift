@@ -7,6 +7,7 @@
 
 import UIKit
 
+import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 public final class GroupNameLabel: UILabel {
@@ -25,6 +26,7 @@ extension GroupNameLabel {
   private func setupUI() {
     self.setupTextStyle()
     self.setupBackgroundColor()
+    self.setupRoundedCorner()
   }
   
   private func setupTextStyle() {
@@ -34,5 +36,10 @@ extension GroupNameLabel {
   
   private func setupBackgroundColor() {
     self.backgroundColor = UIColor.toDoGardenGreenBackground
+  }
+  
+  private func setupRoundedCorner() {
+    self.clipsToBounds = true
+    self.layer.cornerRadius = Constant.GroupNameLabel.Layout.Layer.cornerRadius
   }
 }
