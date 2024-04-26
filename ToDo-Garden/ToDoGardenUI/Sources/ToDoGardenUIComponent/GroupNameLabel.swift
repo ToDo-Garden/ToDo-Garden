@@ -24,10 +24,15 @@ public final class GroupNameLabel: UILabel {
 extension GroupNameLabel {
   private func setupUI() {
     self.setupTextStyle()
+    self.setupBackgroundColor()
   }
   
   private func setupTextStyle() {
     self.font = UIFont.pretendardBodyBold
     self.textColor = UIColor.toDoGardenGreenDark
+  }
+  
+  private func setupBackgroundColor() {
+    self.backgroundColor = UIColor.toDoGardenGreenBackground
   }
 }
