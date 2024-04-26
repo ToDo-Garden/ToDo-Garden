@@ -15,7 +15,7 @@ extension Styled {
         return nil
       }
       set {
-        if case var .groupEdit(model) = self.configuration, let newValue {
+        if var model = self.configuration.groupEditModel, let newValue {
           model.mainColor = newValue
           self.configuration = .groupEdit(model)
         }
@@ -92,6 +92,7 @@ extension Styled {
         button.tintColor = model.mainColor
         self.$configuration
           .compactMap(\.groupEditModel)
+          .removeDuplicates()
           .sink { [weak button] model in
             button?.tintColor = model.mainColor
           }
