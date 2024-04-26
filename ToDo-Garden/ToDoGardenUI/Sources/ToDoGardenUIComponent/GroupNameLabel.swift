@@ -24,6 +24,14 @@ public final class GroupNameLabel: UILabel {
     super.init(coder: coder)
     self.setupUI()
   }
+
+  public override func drawText(in rect: CGRect) {
+    super.drawText(
+      in: rect.inset(
+        by: self.textPadding
+      )
+    )
+  }
 }
 
 extension GroupNameLabel {
