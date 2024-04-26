@@ -14,6 +14,13 @@ public final class GroupNameLabel: UILabel {
   private var textPadding: UIEdgeInsets
   private var additionalContentSize: CGSize
 
+  public override var intrinsicContentSize: CGSize {
+    var contentSize = super.intrinsicContentSize
+    contentSize.width += self.additionalContentSize.width
+    contentSize.height += self.additionalContentSize.height
+    return contentSize
+  }
+
   public init() {
     self.textPadding = UIEdgeInsets()
     self.additionalContentSize = CGSize()
@@ -27,7 +34,7 @@ public final class GroupNameLabel: UILabel {
     super.init(coder: coder)
     self.setupUI()
   }
-
+  
   public override func drawText(in rect: CGRect) {
     super.drawText(
       in: rect.inset(
@@ -45,7 +52,7 @@ extension GroupNameLabel {
     self.setupBackgroundColor()
     self.setupRoundedCorner()
   }
-
+  
   private func setupTextPadding() {
     self.textPadding = UIEdgeInsets(
       top: Constant.GroupNameLabel.Layout.TextPadding.top,
