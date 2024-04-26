@@ -12,15 +12,18 @@ import ToDoGardenUIResource
 
 public final class GroupNameLabel: UILabel {
   private var textPadding: UIEdgeInsets
+  private var additionalContentSize: CGSize
 
   public init() {
     self.textPadding = UIEdgeInsets()
+    self.additionalContentSize = CGSize()
     super.init(frame: CGRect.zero)
     self.setupUI()
   }
   
   public required init?(coder: NSCoder) {
     self.textPadding = UIEdgeInsets()
+    self.additionalContentSize = CGSize()
     super.init(coder: coder)
     self.setupUI()
   }
@@ -37,6 +40,7 @@ public final class GroupNameLabel: UILabel {
 extension GroupNameLabel {
   private func setupUI() {
     self.setupTextPadding()
+    self.setupAdditionalContentSize()
     self.setupTextStyle()
     self.setupBackgroundColor()
     self.setupRoundedCorner()
@@ -49,6 +53,16 @@ extension GroupNameLabel {
       bottom: Constant.GroupNameLabel.Layout.TextPadding.bottom,
       right: Constant.GroupNameLabel.Layout.TextPadding.right
     )
+  }
+  
+  private func setupAdditionalContentSize() {
+    let additionalContentWidth: CGFloat = Constant.GroupNameLabel.Layout.TextPadding.left
+    + Constant.GroupNameLabel.Layout.TextPadding.right
+    self.additionalContentSize.width = additionalContentWidth
+    
+    let additionalContentHeight: CGFloat = Constant.GroupNameLabel.Layout.TextPadding.top
+    + Constant.GroupNameLabel.Layout.TextPadding.bottom
+    self.additionalContentSize.height = additionalContentHeight
   }
 
   private func setupTextStyle() {
