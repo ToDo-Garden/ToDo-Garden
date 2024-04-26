@@ -42,6 +42,10 @@ public final class GroupNameLabel: UILabel {
       )
     )
   }
+
+  public func setupTitle(with text: String) {
+    self.text = text
+  }
 }
 
 extension GroupNameLabel {
