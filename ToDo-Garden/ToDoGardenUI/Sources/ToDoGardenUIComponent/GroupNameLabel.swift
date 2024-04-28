@@ -7,86 +7,64 @@
 
 import UIKit
 
-import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
-public final class GroupNameLabel: UILabel {
-  private var textPadding: UIEdgeInsets
-  private var additionalContentSize: CGSize
+extension Styled {
+  open class UILabel: UIKit.UILabel {
+    private var configuration: Styled.UILabel.Configuration
 
-  public override var intrinsicContentSize: CGSize {
-    var contentSize = super.intrinsicContentSize
-    contentSize.width += self.additionalContentSize.width
-    contentSize.height += self.additionalContentSize.height
-    return contentSize
-  }
+    public override var intrinsicContentSize: CGSize {
+      var contentSize = super.intrinsicContentSize
 
-  public init() {
-    self.textPadding = UIEdgeInsets()
-    self.additionalContentSize = CGSize()
-    super.init(frame: CGRect.zero)
-    self.setupUI()
-  }
-  
-  public required init?(coder: NSCoder) {
-    self.textPadding = UIEdgeInsets()
-    self.additionalContentSize = CGSize()
-    super.init(coder: coder)
-    self.setupUI()
-  }
-  
-  public override func drawText(in rect: CGRect) {
-    super.drawText(
-      in: rect.inset(
-        by: self.textPadding
+      switch self.configuration {
+      case let .groupName(groupNameModel):
+        contentSize.width += (groupNameModel.textPadding.left + groupNameModel.textPadding.right)
+        contentSize.height += (groupNameModel.textPadding.top + groupNameModel.textPadding.bottom)
+      }
+
+      return contentSize
+    }
+
+    init(configuration: Styled.UILabel.Configuration) {
+      self.configuration = configuration
+      super.init(frame: CGRect.zero)
+      self.setupUI()
+    }
+
+    public required init?(coder: NSCoder) {
+      self.configuration = Styled.UILabel.Configuration.groupName(Configuration.GroupNameModel.defaultPrimaryModel)
+      super.init(coder: coder)
+      self.setupUI()
+    }
+
+    public override func drawText(in rect: CGRect) {
+      let textPadding: UIEdgeInsets
+      switch self.configuration {
+      case let .groupName(groupNameModel):
+        textPadding = groupNameModel.textPadding
+      }
+
+      super.drawText(
+        in: rect.inset(
+          by: textPadding
+        )
       )
-    )
-  }
+    }
 
-  public func setupTitle(with text: String) {
-    self.text = text
+    public func updateText(with text: String) {
+      self.text = text
+    }
   }
 }
 
-extension GroupNameLabel {
-  private func setupUI() {
-    self.setupTextPadding()
-    self.setupAdditionalContentSize()
-    self.setupTextStyle()
-    self.setupBackgroundColor()
-    self.setupRoundedCorner()
+extension Styled.UILabel {
+  enum Configuration {
+    case groupName(GroupNameModel)
   }
-  
-  private func setupTextPadding() {
-    self.textPadding = UIEdgeInsets(
-      top: Constant.GroupNameLabel.Layout.TextPadding.top,
-      left: Constant.GroupNameLabel.Layout.TextPadding.left,
-      bottom: Constant.GroupNameLabel.Layout.TextPadding.bottom,
-      right: Constant.GroupNameLabel.Layout.TextPadding.right
-    )
-  }
-  
-  private func setupAdditionalContentSize() {
-    let additionalContentWidth: CGFloat = Constant.GroupNameLabel.Layout.TextPadding.left
-    + Constant.GroupNameLabel.Layout.TextPadding.right
-    self.additionalContentSize.width = additionalContentWidth
-    
-    let additionalContentHeight: CGFloat = Constant.GroupNameLabel.Layout.TextPadding.top
-    + Constant.GroupNameLabel.Layout.TextPadding.bottom
-    self.additionalContentSize.height = additionalContentHeight
-  }
+}
 
-  private func setupTextStyle() {
-    self.font = UIFont.pretendardBodyBold
-    self.textColor = UIColor.toDoGardenGreenDark
-  }
-  
-  private func setupBackgroundColor() {
-    self.backgroundColor = UIColor.toDoGardenGreenBackground
-  }
-  
-  private func setupRoundedCorner() {
-    self.clipsToBounds = true
-    self.layer.cornerRadius = Constant.GroupNameLabel.Layout.Layer.cornerRadius
+extension Styled.UILabel.Configuration {
+  struct GroupNameModel {
+    
   }
 }
