@@ -57,9 +57,18 @@ extension Styled {
   }
 }
 
+// MARK: configuration
+
 extension Styled.UILabel {
   enum Configuration {
-    case groupName(GroupNameModel)
+    var groupNameModel: Styled.UILabel.Configuration.GroupNameModel {
+      if case let Styled.UILabel.Configuration.groupName(model) = self {
+        return model
+      }
+      return Styled.UILabel.Configuration.GroupNameModel.defaultPrimaryModel
+    }
+
+    case groupName(Styled.UILabel.Configuration.GroupNameModel)
   }
 }
 
