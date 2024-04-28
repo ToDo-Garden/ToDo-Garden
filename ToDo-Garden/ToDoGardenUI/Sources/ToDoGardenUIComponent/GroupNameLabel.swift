@@ -9,6 +9,16 @@ import UIKit
 
 import ToDoGardenUIResource
 
+public enum Styled {}
+
+extension Styled.UILabel {
+  public static let groupName = Styled.UILabel(
+    configuration: Configuration.groupName(
+      Configuration.GroupNameModel.defaultGroupModel
+    )
+  )
+}
+
 extension Styled {
   open class UILabel: UIKit.UILabel {
     private var configuration: Styled.UILabel.Configuration
@@ -93,7 +103,7 @@ extension Styled.UILabel {
 // MARK: configuration
 
 extension Styled.UILabel {
-  enum Configuration {
+  public enum Configuration {
     var groupNameModel: Styled.UILabel.Configuration.GroupNameModel {
       if case let Styled.UILabel.Configuration.groupName(model) = self {
         return model
@@ -108,7 +118,7 @@ extension Styled.UILabel {
 // MARK: models
 
 extension Styled.UILabel.Configuration {
-  struct GroupNameModel {
+  public struct GroupNameModel {
     let cornerRadius: CGFloat
     let textPadding: UIEdgeInsets
     let font: UIFont
