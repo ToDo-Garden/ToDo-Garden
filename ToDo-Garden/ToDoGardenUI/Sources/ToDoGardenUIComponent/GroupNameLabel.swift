@@ -23,7 +23,7 @@ public final class GroupNameLabel: UILabel {
     
     return contentSize
   }
-  
+
   init(configuration: GroupNameLabel.Configuration) {
     self.configuration = configuration
     super.init(frame: CGRect.zero)
@@ -130,41 +130,3 @@ extension GroupNameLabel {
     )
   )
 }
-
-
-#if canImport(SwiftUI) && DEBUG
-import SwiftUI
-struct UIViewPreview<View: UIView>: UIViewRepresentable {
-    let view: View
-
-    init(_ builder: @escaping () -> View) {
-        view = builder()
-    }
-
-    // MARK: - UIViewRepresentable
-
-    func makeUIView(context: Context) -> UIView {
-        return view
-    }
-
-    func updateUIView(_ view: UIView, context: Context) {
-        view.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        view.setContentHuggingPriority(.defaultHigh, for: .vertical)
-    }
-}
-#endif
-// MyYellowButton
-
-#if canImport(SwiftUI) && DEBUG
-import SwiftUI
-
-struct MyYellowButtonPreview: PreviewProvider{
-    static var previews: some View {
-        UIViewPreview {
-          let label = GroupNameLabel.primary
-          label.updateText(with: "iOS 인터뷰 스터디")
-          return label
-        }.previewLayout(.sizeThatFits)
-    }
-}
-#endif
