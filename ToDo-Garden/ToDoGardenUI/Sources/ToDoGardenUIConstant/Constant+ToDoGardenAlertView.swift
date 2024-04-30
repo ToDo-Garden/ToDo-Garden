@@ -9,6 +9,16 @@ import Foundation
 
 extension Constant.ToDoGardenAlertView {
   public enum Alpha {}
+  
+  public enum Content {
+    case welldone
+    case askToStop
+    case fullyCharged
+    case askToDeleteToDo
+    case askToDeleteGroup
+    case askToUnsubscribe
+    case askToLogout
+  }
 }
 
 extension Constant.ToDoGardenAlertView.Alpha {
