@@ -14,22 +14,25 @@ public final class GroupNameLabel: UILabel {
   
   public override var intrinsicContentSize: CGSize {
     var contentSize = super.intrinsicContentSize
-    
-    switch self.configuration {
-    case let .primary(model):
-      contentSize.width += (model.textPadding.left + model.textPadding.right)
-      contentSize.height += (model.textPadding.top + model.textPadding.bottom)
-    }
-    
+
+    contentSize.width += (
+      self.configuration.primaryModel.textPadding.left +
+      self.configuration.primaryModel.textPadding.right
+    )
+    contentSize.height += (
+      self.configuration.primaryModel.textPadding.top +
+      self.configuration.primaryModel.textPadding.bottom
+    )
+
     return contentSize
   }
-
+  
   public init(configuration: GroupNameLabel.Configuration) {
     self.configuration = configuration
     super.init(frame: CGRect.zero)
     self.setupUI()
   }
-
+  
   public required init?(coder: NSCoder) {
     self.configuration = GroupNameLabel.Configuration.primary(Configuration.PrimaryModel.defaultPrimaryModel)
     super.init(coder: coder)
@@ -37,19 +40,15 @@ public final class GroupNameLabel: UILabel {
   }
   
   public override func drawText(in rect: CGRect) {
-    let textPadding: UIEdgeInsets
-    switch self.configuration {
-    case let .primary(model):
-      textPadding = model.textPadding
-    }
-    
+    let textPadding = self.configuration.primaryModel.textPadding
+
     super.drawText(
       in: rect.inset(
         by: textPadding
       )
     )
   }
-  
+
   public func updateText(with text: String) {
     self.text = text
   }
@@ -65,26 +64,17 @@ extension GroupNameLabel {
   }
   
   private func setupBackgroundColor() {
-    switch self.configuration {
-    case let .primary(model):
-      self.backgroundColor = model.backgroundColor
-    }
+    self.backgroundColor = self.configuration.primaryModel.backgroundColor
   }
-
+  
   private func setupText() {
-    switch self.configuration {
-    case let .primary(model):
-      self.font = model.font
-      self.textColor = model.textColor
-    }
+    self.font = self.configuration.primaryModel.font
+    self.textColor = self.configuration.primaryModel.textColor
   }
   
   private func setupRoundedCorner() {
-    switch self.configuration {
-    case let .primary(model):
-      self.clipsToBounds = true
-      self.layer.cornerRadius = model.cornerRadius
-    }
+    self.clipsToBounds = true
+    self.layer.cornerRadius = self.configuration.primaryModel.cornerRadius
   }
 }
 
@@ -98,7 +88,7 @@ extension GroupNameLabel {
       }
       return .defaultPrimaryModel
     }
-    
+
     case primary(GroupNameLabel.Configuration.PrimaryModel)
   }
 }
