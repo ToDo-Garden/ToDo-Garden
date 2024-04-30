@@ -146,7 +146,7 @@ extension Styled.Row {
     self.buildSpacing(stack: stack)
     self.buildImageView(
       stack: stack,
-      image: .buttonForward,
+      image: UIImage.forwardButtonImage,
       size: CGSize(width: 24, height: 24)
     )
   }
@@ -230,7 +230,7 @@ extension Styled.Row {
 @available(iOS 17.0, *)
 #Preview {
   let view = Styled.Row(
-    configuration: .listPrimary(.init(title: "영어독해", color: .red))
+    configuration: .profile(.init(title: "테스트", description: "테스트 입니다."))
   )
   
   return view
