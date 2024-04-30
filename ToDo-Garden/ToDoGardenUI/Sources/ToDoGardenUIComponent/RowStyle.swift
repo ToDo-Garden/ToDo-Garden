@@ -18,7 +18,7 @@ extension Styled {
       }
     }
     
-    @Published private var configutration: Configuration
+    @Published var configutration: Configuration
     private var cancellables: Set<AnyCancellable> = []
     
     public init(configuration: Configuration) {
@@ -43,6 +43,9 @@ extension Styled {
         
       case let .listPrimary(listPrimaryModel):
         self.buildListPrimaryStyle(stack: stack, model: listPrimaryModel)
+        
+      case let .todoList(todoListModel):
+        self.buildTodoListStyle(stack: stack, model: todoListModel)
       }
     }
   }
@@ -63,29 +66,52 @@ extension Styled.Row {
       }
       return nil
     }
+    var todoListModel: TodoListModel? {
+      if case let .todoList(model) = self {
+        return model
+      }
+      return nil
+    }
     
     case profile(ProfileModel)
     case listPrimary(ListPrimaryModel)
+    case todoList(TodoListModel)
   }
 }
 
 extension Styled.Row.Configuration {
-  public struct ProfileModel {
+  public struct ProfileModel: Equatable {
     var image: UIImage = .defaultFriendProfileImage
     var title: String
     var description: String
   }
   
-  public struct ListPrimaryModel {
+  public struct ListPrimaryModel: Equatable {
     let title: String
     let color: UIColor
+  }
+  
+  public struct TodoListModel: Equatable {
+    public static let empty = Self()
+    public var text: String?
+    public var isSelected: Bool
+    
+    public init(text: String? = nil, isSelected: Bool = false) {
+      self.text = text
+      self.isSelected = isSelected
+    }
   }
 }
 
 // MARK: - Shared View Logic
 extension Styled.Row {
-  private func buildStack(stack: UIStackView, edgeInsets: NSDirectionalEdgeInsets) {
+  private func buildStack(
+    stack: UIStackView,
+    axis: NSLayoutConstraint.Axis = .horizontal,
+    edgeInsets: NSDirectionalEdgeInsets
+  ) {
     stack.alignment = .center
+    stack.axis = axis
     stack.isLayoutMarginsRelativeArrangement = true
     stack.directionalLayoutMargins = edgeInsets
     self.addSubview(stack)
@@ -152,7 +178,6 @@ extension Styled.Row {
   }
   
   private func buildProfileStyleStack(stack: UIStackView) {
-    stack.axis = .horizontal
     stack.isLayoutMarginsRelativeArrangement = true
     stack.spacing = 15
     self.buildStack(
@@ -226,12 +251,99 @@ extension Styled.Row {
   }
 }
 
+extension Styled.Row {
+  private func buildTodoListStyle(stack: UIStackView, model: Configuration.TodoListModel) {
+    self.buildStack(
+      stack: stack,
+      edgeInsets: NSDirectionalEdgeInsets(top: 12, leading: 41, bottom: 12, trailing: 0)
+    )
+    let textField = self.buildTextField(stack: stack, text: model.text)
+    self.buildButton(stack: stack, textField: textField)
+    stack.addSpacing(8)
+    stack.addArrangedSubview(textField)
+    stack.addSpacing()
+  }
+  
+  private func buildButton(stack: UIStackView, textField: UITextField) {
+    let button = UIButton(
+      configuration: .plain(),
+      primaryAction: UIAction { [weak self, weak textField] action in
+        guard
+          let button = action.sender as? UIButton
+        else { return }
+        self?.updateTextField(textField, buttonSelected: button.isSelected)
+        self?.configutration.todoListModel.map { model in
+          var copy = model
+          copy.isSelected = button.isSelected
+          self?.configutration = .todoList(copy)
+        }
+      }
+    )
+    button.configuration?.baseForegroundColor = UIColor.toDoGardenRed
+    button.configurationUpdateHandler = { button in
+      switch button.state {
+      case .selected, .highlighted:
+        let image = UIImage(systemName: "checkmark.square.fill")
+        button.configuration?.image = image
+      default:
+        button.configuration?.image = UIImage(systemName: "square")
+      }
+    }
+    button.changesSelectionAsPrimaryAction = true
+    button.usingAutolayout()
+    NSLayoutConstraint.activate([
+      button.widthAnchor.constraint(equalToConstant: 18),
+      button.heightAnchor.constraint(equalToConstant: 18),
+    ])
+    stack.addArrangedSubview(button)
+  }
+  
+  private func buildTextField(stack: UIStackView, text: String?) -> UITextField {
+    let textField = Styled.UITextField(configuration: .groupEdit(.todoList))
+    textField.text = text
+    let action = UIAction { [weak self] action in
+      if let textField = action.sender as? UITextField {
+        self?.configutration.todoListModel
+          .map { model in
+            var copy = model
+            copy.text = textField.text
+            self?.configutration = .todoList(copy)
+          }
+      }
+    }
+    textField.addAction(action, for: .editingChanged)
+    textField.usingAutolayout()
+    NSLayoutConstraint.activate([
+      textField.widthAnchor.constraint(equalToConstant: 200)
+    ])
+    
+    return textField
+  }
+  
+  private func updateTextField(_ textField: UITextField?, buttonSelected: Bool) {
+    textField?.isEnabled = !buttonSelected
+    textField?.textColor = buttonSelected ? UIColor.gray : UIColor.black
+    if buttonSelected {
+      let attributeString = NSMutableAttributedString(string: textField?.text ?? "")
+      attributeString
+        .addAttribute(
+          NSAttributedString.Key.strikethroughStyle,
+          value: 1,
+          range: NSRange(location: 0, length: attributeString.length)
+        )
+      textField?.attributedText = attributeString
+    } else {
+      let temp = textField?.text
+      textField?.attributedText = nil
+      textField?.text = temp
+    }
+  }
+}
+
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  let view = Styled.Row(
-    configuration: .profile(.init(title: "테스트", description: "테스트 입니다."))
-  )
+  let view = Styled.Row(configuration: .todoList(.empty))
   
   return view
 }
