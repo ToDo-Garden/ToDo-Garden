@@ -1,3 +1,4 @@
+import ToDoGardenUIResource
 import Combine
 import UIKit
 
@@ -81,9 +82,41 @@ extension Styled.Row {
 
 extension Styled.Row.Configuration {
   public struct ProfileModel: Equatable {
+    public static func primary(
+      image: UIImage = UIImage.defaultProfileImage,
+      title: String,
+      description: String
+    ) -> Self {
+      return Self(
+        image: image,
+        title: title,
+        titleFont: UIFont.pretendardHeadBold,
+        description: description,
+        descriptionFont: UIFont.pretendardDetailLight,
+        axis: .vertical
+      )
+    }
+    
+    public static func gardenInfo(
+      image: UIImage = UIImage.defaultProfileImage,
+      title: String,
+      description: String
+    ) -> Self {
+      return Self(
+        image: image,
+        title: title,
+        titleFont: UIFont.pretendardBodySemiBold,
+        description: description,
+        descriptionFont: UIFont.pretendardBodyMedium,
+        axis: .horizontal
+      )
+    }
     var image: UIImage = .defaultFriendProfileImage
     var title: String
+    var titleFont: UIFont
     var description: String
+    var descriptionFont: UIFont
+    var axis: NSLayoutConstraint.Axis
   }
   
   public struct ListPrimaryModel: Equatable {
@@ -145,11 +178,6 @@ extension Styled.Row {
     stack.addArrangedSubview(label)
     return label
   }
-  
-  private func buildSpacing(stack: UIStackView) {
-    let spacing = UIView()
-    stack.addArrangedSubview(spacing)
-  }
 }
 
 // MARK: - ProfileStyle
@@ -168,8 +196,10 @@ extension Styled.Row {
         imageView?.image = image
       }
       .store(in: &cancellables)
-    self.buildVStack(stack: stack, model: model)
-    self.buildSpacing(stack: stack)
+    self.buildInnerStack(stack: stack, model: model)
+    if model.axis == .vertical {
+      stack.addSpacing()
+    }
     self.buildImageView(
       stack: stack,
       image: UIImage.forwardButtonImage,
@@ -191,13 +221,20 @@ extension Styled.Row {
     )
   }
   
-  private func buildVStack(stack: UIStackView, model: Configuration.ProfileModel) {
-    let vStack = UIStackView(frame: CGRect.zero)
-    vStack.axis = .vertical
-    vStack.spacing = 3
+  private func buildInnerStack(stack: UIStackView, model: Configuration.ProfileModel) {
+    let innerStack = UIStackView(frame: CGRect.zero)
+    innerStack.axis = model.axis
     let titleLabel = self.buildTextLabel(
-      stack: vStack, text: model.title, font: .pretendardHeadBold, textColor: .toDoGardenGreenDark
+      stack: innerStack, text: model.title, font: model.titleFont, textColor: .toDoGardenGreenDark
     )
+    switch model.axis {
+    case .vertical:
+      innerStack.spacing = 3
+    case .horizontal:
+      innerStack.addSpacing()
+    @unknown default:
+      break
+    }
     self.$configutration
       .map(\.profileModel?.title)
       .removeDuplicates()
@@ -206,7 +243,7 @@ extension Styled.Row {
       }
       .store(in: &cancellables)
     let descriptionLabel = self.buildTextLabel(
-      stack: vStack, text: model.description, font: .pretendardDetailLight, textColor: .toDoGardenGreenDark
+      stack: innerStack, text: model.description, font: model.descriptionFont, textColor: .toDoGardenGreenDark
     )
     self.$configutration
       .map(\.profileModel?.description)
@@ -215,7 +252,7 @@ extension Styled.Row {
         descriptionLabel?.text = text
       }
       .store(in: &cancellables)
-    stack.addArrangedSubview(vStack)
+    stack.addArrangedSubview(innerStack)
   }
 }
 
@@ -234,7 +271,7 @@ extension Styled.Row {
     )
     // MARK: - TODO: 레이블 집어넣기
     
-    self.buildSpacing(stack: stack)
+    stack.addSpacing()
     self.buildColorView(stack: stack, color: model.color)
   }
   
@@ -343,8 +380,14 @@ extension Styled.Row {
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  let view = Styled.Row(configuration: .todoList(.empty))
+  let stack = UIStackView()
+  stack.axis = .vertical
   
-  return view
+  let view = Styled.Row(configuration: .profile(.primary(title: "에피", description: "잡식과 편식 단순한 인생")))
+  stack.addArrangedSubview(view)
+  
+  let view2 = Styled.Row(configuration: .profile(.gardenInfo(title: "박준보", description: "연속 19일 집중!")))
+  stack.addArrangedSubview(view2)
+  return stack
 }
 #endif
