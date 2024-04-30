@@ -24,7 +24,7 @@ public final class GroupNameLabel: UILabel {
     return contentSize
   }
 
-  init(configuration: GroupNameLabel.Configuration) {
+  public init(configuration: GroupNameLabel.Configuration) {
     self.configuration = configuration
     super.init(frame: CGRect.zero)
     self.setupUI()
@@ -103,6 +103,12 @@ extension GroupNameLabel {
   }
 }
 
+extension GroupNameLabel.Configuration {
+  public static let primaryConfigration = GroupNameLabel.Configuration.primary(
+    PrimaryModel.defaultPrimaryModel
+  )
+}
+
 // MARK: models
 
 extension GroupNameLabel.Configuration {
@@ -121,12 +127,4 @@ extension GroupNameLabel.Configuration {
       backgroundColor: UIColor.toDoGardenGreenBackground
     )
   }
-}
-
-extension GroupNameLabel {
-  public static let primary = GroupNameLabel(
-    configuration: Configuration.primary(
-      Configuration.PrimaryModel.defaultPrimaryModel
-    )
-  )
 }
