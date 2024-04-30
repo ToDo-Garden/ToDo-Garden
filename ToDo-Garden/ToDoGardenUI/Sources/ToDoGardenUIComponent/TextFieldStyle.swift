@@ -23,6 +23,7 @@ extension Styled {
     }
     
     @Published private var configuration: Configuration
+    private var bottomLine: UIView!
     private var cancellables: Set<AnyCancellable> = []
     
     public init(configuration: Configuration) {
@@ -103,6 +104,14 @@ extension Styled {
     private func buildBottomLine(color: UIColor) {
       let line = UIView()
       line.backgroundColor = color
+      configuration.groupEditModel.map { model in
+        switch model.bottomLineDisplayMode {
+        case .always:
+          line.isHidden = false
+        case .editing, .none:
+          line.isHidden = true
+        }
+      }
       line.usingAutolayout()
       self.addSubview(line)
       NSLayoutConstraint.activate([
@@ -118,6 +127,31 @@ extension Styled {
           line?.backgroundColor = model.mainColor
         }
         .store(in: &self.cancellables)
+      self.bottomLine = line
+    }
+    
+    open override func becomeFirstResponder() -> Bool {
+      configuration.groupEditModel.map { model in
+        switch model.bottomLineDisplayMode {
+        case .always, .editing:
+          bottomLine.isHidden = false
+        case .none:
+          bottomLine.isHidden = true
+        }
+      }
+      return super.becomeFirstResponder()
+    }
+    
+    open override func resignFirstResponder() -> Bool {
+      configuration.groupEditModel.map { model in
+        switch model.bottomLineDisplayMode {
+        case .always:
+          bottomLine.isHidden = false
+        case .editing, .none:
+          bottomLine.isHidden = true
+        }
+      }
+      return super.resignFirstResponder()
     }
   }
 }
@@ -159,21 +193,37 @@ extension Styled.UITextField.Configuration {
   }
   
   public struct GroupEditModel: Equatable {
-    public static let standard = Self(
-      mainColor: .toDoGardenGreenDark,
-      image: UIImage(systemName: "xmark.circle.fill") ?? UIImage.searchIconImage
-    )
+    public static let standard = Self(mainColor: UIColor.toDoGardenGreenDark, bottomLineDisplayMode: .always)
+    public static let todoList = Self(mainColor: UIColor.toDoGardenRed, bottomLineDisplayMode: .editing)
     
     var mainColor: UIColor
-    let image: UIImage
+    var image: UIImage = UIImage(systemName: "xmark.circle.fill") ?? UIImage.searchIconImage
+    var bottomLineDisplayMode: DisPlayMode
+    enum DisPlayMode: Equatable {
+      case always
+      case editing
+      case none
+    }
   }
 }
 
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  let textField = Styled.UITextField(configuration: .primary(.standard))
-  textField.placeholder = "아이디를 입력해주세요."
-  return textField
+  let stack = UIStackView()
+  stack.axis = .vertical
+  stack.spacing = 20
+  
+  let textField1 = Styled.UITextField(configuration: .primary(.standard))
+  textField1.placeholder = "아이디를 입력해주세요."
+  stack.addArrangedSubview(textField1)
+  let textField2 = Styled.UITextField(configuration: .groupEdit(.standard))
+  textField2.placeholder = "아이디를 입력해주세요."
+  stack.addArrangedSubview(textField2)
+  
+  let textField3 = Styled.UITextField(configuration: .groupEdit(.todoList))
+  stack.addArrangedSubview(textField3)
+  
+  return stack
 }
 #endif
