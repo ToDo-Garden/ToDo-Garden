@@ -293,7 +293,7 @@ extension Styled.Row {
     button.usingAutolayout()
     NSLayoutConstraint.activate([
       button.widthAnchor.constraint(equalToConstant: 18),
-      button.heightAnchor.constraint(equalToConstant: 18),
+      button.heightAnchor.constraint(equalToConstant: 18)
     ])
     stack.addArrangedSubview(button)
   }
