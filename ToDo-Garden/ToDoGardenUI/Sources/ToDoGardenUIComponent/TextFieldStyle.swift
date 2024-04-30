@@ -199,11 +199,14 @@ extension Styled.UITextField.Configuration {
     var mainColor: UIColor
     var image: UIImage = UIImage(systemName: "xmark.circle.fill") ?? UIImage.searchIconImage
     var bottomLineDisplayMode: DisPlayMode
-    enum DisPlayMode: Equatable {
-      case always
-      case editing
-      case none
-    }
+  }
+}
+
+extension Styled.UITextField.Configuration.GroupEditModel {
+  enum DisPlayMode: Equatable {
+    case always
+    case editing
+    case none
   }
 }
 
