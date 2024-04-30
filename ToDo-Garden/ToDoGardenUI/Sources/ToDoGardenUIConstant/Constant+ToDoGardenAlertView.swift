@@ -18,6 +18,7 @@ extension Constant.ToDoGardenAlertView {
     case askToDeleteGroup
     case askToUnsubscribe
     case askToLogout
+    case askToStopResting
   }
 }
 
@@ -169,6 +170,18 @@ extension Constant.ToDoGardenAlertView.Content {
         buttons: [
           ButtonLabelState(text: "로그아웃", isRed: true, buttonActionType: ButtonActionType.logout),
           ButtonLabelState(text: "취소", isRed: false, buttonActionType: ButtonActionType.cancel)
+        ],
+        stackView: StackViewState(isHorizontal: true, height: 51.0)
+      )
+      
+    case .askToStopResting:
+      return ViewState(
+        backPlane: BackPlaneState(width: 273.0, height: 206.0, cornerRadius: 20.0),
+        title: TitleViewState(text: "그만 쉴까요?", topMargin: 42.0),
+        description: DescriptionViewState(text: "이제 다시 열심히\n힘을 내볼까요?", topMargin: 84.0),
+        buttons: [
+          ButtonLabelState(text: "홈으로", isRed: true, buttonActionType: ButtonActionType.goHome),
+          ButtonLabelState(text: "집중하기", isRed: false, buttonActionType: ButtonActionType.keepConcentration)
         ],
         stackView: StackViewState(isHorizontal: true, height: 51.0)
       )
