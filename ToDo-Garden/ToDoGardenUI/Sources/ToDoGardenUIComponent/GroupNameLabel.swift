@@ -54,7 +54,7 @@ public final class GroupNameLabel: UILabel {
   }
 }
 
-// MARK: private functions
+// MARK: Private Functions
 
 extension GroupNameLabel {
   private func setupUI() {
@@ -78,7 +78,7 @@ extension GroupNameLabel {
   }
 }
 
-// MARK: configuration
+// MARK: Configuration
 
 extension GroupNameLabel {
   public enum Configuration {
@@ -99,7 +99,7 @@ extension GroupNameLabel.Configuration {
   )
 }
 
-// MARK: models
+// MARK: Models
 
 extension GroupNameLabel.Configuration {
   public struct PrimaryModel {
@@ -110,8 +110,13 @@ extension GroupNameLabel.Configuration {
     let backgroundColor: UIColor
     
     static let defaultPrimaryModel = GroupNameLabel.Configuration.PrimaryModel(
-      cornerRadius: 12,
-      textPadding: UIEdgeInsets(top: 5, left: 12, bottom: 5, right: 12),
+      cornerRadius: Constant.GroupNameLabel.Layout.cornerRadius,
+      textPadding: UIEdgeInsets(
+        top: Constant.GroupNameLabel.Layout.TextPadding.top,
+        left: Constant.GroupNameLabel.Layout.TextPadding.left,
+        bottom: Constant.GroupNameLabel.Layout.TextPadding.bottom,
+        right: Constant.GroupNameLabel.Layout.TextPadding.right
+      ),
       font: UIFont.pretendardBodyBold,
       textColor: UIColor.toDoGardenGreenDark,
       backgroundColor: UIColor.toDoGardenGreenBackground
