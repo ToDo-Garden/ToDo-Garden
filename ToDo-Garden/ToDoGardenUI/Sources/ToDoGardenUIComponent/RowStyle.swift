@@ -1,5 +1,5 @@
-import ToDoGardenUIResource
 import Combine
+import ToDoGardenUIResource
 import UIKit
 
 extension Styled {
@@ -227,32 +227,30 @@ extension Styled.Row {
     let titleLabel = self.buildTextLabel(
       stack: innerStack, text: model.title, font: model.titleFont, textColor: .toDoGardenGreenDark
     )
-    switch model.axis {
-    case .vertical:
-      innerStack.spacing = 3
-    case .horizontal:
-      innerStack.addSpacing()
-    @unknown default:
-      break
-    }
+    addConditionalSpacing(innerStack, axis: model.axis)
     self.$configutration
-      .map(\.profileModel?.title)
-      .removeDuplicates()
-      .sink { [weak titleLabel]text in
+      .map(\.profileModel?.title).removeDuplicates().sink { [weak titleLabel]text in
         titleLabel?.text = text
-      }
-      .store(in: &cancellables)
+      }.store(in: &cancellables)
     let descriptionLabel = self.buildTextLabel(
       stack: innerStack, text: model.description, font: model.descriptionFont, textColor: .toDoGardenGreenDark
     )
     self.$configutration
-      .map(\.profileModel?.description)
-      .removeDuplicates()
-      .sink { [weak descriptionLabel] text in
+      .map(\.profileModel?.description).removeDuplicates().sink { [weak descriptionLabel] text in
         descriptionLabel?.text = text
-      }
-      .store(in: &cancellables)
+      }.store(in: &cancellables)
     stack.addArrangedSubview(innerStack)
+  }
+  
+  private func addConditionalSpacing(_ stack: UIStackView, axis: NSLayoutConstraint.Axis) {
+    switch axis {
+    case .vertical:
+      stack.spacing = 3
+    case .horizontal:
+      stack.addSpacing()
+    @unknown default:
+      break
+    }
   }
 }
 
@@ -316,6 +314,11 @@ extension Styled.Row {
         }
       }
     )
+    buildButtonConfiguration(button)
+    builButtonLayout(button, stack: stack)
+  }
+  
+  private func buildButtonConfiguration(_ button: UIButton) {
     button.configuration?.baseForegroundColor = UIColor.toDoGardenRed
     button.configurationUpdateHandler = { button in
       switch button.state {
@@ -327,6 +330,9 @@ extension Styled.Row {
       }
     }
     button.changesSelectionAsPrimaryAction = true
+  }
+  
+  private func builButtonLayout(_ button: UIButton, stack: UIStackView) {
     button.usingAutolayout()
     NSLayoutConstraint.activate([
       button.widthAnchor.constraint(equalToConstant: 18),
