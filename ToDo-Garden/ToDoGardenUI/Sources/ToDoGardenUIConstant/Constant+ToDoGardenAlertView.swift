@@ -114,7 +114,10 @@ extension Constant.ToDoGardenAlertView.Content {
           cornerRadius: layoutConstant.cornerRadius
         ),
         title: TitleViewState(text: "수고했어요!", topMargin: layoutConstant.titleTopMarginForVertical),
-        description: DescriptionViewState(text: "오늘도 열심히 집중한 당신!\n이제 조금 쉬어볼까요?", topMargin: layoutConstant.descriptionTopMarginForVertical),
+        description: DescriptionViewState(
+          text: "오늘도 열심히 집중한 당신!\n이제 조금 쉬어볼까요?",
+          topMargin: layoutConstant.descriptionTopMarginForVertical
+        ),
         buttons: [
           ButtonLabelState(text: "휴식하기", isRed: false, buttonActionType: ButtonActionType.stopConcentration),
           ButtonLabelState(text: "더 집중하기", isRed: false, buttonActionType: ButtonActionType.keepConcentration),
@@ -131,7 +134,10 @@ extension Constant.ToDoGardenAlertView.Content {
           cornerRadius: layoutConstant.cornerRadius
         ),
         title: TitleViewState(text: "그만할까요?", topMargin: layoutConstant.titleTopMarginForHorizontal),
-        description: DescriptionViewState(text: "그만하면\n기록으로 돌아갈 수 있어요.", topMargin: layoutConstant.descriptionTopMarginForHorizontal),
+        description: DescriptionViewState(
+          text: "그만하면\n기록으로 돌아갈 수 있어요.",
+          topMargin: layoutConstant.descriptionTopMarginForHorizontal
+        ),
         buttons: [
           ButtonLabelState(text: "포기하기", isRed: true, buttonActionType: ButtonActionType.stopConcentration),
           ButtonLabelState(text: "집중하기", isRed: false, buttonActionType: ButtonActionType.cancel)
@@ -146,7 +152,10 @@ extension Constant.ToDoGardenAlertView.Content {
           height: layoutConstant.heightForHorizontal,
           cornerRadius: layoutConstant.cornerRadius),
         title: TitleViewState(text: "충전완료!", topMargin: layoutConstant.titleTopMarginForHorizontal),
-        description: DescriptionViewState(text: "이제 다시 열심히\n힘을 내볼까요?", topMargin: layoutConstant.descriptionTopMarginForHorizontal),
+        description: DescriptionViewState(
+          text: "이제 다시 열심히\n힘을 내볼까요?",
+          topMargin: layoutConstant.descriptionTopMarginForHorizontal
+        ),
         buttons: [
           ButtonLabelState(text: "홈으로", isRed: true, buttonActionType: ButtonActionType.goHome),
           ButtonLabelState(text: "집중하기", isRed: false, buttonActionType: ButtonActionType.keepConcentration)
@@ -162,7 +171,10 @@ extension Constant.ToDoGardenAlertView.Content {
           cornerRadius: layoutConstant.cornerRadius
         ),
         title: TitleViewState(text: "삭제할까요?", topMargin: layoutConstant.titleTopMarginForHorizontal),
-        description: DescriptionViewState(text: "한 번 삭제하면 되돌릴 수 없어요.", topMargin: layoutConstant.descriptionTopMarginForHorizontal),
+        description: DescriptionViewState(
+          text: "한 번 삭제하면 되돌릴 수 없어요.",
+          topMargin: layoutConstant.descriptionTopMarginForHorizontal
+        ),
         buttons: [
           ButtonLabelState(text: "취소하기", isRed: false, buttonActionType: ButtonActionType.cancel),
           ButtonLabelState(text: "삭제하기", isRed: true, buttonActionType: ButtonActionType.delete)
@@ -178,7 +190,10 @@ extension Constant.ToDoGardenAlertView.Content {
           cornerRadius: layoutConstant.cornerRadius
         ),
         title: TitleViewState(text: "그룹을 삭제하시겠습니까?", topMargin: layoutConstant.titleTopMarginForHorizontal),
-        description: DescriptionViewState(text: "그룹에 포함되어 있던\n투두들은 모두 삭제됩니다", topMargin: layoutConstant.descriptionTopMarginForHorizontal),
+        description: DescriptionViewState(
+          text: "그룹에 포함되어 있던\n투두들은 모두 삭제됩니다",
+          topMargin: layoutConstant.descriptionTopMarginForHorizontal
+        ),
         buttons: [
           ButtonLabelState(text: "취소", isRed: false, buttonActionType: ButtonActionType.cancel),
           ButtonLabelState(text: "삭제하기", isRed: true, buttonActionType: ButtonActionType.delete)
@@ -194,7 +209,10 @@ extension Constant.ToDoGardenAlertView.Content {
           cornerRadius: layoutConstant.cornerRadius
         ),
         title: TitleViewState(text: "서비스 탈퇴", topMargin: layoutConstant.titleTopMarginForHorizontal),
-        description: DescriptionViewState(text: "정말로 탈퇴하시겠습니까?\n회원 탈퇴 시 모든 정보는\n복구할 수 없습니다.", topMargin: layoutConstant.descriptionTopMarginForHorizontal),
+        description: DescriptionViewState(
+          text: "정말로 탈퇴하시겠습니까?\n회원 탈퇴 시 모든 정보는\n복구할 수 없습니다.",
+          topMargin: layoutConstant.descriptionTopMarginForHorizontal
+        ),
         buttons: [
           ButtonLabelState(text: "탈퇴하기", isRed: true, buttonActionType: ButtonActionType.unsubscribe),
           ButtonLabelState(text: "취소", isRed: false, buttonActionType: ButtonActionType.cancel)
@@ -210,7 +228,10 @@ extension Constant.ToDoGardenAlertView.Content {
           cornerRadius: layoutConstant.cornerRadius
         ),
         title: TitleViewState(text: "로그아웃", topMargin: layoutConstant.titleTopMarginForHorizontal),
-        description: DescriptionViewState(text: "정말 로그아웃 하시겠습니까?", topMargin: layoutConstant.descriptionTopMarginForHorizontal),
+        description: DescriptionViewState(
+          text: "정말 로그아웃 하시겠습니까?",
+          topMargin: layoutConstant.descriptionTopMarginForHorizontal
+        ),
         buttons: [
           ButtonLabelState(text: "로그아웃", isRed: true, buttonActionType: ButtonActionType.logout),
           ButtonLabelState(text: "취소", isRed: false, buttonActionType: ButtonActionType.cancel)
@@ -226,7 +247,10 @@ extension Constant.ToDoGardenAlertView.Content {
           cornerRadius: layoutConstant.cornerRadius
         ),
         title: TitleViewState(text: "그만 쉴까요?", topMargin: layoutConstant.titleTopMarginForHorizontal),
-        description: DescriptionViewState(text: "이제 다시 열심히\n힘을 내볼까요?", topMargin: layoutConstant.descriptionTopMarginForHorizontal),
+        description: DescriptionViewState(
+          text: "이제 다시 열심히\n힘을 내볼까요?",
+          topMargin: layoutConstant.descriptionTopMarginForHorizontal
+        ),
         buttons: [
           ButtonLabelState(text: "홈으로", isRed: true, buttonActionType: ButtonActionType.goHome),
           ButtonLabelState(text: "집중하기", isRed: false, buttonActionType: ButtonActionType.keepConcentration)
