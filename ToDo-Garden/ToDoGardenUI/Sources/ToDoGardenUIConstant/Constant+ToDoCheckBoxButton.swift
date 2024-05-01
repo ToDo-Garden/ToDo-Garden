@@ -29,3 +29,14 @@ extension Constant.ToDoCheckBoxButton.Animation {
   public static let fromValue: CGFloat = 0.0
   public static let toValue: CGFloat = 1.0
 }
+
+extension Constant.ToDoCheckBoxButton.Animation {
+  public enum Path {
+    public static let offsetXToStartPoint: CGFloat = 4.0
+    public static let offsetYToStartPoint: CGFloat = 7.5
+    public static let offsetXToMiddlePoint: CGFloat = 3.5
+    public static let offsetYToMiddlePoint: CGFloat = 5.5
+    public static let offsetXToEndPoint: CGFloat = 6.0
+    public static let offsetYToEndPoint: CGFloat = 8.5
+  }
+}
