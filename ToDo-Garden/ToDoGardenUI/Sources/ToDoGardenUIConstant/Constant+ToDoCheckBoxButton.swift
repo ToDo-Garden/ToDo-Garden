@@ -8,9 +8,14 @@
 import Foundation
 
 extension Constant.ToDoCheckBoxButton {
+  public enum Size { }
   public enum Layout { }
   public enum Action { }
   public enum Animation { }
+}
+
+extension Constant.ToDoCheckBoxButton.Size {
+  public static let priamry = CGSize(width: 18, height: 18)
 }
 
 extension Constant.ToDoCheckBoxButton.Layout {
