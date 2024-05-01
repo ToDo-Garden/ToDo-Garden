@@ -3,7 +3,7 @@ import ToDoGardenUIResource
 import UIKit
 
 extension Styled {
-  open class Row: UIView {
+  final public class Row: UIView {
     public var iconImage: UIImage? {
       get {
         if let image = self.configutration.profileModel?.image {
@@ -28,6 +28,7 @@ extension Styled {
       self.build()
     }
     
+    @available(*, unavailable)
     public required init?(coder: NSCoder) {
       fatalError("init(coder:) has not been implemented")
     }
@@ -39,13 +40,11 @@ extension Styled {
     private func build() {
       let stack = UIStackView(frame: CGRect.zero)
       switch self.configutration {
-      case let .profile(profileModel):
+      case let Configuration.profile(profileModel):
         self.buildProfileStyle(stack: stack, model: profileModel)
-        
-      case let .listPrimary(listPrimaryModel):
+      case let Configuration.listPrimary(listPrimaryModel):
         self.buildListPrimaryStyle(stack: stack, model: listPrimaryModel)
-        
-      case let .todoList(todoListModel):
+      case let Configuration.todoList(todoListModel):
         self.buildTodoListStyle(stack: stack, model: todoListModel)
       }
     }
@@ -55,20 +54,20 @@ extension Styled {
 extension Styled.Row {
   public enum Configuration {
     var profileModel: ProfileModel? {
-      if case let .profile(model) = self {
+      if case let Self.profile(model) = self {
         return model
       }
       return nil
     }
     
     var listPrimaryModel: ListPrimaryModel? {
-      if case let .listPrimary(model) = self {
+      if case let Self.listPrimary(model) = self {
         return model
       }
       return nil
     }
     var todoListModel: TodoListModel? {
-      if case let .todoList(model) = self {
+      if case let Self.todoList(model) = self {
         return model
       }
       return nil
@@ -111,7 +110,7 @@ extension Styled.Row.Configuration {
         axis: .horizontal
       )
     }
-    var image: UIImage = .defaultFriendProfileImage
+    var image: UIImage = UIImage.defaultFriendProfileImage
     var title: String
     var titleFont: UIFont
     var description: String
@@ -140,7 +139,7 @@ extension Styled.Row.Configuration {
 extension Styled.Row {
   private func buildStack(
     stack: UIStackView,
-    axis: NSLayoutConstraint.Axis = .horizontal,
+    axis: NSLayoutConstraint.Axis = NSLayoutConstraint.Axis.horizontal,
     edgeInsets: NSDirectionalEdgeInsets
   ) {
     stack.alignment = .center
@@ -189,15 +188,8 @@ extension Styled.Row {
       image: model.image,
       size: CGSize(width: 55, height: 55)
     )
-    self.$configutration
-      .map(\.profileModel?.image)
-      .removeDuplicates()
-      .sink { [weak imageView] image in
-        imageView?.image = image
-      }
-      .store(in: &cancellables)
     self.buildInnerStack(stack: stack, model: model)
-    if model.axis == .vertical {
+    if model.axis == NSLayoutConstraint.Axis.vertical {
       stack.addSpacing()
     }
     self.buildImageView(
@@ -205,6 +197,7 @@ extension Styled.Row {
       image: UIImage.forwardButtonImage,
       size: CGSize(width: 24, height: 24)
     )
+    self.bindingProfileImageState(imageView: imageView)
   }
   
   private func buildProfileStyleStack(stack: UIStackView) {
@@ -225,39 +218,71 @@ extension Styled.Row {
     let innerStack = UIStackView(frame: CGRect.zero)
     innerStack.axis = model.axis
     let titleLabel = self.buildTextLabel(
-      stack: innerStack, text: model.title, font: model.titleFont, textColor: .toDoGardenGreenDark
+      stack: innerStack,
+      text: model.title,
+      font: model.titleFont,
+      textColor: .toDoGardenGreenDark
     )
     addConditionalSpacing(innerStack, axis: model.axis)
-    self.$configutration
-      .map(\.profileModel?.title).removeDuplicates().sink { [weak titleLabel]text in
-        titleLabel?.text = text
-      }.store(in: &cancellables)
     let descriptionLabel = self.buildTextLabel(
-      stack: innerStack, text: model.description, font: model.descriptionFont, textColor: .toDoGardenGreenDark
+      stack: innerStack,
+      text: model.description,
+      font: model.descriptionFont,
+      textColor: .toDoGardenGreenDark
     )
-    self.$configutration
-      .map(\.profileModel?.description).removeDuplicates().sink { [weak descriptionLabel] text in
-        descriptionLabel?.text = text
-      }.store(in: &cancellables)
     stack.addArrangedSubview(innerStack)
+    bindingProfileInnerTitleState(
+      titleLabel: titleLabel,
+      descriptionLabel: descriptionLabel
+    )
   }
   
   private func addConditionalSpacing(_ stack: UIStackView, axis: NSLayoutConstraint.Axis) {
     switch axis {
-    case .vertical:
+    case NSLayoutConstraint.Axis.vertical:
       stack.spacing = 3
-    case .horizontal:
+    case NSLayoutConstraint.Axis.horizontal:
       stack.addSpacing()
     @unknown default:
       break
     }
+  }
+  
+  private func bindingProfileImageState(imageView: UIImageView) {
+    self.$configutration
+      .map(\.profileModel?.image)
+      .removeDuplicates()
+      .sink { [weak imageView] image in
+        imageView?.image = image
+      }
+      .store(in: &cancellables)
+  }
+  
+  private func bindingProfileInnerTitleState(
+    titleLabel: UILabel,
+    descriptionLabel: UILabel
+  ) {
+    self.$configutration
+      .map(\.profileModel?.description)
+      .removeDuplicates()
+      .sink { [weak descriptionLabel] text in
+        descriptionLabel?.text = text
+      }
+      .store(in: &cancellables)
+    self.$configutration
+      .map(\.profileModel?.title)
+      .removeDuplicates()
+      .sink { [weak titleLabel] text in
+        titleLabel?.text = text
+      }
+      .store(in: &cancellables)
   }
 }
 
 // MARK: - ListPrimary
 extension Styled.Row {
   private func buildListPrimaryStyle(stack: UIStackView, model: Configuration.ListPrimaryModel) {
-    stack.alignment = .center
+    stack.alignment = UIStackView.Alignment.center
     self.buildStack(
       stack: stack,
       edgeInsets: NSDirectionalEdgeInsets(
@@ -389,10 +414,10 @@ extension Styled.Row {
   let stack = UIStackView()
   stack.axis = .vertical
   
-  let view = Styled.Row(configuration: .profile(.primary(title: "에피", description: "잡식과 편식 단순한 인생")))
+  let view = Styled.Row(configuration: .profile(.primary(title: "배고픔", description: "울트라 배고픔")))
   stack.addArrangedSubview(view)
   
-  let view2 = Styled.Row(configuration: .profile(.gardenInfo(title: "박준보", description: "연속 19일 집중!")))
+  let view2 = Styled.Row(configuration: .profile(.gardenInfo(title: "윤강운", description: "강운이는 크다.")))
   stack.addArrangedSubview(view2)
   return stack
 }
