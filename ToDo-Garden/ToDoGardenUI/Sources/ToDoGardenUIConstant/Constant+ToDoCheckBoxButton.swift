@@ -9,9 +9,14 @@ import Foundation
 
 extension Constant.ToDoCheckBoxButton {
   public enum Layout { }
+  public enum Action { }
 }
 
 extension Constant.ToDoCheckBoxButton.Layout {
   public static let borderWidth: CGFloat = 0.6
   public static let cornerRadius: CGFloat = 3.0
+}
+
+extension Constant.ToDoCheckBoxButton.Action {
+  public static let impactIntesity: CGFloat = 0.6
 }
