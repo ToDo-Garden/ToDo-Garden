@@ -29,12 +29,27 @@ public final class CreateToDoButton: UIButton {
 extension CreateToDoButton {
   private func setupUI() {
     self.setupConfiguration()
+    self.setupTitle()
     self.setupContentsLayout()
   }
 
   private func setupConfiguration() {
     let configuration = UIButton.Configuration.filled()
     self.configuration = configuration
+  }
+
+  private func setupTitle() {
+     let attributes = AttributeContainer(
+       [
+         NSAttributedString.Key.font : UIFont.pretendardBodyBold,
+         NSAttributedString.Key.foregroundColor : UIColor.toDoGardenGreenDark
+       ]
+     )
+     let attributedTtile = AttributedString(
+       self.primaryModel.title,
+       attributes: attributes
+     )
+     self.configuration?.attributedTitle = attributedTtile
   }
 
   private func setupContentsLayout() {
