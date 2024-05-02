@@ -23,14 +23,30 @@ public final class CreateToDoButton: UIButton {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+
+  public func updateTitle(with groupName: String) {
+    self.configuration?.attributedTitle = self.makeAttributedTitle(with: groupName)
+  }
 }
 
 // MARK: Private Functions
 
 extension CreateToDoButton {
+  private func makeAttributedTitle(with groupName: String) -> AttributedString {
+    let attributes = AttributeContainer(
+      [
+        NSAttributedString.Key.font: UIFont.pretendardBodyBold,
+        NSAttributedString.Key.foregroundColor: UIColor.toDoGardenGreenDark
+      ]
+    )
+    return AttributedString(
+      groupName,
+      attributes: attributes
+    )
+  }
+
   private func setupUI() {
     self.setupConfiguration()
-    self.setupTitle()
     self.setupRightImage()
     self.setupBackgroundColor()
     self.setupContentsLayout()
@@ -40,20 +56,6 @@ extension CreateToDoButton {
     var configuration = UIButton.Configuration.filled()
     configuration.cornerStyle = UIButton.Configuration.CornerStyle.capsule
     self.configuration = configuration
-  }
-
-  private func setupTitle() {
-    let attributes = AttributeContainer(
-      [
-        NSAttributedString.Key.font: UIFont.pretendardBodyBold,
-        NSAttributedString.Key.foregroundColor: UIColor.toDoGardenGreenDark
-      ]
-    )
-    let attributedTtile = AttributedString(
-      self.primaryModel.title,
-      attributes: attributes
-    )
-    self.configuration?.attributedTitle = attributedTtile
   }
 
   private func setupBackgroundColor() {
@@ -75,21 +77,24 @@ extension CreateToDoButton {
 
 extension CreateToDoButton {
   public struct PrimaryModel {
-    var title: String
-    var imagePadding: CGFloat
-    var contentInsets: NSDirectionalEdgeInsets
-    var image: UIImage
+    let imagePadding: CGFloat
+    let contentInsets: NSDirectionalEdgeInsets
+    let image: UIImage
+    let font: UIFont
+    let textColor: UIColor
 
     public init(
-      title: String,
       imagePadding: CGFloat = Constant.CreateToDoButton.Layout.Primary.imagePadding,
       contentInsets: NSDirectionalEdgeInsets = Constant.CreateToDoButton.Layout.Primary.contentInsets,
-      image: UIImage = UIImage.createToDoButtonImage
+      image: UIImage = UIImage.createToDoButtonImage,
+      font: UIFont = UIFont.pretendardBodyBold,
+      textColor: UIColor = UIColor.toDoGardenGreenDark
     ) {
-      self.title = title
       self.imagePadding = imagePadding
       self.contentInsets = contentInsets
       self.image = image
+      self.font = font
+      self.textColor = textColor
     }
   }
 }
