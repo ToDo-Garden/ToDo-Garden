@@ -5,6 +5,7 @@
 //  Created by Wood on 5/2/24.
 //
 
+import AVFoundation
 import UIKit
 
 import ToDoGardenUIConstant
@@ -12,8 +13,12 @@ import ToDoGardenUIResource
 
 public final class ToDoCheckBoxButton: UIButton {
   private var checkBoxModel: ToDoCheckBoxButton.CheckBoxModel
+  private var impactGenerator: UIImpactFeedbackGenerator
 
   public init(checkBoxModel: ToDoCheckBoxButton.CheckBoxModel) {
+    self.impactGenerator = UIImpactFeedbackGenerator(
+      style: UIImpactFeedbackGenerator.FeedbackStyle.heavy
+    )
     self.checkBoxModel = checkBoxModel
     super.init(frame: CGRect.zero)
     self.updateState()
@@ -39,6 +44,7 @@ extension ToDoCheckBoxButton {
   private func completeToDo() {
     self.isSelected = true
     self.backgroundColor = self.checkBoxModel.groupColor
+    self.impactGenerator.impactOccurred(intensity: Constant.ToDoCheckBoxButton.Action.impactIntesity)
   }
 
   private func resetToDo() {
