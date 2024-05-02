@@ -31,6 +31,7 @@ extension CreateToDoButton {
     self.setupConfiguration()
     self.setupTitle()
     self.setupRightImage()
+    self.setupBackgroundColor()
     self.setupContentsLayout()
   }
 
@@ -51,6 +52,10 @@ extension CreateToDoButton {
        attributes: attributes
      )
      self.configuration?.attributedTitle = attributedTtile
+  }
+
+  private func setupBackgroundColor() {
+    self.configuration?.baseBackgroundColor = UIColor.toDoGardenGreenBackground
   }
 
   private func setupRightImage() {
