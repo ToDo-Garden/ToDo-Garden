@@ -7,8 +7,8 @@
 
 import UIKit
 
-import ToDoGardenUIResource
 import ToDoGardenUIConstant
+import ToDoGardenUIResource
 
 public final class ToDoCheckBoxButton: UIButton {
   private var checkBoxModel: ToDoCheckBoxButton.CheckBoxModel
@@ -16,11 +16,34 @@ public final class ToDoCheckBoxButton: UIButton {
   public init(checkBoxModel: ToDoCheckBoxButton.CheckBoxModel) {
     self.checkBoxModel = checkBoxModel
     super.init(frame: CGRect.zero)
+    self.updateState()
   }
 
   @available(*, unavailable)
   public required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+}
+
+// MARK: Private Functions
+
+extension ToDoCheckBoxButton {
+  private func updateState() {
+    if self.checkBoxModel.isToDoDone {
+      self.completeToDo()
+    } else {
+      self.resetToDo()
+    }
+  }
+
+  private func completeToDo() {
+    self.isSelected = true
+    self.backgroundColor = self.checkBoxModel.groupColor
+  }
+
+  private func resetToDo() {
+    self.isSelected = false
+    self.backgroundColor = UIColor.toDoGardenWhite
   }
 }
 
