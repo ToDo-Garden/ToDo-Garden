@@ -23,9 +23,7 @@ public final class ToDoCheckBoxButton: UIButton {
       style: UIImpactFeedbackGenerator.FeedbackStyle.heavy
     )
     super.init(frame: CGRect.zero)
-    self.updateState()
-    self.setupToDoCompleteAnimation()
-    self.setupUI()
+    self.setup()
   }
 
   @available(*, unavailable)
@@ -37,6 +35,13 @@ public final class ToDoCheckBoxButton: UIButton {
 // MARK: Private Functions
 
 extension ToDoCheckBoxButton {
+  private func setup() {
+    self.updateState()
+    self.setupAction()
+    self.setupToDoCompleteAnimation()
+    self.setupUI()
+  }
+
   private func updateState() {
     if self.checkBoxModel.isToDoDone {
       self.completeToDo()
@@ -55,6 +60,28 @@ extension ToDoCheckBoxButton {
   private func resetToDo() {
     self.isSelected = false
     self.backgroundColor = UIColor.toDoGardenWhite
+  }
+}
+
+// MARK: Set Up Action
+
+extension ToDoCheckBoxButton {
+  private func setupAction() {
+    self.addAction(
+      self.makeButtonAction(),
+      for: UIControl.Event.touchUpInside
+    )
+  }
+
+  private func makeButtonAction() -> UIAction {
+    return UIAction { [weak self] _ in
+      guard let self else { return }
+      if self.isSelected {
+        self.resetToDo()
+      } else {
+        self.completeToDo()
+      }
+    }
   }
 }
 
