@@ -7,6 +7,7 @@
 
 import UIKit
 
+import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 public final class CreateToDoButton: UIButton {
@@ -36,7 +37,8 @@ extension CreateToDoButton {
   }
 
   private func setupConfiguration() {
-    let configuration = UIButton.Configuration.filled()
+    var configuration = UIButton.Configuration.filled()
+    configuration.cornerStyle = UIButton.Configuration.CornerStyle.capsule
     self.configuration = configuration
   }
 
