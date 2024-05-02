@@ -42,7 +42,7 @@ extension Styled.Row.Configuration {
         titleFont: UIFont.pretendardHeadBold,
         description: description,
         descriptionFont: UIFont.pretendardDetailLight,
-        axis: .vertical
+        axis: NSLayoutConstraint.Axis.vertical
       )
     }
     
@@ -57,7 +57,7 @@ extension Styled.Row.Configuration {
         titleFont: UIFont.pretendardBodySemiBold,
         description: description,
         descriptionFont: UIFont.pretendardBodyMedium,
-        axis: .horizontal
+        axis: NSLayoutConstraint.Axis.horizontal
       )
     }
     var image: UIImage = UIImage.defaultFriendProfileImage

@@ -1,6 +1,7 @@
 import Combine
-import ToDoGardenUIResource
 import UIKit
+
+import ToDoGardenUIResource
 
 extension Styled {
   final public class Row: UIView {
