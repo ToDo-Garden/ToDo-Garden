@@ -21,6 +21,7 @@ extension Constant.ToDoCheckBoxButton.Size {
 extension Constant.ToDoCheckBoxButton.Layout {
   public static let borderWidth: CGFloat = 0.6
   public static let cornerRadius: CGFloat = 3.0
+  public static let lineWidth: CGFloat = 1.0
 }
 
 extension Constant.ToDoCheckBoxButton.Action {
@@ -28,7 +29,6 @@ extension Constant.ToDoCheckBoxButton.Action {
 }
 
 extension Constant.ToDoCheckBoxButton.Animation {
-  public static let lineWidth: CGFloat = 1.0
   public static let keyPath: String = "strokeEnd"
   public static let duration: CGFloat = 0.4
   public static let fromValue: CGFloat = 0.0
