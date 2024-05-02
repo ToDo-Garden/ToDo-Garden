@@ -1,0 +1,47 @@
+//
+//  Constant+ToDoCheckBoxButton.swift
+//
+//
+//  Created by Wood on 5/1/24.
+//
+
+import Foundation
+
+extension Constant.ToDoCheckBoxButton {
+  public enum Size { }
+  public enum Layout { }
+  public enum Action { }
+  public enum Animation { }
+}
+
+extension Constant.ToDoCheckBoxButton.Size {
+  public static let priamry = CGSize(width: 18, height: 18)
+}
+
+extension Constant.ToDoCheckBoxButton.Layout {
+  public static let borderWidth: CGFloat = 0.6
+  public static let cornerRadius: CGFloat = 3.0
+  public static let lineWidth: CGFloat = 1.0
+}
+
+extension Constant.ToDoCheckBoxButton.Action {
+  public static let impactIntesity: CGFloat = 0.6
+}
+
+extension Constant.ToDoCheckBoxButton.Animation {
+  public static let keyPath: String = "strokeEnd"
+  public static let duration: CGFloat = 0.4
+  public static let fromValue: CGFloat = 0.0
+  public static let toValue: CGFloat = 1.0
+}
+
+extension Constant.ToDoCheckBoxButton.Animation {
+  public enum Path {
+    public static let offsetXToStartPoint: CGFloat = 4.0
+    public static let offsetYToStartPoint: CGFloat = 7.5
+    public static let offsetXToMiddlePoint: CGFloat = 3.5
+    public static let offsetYToMiddlePoint: CGFloat = 5.5
+    public static let offsetXToEndPoint: CGFloat = 6.0
+    public static let offsetYToEndPoint: CGFloat = 8.5
+  }
+}

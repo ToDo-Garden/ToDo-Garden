@@ -12,4 +12,5 @@ public enum Constant {
   public enum ProfileImageView {}
   public enum SearchGardenButton {}
   public enum ToDoGardenAlertView {}
+  public enum ToDoCheckBoxButton {}
 }
