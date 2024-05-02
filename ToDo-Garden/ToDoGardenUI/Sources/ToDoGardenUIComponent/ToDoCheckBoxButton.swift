@@ -13,13 +13,15 @@ import ToDoGardenUIResource
 
 public final class ToDoCheckBoxButton: UIButton {
   private var checkBoxModel: ToDoCheckBoxButton.CheckBoxModel
+  private var checkmarkDrawingLayer: CAShapeLayer
   private var impactGenerator: UIImpactFeedbackGenerator
 
   public init(checkBoxModel: ToDoCheckBoxButton.CheckBoxModel) {
+    self.checkBoxModel = checkBoxModel
+    self.checkmarkDrawingLayer = CAShapeLayer()
     self.impactGenerator = UIImpactFeedbackGenerator(
       style: UIImpactFeedbackGenerator.FeedbackStyle.heavy
     )
-    self.checkBoxModel = checkBoxModel
     super.init(frame: CGRect.zero)
     self.updateState()
   }
@@ -45,11 +47,77 @@ extension ToDoCheckBoxButton {
     self.isSelected = true
     self.backgroundColor = self.checkBoxModel.groupColor
     self.impactGenerator.impactOccurred(intensity: Constant.ToDoCheckBoxButton.Action.impactIntesity)
+    self.drawCompleteToDoAnimation()
   }
 
   private func resetToDo() {
     self.isSelected = false
     self.backgroundColor = UIColor.toDoGardenWhite
+  }
+}
+
+// MARK: Set up Animation
+
+extension ToDoCheckBoxButton {
+  private func setupToDoCompleteAnimation() {
+    self.setupAnimationUI()
+    self.setupAnimationPath()
+  }
+
+  private func drawCompleteToDoAnimation() {
+    let animation = CABasicAnimation(keyPath: Constant.ToDoCheckBoxButton.Animation.keyPath)
+    animation.duration = Constant.ToDoCheckBoxButton.Animation.duration
+    animation.fromValue = Constant.ToDoCheckBoxButton.Animation.fromValue
+    animation.toValue = Constant.ToDoCheckBoxButton.Animation.toValue
+    animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+    self.checkmarkDrawingLayer.add(animation, forKey: nil)
+  }
+
+  private func setupAnimationUI() {
+    self.checkmarkDrawingLayer.lineWidth = Constant.ToDoCheckBoxButton.Layout.lineWidth
+    self.checkmarkDrawingLayer.fillColor = UIColor.clear.cgColor
+    self.checkmarkDrawingLayer.strokeColor = UIColor.white.cgColor
+    self.checkmarkDrawingLayer.lineCap = CAShapeLayerLineCap.round
+    self.checkmarkDrawingLayer.lineJoin = CAShapeLayerLineJoin.round
+    self.layer.addSublayer(self.checkmarkDrawingLayer)
+  }
+
+  private func setupAnimationPath() {
+    let bezierPath = UIBezierPath()
+    self.setupStartPoint(to: bezierPath)
+    self.setupMiddlePoint(to: bezierPath)
+    self.setupEndPoint(to: bezierPath)
+    self.checkmarkDrawingLayer.path = bezierPath.cgPath
+  }
+
+  private func setupStartPoint(to bezierPath: UIBezierPath) {
+    let offsetXToStartPoint = Constant.ToDoCheckBoxButton.Animation.Path.offsetXToStartPoint
+    let offsetYToStartPoint = Constant.ToDoCheckBoxButton.Animation.Path.offsetYToStartPoint
+    let startPoint = CGPoint(
+      x: self.frame.origin.x + offsetXToStartPoint,
+      y: self.frame.origin.x + offsetYToStartPoint
+    )
+    bezierPath.move(to: startPoint)
+  }
+
+  private func setupMiddlePoint(to bezierPath: UIBezierPath) {
+    let offsetXToMiddlePoint = Constant.ToDoCheckBoxButton.Animation.Path.offsetXToMiddlePoint
+    let offsetYToMiddlePoint = Constant.ToDoCheckBoxButton.Animation.Path.offsetYToMiddlePoint
+    let middlePoint = CGPoint(
+      x: bezierPath.currentPoint.x + offsetXToMiddlePoint,
+      y: bezierPath.currentPoint.y + offsetYToMiddlePoint
+    )
+    bezierPath.addLine(to: middlePoint)
+  }
+
+  private func setupEndPoint(to bezierPath: UIBezierPath) {
+    let offsetXToEndPoint = Constant.ToDoCheckBoxButton.Animation.Path.offsetXToEndPoint
+    let offsetYToEndPoint = Constant.ToDoCheckBoxButton.Animation.Path.offsetYToEndPoint
+    let endPoint = CGPoint(
+      x: bezierPath.currentPoint.x + offsetXToEndPoint,
+      y: bezierPath.currentPoint.y - offsetYToEndPoint
+    )
+    bezierPath.addLine(to: endPoint)
   }
 }
 
