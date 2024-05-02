@@ -30,6 +30,7 @@ extension CreateToDoButton {
   private func setupUI() {
     self.setupConfiguration()
     self.setupTitle()
+    self.setupRightImage()
     self.setupContentsLayout()
   }
 
@@ -50,6 +51,10 @@ extension CreateToDoButton {
        attributes: attributes
      )
      self.configuration?.attributedTitle = attributedTtile
+  }
+
+  private func setupRightImage() {
+    self.configuration?.image = self.primaryModel.image
   }
 
   private func setupContentsLayout() {
