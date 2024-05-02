@@ -24,6 +24,8 @@ public final class ToDoCheckBoxButton: UIButton {
     )
     super.init(frame: CGRect.zero)
     self.updateState()
+    self.setupToDoCompleteAnimation()
+    self.setupUI()
   }
 
   @available(*, unavailable)
@@ -118,6 +120,24 @@ extension ToDoCheckBoxButton {
       y: bezierPath.currentPoint.y - offsetYToEndPoint
     )
     bezierPath.addLine(to: endPoint)
+  }
+}
+
+// MARK: set up UI
+
+extension ToDoCheckBoxButton {
+  private func setupUI() {
+    self.setupBorder()
+    self.setupRoundedCorner()
+  }
+
+  private func setupBorder() {
+    self.layer.borderColor = self.checkBoxModel.groupColor.cgColor
+    self.layer.borderWidth = self.checkBoxModel.borderWidth
+  }
+
+  private func setupRoundedCorner() {
+    self.layer.cornerRadius = self.checkBoxModel.cornerRadius
   }
 }
 
