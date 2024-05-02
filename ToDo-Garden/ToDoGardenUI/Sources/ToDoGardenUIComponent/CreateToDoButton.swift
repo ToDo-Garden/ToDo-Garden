@@ -43,17 +43,17 @@ extension CreateToDoButton {
   }
 
   private func setupTitle() {
-     let attributes = AttributeContainer(
-       [
-         NSAttributedString.Key.font : UIFont.pretendardBodyBold,
-         NSAttributedString.Key.foregroundColor : UIColor.toDoGardenGreenDark
-       ]
-     )
-     let attributedTtile = AttributedString(
-       self.primaryModel.title,
-       attributes: attributes
-     )
-     self.configuration?.attributedTitle = attributedTtile
+    let attributes = AttributeContainer(
+      [
+        NSAttributedString.Key.font: UIFont.pretendardBodyBold,
+        NSAttributedString.Key.foregroundColor: UIColor.toDoGardenGreenDark
+      ]
+    )
+    let attributedTtile = AttributedString(
+      self.primaryModel.title,
+      attributes: attributes
+    )
+    self.configuration?.attributedTitle = attributedTtile
   }
 
   private func setupBackgroundColor() {
