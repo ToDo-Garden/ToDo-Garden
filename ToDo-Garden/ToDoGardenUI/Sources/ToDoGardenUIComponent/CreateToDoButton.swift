@@ -15,11 +15,32 @@ public final class CreateToDoButton: UIButton {
   public init(primaryModel: CreateToDoButton.PrimaryModel) {
     self.primaryModel = primaryModel
     super.init(frame: CGRect.zero)
+    self.setupUI()
   }
 
   @available(*, unavailable)
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+}
+
+// MARK: Private Functions
+
+extension CreateToDoButton {
+  private func setupUI() {
+    self.setupConfiguration()
+    self.setupContentsLayout()
+  }
+
+  private func setupConfiguration() {
+    let configuration = UIButton.Configuration.filled()
+    self.configuration = configuration
+  }
+
+  private func setupContentsLayout() {
+    self.configuration?.contentInsets = self.primaryModel.contentInsets
+    self.configuration?.imagePadding = self.primaryModel.imagePadding
+    self.configuration?.imagePlacement = NSDirectionalRectEdge.trailing
   }
 }
 
