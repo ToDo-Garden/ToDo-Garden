@@ -2,10 +2,10 @@ import Combine
 import UIKit
 
 public class TableRow: UITableViewCell {
-  public func build(
+  public func build<T>(
     configuration: Styled.Row.Configuration,
-    handler: @escaping ((Styled.Row.Configuration) -> Void) = { _ in }
-  ) -> AnyCancellable {
+    keyPath: KeyPath<Styled.Row.Configuration, T>
+  ) -> AnyPublisher<T, Never> {
     selectionStyle = UITableViewCell.SelectionStyle.none
     let row = Styled.Row(configuration: configuration)
     row.usingAutolayout()
@@ -18,6 +18,7 @@ public class TableRow: UITableViewCell {
     ])
     
     return row.$configutration
-      .sink(receiveValue: handler)
+      .map(keyPath)
+      .eraseToAnyPublisher()
   }
 }
