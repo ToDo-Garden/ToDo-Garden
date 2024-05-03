@@ -1,5 +1,6 @@
-import ToDoGardenUIResource
 import UIKit
+
+import ToDoGardenUIResource
 
 extension Styled.Row {
   public enum Configuration {

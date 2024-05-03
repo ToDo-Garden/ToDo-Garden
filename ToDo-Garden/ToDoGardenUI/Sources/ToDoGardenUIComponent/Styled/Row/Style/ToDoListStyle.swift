@@ -79,7 +79,7 @@ extension Styled.Row {
   
   private func updateTextField(_ textField: UITextField?, buttonSelected: Bool) {
     textField?.isEnabled = !buttonSelected
-    textField?.textColor = buttonSelected ? UIColor.gray : UIColor.black
+    textField?.textColor = buttonSelected ? UIColor.toDoGardenGray3 : UIColor.toDoGardenGreenDark
     if buttonSelected {
       let attributeString = NSMutableAttributedString(string: textField?.text ?? "")
       attributeString

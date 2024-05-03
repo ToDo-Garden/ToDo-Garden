@@ -1,4 +1,5 @@
 import UIKit
+
 extension Styled.TextField {
   func buildPrimaryView(model: Configuration.PrimaryModel) {
     self.layer.cornerRadius = model.cornerRadius

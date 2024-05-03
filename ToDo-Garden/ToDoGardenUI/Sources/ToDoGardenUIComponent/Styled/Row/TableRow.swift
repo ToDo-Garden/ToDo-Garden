@@ -6,7 +6,7 @@ public class TableRow: UITableViewCell {
     configuration: Styled.Row.Configuration,
     handler: @escaping ((Styled.Row.Configuration) -> Void) = { _ in }
   ) -> AnyCancellable {
-    selectionStyle = .none
+    selectionStyle = UITableViewCell.SelectionStyle.none
     let row = Styled.Row(configuration: configuration)
     row.usingAutolayout()
     contentView.addSubview(row)
