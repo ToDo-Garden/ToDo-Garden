@@ -9,7 +9,7 @@ extension Styled {
   public final class TextField: UITextField {
     public var mainColor: UIColor? {
       get {
-        if case let .groupEdit(model) = self.configuration {
+        if let model = self.configuration.groupEditModel {
           return model.mainColor
         }
         return nil
@@ -22,9 +22,9 @@ extension Styled {
       }
     }
     
-    @Published private var configuration: Configuration
-    private var bottomLine: UIView!
-    private var cancellables: Set<AnyCancellable> = []
+    @Published var configuration: Configuration
+    var bottomLine: UIView!
+    var cancellables: Set<AnyCancellable> = []
     
     public init(configuration: Configuration) {
       self.configuration = configuration
@@ -50,6 +50,32 @@ extension Styled {
       return self.buildLeftImageMargin(rect)
     }
     
+    public override func becomeFirstResponder() -> Bool {
+      configuration.groupEditModel.map { model in
+        switch model.bottomLineDisplayMode {
+        case Configuration.GroupEditModel.DisPlayMode.always,
+          Configuration.GroupEditModel.DisPlayMode.editing:
+          bottomLine.isHidden = false
+        case Configuration.GroupEditModel.DisPlayMode.none:
+          bottomLine.isHidden = true
+        }
+      }
+      return super.becomeFirstResponder()
+    }
+    
+    public override func resignFirstResponder() -> Bool {
+      configuration.groupEditModel.map { model in
+        switch model.bottomLineDisplayMode {
+        case Configuration.GroupEditModel.DisPlayMode.always:
+          bottomLine.isHidden = false
+        case Configuration.GroupEditModel.DisPlayMode.editing,
+          Configuration.GroupEditModel.DisPlayMode.none:
+          bottomLine.isHidden = true
+        }
+      }
+      return super.resignFirstResponder()
+    }
+    
     private func buildLeftImageMargin(_ rect: CGRect) -> CGRect {
       let containedRect = self.configuration.primaryModel
         .map { model in
@@ -72,141 +98,12 @@ extension Styled {
     private func build() {
       self.clearButtonMode = ViewMode.whileEditing
       switch configuration {
-      case let .primary(primaryModel):
+      case let Configuration.primary(primaryModel):
         self.buildPrimaryView(model: primaryModel)
-        
-      case let .groupEdit(groupEditModel):
-        self.buildClearButton(model: groupEditModel)
-        self.buildBottomLine(color: groupEditModel.mainColor)
+      case let Configuration.groupEdit(groupEditModel):
+        self.buildGroupEditStyle(model: groupEditModel)
       }
     }
-    
-    private func buildPrimaryView(model: Configuration.PrimaryModel) {
-      self.layer.cornerRadius = model.cornerRadius
-      self.leftView = UIImageView(image: model.image)
-      self.leftViewMode = ViewMode.always
-    }
-    
-    private func buildClearButton(model: Configuration.GroupEditModel) {
-      if let button = self.value(forKeyPath: "_clearButton") as? UIButton {
-        button.setImage(model.image, for: .normal)
-        button.tintColor = model.mainColor
-        self.$configuration
-          .compactMap(\.groupEditModel)
-          .removeDuplicates()
-          .sink { [weak button] model in
-            button?.tintColor = model.mainColor
-          }
-          .store(in: &self.cancellables)
-      }
-    }
-    
-    private func buildBottomLine(color: UIColor) {
-      let line = UIView()
-      line.backgroundColor = color
-      configuration.groupEditModel.map { model in
-        switch model.bottomLineDisplayMode {
-        case .always:
-          line.isHidden = false
-        case .editing, .none:
-          line.isHidden = true
-        }
-      }
-      line.usingAutolayout()
-      self.addSubview(line)
-      NSLayoutConstraint.activate([
-        line.bottomAnchor.constraint(equalTo: bottomAnchor),
-        line.leadingAnchor.constraint(equalTo: leadingAnchor),
-        line.trailingAnchor.constraint(equalTo: trailingAnchor),
-        line.heightAnchor.constraint(equalToConstant: 1)
-      ])
-      self.$configuration
-        .compactMap(\.groupEditModel)
-        .removeDuplicates()
-        .sink { [weak line] model in
-          line?.backgroundColor = model.mainColor
-        }
-        .store(in: &self.cancellables)
-      self.bottomLine = line
-    }
-    
-    public override func becomeFirstResponder() -> Bool {
-      configuration.groupEditModel.map { model in
-        switch model.bottomLineDisplayMode {
-        case .always, .editing:
-          bottomLine.isHidden = false
-        case .none:
-          bottomLine.isHidden = true
-        }
-      }
-      return super.becomeFirstResponder()
-    }
-    
-    public override func resignFirstResponder() -> Bool {
-      configuration.groupEditModel.map { model in
-        switch model.bottomLineDisplayMode {
-        case .always:
-          bottomLine.isHidden = false
-        case .editing, .none:
-          bottomLine.isHidden = true
-        }
-      }
-      return super.resignFirstResponder()
-    }
-  }
-}
-
-extension Styled.TextField {
-  public enum Configuration: Equatable {
-    var primaryModel: PrimaryModel? {
-      if case let .primary(model) = self {
-        return model
-      }
-      return nil
-    }
-    
-    var groupEditModel: GroupEditModel? {
-      if case let .groupEdit(model) = self {
-        return model
-      }
-      return nil
-    }
-    
-    case primary(PrimaryModel)
-    case groupEdit(GroupEditModel)
-  }
-}
-
-extension Styled.TextField.Configuration {
-  public struct PrimaryModel: Equatable {
-    public static let standard = Self(
-      cornerRadius: 10,
-      image: UIImage.searchIconImage,
-      imageLeadingConstant: 7,
-      imageTrailingConstant: 4
-    )
-    
-    let cornerRadius: CGFloat
-    let image: UIImage?
-    let imageLeadingConstant: CGFloat
-    let imageTrailingConstant: CGFloat
-  }
-  
-  public struct GroupEditModel: Equatable {
-    public static let standard = Self(mainColor: UIColor.toDoGardenGreenDark, bottomLineDisplayMode: .always)
-    public static let todoList = Self(mainColor: UIColor.toDoGardenRed, bottomLineDisplayMode: .editing)
-    
-    var mainColor: UIColor
-    var image: UIImage = UIImage(systemName: "xmark.circle.fill") ?? UIImage.searchIconImage
-    var bottomLineDisplayMode: DisPlayMode
-  }
-}
-
-extension Styled.TextField.Configuration.GroupEditModel {
-  enum DisPlayMode: Equatable {
-    case always
-    case editing
-    case none
   }
 }
 
