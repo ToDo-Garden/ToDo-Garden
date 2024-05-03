@@ -190,3 +190,19 @@ extension ToDoCheckBoxButton {
     }
   }
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let button = ToDoCheckBoxButton(
+    checkBoxModel: ToDoCheckBoxButton.CheckBoxModel.init(
+      isToDoDone: true,
+      groupColor: UIColor.toDoGardenBlue
+    )
+  )
+  button.translatesAutoresizingMaskIntoConstraints = false
+  button.widthAnchor.constraint(equalToConstant: Constant.ToDoCheckBoxButton.Size.priamry.width).isActive = true
+  button.heightAnchor.constraint(equalToConstant: Constant.ToDoCheckBoxButton.Size.priamry.height).isActive = true
+  return button
+}
+#endif
