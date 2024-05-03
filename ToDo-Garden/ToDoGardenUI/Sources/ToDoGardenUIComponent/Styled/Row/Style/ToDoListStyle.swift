@@ -56,7 +56,7 @@ extension Styled.Row {
   }
   
   private func buildTextField(stack: UIStackView, text: String?) -> UITextField {
-    let textField = Styled.UITextField(configuration: .groupEdit(.todoList))
+    let textField = Styled.TextField(configuration: .groupEdit(.todoList))
     textField.text = text
     let action = UIAction { [weak self] action in
       if let textField = action.sender as? UITextField {

@@ -6,7 +6,7 @@ public enum Styled { }
 private typealias ViewMode = UIKit.UITextField.ViewMode
 
 extension Styled {
-  open class UITextField: UIKit.UITextField {
+  public final class TextField: UITextField {
     public var mainColor: UIColor? {
       get {
         if case let .groupEdit(model) = self.configuration {
@@ -40,12 +40,12 @@ extension Styled {
       self.cancellables.removeAll()
     }
     
-    open override func textRect(forBounds bounds: CGRect) -> CGRect {
+    public override func textRect(forBounds bounds: CGRect) -> CGRect {
       let rect = super.textRect(forBounds: bounds)
       return self.buildLeftImageMargin(rect)
     }
     
-    open override func editingRect(forBounds bounds: CGRect) -> CGRect {
+    public override func editingRect(forBounds bounds: CGRect) -> CGRect {
       let rect = super.textRect(forBounds: bounds)
       return self.buildLeftImageMargin(rect)
     }
@@ -60,7 +60,7 @@ extension Styled {
       return containedRect ?? rect
     }
     
-    open override func leftViewRect(forBounds bounds: CGRect) -> CGRect {
+    public override func leftViewRect(forBounds bounds: CGRect) -> CGRect {
       var rect = super.leftViewRect(forBounds: bounds)
       self.configuration.primaryModel
         .map { model in
@@ -130,7 +130,7 @@ extension Styled {
       self.bottomLine = line
     }
     
-    open override func becomeFirstResponder() -> Bool {
+    public override func becomeFirstResponder() -> Bool {
       configuration.groupEditModel.map { model in
         switch model.bottomLineDisplayMode {
         case .always, .editing:
@@ -142,7 +142,7 @@ extension Styled {
       return super.becomeFirstResponder()
     }
     
-    open override func resignFirstResponder() -> Bool {
+    public override func resignFirstResponder() -> Bool {
       configuration.groupEditModel.map { model in
         switch model.bottomLineDisplayMode {
         case .always:
@@ -156,7 +156,7 @@ extension Styled {
   }
 }
 
-extension Styled.UITextField {
+extension Styled.TextField {
   public enum Configuration: Equatable {
     var primaryModel: PrimaryModel? {
       if case let .primary(model) = self {
@@ -177,7 +177,7 @@ extension Styled.UITextField {
   }
 }
 
-extension Styled.UITextField.Configuration {
+extension Styled.TextField.Configuration {
   public struct PrimaryModel: Equatable {
     public static let standard = Self(
       cornerRadius: 10,
@@ -202,7 +202,7 @@ extension Styled.UITextField.Configuration {
   }
 }
 
-extension Styled.UITextField.Configuration.GroupEditModel {
+extension Styled.TextField.Configuration.GroupEditModel {
   enum DisPlayMode: Equatable {
     case always
     case editing
@@ -217,14 +217,14 @@ extension Styled.UITextField.Configuration.GroupEditModel {
   stack.axis = .vertical
   stack.spacing = 20
   
-  let textField1 = Styled.UITextField(configuration: .primary(.standard))
+  let textField1 = Styled.TextField(configuration: .primary(.standard))
   textField1.placeholder = "아이디를 입력해주세요."
   stack.addArrangedSubview(textField1)
-  let textField2 = Styled.UITextField(configuration: .groupEdit(.standard))
+  let textField2 = Styled.TextField(configuration: .groupEdit(.standard))
   textField2.placeholder = "아이디를 입력해주세요."
   stack.addArrangedSubview(textField2)
   
-  let textField3 = Styled.UITextField(configuration: .groupEdit(.todoList))
+  let textField3 = Styled.TextField(configuration: .groupEdit(.todoList))
   stack.addArrangedSubview(textField3)
   
   return stack
