@@ -78,10 +78,16 @@ extension Styled.Row.Configuration {
     public static let empty = Self()
     public var text: String?
     public var isSelected: Bool
+    public var hasAlert: Bool
     
-    public init(text: String? = nil, isSelected: Bool = false) {
+    public init(
+      text: String? = nil,
+      isSelected: Bool = false,
+      hasAlert: Bool = false
+    ) {
       self.text = text
       self.isSelected = isSelected
+      self.hasAlert = hasAlert
     }
   }
 }

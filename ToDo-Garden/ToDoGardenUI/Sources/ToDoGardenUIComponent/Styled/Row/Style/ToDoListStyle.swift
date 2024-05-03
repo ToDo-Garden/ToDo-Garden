@@ -6,21 +6,21 @@ extension Styled.Row {
       stack: stack,
       edgeInsets: NSDirectionalEdgeInsets(top: 12, leading: 41, bottom: 12, trailing: 0)
     )
-    let textField = self.buildTextField(stack: stack, text: model.text)
-    self.buildButton(stack: stack, textField: textField)
+    let (zStack, zStackHandler) = buildZStack(model: model)
+    self.buildButton(stack: stack, isSelecetd: model.isSelected, handler: zStackHandler)
     stack.addSpacing(8)
-    stack.addArrangedSubview(textField)
+    stack.addArrangedSubview(zStack)
     stack.addSpacing()
   }
   
-  private func buildButton(stack: UIStackView, textField: UITextField) {
+  private func buildButton(stack: UIStackView, isSelecetd: Bool, handler: @escaping (Bool) -> Void) {
     let button = UIButton(
       configuration: .plain(),
-      primaryAction: UIAction { [weak self, weak textField] action in
+      primaryAction: UIAction { [weak self] action in
         guard
           let button = action.sender as? UIButton
         else { return }
-        self?.updateTextField(textField, buttonSelected: button.isSelected)
+        handler(button.isSelected)
         self?.configutration.todoListModel.map { model in
           var copy = model
           copy.isSelected = button.isSelected
@@ -28,6 +28,7 @@ extension Styled.Row {
         }
       }
     )
+    button.isSelected = isSelecetd
     buildButtonConfiguration(button)
     builButtonLayout(button, stack: stack)
   }
@@ -55,9 +56,12 @@ extension Styled.Row {
     stack.addArrangedSubview(button)
   }
   
-  private func buildTextField(stack: UIStackView, text: String?) -> UITextField {
+  private func buildTextField(text: String?, isSelected: Bool) -> UITextField {
     let textField = Styled.TextField(configuration: .groupEdit(.todoList))
     textField.text = text
+    textField.font = UIFont.pretendardDetailLight
+    textField.textColor = UIColor.toDoGardenGreenDark
+    textField.isHidden = isSelected
     let action = UIAction { [weak self] action in
       if let textField = action.sender as? UITextField {
         self?.configutration.todoListModel
@@ -73,26 +77,92 @@ extension Styled.Row {
     NSLayoutConstraint.activate([
       textField.widthAnchor.constraint(equalToConstant: 200)
     ])
-    
     return textField
   }
   
-  private func updateTextField(_ textField: UITextField?, buttonSelected: Bool) {
-    textField?.isEnabled = !buttonSelected
-    textField?.textColor = buttonSelected ? UIColor.toDoGardenGray3 : UIColor.toDoGardenGreenDark
-    if buttonSelected {
-      let attributeString = NSMutableAttributedString(string: textField?.text ?? "")
-      attributeString
-        .addAttribute(
-          NSAttributedString.Key.strikethroughStyle,
-          value: 1,
-          range: NSRange(location: 0, length: attributeString.length)
-        )
-      textField?.attributedText = attributeString
-    } else {
-      let temp = textField?.text
-      textField?.attributedText = nil
-      textField?.text = temp
+  private func buildZStack(model: Configuration.TodoListModel) -> (UIView, (Bool) -> Void) {
+    let textField = buildTextField(text: model.text, isSelected: model.isSelected)
+    let zStack = UIStackView(arrangedSubviews: [textField])
+    let (selectedView, selecetdViewUpdateAction) = buildSelectedView(
+      zStack: zStack,
+      model: model
+    )
+    zStack.addSubview(selectedView)
+    
+    selectedView.equalToParent()
+    let action: (Bool) -> Void = { [weak textField, weak selectedView] isSelected in
+      textField?.isHidden = isSelected
+      selectedView?.isHidden = !isSelected
+      if let text = textField?.text, isSelected {
+        selecetdViewUpdateAction(text)
+      } else {
+        selecetdViewUpdateAction("")
+      }
     }
+    
+    return (zStack, action)
+  }
+  
+  private func buildSelectedView(
+    zStack: UIStackView,
+    model: Configuration.TodoListModel
+  ) -> (UIView, (String) -> Void) {
+    let stack = UIStackView()
+    let label = buildSelecetdLabel(stack: zStack, text: model.text, isSelected: model.isSelected)
+    let imageView = buildAlarmImage(stack: zStack, isSelected: model.isSelected, hasAlarm: model.hasAlert)
+    zStack.addSubview(stack)
+    stack.equalToParent()
+    
+    let action: (String) -> Void = { [weak self, weak label, weak imageView] text in
+      self?.updateSelecetdView(
+        label: label,
+        imageView: imageView,
+        text: text
+      )
+    }
+    
+    return (stack, action)
+  }
+  
+  private func buildSelecetdLabel(stack: UIStackView, text: String?, isSelected: Bool) -> UILabel {
+    let label = UILabel()
+    label.textColor = UIColor.toDoGardenGray3
+    label.font = UIFont.pretendardDetailLight
+    stack.addArrangedSubview(label)
+    if isSelected {
+      label.attributedText = self.setAttributeText(text: text)
+    }
+    
+    return label
+  }
+  
+  private func buildAlarmImage(stack: UIStackView, isSelected: Bool, hasAlarm: Bool) -> UIImageView {
+    let image = hasAlarm ? UIImage.alarmImage : nil
+    let imageView = UIImageView(image: image)
+    imageView.contentMode = UIView.ContentMode.scaleAspectFit
+    imageView.isHidden = !isSelected
+    stack.addArrangedSubview(imageView)
+    
+    return imageView
+  }
+  
+  private func updateSelecetdView(label: UILabel?, imageView: UIImageView?, text: String) {
+    label?.isHidden = text.isEmpty
+    imageView?.isHidden = text.isEmpty
+    label?.attributedText = text.isEmpty
+    ? nil
+    : self.setAttributeText(text: text)
+  }
+  
+  private func setAttributeText(text: String?) -> NSMutableAttributedString {
+    let attributeString = NSMutableAttributedString(string: text ?? "")
+    attributeString
+      .addAttribute(
+        NSAttributedString.Key.strikethroughStyle,
+        value: 1,
+        range: NSRange(location: 0, length: attributeString.length)
+      )
+    
+    return attributeString
   }
 }

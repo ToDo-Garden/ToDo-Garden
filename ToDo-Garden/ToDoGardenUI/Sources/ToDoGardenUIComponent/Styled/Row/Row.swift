@@ -104,3 +104,18 @@ extension Styled.Row {
     return label
   }
 }
+
+@available(iOS 17.0, *)
+#Preview {
+  let row = Styled.Row(
+    configuration: .todoList(
+      .init(
+        text: "ASDFXV",
+        isSelected: true,
+        hasAlert: true
+      )
+    ) 
+  )
+  
+  return row
+}
