@@ -89,7 +89,7 @@ extension ToDoGardenAlertView {
     for (index, item) in configuration.contents.buttons.enumerated() {
       let button = UIButton()
       button.backgroundColor = UIColor.clear
-      let textColor = item.isRed ? UIColor.toDoGardenRed: UIColor.toDoGardenGreenDark
+      let textColor = item.isRed ? UIColor.toDoGardenEditButtonRed: UIColor.toDoGardenGreenDark
       let attributedTitle = NSAttributedString(
         string: item.text,
         attributes: [
