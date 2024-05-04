@@ -220,6 +220,21 @@ extension ToDoGardenAlertView {
       )
     }
   }
+  
+  private func addHorizontalTopLine(on stackView: UIStackView) {
+    let lineView = self.generateLine()
+    let thickness = self.configuration.contents.stackView.dividerThickness
+    lineView.backgroundColor = UIColor.toDoGardenGreenGray
+    lineView.usingAutolayout()
+    stackView.addSubview(lineView)
+    
+    NSLayoutConstraint.activate([
+      lineView.heightAnchor.constraint(equalToConstant: thickness),
+      lineView.topAnchor.constraint(equalTo: stackView.topAnchor),
+      lineView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+      lineView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
+    ])
+  }
   }
 }
 
