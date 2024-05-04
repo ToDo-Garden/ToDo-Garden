@@ -29,3 +29,32 @@ extension Constant.GardenSummaryView {
     static let lineHeight: CGFloat = 56.5
   }
 }
+
+extension Constant.GardenSummaryView {
+  public struct ViewState {
+    public let backPlane: BackPlaneState
+    public let firstUnitItem: UnitItemState
+    public let secondUnitItem: UnitItemState
+    public let line: LineState
+  }
+  
+  public struct BackPlaneState {
+    public let width: CGFloat
+    public let height: CGFloat
+    public let cornerRadius: CGFloat
+    public let borderWidth: CGFloat
+  }
+  
+  public struct UnitItemState {
+    public let title: String
+    public let titleLeftMargin: CGFloat
+    public let titleTopMargin: CGFloat
+    public let decriptionRightMargin: CGFloat
+    public let decriptionBottomMargin: CGFloat
+  }
+  
+  public struct LineState {
+    public let width: CGFloat
+    public let height: CGFloat
+  }
+}
