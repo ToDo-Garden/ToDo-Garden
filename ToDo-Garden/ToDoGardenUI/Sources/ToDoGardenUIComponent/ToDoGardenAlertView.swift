@@ -235,6 +235,11 @@ extension ToDoGardenAlertView {
       lineView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
     ])
   }
+  
+  private func generateLine() -> UIView {
+    let lineView = UIView()
+    lineView.backgroundColor = UIColor.toDoGardenGreenGray
+    return lineView
   }
 }
 
