@@ -126,6 +126,33 @@ extension ToDoGardenAlertView {
       for: .touchUpInside
     )
   }
+  
+  private func configureStackViewLayout(at stackView: UIStackView, buttonsCount: Int) {
+    if self.configuration.contents.stackView.isHorizontal {
+      stackView.axis = NSLayoutConstraint.Axis.horizontal
+    } else {
+      stackView.axis = NSLayoutConstraint.Axis.vertical
+    }
+    stackView.distribution = UIStackView.Distribution.fillProportionally
+    stackView.alignment = UIStackView.Alignment.fill
+    stackView.usingAutolayout()
+    self.addSubview(stackView)
+    NSLayoutConstraint.activate(
+      [
+        stackView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+        stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+        stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+        stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+      ]
+    )
+    let height = self.configuration.contents.stackView.height
+    if self.configuration.contents.stackView.isHorizontal {
+      stackView.heightAnchor.constraint(equalToConstant: height).isActive = true
+    } else {
+      let buttonCount = CGFloat(buttonsCount)
+      stackView.heightAnchor.constraint(equalToConstant: height * buttonCount).isActive = true
+    }
+  }
   }
 }
 
