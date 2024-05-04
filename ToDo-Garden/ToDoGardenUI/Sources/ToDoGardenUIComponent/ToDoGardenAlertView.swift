@@ -254,3 +254,37 @@ extension ToDoGardenAlertView {
     }
   }
 }
+
+extension ToDoGardenAlertView.Configuration {
+  public static let fullyCharged: Self = ToDoGardenAlertView.Configuration.init(
+    contents: Constant.ToDoGardenAlertView.Content.fullyCharged.viewState
+  )
+  
+  public static let welldone: Self = ToDoGardenAlertView.Configuration.init(
+    contents: Constant.ToDoGardenAlertView.Content.welldone.viewState
+  )
+  
+  public static let askToStop: Self = ToDoGardenAlertView.Configuration.init(
+    contents: Constant.ToDoGardenAlertView.Content.askToStop.viewState
+  )
+  
+  public static let askToLogout: Self = ToDoGardenAlertView.Configuration.init(
+    contents: Constant.ToDoGardenAlertView.Content.askToLogout.viewState
+  )
+  
+  public static let askToUnsubscribe: Self = ToDoGardenAlertView.Configuration.init(
+    contents: Constant.ToDoGardenAlertView.Content.askToUnsubscribe.viewState
+  )
+  
+  public static let askToDeleteGroup: Self = ToDoGardenAlertView.Configuration.init(
+    contents: Constant.ToDoGardenAlertView.Content.askToDeleteGroup.viewState
+  )
+  
+  public static let askToDeleteToDo: Self = ToDoGardenAlertView.Configuration.init(
+    contents: Constant.ToDoGardenAlertView.Content.askToDeleteToDo.viewState
+  )
+  
+  public static let askToStopResting: Self = ToDoGardenAlertView.Configuration.init(
+    contents: Constant.ToDoGardenAlertView.Content.askToStopResting.viewState
+  )
+}
