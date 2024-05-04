@@ -50,7 +50,18 @@ final public class ToDoGardenAlertView: UIView {
 
 extension ToDoGardenAlertView {
   private func buildTitleLabel() {
-    
+    let label = UILabel()
+    label.text = self.configuration.contents.title.text
+    label.font = UIFont.pretendardHeadBold
+    label.textColor = UIColor.toDoGardenGreenDark
+    label.usingAutolayout()
+    self.addSubview(label)
+    NSLayoutConstraint.activate(
+      [
+        label.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+        label.topAnchor.constraint(equalTo: self.topAnchor, constant: self.configuration.contents.title.topMargin)
+      ]
+    )
   }
   
   private func buildDescription() {
