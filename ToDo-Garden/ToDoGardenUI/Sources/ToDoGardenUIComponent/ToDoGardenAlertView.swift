@@ -86,7 +86,46 @@ extension ToDoGardenAlertView {
   }
   
   private func buildStackView() {
+    let bottomStackView = UIStackView()
+    let buttons = self.buildButtons()
+    self.addStackedContents(with: buttons, at: bottomStackView)
+    self.configureStackViewLayout(at: bottomStackView, buttonsCount: buttons.count)
+    self.addHorizontalTopLine(on: bottomStackView)
+  }
+  
+  private func buildButtons() -> [UIButton] {
+    var buttons: [UIButton] = []
     
+    for item in configuration.contents.buttons {
+      let button = UIButton()
+      button.backgroundColor = UIColor.clear
+      let textColor = item.isRed ? UIColor.toDoGardenRed: UIColor.toDoGardenGreenDark
+      let attributedTitle = NSAttributedString(
+        string: item.text,
+        attributes: [
+          .font: UIFont.pretendardDetailRegular,
+          .foregroundColor: textColor
+        ]
+      )
+      button.setAttributedTitle(attributedTitle, for: UIControl.State.normal)
+      self.addButtonTouchActions(at: button)
+      buttons.append(button)
+    }
+    return buttons
+  }
+  
+  private func addButtonTouchActions(at button: UIButton) {
+    let touchedAlpha = Constant.ToDoGardenAlertView.Alpha.touchedAlpha
+    let normalAlpha = Constant.ToDoGardenAlertView.Alpha.normalAlpha
+    button.addAction(
+      UIAction(handler: { [weak button] _ in button?.alpha = touchedAlpha }),
+      for: .touchDown
+    )
+    button.addAction(
+      UIAction(handler: { [weak button] _ in button?.alpha = normalAlpha }),
+      for: .touchUpInside
+    )
+  }
   }
 }
 
