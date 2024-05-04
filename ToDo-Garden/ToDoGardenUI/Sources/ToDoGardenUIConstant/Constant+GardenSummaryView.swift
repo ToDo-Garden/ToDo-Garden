@@ -58,3 +58,33 @@ extension Constant.GardenSummaryView {
     public let height: CGFloat
   }
 }
+
+extension Constant.GardenSummaryView {
+  public static let primary = ViewState(
+    backPlane:
+      BackPlaneState(
+        width: Constant.GardenSummaryView.Layout.backPlaneWidth,
+        height: Constant.GardenSummaryView.Layout.backPlaneHeight,
+        cornerRadius: Constant.GardenSummaryView.Layout.cornerRadius,
+        borderWidth: Constant.GardenSummaryView.Layout.borderWidth
+      ),
+    firstUnitItem: UnitItemState(
+      title: Constant.GardenSummaryView.Content.averageTimeTitle,
+      titleLeftMargin: Constant.GardenSummaryView.Layout.titleLeftMargin,
+      titleTopMargin: Constant.GardenSummaryView.Layout.titleTopMargin,
+      decriptionRightMargin: Constant.GardenSummaryView.Layout.decriptionRightMargin,
+      decriptionBottomMargin: Constant.GardenSummaryView.Layout.decriptionBottomMargin
+    ),
+    secondUnitItem: UnitItemState(
+      title: Constant.GardenSummaryView.Content.averageCompleteTitle,
+      titleLeftMargin: Constant.GardenSummaryView.Layout.titleLeftMargin,
+      titleTopMargin: Constant.GardenSummaryView.Layout.titleTopMargin,
+      decriptionRightMargin: Constant.GardenSummaryView.Layout.decriptionRightMargin,
+      decriptionBottomMargin: Constant.GardenSummaryView.Layout.decriptionBottomMargin
+    ),
+    line: LineState(
+      width: Constant.GardenSummaryView.Layout.lineWidth,
+      height: Constant.GardenSummaryView.Layout.lineHeight
+    )
+  )
+}
