@@ -65,7 +65,24 @@ extension ToDoGardenAlertView {
   }
   
   private func buildDescription() {
+    let descriptionView = UILabel()
+    descriptionView.numberOfLines = self.configuration.contents.description.numberOfLines
+    descriptionView.text = self.configuration.contents.description.text
+    descriptionView.font = UIFont.pretendardDetailRegular
+    descriptionView.textColor = UIColor.toDoGardenGreenDark
+    descriptionView.textAlignment = NSTextAlignment.center
     
+    descriptionView.translatesAutoresizingMaskIntoConstraints = false
+    self.addSubview(descriptionView)
+    NSLayoutConstraint.activate(
+      [
+        descriptionView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+        descriptionView.topAnchor.constraint(
+          equalTo: self.topAnchor,
+          constant: self.configuration.contents.description.topMargin
+        )
+      ]
+    )
   }
   
   private func buildStackView() {
