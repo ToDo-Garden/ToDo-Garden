@@ -10,6 +10,7 @@ import UIKit
 import ToDoGardenUIConstant
 
 final public class ToDoGardenAlertView: UIView {
+  var delegate: ToDoGardenAlertViewDelegate?
   private var configuration: Configuration
   
   init(configuration: Configuration) {
