@@ -153,6 +153,19 @@ extension ToDoGardenAlertView {
       stackView.heightAnchor.constraint(equalToConstant: height * buttonCount).isActive = true
     }
   }
+  
+  private func addStackedContents(with buttons: [UIButton], at stackView: UIStackView) {
+    let one = self.configuration.contents.stackView.dividerThickness
+    
+    for (index, item) in buttons.enumerated() {
+      self.setupItemsLayout(with: item, in: stackView, count: buttons.count)
+      
+      if index < buttons.count - Int(one) {
+        let divider = self.generateLine()
+        self.setupDivierLayout(with: divider, at: stackView, width: one)
+      }
+    }
+  }
   }
 }
 
