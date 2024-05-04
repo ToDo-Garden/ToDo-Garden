@@ -31,9 +31,35 @@ final public class ToDoGardenAlertView: UIView {
   }
   
   private func build() {
+    // MARK: - BackgroundColor
+    self.backgroundColor = UIColor.toDoGardenWhite
+    
+    // MARK: - CornerRadius
+    self.layer.cornerRadius = self.configuration.contents.backPlane.cornerRadius
+    
+    // MARK: - Title
+    self.buildTitleLabel()
+    
+    // MARK: - Description
+    self.buildDescription()
+    
+    // MARK: - StackView
+    self.buildStackView()
+  }
+}
+
+extension ToDoGardenAlertView {
+  private func buildTitleLabel() {
     
   }
   
+  private func buildDescription() {
+    
+  }
+  
+  private func buildStackView() {
+    
+  }
 }
 
 extension ToDoGardenAlertView {
