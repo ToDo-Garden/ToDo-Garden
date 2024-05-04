@@ -23,6 +23,13 @@ final public class ToDoGardenAlertView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
   
+  public override var intrinsicContentSize: CGSize {
+    return CGSize(
+      width: self.configuration.contents.backPlane.width,
+      height: self.configuration.contents.backPlane.height
+    )
+  }
+  
   private func build() {
     
   }
