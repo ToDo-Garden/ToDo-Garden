@@ -96,8 +96,7 @@ extension ToDoGardenAlertView {
   
   private func buildButtons() -> [UIButton] {
     var buttons: [UIButton] = []
-    
-    for item in configuration.contents.buttons {
+    for (index, item) in configuration.contents.buttons.enumerated() {
       let button = UIButton()
       button.backgroundColor = UIColor.clear
       let textColor = item.isRed ? UIColor.toDoGardenRed: UIColor.toDoGardenGreenDark
@@ -109,13 +108,13 @@ extension ToDoGardenAlertView {
         ]
       )
       button.setAttributedTitle(attributedTitle, for: UIControl.State.normal)
-      self.addButtonTouchActions(at: button)
+      self.addButtonTouchActions(at: button, index: index)
       buttons.append(button)
     }
     return buttons
   }
   
-  private func addButtonTouchActions(at button: UIButton) {
+  private func addButtonTouchActions(at button: UIButton, index: Int) {
     let touchedAlpha = Constant.ToDoGardenAlertView.Alpha.touchedAlpha
     let normalAlpha = Constant.ToDoGardenAlertView.Alpha.normalAlpha
     button.addAction(
@@ -125,6 +124,10 @@ extension ToDoGardenAlertView {
     button.addAction(
       UIAction(handler: { [weak button] _ in button?.alpha = normalAlpha }),
       for: .touchUpInside
+    )
+    button.addAction(
+      UIAction(handler: { [weak self] _ in self?.buttonTouched(at: index) }),
+      for: UIControl.Event.touchUpInside
     )
   }
   
@@ -241,6 +244,25 @@ extension ToDoGardenAlertView {
     let lineView = UIView()
     lineView.backgroundColor = UIColor.toDoGardenGreenGray
     return lineView
+  }
+  
+  private func buttonTouched(at index: Int) {
+    switch self.configuration.contents.buttons[index].buttonActionType {
+    case .cancel:
+      self.delegate?.didTapCancel()
+    case .keepConcentration:
+      self.delegate?.didTapKeepConcentration()
+    case .goHome:
+      self.delegate?.didTapGoHome()
+    case .delete:
+      self.delegate?.didTapDelete()
+    case .unsubscribe:
+      self.delegate?.didTapUnsubscribe()
+    case .logout:
+      self.delegate?.didTapLogout()
+    case .stopConcentration:
+      self.delegate?.didTapStopConcentration()
+    }
   }
 }
 
