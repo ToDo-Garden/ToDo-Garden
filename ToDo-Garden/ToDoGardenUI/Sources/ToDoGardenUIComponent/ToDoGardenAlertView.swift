@@ -166,6 +166,33 @@ extension ToDoGardenAlertView {
       }
     }
   }
+  
+  private func setupItemsLayout(
+    with item: UIButton,
+    in stackView: UIStackView,
+    count: Int
+  ) {
+    item.usingAutolayout()
+    stackView.addArrangedSubview(item)
+    
+    if self.configuration.contents.stackView.isHorizontal {
+      NSLayoutConstraint.activate(
+        [
+          item.widthAnchor.constraint(equalToConstant: self.configuration.contents.backPlane.width / CGFloat(count)),
+          item.topAnchor.constraint(equalTo: stackView.topAnchor),
+          item.bottomAnchor.constraint(equalTo: stackView.bottomAnchor)
+        ]
+      )
+    } else {
+      NSLayoutConstraint.activate(
+        [
+          item.widthAnchor.constraint(equalToConstant: self.configuration.contents.backPlane.width),
+          item.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+          item.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
+        ]
+      )
+    }
+  }
   }
 }
 
