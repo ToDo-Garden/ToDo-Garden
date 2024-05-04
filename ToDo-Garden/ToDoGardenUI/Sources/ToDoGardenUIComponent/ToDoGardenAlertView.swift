@@ -32,19 +32,10 @@ final public class ToDoGardenAlertView: UIView {
   }
   
   private func build() {
-    // MARK: - BackgroundColor
     self.backgroundColor = UIColor.toDoGardenWhite
-    
-    // MARK: - CornerRadius
     self.layer.cornerRadius = self.configuration.contents.backPlane.cornerRadius
-    
-    // MARK: - Title
     self.buildTitleLabel()
-    
-    // MARK: - Description
     self.buildDescription()
-    
-    // MARK: - StackView
     self.buildStackView()
   }
 }
@@ -72,8 +63,7 @@ extension ToDoGardenAlertView {
     descriptionView.font = UIFont.pretendardDetailRegular
     descriptionView.textColor = UIColor.toDoGardenGreenDark
     descriptionView.textAlignment = NSTextAlignment.center
-    
-    descriptionView.translatesAutoresizingMaskIntoConstraints = false
+    descriptionView.usingAutolayout()
     self.addSubview(descriptionView)
     NSLayoutConstraint.activate(
       [
@@ -103,8 +93,8 @@ extension ToDoGardenAlertView {
       let attributedTitle = NSAttributedString(
         string: item.text,
         attributes: [
-          .font: UIFont.pretendardDetailRegular,
-          .foregroundColor: textColor
+          NSAttributedString.Key.font: UIFont.pretendardDetailRegular,
+          NSAttributedString.Key.foregroundColor: textColor
         ]
       )
       button.setAttributedTitle(attributedTitle, for: UIControl.State.normal)
@@ -163,7 +153,6 @@ extension ToDoGardenAlertView {
     
     for (index, item) in buttons.enumerated() {
       self.setupItemsLayout(with: item, in: stackView, count: buttons.count)
-      
       if index < buttons.count - Int(one) {
         let divider = self.generateLine()
         self.setupDivierLayout(with: divider, at: stackView, width: one)
@@ -231,7 +220,6 @@ extension ToDoGardenAlertView {
     lineView.backgroundColor = UIColor.toDoGardenGreenGray
     lineView.usingAutolayout()
     stackView.addSubview(lineView)
-    
     NSLayoutConstraint.activate([
       lineView.heightAnchor.constraint(equalToConstant: thickness),
       lineView.topAnchor.constraint(equalTo: stackView.topAnchor),
@@ -270,9 +258,7 @@ extension ToDoGardenAlertView {
   public struct Configuration {
     let contents: Constant.ToDoGardenAlertView.Content.ViewState
     
-    public init(
-      contents: Constant.ToDoGardenAlertView.Content.ViewState
-    ) {
+    public init(contents: Constant.ToDoGardenAlertView.Content.ViewState) {
       self.contents = contents
     }
   }
