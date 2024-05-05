@@ -32,6 +32,11 @@ public final class GardenSummaryView: UIView {
     )
   }
   
+  public func update(timeText: String, completionsText: String) {
+    self.averageTimeLabel?.text = timeText
+    self.averageCompleteLabel?.text = completionsText
+  }
+  
   private func build() {
     // MARK: - BackgroundColor
     self.backgroundColor = UIColor.toDoGardenWhite
