@@ -72,3 +72,11 @@ extension ToDoGardenAlertController: ToDoGardenAlertViewDelegate {
     print("그만하기 버튼 실행할 코드")
   }
 }
+
+// #if DEBUG
+// @available(iOS 17.0, *)
+// #Preview {
+//   let view = ToDoGardenAlertController(for: .askToDeleteGroup)
+//   return view
+// }
+// #endif
