@@ -198,3 +198,9 @@ extension GardenSummaryView {
     }
   }
 }
+
+extension GardenSummaryView.Configuration {
+  public static let primary: Self = GardenSummaryView.Configuration.init(
+    contents: Constant.GardenSummaryView.primary
+  )
+}
