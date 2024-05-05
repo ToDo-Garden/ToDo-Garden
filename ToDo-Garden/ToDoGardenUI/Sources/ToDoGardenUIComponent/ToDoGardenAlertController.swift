@@ -31,6 +31,13 @@ public final class ToDoGardenAlertController: UIViewController {
   }
   
   private func layout() {
-    
+    self.view.addSubview(self.alertView)
+    self.alertView.usingAutolayout()
+    NSLayoutConstraint.activate(
+      [
+        self.alertView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+        self.alertView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
+      ]
+    )
   }
 }
