@@ -43,7 +43,9 @@ public final class GardenSummaryView: UIView {
 
 extension GardenSummaryView {
   private func setupLayer() {
-
+    self.layer.cornerRadius = self.configuration.contents.backPlane.cornerRadius
+    self.layer.borderColor = UIColor.toDoGardenGreenGray.cgColor
+    self.layer.borderWidth = self.configuration.contents.backPlane.borderWidth
   }
   
   private func buildStackView() {
