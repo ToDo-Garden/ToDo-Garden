@@ -25,6 +25,8 @@ public final class ToDoGardenAlertController: UIViewController {
   
   public override func viewDidLoad() {
     super.viewDidLoad()
+    self.view.backgroundColor = UIColor.toDoGardenBlack.withAlphaComponent(0.2)
+    // TODO: - Constant 논의 이후 변경예정
     self.layout()
   }
   
