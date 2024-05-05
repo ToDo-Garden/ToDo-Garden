@@ -25,6 +25,13 @@ public final class GardenSummaryView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
   
+  public override var intrinsicContentSize: CGSize {
+    return CGSize(
+      width: self.configuration.contents.backPlane.width,
+      height: self.configuration.contents.backPlane.height
+    )
+  }
+  
   private func build() {
     // MARK: - BackgroundColor
     self.backgroundColor = UIColor.toDoGardenWhite
