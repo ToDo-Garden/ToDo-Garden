@@ -49,7 +49,25 @@ extension GardenSummaryView {
   }
   
   private func buildStackView() {
+    let stackView = UIStackView()
+    stackView.axis = NSLayoutConstraint.Axis.horizontal
+    stackView.distribution = UIStackView.Distribution.fillProportionally
+    self.addSubview(stackView)
+    stackView.usingAutolayout()
     
+    NSLayoutConstraint.activate(
+      [
+        stackView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+        stackView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+        stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+        stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+        stackView.heightAnchor.constraint(equalToConstant: self.configuration.contents.backPlane.height)
+      ]
+    )
+    var items = buildUnitItems()
+    for _ in items {
+      stackView.addArrangedSubview(items.removeFirst())
+    }
   }
   
   private func buildDivider() {
@@ -58,6 +76,43 @@ extension GardenSummaryView {
   
   private func buildDescriptions() {
     
+  }
+}
+
+extension GardenSummaryView {
+  private func buildUnitItems() -> [UIView] {
+    var unitItems: [UIView] = []
+    let itemConfigurations = [
+      self.configuration.contents.firstUnitItem,
+      self.configuration.contents.secondUnitItem
+    ]
+    
+    let width = Int(self.configuration.contents.backPlane.width) / itemConfigurations.count
+    let height = Int(self.configuration.contents.backPlane.height)
+    
+    for itemConfiguration in itemConfigurations {
+      let title = generateLabel(text: itemConfiguration.title)
+      
+      let item = UIView(
+        frame: CGRect(
+          x: Int.zero,
+          y: Int.zero,
+          width: width,
+          height: height
+        )
+      )
+      self.layout(on: item, with: title)
+      unitItems.append(item)
+    }
+    return unitItems
+  }
+  
+  private func generateLabel(text: String) -> UILabel {
+    let label = UILabel()
+    label.text = text
+    label.font = UIFont.pretendardBodySemiBold
+    label.textColor = UIColor.toDoGardenGreenDark
+    return label
   }
 }
 
