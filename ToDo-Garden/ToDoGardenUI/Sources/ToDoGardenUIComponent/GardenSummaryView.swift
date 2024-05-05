@@ -168,6 +168,23 @@ extension GardenSummaryView {
     divider.backgroundColor = UIColor.toDoGardenGreenGray
     return divider
   }
+  
+  private func setLayoutUnitItem(on unitItem: UIView, with title: UILabel) {
+    unitItem.addSubview(title)
+    title.usingAutolayout()
+    NSLayoutConstraint.activate(
+      [
+        title.leadingAnchor.constraint(
+          equalTo: unitItem.leadingAnchor,
+          constant: self.configuration.contents.firstUnitItem.titleLeftMargin
+        ),
+        title.topAnchor.constraint(
+          equalTo: unitItem.topAnchor,
+          constant: self.configuration.contents.firstUnitItem.titleTopMargin
+        )
+      ]
+    )
+  }
 }
 
 extension GardenSummaryView {
