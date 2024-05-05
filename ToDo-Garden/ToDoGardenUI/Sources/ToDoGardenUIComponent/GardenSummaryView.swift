@@ -204,3 +204,12 @@ extension GardenSummaryView.Configuration {
     contents: Constant.GardenSummaryView.primary
   )
 }
+
+// #if DEBUG
+// @available(iOS 17.0, *)
+// #Preview {
+//   let view = GardenSummaryView(configuration: GardenSummaryView.Configuration.primary)
+//   view.update(timeText: "111시간 11분", completionsText: "222개")
+//   return view
+// }
+// #endif
