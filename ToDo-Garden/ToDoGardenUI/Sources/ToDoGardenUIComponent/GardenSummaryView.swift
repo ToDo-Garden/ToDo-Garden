@@ -24,6 +24,37 @@ public final class GardenSummaryView: UIView {
   }
   
   private func build() {
+    // MARK: - BackgroundColor
+    self.backgroundColor = UIColor.toDoGardenWhite
+    
+    // MARK: - layer
+    self.setupLayer()
+    
+    // MARK: - StackView
+    self.buildStackView()
+    
+    // MARK: - Divider
+    self.buildDivider()
+    
+    // MARK: - Descriptions
+    self.buildDescriptions()
+  }
+}
+
+extension GardenSummaryView {
+  private func setupLayer() {
+
+  }
+  
+  private func buildStackView() {
+    
+  }
+  
+  private func buildDivider() {
+    
+  }
+  
+  private func buildDescriptions() {
     
   }
 }
