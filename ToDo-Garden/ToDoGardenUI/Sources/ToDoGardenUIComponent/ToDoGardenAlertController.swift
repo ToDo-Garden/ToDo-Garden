@@ -15,6 +15,7 @@ public final class ToDoGardenAlertController: UIViewController {
   public init(for alertType: ToDoGardenAlertView.Configuration) {
     self.alertView = ToDoGardenAlertView(configuration: alertType)
     super.init(nibName: nil, bundle: nil)
+    self.alertView.delegate = self
     self.modalPresentationStyle = UIModalPresentationStyle.overFullScreen
   }
   
@@ -39,5 +40,35 @@ public final class ToDoGardenAlertController: UIViewController {
         self.alertView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
       ]
     )
+  }
+}
+
+extension ToDoGardenAlertController: ToDoGardenAlertViewDelegate {
+  public func didTapCancel() {
+    print("취소 버튼 실행할 코드")
+  }
+  
+  public func didTapDelete() {
+    print("삭제 버튼 실행할 코드")
+  }
+  
+  public func didTapLogout() {
+    print("로그아웃 버튼 실행할 코드")
+  }
+  
+  public func didTapGoHome() {
+    print("홈으로 버튼 실행할 코드")
+  }
+  
+  public func didTapUnsubscribe() {
+    print("탈퇴하기 버튼 실행할 코드")
+  }
+  
+  public func didTapKeepConcentration() {
+    print("집중하기 버튼 실행할 코드")
+  }
+  
+  public func didTapStopConcentration() {
+    print("그만하기 버튼 실행할 코드")
   }
 }
