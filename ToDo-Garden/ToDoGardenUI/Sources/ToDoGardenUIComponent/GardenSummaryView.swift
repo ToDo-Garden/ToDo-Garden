@@ -71,7 +71,18 @@ extension GardenSummaryView {
   }
   
   private func buildDivider() {
+    let divider = generateDivider()
+    divider.usingAutolayout()
     
+    self.addSubview(divider)
+    NSLayoutConstraint.activate(
+      [
+        divider.widthAnchor.constraint(equalToConstant: self.configuration.contents.line.width),
+        divider.heightAnchor.constraint(equalToConstant: self.configuration.contents.line.height),
+        divider.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+        divider.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+      ]
+    )
   }
   
   private func buildDescriptions() {
@@ -113,6 +124,12 @@ extension GardenSummaryView {
     label.font = UIFont.pretendardBodySemiBold
     label.textColor = UIColor.toDoGardenGreenDark
     return label
+  }
+  
+  private func generateDivider() -> UIView {
+    let divider = UIView()
+    divider.backgroundColor = UIColor.toDoGardenGreenGray
+    return divider
   }
 }
 
