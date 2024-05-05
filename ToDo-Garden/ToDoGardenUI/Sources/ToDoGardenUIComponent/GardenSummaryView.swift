@@ -11,6 +11,8 @@ import ToDoGardenUIConstant
 
 public final class GardenSummaryView: UIView {
   private let configuration: Configuration
+  private var averageTimeLabel: UILabel?
+  private var averageCompleteLabel: UILabel?
   
   public init(configuration: Configuration) {
     self.configuration = configuration
@@ -86,7 +88,30 @@ extension GardenSummaryView {
   }
   
   private func buildDescriptions() {
+    let rightMargin = self.configuration.contents.firstUnitItem.decriptionRightMargin
+    let bottomMargin = self.configuration.contents.firstUnitItem.decriptionBottomMargin
+    self.averageTimeLabel = UILabel()
+    self.averageCompleteLabel = UILabel()
     
+    guard let averageTimeLabel = self.averageTimeLabel, let averageCompleteLabel = self.averageCompleteLabel else {
+      return
+    }
+
+    let labels = [averageTimeLabel, averageCompleteLabel]
+    for label in labels {
+      label.font = UIFont.pretendardHeadBold
+      self.addSubview(label)
+      label.textColor = UIColor.toDoGardenGreenDark
+      label.usingAutolayout()
+    }
+    NSLayoutConstraint.activate(
+      [
+        averageTimeLabel.trailingAnchor.constraint(equalTo: self.centerXAnchor, constant: rightMargin),
+        averageTimeLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: bottomMargin),
+        averageCompleteLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: rightMargin),
+        averageCompleteLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: bottomMargin)
+      ]
+    )
   }
 }
 
