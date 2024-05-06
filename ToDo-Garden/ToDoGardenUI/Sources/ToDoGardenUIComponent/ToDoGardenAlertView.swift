@@ -109,11 +109,11 @@ extension ToDoGardenAlertView {
     let normalAlpha = Constant.ToDoGardenAlertView.Alpha.normalAlpha
     button.addAction(
       UIAction(handler: { [weak button] _ in button?.alpha = touchedAlpha }),
-      for: .touchDown
+      for: UIControl.Event.touchDown
     )
     button.addAction(
       UIAction(handler: { [weak button] _ in button?.alpha = normalAlpha }),
-      for: .touchUpInside
+      for: UIControl.Event.touchUpInside
     )
     button.addAction(
       UIAction(handler: { [weak self] _ in self?.buttonTouched(at: index) }),
