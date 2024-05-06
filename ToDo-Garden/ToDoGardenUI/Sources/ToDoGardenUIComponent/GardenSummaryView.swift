@@ -11,11 +11,13 @@ import ToDoGardenUIConstant
 
 public final class GardenSummaryView: UIView {
   private let configuration: Configuration
-  private var averageTimeLabel: UILabel?
-  private var averageCompleteLabel: UILabel?
+  private let averageTimeLabel: UILabel
+  private let averageCompleteLabel: UILabel
   
   public init(configuration: Configuration) {
     self.configuration = configuration
+    self.averageTimeLabel = UILabel()
+    self.averageCompleteLabel = UILabel()
     super.init(frame: CGRect.zero)
     self.build()
   }
@@ -33,8 +35,8 @@ public final class GardenSummaryView: UIView {
   }
   
   public func update(timeText: String, completionsText: String) {
-    self.averageTimeLabel?.text = timeText
-    self.averageCompleteLabel?.text = completionsText
+    self.averageTimeLabel.text = timeText
+    self.averageCompleteLabel.text = completionsText
   }
   
   private func build() {
@@ -102,14 +104,8 @@ extension GardenSummaryView {
   private func buildDescriptions() {
     let rightMargin = self.configuration.contents.firstUnitItem.decriptionRightMargin
     let bottomMargin = self.configuration.contents.firstUnitItem.decriptionBottomMargin
-    self.averageTimeLabel = UILabel()
-    self.averageCompleteLabel = UILabel()
-    
-    guard let averageTimeLabel = self.averageTimeLabel, let averageCompleteLabel = self.averageCompleteLabel else {
-      return
-    }
 
-    let labels = [averageTimeLabel, averageCompleteLabel]
+    let labels = [self.averageTimeLabel, self.averageCompleteLabel]
     for label in labels {
       label.font = UIFont.pretendardHeadBold
       self.addSubview(label)
