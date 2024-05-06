@@ -30,7 +30,8 @@ let package = Package(
 			name: "ToDoGardenUIComponent",
 			dependencies: [
         "ToDoGardenUIResource",
-        "ToDoGardenUIConstant"
+        "ToDoGardenUIConstant",
+        "CombineExtension"
       ]
 		),
 		.target(
@@ -39,6 +40,7 @@ let package = Package(
 				.process("Fonts")
 			]
 		),
-    .target(name: "ToDoGardenUIConstant")
+    .target(name: "ToDoGardenUIConstant"),
+    .target(name: "CombineExtension")
 	]
 )
