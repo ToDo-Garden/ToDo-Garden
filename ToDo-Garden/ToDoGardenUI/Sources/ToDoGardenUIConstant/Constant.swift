@@ -15,4 +15,5 @@ public enum Constant {
   public enum ToDoCheckBoxButton {}
   public enum GardenSummaryView {}
   public enum GroupNameLabel {}
+  public enum Styled {}
 }
