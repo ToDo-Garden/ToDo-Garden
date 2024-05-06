@@ -11,10 +11,10 @@ import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 public final class CreateToDoButton: UIButton {
-  private var primaryModel: CreateToDoButton.PrimaryModel
+  private var model: CreateToDoButton.Model
 
-  public init(primaryModel: CreateToDoButton.PrimaryModel) {
-    self.primaryModel = primaryModel
+  public init(model: CreateToDoButton.Model) {
+    self.model = model
     super.init(frame: CGRect.zero)
     self.setupUI()
   }
@@ -63,12 +63,12 @@ extension CreateToDoButton {
   }
 
   private func setupRightImage() {
-    self.configuration?.image = self.primaryModel.image
+    self.configuration?.image = self.model.image
   }
 
   private func setupContentsLayout() {
-    self.configuration?.contentInsets = self.primaryModel.contentInsets
-    self.configuration?.imagePadding = self.primaryModel.imagePadding
+    self.configuration?.contentInsets = self.model.contentInsets
+    self.configuration?.imagePadding = self.model.imagePadding
     self.configuration?.imagePlacement = NSDirectionalRectEdge.trailing
   }
 }
@@ -76,25 +76,21 @@ extension CreateToDoButton {
 // MARK: Primary Model
 
 extension CreateToDoButton {
-  public struct PrimaryModel {
+  public struct Model {
     let imagePadding: CGFloat
     let contentInsets: NSDirectionalEdgeInsets
     let image: UIImage
     let font: UIFont
     let textColor: UIColor
-
-    public init(
-      imagePadding: CGFloat = Constant.CreateToDoButton.Layout.Primary.imagePadding,
-      contentInsets: NSDirectionalEdgeInsets = Constant.CreateToDoButton.Layout.Primary.contentInsets,
-      image: UIImage = UIImage.createToDoButtonImage,
-      font: UIFont = UIFont.pretendardBodyBold,
-      textColor: UIColor = UIColor.toDoGardenGreenDark
-    ) {
-      self.imagePadding = imagePadding
-      self.contentInsets = contentInsets
-      self.image = image
-      self.font = font
-      self.textColor = textColor
-    }
   }
+}
+
+extension CreateToDoButton.Model {
+  public static let primary = CreateToDoButton.Model(
+    imagePadding: Constant.CreateToDoButton.Layout.Primary.imagePadding,
+    contentInsets: Constant.CreateToDoButton.Layout.Primary.contentInsets,
+    image: UIImage.createToDoButtonImage,
+    font: UIFont.pretendardBodyBold,
+    textColor: UIColor.toDoGardenGreenDark
+  )
 }
