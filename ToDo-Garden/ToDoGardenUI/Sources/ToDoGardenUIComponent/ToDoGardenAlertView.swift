@@ -78,6 +78,8 @@ extension ToDoGardenAlertView {
   
   private func buildStackView() {
     let bottomStackView = UIStackView()
+    bottomStackView.distribution = UIStackView.Distribution.fillProportionally
+    bottomStackView.alignment = UIStackView.Alignment.fill
     let buttons = self.buildButtons()
     self.addStackedContents(with: buttons, at: bottomStackView)
     self.configureStackViewLayout(at: bottomStackView, buttonsCount: buttons.count)
@@ -127,8 +129,7 @@ extension ToDoGardenAlertView {
     } else {
       stackView.axis = NSLayoutConstraint.Axis.vertical
     }
-    stackView.distribution = UIStackView.Distribution.fillProportionally
-    stackView.alignment = UIStackView.Alignment.fill
+
     stackView.usingAutolayout()
     self.addSubview(stackView)
     NSLayoutConstraint.activate(
