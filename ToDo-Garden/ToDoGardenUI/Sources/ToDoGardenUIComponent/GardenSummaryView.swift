@@ -80,9 +80,9 @@ extension GardenSummaryView {
         stackView.heightAnchor.constraint(equalToConstant: self.configuration.contents.backPlane.height)
       ]
     )
-    var items = self.buildUnitItems()
-    for _ in items {
-      stackView.addArrangedSubview(items.removeFirst())
+    var unitItems = self.buildUnitItems()
+    for unitItem in unitItems {
+      stackView.addArrangedSubview(unitItem)
     }
   }
   
