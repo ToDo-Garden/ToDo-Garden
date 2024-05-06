@@ -2,6 +2,7 @@ import Combine
 import UIKit
 
 import CombineExtension
+import ToDoGardenUIConstant
 
 public final class ColorPickerList: UIStackView {
   let colors: [UIColor]
@@ -37,14 +38,9 @@ public final class ColorPickerList: UIStackView {
     fatalError("init(coder:) has not been implemented")
   }
   
-  deinit {
-    cancellables.forEach { $0.cancel() }
-    cancellables.removeAll()
-  }
-  
   private func build() {
-    self.axis = .vertical
-    self.spacing = 14
+    self.axis = NSLayoutConstraint.Axis.vertical
+    self.spacing = Constant.ColorPickerList.spacing
     let colors = colors.splitArray(itemsPerRow)
     colors
       .enumerated()
@@ -57,7 +53,7 @@ public final class ColorPickerList: UIStackView {
         if subViews.count != itemsPerRow {
           stack.addArrangedSubview(UIView())
         }
-        stack.spacing = 14
+        stack.spacing = Constant.ColorPickerList.spacing
         self.addArrangedSubview(stack)
       }
   }
@@ -94,9 +90,11 @@ public final class ColorPickerList: UIStackView {
   
   private func buildColorButtonLayout(_ button: UIButton) {
     button.usingAutolayout()
+    let width = Constant.ColorPickerList.buttonSize.width
+    let height = Constant.ColorPickerList.buttonSize.height
     NSLayoutConstraint.activate([
-      button.widthAnchor.constraint(equalToConstant: 36),
-      button.heightAnchor.constraint(equalToConstant: 36)
+      button.widthAnchor.constraint(equalToConstant: width),
+      button.heightAnchor.constraint(equalToConstant: height)
     ])
   }
 }
@@ -106,12 +104,14 @@ private final class ColorButton: UIButton {
   
   override var isSelected: Bool {
     didSet {
-      self.layer.borderWidth = isSelected ? 2 : 0
+      self.layer.borderWidth = isSelected
+      ? Constant.ColorPickerList.buttonSelectedBorderWidth
+      : Constant.ColorPickerList.buttonNormalBorderWidth
     }
   }
   
   init(
-    padding: CGFloat = 4,
+    padding: CGFloat = Constant.ColorPickerList.buttonPadding,
     color: UIColor,
     selectedColor: UIColor? = UIColor.toDoGardenGray
   ) {
@@ -140,7 +140,7 @@ private final class ColorButton: UIButton {
   private func build(backgroundColor: UIColor, selectedColor: UIColor?) {
     self.buildConfiguration(backgroundColor)
     if let selectedColor {
-      self.buildSelectedState(selectedColor: selectedColor)
+      self.layer.borderColor = selectedColor.cgColor
     }
   }
   
@@ -154,16 +154,6 @@ private final class ColorButton: UIButton {
     )
     self.configuration?.background.backgroundColor = backgroundColor
     self.changesSelectionAsPrimaryAction = true
-  }
-  
-  private func buildSelectedState(selectedColor: UIColor) {
-    self.layer.borderColor = selectedColor.cgColor
-    
-    let action = UIAction { [weak self] _ in
-      guard let self else { return }
-      self.layer.borderWidth = self.isSelected ? 2 : 0
-    }
-    self.addAction(action, for: .touchUpInside)
   }
 }
 
@@ -184,7 +174,11 @@ private extension Array {
 #Preview {
   let subject =  CurrentValueSubject<Int?, Never>(nil)
   let view = ColorPickerList(
-    colors: [UIColor.gray, UIColor.red, UIColor.green, UIColor.blue],
+    colors: [
+      UIColor.gray, UIColor.red, UIColor.green, UIColor.blue,
+      UIColor.gray, UIColor.red, UIColor.green, UIColor.blue,
+      UIColor.gray, UIColor.red, UIColor.green, UIColor.blue
+    ],
     selected: subject,
     itemsPerRow: 4
   )
