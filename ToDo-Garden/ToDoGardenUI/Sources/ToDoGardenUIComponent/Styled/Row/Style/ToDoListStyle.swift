@@ -16,37 +16,25 @@ extension Styled.Row {
   }
   
   private func buildButton(stack: UIStackView, isSelecetd: Bool, handler: @escaping (Bool) -> Void) {
-    let button = UIButton(
-      configuration: .plain(),
-      primaryAction: UIAction { [weak self] action in
-        guard
-          let button = action.sender as? UIButton
-        else { return }
-        handler(button.isSelected)
-        self?.configutration.todoListModel.map { model in
+    let button = ToDoCheckBoxButton(
+      checkBoxModel: .init(
+        isToDoDone: isSelecetd,
+        groupColor: UIColor.toDoGardenRed,
+        borderWidth: 0.5,
+        cornerRadius: 3
+      )
+    )
+    let action = UIAction { [weak self, weak button] _ in
+      guard let button else { return }
+      self?.configutration.todoListModel
+        .map { model in
           var copy = model
           copy.isSelected = button.isSelected
-          self?.configutration = .todoList(copy)
+          self?.configutration = Configuration.todoList(copy)
         }
-      }
-    )
-    button.isSelected = isSelecetd
-    buildButtonConfiguration(button)
-    builButtonLayout(button, stack: stack)
-  }
-  
-  private func buildButtonConfiguration(_ button: UIButton) {
-    button.configuration?.baseForegroundColor = UIColor.toDoGardenRed
-    button.configurationUpdateHandler = { button in
-      switch button.state {
-      case .selected, .highlighted:
-        let image = UIImage(systemName: "checkmark.square.fill")
-        button.configuration?.image = image
-      default:
-        button.configuration?.image = UIImage(systemName: "square")
-      }
     }
-    button.changesSelectionAsPrimaryAction = true
+    button.addAction(action, for: .touchUpInside)
+    builButtonLayout(button, stack: stack)
   }
   
   private func builButtonLayout(_ button: UIButton, stack: UIStackView) {
