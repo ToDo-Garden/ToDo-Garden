@@ -3,11 +3,13 @@ import struct Foundation.CGSize
 import struct UIKit.NSDirectionalEdgeInsets
 
 public extension Constant.Styled {
-  enum Row { 
-    public enum ToDoList {}
-    public enum Profile {}
-    public enum ListPrimary {}
-  }
+  enum Row { }
+}
+
+public extension Constant.Styled.Row {
+  enum ToDoList {}
+  enum Profile {}
+  enum ListPrimary {}
 }
 
 public extension Constant.Styled.Row.ToDoList {
