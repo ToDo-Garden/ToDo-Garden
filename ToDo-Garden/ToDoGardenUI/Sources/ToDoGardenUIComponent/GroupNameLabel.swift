@@ -7,6 +7,7 @@
 
 import UIKit
 
+import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 public final class GroupNameLabel: UILabel {
