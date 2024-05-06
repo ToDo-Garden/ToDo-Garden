@@ -47,4 +47,10 @@ extension UIImage {
   public static let timerButtonImage = UIImage(
     resource: .timerButton
   )
+  public static let createToDoButtonImage = UIImage(
+    resource: .createToDoButton
+  )
+  public static let alarmImage = UIImage(
+    resource: .alarm
+  )
 }

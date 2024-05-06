@@ -13,7 +13,7 @@ analyzer_rules:
   - explicit_self
 
 included:
-  - ToDo-Garden/ToDo-Garden/
+  - ToDo-Garden/
 
 excluded:
     - ToDo-Garden/*/Package.swift
