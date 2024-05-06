@@ -13,5 +13,6 @@ public enum Constant {
   public enum SearchGardenButton {}
   public enum ToDoGardenAlertView {}
   public enum ToDoCheckBoxButton {}
+  public enum GardenSummaryView {}
   public enum GroupNameLabel {}
 }
