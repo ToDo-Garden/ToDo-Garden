@@ -52,7 +52,7 @@ extension Constant.ToDoGardenAlertView.Content {
     public let topMargin: CGFloat
     public let numberOfLines: Int
     
-    init(text: String, topMargin: CGFloat, numberOfLines: Int = 2) {
+    init(text: String, topMargin: CGFloat, numberOfLines: Int = 3) {
       self.text = text
       self.topMargin = topMargin
       self.numberOfLines = numberOfLines
