@@ -9,8 +9,9 @@ extension Styled.Row {
       stack: stack,
       edgeInsets: Constant.Styled.Row.ListPrimary.stackEdgeInsets
     )
-    // MARK: - TODO: 레이블 집어넣기
-    
+    let label = GroupNameLabel(configuration: .primary(.defaultPrimaryModel))
+    label.text = model.title
+    stack.addArrangedSubview(label)
     stack.addSpacing()
     self.buildColorView(stack: stack, color: model.color)
   }

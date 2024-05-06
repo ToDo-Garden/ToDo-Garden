@@ -104,13 +104,7 @@ extension Styled.Row {
 @available(iOS 17.0, *)
 #Preview {
   let row = Styled.Row(
-    configuration: .todoList(
-      .init(
-        text: "ASDFXV",
-        isSelected: true,
-        hasAlert: true
-      )
-    ) 
+    configuration: .listPrimary(.init(title: "영어독해", color: .red))
   )
   
   return row
