@@ -80,14 +80,14 @@ extension GardenSummaryView {
         stackView.heightAnchor.constraint(equalToConstant: self.configuration.contents.backPlane.height)
       ]
     )
-    var items = buildUnitItems()
+    var items = self.buildUnitItems()
     for _ in items {
       stackView.addArrangedSubview(items.removeFirst())
     }
   }
   
   private func buildDivider() {
-    let divider = generateDivider()
+    let divider = self.generateDivider()
     divider.usingAutolayout()
     
     self.addSubview(divider)
