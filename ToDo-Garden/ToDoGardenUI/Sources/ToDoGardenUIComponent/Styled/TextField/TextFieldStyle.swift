@@ -1,8 +1,6 @@
 import Combine
 import UIKit
 
-public enum Styled { }
-
 private typealias ViewMode = UIKit.UITextField.ViewMode
 
 extension Styled {
