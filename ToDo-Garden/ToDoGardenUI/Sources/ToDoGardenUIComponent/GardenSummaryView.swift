@@ -149,7 +149,7 @@ extension GardenSummaryView {
           height: height
         )
       )
-      self.layout(on: item, with: title)
+      self.setLayoutUnitItem(on: item, with: title)
       unitItems.append(item)
     }
     return unitItems
