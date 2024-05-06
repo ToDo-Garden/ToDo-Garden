@@ -19,7 +19,7 @@ public final class ColorPickerList: UIStackView {
     self.selected = CurrentValueSubject<Int?, Never>(selected)
     self.itemsPerRow = itemsPerRow
     super.init(frame: CGRect.zero)
-    build()
+    self.build()
   }
   
   public init(
@@ -31,9 +31,10 @@ public final class ColorPickerList: UIStackView {
     self.selected = selected
     self.itemsPerRow = itemsPerRow
     super.init(frame: CGRect.zero)
-    build()
+    self.build()
   }
   
+  @available(*, unavailable)
   public required init(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
@@ -41,7 +42,7 @@ public final class ColorPickerList: UIStackView {
   private func build() {
     self.axis = NSLayoutConstraint.Axis.vertical
     self.spacing = Constant.ColorPickerList.spacing
-    let colors = colors.splitArray(itemsPerRow)
+    let colors = self.colors.splitArray(itemsPerRow)
     colors
       .enumerated()
       .forEach { column, colorList in
@@ -65,7 +66,8 @@ public final class ColorPickerList: UIStackView {
     self.selected
       .pairwise()
       .sink { [weak button] old, new in
-        guard let button else { return }
+        guard let button 
+        else { return }
         if index == old, old != new {
           button.isSelected = false
         }
@@ -82,7 +84,7 @@ public final class ColorPickerList: UIStackView {
     let action = UIAction { [weak self] _ in
       self?.selected.send(index)
     }
-    button.addAction(action, for: .touchUpInside)
+    button.addAction(action, for: UIControl.Event.touchUpInside)
     if selected.value == index {
       button.isSelected = true
     }
