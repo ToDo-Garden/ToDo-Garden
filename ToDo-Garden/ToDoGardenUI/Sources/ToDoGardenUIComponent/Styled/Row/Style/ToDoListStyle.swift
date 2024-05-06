@@ -1,14 +1,16 @@
 import UIKit
 
+import ToDoGardenUIConstant
+
 extension Styled.Row {
   func buildTodoListStyle(stack: UIStackView, model: Configuration.TodoListModel) {
     self.buildStack(
       stack: stack,
-      edgeInsets: NSDirectionalEdgeInsets(top: 12, leading: 41, bottom: 12, trailing: 0)
+      edgeInsets: Constant.Styled.Row.ToDoList.stackEdgeInsets
     )
     let (zStack, zStackHandler) = buildZStack(model: model)
     self.buildButton(stack: stack, isSelecetd: model.isSelected, handler: zStackHandler)
-    stack.addSpacing(8)
+    stack.addSpacing(Constant.Styled.Row.ToDoList.stackSpacing)
     stack.addArrangedSubview(zStack)
     stack.addSpacing()
   }
@@ -50,8 +52,8 @@ extension Styled.Row {
   private func builButtonLayout(_ button: UIButton, stack: UIStackView) {
     button.usingAutolayout()
     NSLayoutConstraint.activate([
-      button.widthAnchor.constraint(equalToConstant: 18),
-      button.heightAnchor.constraint(equalToConstant: 18)
+      button.widthAnchor.constraint(equalToConstant: Constant.Styled.Row.ToDoList.buttonSize.width),
+      button.heightAnchor.constraint(equalToConstant: Constant.Styled.Row.ToDoList.buttonSize.height)
     ])
     stack.addArrangedSubview(button)
   }
@@ -75,7 +77,7 @@ extension Styled.Row {
     textField.addAction(action, for: .editingChanged)
     textField.usingAutolayout()
     NSLayoutConstraint.activate([
-      textField.widthAnchor.constraint(equalToConstant: 200)
+      textField.widthAnchor.constraint(equalToConstant: Constant.Styled.Row.ToDoList.textFieldWidth)
     ])
     return textField
   }

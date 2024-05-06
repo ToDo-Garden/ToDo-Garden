@@ -1,16 +1,13 @@
 import UIKit
 
+import ToDoGardenUIConstant
+
 extension Styled.Row {
   func buildListPrimaryStyle(stack: UIStackView, model: Configuration.ListPrimaryModel) {
     stack.alignment = UIStackView.Alignment.center
     self.buildStack(
       stack: stack,
-      edgeInsets: NSDirectionalEdgeInsets(
-        top: 0,
-        leading: 14,
-        bottom: 0,
-        trailing: 14
-      )
+      edgeInsets: Constant.Styled.Row.ListPrimary.stackEdgeInsets
     )
     // MARK: - TODO: 레이블 집어넣기
     
@@ -21,11 +18,11 @@ extension Styled.Row {
   private func buildColorView(stack: UIStackView, color: UIColor) {
     let colorView = UIView()
     colorView.backgroundColor = color
-    colorView.layer.cornerRadius = 12
+    colorView.layer.cornerRadius = Constant.Styled.Row.ListPrimary.colorViewCornerRadius
     colorView.usingAutolayout()
     NSLayoutConstraint.activate([
-      colorView.widthAnchor.constraint(equalToConstant: 24),
-      colorView.heightAnchor.constraint(equalToConstant: 24)
+      colorView.widthAnchor.constraint(equalToConstant: Constant.Styled.Row.ListPrimary.colorViewSize.width),
+      colorView.heightAnchor.constraint(equalToConstant: Constant.Styled.Row.ListPrimary.colorViewSize.height)
     ])
     stack.addArrangedSubview(colorView)
   }

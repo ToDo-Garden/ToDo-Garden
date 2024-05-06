@@ -1,6 +1,8 @@
 import Combine
 import UIKit
 
+import ToDoGardenUIConstant
+
 // MARK: - ProfileStyle
 extension Styled.Row {
   func buildProfileStyle(stack: UIStackView, model: Configuration.ProfileModel) {
@@ -8,7 +10,7 @@ extension Styled.Row {
     let imageView = self.buildImageView(
       stack: stack,
       image: model.image,
-      size: CGSize(width: 55, height: 55)
+      size: Constant.Styled.Row.Profile.profileSize
     )
     self.buildInnerStack(stack: stack, model: model)
     if model.axis == NSLayoutConstraint.Axis.vertical {
@@ -17,27 +19,22 @@ extension Styled.Row {
     self.buildImageView(
       stack: stack,
       image: UIImage.forwardButtonImage,
-      size: CGSize(width: 24, height: 24)
+      size: Constant.Styled.Row.Profile.accessorySize
     )
     self.bindingProfileImageState(imageView: imageView)
   }
   
   private func buildProfileStyleStack(stack: UIStackView) {
     stack.isLayoutMarginsRelativeArrangement = true
-    stack.spacing = 15
+    stack.spacing = Constant.Styled.Row.Profile.stackSpacing
     self.buildStack(
       stack: stack,
-      edgeInsets: NSDirectionalEdgeInsets(
-        top: 8,
-        leading: 16,
-        bottom: 8,
-        trailing: 36
-      )
+      edgeInsets: Constant.Styled.Row.Profile.stackEdgeInsets
     )
   }
   
   private func buildInnerStack(stack: UIStackView, model: Configuration.ProfileModel) {
-    let innerStack = UIStackView(frame: CGRect.zero)
+    let innerStack = UIStackView()
     innerStack.axis = model.axis
     let titleLabel = self.buildTextLabel(
       stack: innerStack,
@@ -62,7 +59,7 @@ extension Styled.Row {
   private func addConditionalSpacing(_ stack: UIStackView, axis: NSLayoutConstraint.Axis) {
     switch axis {
     case NSLayoutConstraint.Axis.vertical:
-      stack.spacing = 3
+      stack.spacing = Constant.Styled.Row.Profile.conditionSpacing
     case NSLayoutConstraint.Axis.horizontal:
       stack.addSpacing()
     @unknown default:

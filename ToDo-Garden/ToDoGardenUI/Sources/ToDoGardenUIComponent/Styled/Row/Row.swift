@@ -15,7 +15,7 @@ extension Styled {
       set {
         if var model = self.configutration.profileModel, let newValue {
           model.image = newValue
-          self.configutration = .profile(model)
+          self.configutration = Configuration.profile(model)
         }
       }
     }
@@ -32,10 +32,6 @@ extension Styled {
     @available(*, unavailable)
     public required init?(coder: NSCoder) {
       fatalError("init(coder:) has not been implemented")
-    }
-    
-    deinit {
-      self.cancellables.removeAll()
     }
     
     private func build() {
@@ -59,7 +55,7 @@ extension Styled.Row {
     axis: NSLayoutConstraint.Axis = NSLayoutConstraint.Axis.horizontal,
     edgeInsets: NSDirectionalEdgeInsets
   ) {
-    stack.alignment = .center
+    stack.alignment = UIStackView.Alignment.center
     stack.axis = axis
     stack.isLayoutMarginsRelativeArrangement = true
     stack.directionalLayoutMargins = edgeInsets
