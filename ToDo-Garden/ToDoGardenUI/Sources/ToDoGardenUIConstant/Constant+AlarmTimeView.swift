@@ -25,3 +25,17 @@ extension Constant.AlarmTimeView.Layout.TimeLabel {
   public static let defaultText: String = "시간"
   public static let leadingMargin: CGFloat = 22
 }
+
+extension Constant.AlarmTimeView.Layout.AlarmSettingButton {
+  public enum ContentInsets {}
+
+  public static let defaultTimeText: String = "20:00"
+  public static let trailingMargin: CGFloat = 14
+}
+
+extension Constant.AlarmTimeView.Layout.AlarmSettingButton.ContentInsets {
+  public static let top: CGFloat = 4
+  public static let leading: CGFloat = 10
+  public static let bottom: CGFloat = 4
+  public static let trailing: CGFloat = 10
+}
