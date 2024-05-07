@@ -20,3 +20,8 @@ extension Constant.AlarmTimeView.Layout {
   public static let borderWidth: CGFloat = 1.0
   public static let cornerRadius: CGFloat = 15.5
 }
+
+extension Constant.AlarmTimeView.Layout.TimeLabel {
+  public static let defaultText: String = "시간"
+  public static let leadingMargin: CGFloat = 22
+}
