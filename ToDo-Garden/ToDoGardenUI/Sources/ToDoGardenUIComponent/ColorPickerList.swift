@@ -6,30 +6,30 @@ import ToDoGardenUIConstant
 
 public final class ColorPickerList: UIStackView {
   let colors: [UIColor]
+  let itemsPerRow: Int
   public var selected: CurrentValueSubject<Int?, Never>
-  var itemsPerRow: Int
   private var cancellables: Set<AnyCancellable> = []
   
   public init(
     colors: [UIColor],
-    selected: Int?,
-    itemsPerRow: Int
+    itemsPerRow: Int,
+    selected: Int?
   ) {
     self.colors = colors
-    self.selected = CurrentValueSubject<Int?, Never>(selected)
     self.itemsPerRow = itemsPerRow
+    self.selected = CurrentValueSubject<Int?, Never>(selected)
     super.init(frame: CGRect.zero)
     self.build()
   }
   
   public init(
     colors: [UIColor],
-    selected: CurrentValueSubject<Int?, Never>,
-    itemsPerRow: Int
+    itemsPerRow: Int,
+    selected: CurrentValueSubject<Int?, Never>
   ) {
     self.colors = colors
-    self.selected = selected
     self.itemsPerRow = itemsPerRow
+    self.selected = selected
     super.init(frame: CGRect.zero)
     self.build()
   }
@@ -181,8 +181,8 @@ private extension Array {
       UIColor.gray, UIColor.red, UIColor.green, UIColor.blue,
       UIColor.gray, UIColor.red, UIColor.green, UIColor.blue
     ],
-    selected: subject,
-    itemsPerRow: 4
+    itemsPerRow: 4,
+    selected: subject
   )
   subject.send(3)
   
