@@ -1,9 +1,11 @@
 import UIKit
 
+import ToDoGardenUIConstant
+
 extension Styled.TextField {
   func buildGroupEditStyle(model: Configuration.GroupEditModel) {
-    buildClearButton(model: model)
-    buildBottomLine(color: model.mainColor)
+    self.buildClearButton(model: model)
+    self.buildBottomLine(color: model.mainColor)
   }
   
   private func buildClearButton(model: Configuration.GroupEditModel) {
@@ -38,7 +40,7 @@ extension Styled.TextField {
       line.bottomAnchor.constraint(equalTo: bottomAnchor),
       line.leadingAnchor.constraint(equalTo: leadingAnchor),
       line.trailingAnchor.constraint(equalTo: trailingAnchor),
-      line.heightAnchor.constraint(equalToConstant: 1)
+      line.heightAnchor.constraint(equalToConstant: Constant.Styled.TextField.GroupEdit.bottomLineHeight)
     ])
     self.bindingBottomLine(line: line)
     self.bottomLine = line
