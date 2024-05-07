@@ -13,7 +13,7 @@ extension UIButton {
   }
 }
 
-private enum ToDoGardenPlainButtonStyle {
+enum ToDoGardenPlainButtonStyle {
   static func apply(to button: UIButton, with image: UIImage) {
     self.setupNormalStateImage(to: button, with: image)
   }
