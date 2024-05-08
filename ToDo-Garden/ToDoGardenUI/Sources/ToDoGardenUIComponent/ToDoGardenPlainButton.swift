@@ -51,3 +51,17 @@ extension ToDoGardenPlainButton {
     }
   }
 }
+
+// MARK: Preview
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let button = ToDoGardenPlainButton(
+    model: ToDoGardenPlainButton.Model(
+      image: UIImage.forwardButtonImage
+    )
+  )
+  return button
+}
+#endif
