@@ -29,7 +29,7 @@ extension Constant.AlarmTimeView.Layout.TimeLabel {
 extension Constant.AlarmTimeView.Layout.AlarmSettingButton {
   public enum ContentInsets {}
 
-  public static let defaultTimeText: String = "20:00"
+  public static let defaultTimeText: String = "00:00"
   public static let trailingMargin: CGFloat = 14
 }
 
