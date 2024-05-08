@@ -9,7 +9,10 @@ import Foundation
 
 extension Constant.AlarmTimeView {
   public enum Layout {}
+  public enum StringLiteral {}
 }
+
+// MARK: Layout
 
 extension Constant.AlarmTimeView.Layout {
   public enum TimeLabel {}
@@ -22,14 +25,12 @@ extension Constant.AlarmTimeView.Layout {
 }
 
 extension Constant.AlarmTimeView.Layout.TimeLabel {
-  public static let defaultText: String = "시간"
   public static let leadingMargin: CGFloat = 22
 }
 
 extension Constant.AlarmTimeView.Layout.AlarmSettingButton {
   public enum ContentInsets {}
 
-  public static let defaultTimeText: String = "00:00"
   public static let trailingMargin: CGFloat = 14
 }
 
@@ -38,4 +39,19 @@ extension Constant.AlarmTimeView.Layout.AlarmSettingButton.ContentInsets {
   public static let leading: CGFloat = 10
   public static let bottom: CGFloat = 4
   public static let trailing: CGFloat = 10
+}
+
+// MARK: String Literal
+
+extension Constant.AlarmTimeView.StringLiteral {
+  public enum AlarmSettingButton {}
+  public enum TimeLabel {}
+}
+
+extension Constant.AlarmTimeView.StringLiteral.AlarmSettingButton {
+  public static let defaultTimeText: String = "00:00"
+}
+
+extension Constant.AlarmTimeView.StringLiteral.TimeLabel {
+  public static let defaultText: String = "시간"
 }
