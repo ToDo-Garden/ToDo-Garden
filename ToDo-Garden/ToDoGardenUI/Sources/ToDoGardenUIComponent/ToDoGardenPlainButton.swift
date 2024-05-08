@@ -13,6 +13,7 @@ public final class ToDoGardenPlainButton: UIButton {
   public init(model: Model) {
     self.model = model
     super.init(frame: CGRect.zero)
+    self.setup()
   }
 
   @available(*, unavailable)
@@ -20,6 +21,26 @@ public final class ToDoGardenPlainButton: UIButton {
     fatalError("init(coder:) has not been implemented")
   }
 }
+
+// MARK: Private Functions
+
+extension ToDoGardenPlainButton {
+  private func setup() {
+    self.setupConfiguration()
+    self.setupImage()
+  }
+
+  private func setupConfiguration() {
+    let configuration = UIButton.Configuration.plain()
+    self.configuration = configuration
+  }
+
+  private func setupImage() {
+    self.configuration?.image = self.model.image
+  }
+}
+
+// MARK: Model
 
 extension ToDoGardenPlainButton {
   public struct Model {
