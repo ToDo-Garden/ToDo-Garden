@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  Constant+SettingTimeView.swift
+//
 //
 //  Created by SONG on 5/9/24.
 //
