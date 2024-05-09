@@ -41,17 +41,18 @@ extension Constant.SettingTimeView {
       case TimePicker.alarmTime:
         return TimePicker.DataStore(
           highlightedView: HighlightedView(
-            leading: 40.0,
-            trailing: -20.0,
-            height: 33.0
+            leading: 42.5,
+            trailing: -27.5,
+            height: 33.0,
+            cornerRadius: 5.0
           ),
           hourUnitLabel: HourUnitLabel(
-            text: Content.hour,
-            leading: 34.0
+            text: Content.hourAlarm,
+            leading: 35.0
           ),
           minuteUnitLabel: MinuteUnitLabel(
             text: Content.minute,
-            leading: 15.0
+            leading: 56.0
           ),
           secondUnitLabel: nil,
           pickerView: PickerView(
@@ -59,6 +60,7 @@ extension Constant.SettingTimeView {
             width: 214.0,
             height: 216.0,
             rowHeight: 43.0,
+            widthForComponent: 80.0,
             numberOfComponents: 2,
             numberOfRowsInComponent: [24, 60]
           )
@@ -67,12 +69,13 @@ extension Constant.SettingTimeView {
       case TimePicker.focusTime:
         return TimePicker.DataStore(
           highlightedView: HighlightedView(
-            leading: 40.0,
-            trailing: -20.0,
-            height: 33.0
+            leading: 45.0,
+            trailing: -27.5,
+            height: 33.0,
+            cornerRadius: 5.0
           ),
           hourUnitLabel: HourUnitLabel(
-            text: Content.hour,
+            text: Content.hourDefault,
             leading: 34.0
           ),
           minuteUnitLabel: MinuteUnitLabel(
@@ -88,6 +91,7 @@ extension Constant.SettingTimeView {
             width: 320.0,
             height: 216.0,
             rowHeight: 43.0,
+            widthForComponent: 90.0,
             numberOfComponents: 3,
             numberOfRowsInComponent: [24, 60, 60]
           )
@@ -96,12 +100,13 @@ extension Constant.SettingTimeView {
       case TimePicker.breakTime:
         return TimePicker.DataStore(
           highlightedView: HighlightedView(
-            leading: 40.0,
-            trailing: -20.0,
-            height: 33.0
+            leading: 45.0,
+            trailing: -27.5,
+            height: 33.0,
+            cornerRadius: 5.0
           ),
           hourUnitLabel: HourUnitLabel(
-            text: Content.hour,
+            text: Content.hourDefault,
             leading: 34.0
           ),
           minuteUnitLabel: MinuteUnitLabel(
@@ -117,6 +122,7 @@ extension Constant.SettingTimeView {
             width: 320.0,
             height: 216.0,
             rowHeight: 43.0,
+            widthForComponent: 90.0,
             numberOfComponents: 3,
             numberOfRowsInComponent: [2, 60, 60]
           )
@@ -132,7 +138,8 @@ extension Constant.SettingTimeView {
 
 extension Constant.SettingTimeView.TimePicker {
   private enum Content {
-    static let hour = "시간"
+    static let hourDefault = "시간"
+    static let hourAlarm = "시"
     static let minute = "분"
     static let second = "초"
   }
@@ -149,6 +156,7 @@ extension Constant.SettingTimeView.TimePicker {
     public let leading: CGFloat
     public let trailing: CGFloat
     public let height: CGFloat
+    public let cornerRadius: CGFloat
   }
   
   public struct HourUnitLabel {
@@ -171,6 +179,7 @@ extension Constant.SettingTimeView.TimePicker {
     public let width: CGFloat
     public let height: CGFloat
     public let rowHeight: CGFloat
+    public let widthForComponent: CGFloat
     public let numberOfComponents: Int
     public let numberOfRowsInComponent: [Int]
   }
