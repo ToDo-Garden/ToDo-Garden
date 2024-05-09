@@ -17,4 +17,5 @@ public enum Constant {
   public enum GroupNameLabel {}
   public enum Styled {}
   public enum ColorPickerList {}
+  public enum SettingTimeView {}
 }
