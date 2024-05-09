@@ -14,4 +14,8 @@ extension Constant.SettingTimeView {
     static let notificationTimeTitle: String = "시간 설정"
   }
   
+  private enum Layout {
+    static let titleTopMargin: CGFloat = 44.0
+    static let buttonTopMargin: CGFloat = 335.0
+  }
 }
