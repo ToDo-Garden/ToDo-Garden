@@ -19,3 +19,42 @@ extension Constant.SettingTimeView {
     static let buttonTopMargin: CGFloat = 335.0
   }
 }
+
+extension Constant.SettingTimeView {
+  public struct DataStore {
+    public let title: Title
+    public let timePicker: TimePicker
+    public let button: Button
+  }
+  public struct Title {
+    public let topMargin: CGFloat
+    public let text: String
+  }
+  
+  public enum TimePicker {
+    case focusTime
+    case breakTime
+    case alarmTime
+    
+    public var dataStore: TimePicker.DataStore {
+      switch self {
+      case TimePicker.alarmTime:
+        return TimePicker.DataStore()
+        
+      case TimePicker.focusTime:
+        return TimePicker.DataStore()
+        
+      case TimePicker.breakTime:
+        return TimePicker.DataStore()
+      }
+    }
+  }
+  
+  public struct Button {
+    public let topMargin: CGFloat
+  }
+}
+
+extension Constant.SettingTimeView.TimePicker {
+  public struct DataStore {}
+}
