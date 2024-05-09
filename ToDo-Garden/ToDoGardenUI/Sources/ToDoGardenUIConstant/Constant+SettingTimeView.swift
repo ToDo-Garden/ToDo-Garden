@@ -11,7 +11,7 @@ extension Constant.SettingTimeView {
   private enum Content {
     static let focusTimeTitle: String = "집중시간 설정"
     static let breakTimeTitle: String = "휴식시간 설정"
-    static let notificationTimeTitle: String = "시간 설정"
+    static let alarmTimeTitle: String = "시간 설정"
   }
   
   private enum Layout {
@@ -174,4 +174,24 @@ extension Constant.SettingTimeView.TimePicker {
     public let numberOfComponents: Int
     public let numberOfRowsInComponent: [Int]
   }
+}
+
+extension Constant.SettingTimeView {
+  public static let focusTimeSetting = DataStore.init(
+    title: Title(topMargin: Layout.titleTopMargin, text: Content.focusTimeTitle),
+    timePicker: TimePicker.focusTime,
+    button: Button(topMargin: Layout.buttonTopMargin)
+  )
+  
+  public static let breakTimeSetting = DataStore.init(
+    title: Title(topMargin: Layout.titleTopMargin, text: Content.breakTimeTitle),
+    timePicker: TimePicker.breakTime,
+    button: Button(topMargin: Layout.buttonTopMargin)
+  )
+  
+  public static let alarmTimeSetting = DataStore.init(
+    title: Title(topMargin: Layout.titleTopMargin, text: Content.alarmTimeTitle),
+    timePicker: TimePicker.alarmTime,
+    button: Button(topMargin: Layout.buttonTopMargin)
+  )
 }
