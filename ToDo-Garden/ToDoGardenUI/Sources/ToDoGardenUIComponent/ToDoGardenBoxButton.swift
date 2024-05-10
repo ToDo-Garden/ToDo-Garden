@@ -15,28 +15,21 @@ public final class ToDoGardenBoxButton: UIButton {
       self.updateBackgroundColor()
     }
   }
+  private let size: CGSize
   
-  init() {
+  public init(title: String, dataConfiguration: DataConfiguaration) {
+    self.size = dataConfiguration.dataStore.size
     super.init(frame: CGRect.zero)
+    self.setup(title: title, dataConfiguration: dataConfiguration)
   }
   
-  public convenience init(
-    isRoundRect: Bool,
-    text: String,
-    size: CGSize,
-    isEnabled: Bool
-  ) {
-    self.init()
-    self.isEnabled = isEnabled
-    self.setup(
-      isRoundRect: isRoundRect,
-      text: text,
-      size: size
-    )
-  }
-  
+  @available(*, unavailable)
   required init?(coder: NSCoder) {
-    super.init(coder: coder)
+    fatalError()
+  }
+  
+  override public var intrinsicContentSize: CGSize {
+    return self.size
   }
   
   public func enable() {
