@@ -35,3 +35,40 @@ extension Constant.ToDoGardenBoxButton {
     )
   }
 }
+
+extension Constant.ToDoGardenBoxButton {
+  public struct DataStore {
+    public let size: CGSize
+    public let mode: Mode
+    public let normalAlpha: CGFloat
+    public let highlightedAlpha: CGFloat
+  }
+  
+  public static let primaryRoundRectButton = DataStore(
+    size: Size.primary,
+    mode: Mode.roundRectangle,
+    normalAlpha: Alpha.normal,
+    highlightedAlpha: Alpha.highlighted
+  )
+  
+  public static let secondaryRoundRectButton = DataStore(
+    size: Size.secondary,
+    mode: Mode.roundRectangle,
+    normalAlpha: Alpha.normal,
+    highlightedAlpha: Alpha.highlighted
+  )
+  
+  public static let tertiaryRoundRectButton = DataStore(
+    size: Size.tertiary,
+    mode: Mode.roundRectangle,
+    normalAlpha: Alpha.normal,
+    highlightedAlpha: Alpha.highlighted
+  )
+  
+  public static let rectangleButton = DataStore(
+    size: Size.filledHorizontal,
+    mode: Mode.rectangle,
+    normalAlpha: Alpha.normal,
+    highlightedAlpha: Alpha.highlighted
+  )
+}
