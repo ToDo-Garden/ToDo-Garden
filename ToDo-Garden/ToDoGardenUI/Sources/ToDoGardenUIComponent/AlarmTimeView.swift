@@ -36,6 +36,8 @@ extension AlarmTimeView {
     self.setupBorder()
     self.setupTimeLabel()
     self.setupAlarmSettingButton()
+    self.addSubviews()
+    self.setupSubviewsLayout()
   }
 
   private func setupBorder() {
@@ -86,6 +88,48 @@ extension AlarmTimeView {
     )
     let attributedTitle = AttributedString(text, attributes: attributes)
     self.alarmSettingButton.configuration?.attributedTitle = attributedTitle
+  }
+}
+
+// MARK: Auto Layout
+
+extension AlarmTimeView {
+  private func addSubviews() {
+    self.addSubview(self.timeLabel)
+    self.addSubview(self.alarmSettingButton)
+  }
+
+  private func setupSubviewsLayout() {
+    self.setupTimeLabelLayout()
+    self.setupAlarmSettingButtonLayout()
+  }
+
+  private func setupTimeLabelLayout() {
+    self.timeLabel.usingAutolayout()
+
+    NSLayoutConstraint.activate(
+      [
+        self.timeLabel.leadingAnchor.constraint(
+          equalTo: self.leadingAnchor,
+          constant: Constant.AlarmTimeView.Layout.TimeLabel.leadingMargin
+        ),
+        self.timeLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+      ]
+    )
+  }
+
+  private func setupAlarmSettingButtonLayout() {
+    self.alarmSettingButton.usingAutolayout()
+
+    NSLayoutConstraint.activate(
+      [
+        self.alarmSettingButton.trailingAnchor.constraint(
+          equalTo: self.trailingAnchor,
+          constant: -Constant.AlarmTimeView.Layout.AlarmSettingButton.trailingMargin
+        ),
+        self.alarmSettingButton.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+      ]
+    )
   }
 }
 
