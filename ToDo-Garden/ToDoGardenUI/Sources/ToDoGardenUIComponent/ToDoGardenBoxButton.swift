@@ -107,3 +107,27 @@ extension ToDoGardenBoxButton {
     }
   }
 }
+
+extension ToDoGardenBoxButton {
+  public struct DataConfiguaration {
+    let dataStore: Constant.ToDoGardenBoxButton.DataStore
+    
+    init(dataStore: Constant.ToDoGardenBoxButton.DataStore) {
+      self.dataStore = dataStore
+    }
+  }
+}
+
+extension ToDoGardenBoxButton.DataConfiguaration {
+  public static let primaryRoundRectButton: Self = 
+  ToDoGardenBoxButton.DataConfiguaration.init(dataStore: Constant.ToDoGardenBoxButton.primaryRoundRectButton)
+  
+  public static let secondaryRoundRectButton: Self = 
+  ToDoGardenBoxButton.DataConfiguaration.init(dataStore: Constant.ToDoGardenBoxButton.secondaryRoundRectButton)
+  
+  public static let tertiaryRoundRectButton: Self = 
+  ToDoGardenBoxButton.DataConfiguaration.init(dataStore: Constant.ToDoGardenBoxButton.tertiaryRoundRectButton)
+  
+  public static let rectangleButton: Self = 
+  ToDoGardenBoxButton.DataConfiguaration.init(dataStore: Constant.ToDoGardenBoxButton.rectangleButton)
+}
