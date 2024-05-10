@@ -16,7 +16,7 @@ extension Constant.SettingTimeView {
   
   private enum Layout {
     static let titleTopMargin: CGFloat = 44.0
-    static let buttonTopMargin: CGFloat = 335.0
+    static let buttonBottomMargin: CGFloat = -16.0
   }
 }
 
@@ -132,7 +132,7 @@ extension Constant.SettingTimeView {
   }
   
   public struct Button {
-    public let topMargin: CGFloat
+    public let bottomMargin: CGFloat
   }
 }
 
@@ -189,18 +189,18 @@ extension Constant.SettingTimeView {
   public static let focusTimeSetting = DataStore.init(
     title: Title(topMargin: Layout.titleTopMargin, text: Content.focusTimeTitle),
     timePicker: TimePicker.focusTime,
-    button: Button(topMargin: Layout.buttonTopMargin)
+    button: Button(bottomMargin: Layout.buttonBottomMargin)
   )
   
   public static let breakTimeSetting = DataStore.init(
     title: Title(topMargin: Layout.titleTopMargin, text: Content.breakTimeTitle),
     timePicker: TimePicker.breakTime,
-    button: Button(topMargin: Layout.buttonTopMargin)
+    button: Button(bottomMargin: Layout.buttonBottomMargin)
   )
   
   public static let alarmTimeSetting = DataStore.init(
     title: Title(topMargin: Layout.titleTopMargin, text: Content.alarmTimeTitle),
     timePicker: TimePicker.alarmTime,
-    button: Button(topMargin: Layout.buttonTopMargin)
+    button: Button(bottomMargin: Layout.buttonBottomMargin)
   )
 }
