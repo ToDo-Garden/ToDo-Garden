@@ -15,7 +15,7 @@ extension Styled {
       set {
         if var model = self.configuration.groupEditModel, let newValue {
           model.mainColor = newValue
-          self.configuration = .groupEdit(model)
+          self.configuration = Configuration.groupEdit(model)
         }
       }
     }

@@ -16,6 +16,8 @@ public extension Constant.Styled.Row.ToDoList {
   static let stackEdgeInsets = NSDirectionalEdgeInsets(top: 12, leading: 41, bottom: 12, trailing: 0)
   static let stackSpacing = CGFloat(4)
   static let buttonSize = CGSize(width: 18, height: 18)
+  static let buttonBorderWidth = CGFloat(0.5)
+  static let buttonCornerRadius = CGFloat(3)
   // TODO: 디자이너분한테 문의 한 상태
   static let textFieldWidth = CGFloat(200)
 }

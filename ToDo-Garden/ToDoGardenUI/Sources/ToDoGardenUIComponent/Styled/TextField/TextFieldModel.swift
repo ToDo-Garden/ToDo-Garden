@@ -1,5 +1,7 @@
 import UIKit
 
+import ToDoGardenUIConstant
+
 extension Styled.TextField {
   public enum Configuration: Equatable {
     var primaryModel: PrimaryModel? {
@@ -24,10 +26,10 @@ extension Styled.TextField {
 extension Styled.TextField.Configuration {
   public struct PrimaryModel: Equatable {
     public static let standard = Self(
-      cornerRadius: 10,
+      cornerRadius: Constant.Styled.TextField.Primary.Standard.cornerRadius,
       image: UIImage.searchIconImage,
-      imageLeadingConstant: 7,
-      imageTrailingConstant: 4
+      imageLeadingConstant: Constant.Styled.TextField.Primary.Standard.imageLeading,
+      imageTrailingConstant: Constant.Styled.TextField.Primary.Standard.imageTrailing
     )
     
     let cornerRadius: CGFloat

@@ -20,8 +20,8 @@ extension Styled.Row {
       checkBoxModel: .init(
         isToDoDone: isSelecetd,
         groupColor: UIColor.toDoGardenRed,
-        borderWidth: 0.5,
-        cornerRadius: 3
+        borderWidth: Constant.Styled.Row.ToDoList.buttonBorderWidth,
+        cornerRadius: Constant.Styled.Row.ToDoList.buttonCornerRadius
       )
     )
     let action = UIAction { [weak self, weak button] _ in
