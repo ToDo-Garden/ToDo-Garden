@@ -157,3 +157,14 @@ extension AlarmTimeView {
     )
   }
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let alarmTimeView = AlarmTimeView(model: AlarmTimeView.Model.primary)
+  alarmTimeView.usingAutolayout()
+  alarmTimeView.widthAnchor.constraint(equalToConstant: 315).isActive = true
+  alarmTimeView.heightAnchor.constraint(equalToConstant: 53).isActive = true
+  return alarmTimeView
+}
+#endif
