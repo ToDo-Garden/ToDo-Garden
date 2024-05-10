@@ -16,5 +16,6 @@ public enum Constant {
   public enum GardenSummaryView {}
   public enum GroupNameLabel {}
   public enum Styled {}
+  public enum AlarmTimeView {}
   public enum ColorPickerList {}
 }
