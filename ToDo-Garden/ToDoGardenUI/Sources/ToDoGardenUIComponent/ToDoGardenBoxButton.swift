@@ -17,7 +17,7 @@ public final class ToDoGardenBoxButton: UIButton {
   }
   private let size: CGSize
   
-  public init(title: String, configuration: Configuration) {
+  public init(title: String, buttonType configuration: Configuration) {
     self.size = configuration.dataStore.size
     super.init(frame: CGRect.zero)
     self.setup(title: title, configuration: configuration)
