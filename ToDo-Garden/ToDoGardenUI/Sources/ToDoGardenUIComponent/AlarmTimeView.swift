@@ -41,6 +41,10 @@ public final class AlarmTimeView: UIView {
     self.alarmSettingButton.isEnabled = false
     self.layer.borderColor = UIColor.toDoGardenGray2.cgColor
   }
+
+  public func updateAlarmTime(with text: String) {
+    self.setupAlarmSettingButtonTitle(with: text)
+  }
 }
 
 // MARK: Private Functions
