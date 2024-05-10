@@ -17,10 +17,10 @@ public final class ToDoGardenBoxButton: UIButton {
   }
   private let size: CGSize
   
-  public init(title: String, dataConfiguration: DataConfiguaration) {
-    self.size = dataConfiguration.dataStore.size
+  public init(title: String, configuration: Configuration) {
+    self.size = configuration.dataStore.size
     super.init(frame: CGRect.zero)
-    self.setup(title: title, dataConfiguration: dataConfiguration)
+    self.setup(title: title, configuration: configuration)
   }
   
   @available(*, unavailable)
@@ -48,16 +48,15 @@ public final class ToDoGardenBoxButton: UIButton {
 // MARK: - private functions
 
 extension ToDoGardenBoxButton {
-  private func setup(title: String, dataConfiguration: DataConfiguaration) {
-    
-    if dataConfiguration.dataStore.mode == Constant.ToDoGardenBoxButton.Mode.roundRectangle {
-      self.setupCornerRadius(with: dataConfiguration.dataStore.size.height / 2)
+  private func setup(title: String, configuration: Configuration) {
+    if configuration.dataStore.mode == Constant.ToDoGardenBoxButton.Mode.roundRectangle {
+      self.setupCornerRadius(with: configuration.dataStore.size.height / 2)
     }
     
     self.updateBackgroundColor()
     self.setTitle(title, for: UIControl.State.normal)
     self.setupTitleFont()
-    self.setupActionToChangeAlpha(with: dataConfiguration)
+    self.setupActionToChangeAlpha(with: configuration)
   }
   
   private func setupTitleFont() {
@@ -68,9 +67,9 @@ extension ToDoGardenBoxButton {
     self.layer.cornerRadius = value
   }
   
-  private func setupActionToChangeAlpha(with dataConfiguaration: DataConfiguaration) {
-    let highlightedAlpha = dataConfiguaration.dataStore.highlightedAlpha
-    let normalAlpha = dataConfiguaration.dataStore.normalAlpha
+  private func setupActionToChangeAlpha(with configuration: Configuration) {
+    let highlightedAlpha = configuration.dataStore.highlightedAlpha
+    let normalAlpha = configuration.dataStore.normalAlpha
 
     self.setupTouchDownAction(with: highlightedAlpha)
     self.setupTouchUpAction(with: normalAlpha)
@@ -109,7 +108,7 @@ extension ToDoGardenBoxButton {
 }
 
 extension ToDoGardenBoxButton {
-  public struct DataConfiguaration {
+  public struct Configuration {
     let dataStore: Constant.ToDoGardenBoxButton.DataStore
     
     init(dataStore: Constant.ToDoGardenBoxButton.DataStore) {
@@ -118,16 +117,16 @@ extension ToDoGardenBoxButton {
   }
 }
 
-extension ToDoGardenBoxButton.DataConfiguaration {
+extension ToDoGardenBoxButton.Configuration {
   public static let primaryRoundRectButton: Self = 
-  ToDoGardenBoxButton.DataConfiguaration.init(dataStore: Constant.ToDoGardenBoxButton.primaryRoundRectButton)
+  ToDoGardenBoxButton.Configuration.init(dataStore: Constant.ToDoGardenBoxButton.primaryRoundRectButton)
   
   public static let secondaryRoundRectButton: Self = 
-  ToDoGardenBoxButton.DataConfiguaration.init(dataStore: Constant.ToDoGardenBoxButton.secondaryRoundRectButton)
+  ToDoGardenBoxButton.Configuration.init(dataStore: Constant.ToDoGardenBoxButton.secondaryRoundRectButton)
   
   public static let tertiaryRoundRectButton: Self = 
-  ToDoGardenBoxButton.DataConfiguaration.init(dataStore: Constant.ToDoGardenBoxButton.tertiaryRoundRectButton)
+  ToDoGardenBoxButton.Configuration.init(dataStore: Constant.ToDoGardenBoxButton.tertiaryRoundRectButton)
   
   public static let rectangleButton: Self = 
-  ToDoGardenBoxButton.DataConfiguaration.init(dataStore: Constant.ToDoGardenBoxButton.rectangleButton)
+  ToDoGardenBoxButton.Configuration.init(dataStore: Constant.ToDoGardenBoxButton.rectangleButton)
 }
