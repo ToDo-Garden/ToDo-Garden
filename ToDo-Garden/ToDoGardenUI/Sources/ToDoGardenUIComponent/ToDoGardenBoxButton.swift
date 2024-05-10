@@ -48,18 +48,16 @@ public final class ToDoGardenBoxButton: UIButton {
 // MARK: - private functions
 
 extension ToDoGardenBoxButton {
-  private func setup(
-    isRoundRect: Bool,
-    text: String,
-    size: CGSize
-  ) {
-    if isRoundRect {
-      self.setupCornerRadius(with: size.height / 2)
+  private func setup(title: String, dataConfiguration: DataConfiguaration) {
+    
+    if dataConfiguration.dataStore.mode == Constant.ToDoGardenBoxButton.Mode.roundRectangle {
+      self.setupCornerRadius(with: dataConfiguration.dataStore.size.height / 2)
     }
+    
     self.updateBackgroundColor()
-    self.setTitle(text, for: UIControl.State.normal)
+    self.setTitle(title, for: UIControl.State.normal)
     self.setupTitleFont()
-    self.setupActionToChangeAlpha()
+    self.setupActionToChangeAlpha(with: dataConfiguration)
   }
   
   private func setupTitleFont() {
@@ -70,22 +68,25 @@ extension ToDoGardenBoxButton {
     self.layer.cornerRadius = value
   }
   
-  private func setupActionToChangeAlpha() {
-    self.setupTouchDownAction()
-    self.setupTouchUpAction()
+  private func setupActionToChangeAlpha(with dataConfiguaration: DataConfiguaration) {
+    let highlightedAlpha = dataConfiguaration.dataStore.highlightedAlpha
+    let normalAlpha = dataConfiguaration.dataStore.normalAlpha
+
+    self.setupTouchDownAction(with: highlightedAlpha)
+    self.setupTouchUpAction(with: normalAlpha)
   }
   
-  private func setupTouchDownAction() {
+  private func setupTouchDownAction(with alpha: CGFloat) {
     let touchDownAction = UIAction { [weak self] _ in
-      self?.alpha = Constant.ToDoGardenBoxButton.Alpha.highlighted
+      self?.alpha = alpha
     }
     
     self.addAction(touchDownAction, for: UIControl.Event.touchDown)
   }
   
-  private func setupTouchUpAction() {
+  private func setupTouchUpAction(with alpha: CGFloat) {
     let touchUpAction = UIAction { [weak self] _ in
-      self?.alpha = Constant.ToDoGardenBoxButton.Alpha.normal
+      self?.alpha = alpha
     }
     
     self.addAction(
