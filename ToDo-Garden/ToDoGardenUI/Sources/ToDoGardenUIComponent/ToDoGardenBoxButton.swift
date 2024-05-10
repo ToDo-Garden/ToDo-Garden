@@ -39,6 +39,10 @@ public final class ToDoGardenBoxButton: UIButton {
   public func disable() {
     self.isEnabled = false
   }
+  
+  public func changeTitle(text: String) {
+    self.setTitle(text, for: UIControl.State.normal)
+  }
 }
 
 // MARK: - private functions
