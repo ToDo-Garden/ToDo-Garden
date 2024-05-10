@@ -27,6 +27,20 @@ public final class AlarmTimeView: UIView {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+
+  public func enable() {
+    self.isUserInteractionEnabled = true
+    self.timeLabel.textColor = UIColor.toDoGardenGreenDark
+    self.alarmSettingButton.isEnabled = true
+    self.layer.borderColor = UIColor.toDoGardenGreenDark.cgColor
+  }
+
+  public func disable() {
+    self.isUserInteractionEnabled = false
+    self.timeLabel.textColor = UIColor.toDoGardenGray3
+    self.alarmSettingButton.isEnabled = false
+    self.layer.borderColor = UIColor.toDoGardenGray2.cgColor
+  }
 }
 
 // MARK: Private Functions
