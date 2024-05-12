@@ -56,7 +56,7 @@ extension ToDoGardenBoxButton {
     self.updateBackgroundColor()
     self.setTitle(title, for: UIControl.State.normal)
     self.setupTitleFont()
-    self.setupActionToChangeAlpha(with: configuration)
+    self.setupActionToChangeAlpha()
   }
   
   private func setupTitleFont() {
@@ -67,9 +67,9 @@ extension ToDoGardenBoxButton {
     self.layer.cornerRadius = value
   }
   
-  private func setupActionToChangeAlpha(with configuration: Configuration) {
-    let highlightedAlpha = configuration.dataStore.highlightedAlpha
-    let normalAlpha = configuration.dataStore.normalAlpha
+  private func setupActionToChangeAlpha() {
+    let highlightedAlpha = Constant.ToDoGardenBoxButton.Alpha.highlighted
+    let normalAlpha = Constant.ToDoGardenBoxButton.Alpha.normal
 
     self.setupTouchDownAction(with: highlightedAlpha)
     self.setupTouchUpAction(with: normalAlpha)

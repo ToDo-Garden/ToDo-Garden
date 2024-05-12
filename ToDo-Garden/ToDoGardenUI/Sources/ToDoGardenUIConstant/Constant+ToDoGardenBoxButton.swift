@@ -20,9 +20,9 @@ extension Constant.ToDoGardenBoxButton {
     case rectangle
   }
   
-  private enum Alpha {
-    static let normal: CGFloat = 1.0
-    static let highlighted: CGFloat = 0.7
+  public enum Alpha {
+    public static let normal: CGFloat = 1.0
+    public static let highlighted: CGFloat = 0.7
   }
   
   private enum Size {
@@ -40,35 +40,25 @@ extension Constant.ToDoGardenBoxButton {
   public struct DataStore {
     public let size: CGSize
     public let mode: Mode
-    public let normalAlpha: CGFloat
-    public let highlightedAlpha: CGFloat
   }
   
   public static let primaryRoundRectButton = DataStore(
     size: Size.primary,
-    mode: Mode.roundRectangle,
-    normalAlpha: Alpha.normal,
-    highlightedAlpha: Alpha.highlighted
+    mode: Mode.roundRectangle
   )
   
   public static let secondaryRoundRectButton = DataStore(
     size: Size.secondary,
-    mode: Mode.roundRectangle,
-    normalAlpha: Alpha.normal,
-    highlightedAlpha: Alpha.highlighted
+    mode: Mode.roundRectangle
   )
   
   public static let tertiaryRoundRectButton = DataStore(
     size: Size.tertiary,
-    mode: Mode.roundRectangle,
-    normalAlpha: Alpha.normal,
-    highlightedAlpha: Alpha.highlighted
+    mode: Mode.roundRectangle
   )
   
   public static let rectangleButton = DataStore(
     size: Size.filledHorizontal,
-    mode: Mode.rectangle,
-    normalAlpha: Alpha.normal,
-    highlightedAlpha: Alpha.highlighted
+    mode: Mode.rectangle
   )
 }
