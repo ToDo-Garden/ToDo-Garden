@@ -53,4 +53,7 @@ extension UIImage {
   public static let alarmImage = UIImage(
     resource: .alarm
   )
+  public static let checkmarkImage = UIImage(
+    resource: .checkmark
+  )
 }
