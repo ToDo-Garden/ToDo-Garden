@@ -19,6 +19,7 @@ extension Constant.Styled.Button {
 
 extension Constant.Styled.Button.OnlyToday {
   public enum Layout {}
+  public enum StringLiteral {}
 }
 
 extension Constant.Styled.Button.OnlyToday.Layout {
@@ -32,4 +33,8 @@ extension Constant.Styled.Button.OnlyToday.Layout.ImageView {
 
 extension Constant.Styled.Button.OnlyToday.Layout.TitleLabel {
   static let leadingMargin: CGFloat = 16
+}
+
+extension Constant.Styled.Button.OnlyToday.StringLiteral {
+  static let defaultTitle: String = "오늘만 할래요"
 }
