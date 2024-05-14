@@ -9,6 +9,7 @@ import Foundation
 
 extension Constant.ToDoRepeatSelectionView {
   public enum Layout {}
+  public enum StringLiteral {}
 }
 
 extension Constant.ToDoRepeatSelectionView.Layout {
@@ -23,4 +24,13 @@ extension Constant.ToDoRepeatSelectionView.Layout.RepetitionLabel {
 
 extension Constant.ToDoRepeatSelectionView.Layout.SelectionImageView {
   public static let trailingMargin: CGFloat = 12.0
+}
+
+extension Constant.ToDoRepeatSelectionView.StringLiteral {
+  public enum RepetitionLabel {}
+}
+
+extension Constant.ToDoRepeatSelectionView.StringLiteral.RepetitionLabel {
+  public static let onlyToday: String = "오늘만 할래요"
+  public static let anotherDay: String = "다른 날도 할래요"
 }
