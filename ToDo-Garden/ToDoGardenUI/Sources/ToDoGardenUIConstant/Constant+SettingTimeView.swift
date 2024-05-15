@@ -8,7 +8,7 @@
 import Foundation
 
 extension Constant.SettingTimeView {
-  private enum Content {
+  private enum StringLiteral {
     static let focusTimeTitle: String = "집중시간 설정"
     static let breakTimeTitle: String = "휴식시간 설정"
     static let alarmTimeTitle: String = "시간 설정"
@@ -26,6 +26,7 @@ extension Constant.SettingTimeView {
     public let timePicker: TimePicker
     public let button: Button
   }
+  
   public struct Title {
     public let topMargin: CGFloat
     public let text: String
@@ -47,11 +48,11 @@ extension Constant.SettingTimeView {
             cornerRadius: 5.0
           ),
           hourUnitLabel: HourUnitLabel(
-            text: Content.hourAlarm,
+            text: StringLiteral.hourAlarm,
             leading: 35.0
           ),
           minuteUnitLabel: MinuteUnitLabel(
-            text: Content.minute,
+            text: StringLiteral.minute,
             leading: 56.0
           ),
           secondUnitLabel: nil,
@@ -75,15 +76,15 @@ extension Constant.SettingTimeView {
             cornerRadius: 5.0
           ),
           hourUnitLabel: HourUnitLabel(
-            text: Content.hourDefault,
+            text: StringLiteral.hourDefault,
             leading: 34.0
           ),
           minuteUnitLabel: MinuteUnitLabel(
-            text: Content.minute,
+            text: StringLiteral.minute,
             leading: 15.0
           ),
           secondUnitLabel: SecondUnitLabel(
-            text: Content.second,
+            text: StringLiteral.second,
             leading: -7.0
           ),
           pickerView: PickerView(
@@ -106,15 +107,15 @@ extension Constant.SettingTimeView {
             cornerRadius: 5.0
           ),
           hourUnitLabel: HourUnitLabel(
-            text: Content.hourDefault,
+            text: StringLiteral.hourDefault,
             leading: 34.0
           ),
           minuteUnitLabel: MinuteUnitLabel(
-            text: Content.minute,
+            text: StringLiteral.minute,
             leading: 15.0
           ),
           secondUnitLabel: SecondUnitLabel(
-            text: Content.second,
+            text: StringLiteral.second,
             leading: -7.0
           ),
           pickerView: PickerView(
@@ -137,7 +138,7 @@ extension Constant.SettingTimeView {
 }
 
 extension Constant.SettingTimeView.TimePicker {
-  private enum Content {
+  private enum StringLiteral {
     static let hourDefault = "시간"
     static let hourAlarm = "시"
     static let minute = "분"
@@ -187,19 +188,19 @@ extension Constant.SettingTimeView.TimePicker {
 
 extension Constant.SettingTimeView {
   public static let focusTimeSetting = DataStore.init(
-    title: Title(topMargin: Layout.titleTopMargin, text: Content.focusTimeTitle),
+    title: Title(topMargin: Layout.titleTopMargin, text: StringLiteral.focusTimeTitle),
     timePicker: TimePicker.focusTime,
     button: Button(bottomMargin: Layout.buttonBottomMargin)
   )
   
   public static let breakTimeSetting = DataStore.init(
-    title: Title(topMargin: Layout.titleTopMargin, text: Content.breakTimeTitle),
+    title: Title(topMargin: Layout.titleTopMargin, text: StringLiteral.breakTimeTitle),
     timePicker: TimePicker.breakTime,
     button: Button(bottomMargin: Layout.buttonBottomMargin)
   )
   
   public static let alarmTimeSetting = DataStore.init(
-    title: Title(topMargin: Layout.titleTopMargin, text: Content.alarmTimeTitle),
+    title: Title(topMargin: Layout.titleTopMargin, text: StringLiteral.alarmTimeTitle),
     timePicker: TimePicker.alarmTime,
     button: Button(bottomMargin: Layout.buttonBottomMargin)
   )
