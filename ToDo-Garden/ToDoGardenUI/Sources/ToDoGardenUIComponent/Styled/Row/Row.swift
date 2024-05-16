@@ -29,10 +29,10 @@ extension Styled {
       self.build()
     }
     
-    public init(configuration: Configuration, with buttons: [UIView]) {
+    public init(configuration: Configuration, with views: [UIView]) {
       self.configutration = configuration
       super.init(frame: CGRect.zero)
-      self.build(with: buttons)
+      self.build(with: views)
     }
     
     @available(*, unavailable)
