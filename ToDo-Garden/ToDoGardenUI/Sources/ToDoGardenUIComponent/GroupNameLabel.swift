@@ -98,6 +98,9 @@ extension GroupNameLabel.Configuration {
   public static let primaryConfigration = GroupNameLabel.Configuration.primary(
     PrimaryModel.defaultPrimaryModel
   )
+  public static let repeatOtherDaysConfiguration = GroupNameLabel.Configuration.primary(
+    PrimaryModel.repeatOtherDaysModel
+  )
 }
 
 // MARK: Models
@@ -121,6 +124,19 @@ extension GroupNameLabel.Configuration {
       font: UIFont.pretendardBodyBold,
       textColor: UIColor.toDoGardenGreenDark,
       backgroundColor: UIColor.toDoGardenGreenBackground
+    )
+    
+    static let repeatOtherDaysModel =  GroupNameLabel.Configuration.PrimaryModel(
+      cornerRadius: CGFloat.zero,
+      textPadding: UIEdgeInsets(
+        top: CGFloat.zero,
+        left: CGFloat.zero,
+        bottom: CGFloat.zero,
+        right: CGFloat.zero
+      ),
+      font: UIFont.pretendardBodySemiBold,
+      textColor: UIColor.toDoGardenGreenDark,
+      backgroundColor: UIColor.clear
     )
   }
 }
