@@ -10,6 +10,7 @@ public extension Constant.Styled.Row {
   enum ToDoList {}
   enum Profile {}
   enum ListPrimary {}
+  enum RepeatOtherDays {}
 }
 
 public extension Constant.Styled.Row.ToDoList {
@@ -34,4 +35,8 @@ public extension Constant.Styled.Row.ListPrimary {
   static let stackEdgeInsets = NSDirectionalEdgeInsets(top: 0, leading: 14, bottom: 0, trailing: 14)
   static let colorViewCornerRadius = CGFloat(12)
   static let colorViewSize = CGSize(width: 24, height: 24)
+}
+
+public extension Constant.Styled.Row.RepeatOtherDays {
+  static let stackSpacing = CGFloat(5.0)
 }

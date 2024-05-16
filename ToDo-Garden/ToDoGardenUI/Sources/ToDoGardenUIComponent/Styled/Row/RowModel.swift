@@ -23,10 +23,17 @@ extension Styled.Row {
       }
       return nil
     }
+    var repeatOtherDaysModel: RepeatOtherDaysModel? {
+      if case let Self.repeatOtherDays(model) = self {
+        return model
+      }
+      return nil
+    }
     
     case profile(ProfileModel)
     case listPrimary(ListPrimaryModel)
     case todoList(TodoListModel)
+    case repeatOtherDays(RepeatOtherDaysModel)
   }
 }
 
@@ -72,6 +79,10 @@ extension Styled.Row.Configuration {
   public struct ListPrimaryModel: Equatable {
     let title: String
     let color: UIColor
+  }
+  
+  public struct RepeatOtherDaysModel: Equatable {
+    let title: String
   }
   
   public struct TodoListModel: Equatable {
