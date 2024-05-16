@@ -29,6 +29,12 @@ extension Styled {
       self.build()
     }
     
+    public init(configuration: Configuration, with buttons: [UIView]) {
+      self.configutration = configuration
+      super.init(frame: CGRect.zero)
+      self.build(with: buttons)
+    }
+    
     @available(*, unavailable)
     public required init?(coder: NSCoder) {
       fatalError("init(coder:) has not been implemented")
@@ -43,6 +49,17 @@ extension Styled {
         self.buildListPrimaryStyle(stack: stack, model: listPrimaryModel)
       case let Configuration.todoList(todoListModel):
         self.buildTodoListStyle(stack: stack, model: todoListModel)
+      case let Configuration.repeatOtherDays(repeatOtherDaysModel):
+        self.buildRepeatOtherDaysStyle(stack: stack, model: repeatOtherDaysModel, views: nil)
+      }
+    }
+    
+    private func build(with views: [UIView]) {
+      let stack = UIStackView(frame: CGRect.zero)
+      switch self.configutration {
+      case let Configuration.repeatOtherDays(repeatOtherDaysModel):
+        self.buildRepeatOtherDaysStyle(stack: stack, model: repeatOtherDaysModel, views: views)
+      default: break
       }
     }
   }
