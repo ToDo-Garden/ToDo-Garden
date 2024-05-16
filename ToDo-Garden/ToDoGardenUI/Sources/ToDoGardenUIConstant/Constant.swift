@@ -18,4 +18,5 @@ public enum Constant {
   public enum Styled {}
   public enum AlarmTimeView {}
   public enum ColorPickerList {}
+  public enum SettingTimeView {}
 }
