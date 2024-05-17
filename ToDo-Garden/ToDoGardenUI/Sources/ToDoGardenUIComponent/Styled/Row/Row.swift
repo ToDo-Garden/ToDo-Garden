@@ -7,30 +7,30 @@ extension Styled {
   final public class Row: UIView {
     public var iconImage: UIImage? {
       get {
-        if let image = self.configutration.profileModel?.image {
+        if let image = self.configuration.profileModel?.image {
           return image
         }
         return nil
       }
       set {
-        if var model = self.configutration.profileModel, let newValue {
+        if var model = self.configuration.profileModel, let newValue {
           model.image = newValue
-          self.configutration = Configuration.profile(model)
+          self.configuration = Configuration.profile(model)
         }
       }
     }
     
-    @Published var configutration: Configuration
+    @Published var configuration: Configuration
     var cancellables: Set<AnyCancellable> = []
     
     public init(configuration: Configuration) {
-      self.configutration = configuration
+      self.configuration = configuration
       super.init(frame: CGRect.zero)
       self.build()
     }
     
     public init(configuration: Configuration, with views: [UIView]) {
-      self.configutration = configuration
+      self.configuration = configuration
       super.init(frame: CGRect.zero)
       self.build(with: views)
     }
@@ -42,7 +42,7 @@ extension Styled {
     
     private func build() {
       let stack = UIStackView(frame: CGRect.zero)
-      switch self.configutration {
+      switch self.configuration {
       case let Configuration.profile(profileModel):
         self.buildProfileStyle(stack: stack, model: profileModel)
       case let Configuration.listPrimary(listPrimaryModel):
@@ -56,7 +56,7 @@ extension Styled {
     
     private func build(with views: [UIView]) {
       let stack = UIStackView(frame: CGRect.zero)
-      switch self.configutration {
+      switch self.configuration {
       case let Configuration.repeatOtherDays(repeatOtherDaysModel):
         self.buildRepeatOtherDaysStyle(stack: stack, model: repeatOtherDaysModel, views: views)
       default: break

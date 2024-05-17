@@ -26,11 +26,11 @@ extension Styled.Row {
     )
     let action = UIAction { [weak self, weak button] _ in
       guard let button else { return }
-      self?.configutration.todoListModel
+      self?.configuration.todoListModel
         .map { model in
           var copy = model
           copy.isSelected = button.isSelected
-          self?.configutration = Configuration.todoList(copy)
+          self?.configuration = Configuration.todoList(copy)
         }
     }
     button.addAction(action, for: .touchUpInside)
@@ -54,11 +54,11 @@ extension Styled.Row {
     textField.isHidden = isSelected
     let action = UIAction { [weak self] action in
       if let textField = action.sender as? UITextField {
-        self?.configutration.todoListModel
+        self?.configuration.todoListModel
           .map { model in
             var copy = model
             copy.text = textField.text
-            self?.configutration = .todoList(copy)
+            self?.configuration = .todoList(copy)
           }
       }
     }

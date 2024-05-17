@@ -17,7 +17,7 @@ public class TableRow: UITableViewCell {
       row.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
     ])
     
-    return row.$configutration
+    return row.$configuration
       .map(keyPath)
       .eraseToAnyPublisher()
   }
