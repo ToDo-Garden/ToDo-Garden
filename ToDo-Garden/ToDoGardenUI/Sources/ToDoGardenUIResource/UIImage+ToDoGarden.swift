@@ -56,4 +56,13 @@ extension UIImage {
   public static let checkmarkImage = UIImage(
     resource: .checkmark
   )
+  public static let ringToggleOn = UIImage(
+    resource: .ringToggleOn
+  )
+  public static let ringToggleOff = UIImage(
+    resource: .ringToggleOff
+  )
+  public static let ringToggleHighlighted = UIImage(
+    resource: .ringToggleHighlighted
+  )
 }
