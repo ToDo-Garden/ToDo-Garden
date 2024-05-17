@@ -68,7 +68,7 @@ extension Styled.Row {
   }
   
   private func bindingProfileImageState(imageView: UIImageView) {
-    self.$configutration
+    self.$configuration
       .map(\.profileModel?.image)
       .removeDuplicates()
       .sink { [weak imageView] image in
@@ -81,14 +81,14 @@ extension Styled.Row {
     titleLabel: UILabel,
     descriptionLabel: UILabel
   ) {
-    self.$configutration
+    self.$configuration
       .map(\.profileModel?.description)
       .removeDuplicates()
       .sink { [weak descriptionLabel] text in
         descriptionLabel?.text = text
       }
       .store(in: &cancellables)
-    self.$configutration
+    self.$configuration
       .map(\.profileModel?.title)
       .removeDuplicates()
       .sink { [weak titleLabel] text in

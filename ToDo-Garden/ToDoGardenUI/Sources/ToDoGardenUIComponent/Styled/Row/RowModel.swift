@@ -83,6 +83,10 @@ extension Styled.Row.Configuration {
   
   public struct RepeatOtherDaysModel: Equatable {
     let title: String
+    
+    public init(title: String) {
+      self.title = title
+    }
   }
   
   public struct TodoListModel: Equatable {
