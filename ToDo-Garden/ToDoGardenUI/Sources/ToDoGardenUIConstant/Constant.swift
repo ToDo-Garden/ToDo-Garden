@@ -21,4 +21,5 @@ public enum Constant {
   public enum ColorPickerList {}
   public enum SettingTimeView {}
   public enum ToDoRepeatSelectionView {}
+  public enum LightRoundRectButton {}
 }
