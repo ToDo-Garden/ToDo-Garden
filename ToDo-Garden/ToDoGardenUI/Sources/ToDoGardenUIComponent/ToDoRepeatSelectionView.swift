@@ -176,3 +176,16 @@ extension ToDoRepeatSelectionView {
     )
   }
 }
+
+// MARK: Preview
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let view = ToDoRepeatSelectionView(model: ToDoRepeatSelectionView.Model.anotherDay)
+  view.usingAutolayout()
+  view.widthAnchor.constraint(equalToConstant: 315).isActive = true
+  view.heightAnchor.constraint(equalToConstant: 31).isActive = true
+  return view
+}
+#endif
