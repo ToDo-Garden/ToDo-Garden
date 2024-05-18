@@ -12,9 +12,11 @@ import ToDoGardenUIResource
 
 public class ToDoRepeatSelectionView: UIView {
   let model: Model
+  var repetitionLabel: UILabel
 
   public init(model: Model) {
     self.model = model
+    self.repetitionLabel = UILabel()
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -35,6 +37,11 @@ extension ToDoRepeatSelectionView {
   private func setupLayer() {
     self.layer.borderWidth = self.model.borderWidth
     self.layer.cornerRadius = self.model.cornerRadius
+  }
+
+  private func setupRepetitionLabel() {
+    self.repetitionLabel.font = UIFont.pretendardBodyMedium
+    self.repetitionLabel.text = self.model.title
   }
 }
 
