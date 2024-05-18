@@ -18,6 +18,7 @@ extension Constant.ToDoRepeatSelectionView.Layout {
 }
 
 extension Constant.ToDoRepeatSelectionView.Layout {
+  public static let borderWidth: CGFloat = 1.0
   public static let cornerRadius: CGFloat = 15.5
 }
 
