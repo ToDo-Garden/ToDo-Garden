@@ -13,10 +13,12 @@ import ToDoGardenUIResource
 public class ToDoRepeatSelectionView: UIView {
   let model: Model
   var repetitionLabel: UILabel
+  var selectionImageView: UIImageView
 
   public init(model: Model) {
     self.model = model
     self.repetitionLabel = UILabel()
+    self.selectionImageView = UIImageView()
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -32,6 +34,8 @@ public class ToDoRepeatSelectionView: UIView {
 extension ToDoRepeatSelectionView {
   private func setup() {
     self.setupLayer()
+    self.setupRepetitionLabel()
+    self.setupSelectionImageView()
   }
 
   private func setupLayer() {
@@ -42,6 +46,14 @@ extension ToDoRepeatSelectionView {
   private func setupRepetitionLabel() {
     self.repetitionLabel.font = UIFont.pretendardBodyMedium
     self.repetitionLabel.text = self.model.title
+  }
+
+  private func setupSelectionImageView() {
+    guard self.model.selectedStateImage != nil
+    else { return }
+
+    let image = self.model.selectedStateImage
+    self.selectionImageView.image = image
   }
 }
 
