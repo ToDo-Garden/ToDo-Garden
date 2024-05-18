@@ -15,10 +15,13 @@ public class ToDoRepeatSelectionView: UIView {
   var repetitionLabel: UILabel
   var selectionImageView: UIImageView
 
+  var repetitionLabelTopAchor: NSLayoutConstraint
+
   public init(model: Model) {
     self.model = model
     self.repetitionLabel = UILabel()
     self.selectionImageView = UIImageView()
+    self.repetitionLabelTopAchor = NSLayoutConstraint()
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -36,6 +39,8 @@ extension ToDoRepeatSelectionView {
     self.setupLayer()
     self.setupRepetitionLabel()
     self.setupSelectionImageView()
+    self.addSubviews()
+    self.setupSubviewsLayout()
   }
 
   private func setupLayer() {
@@ -54,6 +59,49 @@ extension ToDoRepeatSelectionView {
 
     let image = self.model.selectedStateImage
     self.selectionImageView.image = image
+  }
+}
+
+// MARK: Set Auto Layout
+
+extension ToDoRepeatSelectionView {
+  private func addSubviews() {
+    self.addSubview(self.repetitionLabel)
+    self.addSubview(self.selectionImageView)
+  }
+
+  private func setupSubviewsLayout() {
+    self.setupLabelLayout()
+    self.setupSelectionImageViewLayout()
+  }
+
+  private func setupLabelLayout() {
+    self.repetitionLabel.usingAutolayout()
+
+    self.repetitionLabelTopAchor = self.repetitionLabel.topAnchor.constraint(
+      equalTo: self.topAnchor,
+      constant: Constant.ToDoRepeatSelectionView.Layout.RepetitionLabel.topMargin
+    )
+    self.repetitionLabelTopAchor.isActive = true
+
+    self.repetitionLabel.leadingAnchor.constraint(
+      equalTo: self.leadingAnchor,
+      constant: Constant.ToDoRepeatSelectionView.Layout.RepetitionLabel.leadingMargin
+    ).isActive = true
+  }
+
+  private func setupSelectionImageViewLayout() {
+    self.selectionImageView.usingAutolayout()
+
+    NSLayoutConstraint.activate(
+      [
+        self.selectionImageView.trailingAnchor.constraint(
+          equalTo: self.trailingAnchor,
+          constant: -Constant.ToDoRepeatSelectionView.Layout.SelectionImageView.trailingMargin
+        ),
+        self.selectionImageView.centerYAnchor.constraint(equalTo: self.repetitionLabel.centerYAnchor)
+      ]
+    )
   }
 }
 
