@@ -37,4 +37,10 @@ final public class ToDoGardenTimePicker: UIPickerView {
     
     self.sendSubviewToBack(lastSubview)
   }
+  
+  override public var intrinsicContentSize: CGSize {
+    let width = self.configuration.dataStore.pickerView.width
+    let height = self.configuration.dataStore.pickerView.height
+    return CGSize(width: width, height: height)
+  }
 }
