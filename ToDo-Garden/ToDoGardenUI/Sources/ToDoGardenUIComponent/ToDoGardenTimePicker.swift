@@ -107,3 +107,16 @@ final private class HighlightedView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
 }
+
+fileprivate extension String {
+  func applyTextAttributes() -> NSAttributedString {
+    let attributedString = NSAttributedString(
+      string: self,
+      attributes: [
+        NSAttributedString.Key.font: UIFont.pretendardHeadBold,
+        NSAttributedString.Key.foregroundColor: UIColor.toDoGardenGreenDark
+      ]
+    )
+    return attributedString
+  }
+}
