@@ -100,11 +100,57 @@ final private class HighlightedView: UIView {
     super.init(frame: CGRect.zero)
     self.backgroundColor = UIColor.toDoGardenGreenBackground
     self.layer.cornerRadius = configuration.highlightedView.cornerRadius
+    self.buildLabels(with: configuration)
   }
   
   @available(*, unavailable)
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+  
+  private func buildLabels(with constants: Constant.SettingTimeView.TimePicker.DataStore) {
+    self.setupUnitLabel(with: constants.hourUnitLabel.text, leading: constants.hourUnitLabel.leading)
+    self.setupUnitLabel(with: constants.minuteUnitLabel.text, centerX: constants.minuteUnitLabel.leading)
+    
+    guard let secondLabelConstants = constants.secondUnitLabel else {
+      return
+    }
+    
+    self.setupUnitLabel(with: secondLabelConstants.text, trailing: secondLabelConstants.trailing)
+  }
+  
+  private func setupUnitLabel(
+    with text: String,
+    leading: CGFloat? = nil,
+    centerX: CGFloat? = nil,
+    trailing: CGFloat? = nil
+  ) {
+    let label = createLabel(with: text)
+    label.usingAutolayout()
+    self.addSubview(label)
+    
+    if let leading = leading {
+      NSLayoutConstraint.activate([
+        label.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: leading),
+        label.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+      ])
+    } else if let centerX = centerX {
+      NSLayoutConstraint.activate([
+        label.centerXAnchor.constraint(equalTo: self.centerXAnchor, constant: centerX),
+        label.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+      ])
+    } else if let trailing = trailing {
+      NSLayoutConstraint.activate([
+        label.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: trailing),
+        label.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+      ])
+    }
+  }
+  
+  private func createLabel(with text: String) -> UILabel {
+    let label = UILabel()
+    label.attributedText = text.applyTextAttributes()
+    return label
   }
 }
 
