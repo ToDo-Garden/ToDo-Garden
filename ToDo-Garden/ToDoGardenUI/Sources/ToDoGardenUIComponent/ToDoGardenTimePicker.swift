@@ -71,4 +71,39 @@ final public class ToDoGardenTimePicker: UIPickerView {
     }
     return calendar.date(from: dateComponents)
   }
+  
+  private func addHighlightedView() {
+    let highlightedView = HighlightedView(configuration: self.configuration.dataStore)
+    
+    self.addSubview(highlightedView)
+    
+    highlightedView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate(
+      [
+        highlightedView.leadingAnchor.constraint(
+          equalTo: self.leadingAnchor,
+          constant: self.configuration.dataStore.highlightedView.leading
+        ),
+        highlightedView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+        highlightedView.trailingAnchor.constraint(
+          equalTo: self.trailingAnchor,
+          constant: self.configuration.dataStore.highlightedView.trailing
+        ),
+        highlightedView.heightAnchor.constraint(equalToConstant: self.configuration.dataStore.highlightedView.height)
+      ]
+    )
+  }
+}
+
+final private class HighlightedView: UIView {
+  init(configuration: Constant.SettingTimeView.TimePicker.DataStore) {
+    super.init(frame: CGRect.zero)
+    self.backgroundColor = UIColor.toDoGardenGreenBackground
+    self.layer.cornerRadius = configuration.highlightedView.cornerRadius
+  }
+  
+  @available(*, unavailable)
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
 }
