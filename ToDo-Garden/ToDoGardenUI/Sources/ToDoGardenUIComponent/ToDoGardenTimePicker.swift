@@ -22,4 +22,19 @@ final public class ToDoGardenTimePicker: UIPickerView {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+  
+  override public func layoutSubviews() {
+    super.layoutSubviews()
+    guard !self.subviews.isEmpty else {
+      return
+    }
+    
+    self.subviews[Int.zero].backgroundColor = UIColor.clear
+    
+    guard let lastSubview = self.subviews.last else {
+      return
+    }
+    
+    self.sendSubviewToBack(lastSubview)
+  }
 }
