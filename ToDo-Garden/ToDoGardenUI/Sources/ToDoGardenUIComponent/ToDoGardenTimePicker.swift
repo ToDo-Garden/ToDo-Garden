@@ -15,6 +15,7 @@ final public class ToDoGardenTimePicker: UIPickerView {
   public init(configuration: Constant.SettingTimeView.TimePicker) {
     self.configuration = configuration
     super.init(frame: CGRect.zero)
+    self.delegate = self
     self.dataSource = self
     self.backgroundColor = UIColor.clear
   }
@@ -93,6 +94,16 @@ final public class ToDoGardenTimePicker: UIPickerView {
         highlightedView.heightAnchor.constraint(equalToConstant: self.configuration.dataStore.highlightedView.height)
       ]
     )
+  }
+}
+
+extension ToDoGardenTimePicker: UIPickerViewDelegate {
+  public func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+    return self.configuration.dataStore.pickerView.rowHeight
+  }
+  
+  public func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
+    return self.configuration.dataStore.pickerView.widthForComponent
   }
 }
 
