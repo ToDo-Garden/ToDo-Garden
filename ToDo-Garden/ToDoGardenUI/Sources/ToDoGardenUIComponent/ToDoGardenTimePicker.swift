@@ -18,6 +18,7 @@ final public class ToDoGardenTimePicker: UIPickerView {
     self.delegate = self
     self.dataSource = self
     self.backgroundColor = UIColor.clear
+    self.addHighlightedView()
   }
   
   @available(*, unavailable)
