@@ -15,28 +15,21 @@ public final class ToDoGardenBoxButton: UIButton {
       self.updateBackgroundColor()
     }
   }
+  private let size: CGSize
   
-  init() {
+  public init(title: String, buttonType configuration: Configuration) {
+    self.size = configuration.dataStore.size
     super.init(frame: CGRect.zero)
+    self.setup(title: title, configuration: configuration)
   }
   
-  public convenience init(
-    isRoundRect: Bool,
-    text: String,
-    size: CGSize,
-    isEnabled: Bool
-  ) {
-    self.init()
-    self.isEnabled = isEnabled
-    self.setup(
-      isRoundRect: isRoundRect,
-      text: text,
-      size: size
-    )
-  }
-  
+  @available(*, unavailable)
   required init?(coder: NSCoder) {
-    super.init(coder: coder)
+    fatalError()
+  }
+  
+  override public var intrinsicContentSize: CGSize {
+    return self.size
   }
   
   public func enable() {
@@ -46,21 +39,22 @@ public final class ToDoGardenBoxButton: UIButton {
   public func disable() {
     self.isEnabled = false
   }
+  
+  public func changeTitle(text: String) {
+    self.setTitle(text, for: UIControl.State.normal)
+  }
 }
 
 // MARK: - private functions
 
 extension ToDoGardenBoxButton {
-  private func setup(
-    isRoundRect: Bool,
-    text: String,
-    size: CGSize
-  ) {
-    if isRoundRect {
-      self.setupCornerRadius(with: size.height / 2)
+  private func setup(title: String, configuration: Configuration) {
+    if configuration.dataStore.mode == Constant.ToDoGardenBoxButton.Mode.roundRectangle {
+      self.setupCornerRadius(with: configuration.dataStore.size.height / 2)
     }
+    
     self.updateBackgroundColor()
-    self.setTitle(text, for: UIControl.State.normal)
+    self.setTitle(title, for: UIControl.State.normal)
     self.setupTitleFont()
     self.setupActionToChangeAlpha()
   }
@@ -74,21 +68,24 @@ extension ToDoGardenBoxButton {
   }
   
   private func setupActionToChangeAlpha() {
-    self.setupTouchDownAction()
-    self.setupTouchUpAction()
+    let highlightedAlpha = Constant.ToDoGardenBoxButton.Alpha.highlighted
+    let normalAlpha = Constant.ToDoGardenBoxButton.Alpha.normal
+
+    self.setupTouchDownAction(with: highlightedAlpha)
+    self.setupTouchUpAction(with: normalAlpha)
   }
   
-  private func setupTouchDownAction() {
+  private func setupTouchDownAction(with alpha: CGFloat) {
     let touchDownAction = UIAction { [weak self] _ in
-      self?.alpha = Constant.ToDoGardenBoxButton.Alpha.highlighted
+      self?.alpha = alpha
     }
     
     self.addAction(touchDownAction, for: UIControl.Event.touchDown)
   }
   
-  private func setupTouchUpAction() {
+  private func setupTouchUpAction(with alpha: CGFloat) {
     let touchUpAction = UIAction { [weak self] _ in
-      self?.alpha = Constant.ToDoGardenBoxButton.Alpha.normal
+      self?.alpha = alpha
     }
     
     self.addAction(
@@ -108,4 +105,28 @@ extension ToDoGardenBoxButton {
       self.backgroundColor = UIColor.toDoGardenGreenGray
     }
   }
+}
+
+extension ToDoGardenBoxButton {
+  public struct Configuration {
+    let dataStore: Constant.ToDoGardenBoxButton.DataStore
+    
+    init(dataStore: Constant.ToDoGardenBoxButton.DataStore) {
+      self.dataStore = dataStore
+    }
+  }
+}
+
+extension ToDoGardenBoxButton.Configuration {
+  public static let primaryRoundRectButton: Self = 
+  ToDoGardenBoxButton.Configuration.init(dataStore: Constant.ToDoGardenBoxButton.primaryRoundRectButton)
+  
+  public static let secondaryRoundRectButton: Self = 
+  ToDoGardenBoxButton.Configuration.init(dataStore: Constant.ToDoGardenBoxButton.secondaryRoundRectButton)
+  
+  public static let tertiaryRoundRectButton: Self = 
+  ToDoGardenBoxButton.Configuration.init(dataStore: Constant.ToDoGardenBoxButton.tertiaryRoundRectButton)
+  
+  public static let rectangleButton: Self = 
+  ToDoGardenBoxButton.Configuration.init(dataStore: Constant.ToDoGardenBoxButton.rectangleButton)
 }
