@@ -34,9 +34,9 @@ final public class ToDoGardenTimePicker: UIPickerView {
   }
   
   override public var intrinsicContentSize: CGSize {
-    let width = self.configuration.dataStore.pickerView.width
-    let height = self.configuration.dataStore.pickerView.height
-    return CGSize(width: width, height: height)
+    return self.configuration.dataStore.pickerView.size
+  }
+  
   }
   
   public func selectedTime() -> Date? {
