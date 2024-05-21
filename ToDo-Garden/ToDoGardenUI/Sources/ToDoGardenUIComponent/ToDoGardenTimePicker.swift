@@ -28,17 +28,9 @@ final public class ToDoGardenTimePicker: UIPickerView {
   
   override public func layoutSubviews() {
     super.layoutSubviews()
-    guard !self.subviews.isEmpty else {
-      return
+    if let highlightedView = self.subviews.last(where: { $0 is HighlightedView }) {
+      self.sendSubviewToBack(highlightedView)
     }
-    
-    self.subviews[Int.zero].backgroundColor = UIColor.clear
-    
-    guard let lastSubview = self.subviews.last else {
-      return
-    }
-    
-    self.sendSubviewToBack(lastSubview)
   }
   
   override public var intrinsicContentSize: CGSize {
