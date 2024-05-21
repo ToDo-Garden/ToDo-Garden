@@ -49,11 +49,11 @@ extension Constant.SettingTimeView {
           ),
           hourUnitLabel: UnitLabel(
             text: StringLiteral.hourAlarm,
-            contraint: Constraint.leading(35.0)
+            constraint: Constraint.leading(35.0)
           ),
           minuteUnitLabel: UnitLabel(
             text: StringLiteral.minute,
-            contraint: Constraint.centerX(56.0)
+            constraint: Constraint.centerX(56.0)
           ),
           secondUnitLabel: nil
           ,
@@ -77,15 +77,15 @@ extension Constant.SettingTimeView {
           ),
           hourUnitLabel: UnitLabel(
             text: StringLiteral.hourDefault,
-            contraint: Constraint.leading(34.0)
+            constraint: Constraint.leading(34.0)
           ),
           minuteUnitLabel: UnitLabel(
             text: StringLiteral.minute,
-            contraint: Constraint.centerX(15.0)
+            constraint: Constraint.centerX(15.0)
           ),
           secondUnitLabel: UnitLabel(
             text: StringLiteral.second,
-            contraint: Constraint.trailing(-7.0)
+            constraint: Constraint.trailing(-7.0)
           ),
           pickerView: PickerView(
             topMargin: 95.0,
@@ -107,15 +107,15 @@ extension Constant.SettingTimeView {
           ),
           hourUnitLabel: UnitLabel(
             text: StringLiteral.hourDefault,
-            contraint: Constraint.leading(34.0)
+            constraint: Constraint.leading(34.0)
           ),
           minuteUnitLabel: UnitLabel(
             text: StringLiteral.minute,
-            contraint: Constraint.centerX(15.0)
+            constraint: Constraint.centerX(15.0)
           ),
           secondUnitLabel: UnitLabel(
             text: StringLiteral.minute,
-            contraint: Constraint.trailing(-7.0)
+            constraint: Constraint.trailing(-7.0)
           ),
           pickerView: PickerView(
             topMargin: 95.0,
@@ -166,7 +166,7 @@ extension Constant.SettingTimeView.TimePicker {
   
   public struct UnitLabel {
     public let text: String
-    public let contraint: Constraint
+    public let constraint: Constraint
   }
   
   public struct PickerView {
