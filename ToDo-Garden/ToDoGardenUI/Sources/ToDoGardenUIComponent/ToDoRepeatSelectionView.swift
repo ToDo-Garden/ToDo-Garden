@@ -16,11 +16,25 @@ public class ToDoRepeatSelectionView: UIView {
   public init(model: Model) {
     self.model = model
     super.init(frame: CGRect.zero)
+    self.setup()
   }
 
   @available(*, unavailable)
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+}
+
+// MARK: Private Functions
+
+extension ToDoRepeatSelectionView {
+  private func setup() {
+    self.setupLayer()
+  }
+
+  private func setupLayer() {
+    self.layer.borderWidth = self.model.borderWidth
+    self.layer.cornerRadius = self.model.cornerRadius
   }
 }
 
