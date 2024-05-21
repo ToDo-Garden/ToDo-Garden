@@ -47,15 +47,16 @@ extension Constant.SettingTimeView {
             height: 33.0,
             cornerRadius: 5.0
           ),
-          hourUnitLabel: HourUnitLabel(
+          hourUnitLabel: UnitLabel(
             text: StringLiteral.hourAlarm,
-            leading: 35.0
+            contraint: Constraint.leading(35.0)
           ),
-          minuteUnitLabel: MinuteUnitLabel(
+          minuteUnitLabel: UnitLabel(
             text: StringLiteral.minute,
-            leading: 56.0
+            contraint: Constraint.centerX(56.0)
           ),
-          secondUnitLabel: nil,
+          secondUnitLabel: nil
+          ,
           pickerView: PickerView(
             topMargin: 95.0,
             size: CGSize(width: 214.0, height: 216.0),
@@ -74,17 +75,17 @@ extension Constant.SettingTimeView {
             height: 33.0,
             cornerRadius: 5.0
           ),
-          hourUnitLabel: HourUnitLabel(
+          hourUnitLabel: UnitLabel(
             text: StringLiteral.hourDefault,
-            leading: 34.0
+            contraint: Constraint.leading(34.0)
           ),
-          minuteUnitLabel: MinuteUnitLabel(
+          minuteUnitLabel: UnitLabel(
             text: StringLiteral.minute,
-            leading: 15.0
+            contraint: Constraint.centerX(15.0)
           ),
-          secondUnitLabel: SecondUnitLabel(
+          secondUnitLabel: UnitLabel(
             text: StringLiteral.second,
-            leading: -7.0
+            contraint: Constraint.trailing(-7.0)
           ),
           pickerView: PickerView(
             topMargin: 95.0,
@@ -104,17 +105,17 @@ extension Constant.SettingTimeView {
             height: 33.0,
             cornerRadius: 5.0
           ),
-          hourUnitLabel: HourUnitLabel(
+          hourUnitLabel: UnitLabel(
             text: StringLiteral.hourDefault,
-            leading: 34.0
+            contraint: Constraint.leading(34.0)
           ),
-          minuteUnitLabel: MinuteUnitLabel(
+          minuteUnitLabel: UnitLabel(
             text: StringLiteral.minute,
-            leading: 15.0
+            contraint: Constraint.centerX(15.0)
           ),
-          secondUnitLabel: SecondUnitLabel(
-            text: StringLiteral.second,
-            leading: -7.0
+          secondUnitLabel: UnitLabel(
+            text: StringLiteral.minute,
+            contraint: Constraint.trailing(-7.0)
           ),
           pickerView: PickerView(
             topMargin: 95.0,
@@ -150,9 +151,9 @@ extension Constant.SettingTimeView.TimePicker {
   
   public struct DataStore {
     public let highlightedView: HighlightedView
-    public let hourUnitLabel: HourUnitLabel
-    public let minuteUnitLabel: MinuteUnitLabel
-    public let secondUnitLabel: SecondUnitLabel?
+    public let hourUnitLabel: UnitLabel
+    public let minuteUnitLabel: UnitLabel
+    public let secondUnitLabel: UnitLabel?
     public let pickerView: PickerView
   }
   
@@ -163,19 +164,9 @@ extension Constant.SettingTimeView.TimePicker {
     public let cornerRadius: CGFloat
   }
   
-  public struct HourUnitLabel {
+  public struct UnitLabel {
     public let text: String
-    public let leading: CGFloat
-  }
-  
-  public struct MinuteUnitLabel {
-    public let text: String
-    public let leading: CGFloat
-  }
-  
-  public struct SecondUnitLabel {
-    public let text: String
-    public let leading: CGFloat
+    public let contraint: Constraint
   }
   
   public struct PickerView {
