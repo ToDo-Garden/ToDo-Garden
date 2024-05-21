@@ -37,39 +37,8 @@ final public class ToDoGardenTimePicker: UIPickerView {
     return self.configuration.dataStore.pickerView.size
   }
   
-  }
-  
-  public func selectedTime() -> Date? {
-    let calendar = Calendar.current
-    var dateComponents = calendar.dateComponents(
-      [
-        Calendar.Component.year,
-        Calendar.Component.month,
-        Calendar.Component.day,
-        Calendar.Component.hour,
-        Calendar.Component.minute,
-        Calendar.Component.second
-      ],
-      from: Date()
-    )
-    for component in 0..<self.numberOfComponents {
-      let selectedRow = self.selectedRow(inComponent: component)
-      switch component {
-      case 0:
-        dateComponents.hour? += selectedRow
-      case 1:
-        dateComponents.minute? += selectedRow
-      case 2:
-        dateComponents.second? += selectedRow
-      default: break
-      }
-    }
-    return calendar.date(from: dateComponents)
-  }
-  
   private func addHighlightedView() {
     let highlightedView = HighlightedView(configuration: self.configuration.dataStore)
-    
     self.addSubview(highlightedView)
     
     highlightedView.translatesAutoresizingMaskIntoConstraints = false
