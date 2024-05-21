@@ -14,21 +14,43 @@ public class ToDoRepeatSelectionView: UIView {
   let model: Model
   var repetitionLabel: UILabel
   var selectionImageView: UIImageView
-
+  var tapGestureRecognizer: UITapGestureRecognizer
   var repetitionLabelTopAchor: NSLayoutConstraint
+  var isSelected: Bool {
+    willSet {
+      newValue ? self.setSelected() : self.setDeSelected()
+    }
+  }
 
   public init(model: Model) {
     self.model = model
     self.repetitionLabel = UILabel()
     self.selectionImageView = UIImageView()
+    self.tapGestureRecognizer = UITapGestureRecognizer()
     self.repetitionLabelTopAchor = NSLayoutConstraint()
+    self.isSelected = false
     super.init(frame: CGRect.zero)
     self.setup()
+    self.setDeSelected()
   }
 
   @available(*, unavailable)
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+
+  public func setSelected() {
+    self.backgroundColor = UIColor.toDoGardenGreenBackground
+    self.layer.borderColor = UIColor.toDoGardenGreenDark.cgColor
+    self.repetitionLabel.textColor = UIColor.toDoGardenGreenDark
+    self.selectionImageView.isHidden = false
+  }
+
+  public func setDeSelected() {
+    self.backgroundColor = UIColor.clear
+    self.layer.borderColor = UIColor.toDoGardenGray2.cgColor
+    self.repetitionLabel.textColor = UIColor.toDoGardenGray3
+    self.selectionImageView.isHidden = true
   }
 }
 
@@ -39,6 +61,7 @@ extension ToDoRepeatSelectionView {
     self.setupLayer()
     self.setupRepetitionLabel()
     self.setupSelectionImageView()
+    self.setupTapGestureRecognizer()
     self.addSubviews()
     self.setupSubviewsLayout()
   }
@@ -59,6 +82,19 @@ extension ToDoRepeatSelectionView {
 
     let image = self.model.selectedStateImage
     self.selectionImageView.image = image
+  }
+
+  private func setupTapGestureRecognizer() {
+    self.addGestureRecognizer(self.tapGestureRecognizer)
+    self.tapGestureRecognizer.addTarget(self, action: #selector(self.didTapView))
+  }
+}
+
+// MARK: Tap Gesture Function
+
+extension ToDoRepeatSelectionView {
+  @objc func didTapView() {
+    self.isSelected = !self.isSelected
   }
 }
 
