@@ -18,6 +18,7 @@ final public class ToDoGardenTimePicker: UIPickerView {
     self.delegate = self
     self.dataSource = self
     self.backgroundColor = UIColor.clear
+    self.hideDefaultHighlightedView()
     self.addHighlightedView()
   }
   
@@ -35,6 +36,15 @@ final public class ToDoGardenTimePicker: UIPickerView {
   
   override public var intrinsicContentSize: CGSize {
     return self.configuration.dataStore.pickerView.size
+  }
+  
+  private func hideDefaultHighlightedView() {
+    self.layoutIfNeeded()
+    guard let defaultHighlightedView = self.subviews.last else {
+      return
+    }
+    
+    defaultHighlightedView.isHidden = true
   }
   
   private func addHighlightedView() {
