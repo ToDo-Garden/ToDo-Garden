@@ -58,8 +58,7 @@ extension Constant.SettingTimeView {
           secondUnitLabel: nil,
           pickerView: PickerView(
             topMargin: 95.0,
-            width: 214.0,
-            height: 216.0,
+            size: CGSize(width: 214.0, height: 216.0),
             rowHeight: 43.0,
             widthForComponent: 80.0,
             numberOfComponents: 2,
@@ -89,8 +88,7 @@ extension Constant.SettingTimeView {
           ),
           pickerView: PickerView(
             topMargin: 95.0,
-            width: 320.0,
-            height: 216.0,
+            size: CGSize(width: 320.0, height: 216.0),
             rowHeight: 43.0,
             widthForComponent: 90.0,
             numberOfComponents: 3,
@@ -120,8 +118,7 @@ extension Constant.SettingTimeView {
           ),
           pickerView: PickerView(
             topMargin: 95.0,
-            width: 320.0,
-            height: 216.0,
+            size: CGSize(width: 320.0, height: 216.0),
             rowHeight: 43.0,
             widthForComponent: 90.0,
             numberOfComponents: 3,
@@ -177,8 +174,7 @@ extension Constant.SettingTimeView.TimePicker {
   
   public struct PickerView {
     public let topMargin: CGFloat
-    public let width: CGFloat
-    public let height: CGFloat
+    public let size: CGSize
     public let rowHeight: CGFloat
     public let widthForComponent: CGFloat
     public let numberOfComponents: Int
