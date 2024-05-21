@@ -142,6 +142,12 @@ extension Constant.SettingTimeView.TimePicker {
     static let second = "초"
   }
   
+  public enum Constraint {
+    case leading(CGFloat)
+    case centerX(CGFloat)
+    case trailing(CGFloat)
+  }
+  
   public struct DataStore {
     public let highlightedView: HighlightedView
     public let hourUnitLabel: HourUnitLabel
