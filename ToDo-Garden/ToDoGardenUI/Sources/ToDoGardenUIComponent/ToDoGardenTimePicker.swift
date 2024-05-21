@@ -146,42 +146,50 @@ final private class HighlightedView: UIView {
   }
   
   private func buildLabels(with constants: Constant.SettingTimeView.TimePicker.DataStore) {
-    self.setupUnitLabel(with: constants.hourUnitLabel.text, leading: constants.hourUnitLabel.leading)
-    self.setupUnitLabel(with: constants.minuteUnitLabel.text, centerX: constants.minuteUnitLabel.leading)
+    self.setupUnitLabel(
+      with: constants.hourUnitLabel.text,
+      constraint: constants.hourUnitLabel.constraint
+    )
+    self.setupUnitLabel(
+      with: constants.minuteUnitLabel.text,
+      constraint: constants.minuteUnitLabel.constraint
+    )
     
     guard let secondLabelConstants = constants.secondUnitLabel else {
       return
     }
     
-    self.setupUnitLabel(with: secondLabelConstants.text, trailing: secondLabelConstants.trailing)
+    self.setupUnitLabel(
+      with: secondLabelConstants.text,
+      constraint: secondLabelConstants.constraint
+    )
   }
   
   private func setupUnitLabel(
     with text: String,
-    leading: CGFloat? = nil,
-    centerX: CGFloat? = nil,
-    trailing: CGFloat? = nil
+    constraint: Constant.SettingTimeView.TimePicker.Constraint
   ) {
     let label = createLabel(with: text)
     label.usingAutolayout()
     self.addSubview(label)
+    var layoutConstraints: [NSLayoutConstraint] = []
     
-    if let leading = leading {
-      NSLayoutConstraint.activate([
-        label.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: leading),
-        label.centerYAnchor.constraint(equalTo: self.centerYAnchor)
-      ])
-    } else if let centerX = centerX {
-      NSLayoutConstraint.activate([
-        label.centerXAnchor.constraint(equalTo: self.centerXAnchor, constant: centerX),
-        label.centerYAnchor.constraint(equalTo: self.centerYAnchor)
-      ])
-    } else if let trailing = trailing {
-      NSLayoutConstraint.activate([
-        label.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: trailing),
-        label.centerYAnchor.constraint(equalTo: self.centerYAnchor)
-      ])
+    switch constraint {
+    case .leading(let value):
+      layoutConstraints.append(
+        label.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: value)
+      )
+    case .centerX(let value):
+      layoutConstraints.append(
+        label.centerXAnchor.constraint(equalTo: self.centerXAnchor, constant: value)
+      )
+    case .trailing(let value):
+      layoutConstraints.append(
+        label.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: value)
+      )
     }
+    layoutConstraints.append(label.centerYAnchor.constraint(equalTo: self.centerYAnchor))
+    NSLayoutConstraint.activate(layoutConstraints)
   }
   
   private func createLabel(with text: String) -> UILabel {
