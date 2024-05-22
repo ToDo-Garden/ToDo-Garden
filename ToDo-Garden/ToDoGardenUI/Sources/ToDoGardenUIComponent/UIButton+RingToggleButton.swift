@@ -25,9 +25,6 @@ private enum RingToggleButton {
         UIControl.State.highlighted
       ]
     )
-
-    button.addAction(
-      UIAction { [weak button] _ in button?.isSelected.toggle() },
-      for: UIControl.Event.touchUpInside)
+    button.changesSelectionAsPrimaryAction = true
   }
 }
