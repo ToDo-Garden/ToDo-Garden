@@ -19,8 +19,8 @@ private enum LightRoundRectButton {
   fileprivate static func apply(to button: UIButton, title: String) {
     var buttonConfiguration = UIButton.Configuration.filled()
     buttonConfiguration.contentInsets = Constant.LightRoundRectButton.contentsInsets
-    buttonConfiguration.baseForegroundColor = .toDoGardenGreenDark
-    buttonConfiguration.baseBackgroundColor = .toDoGardenGreenBackground
+    buttonConfiguration.baseForegroundColor = UIColor.toDoGardenGreenDark
+    buttonConfiguration.baseBackgroundColor = UIColor.toDoGardenGreenBackground
     
     let attributedString = NSAttributedString(
       string: title,
