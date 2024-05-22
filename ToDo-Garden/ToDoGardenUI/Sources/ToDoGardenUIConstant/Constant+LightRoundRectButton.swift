@@ -8,7 +8,14 @@
 import UIKit.UIGeometry
 
 extension Constant.LightRoundRectButton {
-  public static let contentsInsets = NSDirectionalEdgeInsets(top: 4, leading: 10, bottom: 4, trailing: 10)
+  public enum Layout {
+    public static let contentsInsets = NSDirectionalEdgeInsets(
+      top: 4,
+      leading: 10,
+      bottom: 4,
+      trailing: 10
+    )
+  }
   
   public enum StringLiteral {
     public static let everyday = "매일"
