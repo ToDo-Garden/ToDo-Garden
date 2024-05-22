@@ -1,11 +1,13 @@
 //
-//  RingToggleButton.swift
+//  UIButton+RingToggleButton.swift
 //
 //
 //  Created by SONG on 5/17/24.
 //
 
 import UIKit
+
+import ToDoGardenUIResource
 
 extension UIButton {
   public func applyRingToggleButtonStyle() {
