@@ -103,3 +103,17 @@ extension CircularProgressView {
     self.progressBackgroundLayer.strokeColor = color.cgColor
   }
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let circularProgressView = CircularProgressView(
+    progressColor: UIColor.toDoGardenLeaf,
+    backgroundColor: UIColor.toDoGardenGreenDark,
+    lineWidth: 9.0
+  )
+  circularProgressView.startAnimation(duration: 10.0, from: 0.0, to: 1.0)
+  
+  return circularProgressView
+}
+#endif
