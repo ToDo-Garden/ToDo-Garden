@@ -32,6 +32,12 @@ public final class CircularProgressView: UIView {
     super.draw(rect)
     self.drawCircularPath(rect)
   }
+  
+  public func startAnimation(duration: TimeInterval, from: Float, to value: Float) {
+    self.setProgress(duration: duration, from: from, to: value)
+    self.layer.addSublayer(self.progressBackgroundLayer)
+    self.layer.addSublayer(self.progressLayer)
+  }
 }
 
 // MARK: - Setup animation
@@ -54,7 +60,17 @@ extension CircularProgressView {
     self.progressBackgroundLayer.path = circularPath.cgPath
     self.progressLayer.path = circularPath.cgPath
   }
+  
+  private func setProgress(duration: TimeInterval, from: Float, to value: Float) {
+    let animation = CABasicAnimation(keyPath: "strokeEnd")
+    animation.duration = duration
+    animation.fromValue = from
+    animation.toValue = value
+    self.progressLayer.strokeEnd = CGFloat(value)
+    self.progressLayer.add(animation, forKey: animation.keyPath)
+  }
 }
+
 // MARK: - Setup appearance
 
 extension CircularProgressView {
