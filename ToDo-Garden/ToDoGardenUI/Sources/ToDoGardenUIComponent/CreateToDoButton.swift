@@ -88,7 +88,12 @@ extension CreateToDoButton {
 extension CreateToDoButton.Model {
   public static let primary = CreateToDoButton.Model(
     imagePadding: Constant.CreateToDoButton.Layout.Primary.imagePadding,
-    contentInsets: Constant.CreateToDoButton.Layout.Primary.contentInsets,
+    contentInsets: NSDirectionalEdgeInsets(
+      top: Constant.CreateToDoButton.Layout.Primary.topMargin,
+      leading: Constant.CreateToDoButton.Layout.Primary.leadingMargin,
+      bottom: Constant.CreateToDoButton.Layout.Primary.bottomMargin,
+      trailing: Constant.CreateToDoButton.Layout.Primary.trailingMargin
+    ),
     image: UIImage.createToDoButtonImage,
     font: UIFont.pretendardBodyBold,
     textColor: UIColor.toDoGardenGreenDark
