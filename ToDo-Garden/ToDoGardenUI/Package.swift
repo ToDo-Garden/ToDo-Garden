@@ -32,7 +32,7 @@ let package = Package(
         "ToDoGardenUIResource",
         "ToDoGardenUIConstant",
         "CombineExtension",
-        "StringExtension"
+        "FoundationExtension"
       ]
 		),
 		.target(
@@ -43,6 +43,6 @@ let package = Package(
 		),
     .target(name: "ToDoGardenUIConstant"),
     .target(name: "CombineExtension"),
-    .target(name: "StringExtension")
+    .target(name: "FoundationExtension")
 	]
 )
