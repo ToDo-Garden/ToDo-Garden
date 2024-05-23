@@ -27,6 +27,33 @@ public final class CircularProgressView: UIView {
   public required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+  
+  public override func draw(_ rect: CGRect) {
+    super.draw(rect)
+    self.drawCircularPath(rect)
+  }
+}
+
+// MARK: - Setup animation
+
+extension CircularProgressView {
+  private func drawCircularPath(_ rect: CGRect) {
+    let startAngle = -(Double.pi / 2)
+    let endAngle = 3 * Double.pi / 2
+    let arcCenter = CGPoint(x: rect.midX, y: rect.midY)
+    let radius = rect.width / 2
+    
+    let circularPath = UIBezierPath(
+      arcCenter: arcCenter,
+      radius: radius,
+      startAngle: startAngle,
+      endAngle: endAngle,
+      clockwise: true
+    )
+    
+    self.progressBackgroundLayer.path = circularPath.cgPath
+    self.progressLayer.path = circularPath.cgPath
+  }
 }
 // MARK: - Setup appearance
 
