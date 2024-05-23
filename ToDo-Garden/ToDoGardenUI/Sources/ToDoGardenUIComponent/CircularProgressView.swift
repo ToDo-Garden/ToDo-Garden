@@ -108,8 +108,8 @@ extension CircularProgressView {
 @available(iOS 17.0, *)
 #Preview {
   let circularProgressView = CircularProgressView(
-    progressColor: UIColor.toDoGardenLeaf,
-    backgroundColor: UIColor.toDoGardenGreenDark,
+    progressColor: UIColor.toDoGardenGreenDark,
+    backgroundColor: UIColor.toDoGardenLeaf,
     lineWidth: 9.0
   )
   circularProgressView.startAnimation(duration: 10.0, from: 0.0, to: 1.0)
