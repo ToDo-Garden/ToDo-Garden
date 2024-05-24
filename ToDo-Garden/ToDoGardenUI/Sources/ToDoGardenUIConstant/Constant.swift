@@ -22,4 +22,5 @@ public enum Constant {
   public enum SettingTimeView {}
   public enum ToDoRepeatSelectionView {}
   public enum LightRoundRectButton {}
+  public enum CircularProgressView { }
 }
