@@ -7,6 +7,8 @@
 
 import UIKit
 
+import ToDoGardenUIConstant
+
 public final class CircularProgressView: UIView {
   
   private let progressLayer: CAShapeLayer
@@ -62,7 +64,8 @@ extension CircularProgressView {
   }
   
   private func setProgress(duration: TimeInterval, from: Float, to value: Float) {
-    let animation = CABasicAnimation(keyPath: "strokeEnd")
+    let animationKeyPath = Constant.CircularProgressView.StringLiteral.Animation.keyPath
+    let animation = CABasicAnimation(keyPath: animationKeyPath)
     animation.duration = duration
     animation.fromValue = from
     animation.toValue = value
