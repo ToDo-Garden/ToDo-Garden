@@ -45,3 +45,8 @@ extension Constant.RepeatOtherDaysView.AboutAnimation {
   public static let alphaDisappear: CGFloat = 0.0
   public static let alphaAppear: CGFloat = 1.0
 }
+
+extension Constant.RepeatOtherDaysView.StringLiteral {
+  public static let everyday: String = "매일"
+  public static let timeSet: String = "시간지정"
+}
