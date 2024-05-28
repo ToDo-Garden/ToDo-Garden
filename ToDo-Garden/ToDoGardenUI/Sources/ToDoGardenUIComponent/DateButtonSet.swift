@@ -47,7 +47,7 @@ public final class DateButtonSet: UIControl {
   }
   
   override public var intrinsicContentSize: CGSize {
-    return CGSize(width: 140, height: 52)
+    return Constant.RepeatOtherDaysView.Layout.DateButtonSet.size
   }
   
   private func setupButtons() {
