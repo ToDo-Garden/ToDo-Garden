@@ -31,6 +31,8 @@ extension Constant.RepeatOtherDaysView.Layout {
   public enum DateButtonSet {
     public static let width: CGFloat = 140.0
     public static let trailing: CGFloat = -17.0
+    public static let buttonWidth: CGFloat = 93.0
+    public static let margin: CGFloat = 3.0
   }
   
   public enum CommonMargin {
