@@ -16,20 +16,43 @@ public class DateButtonSet: UIStackView {
   private let endDateButton: UIButton
   private let endLabelButton: UIButton
   
+  private var _isSelected: Bool
+  
+  var isSelected: Bool {
+    get {
+      return self._isSelected
+    }
+    set {
+      self._isSelected = newValue
+      self.updateButtonSelectionStates()
+      self.delegate?.dateButtonTapped(isSelected: _isSelected)
+    }
+  }
+  
   init() {
     self.delegate = nil
     self.startDateButton = UIButton()
     self.startLabelButton = UIButton()
     self.endDateButton = UIButton()
     self.endLabelButton = UIButton()
+    self._isSelected = false
+    
     super.init(frame: CGRect.zero)
-    self.isUserInteractionEnabled = true
     self.axis = NSLayoutConstraint.Axis.vertical
   }
   
   @available(*, unavailable)
   required init(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+}
+
+extension DateButtonSet {
+  private func updateButtonSelectionStates() {
+    startDateButton.isSelected = _isSelected
+    startLabelButton.isSelected = _isSelected
+    endDateButton.isSelected = _isSelected
+    endLabelButton.isSelected = _isSelected
   }
 }
 
