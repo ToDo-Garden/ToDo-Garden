@@ -10,28 +10,26 @@ import UIKit
 import FoundationExtension
 import ToDoGardenUIConstant
 
-public class DateButtonSet: UIStackView {
-  public var delegate: DateButtonSetDelegate?
+public final class DateButtonSet: UIControl {
   private let startDateButton: UIButton
   private let startLabelButton: UIButton
   private let endDateButton: UIButton
   private let endLabelButton: UIButton
+  private let stackView: UIStackView
   
   private var _isSelected: Bool
   
-  var isSelected: Bool {
+  public override var isSelected: Bool {
     get {
       return self._isSelected
     }
     set {
       self._isSelected = newValue
       self.updateButtonSelectionStates()
-      self.delegate?.dateButtonTapped(isSelected: _isSelected)
     }
   }
   
   init() {
-    self.delegate = nil
     self.startDateButton = UIButton()
     self.startLabelButton = UIButton()
     self.endDateButton = UIButton()
@@ -39,7 +37,7 @@ public class DateButtonSet: UIStackView {
     self._isSelected = false
     
     super.init(frame: CGRect.zero)
-    self.axis = NSLayoutConstraint.Axis.vertical
+    self.stackView.axis = NSLayoutConstraint.Axis.vertical
     self.setupButtons()
   }
   
@@ -48,12 +46,17 @@ public class DateButtonSet: UIStackView {
     fatalError("init(coder:) has not been implemented")
   }
   
+  override public var intrinsicContentSize: CGSize {
+    return CGSize(width: 140, height: 52)
+  }
+  
   private func setupButtons() {
     self.setupButtonStyle()
     self.setupButtonInnerStackView(labelButton: self.startLabelButton, dateButton: self.startDateButton)
     self.setupButtonInnerStackView(labelButton: self.endLabelButton, dateButton: self.endDateButton)
     self.setupButtonActions()
     self.buttonsLayout()
+    self.setupStackView()
   }
   
   private func setupButtonStyle() {
@@ -77,8 +80,8 @@ public class DateButtonSet: UIStackView {
     innerStackView.addSpacing(margin)
     innerStackView.addArrangedSubview(dateButton)
     
-    self.addArrangedSubview(innerStackView)
-    self.addSpacing(margin)
+    self.stackView.addArrangedSubview(innerStackView)
+    self.stackView.addSpacing(margin)
   }
   
   private func setupButtonActions() {
@@ -103,6 +106,20 @@ public class DateButtonSet: UIStackView {
       [
         self.startDateButton.widthAnchor.constraint(equalToConstant: buttonWidth),
         self.endDateButton.widthAnchor.constraint(equalToConstant: buttonWidth)
+      ]
+    )
+  }
+  
+  private func setupStackView() {
+    self.stackView.usingAutolayout()
+    self.addSubview(self.stackView)
+
+    self.stackView.axis = .vertical
+    self.stackView.distribution = .fillProportionally
+    NSLayoutConstraint.activate(
+      [
+        self.stackView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+        self.stackView.centerYAnchor.constraint(equalTo: self.centerYAnchor)
       ]
     )
   }
@@ -140,6 +157,7 @@ extension DateButtonSet {
         self.isSelected = false
       }
     }
+    self.sendActions(for: .touchUpInside)
   }
   
   private func attributedButtonTitle(with title: String) -> NSAttributedString {
@@ -150,8 +168,4 @@ extension DateButtonSet {
     )
     return attributedString
   }
-}
-
-public protocol DateButtonSetDelegate: AnyObject {
-  func dateButtonTapped(isSelected: Bool)
 }
