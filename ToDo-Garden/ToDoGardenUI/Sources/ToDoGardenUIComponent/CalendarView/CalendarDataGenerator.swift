@@ -7,12 +7,20 @@
 
 import Foundation
 
-final class CalendarDataGenerator {
+protocol CalendarDataGeneratable {
+  func fetchWeekdaySymbols() -> [String]
+}
+
+final class CalendarDataGenerator: CalendarDataGeneratable {
   private var calendar: Calendar
 
   init(calendar: Calendar = Calendar(identifier: Calendar.Identifier.gregorian)) {
     self.calendar = calendar
     self.setupLocale()
+  }
+
+  func fetchWeekdaySymbols() -> [String] {
+    return self.calendar.shortWeekdaySymbols
   }
 }
 
