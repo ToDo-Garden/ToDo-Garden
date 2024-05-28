@@ -95,7 +95,15 @@ public class DateButtonSet: UIStackView {
   }
   
   private func buttonsLayout() {
-
+    self.startDateButton.usingAutolayout()
+    self.endDateButton.usingAutolayout()
+    let buttonWidth = Constant.RepeatOtherDaysView.Layout.DateButtonSet.buttonWidth
+    NSLayoutConstraint.activate(
+      [
+        self.startDateButton.widthAnchor.constraint(equalToConstant: buttonWidth),
+        self.endDateButton.widthAnchor.constraint(equalToConstant: buttonWidth)
+      ]
+    )
   }
 }
 
