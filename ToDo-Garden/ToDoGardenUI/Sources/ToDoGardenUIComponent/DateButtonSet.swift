@@ -39,11 +39,36 @@ public class DateButtonSet: UIStackView {
     
     super.init(frame: CGRect.zero)
     self.axis = NSLayoutConstraint.Axis.vertical
+    self.setupButtons()
   }
   
   @available(*, unavailable)
   required init(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+  
+  private func setupButtons() {
+    self.setupButtonStyle()
+    self.setupButtonInnerStackView(labelButton: self.startLabelButton, dateButton: self.startDateButton)
+    self.setupButtonInnerStackView(labelButton: self.endLabelButton, dateButton: self.endDateButton)
+    self.setupButtonActions()
+    self.buttonsLayout()
+  }
+  
+  private func setupButtonStyle() {
+
+  }
+  
+  private func setupButtonInnerStackView(labelButton: UIButton, dateButton: UIButton) {
+
+  }
+  
+  private func setupButtonActions() {
+
+  }
+  
+  private func buttonsLayout() {
+
   }
 }
 
