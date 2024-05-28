@@ -62,6 +62,28 @@ extension CalendarDataGenerator {
     return previousMonthDays
   }
 
+  private func getCurrentMonthDays(from firstDay: Date) -> [MonthData.Day] {
+    guard let firstDayOfNextMonth = self.calendar.date(
+      byAdding: Calendar.Component.month,
+      value: 1,
+      to: firstDay
+    )
+    else { return [] }
+
+    guard let lastDayOfCurrentMonth = self.calendar.date(
+      byAdding: Calendar.Component.day,
+      value: -1,
+      to: firstDayOfNextMonth
+    )
+    else { return [] }
+
+    let lastDayNumber = self.calendar.component(Calendar.Component.day, from: lastDayOfCurrentMonth)
+    let dateRange = (0..<lastDayNumber)
+    let currentMonthDays = self.getMonthDataDays(for: dateRange, from: firstDay)
+
+    return currentMonthDays
+  }
+
   private func getMonthDataDays(
     for dateRange: Range<Int>,
     from firstDay: Date
