@@ -7,6 +7,7 @@
 
 import UIKit
 
+import FoundationExtension
 import ToDoGardenUIConstant
 
 public class DateButtonSet: UIStackView {
@@ -108,6 +109,16 @@ public class DateButtonSet: UIStackView {
 }
 
 extension DateButtonSet {
+  public func updateStartDateButton(title: String) {
+    let attributedString = attributedButtonTitle(with: title)
+    self.startDateButton.setAttributedTitle(attributedString, for: .normal)
+  }
+  
+  public func updateEndDateButton(title: String) {
+    let attributedString = attributedButtonTitle(with: title)
+    self.endDateButton.setAttributedTitle(attributedString, for: .normal)
+  }
+  
   private func updateButtonSelectionStates() {
     startDateButton.isSelected = _isSelected
     startLabelButton.isSelected = _isSelected
@@ -129,6 +140,15 @@ extension DateButtonSet {
         self.isSelected = false
       }
     }
+  }
+  
+  private func attributedButtonTitle(with title: String) -> NSAttributedString {
+    let attributedString = title.applyTextAttributes(
+      attributes: [
+        NSAttributedString.Key.font: UIFont.pretendardBodySemiBold
+      ]
+    )
+    return attributedString
   }
 }
 
