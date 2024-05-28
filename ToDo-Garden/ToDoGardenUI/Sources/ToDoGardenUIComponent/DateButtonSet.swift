@@ -56,7 +56,15 @@ public class DateButtonSet: UIStackView {
   }
   
   private func setupButtonStyle() {
-
+    let contentsInsets = Constant.LightRoundRectButton.Layout.contentsInsetsSecondary
+    let buttonTitle = Constant.LightRoundRectButton.StringLiteral.self
+    self.startDateButton.applyLightRoundRectButtonStyle(title: "")
+    self.startDateButton.configuration?.contentInsets = contentsInsets
+    self.startLabelButton.applyLightRoundRectButtonStyle(title: buttonTitle.start)
+    
+    self.endDateButton.applyLightRoundRectButtonStyle(title: "")
+    self.endDateButton.configuration?.contentInsets = contentsInsets
+    self.endLabelButton.applyLightRoundRectButtonStyle(title: buttonTitle.end)
   }
   
   private func setupButtonInnerStackView(labelButton: UIButton, dateButton: UIButton) {
