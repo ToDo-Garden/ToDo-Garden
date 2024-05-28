@@ -9,6 +9,7 @@ import Foundation
 
 protocol CalendarDataGeneratable {
   func fetchWeekdaySymbols() -> [String]
+  func fetchMonthData(from date: Date, add value: Int) -> MonthData?
 }
 
 final class CalendarDataGenerator: CalendarDataGeneratable {
@@ -21,6 +22,21 @@ final class CalendarDataGenerator: CalendarDataGeneratable {
 
   func fetchWeekdaySymbols() -> [String] {
     return self.calendar.shortWeekdaySymbols
+  }
+
+  func fetchMonthData(from date: Date, add value: Int) -> MonthData? {
+    guard let monthToFetch = self.calendar.date(
+      byAdding: Calendar.Component.month,
+      value: value,
+      to: date
+    )
+    else { return nil }
+
+    let firstDayOfMonth = self.getFirstDayOfMonth(from: monthToFetch)
+    guard let dates = self.getMonthDates(from: firstDayOfMonth)
+    else { return nil }
+
+    return MonthData(firstDayOfMonth: firstDayOfMonth, dates: dates)
   }
 }
 
@@ -49,6 +65,22 @@ extension CalendarDataGenerator {
     else { return date }
 
     return firstDay
+  }
+
+  private func getMonthDates(from firstDay: Date) -> [MonthData.Day]? {
+    let firstDayOfMonth = firstDay
+    let previousMonthDays = self.getPreviousMonthDays(from: firstDayOfMonth)
+    let nextMonthDays = self.getNextMonthDays(from: firstDayOfMonth)
+    let currentMonthDays = self.getCurrentMonthDays(from: firstDayOfMonth)
+    guard currentMonthDays.isEmpty == false
+    else { return nil }
+
+    let totalMonthDays = previousMonthDays + currentMonthDays + nextMonthDays
+    let weekdaySymbolsCount = self.calendar.weekdaySymbols.count
+    guard totalMonthDays.count % weekdaySymbolsCount == 0
+    else { return nil }
+
+    return totalMonthDays
   }
 
   private func getPreviousMonthDays(from firstDay: Date) -> [MonthData.Day] {
