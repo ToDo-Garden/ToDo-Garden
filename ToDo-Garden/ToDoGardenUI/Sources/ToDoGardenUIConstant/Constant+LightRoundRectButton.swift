@@ -15,6 +15,12 @@ extension Constant.LightRoundRectButton {
       bottom: 4,
       trailing: 10
     )
+    public static let contentsInsetsSecondary = NSDirectionalEdgeInsets(
+      top: 3,
+      leading: 5,
+      bottom: 4,
+      trailing: 5
+    )
   }
   
   public enum StringLiteral {
