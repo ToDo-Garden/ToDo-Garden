@@ -142,3 +142,20 @@ extension TimerProgressView: CAAnimationDelegate {
     )
   }
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let timerProgressView = TimerProgressView(
+    circularProgressView: CircularProgressView(
+      progressColor: UIColor.toDoGardenGreenDark,
+      backgroundColor: UIColor.toDoGardenLeaf,
+      lineWidth: 9.0
+    ),
+    dotColor: UIColor.toDoGardenGreenDark
+  )
+  timerProgressView.startAnimation(duration: 10.0, from: 0.3, to: 0.7)
+  
+  return timerProgressView
+}
+#endif
