@@ -68,7 +68,16 @@ public class DateButtonSet: UIStackView {
   }
   
   private func setupButtonInnerStackView(labelButton: UIButton, dateButton: UIButton) {
-
+    let margin = Constant.RepeatOtherDaysView.Layout.DateButtonSet.margin
+    let innerStackView = UIStackView()
+    innerStackView.axis = NSLayoutConstraint.Axis.horizontal
+    innerStackView.distribution = UIStackView.Distribution.fillProportionally
+    innerStackView.addArrangedSubview(labelButton)
+    innerStackView.addSpacing(margin)
+    innerStackView.addArrangedSubview(dateButton)
+    
+    self.addArrangedSubview(innerStackView)
+    self.addSpacing(margin)
   }
   
   private func setupButtonActions() {
