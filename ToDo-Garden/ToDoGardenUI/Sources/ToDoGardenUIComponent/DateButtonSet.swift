@@ -81,7 +81,17 @@ public class DateButtonSet: UIStackView {
   }
   
   private func setupButtonActions() {
-
+    let buttons = [
+      self.startDateButton,
+      self.startLabelButton,
+      self.endDateButton,
+      self.endLabelButton
+    ]
+    buttons.forEach { button in
+      button.addAction(UIAction { [weak self] _ in
+        self?.buttonTapped(button)
+      }, for: UIControl.Event.touchUpInside)
+    }
   }
   
   private func buttonsLayout() {
@@ -95,6 +105,22 @@ extension DateButtonSet {
     startLabelButton.isSelected = _isSelected
     endDateButton.isSelected = _isSelected
     endLabelButton.isSelected = _isSelected
+  }
+  
+  private func buttonTapped(_ sender: UIButton) {
+    if sender.isSelected {
+      self.isSelected = true
+    } else {
+      let isAllSelected = 
+      self.startDateButton.isSelected &&
+      self.startLabelButton.isSelected &&
+      self.endDateButton.isSelected &&
+      self.endLabelButton.isSelected
+      
+      if !isAllSelected {
+        self.isSelected = false
+      }
+    }
   }
 }
 
