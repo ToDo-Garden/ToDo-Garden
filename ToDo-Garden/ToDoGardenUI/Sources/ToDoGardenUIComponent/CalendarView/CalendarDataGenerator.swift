@@ -11,6 +11,7 @@ protocol CalendarDataGeneratable {
   func fetchWeekdaySymbols() -> [String]
   func fetchMonthData(from date: Date, add value: Int) -> MonthData?
   func compareMonth(date1: Date, with date2: Date) -> ComparisonResult
+  func formatToStartTime(for date: Date) -> Date
 }
 
 final class CalendarDataGenerator: CalendarDataGeneratable {
@@ -48,6 +49,10 @@ final class CalendarDataGenerator: CalendarDataGeneratable {
     )
 
     return comparisonResult
+  }
+
+  func formatToStartTime(for date: Date) -> Date {
+    return self.calendar.startOfDay(for: date)
   }
 }
 
