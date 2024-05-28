@@ -9,7 +9,7 @@ import UIKit.UIGeometry
 
 extension Constant.LightRoundRectButton {
   public enum Layout {
-    public static let contentsInsets = NSDirectionalEdgeInsets(
+    public static let contentsInsetsPrimary = NSDirectionalEdgeInsets(
       top: 4,
       leading: 10,
       bottom: 4,
