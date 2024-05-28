@@ -10,6 +10,7 @@ import Foundation
 protocol CalendarDataGeneratable {
   func fetchWeekdaySymbols() -> [String]
   func fetchMonthData(from date: Date, add value: Int) -> MonthData?
+  func compareMonth(date1: Date, with date2: Date) -> ComparisonResult
 }
 
 final class CalendarDataGenerator: CalendarDataGeneratable {
@@ -37,6 +38,16 @@ final class CalendarDataGenerator: CalendarDataGeneratable {
     else { return nil }
 
     return MonthData(firstDayOfMonth: firstDayOfMonth, dates: dates)
+  }
+
+  func compareMonth(date1: Date, with date2: Date) -> ComparisonResult {
+    let comparisonResult = self.calendar.compare(
+      date1,
+      to: date2,
+      toGranularity: Calendar.Component.month
+    )
+
+    return comparisonResult
   }
 }
 
