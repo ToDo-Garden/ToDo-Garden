@@ -35,4 +35,45 @@ extension CalendarDataGenerator {
       self.calendar.locale = Locale.autoupdatingCurrent
     }
   }
+
+  private func getFirstDayOfMonth(from date: Date) -> Date {
+    let dateComponents = self.calendar.dateComponents(
+      [
+        Calendar.Component.year,
+        Calendar.Component.month
+      ],
+      from: date
+    )
+
+    guard let firstDay = self.calendar.date(from: dateComponents)
+    else { return date }
+
+    return firstDay
+  }
+
+  private func getPreviousMonthDays(from firstDay: Date) -> [MonthData.Day] {
+    let weekdayCount = self.calendar.component(Calendar.Component.weekday, from: firstDay)
+    guard weekdayCount != 1 else { return [] }
+
+    let startDay = -weekdayCount + 1
+    let dateRange = (startDay..<0)
+    let previousMonthDays = self.getMonthDataDays(for: dateRange, from: firstDay)
+
+    return previousMonthDays
+  }
+
+  private func getMonthDataDays(
+    for dateRange: Range<Int>,
+    from firstDay: Date
+  ) -> [MonthData.Day] {
+    return dateRange.map { value in
+      let dayOfNextMonth = self.calendar.date(
+        byAdding: Calendar.Component.day,
+        value: value,
+        to: firstDay
+      ) ?? Date()
+
+      return MonthData.Day(date: dayOfNextMonth, isThisMonth: false)
+    }
+  }
 }
