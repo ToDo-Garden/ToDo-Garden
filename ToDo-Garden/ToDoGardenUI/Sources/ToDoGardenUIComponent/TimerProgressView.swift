@@ -38,5 +38,45 @@ public final class TimerProgressView: UIView {
 
 extension TimerProgressView {
   private func setupViews(with dotColor: UIColor) {
+    self.setupDot(with: dotColor)
+    self.addSubviews()
+    self.setupLayoutConstraints()
+  }
+}
+
+// MARK: - Setup dot
+
+extension TimerProgressView {
+  private func setupDot(with dotColor: UIColor) {
+    self.dot.layer.cornerRadius = self.dot.frame.width / 2
+    self.dot.backgroundColor = dotColor
+  }
+}
+
+// MARK: - Add subviews
+
+extension TimerProgressView {
+  private func addSubviews() {
+    self.addSubview(self.circularProgressView)
+    self.addSubview(self.dot)
+  }
+}
+
+// MARK: - Setup layout constraints
+
+extension TimerProgressView {
+  private func setupLayoutConstraints() {
+    self.setupCircularProgressViewLayoutConstraints()
+  }
+  
+  private func setupCircularProgressViewLayoutConstraints() {
+    self.circularProgressView.usingAutolayout()
+    
+    NSLayoutConstraint.activate([
+      self.circularProgressView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+      self.circularProgressView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+      self.circularProgressView.heightAnchor.constraint(equalTo: self.heightAnchor),
+      self.circularProgressView.widthAnchor.constraint(equalTo: self.widthAnchor)
+    ])
   }
 }
