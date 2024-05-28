@@ -38,3 +38,10 @@ extension Constant.RepeatOtherDaysView.Layout {
     public static let broad: CGFloat = 40.0
   }
 }
+
+extension Constant.RepeatOtherDaysView.AboutAnimation {
+  public static let duration: TimeInterval = 0.15
+  public static let delay: UInt64 = UInt64(0.15)
+  public static let alphaDisappear: CGFloat = 0.0
+  public static let alphaAppear: CGFloat = 1.0
+}
