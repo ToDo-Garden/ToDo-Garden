@@ -32,6 +32,12 @@ public final class TimerProgressView: UIView {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+  
+  public func startAnimation(duration: TimeInterval, from: Double, to value: Double) {
+    self.toValue = value
+    self.addAnimation(duration: duration, from: from, to: value)
+    self.circularProgressView.startAnimation(duration: duration, from: Float(from), to: Float(value))
+  }
 }
 
 // MARK: - Setup views
@@ -78,5 +84,61 @@ extension TimerProgressView {
       self.circularProgressView.heightAnchor.constraint(equalTo: self.heightAnchor),
       self.circularProgressView.widthAnchor.constraint(equalTo: self.widthAnchor)
     ])
+  }
+}
+
+// MARK: - Setup animation
+
+extension TimerProgressView {
+  private func addAnimation(duration: TimeInterval, from: Double, to value: Double) {
+    let circularPath = self.makeCircularPath(fromValue: from, toValue: value)
+    let animationKeyPath = Constant.TimerProgressView.StringLiteral.Dot.Animation.keyPath
+    let animation = CAKeyframeAnimation(keyPath: animationKeyPath)
+    animation.delegate = self
+    animation.path = circularPath.cgPath
+    animation.duration = duration
+    animation.calculationMode = CAAnimationCalculationMode.paced
+    
+    self.dot.layer.add(animation, forKey: nil)
+  }
+  
+  private func makeCircularPath(fromValue: Double, toValue: Double) -> UIBezierPath {
+    self.layoutIfNeeded()
+    let startAngle = -(Double.pi / 2)
+    let endAngle = (2 * Double.pi)
+    let radius = self.bounds.width / 2
+    let arcCenter = CGPoint(x: self.bounds.midX, y: self.bounds.midY)
+    
+    let circularPath = UIBezierPath(
+      arcCenter: arcCenter,
+      radius: radius,
+      startAngle: startAngle + (2 * Double.pi) * fromValue,
+      endAngle: endAngle * toValue + startAngle,
+      clockwise: true
+    )
+    
+    return circularPath
+  }
+}
+
+// MARK: - Conforming to a protocol
+
+extension TimerProgressView: CAAnimationDelegate {
+  public func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
+    guard let toValue
+    else { return }
+    
+    let startAngle = -(Double.pi / 2)
+    let dotWidth = Constant.TimerProgressView.Layout.Dot.width
+    let dotHeight = Constant.TimerProgressView.Layout.Dot.height
+    let dotRadius = dotWidth / 2
+    let endAngle = (2 * Double.pi) * toValue + startAngle
+    let adjustedAngle = atan2(sin(endAngle), cos(endAngle))
+    let endOfXPosition: CGFloat = self.center.x + (self.frame.width / 2.0 * cos(adjustedAngle)) - dotRadius
+    let endOfYPosition: CGFloat =  self.center.y + (self.frame.width / 2.0 * sin(adjustedAngle)) - dotRadius
+    self.dot.frame = CGRect(
+      origin: CGPoint(x: endOfXPosition, y: endOfYPosition),
+      size: CGSize(width: dotWidth, height: dotHeight)
+    )
   }
 }
