@@ -8,6 +8,7 @@
 import UIKit
 
 import ToDoGardenUIConstant
+import ToDoGardenUIResource
 
 public final class RepeatOtherDaysView: ToDoRepeatSelectionView {
   public let ringToggleButton: UIButton
@@ -122,6 +123,50 @@ extension RepeatOtherDaysView {
     }
   }
 }
+
+// MARK: - About Updating states
+extension RepeatOtherDaysView {
+  private func updateUI() {
+    self.divider.isHidden = self.viewModel.divider.isHidden.value
+    self.innerStackView.isHidden = self.viewModel.innerStackView.isHidden.value
+    self.updateRepeatOtherDaysViewHeightConstraint(to: self.viewModel.height.value)
+    self.updateTitleConstraint(to: self.viewModel.title.topMargin.value)
+    self.updateInnerStackViewViewHeightConstraint(to: self.viewModel.innerStackView.height.value)
+  }
+  
+  private func updateBackgroundColor() {
+    if self.viewModel.isSelected.value && self.viewModel.ringToggleButton.isSelected.value {
+      self.backgroundColor = UIColor.toDoGardenGreenBackground
+    } else {
+      self.backgroundColor = UIColor.clear
+    }
+  }
+  
+  private func updateRepeatOtherDaysViewHeightConstraint(to height: CGFloat) {
+    if self.heightConstraints.isEmpty {
+      return
+    }
+    
+    guard let repeatOtherDaysViewHeightConstraint = self.heightConstraints.first else {
+      return
+    }
+    repeatOtherDaysViewHeightConstraint.constant = height
+  }
+  
+  private func updateInnerStackViewViewHeightConstraint(to height: CGFloat) {
+    if self.heightConstraints.isEmpty {
+      return
+    }
+    
+    guard let innerStackViewHeightConstraint = self.heightConstraints.last else {
+      return
+    }
+    
+    innerStackViewHeightConstraint.constant = height
+  }
+  
+  private func updateTitleConstraint(to topMargin: CGFloat) {
+    self.repetitionLabelTopAchor.constant = topMargin
   }
 }
 
