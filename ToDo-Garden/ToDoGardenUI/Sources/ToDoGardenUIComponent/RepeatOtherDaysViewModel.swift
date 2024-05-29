@@ -45,10 +45,30 @@ public final class RepeatOtherDaysViewModel {
     self.height = Observable(Constant.RepeatOtherDaysView.Layout.heightUnselected)
     self.title = TitleState(topMargin: Observable(Constant.ToDoRepeatSelectionView.Layout.RepetitionLabel.topMargin))
   }
+  
+  public func toggleSelection() {
+    self.updateState()
+  }
 }
 
 extension RepeatOtherDaysViewModel {
-  
+  private func updateState() {
+    let constants = Constant.RepeatOtherDaysView.Layout.self
+    
+    if self.isSelected.value {
+      self.divider.isHidden.value = false
+      self.innerStackView.isHidden.value = false
+      self.height.value = constants.heightSelected
+      self.title.topMargin.value = constants.Title.topMargin
+      self.innerStackView.height.value = constants.InnerStackView.height
+    } else {
+      self.divider.isHidden.value = true
+      self.innerStackView.isHidden.value = true
+      self.height.value = constants.heightUnselected
+      self.title.topMargin.value =  Constant.ToDoRepeatSelectionView.Layout.RepetitionLabel.topMargin
+      self.innerStackView.height.value = CGFloat.zero
+    }
+  }
 }
 
 extension RepeatOtherDaysViewModel {
