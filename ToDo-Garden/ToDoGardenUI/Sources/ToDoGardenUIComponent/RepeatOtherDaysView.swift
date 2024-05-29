@@ -34,9 +34,22 @@ public final class RepeatOtherDaysView: ToDoRepeatSelectionView {
     super.init(model: ToDoRepeatSelectionView.Model.anotherDay)
     self.setup()
   }
+  
+  override public func setSelected() {
+    self.viewModel.toggleSelection()
+    self.animateAppear()
+  }
 }
 
+// MARK: - Private functions
 extension RepeatOtherDaysView {
   private func setup() {
+  }
+}
+
+// MARK: - About animation
+extension RepeatOtherDaysView {
+  private func animateAppear() {
+
   }
 }
