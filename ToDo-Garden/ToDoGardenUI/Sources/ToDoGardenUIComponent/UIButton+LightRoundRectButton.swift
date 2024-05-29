@@ -18,7 +18,7 @@ extension UIButton {
 private enum LightRoundRectButton {
   fileprivate static func apply(to button: UIButton, title: String) {
     var buttonConfiguration = UIButton.Configuration.filled()
-    buttonConfiguration.contentInsets = Constant.LightRoundRectButton.Layout.contentsInsets
+    buttonConfiguration.contentInsets = Constant.LightRoundRectButton.Layout.contentsInsetsPrimary
     buttonConfiguration.baseForegroundColor = UIColor.toDoGardenGreenDark
     buttonConfiguration.baseBackgroundColor = UIColor.toDoGardenGreenBackground
     
