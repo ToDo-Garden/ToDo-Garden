@@ -45,6 +45,10 @@ public final class RepeatOtherDaysView: ToDoRepeatSelectionView {
     super.setDeSelected()
     self.animateDisappear()
   }
+  
+  public func updateDate(startDate: String, endDate: String) {
+    self.viewModel.updateDate(startDate: startDate, endDate: endDate)
+  }
 }
 
 // MARK: - Private functions
