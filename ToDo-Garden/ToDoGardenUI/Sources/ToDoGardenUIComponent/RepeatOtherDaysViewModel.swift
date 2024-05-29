@@ -63,6 +63,11 @@ final class RepeatOtherDaysViewModel {
       self.ringToggleButton.isSelected.value = false
     }
   }
+  
+  func updateDate(startDate: String, endDate: String) {
+    self.dateButton.startDate.value = startDate
+    self.dateButton.endDate.value = endDate
+  }
 }
 
 extension RepeatOtherDaysViewModel {
