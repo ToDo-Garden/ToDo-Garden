@@ -303,7 +303,16 @@ extension RepeatOtherDaysView {
   }
   
   private func animateDisappear() {
-    
+    UIView.animate(withDuration: Constant.RepeatOtherDaysView.AboutAnimation.duration) {
+      self.innerStackView.alpha = Constant.RepeatOtherDaysView.AboutAnimation.alphaDisappear
+      self.divider.alpha = Constant.RepeatOtherDaysView.AboutAnimation.alphaDisappear
+    } completion: { _ in
+      Task {
+        try await Task.sleep(nanoseconds: Constant.RepeatOtherDaysView.AboutAnimation.delay)
+        self.viewModel.toggleSelection()
+        self.animateLayout()
+      }
+    }
   }
   
   private func animateLayout() {
