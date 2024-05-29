@@ -53,6 +53,7 @@ extension RepeatOtherDaysView {
     self.bindViewModel()
     self.usingAutolayout()
     self.setupInitialHeightConstraint()
+    self.applyRingToggleButton()
   }
   
   private func bindViewModel() {
@@ -73,6 +74,10 @@ extension RepeatOtherDaysView {
     for constraint in heightConstraints {
       constraint.isActive = true
     }
+  }
+  
+  private func applyRingToggleButton() {
+    self.ringToggleButton.applyRingToggleStyle()
   }
 }
 
