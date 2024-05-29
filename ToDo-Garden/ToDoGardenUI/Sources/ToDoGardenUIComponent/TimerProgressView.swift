@@ -79,10 +79,10 @@ extension TimerProgressView {
     self.circularProgressView.usingAutolayout()
     
     NSLayoutConstraint.activate([
-      self.circularProgressView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-      self.circularProgressView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-      self.circularProgressView.heightAnchor.constraint(equalTo: self.heightAnchor),
-      self.circularProgressView.widthAnchor.constraint(equalTo: self.widthAnchor)
+      self.circularProgressView.topAnchor.constraint(equalTo: self.topAnchor),
+      self.circularProgressView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+      self.circularProgressView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+      self.circularProgressView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
     ])
   }
 }
