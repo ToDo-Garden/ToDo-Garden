@@ -54,6 +54,7 @@ extension RepeatOtherDaysView {
     self.usingAutolayout()
     self.setupInitialHeightConstraint()
     self.applyRingToggleButton()
+    self.buildStackView()
   }
   
   private func bindViewModel() {
@@ -78,6 +79,95 @@ extension RepeatOtherDaysView {
   
   private func applyRingToggleButton() {
     self.ringToggleButton.applyRingToggleStyle()
+  }
+}
+
+// MARK: - About Building Views
+
+extension RepeatOtherDaysView {
+  private func buildStackView() {
+    self.innerStackView.axis = NSLayoutConstraint.Axis.vertical
+    self.innerStackView.distribution = .fillProportionally
+    self.buildDivider()
+    self.buildRows()
+    self.innerStackView.isUserInteractionEnabled = true
+    self.addSubview(self.innerStackView)
+    self.innerStackView.usingAutolayout()
+    
+    let constants = Constant.RepeatOtherDaysView.Layout.self
+    
+    NSLayoutConstraint.activate(
+      [
+        self.innerStackView.topAnchor.constraint(equalTo: self.topAnchor, constant: constants.CommonMargin.broad),
+        self.innerStackView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+        self.innerStackView.widthAnchor.constraint(equalToConstant: constants.InnerStackView.width),
+        self.innerStackView.heightAnchor.constraint(equalToConstant: constants.InnerStackView.height)
+      ]
+    )
+  }
+  
+  private func buildDivider() {
+    self.divider.backgroundColor = UIColor.toDoGardenGreenGray
+    self.divider.usingAutolayout()
+    self.addSubview(self.divider)
+    let constants = Constant.RepeatOtherDaysView.Layout.self
+    NSLayoutConstraint.activate(
+      [
+        self.divider.widthAnchor.constraint(equalToConstant: constants.Divider.width),
+        self.divider.heightAnchor.constraint(equalToConstant: constants.Divider.height),
+        self.divider.topAnchor.constraint(equalTo: self.topAnchor, constant: constants.CommonMargin.broad),
+        self.divider.centerXAnchor.constraint(equalTo: self.centerXAnchor)
+      ]
+    )
+    self.innerStackView.addSpacing(constants.CommonMargin.narrow)
+  }
+  
+  private func buildRows() {
+    self.buildToggleRow()
+    self.innerStackView.addSpacing(
+      Constant.RepeatOtherDaysView.Layout.CommonMargin.broad
+    )
+    self.buildDateRow()
+  }
+  
+  private func buildToggleRow() {
+    let row = Styled.Row(
+      configuration: Styled.Row.Configuration.repeatOtherDays(
+        Styled.Row.Configuration.RepeatOtherDaysModel.init(
+          title: Constant.RepeatOtherDaysView.StringLiteral.everyday
+        )
+      ),
+      with: [self.ringToggleButton]
+    )
+    
+    self.innerStackView.addArrangedSubview(row)
+  }
+  
+  private func buildDateRow() {
+    let row = Styled.Row(
+      configuration: Styled.Row.Configuration.repeatOtherDays(
+        Styled.Row.Configuration.RepeatOtherDaysModel.init(
+          title: Constant.RepeatOtherDaysView.StringLiteral.timeSet
+        )
+      ),
+      with: []
+    )
+    let constants = Constant.RepeatOtherDaysView.Layout.self
+    self.innerStackView.insertArrangedSubview(row, at: 2)
+    self.innerStackView.addSubview(self.dateButtonSet)
+    self.dateButtonSet.usingAutolayout()
+    NSLayoutConstraint.activate(
+      [
+        self.dateButtonSet.topAnchor.constraint(
+          equalTo: row.topAnchor,
+          constant: constants.CommonMargin.narrow
+        ),
+        self.dateButtonSet.trailingAnchor.constraint(
+          equalTo: row.trailingAnchor,
+          constant: constants.DateButtonSet.trailing
+        )
+      ]
+    )
   }
 }
 
