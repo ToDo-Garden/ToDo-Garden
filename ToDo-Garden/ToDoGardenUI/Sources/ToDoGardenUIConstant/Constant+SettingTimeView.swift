@@ -47,19 +47,19 @@ extension Constant.SettingTimeView {
             height: 33.0,
             cornerRadius: 5.0
           ),
-          hourUnitLabel: HourUnitLabel(
+          hourUnitLabel: UnitLabel(
             text: StringLiteral.hourAlarm,
-            leading: 35.0
+            constraint: Constraint.leading(35.0)
           ),
-          minuteUnitLabel: MinuteUnitLabel(
+          minuteUnitLabel: UnitLabel(
             text: StringLiteral.minute,
-            leading: 56.0
+            constraint: Constraint.centerX(56.0)
           ),
-          secondUnitLabel: nil,
+          secondUnitLabel: nil
+          ,
           pickerView: PickerView(
             topMargin: 95.0,
-            width: 214.0,
-            height: 216.0,
+            size: CGSize(width: 214.0, height: 216.0),
             rowHeight: 43.0,
             widthForComponent: 80.0,
             numberOfComponents: 2,
@@ -75,22 +75,21 @@ extension Constant.SettingTimeView {
             height: 33.0,
             cornerRadius: 5.0
           ),
-          hourUnitLabel: HourUnitLabel(
+          hourUnitLabel: UnitLabel(
             text: StringLiteral.hourDefault,
-            leading: 34.0
+            constraint: Constraint.leading(34.0)
           ),
-          minuteUnitLabel: MinuteUnitLabel(
+          minuteUnitLabel: UnitLabel(
             text: StringLiteral.minute,
-            leading: 15.0
+            constraint: Constraint.centerX(15.0)
           ),
-          secondUnitLabel: SecondUnitLabel(
+          secondUnitLabel: UnitLabel(
             text: StringLiteral.second,
-            leading: -7.0
+            constraint: Constraint.trailing(-7.0)
           ),
           pickerView: PickerView(
             topMargin: 95.0,
-            width: 320.0,
-            height: 216.0,
+            size: CGSize(width: 320.0, height: 216.0),
             rowHeight: 43.0,
             widthForComponent: 90.0,
             numberOfComponents: 3,
@@ -106,22 +105,21 @@ extension Constant.SettingTimeView {
             height: 33.0,
             cornerRadius: 5.0
           ),
-          hourUnitLabel: HourUnitLabel(
+          hourUnitLabel: UnitLabel(
             text: StringLiteral.hourDefault,
-            leading: 34.0
+            constraint: Constraint.leading(34.0)
           ),
-          minuteUnitLabel: MinuteUnitLabel(
+          minuteUnitLabel: UnitLabel(
             text: StringLiteral.minute,
-            leading: 15.0
+            constraint: Constraint.centerX(15.0)
           ),
-          secondUnitLabel: SecondUnitLabel(
-            text: StringLiteral.second,
-            leading: -7.0
+          secondUnitLabel: UnitLabel(
+            text: StringLiteral.minute,
+            constraint: Constraint.trailing(-7.0)
           ),
           pickerView: PickerView(
             topMargin: 95.0,
-            width: 320.0,
-            height: 216.0,
+            size: CGSize(width: 320.0, height: 216.0),
             rowHeight: 43.0,
             widthForComponent: 90.0,
             numberOfComponents: 3,
@@ -145,11 +143,17 @@ extension Constant.SettingTimeView.TimePicker {
     static let second = "초"
   }
   
+  public enum Constraint {
+    case leading(CGFloat)
+    case centerX(CGFloat)
+    case trailing(CGFloat)
+  }
+  
   public struct DataStore {
     public let highlightedView: HighlightedView
-    public let hourUnitLabel: HourUnitLabel
-    public let minuteUnitLabel: MinuteUnitLabel
-    public let secondUnitLabel: SecondUnitLabel?
+    public let hourUnitLabel: UnitLabel
+    public let minuteUnitLabel: UnitLabel
+    public let secondUnitLabel: UnitLabel?
     public let pickerView: PickerView
   }
   
@@ -160,25 +164,14 @@ extension Constant.SettingTimeView.TimePicker {
     public let cornerRadius: CGFloat
   }
   
-  public struct HourUnitLabel {
+  public struct UnitLabel {
     public let text: String
-    public let leading: CGFloat
-  }
-  
-  public struct MinuteUnitLabel {
-    public let text: String
-    public let leading: CGFloat
-  }
-  
-  public struct SecondUnitLabel {
-    public let text: String
-    public let leading: CGFloat
+    public let constraint: Constraint
   }
   
   public struct PickerView {
     public let topMargin: CGFloat
-    public let width: CGFloat
-    public let height: CGFloat
+    public let size: CGSize
     public let rowHeight: CGFloat
     public let widthForComponent: CGFloat
     public let numberOfComponents: Int
