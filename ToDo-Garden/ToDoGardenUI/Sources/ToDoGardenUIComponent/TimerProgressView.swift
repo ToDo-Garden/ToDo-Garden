@@ -33,6 +33,11 @@ public final class TimerProgressView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
   
+  /// 타이머 애니메이션을 시작하는 메소드입니다.
+  /// - Parameters:
+  ///   - duration: `TimerInterval` 동안 실행될지 결정하는 파라미터입니다.
+  ///   - from: `TimerProgressView`의 애니메이션이 시작되는 지점을 나타내는 값입니다.
+  ///   - value: TimerProgressView`의 애니메이션이 종료되는 지점을 나타내는 값입니다.
   public func startAnimation(duration: TimeInterval, from: Double, to value: Double) {
     self.toValue = value
     self.addAnimation(duration: duration, from: from, to: value)
