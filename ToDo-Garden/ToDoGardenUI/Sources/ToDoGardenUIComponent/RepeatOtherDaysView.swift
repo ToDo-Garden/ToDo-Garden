@@ -51,6 +51,7 @@ public final class RepeatOtherDaysView: ToDoRepeatSelectionView {
 extension RepeatOtherDaysView {
   private func setup() {
     self.bindViewModel()
+    self.setupInitialHeightConstraint()
   }
   
   private func bindViewModel() {
@@ -59,6 +60,18 @@ extension RepeatOtherDaysView {
     self.bindVisibilityStates()
     self.bindViewHeights()
     self.bindMargins()
+  }
+  
+  private func setupInitialHeightConstraint() {
+    self.heightConstraints =
+    [
+      self.heightAnchor.constraint(equalToConstant: self.viewModel.height.value),
+      self.innerStackView.heightAnchor.constraint(equalToConstant: self.viewModel.innerStackView.height.value)
+    ]
+    
+    for constraint in heightConstraints {
+      constraint.isActive = true
+    }
   }
 }
 
