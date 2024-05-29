@@ -39,6 +39,11 @@ public final class RepeatOtherDaysView: ToDoRepeatSelectionView {
     self.viewModel.toggleSelection()
     self.animateAppear()
   }
+  
+  override public func setDeSelected() {
+    super.setDeSelected()
+    self.animateDisappear()
+  }
 }
 
 // MARK: - Private functions
@@ -50,6 +55,10 @@ extension RepeatOtherDaysView {
 // MARK: - About animation
 extension RepeatOtherDaysView {
   private func animateAppear() {
+
+  }
+  
+  private func animateDisappear() {
 
   }
 }
