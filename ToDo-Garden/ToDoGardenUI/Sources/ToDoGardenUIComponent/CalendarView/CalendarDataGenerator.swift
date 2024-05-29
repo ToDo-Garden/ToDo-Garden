@@ -9,7 +9,7 @@ import Foundation
 
 protocol CalendarDataGeneratable {
   func fetchWeekdaySymbols() -> [String]
-  func fetchMonthData(from date: Date, add value: Int) -> MonthData?
+  func fetchMonthData(from date: Date, add value: Int) throws -> MonthData
   func compareMonth(date1: Date, with date2: Date) -> ComparisonResult
 }
 
@@ -24,17 +24,17 @@ final class CalendarDataGenerator: CalendarDataGeneratable {
     return self.calendar.shortWeekdaySymbols
   }
 
-  func fetchMonthData(from date: Date, add value: Int) -> MonthData? {
+  func fetchMonthData(from date: Date, add value: Int) throws -> MonthData {
     guard let monthToFetch = self.calendar.date(
       byAdding: Calendar.Component.month,
       value: value,
       to: date
     )
-    else { return nil }
+    else { throw CalendarDataError.invalidInput }
 
     let firstDayOfMonth = self.getFirstDayOfMonth(from: monthToFetch)
     guard let dates = self.getMonthDates(from: firstDayOfMonth)
-    else { return nil }
+    else { throw CalendarDataError.failToGenerateData }
 
     return MonthData(firstDayOfMonth: firstDayOfMonth, dates: dates)
   }
@@ -73,12 +73,10 @@ extension CalendarDataGenerator {
     let previousMonthDays = self.getPreviousMonthDays(from: firstDayOfMonth)
     let nextMonthDays = self.getNextMonthDays(from: firstDayOfMonth)
     let currentMonthDays = self.getCurrentMonthDays(from: firstDayOfMonth)
-    guard currentMonthDays.isEmpty == false
-    else { return nil }
-
     let totalMonthDays = previousMonthDays + currentMonthDays + nextMonthDays
-    let weekdaySymbolsCount = self.calendar.weekdaySymbols.count
-    guard totalMonthDays.count % weekdaySymbolsCount == 0
+
+    let dayCountOfWeek = self.calendar.shortWeekdaySymbols.count
+    guard totalMonthDays.count % dayCountOfWeek == 0
     else { return nil }
 
     return totalMonthDays
@@ -86,7 +84,8 @@ extension CalendarDataGenerator {
 
   private func getPreviousMonthDays(from firstDay: Date) -> [MonthData.Day] {
     let weekdayCount = self.calendar.component(Calendar.Component.weekday, from: firstDay)
-    guard weekdayCount != 1 else { return [] }
+    let isFirstDayOfWeek = weekdayCount == 1
+    guard isFirstDayOfWeek else { return [] }
 
     let startDay = -weekdayCount + 1
     let dateRange = (startDay..<0)
@@ -126,7 +125,8 @@ extension CalendarDataGenerator {
     else { return [] }
 
     let weekday = self.calendar.component(Calendar.Component.weekday, from: firstDayOfNextMonth)
-    guard weekday != 1 else { return [] }
+    let isFirstDayOfWeek = weekday == 1
+    guard isFirstDayOfWeek else { return [] }
 
     let weekdayCount = self.calendar.shortWeekdaySymbols.count
     let lastDayValue = weekdayCount - weekday + 1
@@ -150,4 +150,9 @@ extension CalendarDataGenerator {
       return MonthData.Day(date: dayOfNextMonth, isThisMonth: false)
     }
   }
+}
+
+enum CalendarDataError: Error {
+  case invalidInput
+  case failToGenerateData
 }
