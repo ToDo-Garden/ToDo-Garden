@@ -98,6 +98,7 @@ extension TimerProgressView {
     animation.path = circularPath.cgPath
     animation.duration = duration
     animation.calculationMode = CAAnimationCalculationMode.paced
+    animation.isRemovedOnCompletion = false
     
     self.dot.layer.add(animation, forKey: nil)
   }
