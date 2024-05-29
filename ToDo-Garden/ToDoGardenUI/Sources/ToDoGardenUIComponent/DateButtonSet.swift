@@ -114,8 +114,8 @@ public final class DateButtonSet: UIControl {
     self.stackView.usingAutolayout()
     self.addSubview(self.stackView)
 
-    self.stackView.axis = .vertical
-    self.stackView.distribution = .fillProportionally
+    self.stackView.axis = NSLayoutConstraint.Axis.vertical
+    self.stackView.distribution = UIStackView.Distribution.fillProportionally
     NSLayoutConstraint.activate(
       [
         self.stackView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
@@ -128,19 +128,19 @@ public final class DateButtonSet: UIControl {
 extension DateButtonSet {
   public func updateStartDateButton(title: String) {
     let attributedString = attributedButtonTitle(with: title)
-    self.startDateButton.setAttributedTitle(attributedString, for: .normal)
+    self.startDateButton.setAttributedTitle(attributedString, for: UIControl.State.normal)
   }
   
   public func updateEndDateButton(title: String) {
     let attributedString = attributedButtonTitle(with: title)
-    self.endDateButton.setAttributedTitle(attributedString, for: .normal)
+    self.endDateButton.setAttributedTitle(attributedString, for: UIControl.State.normal)
   }
   
   private func updateButtonSelectionStates() {
-    startDateButton.isSelected = _isSelected
-    startLabelButton.isSelected = _isSelected
-    endDateButton.isSelected = _isSelected
-    endLabelButton.isSelected = _isSelected
+    self.startDateButton.isSelected = self._isSelected
+    self.startLabelButton.isSelected = self._isSelected
+    self.endDateButton.isSelected = self._isSelected
+    self.endLabelButton.isSelected = self._isSelected
   }
   
   private func buttonTapped(_ sender: UIButton) {
@@ -157,7 +157,7 @@ extension DateButtonSet {
         self.isSelected = false
       }
     }
-    self.sendActions(for: .touchUpInside)
+    self.sendActions(for: UIControl.Event.touchUpInside)
   }
   
   private func attributedButtonTitle(with title: String) -> NSAttributedString {
