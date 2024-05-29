@@ -12,6 +12,32 @@ import ToDoGardenUIConstant
 public final class RepeatOtherDaysViewModel {
   
 }
+
+extension RepeatOtherDaysViewModel {
+  struct DateButtonState {
+    var startDate: Observable<String>
+    var endDate: Observable<String>
+    var isSelected: Observable<Bool>
+  }
+  
+  struct RingToggleButtonState {
+    var isSelected: Observable<Bool>
+  }
+  
+  struct DividerState {
+    var isHidden: Observable<Bool>
+  }
+  
+  struct InnerStackViewState {
+    var isHidden: Observable<Bool>
+    var height: Observable<CGFloat>
+  }
+  
+  struct TitleState {
+    var topMargin: Observable<CGFloat>
+  }
+}
+
 class Observable<T> {
   var value: T {
     didSet {
