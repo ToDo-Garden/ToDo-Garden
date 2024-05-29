@@ -1,6 +1,6 @@
 //
 //  RepeatOtherDaysView.swift
-//  
+//
 //
 //  Created by SONG on 5/28/24.
 //
@@ -295,10 +295,23 @@ extension RepeatOtherDaysView {
 // MARK: - About animation
 extension RepeatOtherDaysView {
   private func animateAppear() {
-
+    self.animateLayout()
+    UIView.animate(withDuration: Constant.RepeatOtherDaysView.AboutAnimation.duration) {
+      self.innerStackView.alpha = Constant.RepeatOtherDaysView.AboutAnimation.alphaAppear
+      self.divider.alpha = Constant.RepeatOtherDaysView.AboutAnimation.alphaAppear
+    }
   }
   
   private func animateDisappear() {
-
+    
   }
+  
+  private func animateLayout() {
+    UIView.animate(
+      withDuration: Constant.RepeatOtherDaysView.AboutAnimation.duration
+    ) {
+      self.superview?.layoutIfNeeded()
+    }
+  }
+
 }
