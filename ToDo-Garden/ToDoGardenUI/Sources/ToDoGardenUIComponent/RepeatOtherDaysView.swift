@@ -18,6 +18,12 @@ public final class RepeatOtherDaysView: ToDoRepeatSelectionView {
   private var heightConstraints: [NSLayoutConstraint]
   private var viewModel: RepeatOtherDaysViewModel
   
+  override var isSelected: Bool {
+    willSet {
+      viewModel.isSelected.value = newValue
+    }
+  }
+  
   public init(startDate: String?, endDate: String?) {
     self.viewModel = RepeatOtherDaysViewModel(startDate: startDate, endDate: endDate)
     self.heightConstraints = []
