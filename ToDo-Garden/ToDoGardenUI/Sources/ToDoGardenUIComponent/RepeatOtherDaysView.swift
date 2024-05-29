@@ -51,6 +51,7 @@ public final class RepeatOtherDaysView: ToDoRepeatSelectionView {
 extension RepeatOtherDaysView {
   private func setup() {
     self.bindViewModel()
+    self.usingAutolayout()
     self.setupInitialHeightConstraint()
   }
   
