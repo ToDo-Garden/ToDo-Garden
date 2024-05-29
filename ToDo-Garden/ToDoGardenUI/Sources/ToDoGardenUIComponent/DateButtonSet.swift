@@ -35,7 +35,7 @@ public final class DateButtonSet: UIControl {
     self.endDateButton = UIButton()
     self.endLabelButton = UIButton()
     self._isSelected = false
-    
+    self.stackView = UIStackView()
     super.init(frame: CGRect.zero)
     self.stackView.axis = NSLayoutConstraint.Axis.vertical
     self.setupButtons()
