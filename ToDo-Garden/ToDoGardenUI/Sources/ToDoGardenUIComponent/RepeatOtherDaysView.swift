@@ -55,6 +55,7 @@ extension RepeatOtherDaysView {
     self.setupInitialHeightConstraint()
     self.applyRingToggleButton()
     self.buildStackView()
+    self.setupButtonActions()
   }
   
   private func bindViewModel() {
@@ -79,6 +80,18 @@ extension RepeatOtherDaysView {
   
   private func applyRingToggleButton() {
     self.ringToggleButton.applyRingToggleStyle()
+  }
+  
+  private func setupButtonActions() {
+    self.ringToggleButton.addAction(UIAction { [weak self] _ in
+      self?.viewModel.ringToggleButtonTapped()
+      self?.updateBackgroundColor()
+    }, for: UIControl.Event.touchUpInside)
+    
+    self.dateButtonSet.addAction(UIAction { [weak self] _ in
+      self?.viewModel.dateButtonSetTapped()
+      self?.updateBackgroundColor()
+    }, for: UIControl.Event.touchUpInside)
   }
 }
 
