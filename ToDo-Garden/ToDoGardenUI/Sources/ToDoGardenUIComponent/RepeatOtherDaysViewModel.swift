@@ -9,7 +9,7 @@ import Foundation
 
 import ToDoGardenUIConstant
 
-public final class RepeatOtherDaysViewModel {
+final class RepeatOtherDaysViewModel {
   private(set) var dateButton: DateButtonState
   private(set) var ringToggleButton: RingToggleButtonState
   private(set) var divider: DividerState
@@ -46,7 +46,7 @@ public final class RepeatOtherDaysViewModel {
     self.title = TitleState(topMargin: Observable(Constant.ToDoRepeatSelectionView.Layout.RepetitionLabel.topMargin))
   }
   
-  public func toggleSelection() {
+  func toggleSelection() {
     self.updateState()
   }
 }
