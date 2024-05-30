@@ -11,9 +11,14 @@ import ToDoGardenUIConstant
 
 final public class ToDoGardenTimePicker: UIPickerView {
   private let configuration: Constant.SettingTimeView.TimePicker
+  private let dateBuilder: DateBuilder
   
-  public init(configuration: Constant.SettingTimeView.TimePicker) {
+  public init(
+    configuration: Constant.SettingTimeView.TimePicker,
+    dateBuilder: DateBuilder = DateBuilder()
+  ) {
     self.configuration = configuration
+    self.dateBuilder = dateBuilder
     super.init(frame: CGRect.zero)
     self.delegate = self
     self.dataSource = self
@@ -36,6 +41,14 @@ final public class ToDoGardenTimePicker: UIPickerView {
   
   override public var intrinsicContentSize: CGSize {
     return self.configuration.dataStore.pickerView.size
+  }
+  
+  func calculateDate() -> Date {
+    var components = [Int]()
+    for index in Int.zero..<self.numberOfComponents {
+      components.append(self.selectedRow(inComponent: index))
+    }
+    return self.dateBuilder.buildDate(from: components)
   }
   
   private func hideDefaultHighlightedView() {
@@ -180,5 +193,26 @@ fileprivate extension String {
       ]
     )
     return attributedString
+  }
+}
+
+public class DateBuilder {
+  private let baseDate: Date
+  
+  public init(baseDate: Date = Date()) {
+    self.baseDate = baseDate
+  }
+  
+  public func buildDate(from components: [Int]) -> Date {
+    var dateComponents = DateComponents()
+    dateComponents.hour = components[0]
+    dateComponents.minute = components[1]
+    
+    if components.count > 2 {
+      dateComponents.second = components[2]
+    }
+    
+    let calendar = Calendar.current
+    return calendar.date(byAdding: dateComponents, to: baseDate) ?? baseDate
   }
 }
