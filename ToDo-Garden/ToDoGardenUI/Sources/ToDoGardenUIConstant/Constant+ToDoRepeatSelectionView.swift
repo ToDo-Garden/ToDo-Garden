@@ -15,6 +15,8 @@ extension Constant.ToDoRepeatSelectionView {
 extension Constant.ToDoRepeatSelectionView.Layout {
   public enum RepetitionLabel {}
   public enum SelectionImageView {}
+  
+  public static let size: CGSize = CGSize(width: 315, height: 31)
 }
 
 extension Constant.ToDoRepeatSelectionView.Layout {
