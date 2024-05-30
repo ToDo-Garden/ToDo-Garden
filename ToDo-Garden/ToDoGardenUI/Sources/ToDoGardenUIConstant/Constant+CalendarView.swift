@@ -10,6 +10,7 @@ import Foundation
 extension Constant.CalendarView {
   public enum Layout {}
   public enum Model {}
+  public enum StringLiteral {}
 }
 
 extension Constant.CalendarView.Layout {
@@ -67,4 +68,8 @@ extension Constant.CalendarView.Model.Primary {
   public static let itemSize = CGSize(width: 30, height: 30)
   public static let itemSpacing: CGFloat = 15
   public static let lineSpacing: CGFloat = 8
+}
+
+extension Constant.CalendarView.StringLiteral {
+  public static let dateFormat = "yyyy년 MMM d"
 }
