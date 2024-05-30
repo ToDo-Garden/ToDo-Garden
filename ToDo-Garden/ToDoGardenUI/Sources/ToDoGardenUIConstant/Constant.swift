@@ -25,4 +25,5 @@ public enum Constant {
   public enum CircularProgressView { }
   public enum TimerProgressView {}
   public enum RepeatOtherDaysView {}
+  public enum CalendarView {}
 }
