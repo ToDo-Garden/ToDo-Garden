@@ -38,6 +38,10 @@ public class ToDoRepeatSelectionView: UIView {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+  
+  override public var intrinsicContentSize: CGSize {
+    return Constant.ToDoRepeatSelectionView.Layout.size
+  }
 
   public func setSelected() {
     self.backgroundColor = UIColor.toDoGardenGreenBackground
@@ -183,9 +187,7 @@ extension ToDoRepeatSelectionView {
 @available(iOS 17.0, *)
 #Preview {
   let view = ToDoRepeatSelectionView(model: ToDoRepeatSelectionView.Model.anotherDay)
-  view.usingAutolayout()
-  view.widthAnchor.constraint(equalToConstant: 315).isActive = true
-  view.heightAnchor.constraint(equalToConstant: 31).isActive = true
+
   return view
 }
 #endif
