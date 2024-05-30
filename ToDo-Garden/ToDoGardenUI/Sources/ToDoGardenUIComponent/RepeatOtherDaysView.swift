@@ -83,7 +83,7 @@ extension RepeatOtherDaysView {
   }
   
   private func applyRingToggleButton() {
-    self.ringToggleButton.applyRingToggleStyle()
+    self.ringToggleButton.applyRingToggleButtonStyle()
   }
   
   private func setupButtonActions() {
