@@ -42,4 +42,16 @@ extension Constant.CalendarView.Layout {
     public static let bottomMargin: CGFloat = 11
     public static let defaultHeight: CGFloat = 98
   }
+
+  public enum CollectionViewCell {
+    public static let cornerRadius: CGFloat = 1
+  }
+}
+
+extension Constant.CalendarView.Layout.CollectionViewCell {
+  public enum ToDoExistenceView {
+    public static let cornerRadius: CGFloat = 1
+    public static let widthMargin: CGFloat = 2
+    public static let heightMargin: CGFloat = 2
+  }
 }
