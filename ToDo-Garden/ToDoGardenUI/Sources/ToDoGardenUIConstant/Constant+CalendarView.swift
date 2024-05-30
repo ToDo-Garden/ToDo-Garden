@@ -31,7 +31,7 @@ extension Constant.CalendarView.Layout {
     public static let heightMargin: CGFloat = 24
   }
 
-  public enum StackView {
+  public enum WeekdaySymbolStackView {
     public static let topMargin: CGFloat = 26
     public static let leadingMargin: CGFloat = 22
     public static let trailingMargin: CGFloat = 19
