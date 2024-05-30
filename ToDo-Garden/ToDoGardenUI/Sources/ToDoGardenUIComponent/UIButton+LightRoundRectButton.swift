@@ -19,14 +19,26 @@ private enum LightRoundRectButton {
   fileprivate static func apply(to button: UIButton, title: String) {
     var buttonConfiguration = UIButton.Configuration.filled()
     buttonConfiguration.contentInsets = Constant.LightRoundRectButton.Layout.contentsInsetsPrimary
-    buttonConfiguration.baseForegroundColor = UIColor.toDoGardenGreenDark
-    buttonConfiguration.baseBackgroundColor = UIColor.toDoGardenGreenBackground
-    
     let attributedString = NSAttributedString(
       string: title,
-      attributes: [NSAttributedString.Key.font: UIFont.pretendardBodySemiBold]
+      attributes: [
+        NSAttributedString.Key.font: UIFont.pretendardBodySemiBold
+      ]
     )
-
+    
+    button.configurationUpdateHandler = { button in
+      switch button.state {
+      case UIControl.State.normal:
+        button.configuration?.baseBackgroundColor = UIColor.toDoGardenGray1
+        button.configuration?.baseForegroundColor = UIColor.toDoGardenGreenGray
+      case UIControl.State.selected:
+        button.configuration?.baseBackgroundColor = UIColor.toDoGardenGreenBackground
+        button.configuration?.baseForegroundColor = UIColor.toDoGardenGreenDark
+      default: break
+      }
+    }
+    
+    button.changesSelectionAsPrimaryAction = true
     button.configuration = buttonConfiguration
     button.setAttributedTitle(attributedString, for: UIControl.State.normal)
   }
