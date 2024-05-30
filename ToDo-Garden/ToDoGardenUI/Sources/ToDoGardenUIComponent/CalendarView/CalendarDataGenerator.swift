@@ -31,6 +31,7 @@ final class CalendarDataGenerator: CalendarDataGeneratable {
       to: date
     )
     else { throw CalendarDataError.invalidInput }
+
     let firstDayOfMonth = self.calendar.firstDayOfMonth(from: monthToFetch)
     let dates = try self.monthDays(from: firstDayOfMonth)
     
@@ -92,9 +93,7 @@ extension CalendarDataGenerator {
       switch self {
       case .previous:
         let weekdayCount = calendar.weekdayCount(day)
-        let isFirstDayOfWeek = weekdayCount == 1
-        guard isFirstDayOfWeek else { throw CalendarDataError.failToGenerateData }
-        let startDay = -weekdayCount + 1
+        let startDay = weekdayCount == 1 ? 0 : -weekdayCount + 1
         return (startDay..<0, day)
       case .current:
         let firstDayOfNextMonth = try calendar.dayOfNextMonth(day)
@@ -104,10 +103,8 @@ extension CalendarDataGenerator {
       case .next:
         let firstDayOfNextMonth = try calendar.dayOfNextMonth(day)
         let weekday = calendar.weekdayCount(firstDayOfNextMonth)
-        let isFirstDayOfWeek = weekday == 1
-        guard isFirstDayOfWeek else { throw CalendarDataError.failToGenerateData }
         let weekdayCount = calendar.shortWeekdaySymbols.count
-        let lastDayValue = weekdayCount - weekday + 1
+        let lastDayValue = weekday == 1 ? 0 : weekdayCount - weekday + 1
         return (0..<lastDayValue, firstDayOfNextMonth)
       }
     }
@@ -136,6 +133,7 @@ private extension Calendar {
       to: day
     )
     guard let date else { throw CalendarDataError.unexpected }
+
     return date
   }
   
@@ -147,6 +145,7 @@ private extension Calendar {
     guard
       let date = self.date(byAdding: Component.day, value: -1, to: day)
     else { throw CalendarDataError.unexpected }
+
     return date
   }
   
