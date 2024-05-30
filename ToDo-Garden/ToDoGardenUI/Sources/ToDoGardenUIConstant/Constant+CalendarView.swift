@@ -9,6 +9,7 @@ import Foundation
 
 extension Constant.CalendarView {
   public enum Layout {}
+  public enum Model {}
 }
 
 extension Constant.CalendarView.Layout {
@@ -54,4 +55,16 @@ extension Constant.CalendarView.Layout.CollectionViewCell {
     public static let widthMargin: CGFloat = 2
     public static let heightMargin: CGFloat = 2
   }
+}
+
+extension Constant.CalendarView.Model {
+  public enum Primary {}
+}
+
+extension Constant.CalendarView.Model.Primary {
+  public static let cornerRadius: CGFloat = 10
+  public static let borderWidth: CGFloat = 1
+  public static let itemSize = CGSize(width: 30, height: 30)
+  public static let itemSpacing: CGFloat = 15
+  public static let lineSpacing: CGFloat = 8
 }
