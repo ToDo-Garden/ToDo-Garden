@@ -29,8 +29,8 @@ private enum LightRoundRectButton {
     button.configurationUpdateHandler = { button in
       switch button.state {
       case UIControl.State.normal:
-        button.configuration?.baseBackgroundColor = UIColor.toDoGardenGray1.withAlphaComponent(1.0)
-        button.configuration?.baseForegroundColor = UIColor.toDoGardenGreenGray.withAlphaComponent(1.0)
+        button.configuration?.baseBackgroundColor = UIColor.toDoGardenGray1
+        button.configuration?.baseForegroundColor = UIColor.toDoGardenGreenGray
       case UIControl.State.selected:
         button.configuration?.baseBackgroundColor = UIColor.toDoGardenGreenBackground
         button.configuration?.baseForegroundColor = UIColor.toDoGardenGreenDark
