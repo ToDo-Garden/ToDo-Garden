@@ -7,6 +7,7 @@
 
 import UIKit
 
+import FoundationExtension
 import ToDoGardenUIConstant
 
 final public class ToDoGardenTimePicker: UIPickerView {
@@ -178,21 +179,12 @@ final private class HighlightedView: UIView {
   
   private func createLabel(with text: String) -> UILabel {
     let label = UILabel()
-    label.attributedText = text.applyTextAttributes()
+    let attributes = [
+      NSAttributedString.Key.font: UIFont.pretendardHeadBold,
+      NSAttributedString.Key.foregroundColor: UIColor.toDoGardenGreenDark
+    ]
+    label.attributedText = text.applyTextAttributes(attributes: attributes)
     return label
-  }
-}
-
-fileprivate extension String {
-  func applyTextAttributes() -> NSAttributedString {
-    let attributedString = NSAttributedString(
-      string: self,
-      attributes: [
-        NSAttributedString.Key.font: UIFont.pretendardHeadBold,
-        NSAttributedString.Key.foregroundColor: UIColor.toDoGardenGreenDark
-      ]
-    )
-    return attributedString
   }
 }
 
