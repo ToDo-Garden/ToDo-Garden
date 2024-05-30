@@ -56,7 +56,8 @@ extension CalendarDataGenerator {
     let totalMonthDays = try MonthPosition.allCases
       .map { position in
         let params = try position.monthDayParams(day, calendar: self.calendar)
-        return self.getMonthDataDays(for: params.range, from: params.firstDay)
+        let isThisMonth = position == MonthPosition.current ? true : false
+        return self.getMonthDataDays(for: params.range, from: params.firstDay, isThisMonth: isThisMonth)
       }
       .reduce(into: [MonthData.Day](), +=)
     let dayCountOfWeek = self.calendar.shortWeekdaySymbols.count
@@ -68,7 +69,8 @@ extension CalendarDataGenerator {
   
   private func getMonthDataDays(
     for dateRange: Range<Int>,
-    from firstDay: Date
+    from firstDay: Date,
+    isThisMonth: Bool
   ) -> [MonthData.Day] {
     return dateRange.map { value in
       let dayOfNextMonth = self.calendar.date(
@@ -77,7 +79,7 @@ extension CalendarDataGenerator {
         to: firstDay
       ) ?? Date()
       
-      return MonthData.Day(date: dayOfNextMonth, isThisMonth: false)
+      return MonthData.Day(date: dayOfNextMonth, isThisMonth: isThisMonth)
     }
   }
 }
