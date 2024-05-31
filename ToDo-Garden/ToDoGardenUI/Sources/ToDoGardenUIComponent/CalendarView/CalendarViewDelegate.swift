@@ -28,9 +28,11 @@ final class CalendarViewDelegate: NSObject {
     self.dateFormatter = DateFormatter()
     self.collectionView = collectionView
     self.currentIndexPath = IndexPath(item: 0, section: 3)
+    self.collectionViewModel = collectionViewModel
     self.initialContentOffset = CGPoint()
     super.init()
     self.setupDateFormatter()
+    self.setupCollectionViewDataSource()
     self.loadInitialMonthSnapshot()
   }
 
@@ -45,6 +47,7 @@ final class CalendarViewDelegate: NSObject {
       at: UICollectionView.ScrollPosition.left,
       animated: animated
     )
+    self.reloadAllSnapshot()
   }
 
   func getCollectionViewHeight() -> CGFloat {
@@ -94,25 +97,12 @@ extension CalendarViewDelegate {
   }
 
   private func loadInitialMonthSnapshot() {
-    var snapshot = self.collectionViewDataSource.snapshot()
-    let currentDate = Date()
+    let snapshot = self.collectionViewDataSource.snapshot()
     let dateRange = (-3...3)
-    dateRange.forEach { (addValue: Int) in
-      guard let monthData = try? self.calendarDataGenerator.fetchMonthData(from: currentDate, add: addValue)
-      else { return }
+    guard let newSnapshot = try? self.addMonthData(to: snapshot, wit: dateRange, isAppendFirst: false)
+    else { return }
 
-      let section = CalendarSection(firstDay: monthData.firstDayOfMonth)
-      snapshot.appendSections([section])
-
-      let newItems = monthData.dates.map { (day: MonthData.Day) in
-        let date = day.date
-        let isThisMonth = day.isThisMonth
-        return CalendarItem(date: date, isThisMonth: isThisMonth)
-      }
-      snapshot.appendItems(newItems, toSection: section)
-    }
-
-    self.collectionViewDataSource.apply(snapshot)
+    self.collectionViewDataSource.apply(newSnapshot)
   }
 
   private func reloadAllSnapshot() {
@@ -120,13 +110,14 @@ extension CalendarViewDelegate {
     guard self.currentIndexPath.section <= 0 || self.currentIndexPath.section >= lastSection
     else { return }
 
-    let currentSnapshot = self.collectionViewDataSource.snapshot()
-    let scrollDirection: CalendarScrollDirection = self.currentIndexPath.section == 0 ? .left : .right
-    let snapshot1 = self.deleteSections(by: scrollDirection, to: currentSnapshot)
-    let snapshot2 = self.insertNewSection(by: scrollDirection, to: snapshot1)
+    guard let deletedSnapshot = try? self.deleteSections(to: self.collectionViewDataSource.snapshot()),
+    let updatedSnapshot = try? self.insertNewSection(to: deletedSnapshot)
+    else { return }
 
-    self.collectionViewDataSource?.apply(
-      snapshot2,
+    self.currentIndexPath.section = 3
+
+    self.collectionViewDataSource.apply(
+      updatedSnapshot,
       animatingDifferences: false
     ) {
       self.moveToCurrentMonth()
@@ -134,52 +125,64 @@ extension CalendarViewDelegate {
   }
 
   private func deleteSections(
-    by scrollDirection: CalendarScrollDirection,
     to snapshot: NSDiffableDataSourceSnapshot<CalendarSection, CalendarItem>
-  ) -> NSDiffableDataSourceSnapshot<CalendarSection, CalendarItem> {
+  ) throws -> NSDiffableDataSourceSnapshot<CalendarSection, CalendarItem> {
     var newSnapshot = snapshot
 
     for _ in (0...2) {
       let sections = newSnapshot.sectionIdentifiers
-      let sectionToDelete = scrollDirection == CalendarScrollDirection.left ? sections.last : sections.first
-      if let section = sectionToDelete {
-        let itemsToDelete = newSnapshot.itemIdentifiers(inSection: section)
-        newSnapshot.deleteItems(itemsToDelete)
-        newSnapshot.deleteSections([section])
-      }
+      guard let sectionToDelete = self.currentIndexPath.section == 0 ? sections.last : sections.first
+      else { throw CalendarViewDelegateError.snapshotIsNotLoaded }
+
+      let itemsToDelete = newSnapshot.itemIdentifiers(inSection: sectionToDelete)
+      newSnapshot.deleteItems(itemsToDelete)
+      newSnapshot.deleteSections([sectionToDelete])
     }
 
     return newSnapshot
   }
 
   private func insertNewSection(
-    by scrollDirection: CalendarScrollDirection,
     to snapshot: NSDiffableDataSourceSnapshot<CalendarSection, CalendarItem>
-  ) -> NSDiffableDataSourceSnapshot<CalendarSection, CalendarItem> {
+  ) throws -> NSDiffableDataSourceSnapshot<CalendarSection, CalendarItem> {
+    let isAppendFirst = self.currentIndexPath.section == 0 ? true : false
+    return try self.addMonthData(
+      to: snapshot,
+      wit: (1...3),
+      isAppendFirst: isAppendFirst
+    )
+  }
+
+  private func addMonthData(
+    to snapshot: NSDiffableDataSourceSnapshot<CalendarSection, CalendarItem>,
+    wit dateRange: ClosedRange<Int>,
+    isAppendFirst: Bool
+  ) throws -> NSDiffableDataSourceSnapshot<CalendarSection, CalendarItem> {
     var newSnapshot = snapshot
+    let sections = newSnapshot.sectionIdentifiers
+    guard let firstDay = isAppendFirst ? sections.first?.firstDay : sections.last?.firstDay ?? Date()
+    else { throw CalendarViewDelegateError.snapshotIsNotLoaded }
 
-    for _ in (0...2) {
-      let sections = newSnapshot.sectionIdentifiers
-      let section = scrollDirection == .left ? sections.first : sections.last
-      let addValue = scrollDirection == .left ? -1 : 1
-      if let section2 = section {
-        guard let monthData = try? self.calendarDataGenerator.fetchMonthData(from: section2.firstDay, add: addValue)
-        else { continue }
+    for value in dateRange {
+      let addValue = self.currentIndexPath.section == 0 ? -value : value
+      let monthData = try self.calendarDataGenerator.fetchMonthData(from: firstDay, add: addValue)
 
-        let sectionToAppend = CalendarSection(firstDay: monthData.firstDayOfMonth)
-        if scrollDirection == CalendarScrollDirection.left {
-          newSnapshot.insertSections([sectionToAppend], beforeSection: section2)
-        } else {
-          newSnapshot.appendSections([sectionToAppend])
-        }
+      let section = CalendarSection(firstDay: monthData.firstDayOfMonth)
+      if isAppendFirst {
+        guard let beforeSection = newSnapshot.sectionIdentifiers.first
+        else { throw CalendarViewDelegateError.snapshotIsNotLoaded }
 
-        let newItems = monthData.dates.map { (day: MonthData.Day) in
-          let date = day.date
-          let isThisMonth = day.isThisMonth
-          return CalendarItem(date: date, isThisMonth: isThisMonth)
-        }
-        newSnapshot.appendItems(newItems, toSection: sectionToAppend)
+        newSnapshot.insertSections([section], beforeSection: beforeSection)
+      } else {
+        newSnapshot.appendSections([section])
       }
+
+      let items = monthData.dates.map { (day: MonthData.Day) in
+        let date = day.date
+        let isThisMonth = day.isThisMonth
+        return CalendarItem(date: date, isThisMonth: isThisMonth)
+      }
+      newSnapshot.appendItems(items, toSection: section)
     }
 
     return newSnapshot
@@ -302,4 +305,8 @@ enum CalendarScrollDirection: Int {
   case left  = -1
   case current = 0
   case right = 1
+}
+
+enum CalendarViewDelegateError: Error {
+  case snapshotIsNotLoaded
 }
