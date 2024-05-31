@@ -11,10 +11,12 @@ public final class CalendarView: UIView {
   private var model: Model
 
   private var monthLabel: UILabel
+  private var backButton: UIButton
 
   public init(model: Model) {
     self.model = model
     self.monthLabel = UILabel()
+    self.backButton = UIButton()
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -38,6 +40,7 @@ extension CalendarView {
 extension CalendarView {
   private func setupUI() {
     self.setupMonthLabel()
+    self.setupBackButton()
     self.addSubviews()
     self.setupSubviewsLayout()
   }
@@ -46,6 +49,15 @@ extension CalendarView {
     self.monthLabel.font = UIFont.pretendardHeadBold
     self.monthLabel.textColor = UIColor.toDoGardenGreenDark
   }
+
+  private func setupBackButton() {
+    self.backButton.setImage(UIImage.backwardButtonImage, for: UIControl.State.normal)
+
+    let action = UIAction { [weak self] _ in
+      self?.calendarViewDelegate.scrollCalendar(to: CalendarScrollDirection.left, animated: true)
+    }
+    self.backButton.addAction(action, for: UIControl.Event.touchUpInside)
+  }
 }
 
 // MARK: Auto Layout
@@ -53,10 +65,12 @@ extension CalendarView {
 extension CalendarView {
   private func addSubviews() {
     self.addSubview(self.monthLabel)
+    self.addSubview(self.backButton)
   }
 
   private func setupSubviewsLayout() {
     self.setupMonthLabelLayout()
+    self.setupBackButtonLayout()
   }
 
   private func setupMonthLabelLayout() {
@@ -73,6 +87,26 @@ extension CalendarView {
           constant: Constant.CalendarView.Layout.MonthLabel.leadingMargin
         ),
         self.monthLabel.trailingAnchor.constraint(lessThanOrEqualTo: self.backButton.leadingAnchor)
+      ]
+    )
+  }
+
+  private func setupBackButtonLayout() {
+    self.backButton.usingAutolayout()
+
+    NSLayoutConstraint.activate(
+      [
+        self.backButton.trailingAnchor.constraint(
+          equalTo: self.forwardButton.leadingAnchor,
+          constant: -Constant.CalendarView.Layout.BackButton.trailingMargin
+        ),
+        self.backButton.centerYAnchor.constraint(equalTo: self.monthLabel.centerYAnchor),
+        self.backButton.widthAnchor.constraint(
+          equalToConstant: Constant.CalendarView.Layout.BackButton.widthMargin
+        ),
+        self.backButton.heightAnchor.constraint(
+          equalToConstant: Constant.CalendarView.Layout.BackButton.heightMargin
+        )
       ]
     )
   }
