@@ -91,5 +91,16 @@ extension SettingTimeView {
 }
 
 extension SettingTimeView.Configuration {
-
+  public static let focusTimeSetting: Self = SettingTimeView.Configuration.init(
+    dataStore: Constant.SettingTimeView.focusTimeSetting
+  )
+  
+  public static let breakTimeSetting: Self = SettingTimeView.Configuration.init(
+    dataStore: Constant.SettingTimeView.breakTimeSetting
+  )
+  
+  public static let alarmTimeSetting: Self =
+  SettingTimeView.Configuration.init(
+    dataStore: Constant.SettingTimeView.alarmTimeSetting
+  )
 }
