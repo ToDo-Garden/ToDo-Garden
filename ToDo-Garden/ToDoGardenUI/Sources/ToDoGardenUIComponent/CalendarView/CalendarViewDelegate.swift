@@ -34,6 +34,10 @@ final class CalendarViewDelegate: NSObject {
     self.loadInitialMonthSnapshot()
   }
 
+  func fetchWeekdaySymbols() -> [String] {
+    return self.calendarDataGenerator.fetchWeekdaySymbols()
+  }
+
   func scrollCalendar(to scrollDirection: CalendarScrollDirection, animated: Bool) {
     self.currentIndexPath.section += scrollDirection.rawValue
     self.collectionView.scrollToItem(
@@ -48,6 +52,14 @@ final class CalendarViewDelegate: NSObject {
     let currentSection = snapshot.sectionIdentifiers[self.currentIndexPath.section]
     let itemCount = snapshot.itemIdentifiers(inSection: currentSection).count
     return self.calculateHeight(items: itemCount)
+  }
+
+  func getDateString() -> String {
+    let snapShot = self.collectionViewDataSource.snapshot()
+    let currentSectionDate = snapShot.sectionIdentifiers[self.currentIndexPath.section].firstDay
+    let formattedString = self.dateFormatter.string(from: currentSectionDate).split(separator: " ")
+    let dateString = formattedString[0] + " \(formattedString[1])"
+    return String(dateString)
   }
 }
 
