@@ -18,6 +18,7 @@ final class CalendarViewDelegate: NSObject {
   private var currentIndexPath: IndexPath
   private var collectionViewModel: CalendarView.Model.CollectionView
   private var initialContentOffset: CGPoint
+  private var selectedItem: CalendarItem?
 
   init(
     collectionView: UICollectionView,
@@ -233,6 +234,55 @@ extension CalendarViewDelegate: UICollectionViewDelegate {
 
   func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
     self.reloadAllSnapshot()
+  }
+}
+
+// MARK: Cell Selection Functions
+
+extension CalendarViewDelegate {
+  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    guard let selectedNewItem = self.collectionViewDataSource.itemIdentifier(for: indexPath)
+    else { return }
+
+    let comparisonResult = self.validateIsSameMonth(selectedItem: selectedNewItem, section: indexPath)
+    guard comparisonResult != ComparisonResult.orderedSame
+    else {
+      self.selectedItem = selectedNewItem
+      return
+    }
+
+    let scrollDirection = comparisonResult == ComparisonResult.orderedAscending ?
+    CalendarScrollDirection.left : CalendarScrollDirection.right
+    self.scrollCalendar(to: scrollDirection, animated: true)
+    self.setSelected(to: selectedNewItem)
+    self.selectedItem = selectedNewItem
+  }
+
+  private func validateIsSameMonth(selectedItem: CalendarItem, section indexPath: IndexPath) -> ComparisonResult {
+    guard let date = self.collectionViewDataSource.sectionIdentifier(for: indexPath.section)?.firstDay
+    else { return ComparisonResult.orderedSame }
+
+    return self.calendarDataGenerator.compareMonth(
+      date1: selectedItem.date,
+      with: date
+    )
+  }
+
+  private func setSelected(to item: CalendarItem) {
+    let snapshot = self.collectionViewDataSource.snapshot()
+    let section = snapshot.sectionIdentifiers[self.currentIndexPath.section]
+    let indexOfItem = snapshot.itemIdentifiers(inSection: section).firstIndex { (calendarItem: CalendarItem) in
+      return item.date == calendarItem.date
+    }
+
+    if let itemIndex = indexOfItem {
+      let itemIndexPath = IndexPath(item: itemIndex, section: self.currentIndexPath.section)
+      self.collectionView.selectItem(
+        at: itemIndexPath,
+        animated: true,
+        scrollPosition: []
+      )
+    }
   }
 }
 
