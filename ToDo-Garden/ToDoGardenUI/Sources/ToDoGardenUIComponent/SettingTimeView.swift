@@ -104,3 +104,19 @@ extension SettingTimeView.Configuration {
     dataStore: Constant.SettingTimeView.alarmTimeSetting
   )
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let button = ToDoGardenBoxButton(title: "asdasd", buttonType: .primaryRoundRectButton)
+  
+  let view = SettingTimeView(with: button, for: .breakTimeSetting)
+  
+  let action = UIAction { _ in
+    view.calculateDate { date in print(date) }
+  }
+  
+  button.addAction(action, for: .touchUpInside)
+  return view
+}
+#endif
