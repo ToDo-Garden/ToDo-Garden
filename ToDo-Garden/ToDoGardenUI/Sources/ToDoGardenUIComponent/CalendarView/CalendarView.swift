@@ -50,6 +50,7 @@ public final class CalendarView: UIView {
 extension CalendarView {
   private func setup() {
     self.setupUI()
+    self.calendarViewDelegate.calendarScrollSender = self
   }
 
   private func scrollToCurrentMonth() {
@@ -60,6 +61,23 @@ extension CalendarView {
       )
       self.isLayoutSubviewsCalled = true
     }
+  }
+}
+
+// MARK: ScrollDirection Sender Delegate
+
+protocol CalendarScrollSendable {
+  func didScrolled()
+}
+
+extension CalendarView: CalendarScrollSendable {
+  func didScrolled() {
+    self.updateMonthLabelText()
+  }
+
+  private func updateMonthLabelText() {
+    let text = self.calendarViewDelegate.getDateString()
+    self.monthLabel.text = text
   }
 }
 
