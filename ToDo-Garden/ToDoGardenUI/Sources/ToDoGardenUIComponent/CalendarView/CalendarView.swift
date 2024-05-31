@@ -12,11 +12,13 @@ public final class CalendarView: UIView {
 
   private var monthLabel: UILabel
   private var backButton: UIButton
+  private var forwardButton: UIButton
 
   public init(model: Model) {
     self.model = model
     self.monthLabel = UILabel()
     self.backButton = UIButton()
+    self.forwardButton = UIButton()
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -41,6 +43,7 @@ extension CalendarView {
   private func setupUI() {
     self.setupMonthLabel()
     self.setupBackButton()
+    self.setupForwardButton()
     self.addSubviews()
     self.setupSubviewsLayout()
   }
@@ -58,6 +61,15 @@ extension CalendarView {
     }
     self.backButton.addAction(action, for: UIControl.Event.touchUpInside)
   }
+
+  private func setupForwardButton() {
+    self.forwardButton.setImage(UIImage.forwardButtonImage, for: UIControl.State.normal)
+
+    let action = UIAction { [weak self] _ in
+      self?.calendarViewDelegate.scrollCalendar(to: CalendarScrollDirection.right, animated: true)
+    }
+    self.forwardButton.addAction(action, for: UIControl.Event.touchUpInside)
+  }
 }
 
 // MARK: Auto Layout
@@ -66,11 +78,13 @@ extension CalendarView {
   private func addSubviews() {
     self.addSubview(self.monthLabel)
     self.addSubview(self.backButton)
+    self.addSubview(self.forwardButton)
   }
 
   private func setupSubviewsLayout() {
     self.setupMonthLabelLayout()
     self.setupBackButtonLayout()
+    self.setupForwardButtonLayout()
   }
 
   private func setupMonthLabelLayout() {
@@ -106,6 +120,26 @@ extension CalendarView {
         ),
         self.backButton.heightAnchor.constraint(
           equalToConstant: Constant.CalendarView.Layout.BackButton.heightMargin
+        )
+      ]
+    )
+  }
+
+  private func setupForwardButtonLayout() {
+    self.forwardButton.usingAutolayout()
+
+    NSLayoutConstraint.activate(
+      [
+        self.forwardButton.centerYAnchor.constraint(equalTo: self.monthLabel.centerYAnchor),
+        self.forwardButton.trailingAnchor.constraint(
+          equalTo: self.trailingAnchor,
+          constant: -Constant.CalendarView.Layout.ForwardButton.trailingMargin
+        ),
+        self.forwardButton.widthAnchor.constraint(
+          equalToConstant: Constant.CalendarView.Layout.ForwardButton.widthMargin
+        ),
+        self.forwardButton.heightAnchor.constraint(
+          equalToConstant: Constant.CalendarView.Layout.ForwardButton.heightMargin
         )
       ]
     )
