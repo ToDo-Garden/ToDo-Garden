@@ -99,6 +99,7 @@ extension CalendarView: CalendarScrollSendable {
 
 extension CalendarView {
   private func setupUI() {
+    self.setupBorder()
     self.setupMonthLabel()
     self.setupBackButton()
     self.setupForwardButton()
@@ -106,6 +107,12 @@ extension CalendarView {
     self.setupCollectionView()
     self.addSubviews()
     self.setupSubviewsLayout()
+  }
+
+  private func setupBorder() {
+    self.layer.cornerRadius = self.model.cornerRadius
+    self.layer.borderWidth = self.model.borderWidth
+    self.layer.borderColor = UIColor.toDoGardenGreenGray.cgColor
   }
 
   private func setupMonthLabel() {
