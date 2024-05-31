@@ -101,6 +101,39 @@ extension CalendarViewDelegate {
 
     self.collectionViewDataSource.apply(snapshot)
   }
+
+  private func insertNewSection(
+    by scrollDirection: CalendarScrollDirection,
+    to snapshot: NSDiffableDataSourceSnapshot<CalendarSection, CalendarItem>
+  ) -> NSDiffableDataSourceSnapshot<CalendarSection, CalendarItem> {
+    var newSnapshot = snapshot
+
+    for _ in (0...2) {
+      let sections = newSnapshot.sectionIdentifiers
+      let section = scrollDirection == .left ? sections.first : sections.last
+      let addValue = scrollDirection == .left ? -1 : 1
+      if let section2 = section {
+        guard let monthData = try? self.calendarDataGenerator.fetchMonthData(from: section2.firstDay, add: addValue)
+        else { continue }
+
+        let sectionToAppend = CalendarSection(firstDay: monthData.firstDayOfMonth)
+        if scrollDirection == CalendarScrollDirection.left {
+          newSnapshot.insertSections([sectionToAppend], beforeSection: section2)
+        } else {
+          newSnapshot.appendSections([sectionToAppend])
+        }
+
+        let newItems = monthData.dates.map { (day: MonthData.Day) in
+          let date = day.date
+          let isThisMonth = day.isThisMonth
+          return CalendarItem(date: date, isThisMonth: isThisMonth)
+        }
+        newSnapshot.appendItems(newItems, toSection: sectionToAppend)
+      }
+    }
+
+    return newSnapshot
+  }
 }
 
 // MARK: UIScrollView Deleagate Functions
@@ -150,9 +183,11 @@ extension CalendarViewDelegate: UICollectionViewDelegate {
   }
 
   func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+    self.reloadAllSnapshot()
   }
 
   func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    self.reloadAllSnapshot()
   }
 }
 
