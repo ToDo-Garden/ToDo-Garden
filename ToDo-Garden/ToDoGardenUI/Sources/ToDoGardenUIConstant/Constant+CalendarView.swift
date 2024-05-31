@@ -8,9 +8,14 @@
 import Foundation
 
 extension Constant.CalendarView {
+  public enum Animation {}
   public enum Layout {}
   public enum Model {}
   public enum StringLiteral {}
+}
+
+extension Constant.CalendarView.Animation {
+  public static let duration: CGFloat = 0.1
 }
 
 extension Constant.CalendarView.Layout {
@@ -46,7 +51,7 @@ extension Constant.CalendarView.Layout {
   }
 
   public enum CollectionViewCell {
-    public static let cornerRadius: CGFloat = 1
+    public static let cornerRadius: CGFloat = 5
   }
 }
 
