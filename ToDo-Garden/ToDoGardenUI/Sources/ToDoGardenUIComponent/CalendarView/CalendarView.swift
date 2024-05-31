@@ -15,6 +15,7 @@ public final class CalendarView: UIView {
   private var backButton: UIButton
   private var forwardButton: UIButton
   private var weekdaySymbolStackView: UIStackView
+  private var collectionView: UICollectionView
 
   public init(model: Model) {
     self.model = model
@@ -23,6 +24,7 @@ public final class CalendarView: UIView {
     self.backButton = UIButton()
     self.forwardButton = UIButton()
     self.weekdaySymbolStackView = UIStackView()
+    self.collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewLayout())
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -49,6 +51,7 @@ extension CalendarView {
     self.setupBackButton()
     self.setupForwardButton()
     self.setupWeekdaySymbolStackView()
+    self.setupCollectionView(self.collectionView)
     self.addSubviews()
     self.setupSubviewsLayout()
   }
@@ -97,6 +100,7 @@ extension CalendarView {
     self.addSubview(self.backButton)
     self.addSubview(self.forwardButton)
     self.addSubview(self.weekdaySymbolStackView)
+    self.addSubview(self.collectionView)
   }
 
   private func setupSubviewsLayout() {
@@ -104,6 +108,7 @@ extension CalendarView {
     self.setupBackButtonLayout()
     self.setupForwardButtonLayout()
     self.setupWeekdaySymbolStackViewLayout()
+    self.setupCollectionViewLayout()
   }
 
   private func setupMonthLabelLayout() {
@@ -183,6 +188,31 @@ extension CalendarView {
         self.weekdaySymbolStackView.trailingAnchor.constraint(
           equalTo: self.trailingAnchor,
           constant: -Constant.CalendarView.Layout.StackView.trailingMargin
+        )
+      ]
+    )
+  }
+
+  private func setupCollectionViewLayout() {
+    self.collectionView.usingAutolayout()
+
+    NSLayoutConstraint.activate(
+      [
+        self.collectionView.topAnchor.constraint(
+          equalTo: self.weekdaySymbolStackView.bottomAnchor,
+          constant: Constant.CalendarView.Layout.CollectionView.topMargin
+        ),
+        self.collectionView.leadingAnchor.constraint(
+          equalTo: self.leadingAnchor,
+          constant: Constant.CalendarView.Layout.CollectionView.leadingMargin
+        ),
+        self.collectionView.trailingAnchor.constraint(
+          equalTo: self.trailingAnchor,
+          constant: -Constant.CalendarView.Layout.CollectionView.trailingMargin
+        ),
+        self.collectionView.bottomAnchor.constraint(
+          equalTo: self.bottomAnchor,
+          constant: -Constant.CalendarView.Layout.CollectionView.bottomMargin
         )
       ]
     )
