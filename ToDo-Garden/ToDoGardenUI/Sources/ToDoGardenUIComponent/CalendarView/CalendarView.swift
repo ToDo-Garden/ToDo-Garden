@@ -9,16 +9,20 @@ import UIKit
 
 public final class CalendarView: UIView {
   private var model: Model
+  private var calendarViewDelegate: CalendarViewDelegate
 
   private var monthLabel: UILabel
   private var backButton: UIButton
   private var forwardButton: UIButton
+  private var weekdaySymbolStackView: UIStackView
 
   public init(model: Model) {
     self.model = model
+    self.calendarViewDelegate = CalendarViewDelegate()
     self.monthLabel = UILabel()
     self.backButton = UIButton()
     self.forwardButton = UIButton()
+    self.weekdaySymbolStackView = UIStackView()
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -44,6 +48,7 @@ extension CalendarView {
     self.setupMonthLabel()
     self.setupBackButton()
     self.setupForwardButton()
+    self.setupWeekdaySymbolStackView()
     self.addSubviews()
     self.setupSubviewsLayout()
   }
@@ -70,6 +75,18 @@ extension CalendarView {
     }
     self.forwardButton.addAction(action, for: UIControl.Event.touchUpInside)
   }
+
+  private func setupWeekdaySymbolStackView() {
+    self.weekdaySymbolStackView.distribution = UIStackView.Distribution.equalSpacing
+    let symbols = self.calendarViewDelegate.fetchWeekdaySymbols()
+    symbols.forEach { (symbol: String) in
+      let daySymbolLabel = UILabel()
+      daySymbolLabel.text = symbol
+      daySymbolLabel.textColor = UIColor.toDoGardenGray3
+      daySymbolLabel.font = UIFont.pretendardBodySemiBold
+      self.weekdaySymbolStackView.addArrangedSubview(daySymbolLabel)
+    }
+  }
 }
 
 // MARK: Auto Layout
@@ -79,12 +96,14 @@ extension CalendarView {
     self.addSubview(self.monthLabel)
     self.addSubview(self.backButton)
     self.addSubview(self.forwardButton)
+    self.addSubview(self.weekdaySymbolStackView)
   }
 
   private func setupSubviewsLayout() {
     self.setupMonthLabelLayout()
     self.setupBackButtonLayout()
     self.setupForwardButtonLayout()
+    self.setupWeekdaySymbolStackViewLayout()
   }
 
   private func setupMonthLabelLayout() {
@@ -140,6 +159,30 @@ extension CalendarView {
         ),
         self.forwardButton.heightAnchor.constraint(
           equalToConstant: Constant.CalendarView.Layout.ForwardButton.heightMargin
+        )
+      ]
+    )
+  }
+
+  private func setupWeekdaySymbolStackViewLayout() {
+    self.weekdaySymbolStackView.usingAutolayout()
+
+    let topConstraint = self.weekdaySymbolStackView.topAnchor.constraint(
+      equalTo: self.monthLabel.bottomAnchor,
+      constant: Constant.CalendarView.Layout.StackView.topMargin
+    )
+    topConstraint.priority = UILayoutPriority.defaultLow
+    topConstraint.isActive = true
+
+    NSLayoutConstraint.activate(
+      [
+        self.weekdaySymbolStackView.leadingAnchor.constraint(
+          equalTo: self.leadingAnchor,
+          constant: Constant.CalendarView.Layout.StackView.leadingMargin
+        ),
+        self.weekdaySymbolStackView.trailingAnchor.constraint(
+          equalTo: self.trailingAnchor,
+          constant: -Constant.CalendarView.Layout.StackView.trailingMargin
         )
       ]
     )
