@@ -13,6 +13,16 @@ final class CalendarCollectionViewCell: UICollectionViewCell {
   private var toDoExistenceView: UIView
   private var dayLabel: UILabel
 
+  override var isSelected: Bool {
+    willSet {
+      if newValue {
+        self.selected()
+      } else {
+        self.deSelected()
+      }
+    }
+  }
+
   override init(frame: CGRect) {
     self.toDoExistenceView = UIView()
     self.dayLabel = UILabel()
@@ -24,11 +34,26 @@ final class CalendarCollectionViewCell: UICollectionViewCell {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    self.deSelected()
+  }
 }
 
 // MARK: Private Functions
 
 extension CalendarCollectionViewCell {
+  private func selected() {
+    self.backgroundColor = UIColor.toDoGardenGreenDark
+    self.dayLabel.textColor = UIColor.toDoGardenWhite
+  }
+
+  private func deSelected() {
+    self.backgroundColor = UIColor.toDoGardenWhite
+    self.dayLabel.textColor = UIColor.toDoGardenGreenDark
+  }
+
   private func setup() {
     self.setupLayer()
     self.setupToDoExistenceView()
