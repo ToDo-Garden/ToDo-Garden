@@ -24,6 +24,12 @@ public class SettingTimeView: UIView {
   public required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+  
+  override public var intrinsicContentSize: CGSize {
+    let screenWidth = UIScreen.main.bounds.width
+    let screenHeight = UIScreen.main.bounds.height
+    return CGSize.init(width: screenWidth, height: screenHeight / 2)
+  }
 }
 
 extension SettingTimeView {
