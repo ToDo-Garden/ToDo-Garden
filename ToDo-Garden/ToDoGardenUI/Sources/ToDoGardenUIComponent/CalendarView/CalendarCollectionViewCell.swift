@@ -39,6 +39,13 @@ final class CalendarCollectionViewCell: UICollectionViewCell {
     super.prepareForReuse()
     self.deSelected()
   }
+
+  func update(dayString: String, isThisMonth: Bool) {
+    self.dayLabel.text = dayString
+    if isThisMonth == false {
+      self.dayLabel.textColor = UIColor.toDoGardenGreenGray
+    }
+  }
 }
 
 // MARK: Private Functions
