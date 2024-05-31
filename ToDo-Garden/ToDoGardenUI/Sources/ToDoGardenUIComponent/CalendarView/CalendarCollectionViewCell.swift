@@ -30,10 +30,15 @@ final class CalendarCollectionViewCell: UICollectionViewCell {
 
 extension CalendarCollectionViewCell {
   private func setup() {
+    self.setupLayer()
     self.setupToDoExistenceView()
     self.setupDayLabel()
     self.addSubviews()
     self.setupSubviewsLayout()
+  }
+
+  private func setupLayer() {
+    self.layer.cornerRadius = Constant.CalendarView.Layout.CollectionViewCell.cornerRadius
   }
 
   private func setupDayLabel() {
@@ -87,4 +92,10 @@ extension CalendarCollectionViewCell {
       self.dayLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor)
     ])
   }
+}
+
+// MARK: Cell Identifier
+
+extension CalendarCollectionViewCell: ReusableIdentifier {
+  static var identifier = Constant.CalendarView.StringLiteral.cellIdentifier
 }
