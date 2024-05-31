@@ -20,6 +20,8 @@ final class CalendarViewDelegate: NSObject {
   private var initialContentOffset: CGPoint
   private var selectedItem: CalendarItem?
 
+  var scrollSender: CalendarScrollSender?
+
   init(
     collectionView: UICollectionView,
     collectionViewModel: CalendarView.Model.CollectionView
@@ -48,6 +50,7 @@ final class CalendarViewDelegate: NSObject {
       animated: animated
     )
     self.reloadAllSnapshot()
+    self.scrollSender?.didScroll()
   }
 
   func getCollectionViewHeight() -> CGFloat {
@@ -245,10 +248,12 @@ extension CalendarViewDelegate: UICollectionViewDelegate {
 
   func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
     self.reloadAllSnapshot()
+    self.scrollSender?.didScroll()
   }
 
   func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
     self.reloadAllSnapshot()
+    self.scrollSender?.didScroll()
   }
 }
 
@@ -271,6 +276,7 @@ extension CalendarViewDelegate {
     self.scrollCalendar(to: scrollDirection, animated: true)
     self.setSelected(to: selectedNewItem)
     self.selectedItem = selectedNewItem
+    self.scrollSender?.didScroll()
   }
 
   private func validateIsSameMonth(selectedItem: CalendarItem, section indexPath: IndexPath) -> ComparisonResult {
