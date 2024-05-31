@@ -12,7 +12,7 @@ import ToDoGardenUIConstant
 public class SettingTimeView: UIView {
   private var configuration: Configuration
   private let timepicker: ToDoGardenTimePicker
-
+  
   public init(with button: UIButton, for configuration: Configuration) {
     self.configuration = configuration
     self.timepicker = ToDoGardenTimePicker(configuration: self.configuration.dataStore.timePicker)
@@ -29,6 +29,11 @@ public class SettingTimeView: UIView {
     let screenWidth = UIScreen.main.bounds.width
     let screenHeight = UIScreen.main.bounds.height
     return CGSize.init(width: screenWidth, height: screenHeight / 2)
+  }
+  
+  public func calculateDate(completion: @escaping (Date) -> Void) {
+    let calculatedDate = self.timepicker.calculateDate()
+    completion(calculatedDate)
   }
 }
 
