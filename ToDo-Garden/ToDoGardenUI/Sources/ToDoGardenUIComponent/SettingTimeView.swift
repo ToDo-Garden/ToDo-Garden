@@ -8,6 +8,7 @@
 import UIKit
 
 import ToDoGardenUIConstant
+import ToDoGardenUIResource
 
 public class SettingTimeView: UIView {
   private var configuration: Configuration
@@ -39,7 +40,27 @@ public class SettingTimeView: UIView {
 
 extension SettingTimeView {
   private func build(with button: UIButton) {
+    self.buildTitleLabel()
     
+  }
+  
+  private func buildTitleLabel() {
+    let titleLabel = UILabel()
+    titleLabel.text = self.configuration.dataStore.title.text
+    titleLabel.font = UIFont.pretendardHeadBold
+    titleLabel.textColor = UIColor.toDoGardenBlack
+    self.addSubview(titleLabel)
+    
+    titleLabel.usingAutolayout()
+    NSLayoutConstraint.activate(
+      [
+        titleLabel.topAnchor.constraint(
+          equalTo: self.topAnchor,
+          constant: self.configuration.dataStore.title.topMargin
+        ),
+        titleLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor)
+      ]
+    )
   }
 }
 
