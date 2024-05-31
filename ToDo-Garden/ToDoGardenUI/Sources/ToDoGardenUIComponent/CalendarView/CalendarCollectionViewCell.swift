@@ -11,10 +11,13 @@ import ToDoGardenUIConstant
 
 final class CalendarCollectionViewCell: UICollectionViewCell {
   private var toDoExistenceView: UIView
+  private var dayLabel: UILabel
 
   override init(frame: CGRect) {
     self.toDoExistenceView = UIView()
+    self.dayLabel = UILabel()
     super.init(frame: CGRect.zero)
+    self.setup()
   }
 
   @available(*, unavailable)
@@ -28,8 +31,14 @@ final class CalendarCollectionViewCell: UICollectionViewCell {
 extension CalendarCollectionViewCell {
   private func setup() {
     self.setupToDoExistenceView()
+    self.setupDayLabel()
     self.addSubviews()
     self.setupSubviewsLayout()
+  }
+
+  private func setupDayLabel() {
+    self.dayLabel.font = UIFont.pretendardBodySemiBold
+    self.dayLabel.textColor = UIColor.toDoGardenGreenDark
   }
 
   private func setupToDoExistenceView() {
@@ -45,10 +54,12 @@ extension CalendarCollectionViewCell {
 extension CalendarCollectionViewCell {
   private func addSubviews() {
     self.addSubview(self.toDoExistenceView)
+    self.addSubview(self.dayLabel)
   }
 
   private func setupSubviewsLayout() {
     self.setupToDoExistenceViewLayout()
+    self.setupDayLabelLayout()
   }
 
   private func setupToDoExistenceViewLayout() {
@@ -66,5 +77,14 @@ extension CalendarCollectionViewCell {
         )
       ]
     )
+  }
+
+  private func setupDayLabelLayout() {
+    self.dayLabel.usingAutolayout()
+
+    NSLayoutConstraint.activate([
+      self.dayLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+      self.dayLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+    ])
   }
 }
