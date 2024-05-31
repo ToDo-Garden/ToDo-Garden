@@ -42,7 +42,7 @@ extension SettingTimeView {
   private func build(with button: UIButton) {
     self.buildTitleLabel()
     self.buildTimePicker()
-    
+    self.buildButton(with: button)
   }
   
   private func buildTitleLabel() {
@@ -75,6 +75,21 @@ extension SettingTimeView {
           constant: self.configuration.dataStore.timePicker.dataStore.pickerView.topMargin
         ),
         self.timepicker.centerXAnchor.constraint(equalTo: self.centerXAnchor, constant: -3)
+      ]
+    )
+  }
+  
+  private func buildButton(with button: UIButton) {
+    self.addSubview(button)
+    
+    button.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate(
+      [
+        button.bottomAnchor.constraint(
+          equalTo: self.bottomAnchor,
+          constant: self.configuration.dataStore.button.bottomMargin
+        ),
+        button.centerXAnchor.constraint(equalTo: self.centerXAnchor)
       ]
     )
   }
