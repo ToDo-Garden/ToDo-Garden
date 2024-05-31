@@ -317,3 +317,12 @@ extension CalendarView.Model {
     let lineSpacing: CGFloat
   }
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  var calendarView = CalendarView(model: .primary)
+  calendarView.widthAnchor.constraint(equalTo: 323).isActive = true
+  return calendarView
+}
+#endif
