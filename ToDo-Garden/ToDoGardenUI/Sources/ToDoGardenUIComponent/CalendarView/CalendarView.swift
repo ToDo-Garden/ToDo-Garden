@@ -10,6 +10,7 @@ import UIKit
 public final class CalendarView: UIView {
   private var model: Model
   private var calendarViewDelegate: CalendarViewDelegate
+  private var isLayoutSubviewsCalled: Bool
 
   private var monthLabel: UILabel
   private var backButton: UIButton
@@ -19,7 +20,11 @@ public final class CalendarView: UIView {
 
   public init(model: Model) {
     self.model = model
-    self.calendarViewDelegate = CalendarViewDelegate()
+    self.calendarViewDelegate = CalendarViewDelegate(
+      collectionView: self.collectionView,
+      collectionViewModel: self.model.collectionView
+    )
+    self.isLayoutSubviewsCalled = false
     self.monthLabel = UILabel()
     self.backButton = UIButton()
     self.forwardButton = UIButton()
@@ -33,6 +38,11 @@ public final class CalendarView: UIView {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+
+  public override func layoutSubviews() {
+    super.layoutSubviews()
+    self.scrollToCurrentMonth()
+  }
 }
 
 // MARK: Private Functions
@@ -40,6 +50,16 @@ public final class CalendarView: UIView {
 extension CalendarView {
   private func setup() {
     self.setupUI()
+  }
+
+  private func scrollToCurrentMonth() {
+    if self.isLayoutSubviewsCalled == false {
+      self.calendarViewDelegate.scrollCalendar(
+        to: CalendarScrollDirection.current,
+        animated: false
+      )
+      self.isLayoutSubviewsCalled = true
+    }
   }
 }
 
