@@ -7,6 +7,8 @@
 
 import UIKit
 
+import ToDoGardenUIConstant
+
 public final class CalendarView: UIView {
   private var model: Model
   private var calendarViewDelegate: CalendarViewDelegate
@@ -17,6 +19,7 @@ public final class CalendarView: UIView {
   private var forwardButton: UIButton
   private var weekdaySymbolStackView: UIStackView
   private var collectionView: UICollectionView
+  private var heightConstraint: NSLayoutConstraint
 
   public init(model: Model) {
     self.model = model
@@ -30,6 +33,7 @@ public final class CalendarView: UIView {
     self.forwardButton = UIButton()
     self.weekdaySymbolStackView = UIStackView()
     self.collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewLayout())
+    self.heightConstraint = NSLayoutConstraint()
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -72,7 +76,17 @@ protocol CalendarScrollSendable {
 
 extension CalendarView: CalendarScrollSendable {
   func didScrolled() {
+    self.updateCollectionViewHeight()
     self.updateMonthLabelText()
+  }
+
+  private func updateCollectionViewHeight() {
+    let duration = Constant.CalendarView.Animation.duration
+    UIView.animate(withDuration: duration) {
+      let collectionViewHeight = self.calendarViewDelegate.getCollectionViewHeight()
+      self.heightConstraint.constant = collectionViewHeight
+      self.layoutIfNeeded()
+    }
   }
 
   private func updateMonthLabelText() {
@@ -153,6 +167,7 @@ extension CalendarView {
     self.setupForwardButtonLayout()
     self.setupWeekdaySymbolStackViewLayout()
     self.setupCollectionViewLayout()
+    self.setupHeightConstraint()
   }
 
   private func setupMonthLabelLayout() {
@@ -260,6 +275,11 @@ extension CalendarView {
         )
       ]
     )
+  }
+
+  private func setupHeightConstraint() {
+    self.heightConstraint = self.heightAnchor.constraint(equalToConstant: 0)
+    self.heightConstraint.isActive = true
   }
 }
 
