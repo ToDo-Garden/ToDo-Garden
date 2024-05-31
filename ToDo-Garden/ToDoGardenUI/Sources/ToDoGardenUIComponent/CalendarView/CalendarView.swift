@@ -10,9 +10,13 @@ import UIKit
 public final class CalendarView: UIView {
   private var model: Model
 
+  private var monthLabel: UILabel
+
   public init(model: Model) {
     self.model = model
+    self.monthLabel = UILabel()
     super.init(frame: CGRect.zero)
+    self.setup()
   }
 
   @available(*, deprecated)
@@ -20,6 +24,61 @@ public final class CalendarView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
 }
+
+// MARK: Private Functions
+
+extension CalendarView {
+  private func setup() {
+    self.setupUI()
+  }
+}
+
+// MARK: Set up UI
+
+extension CalendarView {
+  private func setupUI() {
+    self.setupMonthLabel()
+    self.addSubviews()
+    self.setupSubviewsLayout()
+  }
+
+  private func setupMonthLabel() {
+    self.monthLabel.font = UIFont.pretendardHeadBold
+    self.monthLabel.textColor = UIColor.toDoGardenGreenDark
+  }
+}
+
+// MARK: Auto Layout
+
+extension CalendarView {
+  private func addSubviews() {
+    self.addSubview(self.monthLabel)
+  }
+
+  private func setupSubviewsLayout() {
+    self.setupMonthLabelLayout()
+  }
+
+  private func setupMonthLabelLayout() {
+    self.monthLabel.usingAutolayout()
+
+    NSLayoutConstraint.activate(
+      [
+        self.monthLabel.topAnchor.constraint(
+          equalTo: self.topAnchor,
+          constant: Constant.CalendarView.Layout.MonthLabel.topMargin
+        ),
+        self.monthLabel.leadingAnchor.constraint(
+          equalTo: self.leadingAnchor,
+          constant: Constant.CalendarView.Layout.MonthLabel.leadingMargin
+        ),
+        self.monthLabel.trailingAnchor.constraint(lessThanOrEqualTo: self.backButton.leadingAnchor)
+      ]
+    )
+  }
+}
+
+// MARK: Model
 
 extension CalendarView {
   public struct Model {
