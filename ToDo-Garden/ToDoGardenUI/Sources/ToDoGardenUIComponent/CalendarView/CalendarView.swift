@@ -51,7 +51,7 @@ extension CalendarView {
     self.setupBackButton()
     self.setupForwardButton()
     self.setupWeekdaySymbolStackView()
-    self.setupCollectionView(self.collectionView)
+    self.setupCollectionView()
     self.addSubviews()
     self.setupSubviewsLayout()
   }
@@ -89,6 +89,12 @@ extension CalendarView {
       daySymbolLabel.font = UIFont.pretendardBodySemiBold
       self.weekdaySymbolStackView.addArrangedSubview(daySymbolLabel)
     }
+  }
+
+  private func setupCollectionView() {
+    self.configureCollectionView(self.collectionView)
+    self.collectionView.delegate = self.calendarViewDelegate
+    self.collectionView.collectionViewLayout = self.makeCollectionViewLayout(with: self.model.collectionView)
   }
 }
 
