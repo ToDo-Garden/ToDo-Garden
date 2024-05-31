@@ -102,6 +102,24 @@ extension CalendarViewDelegate {
     self.collectionViewDataSource.apply(snapshot)
   }
 
+  private func reloadAllSnapshot() {
+    let lastSection = self.collectionViewDataSource.snapshot().sectionIdentifiers.count - 1
+    guard self.currentIndexPath.section <= 0 || self.currentIndexPath.section >= lastSection
+    else { return }
+
+    let currentSnapshot = self.collectionViewDataSource.snapshot()
+    let scrollDirection: CalendarScrollDirection = self.currentIndexPath.section == 0 ? .left : .right
+    let snapshot1 = self.deleteSections(by: scrollDirection, to: currentSnapshot)
+    let snapshot2 = self.insertNewSection(by: scrollDirection, to: snapshot1)
+
+    self.collectionViewDataSource?.apply(
+      snapshot2,
+      animatingDifferences: false
+    ) {
+      self.moveToCurrentMonth()
+    }
+  }
+
   private func deleteSections(
     by scrollDirection: CalendarScrollDirection,
     to snapshot: NSDiffableDataSourceSnapshot<CalendarSection, CalendarItem>
@@ -152,6 +170,14 @@ extension CalendarViewDelegate {
     }
 
     return newSnapshot
+  }
+
+  private func moveToCurrentMonth() {
+    let currentMonthOffset = CGPoint(
+      x: self.collectionView.frame.width * 3,
+      y: self.collectionView.bounds.origin.y
+    )
+    self.collectionView.setContentOffset(currentMonthOffset, animated: false)
   }
 }
 
