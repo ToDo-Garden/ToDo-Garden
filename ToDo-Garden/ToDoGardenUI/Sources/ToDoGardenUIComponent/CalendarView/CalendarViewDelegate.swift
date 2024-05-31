@@ -102,6 +102,25 @@ extension CalendarViewDelegate {
     self.collectionViewDataSource.apply(snapshot)
   }
 
+  private func deleteSections(
+    by scrollDirection: CalendarScrollDirection,
+    to snapshot: NSDiffableDataSourceSnapshot<CalendarSection, CalendarItem>
+  ) -> NSDiffableDataSourceSnapshot<CalendarSection, CalendarItem> {
+    var newSnapshot = snapshot
+
+    for _ in (0...2) {
+      let sections = newSnapshot.sectionIdentifiers
+      let sectionToDelete = scrollDirection == CalendarScrollDirection.left ? sections.last : sections.first
+      if let section = sectionToDelete {
+        let itemsToDelete = newSnapshot.itemIdentifiers(inSection: section)
+        newSnapshot.deleteItems(itemsToDelete)
+        newSnapshot.deleteSections([section])
+      }
+    }
+
+    return newSnapshot
+  }
+
   private func insertNewSection(
     by scrollDirection: CalendarScrollDirection,
     to snapshot: NSDiffableDataSourceSnapshot<CalendarSection, CalendarItem>
