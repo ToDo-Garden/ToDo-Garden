@@ -10,18 +10,24 @@ import UIKit
 import ToDoGardenUIConstant
 
 final class CalendarViewDelegate: NSObject {
-  private var collectionView: UICollectionView
-  private var collectionViewDataSource: UICollectionViewDiffableDataSource<CalendarSection, CalendarItem>!
   private var calendarDataGenerator: CalendarDataGeneratable
-  private var currentIndexPath: IndexPath
-  private var collectionViewModel: CalendarView.Model.CollectionView
   private var dateFormatter: DateFormatter
 
-  init(collectionView: UICollectionView) {
-    self.collectionView = collectionView
+  private var collectionView: UICollectionView
+  private var collectionViewDataSource: UICollectionViewDiffableDataSource<CalendarSection, CalendarItem>!
+  private var currentIndexPath: IndexPath
+  private var collectionViewModel: CalendarView.Model.CollectionView
+  private var initialContentOffset: CGPoint
+
+  init(
+    collectionView: UICollectionView,
+    collectionViewModel: CalendarView.Model.CollectionView
+  ) {
     self.calendarDataGenerator = CalendarDataGenerator(calendar: Calendar.localeUpdated)
-    self.currentIndexPath = IndexPath(item: 0, section: 3)
     self.dateFormatter = DateFormatter()
+    self.collectionView = collectionView
+    self.currentIndexPath = IndexPath(item: 0, section: 3)
+    self.initialContentOffset = CGPoint()
     super.init()
     self.setupDateFormatter()
     self.loadInitialMonthSnapshot()
@@ -94,6 +100,59 @@ extension CalendarViewDelegate {
     }
 
     self.collectionViewDataSource.apply(snapshot)
+  }
+}
+
+// MARK: UIScrollView Deleagate Functions
+
+extension CalendarViewDelegate: UICollectionViewDelegate {
+  func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+    self.initialContentOffset = scrollView.contentOffset
+  }
+
+  func scrollViewWillEndDragging(
+    _ scrollView: UIScrollView,
+    withVelocity velocity: CGPoint,
+    targetContentOffset: UnsafeMutablePointer<CGPoint>
+  ) {
+    let contentOffset = scrollView.contentOffset.x
+    let targetContentOffset = targetContentOffset.pointee.x
+    let velocity = velocity.x
+    let scrollViewWidth = scrollView.frame.width
+
+    guard let scrollDirection = self.calculateScrollDireciton(
+      contentOffset,
+      targetContentOffset,
+      velocity,
+      scrollViewWidth / 2
+    ) else { return }
+
+    self.currentIndexPath.section += scrollDirection.rawValue
+  }
+
+  private func calculateScrollDireciton(
+    _ contentOffset: CGFloat,
+    _ targetContentOffset: CGFloat,
+    _ velocity: CGFloat,
+    _ scrollViewHalfWidth: CGFloat
+  ) -> CalendarScrollDirection? {
+    guard velocity == 0 else {
+      return velocity > 0 ? CalendarScrollDirection.right : CalendarScrollDirection.left
+    }
+
+    let hasScrolledFarEnough = abs(contentOffset - self.initialContentOffset.x) > scrollViewHalfWidth
+    guard hasScrolledFarEnough else {
+      return nil
+    }
+
+    return contentOffset > targetContentOffset ?
+    CalendarScrollDirection.left : CalendarScrollDirection.right
+  }
+
+  func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+  }
+
+  func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
   }
 }
 
