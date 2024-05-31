@@ -41,6 +41,7 @@ public class SettingTimeView: UIView {
 extension SettingTimeView {
   private func build(with button: UIButton) {
     self.buildTitleLabel()
+    self.buildTimePicker()
     
   }
   
@@ -59,6 +60,21 @@ extension SettingTimeView {
           constant: self.configuration.dataStore.title.topMargin
         ),
         titleLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor)
+      ]
+    )
+  }
+  
+  private func buildTimePicker() {
+    self.addSubview(self.timepicker)
+    
+    self.timepicker.usingAutolayout()
+    NSLayoutConstraint.activate(
+      [
+        self.timepicker.topAnchor.constraint(
+          equalTo: self.topAnchor,
+          constant: self.configuration.dataStore.timePicker.dataStore.pickerView.topMargin
+        ),
+        self.timepicker.centerXAnchor.constraint(equalTo: self.centerXAnchor, constant: -3)
       ]
     )
   }
