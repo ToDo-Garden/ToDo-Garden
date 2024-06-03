@@ -27,8 +27,9 @@ public class SettingTimeView: UIView {
   }
   
   override public var intrinsicContentSize: CGSize {
-    let screenWidth = UIScreen.main.bounds.width
-    let screenHeight = UIScreen.main.bounds.height
+    let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+    let screenWidth = windowScene?.screen.bounds.width ?? 1.0
+    let screenHeight = windowScene?.screen.bounds.height ?? 1.0
     return CGSize.init(width: screenWidth, height: screenHeight / 2)
   }
   
