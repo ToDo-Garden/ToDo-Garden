@@ -83,7 +83,7 @@ extension SettingTimeView {
   private func buildButton(with button: UIButton) {
     self.addSubview(button)
     
-    button.translatesAutoresizingMaskIntoConstraints = false
+    button.usingAutolayout()
     NSLayoutConstraint.activate(
       [
         button.bottomAnchor.constraint(
