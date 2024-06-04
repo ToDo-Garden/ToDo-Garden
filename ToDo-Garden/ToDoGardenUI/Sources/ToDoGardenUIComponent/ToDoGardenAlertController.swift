@@ -15,7 +15,6 @@ public final class ToDoGardenAlertController: UIViewController {
   public init(for alertType: ToDoGardenAlertView.Configuration) {
     self.alertView = ToDoGardenAlertView(configuration: alertType)
     super.init(nibName: nil, bundle: nil)
-    self.alertView.delegate = self
     self.modalPresentationStyle = UIModalPresentationStyle.overFullScreen
   }
   
