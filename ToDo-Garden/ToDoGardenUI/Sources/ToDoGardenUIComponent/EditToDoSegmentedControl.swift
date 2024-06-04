@@ -7,6 +7,8 @@
 
 import UIKit
 
+import ToDoGardenUIResource
+
 public final class EditToDoSegmentedControl: UISegmentedControl {
   public enum EditMode: Int {
     case notification = 0
@@ -31,6 +33,7 @@ public final class EditToDoSegmentedControl: UISegmentedControl {
 extension EditToDoSegmentedControl {
   private func setup() {
     self.setupAction()
+    self.setupAppearance()
   }
 }
 
@@ -53,5 +56,31 @@ extension EditToDoSegmentedControl {
     }
     
     self.editMode = selectedMode
+  }
+}
+
+// MARK: - Setup appearance
+
+extension EditToDoSegmentedControl {
+  private func setupAppearance() {
+    let notificationEditImage = UIImage.bellIconImage.withRenderingMode(
+      UIImage.RenderingMode.alwaysOriginal
+    )
+    let toDoEditImage = UIImage.editIconImage.withRenderingMode(
+      UIImage.RenderingMode.alwaysOriginal
+    )
+    self.insertSegment(
+      with: notificationEditImage,
+      at: EditToDoSegmentedControl.EditMode.notification.rawValue,
+      animated: false
+    )
+    self.insertSegment(
+      with: toDoEditImage,
+      at: EditToDoSegmentedControl.EditMode.todo.rawValue,
+      animated: false
+    )
+    self.backgroundColor = UIColor.toDoGardenGreenBackground
+    self.selectedSegmentTintColor = UIColor.white
+    self.selectedSegmentIndex = EditToDoSegmentedControl.EditMode.todo.rawValue
   }
 }
