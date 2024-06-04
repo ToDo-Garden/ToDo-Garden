@@ -16,21 +16,14 @@ class CalendarViewDelegate: NSObject {
   private var collectionView: UICollectionView
   private var collectionViewDataSource: UICollectionViewDiffableDataSource<CalendarSection, CalendarItem>!
   private var currentIndexPath: IndexPath
-  private var collectionViewModel: CalendarView.Model.CollectionView
   private var initialContentOffset: CGPoint
   private var selectedItem: CalendarItem?
 
-  var scrollSender: CalendarScrollSender?
-
-  init(
-    collectionView: UICollectionView,
-    collectionViewModel: CalendarView.Model.CollectionView
-  ) {
+  init(collectionView: UICollectionView) {
     self.calendarDataGenerator = CalendarDataGenerator(calendar: Calendar.localeUpdated)
     self.dateFormatter = DateFormatter()
     self.collectionView = collectionView
     self.currentIndexPath = IndexPath(item: 0, section: 3)
-    self.collectionViewModel = collectionViewModel
     self.initialContentOffset = CGPoint()
     super.init()
     self.setupDateFormatter()
@@ -50,14 +43,6 @@ class CalendarViewDelegate: NSObject {
       animated: animated
     )
     self.reloadAllSnapshot()
-    self.scrollSender?.didScroll()
-  }
-
-  func getCollectionViewHeight() -> CGFloat {
-    let snapshot = self.collectionViewDataSource.snapshot()
-    let currentSection = snapshot.sectionIdentifiers[self.currentIndexPath.section]
-    let itemCount = snapshot.itemIdentifiers(inSection: currentSection).count
-    return self.calculateHeight(items: itemCount)
   }
 
   func getDateString() -> String {
@@ -77,17 +62,6 @@ extension CalendarViewDelegate {
     } else {
       self.dateFormatter.locale = Locale.autoupdatingCurrent
     }
-    self.dateFormatter.dateFormat = Constant.CalendarView.StringLiteral.dateFormat
-  }
-
-  private func calculateHeight(items count: Int) -> CGFloat {
-    let numberOfRows = CGFloat(count / 7)
-    let totalItemHeight = self.collectionViewModel.itemSize.height * numberOfRows
-    let totalInsets = self.collectionViewModel.lineSpacing * (numberOfRows - 1)
-    let collectionViewHeight = totalItemHeight + totalInsets
-    let defaultHeight: CGFloat = Constant.CalendarView.Layout.CollectionView.defaultHeight
-
-    return defaultHeight + collectionViewHeight
   }
 }
 
@@ -248,12 +222,10 @@ extension CalendarViewDelegate: UICollectionViewDelegate {
 
   func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
     self.reloadAllSnapshot()
-    self.scrollSender?.didScroll()
   }
 
   func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
     self.reloadAllSnapshot()
-    self.scrollSender?.didScroll()
   }
 }
 
@@ -276,7 +248,6 @@ extension CalendarViewDelegate {
     self.scrollCalendar(to: scrollDirection, animated: true)
     self.setSelected(to: selectedNewItem)
     self.selectedItem = selectedNewItem
-    self.scrollSender?.didScroll()
   }
 
   private func validateIsSameMonth(selectedItem: CalendarItem, section indexPath: IndexPath) -> ComparisonResult {
