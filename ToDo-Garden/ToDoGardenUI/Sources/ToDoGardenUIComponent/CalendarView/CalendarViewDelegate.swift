@@ -102,7 +102,7 @@ extension CalendarViewDelegate {
   private func loadInitialMonthSnapshot() {
     let snapshot = self.collectionViewDataSource.snapshot()
     let dateRange = (-3...3)
-    guard let newSnapshot = try? self.addMonthData(to: snapshot, wit: dateRange, isAppendFirst: false)
+    guard let newSnapshot = try? self.addMonthData(to: snapshot, with: dateRange, isAppendFirst: false)
     else { return }
 
     self.collectionViewDataSource.apply(newSnapshot)
@@ -151,14 +151,14 @@ extension CalendarViewDelegate {
     let isAppendFirst = self.currentIndexPath.section == 0 ? true : false
     return try self.addMonthData(
       to: snapshot,
-      wit: (1...3),
+      with: (1...3),
       isAppendFirst: isAppendFirst
     )
   }
 
   private func addMonthData(
     to snapshot: NSDiffableDataSourceSnapshot<CalendarSection, CalendarItem>,
-    wit dateRange: ClosedRange<Int>,
+    with dateRange: ClosedRange<Int>,
     isAppendFirst: Bool
   ) throws -> NSDiffableDataSourceSnapshot<CalendarSection, CalendarItem> {
     var newSnapshot = snapshot
