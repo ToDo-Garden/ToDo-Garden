@@ -9,7 +9,7 @@ import UIKit
 
 import ToDoGardenUIConstant
 
-final class CalendarViewDelegate: NSObject {
+class CalendarViewDelegate: NSObject {
   private var calendarDataGenerator: CalendarDataGeneratable
   private var dateFormatter: DateFormatter
 
