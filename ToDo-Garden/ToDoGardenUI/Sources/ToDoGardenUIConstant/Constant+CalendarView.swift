@@ -77,5 +77,4 @@ extension Constant.CalendarView.Model.Primary {
 
 extension Constant.CalendarView.StringLiteral {
   public static let dateFormat = "yyyy년 MMM d"
-  public static let cellIdentifier = "CalendarCollectionViewCell"
 }
