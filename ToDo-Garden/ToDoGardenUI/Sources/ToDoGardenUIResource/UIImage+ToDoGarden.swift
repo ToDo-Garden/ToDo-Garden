@@ -68,4 +68,7 @@ extension UIImage {
   public static let bellIconImage = UIImage(
     resource: .bellIcon
   )
+  public static let editIconImage = UIImage(
+    resource: .editIcon
+  )
 }
