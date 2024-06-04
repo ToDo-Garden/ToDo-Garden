@@ -84,3 +84,10 @@ extension EditToDoSegmentedControl {
     self.selectedSegmentIndex = EditToDoSegmentedControl.EditMode.todo.rawValue
   }
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  return EditToDoSegmentedControl()
+}
+#endif
