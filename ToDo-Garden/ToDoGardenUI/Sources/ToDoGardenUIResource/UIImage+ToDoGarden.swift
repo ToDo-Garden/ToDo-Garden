@@ -65,6 +65,12 @@ extension UIImage {
   public static let ringToggleHighlighted = UIImage(
     resource: .ringToggleHighlighted
   )
+  public static let bellIconImage = UIImage(
+    resource: .bellIcon
+  )
+  public static let editIconImage = UIImage(
+    resource: .editIcon
+  )
   public static let backwardButtonImage = UIImage(
     resource: .backwardButton
   )
