@@ -6,11 +6,13 @@
 //
 
 import class UIKit.UIImpactFeedbackGenerator
+import class UIKit.UINotificationFeedbackGenerator
 import class UIKit.UISelectionFeedbackGenerator
 
 public enum HapticFeedbackType {
   case impact(style: UIImpactFeedbackGenerator.FeedbackStyle)
   case selection
+  case notification(type: UINotificationFeedbackGenerator.FeedbackType)
 }
 
 public protocol HapticFeedbackable {
@@ -30,6 +32,9 @@ extension HapticFeedbackable {
     case HapticFeedbackType.selection:
       let generator = UISelectionFeedbackGenerator()
       generator.selectionChanged()
+    case HapticFeedbackType.notification(let feedbackType):
+      let generator = UINotificationFeedbackGenerator()
+      generator.notificationOccurred(feedbackType)
     }
   }
 }
