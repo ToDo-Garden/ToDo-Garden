@@ -16,22 +16,8 @@ extension CalendarViewDelegate {
     return UICollectionViewDiffableDataSource<
       CalendarSection,
       CalendarItem
-    >(collectionView: collectionView) { (collectionView, indexPath, dayItem) in
-      guard let cell = collectionView.dequeueReusableCell(
-        withReuseIdentifier: CalendarCollectionViewCell.identifier,
-        for: indexPath
-      ) as? CalendarCollectionViewCell
-      else { return UICollectionViewCell() }
-
-      let date = dayItem.date
-      let formattedDateString = dateFormatter.string(from: date).split(separator: " ")
-      guard let dayString = formattedDateString.last
-      else { return cell }
-
-      let isThisMonth = dayItem.isThisMonth
-      cell.update(dayString: String(dayString), isThisMonth: isThisMonth)
-
-      return cell
+    >(collectionView: collectionView) { (_, _, _) in
+      return UICollectionViewCell()
     }
   }
 }
