@@ -10,15 +10,15 @@ import UIKit
 import ToDoGardenUIConstant
 
 public final class CalendarView: UIView {
-  private var model: Model
-  private var calendarViewDelegate: CalendarViewControllable
+  private let model: Model
+  private let calendarViewDelegate: CalendarViewControllable
   private var isLayoutSubviewsCalled: Bool
 
-  private var monthLabel: UILabel
-  private var backButton: UIButton
-  private var forwardButton: UIButton
-  private var weekdaySymbolStackView: UIStackView
-  private var collectionView: UICollectionView
+  private let monthLabel: UILabel
+  private let backButton: UIButton
+  private let forwardButton: UIButton
+  private let weekdaySymbolStackView: UIStackView
+  private let collectionView: UICollectionView
   private var heightConstraint: NSLayoutConstraint
 
   public init(model: Model) {
