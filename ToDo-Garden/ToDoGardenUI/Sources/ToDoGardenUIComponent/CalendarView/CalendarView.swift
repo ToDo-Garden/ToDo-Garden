@@ -15,22 +15,22 @@ public final class CalendarView: UIView {
   private var isLayoutSubviewsCalled: Bool
 
   private let monthLabel: UILabel
-  private let backButton: UIButton
-  private let forwardButton: UIButton
+  private let leftScrollButton: UIButton
+  private let rightScrollButton: UIButton
   private let weekdaySymbolStackView: UIStackView
-  private let collectionView: UICollectionView
+  private let dateCollectionView: UICollectionView
   private var heightConstraint: NSLayoutConstraint
 
   public init(model: Model) {
     self.model = model
     self.isLayoutSubviewsCalled = false
     self.monthLabel = UILabel()
-    self.backButton = UIButton()
-    self.forwardButton = UIButton()
+    self.leftScrollButton = UIButton()
+    self.rightScrollButton = UIButton()
     self.weekdaySymbolStackView = UIStackView()
-    self.collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewLayout())
+    self.dateCollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewLayout())
     self.heightConstraint = NSLayoutConstraint()
-    self.calendarViewDelegate = CalendarViewSingleSelectionDelegate(collectionView: self.collectionView)
+    self.calendarViewDelegate = CalendarViewSingleSelectionDelegate(collectionView: self.dateCollectionView)
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -90,7 +90,7 @@ extension CalendarView {
     self.setupBackButton()
     self.setupForwardButton()
     self.setupWeekdaySymbolStackView()
-    self.setupCollectionView()
+    self.setupDateCollectionView()
     self.addSubviews()
     self.setupSubviewsLayout()
   }
@@ -107,21 +107,21 @@ extension CalendarView {
   }
 
   private func setupBackButton() {
-    self.backButton.setImage(UIImage.backwardButtonImage, for: UIControl.State.normal)
+    self.leftScrollButton.setImage(UIImage.backwardButtonImage, for: UIControl.State.normal)
 
     let action = UIAction { [weak self] _ in
       self?.calendarViewDelegate.scrollCalendar(to: CalendarScrollDirection.left, animated: true)
     }
-    self.backButton.addAction(action, for: UIControl.Event.touchUpInside)
+    self.leftScrollButton.addAction(action, for: UIControl.Event.touchUpInside)
   }
 
   private func setupForwardButton() {
-    self.forwardButton.setImage(UIImage.forwardButtonImage, for: UIControl.State.normal)
+    self.rightScrollButton.setImage(UIImage.forwardButtonImage, for: UIControl.State.normal)
 
     let action = UIAction { [weak self] _ in
       self?.calendarViewDelegate.scrollCalendar(to: CalendarScrollDirection.right, animated: true)
     }
-    self.forwardButton.addAction(action, for: UIControl.Event.touchUpInside)
+    self.rightScrollButton.addAction(action, for: UIControl.Event.touchUpInside)
   }
 
   private func setupWeekdaySymbolStackView() {
@@ -136,9 +136,9 @@ extension CalendarView {
     }
   }
 
-  private func setupCollectionView() {
-    self.configureCollectionView(self.collectionView)
-    self.collectionView.collectionViewLayout = self.makeCollectionViewLayout(with: self.model.collectionView)
+  private func setupDateCollectionView() {
+    self.configureCollectionView(self.dateCollectionView)
+    self.dateCollectionView.collectionViewLayout = self.makeCollectionViewLayout(with: self.model.collectionView)
   }
 }
 
@@ -147,10 +147,10 @@ extension CalendarView {
 extension CalendarView {
   private func addSubviews() {
     self.addSubview(self.monthLabel)
-    self.addSubview(self.backButton)
-    self.addSubview(self.forwardButton)
+    self.addSubview(self.leftScrollButton)
+    self.addSubview(self.rightScrollButton)
     self.addSubview(self.weekdaySymbolStackView)
-    self.addSubview(self.collectionView)
+    self.addSubview(self.dateCollectionView)
   }
 
   private func setupSubviewsLayout() {
@@ -175,25 +175,25 @@ extension CalendarView {
           equalTo: self.leadingAnchor,
           constant: Constant.CalendarView.Layout.MonthLabel.leadingMargin
         ),
-        self.monthLabel.trailingAnchor.constraint(lessThanOrEqualTo: self.backButton.leadingAnchor)
+        self.monthLabel.trailingAnchor.constraint(lessThanOrEqualTo: self.leftScrollButton.leadingAnchor)
       ]
     )
   }
 
   private func setupBackButtonLayout() {
-    self.backButton.usingAutolayout()
+    self.leftScrollButton.usingAutolayout()
 
     NSLayoutConstraint.activate(
       [
-        self.backButton.trailingAnchor.constraint(
-          equalTo: self.forwardButton.leadingAnchor,
+        self.leftScrollButton.trailingAnchor.constraint(
+          equalTo: self.rightScrollButton.leadingAnchor,
           constant: -Constant.CalendarView.Layout.BackButton.trailingMargin
         ),
-        self.backButton.centerYAnchor.constraint(equalTo: self.monthLabel.centerYAnchor),
-        self.backButton.widthAnchor.constraint(
+        self.leftScrollButton.centerYAnchor.constraint(equalTo: self.monthLabel.centerYAnchor),
+        self.leftScrollButton.widthAnchor.constraint(
           equalToConstant: Constant.CalendarView.Layout.BackButton.widthMargin
         ),
-        self.backButton.heightAnchor.constraint(
+        self.leftScrollButton.heightAnchor.constraint(
           equalToConstant: Constant.CalendarView.Layout.BackButton.heightMargin
         )
       ]
@@ -201,19 +201,19 @@ extension CalendarView {
   }
 
   private func setupForwardButtonLayout() {
-    self.forwardButton.usingAutolayout()
+    self.rightScrollButton.usingAutolayout()
 
     NSLayoutConstraint.activate(
       [
-        self.forwardButton.centerYAnchor.constraint(equalTo: self.monthLabel.centerYAnchor),
-        self.forwardButton.trailingAnchor.constraint(
+        self.rightScrollButton.centerYAnchor.constraint(equalTo: self.monthLabel.centerYAnchor),
+        self.rightScrollButton.trailingAnchor.constraint(
           equalTo: self.trailingAnchor,
           constant: -Constant.CalendarView.Layout.ForwardButton.trailingMargin
         ),
-        self.forwardButton.widthAnchor.constraint(
+        self.rightScrollButton.widthAnchor.constraint(
           equalToConstant: Constant.CalendarView.Layout.ForwardButton.widthMargin
         ),
-        self.forwardButton.heightAnchor.constraint(
+        self.rightScrollButton.heightAnchor.constraint(
           equalToConstant: Constant.CalendarView.Layout.ForwardButton.heightMargin
         )
       ]
@@ -245,23 +245,23 @@ extension CalendarView {
   }
 
   private func setupCollectionViewLayout() {
-    self.collectionView.usingAutolayout()
+    self.dateCollectionView.usingAutolayout()
 
     NSLayoutConstraint.activate(
       [
-        self.collectionView.topAnchor.constraint(
+        self.dateCollectionView.topAnchor.constraint(
           equalTo: self.weekdaySymbolStackView.bottomAnchor,
           constant: Constant.CalendarView.Layout.CollectionView.topMargin
         ),
-        self.collectionView.leadingAnchor.constraint(
+        self.dateCollectionView.leadingAnchor.constraint(
           equalTo: self.leadingAnchor,
           constant: Constant.CalendarView.Layout.CollectionView.leadingMargin
         ),
-        self.collectionView.trailingAnchor.constraint(
+        self.dateCollectionView.trailingAnchor.constraint(
           equalTo: self.trailingAnchor,
           constant: -Constant.CalendarView.Layout.CollectionView.trailingMargin
         ),
-        self.collectionView.bottomAnchor.constraint(
+        self.dateCollectionView.bottomAnchor.constraint(
           equalTo: self.bottomAnchor,
           constant: -Constant.CalendarView.Layout.CollectionView.bottomMargin
         )
