@@ -11,7 +11,7 @@ import ToDoGardenUIConstant
 
 public final class CalendarView: UIView {
   private var model: Model
-  private var calendarViewDelegate: CalendarViewDelegate
+  private var calendarViewDelegate: CalendarViewControllable
   private var isLayoutSubviewsCalled: Bool
 
   private var monthLabel: UILabel
@@ -23,10 +23,6 @@ public final class CalendarView: UIView {
 
   public init(model: Model) {
     self.model = model
-    self.calendarViewDelegate = CalendarViewDelegate(
-      collectionView: self.collectionView,
-      collectionViewModel: self.model.collectionView
-    )
     self.isLayoutSubviewsCalled = false
     self.monthLabel = UILabel()
     self.backButton = UIButton()
@@ -34,6 +30,7 @@ public final class CalendarView: UIView {
     self.weekdaySymbolStackView = UIStackView()
     self.collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewLayout())
     self.heightConstraint = NSLayoutConstraint()
+    self.calendarViewDelegate = CalendarViewSingleSelectionDelegate(collectionView: self.collectionView)
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -54,7 +51,6 @@ public final class CalendarView: UIView {
 extension CalendarView {
   private func setup() {
     self.setupUI()
-    self.calendarViewDelegate.calendarScrollSender = self
   }
 
   private func scrollToCurrentMonth() {
@@ -76,17 +72,7 @@ protocol CalendarScrollSendable {
 
 extension CalendarView: CalendarScrollSendable {
   func didScrolled() {
-    self.updateCollectionViewHeight()
     self.updateMonthLabelText()
-  }
-
-  private func updateCollectionViewHeight() {
-    let duration = Constant.CalendarView.Animation.duration
-    UIView.animate(withDuration: duration) {
-      let collectionViewHeight = self.calendarViewDelegate.getCollectionViewHeight()
-      self.heightConstraint.constant = collectionViewHeight
-      self.layoutIfNeeded()
-    }
   }
 
   private func updateMonthLabelText() {
@@ -152,7 +138,6 @@ extension CalendarView {
 
   private func setupCollectionView() {
     self.configureCollectionView(self.collectionView)
-    self.collectionView.delegate = self.calendarViewDelegate
     self.collectionView.collectionViewLayout = self.makeCollectionViewLayout(with: self.model.collectionView)
   }
 }
@@ -240,7 +225,7 @@ extension CalendarView {
 
     let topConstraint = self.weekdaySymbolStackView.topAnchor.constraint(
       equalTo: self.monthLabel.bottomAnchor,
-      constant: Constant.CalendarView.Layout.StackView.topMargin
+      constant: Constant.CalendarView.Layout.WeekdaySymbolStackView.topMargin
     )
     topConstraint.priority = UILayoutPriority.defaultLow
     topConstraint.isActive = true
@@ -249,11 +234,11 @@ extension CalendarView {
       [
         self.weekdaySymbolStackView.leadingAnchor.constraint(
           equalTo: self.leadingAnchor,
-          constant: Constant.CalendarView.Layout.StackView.leadingMargin
+          constant: Constant.CalendarView.Layout.WeekdaySymbolStackView.leadingMargin
         ),
         self.weekdaySymbolStackView.trailingAnchor.constraint(
           equalTo: self.trailingAnchor,
-          constant: -Constant.CalendarView.Layout.StackView.trailingMargin
+          constant: -Constant.CalendarView.Layout.WeekdaySymbolStackView.trailingMargin
         )
       ]
     )
@@ -299,12 +284,12 @@ extension CalendarView {
     let collectionView: Model.CollectionView
 
     public static let primary = Self(
-      borderWidth: Constant.CalendarView.Layout.Primary.borderWidth,
-      cornerRadius: Constant.CalendarView.Layout.Primary.cornerRadius,
+      borderWidth: Constant.CalendarView.Model.Primary.borderWidth,
+      cornerRadius: Constant.CalendarView.Model.Primary.cornerRadius,
       collectionView: CollectionView(
-        itemSize: Constant.CalendarView.Layout.Primary.itemSize,
-        itemSpacing: Constant.CalendarView.Layout.Primary.itemSpacing,
-        lineSpacing: Constant.CalendarView.Layout.Primary.lineSpacing
+        itemSize: Constant.CalendarView.Model.Primary.itemSize,
+        itemSpacing: Constant.CalendarView.Model.Primary.itemSpacing,
+        lineSpacing: Constant.CalendarView.Model.Primary.lineSpacing
       )
     )
   }
@@ -321,8 +306,8 @@ extension CalendarView.Model {
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  var calendarView = CalendarView(model: .primary)
-  calendarView.widthAnchor.constraint(equalTo: 323).isActive = true
+  let calendarView = CalendarView(model: .primary)
+  calendarView.widthAnchor.constraint(equalToConstant: 323).isActive = true
   return calendarView
 }
 #endif
