@@ -10,3 +10,12 @@ import class UIKit.UIImpactFeedbackGenerator
 public protocol HapticFeedbackable {
   func triggerHapticFeedback(style: UIImpactFeedbackGenerator.FeedbackStyle)
 }
+
+extension HapticFeedbackable {
+  public func triggerHapticFeedback(
+    style: UIImpactFeedbackGenerator.FeedbackStyle = UIImpactFeedbackGenerator.FeedbackStyle.medium
+  ) {
+    let generator = UIImpactFeedbackGenerator(style: style)
+    generator.impactOccurred()
+  }
+}
