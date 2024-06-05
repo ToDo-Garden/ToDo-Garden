@@ -7,16 +7,20 @@
 
 import UIKit
 
+import ToDoGardenUIAPI
 import ToDoGardenUIConstant
 
 public final class ToDoGardenAlertController: UIViewController {
+
+  private var _delegate: ToDoGardenAlertControllerDelegate?
+  
   private var alertView: ToDoGardenAlertView
   
   public init(for alertType: ToDoGardenAlertView.Configuration) {
     self.alertView = ToDoGardenAlertView(configuration: alertType)
     super.init(nibName: nil, bundle: nil)
-    self.alertView.delegate = self
     self.modalPresentationStyle = UIModalPresentationStyle.overFullScreen
+    self.setButtonAction()
   }
   
   @available(*, unavailable)
@@ -27,7 +31,6 @@ public final class ToDoGardenAlertController: UIViewController {
   public override func viewDidLoad() {
     super.viewDidLoad()
     self.view.backgroundColor = UIColor.toDoGardenBlack.withAlphaComponent(0.2)
-    // TODO: - Constant 논의 이후 변경예정
     self.layout()
   }
   
@@ -41,42 +44,33 @@ public final class ToDoGardenAlertController: UIViewController {
       ]
     )
   }
-}
-
-extension ToDoGardenAlertController: ToDoGardenAlertViewDelegate {
-  public func didTapCancel() {
-    print("취소 버튼 실행할 코드")
+  
+  private func setButtonAction() {
+    self.alertView.buttonActionHandler = { [weak self] actionType in
+      self?.handleButtonAction(actionType)
+    }
   }
   
-  public func didTapDelete() {
-    print("삭제 버튼 실행할 코드")
-  }
-  
-  public func didTapLogout() {
-    print("로그아웃 버튼 실행할 코드")
-  }
-  
-  public func didTapGoHome() {
-    print("홈으로 버튼 실행할 코드")
-  }
-  
-  public func didTapUnsubscribe() {
-    print("탈퇴하기 버튼 실행할 코드")
-  }
-  
-  public func didTapKeepConcentration() {
-    print("집중하기 버튼 실행할 코드")
-  }
-  
-  public func didTapStopConcentration() {
-    print("그만하기 버튼 실행할 코드")
+  private func handleButtonAction(_ actionType: Constant.ToDoGardenAlertView.Content.ButtonActionType) {
+    self._delegate?.handleButtonAction(actionType)
   }
 }
 
-// #if DEBUG
-// @available(iOS 17.0, *)
-// #Preview {
-//   let view = ToDoGardenAlertController(for: .askToDeleteGroup)
-//   return view
-// }
-// #endif
+extension ToDoGardenAlertController: ToDoGardenAlertViewControllable {
+  public var delegate: ToDoGardenAlertControllerDelegate? {
+    get {
+      return self._delegate
+    }
+    set(newValue) {
+      self._delegate = newValue
+    }
+  }
+}
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let view = ToDoGardenAlertController(for: .welldone)
+  return view
+}
+#endif

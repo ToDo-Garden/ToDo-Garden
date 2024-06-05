@@ -10,8 +10,9 @@ import UIKit
 import ToDoGardenUIConstant
 
 final public class ToDoGardenAlertView: UIView {
-  var delegate: ToDoGardenAlertViewDelegate?
   private var configuration: Configuration
+  
+  var buttonActionHandler: ((Constant.ToDoGardenAlertView.Content.ButtonActionType) -> Void)?
   
   init(configuration: Configuration) {
     self.configuration = configuration
@@ -236,22 +237,8 @@ extension ToDoGardenAlertView {
   }
   
   private func buttonTouched(at index: Int) {
-    switch self.configuration.contents.buttons[index].buttonActionType {
-    case .cancel:
-      self.delegate?.didTapCancel()
-    case .keepConcentration:
-      self.delegate?.didTapKeepConcentration()
-    case .goHome:
-      self.delegate?.didTapGoHome()
-    case .delete:
-      self.delegate?.didTapDelete()
-    case .unsubscribe:
-      self.delegate?.didTapUnsubscribe()
-    case .logout:
-      self.delegate?.didTapLogout()
-    case .stopConcentration:
-      self.delegate?.didTapStopConcentration()
-    }
+    let buttonActionType = self.configuration.contents.buttons[index].buttonActionType
+    self.buttonActionHandler?(buttonActionType)
   }
 }
 
