@@ -126,8 +126,4 @@ extension CalendarCollectionViewCell {
   }
 }
 
-// MARK: Cell Identifier
-
-extension CalendarCollectionViewCell: ReusableIdentifier {
-  static var identifier = Constant.CalendarView.StringLiteral.cellIdentifier
-}
+extension CalendarCollectionViewCell: ReusableIdentifier {}
