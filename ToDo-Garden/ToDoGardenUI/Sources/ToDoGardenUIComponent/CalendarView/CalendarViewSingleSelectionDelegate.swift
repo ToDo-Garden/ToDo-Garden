@@ -9,6 +9,12 @@ import UIKit
 
 import ToDoGardenUIConstant
 
+protocol CalendarViewControllable where Self: NSObject {
+  func fetchWeekdaySymbols() -> [String]
+  func scrollCalendar(to scrollDirection: CalendarScrollDirection, animated: Bool)
+  func getDateString() -> String
+}
+
 class CalendarViewSingleSelectionDelegate: NSObject {
   private var calendarDataGenerator: CalendarDataGeneratable
   private var dateFormatter: DateFormatter
@@ -30,7 +36,11 @@ class CalendarViewSingleSelectionDelegate: NSObject {
     self.setupCollectionViewDataSource()
     self.loadInitialMonthSnapshot()
   }
+}
 
+// MARK: CalendarViewControllable Protocol
+
+extension CalendarViewSingleSelectionDelegate: CalendarViewControllable {
   func fetchWeekdaySymbols() -> [String] {
     return self.calendarDataGenerator.fetchWeekdaySymbols()
   }
@@ -53,6 +63,8 @@ class CalendarViewSingleSelectionDelegate: NSObject {
     return String(dateString)
   }
 }
+
+// MARK: Private Functions
 
 extension CalendarViewSingleSelectionDelegate {
   private func setupDateFormatter() {
