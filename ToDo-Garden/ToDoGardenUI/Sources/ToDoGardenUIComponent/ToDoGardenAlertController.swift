@@ -7,10 +7,13 @@
 
 import UIKit
 
+import ToDoGardenUIAPI
 import ToDoGardenUIConstant
 
 public final class ToDoGardenAlertController: UIViewController {
-  public var delegate: ToDoGardenAlertControllerDelegate?
+
+  private var _delegate: ToDoGardenAlertControllerDelegate?
+  
   private var alertView: ToDoGardenAlertView
   
   public init(for alertType: ToDoGardenAlertView.Configuration) {
@@ -49,14 +52,25 @@ public final class ToDoGardenAlertController: UIViewController {
   }
   
   private func handleButtonAction(_ actionType: Constant.ToDoGardenAlertView.Content.ButtonActionType) {
-    delegate?.handleButtonAction(actionType)
+    self._delegate?.handleButtonAction(actionType)
   }
 }
 
-// #if DEBUG
-// @available(iOS 17.0, *)
-// #Preview {
-//   let view = ToDoGardenAlertController(for: .askToDeleteGroup)
-//   return view
-// }
-// #endif
+extension ToDoGardenAlertController: ToDoGardenAlertViewControllable {
+  public var delegate: ToDoGardenAlertControllerDelegate? {
+    get {
+      return self._delegate
+    }
+    set(newValue) {
+      self._delegate = newValue
+    }
+  }
+}
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let view = ToDoGardenAlertController(for: .welldone)
+  return view
+}
+#endif
