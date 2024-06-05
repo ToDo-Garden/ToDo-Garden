@@ -6,16 +6,30 @@
 //
 
 import class UIKit.UIImpactFeedbackGenerator
+import class UIKit.UISelectionFeedbackGenerator
+
+public enum HapticFeedbackType {
+  case impact(style: UIImpactFeedbackGenerator.FeedbackStyle)
+  case selection
+}
 
 public protocol HapticFeedbackable {
-  func triggerHapticFeedback(style: UIImpactFeedbackGenerator.FeedbackStyle)
+  func triggerHapticFeedback(type: HapticFeedbackType)
 }
 
 extension HapticFeedbackable {
   public func triggerHapticFeedback(
-    style: UIImpactFeedbackGenerator.FeedbackStyle = UIImpactFeedbackGenerator.FeedbackStyle.medium
+    type: HapticFeedbackType = HapticFeedbackType.impact(
+      style: UIImpactFeedbackGenerator.FeedbackStyle.medium
+    )
   ) {
-    let generator = UIImpactFeedbackGenerator(style: style)
-    generator.impactOccurred()
+    switch type {
+    case HapticFeedbackType.impact(let style):
+      let generator = UIImpactFeedbackGenerator(style: style)
+      generator.impactOccurred()
+    case HapticFeedbackType.selection:
+      let generator = UISelectionFeedbackGenerator()
+      generator.selectionChanged()
+    }
   }
 }
