@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension CalendarViewDelegate {
+extension CalendarViewSingleSelectionDelegate {
   func makeDiffableDataSource(
     _ collectionView: UICollectionView,
     with dateFormatter: DateFormatter

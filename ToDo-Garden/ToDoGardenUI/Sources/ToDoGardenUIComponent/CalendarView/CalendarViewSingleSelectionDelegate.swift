@@ -9,7 +9,7 @@ import UIKit
 
 import ToDoGardenUIConstant
 
-class CalendarViewDelegate: NSObject {
+class CalendarViewSingleSelectionDelegate: NSObject {
   private var calendarDataGenerator: CalendarDataGeneratable
   private var dateFormatter: DateFormatter
 
@@ -54,7 +54,7 @@ class CalendarViewDelegate: NSObject {
   }
 }
 
-extension CalendarViewDelegate {
+extension CalendarViewSingleSelectionDelegate {
   private func setupDateFormatter() {
     if let userPreferredIdentifier = Locale.preferredLanguages.first {
       let userLocale = Locale(identifier: userPreferredIdentifier)
@@ -67,7 +67,7 @@ extension CalendarViewDelegate {
 
 // MARK: Diffable DataSource
 
-extension CalendarViewDelegate {
+extension CalendarViewSingleSelectionDelegate {
   private func setupCollectionViewDataSource() {
     self.collectionViewDataSource = self.makeDiffableDataSource(self.collectionView, with: self.dateFormatter)
     self.collectionView.dataSource = self.collectionViewDataSource
@@ -176,7 +176,7 @@ extension CalendarViewDelegate {
 
 // MARK: UIScrollView Deleagate Functions
 
-extension CalendarViewDelegate: UICollectionViewDelegate {
+extension CalendarViewSingleSelectionDelegate: UICollectionViewDelegate {
   func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
     self.initialContentOffset = scrollView.contentOffset
   }
@@ -231,7 +231,7 @@ extension CalendarViewDelegate: UICollectionViewDelegate {
 
 // MARK: Cell Selection Functions
 
-extension CalendarViewDelegate {
+extension CalendarViewSingleSelectionDelegate {
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     guard let selectedNewItem = self.collectionViewDataSource.itemIdentifier(for: indexPath)
     else { return }
