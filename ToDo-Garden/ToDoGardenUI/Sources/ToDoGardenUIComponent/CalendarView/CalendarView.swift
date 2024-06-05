@@ -67,11 +67,11 @@ extension CalendarView {
 // MARK: ScrollDirection Sender Delegate
 
 protocol CalendarScrollSendable {
-  func didScrolled()
+  func didScroll()
 }
 
 extension CalendarView: CalendarScrollSendable {
-  func didScrolled() {
+  func didScroll() {
     self.updateMonthLabelText()
   }
 
