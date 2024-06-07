@@ -16,6 +16,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 		didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
 	) -> Bool {
 		self.registerCustomFonts()
+    self.updateNavigationBarApperance()
 		return true
 	}
 }
@@ -24,4 +25,8 @@ extension AppDelegate {
 	private func registerCustomFonts() {
 		PretendardFont.register()
 	}
+}
+
+extension AppDelegate {
+  private func updateNavigationBarApperance() {}
 }
