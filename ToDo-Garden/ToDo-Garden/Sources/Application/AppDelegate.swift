@@ -28,5 +28,14 @@ extension AppDelegate {
 }
 
 extension AppDelegate {
-  private func updateNavigationBarApperance() {}
+  private func updateNavigationBarApperance() {
+    self.updateNavigationBarTitle()
+  }
+
+  private func updateNavigationBarTitle() {
+    UINavigationBar.appearance().titleTextAttributes = [
+      NSAttributedString.Key.foregroundColor: UIColor.toDoGardenGreenDark,
+      NSAttributedString.Key.font: UIFont.pretendardHeadBold
+    ]
+  }
 }
