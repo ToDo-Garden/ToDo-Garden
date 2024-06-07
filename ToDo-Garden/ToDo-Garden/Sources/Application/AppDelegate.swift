@@ -30,6 +30,7 @@ extension AppDelegate {
 extension AppDelegate {
   private func updateNavigationBarApperance() {
     self.updateNavigationBarTitle()
+    self.updateNavigationBackButtonItem()
   }
 
   private func updateNavigationBarTitle() {
@@ -37,5 +38,16 @@ extension AppDelegate {
       NSAttributedString.Key.foregroundColor: UIColor.toDoGardenGreenDark,
       NSAttributedString.Key.font: UIFont.pretendardHeadBold
     ]
+  }
+
+  private func updateNavigationBackButtonItem() {
+    UIBarButtonItem.appearance().setBackButtonBackgroundImage(
+      UIImage.backwardButtonImage,
+      for: UIControl.State.normal,
+      barMetrics: UIBarMetrics.default
+    )
+
+    UINavigationBar.appearance().backIndicatorImage = UIImage()
+    UINavigationBar.appearance().backIndicatorTransitionMaskImage = UIImage()
   }
 }
