@@ -266,10 +266,7 @@ extension CalendarViewSingleSelectionDelegate {
     guard let date = self.collectionViewDataSource.sectionIdentifier(for: indexPath.section)?.firstDay
     else { return ComparisonResult.orderedSame }
 
-    return self.calendarDataGenerator.compareMonth(
-      date1: selectedItem.date,
-      with: date
-    )
+    return self.calendarDataGenerator.compareMonth(from: selectedItem.date, with: date)
   }
 
   private func setSelected(to item: CalendarItem) {
