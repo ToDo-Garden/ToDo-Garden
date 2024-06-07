@@ -10,7 +10,7 @@ import Foundation
 protocol CalendarDataGeneratable {
   func fetchWeekdaySymbols() -> [String]
   func fetchMonthData(from date: Date, add value: Int) throws -> MonthData
-  func compareMonth(date1: Date, with date2: Date) -> ComparisonResult
+  func compareMonth(from date: Date, with another: Date) -> ComparisonResult
 }
 
 final class CalendarDataGenerator: CalendarDataGeneratable {
@@ -31,17 +31,17 @@ final class CalendarDataGenerator: CalendarDataGeneratable {
       to: date
     )
     else { throw CalendarDataError.invalidInput }
-
+    
     let firstDayOfMonth = self.calendar.firstDayOfMonth(from: monthToFetch)
     let dates = try self.monthDays(from: firstDayOfMonth)
     
     return MonthData(firstDayOfMonth: firstDayOfMonth, dates: dates)
   }
   
-  func compareMonth(date1: Date, with date2: Date) -> ComparisonResult {
+  func compareMonth(from date: Date, with another: Date) -> ComparisonResult {
     let comparisonResult = self.calendar.compare(
-      date1,
-      to: date2,
+      date,
+      to: another,
       toGranularity: Calendar.Component.month
     )
     
@@ -56,7 +56,8 @@ extension CalendarDataGenerator {
     let totalMonthDays = try MonthPosition.allCases
       .map { position in
         let params = try position.monthDayParams(day, calendar: self.calendar)
-        return self.getMonthDataDays(for: params.range, from: params.firstDay)
+        let isThisMonth = position == MonthPosition.current
+        return self.getMonthDataDays(for: params.range, from: params.firstDay, isThisMonth: isThisMonth)
       }
       .reduce(into: [MonthData.Day](), +=)
     let dayCountOfWeek = self.calendar.shortWeekdaySymbols.count
@@ -68,7 +69,8 @@ extension CalendarDataGenerator {
   
   private func getMonthDataDays(
     for dateRange: Range<Int>,
-    from firstDay: Date
+    from firstDay: Date,
+    isThisMonth: Bool
   ) -> [MonthData.Day] {
     return dateRange.map { value in
       let dayOfNextMonth = self.calendar.date(
@@ -77,7 +79,7 @@ extension CalendarDataGenerator {
         to: firstDay
       ) ?? Date()
       
-      return MonthData.Day(date: dayOfNextMonth, isThisMonth: false)
+      return MonthData.Day(date: dayOfNextMonth, isThisMonth: isThisMonth)
     }
   }
 }
