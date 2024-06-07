@@ -56,7 +56,7 @@ extension CalendarDataGenerator {
     let totalMonthDays = try MonthPosition.allCases
       .map { position in
         let params = try position.monthDayParams(day, calendar: self.calendar)
-        let isThisMonth = position == MonthPosition.current ? true : false
+        let isThisMonth = position == MonthPosition.current
         return self.getMonthDataDays(for: params.range, from: params.firstDay, isThisMonth: isThisMonth)
       }
       .reduce(into: [MonthData.Day](), +=)
