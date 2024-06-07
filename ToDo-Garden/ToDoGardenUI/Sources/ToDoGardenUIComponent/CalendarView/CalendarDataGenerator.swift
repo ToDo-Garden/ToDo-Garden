@@ -10,7 +10,7 @@ import Foundation
 protocol CalendarDataGeneratable {
   func fetchWeekdaySymbols() -> [String]
   func fetchMonthData(from date: Date, add value: Int) throws -> MonthData
-  func compareMonth(date1: Date, with date2: Date) -> ComparisonResult
+  func compareMonth(from date: Date, with another: Date) -> ComparisonResult
 }
 
 final class CalendarDataGenerator: CalendarDataGeneratable {
@@ -31,17 +31,17 @@ final class CalendarDataGenerator: CalendarDataGeneratable {
       to: date
     )
     else { throw CalendarDataError.invalidInput }
-
+    
     let firstDayOfMonth = self.calendar.firstDayOfMonth(from: monthToFetch)
     let dates = try self.monthDays(from: firstDayOfMonth)
     
     return MonthData(firstDayOfMonth: firstDayOfMonth, dates: dates)
   }
   
-  func compareMonth(date1: Date, with date2: Date) -> ComparisonResult {
+  func compareMonth(from date: Date, with another: Date) -> ComparisonResult {
     let comparisonResult = self.calendar.compare(
-      date1,
-      to: date2,
+      date,
+      to: another,
       toGranularity: Calendar.Component.month
     )
     
