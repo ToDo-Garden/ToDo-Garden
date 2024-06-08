@@ -21,7 +21,7 @@ public final class RepeatOtherDaysView: ToDoRepeatSelectionView {
   
   override var isSelected: Bool {
     willSet {
-      viewModel.isSelected.value = newValue
+      self.viewModel.isSelected.value = newValue
     }
   }
   
