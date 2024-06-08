@@ -13,7 +13,7 @@ import ToDoGardenUIResource
 public final class RepeatOtherDaysView: ToDoRepeatSelectionView {
   public let ringToggleButton: UIButton
   public let dateButtonSet: DateButtonSet
-  private let divider: UIView
+  private let dividerView: UIView
   private let innerStackView: UIStackView
   
   private var heightConstraints: [NSLayoutConstraint]
@@ -30,7 +30,7 @@ public final class RepeatOtherDaysView: ToDoRepeatSelectionView {
     self.heightConstraints = []
     self.ringToggleButton = UIButton()
     self.innerStackView = UIStackView()
-    self.divider = UIView()
+    self.dividerView = UIView()
     self.dateButtonSet = DateButtonSet()
     super.init(model: ToDoRepeatSelectionView.Model.anotherDay)
     self.setup()
@@ -127,16 +127,16 @@ extension RepeatOtherDaysView {
   }
   
   private func buildDivider() {
-    self.divider.backgroundColor = UIColor.toDoGardenGreenGray
-    self.divider.usingAutolayout()
-    self.addSubview(self.divider)
+    self.dividerView.backgroundColor = UIColor.toDoGardenGreenGray
+    self.dividerView.usingAutolayout()
+    self.addSubview(self.dividerView)
     let constants = Constant.RepeatOtherDaysView.Layout.self
     NSLayoutConstraint.activate(
       [
-        self.divider.widthAnchor.constraint(equalToConstant: constants.Divider.width),
-        self.divider.heightAnchor.constraint(equalToConstant: constants.Divider.height),
-        self.divider.topAnchor.constraint(equalTo: self.topAnchor, constant: constants.CommonMargin.broad),
-        self.divider.centerXAnchor.constraint(equalTo: self.centerXAnchor)
+        self.dividerView.widthAnchor.constraint(equalToConstant: constants.Divider.width),
+        self.dividerView.heightAnchor.constraint(equalToConstant: constants.Divider.height),
+        self.dividerView.topAnchor.constraint(equalTo: self.topAnchor, constant: constants.CommonMargin.broad),
+        self.dividerView.centerXAnchor.constraint(equalTo: self.centerXAnchor)
       ]
     )
     self.innerStackView.addSpacing(constants.CommonMargin.narrow)
@@ -228,7 +228,7 @@ extension RepeatOtherDaysView {
   
   private func bindVisibilityStates() {
     self.viewModel.divider.isHidden.bind { [weak self] isHidden in
-      self?.divider.isHidden = isHidden
+      self?.dividerView.isHidden = isHidden
     }
     
     self.viewModel.innerStackView.isHidden.bind { [weak self] isHidden in
@@ -256,7 +256,7 @@ extension RepeatOtherDaysView {
 // MARK: - About Updating states
 extension RepeatOtherDaysView {
   private func updateUI() {
-    self.divider.isHidden = self.viewModel.divider.isHidden.value
+    self.dividerView.isHidden = self.viewModel.divider.isHidden.value
     self.innerStackView.isHidden = self.viewModel.innerStackView.isHidden.value
     self.updateRepeatOtherDaysViewHeightConstraint(to: self.viewModel.height.value)
     self.updateTitleConstraint(to: self.viewModel.title.topMargin.value)
@@ -305,14 +305,14 @@ extension RepeatOtherDaysView {
     self.animateLayout()
     UIView.animate(withDuration: Constant.RepeatOtherDaysView.AboutAnimation.duration) {
       self.innerStackView.alpha = Constant.RepeatOtherDaysView.AboutAnimation.alphaAppear
-      self.divider.alpha = Constant.RepeatOtherDaysView.AboutAnimation.alphaAppear
+      self.dividerView.alpha = Constant.RepeatOtherDaysView.AboutAnimation.alphaAppear
     }
   }
   
   private func animateDisappear() {
     UIView.animate(withDuration: Constant.RepeatOtherDaysView.AboutAnimation.duration) {
       self.innerStackView.alpha = Constant.RepeatOtherDaysView.AboutAnimation.alphaDisappear
-      self.divider.alpha = Constant.RepeatOtherDaysView.AboutAnimation.alphaDisappear
+      self.dividerView.alpha = Constant.RepeatOtherDaysView.AboutAnimation.alphaDisappear
     } completion: { _ in
       Task {
         try await Task.sleep(nanoseconds: Constant.RepeatOtherDaysView.AboutAnimation.delay)
