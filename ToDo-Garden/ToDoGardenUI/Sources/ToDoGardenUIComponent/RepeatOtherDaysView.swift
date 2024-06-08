@@ -87,15 +87,18 @@ extension RepeatOtherDaysView {
   }
   
   private func setupButtonActions() {
-    self.ringToggleButton.addAction(UIAction { [weak self] _ in
+    let ringToggleAction = UIAction { [weak self] _ in
       self?.viewModel.ringToggleButtonTapped()
       self?.updateBackgroundColor()
-    }, for: UIControl.Event.touchUpInside)
+    }
     
-    self.dateButtonSet.addAction(UIAction { [weak self] _ in
+    let dateButtonAction = UIAction { [weak self] _ in
       self?.viewModel.dateButtonSetTapped()
       self?.updateBackgroundColor()
-    }, for: UIControl.Event.touchUpInside)
+    }
+    
+    self.ringToggleButton.addAction(ringToggleAction, for: UIControl.Event.touchUpInside)
+    self.dateButtonSet.addAction(dateButtonAction, for: UIControl.Event.touchUpInside)
   }
 }
 
