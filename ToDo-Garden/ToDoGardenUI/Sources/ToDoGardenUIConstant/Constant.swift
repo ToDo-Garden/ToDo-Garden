@@ -26,4 +26,5 @@ public enum Constant {
   public enum TimerProgressView {}
   public enum RepeatOtherDaysView {}
   public enum CalendarView {}
+  public enum ToDoGardenSwitch {}
 }
