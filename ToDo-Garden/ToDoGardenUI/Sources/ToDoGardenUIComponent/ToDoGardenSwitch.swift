@@ -69,3 +69,12 @@ extension ToDoGardenSwitch {
     public static let primary = Self(thumbScale: Constant.ToDoGardenSwitch.Layout.thumbScale)
   }
 }
+
+// MARK: Preview
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  return ToDoGardenSwitch(model: .primary)
+}
+#endif
