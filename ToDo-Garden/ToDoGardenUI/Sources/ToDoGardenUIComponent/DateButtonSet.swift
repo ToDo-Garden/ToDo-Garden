@@ -154,19 +154,6 @@ extension DateButtonSet {
   }
   
   private func buttonTapped(_ sender: UIButton) {
-    if sender.isSelected {
-      self.isSelected = true
-    } else {
-      let isAllSelected = 
-      self.startDateButton.isSelected &&
-      self.startLabelButton.isSelected &&
-      self.endDateButton.isSelected &&
-      self.endLabelButton.isSelected
-      
-      if !isAllSelected {
-        self.isSelected = false
-      }
-    }
     self.sendActions(for: UIControl.Event.touchUpInside)
   }
   
