@@ -93,7 +93,7 @@ extension RepeatOtherDaysViewModel {
 extension RepeatOtherDaysViewModel {
   private static func currentDateString() -> String {
     let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "yyyy.MM.dd"
+    dateFormatter.dateFormat = Constant.RepeatOtherDaysView.StringLiteral.dateFormat
     return dateFormatter.string(from: Date())
   }
   

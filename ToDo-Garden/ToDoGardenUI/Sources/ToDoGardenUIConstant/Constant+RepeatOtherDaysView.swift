@@ -51,4 +51,5 @@ extension Constant.RepeatOtherDaysView.AboutAnimation {
 extension Constant.RepeatOtherDaysView.StringLiteral {
   public static let everyday: String = "매일"
   public static let timeSet: String = "시간지정"
+  public static let dateFormat: String = "yyyy.MM.dd"
 }
