@@ -40,7 +40,7 @@ final class RepeatOtherDaysViewModel {
     self.divider = DividerState(isHidden: Observable(true))
     self.innerStackView = InnerStackViewState(
       isHidden: Observable(true),
-      height: Observable(CGFloat.zero)
+      height: Observable(Constant.RepeatOtherDaysView.Layout.InnerStackView.height)
     )
     self.height = Observable(Constant.RepeatOtherDaysView.Layout.heightUnselected)
     self.title = TitleState(topMargin: Observable(Constant.ToDoRepeatSelectionView.Layout.RepetitionLabel.topMargin))
@@ -79,14 +79,13 @@ extension RepeatOtherDaysViewModel {
       self.innerStackView.isHidden.value = false
       self.height.value = constants.heightSelected
       self.title.topMargin.value = constants.Title.topMargin
-      self.innerStackView.height.value = constants.InnerStackView.height
     } else {
       self.divider.isHidden.value = true
       self.innerStackView.isHidden.value = true
       self.height.value = constants.heightUnselected
       self.title.topMargin.value =  Constant.ToDoRepeatSelectionView.Layout.RepetitionLabel.topMargin
-      self.innerStackView.height.value = CGFloat.zero
     }
+    self.innerStackView.height.value = constants.InnerStackView.height
   }
 }
 

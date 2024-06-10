@@ -120,8 +120,7 @@ extension RepeatOtherDaysView {
       [
         self.innerStackView.topAnchor.constraint(equalTo: self.topAnchor, constant: constants.CommonMargin.broad),
         self.innerStackView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-        self.innerStackView.widthAnchor.constraint(equalToConstant: constants.InnerStackView.width),
-        self.innerStackView.heightAnchor.constraint(equalToConstant: constants.InnerStackView.height)
+        self.innerStackView.widthAnchor.constraint(equalToConstant: constants.InnerStackView.width)
       ]
     )
   }
