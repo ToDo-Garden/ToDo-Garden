@@ -342,8 +342,8 @@ extension RepeatOtherDaysView {
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  let view = RepeatOtherDaysView(startDate: "1234.12.12", endDate: "4321.32.32")
-
-  return view
+  let repeatOtherDaysView = RepeatOtherDaysView(startDate: nil, endDate: nil)
+  
+  return repeatOtherDaysView
 }
 #endif
