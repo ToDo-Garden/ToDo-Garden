@@ -32,7 +32,7 @@ extension Constant.RepeatOtherDaysView.Layout {
     public static let size: CGSize = CGSize(width: 140.0, height: 52)
     public static let trailing: CGFloat = -17.0
     public static let buttonWidth: CGFloat = 93.0
-    public static let margin: CGFloat = 3.0
+    public static let spacing: CGFloat = 3.0
   }
   
   public enum CommonMargin {
