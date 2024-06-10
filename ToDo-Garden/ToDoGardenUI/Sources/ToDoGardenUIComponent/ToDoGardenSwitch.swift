@@ -7,16 +7,17 @@
 
 import UIKit.UISwitch
 
+import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 public final class ToDoGardenSwitch: UISwitch {
-  public init() {
-    super.init(frame: .zero)
+  public init(model: Model) {
+    super.init(frame: CGRect.zero)
     self.setupOnTintColor()
   }
   
   public convenience init(isOn: Bool) {
-    self.init()
+    self.init(model: .primary)
     self.isOn = isOn
   }
   
@@ -41,5 +42,19 @@ extension ToDoGardenSwitch {
   private func setupOffTintColor() {
     let offBackgroundView = self.subviews.first?.subviews.first
     offBackgroundView?.backgroundColor = UIColor.toDoGardenGreenGray
+  }
+}
+
+// MARK: Model
+
+extension ToDoGardenSwitch {
+  public struct Model {
+    let thumbScale: CGFloat
+
+    public init(thumbScale: CGFloat) {
+      self.thumbScale = thumbScale
+    }
+
+    public static let primary = Self(thumbScale: Constant.ToDoGardenSwitch.Layout.thumbScale)
   }
 }
