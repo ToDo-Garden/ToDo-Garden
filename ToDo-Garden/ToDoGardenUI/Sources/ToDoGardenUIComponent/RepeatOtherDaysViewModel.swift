@@ -57,8 +57,8 @@ final class RepeatOtherDaysViewModel {
     }
   }
   
-  func dateButtonSetTapped() {
-    self.dateButton.isSelected.value.toggle()
+  func dateButtonSetValueChanged(isSelected: Bool) {
+    self.dateButton.isSelected.value = isSelected
     if self.dateButton.isSelected.value == true {
       self.ringToggleButton.isSelected.value = false
     }

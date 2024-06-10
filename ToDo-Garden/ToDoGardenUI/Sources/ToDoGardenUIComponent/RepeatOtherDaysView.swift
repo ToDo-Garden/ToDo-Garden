@@ -93,12 +93,17 @@ extension RepeatOtherDaysView {
     }
     
     let dateButtonAction = UIAction { [weak self] _ in
-      self?.viewModel.dateButtonSetTapped()
+      guard let isDateButtonSelected = self?.dateButtonSet.isSelected else {
+        return
+      }
+      
+      self?.viewModel.dateButtonSetValueChanged(isSelected: isDateButtonSelected)
       self?.updateBackgroundColor()
     }
     
     self.ringToggleButton.addAction(ringToggleAction, for: UIControl.Event.touchUpInside)
-    self.dateButtonSet.addAction(dateButtonAction, for: UIControl.Event.touchUpInside)
+    
+    self.dateButtonSet.addAction(dateButtonAction, for: UIControl.Event.valueChanged)
   }
 }
 
@@ -211,7 +216,7 @@ extension RepeatOtherDaysView {
     self.viewModel.ringToggleButton.isSelected.bind { [weak self] isSelected in
       self?.ringToggleButton.isSelected = isSelected
       if isSelected == true {
-        self?.dateButtonSet.isSelected = false
+        self?.viewModel.dateButton.isSelected.value = false
       }
       self?.updateBackgroundColor()
     }
@@ -219,7 +224,7 @@ extension RepeatOtherDaysView {
     self.viewModel.dateButton.isSelected.bind { [weak self] isSelected in
       self?.dateButtonSet.isSelected = isSelected
       if isSelected == true {
-        self?.ringToggleButton.isSelected = false
+        self?.viewModel.ringToggleButton.isSelected.value = false
       }
       self?.updateBackgroundColor()
     }
