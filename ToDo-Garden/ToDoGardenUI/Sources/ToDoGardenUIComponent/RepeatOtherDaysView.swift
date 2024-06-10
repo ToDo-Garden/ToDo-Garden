@@ -301,6 +301,10 @@ extension RepeatOtherDaysView {
   private func updateTitleConstraint(to topMargin: CGFloat) {
     self.repetitionLabelTopAchor.constant = topMargin
   }
+  
+  public func updateDateButtonState(isSelected: Bool) {
+    self.viewModel.dateButton.isSelected.value = isSelected
+  }
 }
 
 // MARK: - About animation
