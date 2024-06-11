@@ -37,8 +37,6 @@ private enum LightRoundRectButton {
       default: break
       }
     }
-    
-    button.changesSelectionAsPrimaryAction = true
     button.configuration = buttonConfiguration
     button.setAttributedTitle(attributedString, for: UIControl.State.normal)
   }

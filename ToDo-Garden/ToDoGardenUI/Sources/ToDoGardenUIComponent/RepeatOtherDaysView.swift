@@ -93,12 +93,17 @@ extension RepeatOtherDaysView {
     }
     
     let dateButtonAction = UIAction { [weak self] _ in
-      self?.viewModel.dateButtonSetTapped()
+      guard let isDateButtonSelected = self?.dateButtonSet.isSelected else {
+        return
+      }
+      
+      self?.viewModel.dateButtonSetValueChanged(isSelected: isDateButtonSelected)
       self?.updateBackgroundColor()
     }
     
     self.ringToggleButton.addAction(ringToggleAction, for: UIControl.Event.touchUpInside)
-    self.dateButtonSet.addAction(dateButtonAction, for: UIControl.Event.touchUpInside)
+    
+    self.dateButtonSet.addAction(dateButtonAction, for: UIControl.Event.valueChanged)
   }
 }
 
@@ -120,8 +125,7 @@ extension RepeatOtherDaysView {
       [
         self.innerStackView.topAnchor.constraint(equalTo: self.topAnchor, constant: constants.CommonMargin.broad),
         self.innerStackView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-        self.innerStackView.widthAnchor.constraint(equalToConstant: constants.InnerStackView.width),
-        self.innerStackView.heightAnchor.constraint(equalToConstant: constants.InnerStackView.height)
+        self.innerStackView.widthAnchor.constraint(equalToConstant: constants.InnerStackView.width)
       ]
     )
   }
@@ -212,7 +216,7 @@ extension RepeatOtherDaysView {
     self.viewModel.ringToggleButton.isSelected.bind { [weak self] isSelected in
       self?.ringToggleButton.isSelected = isSelected
       if isSelected == true {
-        self?.dateButtonSet.isSelected = false
+        self?.viewModel.dateButton.isSelected.value = false
       }
       self?.updateBackgroundColor()
     }
@@ -220,7 +224,7 @@ extension RepeatOtherDaysView {
     self.viewModel.dateButton.isSelected.bind { [weak self] isSelected in
       self?.dateButtonSet.isSelected = isSelected
       if isSelected == true {
-        self?.ringToggleButton.isSelected = false
+        self?.viewModel.ringToggleButton.isSelected.value = false
       }
       self?.updateBackgroundColor()
     }
@@ -297,6 +301,10 @@ extension RepeatOtherDaysView {
   private func updateTitleConstraint(to topMargin: CGFloat) {
     self.repetitionLabelTopAchor.constant = topMargin
   }
+  
+  public func updateDateButtonState(isSelected: Bool) {
+    self.viewModel.dateButton.isSelected.value = isSelected
+  }
 }
 
 // MARK: - About animation
@@ -334,8 +342,8 @@ extension RepeatOtherDaysView {
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  let view = RepeatOtherDaysView(startDate: "1234.12.12", endDate: "4321.32.32")
-
-  return view
+  let repeatOtherDaysView = RepeatOtherDaysView(startDate: nil, endDate: nil)
+  
+  return repeatOtherDaysView
 }
 #endif

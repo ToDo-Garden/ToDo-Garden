@@ -72,16 +72,23 @@ public final class DateButtonSet: UIControl {
   }
   
   private func setupButtonInnerStackView(labelButton: UIButton, dateButton: UIButton) {
-    let margin = Constant.RepeatOtherDaysView.Layout.DateButtonSet.margin
+    let spacing = Constant.RepeatOtherDaysView.Layout.DateButtonSet.spacing
     let innerStackView = UIStackView()
     innerStackView.axis = NSLayoutConstraint.Axis.horizontal
     innerStackView.distribution = UIStackView.Distribution.fillProportionally
     innerStackView.addArrangedSubview(labelButton)
-    innerStackView.addSpacing(margin)
+    innerStackView.addSpacing(spacing)
     innerStackView.addArrangedSubview(dateButton)
+    innerStackView.usingAutolayout()
     
     self.stackView.addArrangedSubview(innerStackView)
-    self.stackView.addSpacing(margin)
+    
+    NSLayoutConstraint.activate(
+      [
+        innerStackView.widthAnchor.constraint(equalTo: self.stackView.widthAnchor),
+        innerStackView.heightAnchor.constraint(lessThanOrEqualTo: self.stackView.heightAnchor, multiplier: 0.5)
+      ]
+    )
   }
   
   private func setupButtonActions() {
@@ -112,6 +119,7 @@ public final class DateButtonSet: UIControl {
   
   private func setupStackView() {
     self.stackView.usingAutolayout()
+    self.stackView.spacing = Constant.RepeatOtherDaysView.Layout.DateButtonSet.spacing
     self.addSubview(self.stackView)
 
     self.stackView.axis = NSLayoutConstraint.Axis.vertical
@@ -119,7 +127,9 @@ public final class DateButtonSet: UIControl {
     NSLayoutConstraint.activate(
       [
         self.stackView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-        self.stackView.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+        self.stackView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+        self.stackView.widthAnchor.constraint(equalTo: self.widthAnchor),
+        self.stackView.heightAnchor.constraint(equalTo: self.heightAnchor)
       ]
     )
   }
@@ -144,19 +154,6 @@ extension DateButtonSet {
   }
   
   private func buttonTapped(_ sender: UIButton) {
-    if sender.isSelected {
-      self.isSelected = true
-    } else {
-      let isAllSelected = 
-      self.startDateButton.isSelected &&
-      self.startLabelButton.isSelected &&
-      self.endDateButton.isSelected &&
-      self.endLabelButton.isSelected
-      
-      if !isAllSelected {
-        self.isSelected = false
-      }
-    }
     self.sendActions(for: UIControl.Event.touchUpInside)
   }
   
