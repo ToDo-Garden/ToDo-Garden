@@ -31,3 +31,12 @@ extension EditToDoViewController.Constant.Layout.ToDoScheduleView {
   static let traillingMargin: CGFloat = 30
   static let bottomMargin: CGFloat = 150
 }
+
+extension EditToDoViewController.Constant.Layout.ToDoScheduleView {
+  enum AlarmTimeSettingView {}
+}
+
+extension EditToDoViewController.Constant.Layout.ToDoScheduleView.AlarmTimeSettingView {
+  static let topMargin: CGFloat = 7
+  static let height: CGFloat = 53
+}
