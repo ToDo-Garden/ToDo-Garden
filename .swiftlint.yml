@@ -12,6 +12,9 @@ opt_in_rules:
 analyzer_rules:
   - explicit_self
 
+nesting:
+  type_level: 3
+  
 included:
   - ToDo-Garden/
 
