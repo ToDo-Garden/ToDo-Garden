@@ -34,9 +34,15 @@ extension EditToDoViewController.Constant.Layout.ToDoScheduleView {
 
 extension EditToDoViewController.Constant.Layout.ToDoScheduleView {
   enum AlarmTimeSettingView {}
+  enum RepetitionLabel {}
 }
 
 extension EditToDoViewController.Constant.Layout.ToDoScheduleView.AlarmTimeSettingView {
   static let topMargin: CGFloat = 7
   static let height: CGFloat = 53
+}
+
+extension EditToDoViewController.Constant.Layout.ToDoScheduleView.RepetitionLabel {
+  static let topMargin: CGFloat = 50
+  static let leadingMargin: CGFloat = 3
 }
