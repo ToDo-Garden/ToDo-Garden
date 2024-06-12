@@ -35,6 +35,7 @@ extension EditToDoViewController.Constant.Layout.ToDoScheduleView {
 extension EditToDoViewController.Constant.Layout.ToDoScheduleView {
   enum AlarmTimeSettingView {}
   enum RepetitionLabel {}
+  enum RepeatOnlyTodayButton {}
 }
 
 extension EditToDoViewController.Constant.Layout.ToDoScheduleView.AlarmTimeSettingView {
@@ -45,4 +46,8 @@ extension EditToDoViewController.Constant.Layout.ToDoScheduleView.AlarmTimeSetti
 extension EditToDoViewController.Constant.Layout.ToDoScheduleView.RepetitionLabel {
   static let topMargin: CGFloat = 50
   static let leadingMargin: CGFloat = 3
+}
+
+extension EditToDoViewController.Constant.Layout.ToDoScheduleView.RepeatOnlyTodayButton {
+  static let topMargin: CGFloat = 10
 }
