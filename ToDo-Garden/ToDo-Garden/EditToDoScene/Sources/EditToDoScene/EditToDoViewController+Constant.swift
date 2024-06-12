@@ -73,8 +73,13 @@ extension EditToDoViewController.Constant.StringLiteral.CompleteEditingButton {
 
 extension EditToDoViewController.Constant.StringLiteral.ToDoScheduleView {
   enum AlarmLabel {}
+  enum RepetitionLabel {}
 }
 
 extension EditToDoViewController.Constant.StringLiteral.ToDoScheduleView.AlarmLabel {
   static let text = "알림"
+}
+
+extension EditToDoViewController.Constant.StringLiteral.ToDoScheduleView.RepetitionLabel {
+  static let text = "반복"
 }
