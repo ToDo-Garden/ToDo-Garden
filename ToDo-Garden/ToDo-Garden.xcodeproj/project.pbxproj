@@ -15,6 +15,7 @@
 		4FC8C1092B8336A100BA223E /* ToDoGardenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC8C1082B8336A100BA223E /* ToDoGardenTests.swift */; };
 		4FC8C1512B8C575A00BA223E /* ToDoGardenUIAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 4FC8C1502B8C575A00BA223E /* ToDoGardenUIAPI */; };
 		4FDA5E392B4FF1E4006506ED /* Asset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FDA5E382B4FF1E4006506ED /* Asset.xcassets */; };
+		639D79512C19A8E300004B26 /* EditToDoScene in Resources */ = {isa = PBXBuildFile; fileRef = 639D79502C19A8E300004B26 /* EditToDoScene */; };
 		E4F7D3B22B996B1F00324294 /* ToDoGardenUIConstant in Frameworks */ = {isa = PBXBuildFile; productRef = E4F7D3B12B996B1F00324294 /* ToDoGardenUIConstant */; };
 /* End PBXBuildFile section */
 
@@ -39,6 +40,7 @@
 		4FC8C10F2B83375500BA223E /* ToDo-GardenTestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "ToDo-GardenTestPlan.xctestplan"; sourceTree = "<group>"; };
 		4FC8C14A2B87562600BA223E /* ToDoGardenUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ToDoGardenUI; sourceTree = "<group>"; };
 		4FDA5E382B4FF1E4006506ED /* Asset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Asset.xcassets; sourceTree = "<group>"; };
+		639D79502C19A8E300004B26 /* EditToDoScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = EditToDoScene; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +88,7 @@
 		4F0DF12A2B4EABCE00097B7D /* ToDo-Garden */ = {
 			isa = PBXGroup;
 			children = (
+				639D79502C19A8E300004B26 /* EditToDoScene */,
 				4FDA5E372B4FF1B0006506ED /* Resources */,
 				4F6C8B862B73685000F209BC /* Sources */,
 			);
@@ -223,6 +226,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4FDA5E392B4FF1E4006506ED /* Asset.xcassets in Resources */,
+				639D79512C19A8E300004B26 /* EditToDoScene in Resources */,
 				4F0DF1382B4EABD000097B7D /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
