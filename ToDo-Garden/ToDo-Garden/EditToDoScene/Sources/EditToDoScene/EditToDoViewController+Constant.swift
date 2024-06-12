@@ -11,6 +11,7 @@ extension EditToDoViewController.Constant {
 extension EditToDoViewController.Constant.Layout {
   enum CompleteEditingButton {}
   enum EditModeSegmentedControl {}
+  enum ToDoScheduleView {}
 }
 
 extension EditToDoViewController.Constant.Layout.CompleteEditingButton {
@@ -22,4 +23,11 @@ extension EditToDoViewController.Constant.Layout.EditModeSegmentedControl {
   static let leadingMargin: CGFloat = 12
   static let trailingMargin: CGFloat = 13
   static let height: CGFloat = 49
+}
+
+extension EditToDoViewController.Constant.Layout.ToDoScheduleView {
+  static let topMargin: CGFloat = 40
+  static let leadingMargin: CGFloat = 30
+  static let traillingMargin: CGFloat = 30
+  static let bottomMargin: CGFloat = 150
 }
