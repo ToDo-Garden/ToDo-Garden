@@ -61,3 +61,11 @@ extension EditToDoViewController.Constant.Layout.ToDoScheduleView.RepeatOtherDay
 extension EditToDoViewController.Constant.StringLiteral {
   static let title = "ToDo 편집"
 }
+
+extension EditToDoViewController.Constant.StringLiteral {
+  enum CompleteEditingButton {}
+}
+
+extension EditToDoViewController.Constant.StringLiteral.CompleteEditingButton {
+  static let title = "완료"
+}
