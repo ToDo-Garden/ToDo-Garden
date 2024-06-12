@@ -64,8 +64,17 @@ extension EditToDoViewController.Constant.StringLiteral {
 
 extension EditToDoViewController.Constant.StringLiteral {
   enum CompleteEditingButton {}
+  enum ToDoScheduleView {}
 }
 
 extension EditToDoViewController.Constant.StringLiteral.CompleteEditingButton {
   static let title = "완료"
+}
+
+extension EditToDoViewController.Constant.StringLiteral.ToDoScheduleView {
+  enum AlarmLabel {}
+}
+
+extension EditToDoViewController.Constant.StringLiteral.ToDoScheduleView.AlarmLabel {
+  static let text = "알림"
 }
