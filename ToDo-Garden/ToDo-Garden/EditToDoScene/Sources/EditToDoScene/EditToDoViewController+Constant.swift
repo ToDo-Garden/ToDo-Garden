@@ -6,6 +6,7 @@ extension EditToDoViewController {
 
 extension EditToDoViewController.Constant {
   enum Layout {}
+  enum StringLiteral {}
 }
 
 extension EditToDoViewController.Constant.Layout {
@@ -55,4 +56,8 @@ extension EditToDoViewController.Constant.Layout.ToDoScheduleView.RepeatOnlyToda
 
 extension EditToDoViewController.Constant.Layout.ToDoScheduleView.RepeatOtherDaysView {
   static let topMargin: CGFloat = 11
+}
+
+extension EditToDoViewController.Constant.StringLiteral {
+  static let title = "ToDo 편집"
 }
