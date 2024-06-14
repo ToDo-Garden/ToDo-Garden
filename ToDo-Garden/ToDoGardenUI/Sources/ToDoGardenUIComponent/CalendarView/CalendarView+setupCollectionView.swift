@@ -21,7 +21,7 @@ extension CalendarView {
     )
   }
 
-  func makeCollectionViewLayout(with collectionViewModel: CalendarView.Model.CollectionView)
+  func makeCollectionViewLayout(with collectionViewModel: CalendarView.Model.CollectionViewLayout)
   -> UICollectionViewCompositionalLayout {
     let item = self.makeItem(with: collectionViewModel.itemSize)
     let group = self.makeGroup(by: item, with: collectionViewModel.itemSpacing)

@@ -16,18 +16,23 @@ protocol CalendarViewControllable where Self: NSObject {
 }
 
 class CalendarViewSingleSelectionDelegate: NSObject {
-  private var calendarDataGenerator: CalendarDataGeneratable
-  private var dateFormatter: DateFormatter
+  private let calendarDataGenerator: CalendarDataGeneratable
+  private let dateFormatter: DateFormatter
 
-  private var collectionView: UICollectionView
+  private let collectionViewLayoutModel: CalendarView.Model.CollectionViewLayout
+  private let collectionView: UICollectionView
   private var collectionViewDataSource: UICollectionViewDiffableDataSource<CalendarSection, CalendarItem>!
   private var currentIndexPath: IndexPath
   private var initialContentOffset: CGPoint
   private var selectedItem: CalendarItem?
 
-  init(collectionView: UICollectionView) {
+  init(
+    collectionView: UICollectionView,
+    collectionViewLayoutModel: CalendarView.Model.CollectionViewLayout
+  ) {
     self.calendarDataGenerator = CalendarDataGenerator(calendar: Calendar.localeUpdated)
     self.dateFormatter = DateFormatter()
+    self.collectionViewLayoutModel = collectionViewLayoutModel
     self.collectionView = collectionView
     self.currentIndexPath = IndexPath(item: 0, section: 3)
     self.initialContentOffset = CGPoint()
