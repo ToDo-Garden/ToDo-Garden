@@ -74,7 +74,7 @@ extension CalendarView {
 
 // MARK: ScrollDirection Sender Delegate
 
-protocol CalendarScrollSendable {
+protocol CalendarScrollSendable: AnyObject {
   func didScroll()
 }
 

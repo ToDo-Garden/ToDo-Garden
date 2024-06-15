@@ -30,7 +30,7 @@ class CalendarViewSingleSelectionDelegate: NSObject {
   let collectionView: UICollectionView
   let dateFormatter: DateFormatter
 
-  var scrollDelegate: CalendarScrollSendable?
+  weak var scrollDelegate: CalendarScrollSendable?
 
   init(
     collectionView: UICollectionView,
