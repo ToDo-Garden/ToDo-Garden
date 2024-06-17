@@ -23,6 +23,7 @@
 		E4DEA1742C2BED0700E3CE3C /* ManageGroupScene in Frameworks */ = {isa = PBXBuildFile; productRef = E4DEA1732C2BED0700E3CE3C /* ManageGroupScene */; };
 		E4DEA1762C2BED0700E3CE3C /* ManageGroupSceneAPI in Frameworks */ = {isa = PBXBuildFile; productRef = E4DEA1752C2BED0700E3CE3C /* ManageGroupSceneAPI */; };
 		E4DEA1782C2BED0700E3CE3C /* ManageGroupSceneEntity in Frameworks */ = {isa = PBXBuildFile; productRef = E4DEA1772C2BED0700E3CE3C /* ManageGroupSceneEntity */; };
+		AE4EE0D62C1FFA3F00483D7F /* TimerScene in Resources */ = {isa = PBXBuildFile; fileRef = AE4EE0D52C1FFA3F00483D7F /* TimerScene */; };
 		E4F7D3B22B996B1F00324294 /* ToDoGardenUIConstant in Frameworks */ = {isa = PBXBuildFile; productRef = E4F7D3B12B996B1F00324294 /* ToDoGardenUIConstant */; };
 /* End PBXBuildFile section */
 
@@ -251,6 +252,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4FDA5E392B4FF1E4006506ED /* Asset.xcassets in Resources */,
+				AE4EE0D62C1FFA3F00483D7F /* TimerScene in Resources */,
 				639D79512C19A8E300004B26 /* EditToDoScene in Resources */,
 				4F0DF1382B4EABD000097B7D /* LaunchScreen.storyboard in Resources */,
 			);
