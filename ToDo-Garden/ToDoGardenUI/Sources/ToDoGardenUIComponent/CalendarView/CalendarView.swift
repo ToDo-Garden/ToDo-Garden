@@ -52,10 +52,6 @@ public final class CalendarView: UIView {
 // MARK: Private Functions
 
 extension CalendarView {
-  private func setup() {
-    self.setupUI()
-  }
-
   private func scrollToCurrentMonth() {
     if self.isLayoutSubviewsCalled == false {
       self.calendarViewDelegate.scrollCalendar(
@@ -64,6 +60,15 @@ extension CalendarView {
       )
       self.isLayoutSubviewsCalled = true
     }
+  }
+
+  private func setup() {
+    self.setupUI()
+    self.setupCollectionViewScrollDelegate()
+  }
+
+  private func setupCollectionViewScrollDelegate() {
+    self.calendarViewDelegate.scrollDelegate = self
   }
 }
 
@@ -75,7 +80,17 @@ protocol CalendarScrollSendable {
 
 extension CalendarView: CalendarScrollSendable {
   func didScroll() {
+    self.updateCollectionViewHeight()
     self.updateMonthLabelText()
+  }
+
+  private func updateCollectionViewHeight() {
+    let duration = Constant.CalendarView.Animation.duration
+    UIView.animate(withDuration: duration) {
+      let collectionViewHeight = self.calendarViewDelegate.getCollectionViewHeight()
+      self.heightConstraint.constant = collectionViewHeight
+      self.layoutIfNeeded()
+    }
   }
 
   private func updateMonthLabelText() {
@@ -142,6 +157,7 @@ extension CalendarView {
   private func setupDateCollectionView() {
     self.configureCollectionView(self.dateCollectionView)
     self.dateCollectionView.collectionViewLayout = self.makeCollectionViewLayout(with: self.model.collectionViewLayout)
+    self.dateCollectionView.delegate = self.calendarViewDelegate
   }
 }
 

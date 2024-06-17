@@ -9,8 +9,11 @@ import UIKit
 
 import ToDoGardenUIConstant
 
-protocol CalendarViewControllable where Self: NSObject {
+protocol CalendarViewControllable: UICollectionViewDelegate {
+  var scrollDelegate: CalendarScrollSendable? { get set }
+
   func fetchWeekdaySymbols() -> [String]
+  func getCollectionViewHeight() -> CGFloat
   func scrollCalendar(to scrollDirection: CalendarScrollDirection, animated: Bool)
   func getDateString() -> String
 }
@@ -18,12 +21,16 @@ protocol CalendarViewControllable where Self: NSObject {
 class CalendarViewSingleSelectionDelegate: NSObject {
   private let calendarDataGenerator: CalendarDataGeneratable
   private let collectionViewLayoutModel: CalendarView.Model.CollectionViewLayout
+  
   private(set) var collectionViewDataSource: UICollectionViewDiffableDataSource<CalendarSection, CalendarItem>!
   private(set) var currentIndexPath: IndexPath
   private(set) var selectedItem: CalendarItem?
   private var initialContentOffset: CGPoint
+  
   let collectionView: UICollectionView
   let dateFormatter: DateFormatter
+
+  var scrollDelegate: CalendarScrollSendable?
 
   init(
     collectionView: UICollectionView,
@@ -57,6 +64,14 @@ extension CalendarViewSingleSelectionDelegate: CalendarViewControllable {
       animated: animated
     )
     self.reloadAllSnapshot()
+    self.scrollDelegate?.didScroll()
+  }
+
+  func getCollectionViewHeight() -> CGFloat {
+    let snapshot = self.collectionViewDataSource.snapshot()
+    let currentSection = snapshot.sectionIdentifiers[self.currentIndexPath.section]
+    let itemCount = snapshot.itemIdentifiers(inSection: currentSection).count
+    return self.calculateHeight(items: itemCount)
   }
 
   func getDateString() -> String {
@@ -78,6 +93,18 @@ extension CalendarViewSingleSelectionDelegate {
     } else {
       self.dateFormatter.locale = Locale.autoupdatingCurrent
     }
+
+    self.dateFormatter.dateFormat = Constant.CalendarView.StringLiteral.dateFormat
+  }
+
+  private func calculateHeight(items count: Int) -> CGFloat {
+    let numberOfRows = CGFloat(count / 7)
+    let totalItemHeight = self.collectionViewLayoutModel.itemSize.height * numberOfRows
+    let totalInsets = self.collectionViewLayoutModel.lineSpacing * (numberOfRows - 1)
+    let collectionViewHeight = totalItemHeight + totalInsets
+    let defaultHeight: CGFloat = Constant.CalendarView.Layout.CollectionView.defaultHeight
+
+    return defaultHeight + collectionViewHeight
   }
 }
 
@@ -215,6 +242,7 @@ extension CalendarViewSingleSelectionDelegate: UICollectionViewDelegate {
     ) else { return }
 
     self.currentIndexPath.section += scrollDirection.rawValue
+    self.scrollDelegate?.didScroll()
   }
 
   private func calculateScrollDireciton(
