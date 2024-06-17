@@ -4,7 +4,9 @@ import TimerSceneApi
 import TimerSceneEntity
 import ToDoGardenUIComponent
 
+@MainActor
 protocol TimerSceneDisplayLogic: AnyObject {
+  func updateTimeLabel(time: Double, isFirst: Bool)
   func displaySomething(viewModel: TimerScene.Something.ViewModel)
 }
 
@@ -31,7 +33,6 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
   // MARK: - View lifecycle
   public override func viewDidLoad() {
     super.viewDidLoad()
-    self.doSomething()
     build()
   }
   
@@ -61,13 +62,13 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
   }
   
   private func buildCircularProgressView() -> CircularProgressView {
-    let alarm = CircularProgressView(
+    let circularProgressView = CircularProgressView(
       progressColor: .toDoGardenRed,
       backgroundColor: .toDoGardenPink,
       lineWidth: 9
     )
     
-    return alarm
+    return circularProgressView
   }
   
   private func layoutCircularProgressView(_ container: UIStackView) {
@@ -82,7 +83,6 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
     circularProgressView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
     circularProgressView.widthAnchor.constraint(equalToConstant: 236).isActive = true
     circularProgressView.heightAnchor.constraint(equalToConstant: 236).isActive = true
-    circularProgressView.startAnimation(duration: 3, from: 0, to: 1)
     container.addArrangedSubview(stack)
   }
   
@@ -94,12 +94,14 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
   
   private func buildTimeLabel() -> UILabel {
     let timeLabel = UILabel()
-    timeLabel.text = "08:26"
     return timeLabel
   }
   
   private func buildSetTimerButton() -> UIButton {
     let button = UIButton()
+    button.addAction(.init(handler: { _ in
+      self.interactor?.buttonTapped()
+    }), for: .touchUpInside)
     button.applyRingToggleButtonStyle()
     return button
   }
@@ -107,6 +109,14 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
 
 // MARK: - Confirm display logic protocol
 extension TimerSceneViewController: TimerSceneDisplayLogic {
+  func updateTimeLabel(time: Double, isFirst: Bool) {
+    if isFirst {
+      print(time)
+      circularProgressView.startAnimation(duration: time, from: 0, to: 1)
+    }
+    timeLabel.text = String(time)
+  }
+  
   func displaySomething(viewModel: TimerScene.Something.ViewModel) {
     // self.nameTextField.text = viewModel.name
   }
@@ -123,8 +133,7 @@ extension TimerSceneViewController {
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  let viewController = TimerSceneViewController()
-  
-  return viewController
+  TimerSceneSceneBuilder(dependency: .live)
+    .build()
 }
 #endif

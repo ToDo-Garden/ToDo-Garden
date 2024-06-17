@@ -2,8 +2,10 @@ import Foundation
 
 import TimerSceneEntity
 
+@MainActor
 protocol TimerScenePresentationLogic {
 	func presentSomething(response: TimerScene.Something.Response)
+  func updateTimeState(_ time: Double, isFirst: Bool)
 }
 
 class TimerScenePresenter {
@@ -17,4 +19,8 @@ extension TimerScenePresenter: TimerScenePresentationLogic {
 		let viewModel = TimerScene.Something.ViewModel()
 		self.viewController?.displaySomething(viewModel: viewModel)
 	}
+  
+  func updateTimeState(_ time: Double, isFirst: Bool) {
+    viewController?.updateTimeLabel(time: time, isFirst: isFirst)
+  }
 }

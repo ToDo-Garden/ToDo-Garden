@@ -31,7 +31,7 @@ extension TimerSceneRouter: TimerSceneRoutingLogic {
 	func routeToSomewhere() {
 		let destinationViewController = self.nextSceneBuilder.build(with: NextScenePayload())
 		
-		self.viewController?.present(destinationViewController, animated: true)
+//		self.viewController?.present(destinationViewController, animated: true)
 	}
 }
 
