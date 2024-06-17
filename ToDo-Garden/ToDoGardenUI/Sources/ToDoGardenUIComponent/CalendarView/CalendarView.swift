@@ -85,11 +85,12 @@ extension CalendarView: CalendarScrollSendable {
   }
 
   private func updateCollectionViewHeight() {
+    self.superview?.layoutIfNeeded()
     let duration = Constant.CalendarView.Animation.duration
     UIView.animate(withDuration: duration) {
       let collectionViewHeight = self.calendarViewDelegate.getCollectionViewHeight()
       self.heightConstraint.constant = collectionViewHeight
-      self.layoutIfNeeded()
+      self.superview?.layoutIfNeeded()
     }
   }
 
