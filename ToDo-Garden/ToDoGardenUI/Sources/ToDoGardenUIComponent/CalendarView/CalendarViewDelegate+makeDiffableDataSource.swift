@@ -1,5 +1,5 @@
 //
-//  CalendarCollectionViewDelegate+DiffableDataSource.swift
+//  CalendarViewSingleSelectionDelegate+DiffableDataSource.swift
 //
 //
 //  Created by Wood on 5/27/24.
@@ -8,42 +8,60 @@
 import UIKit
 
 extension CalendarViewSingleSelectionDelegate {
-  func makeDiffableDataSource(
-    _ collectionView: UICollectionView,
-    with dateFormatter: DateFormatter
-  )
+  func makeDiffableDataSource()
   -> UICollectionViewDiffableDataSource<CalendarSection, CalendarItem> {
     return UICollectionViewDiffableDataSource<
       CalendarSection,
       CalendarItem
-    >(collectionView: collectionView) { (_, _, _) in
-      return UICollectionViewCell()
+    >(collectionView: self.collectionView) { (collectionView, indexPath, dayItem) in
+      guard let cell = collectionView.dequeueReusableCell(
+        withReuseIdentifier: CalendarCollectionViewCell.identifier,
+        for: indexPath
+      ) as? CalendarCollectionViewCell
+      else { return UICollectionViewCell() }
+
+      let dayString = self.makeDayString(from: dayItem.date)
+      let isThisMonth = dayItem.isThisMonth
+      cell.update(dayString: dayString, isThisMonth: isThisMonth)
+      self.updateCellToSelected(with: self.selectedItem)
+
+      return cell
     }
   }
-}
 
-struct CalendarSection: Hashable {
-  let firstDay: Date
+  private func makeDayString(from date: Date) -> String {
+    let formattedDateString = self.dateFormatter.string(from: date).split(separator: " ")
+    guard let dayString = formattedDateString.last
+    else { return "" }
 
-  static func == (lhs: CalendarSection, rhs: CalendarSection) -> Bool {
-    return lhs.firstDay == rhs.firstDay
+    return String(dayString)
   }
 
-  func hash(into hasher: inout Hasher) {
-    hasher.combine(self.firstDay)
+  private func updateCellToSelected(with item: CalendarItem?) {
+    guard let selectedItem = item
+    else { return }
+
+    guard let indexPath = self.getIndexPath(of: selectedItem)
+    else { return }
+
+    self.collectionView.selectItem(
+      at: indexPath,
+      animated: true,
+      scrollPosition: []
+    )
   }
-}
 
-struct CalendarItem: Hashable {
-  let date: Date
-  let isThisMonth: Bool
+  private func getIndexPath(of item: CalendarItem) -> IndexPath? {
+    let snapshot = self.collectionViewDataSource.snapshot()
+    let section = snapshot.sectionIdentifiers[self.currentIndexPath.section]
+    let indexOfItem = snapshot.itemIdentifiers(inSection: section).firstIndex { (calendarItem: CalendarItem) in
+      return item.date == calendarItem.date
+    }
 
-  static func == (lhs: CalendarItem, rhs: CalendarItem) -> Bool {
-    return lhs.date == rhs.date && lhs.isThisMonth == rhs.isThisMonth
-  }
-
-  func hash(into hasher: inout Hasher) {
-    hasher.combine(self.date)
-    hasher.combine(self.isThisMonth)
+    if let itemIndex = indexOfItem {
+      return IndexPath(item: itemIndex, section: self.currentIndexPath.section)
+    } else {
+      return nil
+    }
   }
 }
