@@ -21,8 +21,9 @@ extension CalendarViewSingleSelectionDelegate {
       else { return UICollectionViewCell() }
 
       let dayString = self.makeDayString(from: dayItem.date)
+      cell.updateText(with: dayString)
       let isThisMonth = dayItem.isThisMonth
-      cell.update(dayString: dayString, isThisMonth: isThisMonth)
+      cell.updateTextColor(with: isThisMonth)
       self.updateCellToSelected(with: self.selectedItem)
 
       return cell

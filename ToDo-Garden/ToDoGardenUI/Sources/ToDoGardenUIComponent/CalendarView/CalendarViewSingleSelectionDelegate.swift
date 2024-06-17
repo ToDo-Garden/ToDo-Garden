@@ -279,42 +279,28 @@ extension CalendarViewSingleSelectionDelegate {
     guard let selectedNewItem = self.collectionViewDataSource.itemIdentifier(for: indexPath)
     else { return }
 
-    let comparisonResult = self.validateIsSameMonth(selectedItem: selectedNewItem, section: indexPath)
-    guard comparisonResult != ComparisonResult.orderedSame
-    else {
-      self.selectedItem = selectedNewItem
-      return
-    }
+    guard let scrollDirection = getScrollDirection(selectedItem: selectedNewItem, section: indexPath)
+    else { return }
 
-    let scrollDirection = comparisonResult == ComparisonResult.orderedAscending ?
-    CalendarScrollDirection.left : CalendarScrollDirection.right
     self.scrollCalendar(to: scrollDirection, animated: true)
-    self.setSelected(to: selectedNewItem)
     self.selectedItem = selectedNewItem
   }
 
-  private func validateIsSameMonth(selectedItem: CalendarItem, section indexPath: IndexPath) -> ComparisonResult {
-    guard let date = self.collectionViewDataSource.sectionIdentifier(for: indexPath.section)?.firstDay
-    else { return ComparisonResult.orderedSame }
+  private func getScrollDirection(
+    selectedItem: CalendarItem,
+    section indexPath: IndexPath
+  ) -> CalendarScrollDirection? {
+    guard let currentDate = self.collectionViewDataSource.sectionIdentifier(for: indexPath.section)?.firstDay
+    else { return nil }
 
-    return self.calendarDataGenerator.compareMonth(from: selectedItem.date, with: date)
-  }
-
-  private func setSelected(to item: CalendarItem) {
-    let snapshot = self.collectionViewDataSource.snapshot()
-    let section = snapshot.sectionIdentifiers[self.currentIndexPath.section]
-    let indexOfItem = snapshot.itemIdentifiers(inSection: section).firstIndex { (calendarItem: CalendarItem) in
-      return item.date == calendarItem.date
+    let comparisonResult = self.calendarDataGenerator.compareMonth(from: selectedItem.date, with: currentDate)
+    guard comparisonResult != ComparisonResult.orderedSame
+    else {
+      self.selectedItem = selectedItem
+      return nil
     }
 
-    if let itemIndex = indexOfItem {
-      let itemIndexPath = IndexPath(item: itemIndex, section: self.currentIndexPath.section)
-      self.collectionView.selectItem(
-        at: itemIndexPath,
-        animated: true,
-        scrollPosition: []
-      )
-    }
+    return comparisonResult == ComparisonResult.orderedAscending ? .left : .right
   }
 }
 
