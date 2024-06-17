@@ -63,7 +63,6 @@ extension CalendarViewSingleSelectionDelegate: CalendarViewControllable {
       at: UICollectionView.ScrollPosition.left,
       animated: animated
     )
-    self.reloadAllSnapshot()
     self.scrollDelegate?.didScroll()
   }
 
