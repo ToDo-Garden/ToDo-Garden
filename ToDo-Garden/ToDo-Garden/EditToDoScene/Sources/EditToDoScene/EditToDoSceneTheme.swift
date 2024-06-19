@@ -115,6 +115,19 @@ extension EditToDoSceneTheme.Resource {
     static let backgroundColor = UIColor.toDoGardenWhite
   }
 
+  enum EditToDoView {
+    enum GroupLabel {
+      static let font = UIFont.pretendardHeadSemiBold
+      static let textColor = UIColor.toDoGardenGreenDark
+    }
+
+    enum DeleteToDoButton {
+      static let backgroundColor = UIColor.toDoGardenGreenBackground
+      static let titleFont = UIFont.pretendardHeadSemiBold
+      static let titleColor = UIColor.toDoGardenEditButtonRed
+    }
+  }
+
   enum ToDoScheduleView {
     enum AlarmLabel {
       static let font = UIFont.pretendardHeadSemiBold
