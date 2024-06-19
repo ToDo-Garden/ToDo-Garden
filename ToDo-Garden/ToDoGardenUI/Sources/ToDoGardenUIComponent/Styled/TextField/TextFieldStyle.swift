@@ -1,6 +1,8 @@
 import Combine
 import UIKit
 
+import ToDoGardenUIConstant
+
 private typealias ViewMode = UIKit.UITextField.ViewMode
 
 extension Styled {
@@ -54,13 +56,22 @@ extension Styled {
         case Configuration.GroupEditModel.DisPlayMode.always,
           Configuration.GroupEditModel.DisPlayMode.editing:
           bottomLine.isHidden = false
+          self.animateBottomLineAppearing()
         case Configuration.GroupEditModel.DisPlayMode.none:
           bottomLine.isHidden = true
+          self.animateBottomLineAppearing()
         }
       }
       return super.becomeFirstResponder()
     }
-    
+
+    private func animateBottomLineAppearing() {
+      let duration = Constant.Styled.TextField.GroupEdit.BottomLineAnimation.duration
+      UIView.animate(withDuration: duration) {
+        self.bottomLine.setProgress(1.0, animated: true)
+      }
+    }
+
     public override func resignFirstResponder() -> Bool {
       configuration.groupEditModel.map { model in
         switch model.bottomLineDisplayMode {
@@ -73,7 +84,7 @@ extension Styled {
       }
       return super.resignFirstResponder()
     }
-    
+
     private func buildLeftImageMargin(_ rect: CGRect) -> CGRect {
       let containedRect = self.configuration.primaryModel
         .map { model in
