@@ -23,17 +23,8 @@ extension Styled.TextField {
   }
   
   private func buildBottomLine(color: UIColor) {
-    let line = UIView()
-    line.backgroundColor = color
-    self.configuration.groupEditModel.map { model in
-      switch model.bottomLineDisplayMode {
-      case Configuration.GroupEditModel.DisPlayMode.always:
-        line.isHidden = false
-      case Configuration.GroupEditModel.DisPlayMode.editing,
-        Configuration.GroupEditModel.DisPlayMode.none:
-        line.isHidden = true
-      }
-    }
+    let line = UIProgressView(progressViewStyle: .bar)
+    line.trackTintColor = UIColor.toDoGardenGray1
     line.usingAutolayout()
     self.addSubview(line)
     NSLayoutConstraint.activate([
@@ -46,12 +37,12 @@ extension Styled.TextField {
     self.bottomLine = line
   }
   
-  private func bindingBottomLine(line: UIView) {
+  private func bindingBottomLine(line: UIProgressView) {
     self.$configuration
       .compactMap(\.groupEditModel)
       .removeDuplicates()
       .sink { [weak line] model in
-        line?.backgroundColor = model.mainColor
+        line?.progressTintColor = model.mainColor
       }
       .store(in: &self.cancellables)
   }

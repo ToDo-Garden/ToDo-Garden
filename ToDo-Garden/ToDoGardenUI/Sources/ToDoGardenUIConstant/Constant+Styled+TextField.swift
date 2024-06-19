@@ -22,3 +22,11 @@ public extension Constant.Styled.TextField.Primary.Standard {
 public extension Constant.Styled.TextField.GroupEdit {
   static let bottomLineHeight = CGFloat(1)
 }
+
+public extension Constant.Styled.TextField.GroupEdit {
+  enum BottomLineAnimation { }
+}
+
+public extension Constant.Styled.TextField.GroupEdit.BottomLineAnimation {
+  static let duration: CGFloat = 0.2
+}
