@@ -25,15 +25,6 @@ extension Styled.TextField {
   private func buildBottomLine(color: UIColor) {
     let line = UIProgressView(progressViewStyle: .bar)
     line.trackTintColor = UIColor.toDoGardenGray1
-    self.configuration.groupEditModel.map { model in
-      switch model.bottomLineDisplayMode {
-      case Configuration.GroupEditModel.DisPlayMode.always:
-        line.isHidden = false
-      case Configuration.GroupEditModel.DisPlayMode.editing,
-        Configuration.GroupEditModel.DisPlayMode.none:
-        line.isHidden = true
-      }
-    }
     line.usingAutolayout()
     self.addSubview(line)
     NSLayoutConstraint.activate([

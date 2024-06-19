@@ -55,10 +55,8 @@ extension Styled {
         switch model.bottomLineDisplayMode {
         case Configuration.GroupEditModel.DisPlayMode.always,
           Configuration.GroupEditModel.DisPlayMode.editing:
-          self.bottomLine.isHidden = false
           self.animateBottomLineAppearing()
         case Configuration.GroupEditModel.DisPlayMode.none:
-          self.bottomLine.isHidden = true
           self.animateBottomLineAppearing()
         }
       }
@@ -76,11 +74,9 @@ extension Styled {
       configuration.groupEditModel.map { model in
         switch model.bottomLineDisplayMode {
         case Configuration.GroupEditModel.DisPlayMode.always:
-          self.bottomLine.isHidden = false
           self.bottomLine.setProgress(0.0, animated: false)
         case Configuration.GroupEditModel.DisPlayMode.editing,
           Configuration.GroupEditModel.DisPlayMode.none:
-          self.bottomLine.isHidden = true
           self.bottomLine.setProgress(0.0, animated: false)
         }
       }
