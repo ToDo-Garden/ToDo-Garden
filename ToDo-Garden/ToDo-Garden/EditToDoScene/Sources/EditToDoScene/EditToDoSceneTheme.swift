@@ -4,7 +4,7 @@ import ToDoGardenUIResource
 
 enum EditToDoSceneTheme {
   enum Constant {}
-  enum Resource {}
+  enum Appearance {}
 }
 
 extension EditToDoSceneTheme.Constant {
@@ -110,7 +110,7 @@ extension EditToDoSceneTheme.Constant.StringLiteral {
   }
 }
 
-extension EditToDoSceneTheme.Resource {
+extension EditToDoSceneTheme.Appearance {
   enum EditToDoViewController {
     static let backgroundColor = UIColor.toDoGardenWhite
   }
