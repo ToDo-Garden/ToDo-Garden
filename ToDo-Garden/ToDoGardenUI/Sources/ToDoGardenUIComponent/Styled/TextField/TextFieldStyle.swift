@@ -21,7 +21,7 @@ extension Styled {
     }
     
     @Published var configuration: Configuration
-    var bottomLine: UIView!
+    var bottomLine: UIProgressView!
     var cancellables: Set<AnyCancellable> = []
     
     public init(configuration: Configuration) {
