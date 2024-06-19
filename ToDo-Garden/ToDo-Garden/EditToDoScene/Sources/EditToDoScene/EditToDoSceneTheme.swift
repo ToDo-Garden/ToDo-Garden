@@ -24,6 +24,13 @@ extension EditToDoSceneTheme.Constant.Layout {
     static let height: CGFloat = 49
   }
 
+  enum EditToDoView {
+    static let topMargin: CGFloat = 30
+    static let leadingMargin: CGFloat = 12
+    static let trailingMargin: CGFloat = 19
+    static let bottomMargin: CGFloat = 296
+  }
+
   enum ToDoScheduleView {
     enum AlarmTimeSettingView {
       static let topMargin: CGFloat = 7
