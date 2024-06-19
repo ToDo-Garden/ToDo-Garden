@@ -1,7 +1,10 @@
-import Foundation
+import UIKit.UIColor
+
+import ToDoGardenUIResource
 
 enum EditToDoSceneTheme {
   enum Constant {}
+  enum Resource {}
 }
 
 extension EditToDoSceneTheme.Constant {
@@ -63,6 +66,24 @@ extension EditToDoSceneTheme.Constant.StringLiteral {
 
     enum RepetitionLabel {
       static let text = "반복"
+    }
+  }
+}
+
+extension EditToDoSceneTheme.Resource {
+  enum EditToDoViewController {
+    static let backgroundColor = UIColor.toDoGardenWhite
+  }
+
+  enum ToDoScheduleView {
+    enum AlarmLabel {
+      static let font = UIFont.pretendardHeadSemiBold
+      static let textColor = UIColor.toDoGardenGreenDark
+    }
+
+    enum RepetitionLabel {
+      static let font = UIFont.pretendardHeadSemiBold
+      static let textColor = UIColor.toDoGardenGreenDark
     }
   }
 }
