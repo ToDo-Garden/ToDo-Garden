@@ -10,6 +10,7 @@ import Foundation
 extension Constant.TextInputView {
   public enum Animation {}
   public enum Layout {}
+  public enum StringLiteral {}
 }
 
 extension Constant.TextInputView.Animation {
@@ -28,4 +29,8 @@ extension Constant.TextInputView.Layout.PlaceholderLabel {
 
 extension Constant.TextInputView.Layout.InputTextField {
   public static let defaultHeight: CGFloat = 20
+}
+
+extension Constant.TextInputView.StringLiteral {
+  public static let placeholderText: String = "을 입력해주세요."
 }
