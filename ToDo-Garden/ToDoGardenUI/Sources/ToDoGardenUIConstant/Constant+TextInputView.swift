@@ -8,7 +8,12 @@
 import Foundation
 
 extension Constant.TextInputView {
+  public enum Animation {}
   public enum Layout {}
+}
+
+extension Constant.TextInputView.Animation {
+  public static let duration: CGFloat = 0.2
 }
 
 extension Constant.TextInputView.Layout {
