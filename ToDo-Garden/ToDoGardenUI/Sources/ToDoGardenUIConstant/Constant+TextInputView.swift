@@ -13,9 +13,14 @@ extension Constant.TextInputView {
 
 extension Constant.TextInputView.Layout {
   public enum PlaceholderLabel {}
+  public enum InputTextField {}
 }
 
 extension Constant.TextInputView.Layout.PlaceholderLabel {
   public static let defaultHeight: CGFloat = 18
   public static let bottomMargin: CGFloat = 2
+}
+
+extension Constant.TextInputView.Layout.InputTextField {
+  public static let defaultHeight: CGFloat = 20
 }
