@@ -115,4 +115,19 @@ public class ManageGroupTableViewCell: UITableViewCell {
     }
     self.startAnimation()
   }
+  
+  public func setupRightButtonAction(handler: @escaping (UIColor, String) -> Void) {
+    self.rightButtonActionHandler = handler
+    self.rightImageButton?.addAction(UIAction { [weak self] _ in
+      self?.handleRightButtonAction()
+      
+    }, for: UIControl.Event.touchUpInside)
+  }
+  
+  private func handleRightButtonAction() {
+    if let color = configuration?.model?.progressCircle.progressColor.value,
+    let groupName = configuration?.model?.groupNameButton.groupName.value {
+      self.rightButtonActionHandler?(color, groupName)
+    }
+  }
 }
