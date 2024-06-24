@@ -33,4 +33,11 @@ public class ManageGroupTableViewCell: UITableViewCell {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+  
+  override public func prepareForReuse() {
+    super.prepareForReuse()
+    self.progressCircle?.removeFromSuperview()
+    self.groupNameButton?.removeFromSuperview()
+    self.rightImageButton?.removeFromSuperview()
+  }
 }
