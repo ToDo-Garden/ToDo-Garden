@@ -4,9 +4,11 @@ import ToDoGardenUIConstant
 
 public final class TextInputView: UIView {
   private let model: Model
+  private let inputTextField: Styled.TextField
 
   public init(model: Model) {
     self.model = model
+    self.inputTextField = Styled.TextField(configuration: .groupEdit(.standard))
     super.init(frame: CGRect.zero)
   }
 
@@ -15,6 +17,41 @@ public final class TextInputView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
 }
+
+// MARK: Private Functions
+
+extension TextInputView {
+  private func setup() {
+    self.addSubviews()
+    self.setupSubviewsLayout()
+  }
+}
+
+// MARK: Auto Layout
+
+extension TextInputView {
+  private func addSubviews() {
+    self.addSubview(self.inputTextField)
+  }
+
+  private func setupSubviewsLayout() {
+    self.setupInputTextFieldLayout()
+  }
+
+  private func setupInputTextFieldLayout() {
+    self.inputTextField.usingAutolayout()
+
+    NSLayoutConstraint.activate(
+      [
+        self.inputTextField.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+        self.inputTextField.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+        self.inputTextField.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+      ]
+    )
+  }
+}
+
+// MARK: Model
 
 extension TextInputView {
   public struct Model {
