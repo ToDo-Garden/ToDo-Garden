@@ -144,4 +144,35 @@ extension ManageGroupTableViewCell {
     self.buildRightImageButton()
     self.bind()
   }
+  
+  private func buildProgressCircle() {
+    guard let model = self.configuration?.model?.progressCircle else {
+      return
+    }
+    
+    self.progressCircle = CircularProgressView(
+      progressColor: model.progressColor.value,
+      backgroundColor: model.backgroundColor,
+      lineWidth: model.lineWidth
+    )
+    
+    guard let progressCircle = self.progressCircle else {
+      return
+    }
+    
+    progressCircle.usingAutolayout()
+    
+    self.contentView.addSubview(progressCircle)
+    NSLayoutConstraint.activate(
+      [
+        progressCircle.leadingAnchor.constraint(
+          equalTo: self.contentView.leadingAnchor,
+          constant: model.leading
+        ),
+        progressCircle.widthAnchor.constraint(equalToConstant: model.size.width),
+        progressCircle.heightAnchor.constraint(equalToConstant: model.size.height),
+        progressCircle.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor)
+      ]
+    )
+  }
 }
