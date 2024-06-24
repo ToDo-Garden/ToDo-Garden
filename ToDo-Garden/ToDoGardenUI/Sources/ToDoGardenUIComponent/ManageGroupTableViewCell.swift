@@ -48,4 +48,17 @@ public class ManageGroupTableViewCell: UITableViewCell {
       to: self.configuration?.model?.progressCircle.progressRate.value ?? Float.zero
     )
   }
+  
+  public func enterEditingMode() {
+    self.showRightImageButton()
+    self.animateAppear()
+  }
+  
+  public func leaveEditingMode() {
+    let isSecondaryStyle = self.configuration?.model?.groupNameButton.isCreateToDoButton
+    if isSecondaryStyle == true {
+      return
+    }
+    self.animateDisappear()
+  }
 }
