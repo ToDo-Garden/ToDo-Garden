@@ -50,6 +50,7 @@ extension TextInputView {
 extension TextInputView: UITextFieldDelegate {
   public func textFieldDidBeginEditing(_ textField: UITextField) {
     self.updatePlaceholderLabelText(isEditing: true)
+    self.updatePlaceholderLabelPosition(isEditing: true)
   }
 
   public func textFieldDidEndEditing(_ textField: UITextField) {
@@ -57,6 +58,7 @@ extension TextInputView: UITextFieldDelegate {
     else { return }
 
     self.updatePlaceholderLabelText(isEditing: false)
+    self.updatePlaceholderLabelPosition(isEditing: false)
   }
 
   private func updatePlaceholderLabelText(isEditing: Bool) {
@@ -65,6 +67,32 @@ extension TextInputView: UITextFieldDelegate {
 
     let textColor = isEditing ? UIColor.toDoGardenGreenDark : UIColor.toDoGardenGray2
     self.placeholderLabel.textColor = textColor
+  }
+
+  private func updatePlaceholderLabelPosition(isEditing: Bool) {
+    let transform = self.makePlaceholderLabelTrasnform(isEditing: isEditing, scale: self.model.shrinkScale)
+    if isEditing == false {
+      self.placeholderLabel.transform = transform
+    }
+
+    let duration = Constant.TextInputView.Animation.duration
+    UIView.animate(withDuration: duration, delay: 0.0) {
+      let animationTransform = isEditing ? transform : CGAffineTransform.identity
+      self.placeholderLabel.transform = animationTransform
+    }
+  }
+
+  private func makePlaceholderLabelTrasnform(isEditing: Bool, scale: CGFloat) -> CGAffineTransform {
+    let leadingMargin = -self.placeholderLabel.font.pointSize * (1 - scale)
+    let totalMargin = isEditing ? leadingMargin : leadingMargin * 4
+    let offsetX = self.placeholderLabel.bounds.origin.x + totalMargin
+
+    let labelHeight = -self.placeholderLabel.bounds.height
+    let defaultLineHeight = Constant.TextInputView.Layout.InputTextField.defaultHeight
+    let textFieldLineHeight = self.inputTextField.font?.lineHeight ?? defaultLineHeight
+    let offsetY = labelHeight == 0 ? -textFieldLineHeight : labelHeight
+
+    return CGAffineTransform(translationX: offsetX, y: offsetY).scaledBy(x: scale, y: scale)
   }
 }
 
