@@ -61,4 +61,42 @@ public class ManageGroupTableViewCell: UITableViewCell {
     }
     self.animateDisappear()
   }
+  
+  public func applyModelPrimary(
+    id: String,
+    groupName: String,
+    progressColor: UIColor,
+    progressRate: Float
+  ) {
+    self.configuration = Configuration.init(
+      style: Configuration.Style.primary(
+        id: id,
+        groupName: groupName,
+        progressColor: progressColor,
+        progressRate: progressRate
+      )
+    )
+    
+    self.build()
+    self.startAnimation()
+  }
+  
+  public func applyModelSecondary(
+    id: String,
+    groupName: String,
+    progressColor: UIColor,
+    progressRate: Float
+  ) {
+    self.configuration = Configuration.init(
+      style: Configuration.Style.secondary(
+        id: id,
+        groupName: groupName,
+        progressColor: progressColor,
+        progressRate: progressRate
+      )
+    )
+    
+    self.build()
+    self.startAnimation()
+  }
 }
