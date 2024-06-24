@@ -10,7 +10,7 @@ import UIKit
 import FoundationExtension
 import ToDoGardenUIAPI
 
-public class ManageGroupTableViewCell: UITableViewCell {
+public class ManageGroupTableViewCell: UITableViewCell, ManageGroupTableViewCellAPI {
   private var configuration: ManageGroupTableViewCell.Configuration?
   
   private var progressCircle: CircularProgressView?
