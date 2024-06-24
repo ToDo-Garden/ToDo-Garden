@@ -40,6 +40,10 @@ public final class CircularProgressView: UIView {
     self.layer.addSublayer(self.progressBackgroundLayer)
     self.layer.addSublayer(self.progressLayer)
   }
+  
+  func setupProgressLayerStrokeColor(with color: UIColor) {
+    self.progressLayer.strokeColor = color.cgColor
+  }
 }
 
 // MARK: - Setup animation
@@ -96,10 +100,6 @@ extension CircularProgressView {
   private func setupCircularLayerLineWidth(to lineWidth: CGFloat) {
     self.progressLayer.lineWidth = lineWidth
     self.progressBackgroundLayer.lineWidth = lineWidth
-  }
-  
-  private func setupProgressLayerStrokeColor(with color: UIColor) {
-    self.progressLayer.strokeColor = color.cgColor
   }
   
   private func setupProgressBackgroundLayerColor(with color: UIColor) {
