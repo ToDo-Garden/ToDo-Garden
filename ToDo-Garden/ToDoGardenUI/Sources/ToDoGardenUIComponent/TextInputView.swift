@@ -38,6 +38,14 @@ public final class TextInputView: UIView {
   public func changeBottomLine(color: UIColor) {
     self.inputTextField.mainColor = color
   }
+
+  public func setBeginEditing(with text: String) {
+    guard self.inputTextField.isFirstResponder == false
+    else { return }
+
+    self.inputTextField.text = text
+    _ = self.inputTextField.becomeFirstResponder()
+  }
 }
 
 // MARK: Private Functions
