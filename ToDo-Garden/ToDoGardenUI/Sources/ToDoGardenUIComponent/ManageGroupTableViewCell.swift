@@ -130,4 +130,9 @@ public class ManageGroupTableViewCell: UITableViewCell {
       self.rightButtonActionHandler?(color, groupName)
     }
   }
+  
+  public func getIdentifier() -> String {
+    return Self.identifier
+  }
+}
 }
