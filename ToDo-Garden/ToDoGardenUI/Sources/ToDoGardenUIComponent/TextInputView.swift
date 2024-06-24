@@ -8,6 +8,19 @@ public final class TextInputView: UIView {
   private let placeholderLabel: UILabel
   private let placeholderText: String
 
+  private var height: CGFloat {
+    let textFieldDefatulLineHeight = Constant.TextInputView.Layout.InputTextField.defaultHeight
+    let textFieldHeight = self.inputTextField.font?.lineHeight ?? textFieldDefatulLineHeight
+
+    let labelDefatulLineHeight = Constant.TextInputView.Layout.PlaceholderLabel.defaultHeight
+    let labelHeight = self.placeholderLabel.font?.lineHeight ?? labelDefatulLineHeight
+    return textFieldHeight + labelHeight + 1
+  }
+
+  public override var intrinsicContentSize: CGSize {
+    return CGSize(width: 0, height: self.height)
+  }
+
   public init(model: Model) {
     self.model = model
     self.inputTextField = Styled.TextField(configuration: .groupEdit(.standard))
