@@ -34,6 +34,10 @@ public final class TextInputView: UIView {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+
+  public func changeBottomLine(color: UIColor) {
+    self.inputTextField.mainColor = color
+  }
 }
 
 // MARK: Private Functions
@@ -144,7 +148,7 @@ extension TextInputView {
         self.placeholderLabel.trailingAnchor.constraint(lessThanOrEqualTo: self.inputTextField.trailingAnchor),
         self.placeholderLabel.bottomAnchor.constraint(
           equalTo: self.inputTextField.bottomAnchor,
-          constant: Constant.TextInputView.Layout.PlaceholderLabel.bottomMargin
+          constant: -Constant.TextInputView.Layout.PlaceholderLabel.bottomMargin
         )
       ]
     )
