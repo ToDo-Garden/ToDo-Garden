@@ -14,7 +14,7 @@ extension Constant.TextInputView {
 }
 
 extension Constant.TextInputView.Animation {
-  public static let duration: CGFloat = 0.2
+  public static let duration: CGFloat = 0.4
 }
 
 extension Constant.TextInputView.Layout {
