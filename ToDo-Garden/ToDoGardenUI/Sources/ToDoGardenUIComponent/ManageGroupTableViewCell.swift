@@ -99,4 +99,20 @@ public class ManageGroupTableViewCell: UITableViewCell {
     self.build()
     self.startAnimation()
   }
+  
+  public func update(color: UIColor? = nil, progressRate: Float? = nil, groupName: String? = nil) {
+    
+    if let color = color {
+      self.updateColorOfProgressCircle(color: color)
+    }
+    
+    if let progressRate = progressRate {
+      self.updateProgressRate(rate: progressRate)
+    }
+    
+    if let groupName = groupName {
+      self.updateTextOfGroupName(name: groupName)
+    }
+    self.startAnimation()
+  }
 }
