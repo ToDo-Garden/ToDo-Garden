@@ -9,9 +9,10 @@ import UIKit
 
 import ToDoGardenUIConstant
 
-final class CalendarCollectionViewCell: UICollectionViewCell {
+final class CalendarCollectionViewCell: UICollectionViewCell, ReusableIdentifier {
   private var toDoExistenceView: UIView
   private var dayLabel: UILabel
+  private var isThisMonth: Bool
 
   override var isSelected: Bool {
     willSet {
@@ -26,6 +27,7 @@ final class CalendarCollectionViewCell: UICollectionViewCell {
   override init(frame: CGRect) {
     self.toDoExistenceView = UIView()
     self.dayLabel = UILabel()
+    self.isThisMonth = true
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -37,12 +39,17 @@ final class CalendarCollectionViewCell: UICollectionViewCell {
 
   override func prepareForReuse() {
     super.prepareForReuse()
+    self.isThisMonth = true
     self.deSelected()
   }
 
-  func update(dayString: String, isThisMonth: Bool) {
+  func updateText(with dayString: String) {
     self.dayLabel.text = dayString
+  }
+
+  func updateTextColor(with isThisMonth: Bool) {
     if isThisMonth == false {
+      self.isThisMonth = false
       self.dayLabel.textColor = UIColor.toDoGardenGreenGray
     }
   }
@@ -58,7 +65,8 @@ extension CalendarCollectionViewCell {
 
   private func deSelected() {
     self.backgroundColor = UIColor.toDoGardenWhite
-    self.dayLabel.textColor = UIColor.toDoGardenGreenDark
+    let textColor = self.isThisMonth ? UIColor.toDoGardenGreenDark : UIColor.toDoGardenGreenGray
+    self.dayLabel.textColor = textColor
   }
 
   private func setup() {
@@ -125,5 +133,3 @@ extension CalendarCollectionViewCell {
     ])
   }
 }
-
-extension CalendarCollectionViewCell: ReusableIdentifier {}

@@ -30,7 +30,10 @@ public final class CalendarView: UIView {
     self.weekdaySymbolStackView = UIStackView()
     self.dateCollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewLayout())
     self.heightConstraint = NSLayoutConstraint()
-    self.calendarViewDelegate = CalendarViewSingleSelectionDelegate(collectionView: self.dateCollectionView)
+    self.calendarViewDelegate = CalendarViewSingleSelectionDelegate(
+      collectionView: self.dateCollectionView,
+      collectionViewLayoutModel: model.collectionViewLayout
+    )
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -49,10 +52,6 @@ public final class CalendarView: UIView {
 // MARK: Private Functions
 
 extension CalendarView {
-  private func setup() {
-    self.setupUI()
-  }
-
   private func scrollToCurrentMonth() {
     if self.isLayoutSubviewsCalled == false {
       self.calendarViewDelegate.scrollCalendar(
@@ -62,17 +61,37 @@ extension CalendarView {
       self.isLayoutSubviewsCalled = true
     }
   }
+
+  private func setup() {
+    self.setupUI()
+    self.setupCollectionViewScrollDelegate()
+  }
+
+  private func setupCollectionViewScrollDelegate() {
+    self.calendarViewDelegate.scrollDelegate = self
+  }
 }
 
 // MARK: ScrollDirection Sender Delegate
 
-protocol CalendarScrollSendable {
+protocol CalendarScrollSendable: AnyObject {
   func didScroll()
 }
 
 extension CalendarView: CalendarScrollSendable {
   func didScroll() {
+    self.updateCollectionViewHeight()
     self.updateMonthLabelText()
+  }
+
+  private func updateCollectionViewHeight() {
+    self.superview?.layoutIfNeeded()
+    let duration = Constant.CalendarView.Animation.duration
+    UIView.animate(withDuration: duration) {
+      let collectionViewHeight = self.calendarViewDelegate.getCollectionViewHeight()
+      self.heightConstraint.constant = collectionViewHeight
+      self.superview?.layoutIfNeeded()
+    }
   }
 
   private func updateMonthLabelText() {
@@ -138,7 +157,8 @@ extension CalendarView {
 
   private func setupDateCollectionView() {
     self.configureCollectionView(self.dateCollectionView)
-    self.dateCollectionView.collectionViewLayout = self.makeCollectionViewLayout(with: self.model.collectionView)
+    self.dateCollectionView.collectionViewLayout = self.makeCollectionViewLayout(with: self.model.collectionViewLayout)
+    self.dateCollectionView.delegate = self.calendarViewDelegate
   }
 }
 
@@ -281,12 +301,12 @@ extension CalendarView {
   public struct Model {
     let borderWidth: CGFloat
     let cornerRadius: CGFloat
-    let collectionView: Model.CollectionView
+    let collectionViewLayout: Model.CollectionViewLayout
 
     public static let primary = Self(
       borderWidth: Constant.CalendarView.Model.Primary.borderWidth,
       cornerRadius: Constant.CalendarView.Model.Primary.cornerRadius,
-      collectionView: CollectionView(
+      collectionViewLayout: CollectionViewLayout(
         itemSize: Constant.CalendarView.Model.Primary.itemSize,
         itemSpacing: Constant.CalendarView.Model.Primary.itemSpacing,
         lineSpacing: Constant.CalendarView.Model.Primary.lineSpacing
@@ -296,7 +316,7 @@ extension CalendarView {
 }
 
 extension CalendarView.Model {
-  public struct CollectionView {
+  public struct CollectionViewLayout {
     let itemSize: CGSize
     let itemSpacing: CGFloat
     let lineSpacing: CGFloat

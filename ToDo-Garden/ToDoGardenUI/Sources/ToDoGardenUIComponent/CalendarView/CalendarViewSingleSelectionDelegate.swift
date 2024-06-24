@@ -9,25 +9,36 @@ import UIKit
 
 import ToDoGardenUIConstant
 
-protocol CalendarViewControllable where Self: NSObject {
+protocol CalendarViewControllable: UICollectionViewDelegate {
+  var scrollDelegate: CalendarScrollSendable? { get set }
+
   func fetchWeekdaySymbols() -> [String]
+  func getCollectionViewHeight() -> CGFloat
   func scrollCalendar(to scrollDirection: CalendarScrollDirection, animated: Bool)
   func getDateString() -> String
 }
 
 class CalendarViewSingleSelectionDelegate: NSObject {
-  private var calendarDataGenerator: CalendarDataGeneratable
-  private var dateFormatter: DateFormatter
-
-  private var collectionView: UICollectionView
-  private var collectionViewDataSource: UICollectionViewDiffableDataSource<CalendarSection, CalendarItem>!
-  private var currentIndexPath: IndexPath
+  private let calendarDataGenerator: CalendarDataGeneratable
+  private let collectionViewLayoutModel: CalendarView.Model.CollectionViewLayout
+  
+  private(set) var collectionViewDataSource: UICollectionViewDiffableDataSource<CalendarSection, CalendarItem>!
+  private(set) var currentIndexPath: IndexPath
+  private(set) var selectedItem: CalendarItem?
   private var initialContentOffset: CGPoint
-  private var selectedItem: CalendarItem?
+  
+  let collectionView: UICollectionView
+  let dateFormatter: DateFormatter
 
-  init(collectionView: UICollectionView) {
+  weak var scrollDelegate: CalendarScrollSendable?
+
+  init(
+    collectionView: UICollectionView,
+    collectionViewLayoutModel: CalendarView.Model.CollectionViewLayout
+  ) {
     self.calendarDataGenerator = CalendarDataGenerator(calendar: Calendar.localeUpdated)
     self.dateFormatter = DateFormatter()
+    self.collectionViewLayoutModel = collectionViewLayoutModel
     self.collectionView = collectionView
     self.currentIndexPath = IndexPath(item: 0, section: 3)
     self.initialContentOffset = CGPoint()
@@ -52,7 +63,14 @@ extension CalendarViewSingleSelectionDelegate: CalendarViewControllable {
       at: UICollectionView.ScrollPosition.left,
       animated: animated
     )
-    self.reloadAllSnapshot()
+    self.scrollDelegate?.didScroll()
+  }
+
+  func getCollectionViewHeight() -> CGFloat {
+    let snapshot = self.collectionViewDataSource.snapshot()
+    let currentSection = snapshot.sectionIdentifiers[self.currentIndexPath.section]
+    let itemCount = snapshot.itemIdentifiers(inSection: currentSection).count
+    return self.calculateHeight(items: itemCount)
   }
 
   func getDateString() -> String {
@@ -74,6 +92,18 @@ extension CalendarViewSingleSelectionDelegate {
     } else {
       self.dateFormatter.locale = Locale.autoupdatingCurrent
     }
+
+    self.dateFormatter.dateFormat = Constant.CalendarView.StringLiteral.dateFormat
+  }
+
+  private func calculateHeight(items count: Int) -> CGFloat {
+    let numberOfRows = CGFloat(count / 7)
+    let totalItemHeight = self.collectionViewLayoutModel.itemSize.height * numberOfRows
+    let totalInsets = self.collectionViewLayoutModel.lineSpacing * (numberOfRows - 1)
+    let collectionViewHeight = totalItemHeight + totalInsets
+    let defaultHeight: CGFloat = Constant.CalendarView.Layout.CollectionView.defaultHeight
+
+    return defaultHeight + collectionViewHeight
   }
 }
 
@@ -81,7 +111,7 @@ extension CalendarViewSingleSelectionDelegate {
 
 extension CalendarViewSingleSelectionDelegate {
   private func setupCollectionViewDataSource() {
-    self.collectionViewDataSource = self.makeDiffableDataSource(self.collectionView, with: self.dateFormatter)
+    self.collectionViewDataSource = self.makeDiffableDataSource()
     self.collectionView.dataSource = self.collectionViewDataSource
   }
 
@@ -211,6 +241,7 @@ extension CalendarViewSingleSelectionDelegate: UICollectionViewDelegate {
     ) else { return }
 
     self.currentIndexPath.section += scrollDirection.rawValue
+    self.scrollDelegate?.didScroll()
   }
 
   private func calculateScrollDireciton(
@@ -248,42 +279,28 @@ extension CalendarViewSingleSelectionDelegate {
     guard let selectedNewItem = self.collectionViewDataSource.itemIdentifier(for: indexPath)
     else { return }
 
-    let comparisonResult = self.validateIsSameMonth(selectedItem: selectedNewItem, section: indexPath)
-    guard comparisonResult != ComparisonResult.orderedSame
-    else {
-      self.selectedItem = selectedNewItem
-      return
-    }
+    guard let scrollDirection = getScrollDirection(selectedItem: selectedNewItem, section: indexPath)
+    else { return }
 
-    let scrollDirection = comparisonResult == ComparisonResult.orderedAscending ?
-    CalendarScrollDirection.left : CalendarScrollDirection.right
     self.scrollCalendar(to: scrollDirection, animated: true)
-    self.setSelected(to: selectedNewItem)
     self.selectedItem = selectedNewItem
   }
 
-  private func validateIsSameMonth(selectedItem: CalendarItem, section indexPath: IndexPath) -> ComparisonResult {
-    guard let date = self.collectionViewDataSource.sectionIdentifier(for: indexPath.section)?.firstDay
-    else { return ComparisonResult.orderedSame }
+  private func getScrollDirection(
+    selectedItem: CalendarItem,
+    section indexPath: IndexPath
+  ) -> CalendarScrollDirection? {
+    guard let currentDate = self.collectionViewDataSource.sectionIdentifier(for: indexPath.section)?.firstDay
+    else { return nil }
 
-    return self.calendarDataGenerator.compareMonth(from: selectedItem.date, with: date)
-  }
-
-  private func setSelected(to item: CalendarItem) {
-    let snapshot = self.collectionViewDataSource.snapshot()
-    let section = snapshot.sectionIdentifiers[self.currentIndexPath.section]
-    let indexOfItem = snapshot.itemIdentifiers(inSection: section).firstIndex { (calendarItem: CalendarItem) in
-      return item.date == calendarItem.date
+    let comparisonResult = self.calendarDataGenerator.compareMonth(from: selectedItem.date, with: currentDate)
+    guard comparisonResult != ComparisonResult.orderedSame
+    else {
+      self.selectedItem = selectedItem
+      return nil
     }
 
-    if let itemIndex = indexOfItem {
-      let itemIndexPath = IndexPath(item: itemIndex, section: self.currentIndexPath.section)
-      self.collectionView.selectItem(
-        at: itemIndexPath,
-        animated: true,
-        scrollPosition: []
-      )
-    }
+    return comparisonResult == ComparisonResult.orderedAscending ? .left : .right
   }
 }
 

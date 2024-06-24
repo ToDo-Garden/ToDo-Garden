@@ -15,7 +15,7 @@ extension Constant.CalendarView {
 }
 
 extension Constant.CalendarView.Animation {
-  public static let duration: CGFloat = 0.1
+  public static let duration: CGFloat = 0.3
 }
 
 extension Constant.CalendarView.Layout {
@@ -47,7 +47,7 @@ extension Constant.CalendarView.Layout {
     public static let leadingMargin: CGFloat = 13
     public static let trailingMargin: CGFloat = 10
     public static let bottomMargin: CGFloat = 11
-    public static let defaultHeight: CGFloat = 98
+    public static let defaultHeight: CGFloat = 102
   }
 
   public enum CollectionViewCell {
