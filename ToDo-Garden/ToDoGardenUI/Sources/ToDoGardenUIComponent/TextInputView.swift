@@ -6,11 +6,13 @@ public final class TextInputView: UIView {
   private let model: Model
   private let inputTextField: Styled.TextField
   private let placeholderLabel: UILabel
+  private let placeholderText: String
 
   public init(model: Model) {
     self.model = model
     self.inputTextField = Styled.TextField(configuration: .groupEdit(.standard))
     self.placeholderLabel = UILabel()
+    self.placeholderText = model.inputText + Constant.TextInputView.StringLiteral.placeholderText
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -25,8 +27,16 @@ public final class TextInputView: UIView {
 
 extension TextInputView {
   private func setup() {
+    self.setupPlaceholderLabel()
     self.addSubviews()
     self.setupSubviewsLayout()
+  }
+
+  private func setupPlaceholderLabel() {
+    self.placeholderLabel.font = UIFont.pretendardBodySemiBold15
+    self.placeholderLabel.text = self.placeholderText
+    self.placeholderLabel.textColor = UIColor.toDoGardenGray2
+    self.placeholderLabel.adjustsFontSizeToFitWidth = true
   }
 }
 
