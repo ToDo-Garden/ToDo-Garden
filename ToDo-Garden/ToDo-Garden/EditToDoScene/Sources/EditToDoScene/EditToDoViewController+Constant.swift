@@ -13,7 +13,6 @@ extension EditToDoViewController {
 
 extension EditToDoViewController.Constant {
   enum Layout {}
-  enum StringLiteral {}
 }
 
 extension EditToDoViewController.Constant.Layout {
@@ -81,35 +80,5 @@ extension EditToDoViewController.Constant.Layout {
     static let leadingMargin: CGFloat = 30
     static let traillingMargin: CGFloat = 30
     static let bottomMargin: CGFloat = 150
-  }
-}
-
-extension EditToDoViewController.Constant.StringLiteral {
-  enum CompleteEditingButton {
-    static let title = "ToDo 편집"
-  }
-
-  enum EditToDoViewController {
-    static let title = "완료"
-  }
-
-  enum EditToDoView {
-    enum GroupLabel {
-      static let text = "그룹"
-    }
-
-    enum DeleteToDoButton {
-      static let title = "삭제하기"
-    }
-  }
-
-  enum ToDoScheduleView {
-    enum AlarmLabel {
-      static let text = "알림"
-    }
-
-    enum RepetitionLabel {
-      static let text = "반복"
-    }
   }
 }
