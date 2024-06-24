@@ -28,6 +28,7 @@ public final class TextInputView: UIView {
 extension TextInputView {
   private func setup() {
     self.setupPlaceholderLabel()
+    self.setupInputTextFieldDelegate()
     self.addSubviews()
     self.setupSubviewsLayout()
   }
@@ -38,7 +39,15 @@ extension TextInputView {
     self.placeholderLabel.textColor = UIColor.toDoGardenGray2
     self.placeholderLabel.adjustsFontSizeToFitWidth = true
   }
+
+  private func setupInputTextFieldDelegate() {
+    self.inputTextField.delegate = self
+  }
 }
+
+// MARK: TextField Delegate Functions
+
+extension TextInputView: UITextFieldDelegate {}
 
 // MARK: Auto Layout
 
