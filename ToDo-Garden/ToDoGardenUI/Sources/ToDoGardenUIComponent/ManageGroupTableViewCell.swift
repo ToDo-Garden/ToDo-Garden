@@ -231,4 +231,29 @@ extension ManageGroupTableViewCell {
       ]
     )
   }
+  
+  private func buildRightImageButton() {
+    self.rightImageButton = UIButton()
+    guard let model = self.configuration?.model, let rightImageButton = self.rightImageButton else {
+      return
+    }
+    
+    rightImageButton.setBackgroundImage(
+      model.rightImageButton.image,
+      for: UIControl.State.normal
+    )
+    rightImageButton.usingAutolayout()
+    self.contentView.addSubview(rightImageButton)
+    NSLayoutConstraint.activate(
+      [
+        rightImageButton.widthAnchor.constraint(equalToConstant: model.rightImageButton.size.width),
+        rightImageButton.heightAnchor.constraint(equalToConstant: model.rightImageButton.size.height),
+        rightImageButton.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
+        rightImageButton.trailingAnchor.constraint(
+          equalTo: self.contentView.trailingAnchor,
+          constant: -model.rightImageButton.trailing
+        )
+      ]
+    )
+  }
 }
