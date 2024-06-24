@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Wood on 6/24/24.
-//
-
 import Foundation
 
 extension EditToDoViewController {
