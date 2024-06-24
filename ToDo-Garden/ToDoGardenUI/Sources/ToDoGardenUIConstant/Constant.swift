@@ -28,4 +28,6 @@ public enum Constant {
   public enum CalendarView {}
   public enum ToDoGardenSwitch {}
   public enum TextInputView {}
+  public enum ManageGroupListTableViewCell {}
+  public enum ManageGroupListTableView {}
 }
