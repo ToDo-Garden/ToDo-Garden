@@ -175,4 +175,60 @@ extension ManageGroupTableViewCell {
       ]
     )
   }
+  
+  private func buildGroupNameButton() {
+    guard let model = self.configuration?.model?.groupNameButton else {
+      return
+    }
+    
+    self.initializeGroupNameButton(with: model)
+    
+    guard let groupNameButton = self.groupNameButton, let progressCircle = self.progressCircle else {
+      return
+    }
+    
+    self.configureGroupNameButtonAppearance(groupNameButton, with: model)
+    self.addGroupNameButtonConstraints(groupNameButton, progressCircle, with: model)
+  }
+  
+  private func initializeGroupNameButton(with model: Configuration.Model.GroupNameButton) {
+    if model.isCreateToDoButton {
+      self.groupNameButton = CreateToDoButton(model: CreateToDoButton.Model.primary)
+    } else {
+      self.groupNameButton = UIButton(configuration: UIButton.Configuration.plain())
+      self.groupNameButton?.backgroundColor = UIColor.toDoGardenGreenBackground
+      self.groupNameButton?.layer.cornerRadius = model.cornerRadius
+      self.groupNameButton?.configuration?.contentInsets = model.contentInsets
+    }
+  }
+  
+  private func configureGroupNameButtonAppearance(
+    _ groupNameButton: UIButton,
+    with model: Configuration.Model.GroupNameButton
+  ) {
+    groupNameButton.configuration?.titleLineBreakMode = NSLineBreakMode.byTruncatingTail
+    groupNameButton.setAttributedTitle(
+      self.attributedButtonTitle(with: model.groupName.value),
+      for: UIControl.State.normal
+    )
+    groupNameButton.usingAutolayout()
+    self.contentView.addSubview(groupNameButton)
+  }
+  
+  private func addGroupNameButtonConstraints(
+    _ groupNameButton: UIButton,
+    _ progressCircle: UIView,
+    with model: Configuration.Model.GroupNameButton
+  ) {
+    NSLayoutConstraint.activate(
+      [
+        groupNameButton.leadingAnchor.constraint(equalTo: progressCircle.trailingAnchor, constant: model.leading),
+        groupNameButton.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
+        groupNameButton.heightAnchor.constraint(equalToConstant: model.height),
+        groupNameButton.widthAnchor.constraint(
+          lessThanOrEqualTo: self.contentView.widthAnchor,
+          multiplier: model.widthMultiplier)
+      ]
+    )
+  }
 }
