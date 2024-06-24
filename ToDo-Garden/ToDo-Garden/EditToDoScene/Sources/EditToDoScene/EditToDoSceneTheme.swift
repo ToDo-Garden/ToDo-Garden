@@ -12,30 +12,30 @@ extension EditToDoSceneTheme {
 
 extension EditToDoSceneTheme.StringLiteral {
   enum CompleteEditingButton {
-    static var title = "ToDo 편집"
+    static let title = "ToDo 편집"
   }
 
   enum EditToDoViewController {
-    static var title = "완료"
+    static let title = "완료"
   }
 
   enum EditToDoView {
     enum GroupLabel {
-      static var text = "그룹"
+      static let text = "그룹"
     }
 
     enum DeleteToDoButton {
-      static var title = "삭제하기"
+      static let title = "삭제하기"
     }
   }
 
   enum ToDoScheduleView {
     enum AlarmLabel {
-      static var text = "알림"
+      static let text = "알림"
     }
 
     enum RepetitionLabel {
-      static var text = "반복"
+      static let text = "반복"
     }
   }
 }
