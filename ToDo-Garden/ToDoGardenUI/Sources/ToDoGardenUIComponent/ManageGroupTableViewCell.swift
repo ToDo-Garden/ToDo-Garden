@@ -135,4 +135,13 @@ public class ManageGroupTableViewCell: UITableViewCell {
     return Self.identifier
   }
 }
+
+// MARK: - Build Views
+extension ManageGroupTableViewCell {
+  private func build() {
+    self.buildProgressCircle()
+    self.buildGroupNameButton()
+    self.buildRightImageButton()
+    self.bind()
+  }
 }
