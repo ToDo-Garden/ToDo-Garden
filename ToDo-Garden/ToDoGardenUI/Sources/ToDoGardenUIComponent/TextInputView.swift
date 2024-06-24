@@ -47,7 +47,26 @@ extension TextInputView {
 
 // MARK: TextField Delegate Functions
 
-extension TextInputView: UITextFieldDelegate {}
+extension TextInputView: UITextFieldDelegate {
+  public func textFieldDidBeginEditing(_ textField: UITextField) {
+    self.updatePlaceholderLabelText(isEditing: true)
+  }
+
+  public func textFieldDidEndEditing(_ textField: UITextField) {
+    guard self.inputTextField.text?.isEmpty == true
+    else { return }
+
+    self.updatePlaceholderLabelText(isEditing: false)
+  }
+
+  private func updatePlaceholderLabelText(isEditing: Bool) {
+    let text = isEditing ? self.model.inputText : self.placeholderText
+    self.placeholderLabel.text = text
+
+    let textColor = isEditing ? UIColor.toDoGardenGreenDark : UIColor.toDoGardenGray2
+    self.placeholderLabel.textColor = textColor
+  }
+}
 
 // MARK: Auto Layout
 
