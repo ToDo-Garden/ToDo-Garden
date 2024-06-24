@@ -9,7 +9,7 @@ import UIKit
 
 import ToDoGardenUIConstant
 
-extension ManageGroupListTableViewCell {
+extension ManageGroupTableViewCell {
   public struct Configuration {
     public enum Style {
       case primary(
@@ -167,7 +167,7 @@ extension ManageGroupListTableViewCell {
   }
 }
 
-extension ManageGroupListTableViewCell.Configuration.Model {
+extension ManageGroupTableViewCell.Configuration.Model {
   struct ProgressCircle {
     var progressColor: Observable<UIColor>
     var progressRate: Observable<Float>
