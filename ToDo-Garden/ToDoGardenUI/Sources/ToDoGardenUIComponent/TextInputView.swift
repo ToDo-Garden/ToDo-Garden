@@ -5,11 +5,14 @@ import ToDoGardenUIConstant
 public final class TextInputView: UIView {
   private let model: Model
   private let inputTextField: Styled.TextField
+  private let placeholderLabel: UILabel
 
   public init(model: Model) {
     self.model = model
     self.inputTextField = Styled.TextField(configuration: .groupEdit(.standard))
+    self.placeholderLabel = UILabel()
     super.init(frame: CGRect.zero)
+    self.setup()
   }
 
   @available(*, unavailable)
@@ -32,10 +35,12 @@ extension TextInputView {
 extension TextInputView {
   private func addSubviews() {
     self.addSubview(self.inputTextField)
+    self.addSubview(self.placeholderLabel)
   }
 
   private func setupSubviewsLayout() {
     self.setupInputTextFieldLayout()
+    self.setupPlaceholderLabelLayout()
   }
 
   private func setupInputTextFieldLayout() {
@@ -46,6 +51,22 @@ extension TextInputView {
         self.inputTextField.leadingAnchor.constraint(equalTo: self.leadingAnchor),
         self.inputTextField.trailingAnchor.constraint(equalTo: self.trailingAnchor),
         self.inputTextField.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+      ]
+    )
+  }
+
+  private func setupPlaceholderLabelLayout() {
+    self.placeholderLabel.usingAutolayout()
+
+    NSLayoutConstraint.activate(
+      [
+        self.placeholderLabel.topAnchor.constraint(equalTo: self.inputTextField.topAnchor),
+        self.placeholderLabel.leadingAnchor.constraint(equalTo: self.inputTextField.leadingAnchor),
+        self.placeholderLabel.trailingAnchor.constraint(lessThanOrEqualTo: self.inputTextField.trailingAnchor),
+        self.placeholderLabel.bottomAnchor.constraint(
+          equalTo: self.inputTextField.bottomAnchor,
+          constant: Constant.TextInputView.Layout.PlaceholderLabel.bottomMargin
+        )
       ]
     )
   }
