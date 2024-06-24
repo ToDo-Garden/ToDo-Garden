@@ -182,3 +182,25 @@ extension TextInputView {
     public static let userDescription = Self(inputText: "소개")
   }
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let stackView = UIStackView()
+  stackView.axis = .vertical
+  stackView.spacing = 50
+
+  let toDoNameView = TextInputView(model: .toDoName)
+  stackView.addArrangedSubview(toDoNameView)
+
+  let groupNameView = TextInputView(model: .groupName)
+  groupNameView.changeBottomLine(color: UIColor.toDoGardenYellow)
+  stackView.addArrangedSubview(groupNameView)
+
+  let userIdInputView = TextInputView(model: .userId)
+  userIdInputView.setBeginEditing(with: "우드")
+  stackView.addArrangedSubview(userIdInputView)
+
+  return stackView
+}
+#endif
