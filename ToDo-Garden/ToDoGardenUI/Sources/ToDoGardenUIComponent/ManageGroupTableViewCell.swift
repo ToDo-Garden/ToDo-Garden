@@ -257,6 +257,34 @@ extension ManageGroupTableViewCell {
     )
   }
 }
+
+// MARK: - Bind
+extension ManageGroupTableViewCell {
+  private func bind() {
+    self.configuration?.model?.rightImageButton.isHidden.bind { [weak self] isHidden in
+      self?.rightImageButton?.isHidden = isHidden
+    }
+    
+    self.configuration?.model?.progressCircle.progressColor.bind { [weak self] color in
+      self?.progressCircle?.setupProgressLayerStrokeColor(with: color)
+    }
+    
+    self.configuration?.model?.groupNameButton.groupName.bind { [weak self] title in
+      self?.groupNameButton?.setAttributedTitle(self?.attributedButtonTitle(with: title), for: UIControl.State.normal)
+    }
+  }
+  private func attributedButtonTitle(with title: String) -> NSAttributedString {
+    let attributedString = title.applyTextAttributes(
+      attributes: [
+        NSAttributedString.Key.font: UIFont.pretendardBodyBold,
+        NSAttributedString.Key.foregroundColor:
+          UIColor.toDoGardenGreenDark
+      ]
+    )
+    return attributedString
+  }
+}
+
 // MARK: - Animation
 extension ManageGroupTableViewCell {
   private func showRightImageButton() {
