@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  Constant+ManageGroupListTableView.swift
+//
 //
 //  Created by SONG on 6/23/24.
 //
