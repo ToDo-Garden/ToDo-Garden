@@ -257,3 +257,27 @@ extension ManageGroupTableViewCell {
     )
   }
 }
+// MARK: - Animation
+extension ManageGroupTableViewCell {
+  private func showRightImageButton() {
+    self.configuration?.model?.rightImageButton.isHidden.value = false
+  }
+  
+  private func hideRightImageButton() {
+    self.configuration?.model?.rightImageButton.isHidden.value = true
+  }
+  
+  private func animateAppear() {
+    UIView.animate(withDuration: 0.3) { [weak self] in
+      self?.rightImageButton?.alpha = 1.0
+    }
+  }
+  
+  private func animateDisappear() {
+    UIView.animate(withDuration: 0.3) { [weak self] in
+      self?.rightImageButton?.alpha = 0.0
+    } completion: { [weak self] _ in
+      self?.hideRightImageButton()
+    }
+  }
+}
