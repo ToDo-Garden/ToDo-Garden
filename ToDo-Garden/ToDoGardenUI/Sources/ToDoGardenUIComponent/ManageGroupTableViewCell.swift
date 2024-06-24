@@ -40,4 +40,12 @@ public class ManageGroupTableViewCell: UITableViewCell {
     self.groupNameButton?.removeFromSuperview()
     self.rightImageButton?.removeFromSuperview()
   }
+  
+  public func startAnimation() {
+    self.progressCircle?.startAnimation(
+      duration: 0.5,
+      from: Float.zero,
+      to: self.configuration?.model?.progressCircle.progressRate.value ?? Float.zero
+    )
+  }
 }
