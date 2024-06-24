@@ -273,6 +273,19 @@ extension ManageGroupTableViewCell {
       self?.groupNameButton?.setAttributedTitle(self?.attributedButtonTitle(with: title), for: UIControl.State.normal)
     }
   }
+  
+  private func updateColorOfProgressCircle(color: UIColor) {
+    self.configuration?.model?.progressCircle.progressColor.value = color
+  }
+  
+  private func updateTextOfGroupName(name: String) {
+    self.configuration?.model?.groupNameButton.groupName.value = name
+  }
+  
+  private func updateProgressRate(rate: Float) {
+    self.configuration?.model?.progressCircle.progressRate.value = rate
+  }
+  
   private func attributedButtonTitle(with title: String) -> NSAttributedString {
     let attributedString = title.applyTextAttributes(
       attributes: [
