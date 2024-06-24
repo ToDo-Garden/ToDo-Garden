@@ -23,7 +23,11 @@ public final class TextInputView: UIView {
 
   public init(model: Model) {
     self.model = model
-    self.inputTextField = Styled.TextField(configuration: .groupEdit(.standard))
+    self.inputTextField = Styled.TextField(
+      configuration: Styled.TextField.Configuration.groupEdit(
+        Styled.TextField.Configuration.GroupEditModel.standard
+      )
+    )
     self.placeholderLabel = UILabel()
     self.placeholderText = model.inputText + Constant.TextInputView.StringLiteral.placeholderText
     super.init(frame: CGRect.zero)
@@ -190,14 +194,14 @@ extension TextInputView {
   stackView.axis = .vertical
   stackView.spacing = 50
 
-  let toDoNameView = TextInputView(model: .toDoName)
+  let toDoNameView = TextInputView(model: TextInputView.Model.toDoName)
   stackView.addArrangedSubview(toDoNameView)
 
-  let groupNameView = TextInputView(model: .groupName)
+  let groupNameView = TextInputView(model: TextInputView.Model.groupName)
   groupNameView.changeBottomLine(color: UIColor.toDoGardenYellow)
   stackView.addArrangedSubview(groupNameView)
 
-  let userIdInputView = TextInputView(model: .userId)
+  let userIdInputView = TextInputView(model: TextInputView.Model.userId)
   userIdInputView.setBeginEditing(with: "우드")
   stackView.addArrangedSubview(userIdInputView)
 
