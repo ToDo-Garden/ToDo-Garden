@@ -24,7 +24,6 @@ public final class CircularProgressView: UIView {
       lineWidth: lineWidth
     )
     self.layer.addSublayer(self.progressBackgroundLayer)
-    self.layer.addSublayer(self.progressLayer)
   }
   
   @available(*, unavailable)
@@ -38,6 +37,7 @@ public final class CircularProgressView: UIView {
   }
   
   public func startAnimation(duration: TimeInterval, from: Float, to value: Float) {
+    self.layer.addSublayer(self.progressLayer)
     self.setProgress(duration: duration, from: from, to: value)
   }
   
