@@ -3,7 +3,11 @@ import UIKit
 import ToDoGardenUIConstant
 
 extension Styled.Row {
-  func buildListPrimaryStyle(stack: UIStackView, model: Configuration.ListPrimaryModel) {
+  func buildListPrimaryStyle(
+    stack: UIStackView,
+    model: Configuration.ListPrimaryModel,
+    views: [UIView]? = nil
+  ) {
     stack.alignment = UIStackView.Alignment.center
     self.buildStack(
       stack: stack,

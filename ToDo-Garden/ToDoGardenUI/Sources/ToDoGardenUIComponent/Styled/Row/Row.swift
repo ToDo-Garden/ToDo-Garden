@@ -57,6 +57,8 @@ extension Styled {
     private func build(with views: [UIView]) {
       let stack = UIStackView(frame: CGRect.zero)
       switch self.configuration {
+      case let Configuration.listPrimary(listPrimaryModel):
+        self.buildListPrimaryStyle(stack: stack, model: listPrimaryModel, views: views)
       case let Configuration.repeatOtherDays(repeatOtherDaysModel):
         self.buildRepeatOtherDaysStyle(stack: stack, model: repeatOtherDaysModel, views: views)
       default: break
