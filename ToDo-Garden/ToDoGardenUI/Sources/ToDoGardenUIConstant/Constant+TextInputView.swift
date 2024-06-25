@@ -32,7 +32,9 @@ extension Constant.TextInputView.Layout.InputTextField {
 }
 
 extension Constant.TextInputView.StringLiteral {
-  public static let placeholderText: String = "을 입력해주세요."
+  public static let defaultPlaceholderSuffix: String = "을(를) 입력해주세요."
+  public static let suffixWithFinalConsonant: String = "을 입력해주세요."
+  public static let suffixWithoutFinalConsonant: String = "를 입력해주세요."
 }
 
 extension Constant.TextInputView.StringLiteral {
