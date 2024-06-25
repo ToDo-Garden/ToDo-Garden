@@ -123,6 +123,16 @@ public class ManageGroupTableViewCell: UITableViewCell, ManageGroupTableViewCell
       self?.handleRightButtonAction()
     }, for: UIControl.Event.touchUpInside)
   }
+  public func setupGroupNameButtonAction(handler: @escaping (String) -> Void) {
+    self.groupNameButtonActionHandler = handler
+    self.groupNameButton?.addAction(UIAction { [weak self] _ in
+      self?.handleGroupNameButtonAction()
+    }, for: .touchUpInside)
+  }
+  
+  public func getIdentifier() -> String {
+    return Self.identifier
+  }
   
   private func handleRightButtonAction() {
     if let color = configuration?.model?.progressCircle.progressColor.value,
@@ -131,21 +141,10 @@ public class ManageGroupTableViewCell: UITableViewCell, ManageGroupTableViewCell
     }
   }
   
-  public func setupGroupNameButtonAction(handler: @escaping (String) -> Void) {
-    self.groupNameButtonActionHandler = handler
-    self.groupNameButton?.addAction(UIAction { [weak self] _ in
-      self?.handleGroupNameButtonAction()
-    }, for: .touchUpInside)
-  }
-  
   private func handleGroupNameButtonAction() {
     if let groupID = configuration?.model?.id {
       self.groupNameButtonActionHandler?(groupID)
     }
-  }
-  
-  public func getIdentifier() -> String {
-    return Self.identifier
   }
 }
 
