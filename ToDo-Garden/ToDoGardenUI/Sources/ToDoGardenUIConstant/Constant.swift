@@ -32,4 +32,5 @@ public enum Constant {
   public enum ManageGroupListTableView {}
   public enum PomodoroLevelCollectionViewCell { }
   public enum PomodoroLevelCollectionView { }
+  public enum PomodoroRecordCollectionView { }
 }
