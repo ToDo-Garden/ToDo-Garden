@@ -34,6 +34,34 @@ public final class ManageGroupTableView: UITableView, ManageGroupTableViewAPI {
       height: screenHeight + heightInset
     )
   }
+  
+  public func setEditingMode(_ editing: Bool, animated: Bool) {
+    self.setEditing(editing, animated: animated)
+    if editing {
+      self.enterEditingMode()
+    } else {
+      self.leaveEditingMode()
+    }
+    
+    Task {
+      try await Task.sleep(nanoseconds: Constant.ManageGroupListTableView.sleepTime)
+      self.reloadSectionExceptFooterCell()
+    }
+  }
+  
+  private func enterEditingMode() {
+    guard let visibleCells = self.visibleCells as? [ManageGroupTableViewCell] else {
+      return
+    }
+    visibleCells.forEach { $0.enterEditingMode() }
+  }
+  
+  private func leaveEditingMode() {
+    guard let visibleCells = self.visibleCells as? [ManageGroupTableViewCell] else {
+      return
+    }
+    visibleCells.forEach { $0.leaveEditingMode() }
+  } 
 }
 
 extension ManageGroupTableView {
