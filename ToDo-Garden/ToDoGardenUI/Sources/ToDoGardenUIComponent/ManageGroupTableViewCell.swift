@@ -18,6 +18,7 @@ public class ManageGroupTableViewCell: UITableViewCell, ManageGroupTableViewCell
   private var rightImageButton: UIButton?
   
   private var rightButtonActionHandler: ((UIColor, String) -> Void)?
+  private var groupNameButtonActionHandler: ((String) -> Void)?
   
   public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     self.configuration = nil
@@ -120,7 +121,6 @@ public class ManageGroupTableViewCell: UITableViewCell, ManageGroupTableViewCell
     self.rightButtonActionHandler = handler
     self.rightImageButton?.addAction(UIAction { [weak self] _ in
       self?.handleRightButtonAction()
-      
     }, for: UIControl.Event.touchUpInside)
   }
   
@@ -128,6 +128,19 @@ public class ManageGroupTableViewCell: UITableViewCell, ManageGroupTableViewCell
     if let color = configuration?.model?.progressCircle.progressColor.value,
     let groupName = configuration?.model?.groupNameButton.groupName.value {
       self.rightButtonActionHandler?(color, groupName)
+    }
+  }
+  
+  public func setupGroupNameButtonAction(handler: @escaping (String) -> Void) {
+    self.groupNameButtonActionHandler = handler
+    self.groupNameButton?.addAction(UIAction { [weak self] _ in
+      self?.handleGroupNameButtonAction()
+    }, for: .touchUpInside)
+  }
+  
+  private func handleGroupNameButtonAction() {
+    if let groupID = configuration?.model?.id {
+      self.groupNameButtonActionHandler?(groupID)
     }
   }
   
