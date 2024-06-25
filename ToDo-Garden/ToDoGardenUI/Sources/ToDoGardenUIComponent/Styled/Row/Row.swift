@@ -122,9 +122,23 @@ extension Styled.Row {
 
 @available(iOS 17.0, *)
 #Preview {
+  let stack = UIStackView()
+  stack.axis = .vertical
+  stack.spacing = 20
+
   let row = Styled.Row(
     configuration: .listPrimary(.init(title: "영어독해", color: .red))
   )
-  
-  return row
+  stack.addArrangedSubview(row)
+
+  let button = UIButton()
+  button.setImage(UIImage.forwardButtonImage, for: UIControl.State.normal)
+
+  let row2 = Styled.Row(
+    configuration: .listPrimary(.init(title: "영어독해", color: .toDoGardenYellow)),
+    with: [button]
+  )
+  stack.addArrangedSubview(row2)
+
+  return stack
 }
