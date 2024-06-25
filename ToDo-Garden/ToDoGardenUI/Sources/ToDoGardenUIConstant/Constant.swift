@@ -33,4 +33,5 @@ public enum Constant {
   public enum PomodoroLevelCollectionViewCell { }
   public enum PomodoroLevelCollectionView { }
   public enum PomodoroRecordCollectionView { }
+  public enum GardenView { }
 }
