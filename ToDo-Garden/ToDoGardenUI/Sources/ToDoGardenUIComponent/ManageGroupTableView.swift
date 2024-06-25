@@ -72,4 +72,19 @@ extension ManageGroupTableView {
     self.allowsSelectionDuringEditing = true
     self.dragInteractionEnabled = true
   }
+  
+  private func reloadSectionExceptFooterCell() {
+    let section = Int.zero
+    let numberOfRows = self.numberOfRows(inSection: section)
+    guard numberOfRows > 1 else {
+      return
+    }
+    
+    var indexPaths: [IndexPath] = []
+    for row in Int.zero..<(numberOfRows - 1) {
+      indexPaths.append(IndexPath(row: row, section: section))
+    }
+    
+    self.reloadRows(at: indexPaths, with: UITableView.RowAnimation.none)
+  }
 }
