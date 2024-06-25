@@ -179,11 +179,11 @@ extension TextInputView {
       self.shrinkScale = shrinkScale
     }
 
-    public static let toDoName = Self(inputText: "할 일")
-    public static let groupName = Self(inputText: "그룹명")
-    public static let userNickname = Self(inputText: "닉네임")
-    public static let userId = Self(inputText: "아이디")
-    public static let userDescription = Self(inputText: "소개")
+    public static let toDoName = Self(inputText: Constant.TextInputView.StringLiteral.Model.toDoName)
+    public static let groupName = Self(inputText: Constant.TextInputView.StringLiteral.Model.groupName)
+    public static let userNickname = Self(inputText: Constant.TextInputView.StringLiteral.Model.userNickname)
+    public static let userId = Self(inputText: Constant.TextInputView.StringLiteral.Model.userId)
+    public static let userDescription = Self(inputText: Constant.TextInputView.StringLiteral.Model.userDescription)
   }
 }
 
