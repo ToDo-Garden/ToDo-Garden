@@ -6,7 +6,7 @@ public final class TextInputView: UIView {
   private let model: Model
   private let inputTextField: Styled.TextField
   private let placeholderLabel: UILabel
-  private let placeholderText: String
+  private var placeholderText: String
 
   private var height: CGFloat {
     let textFieldDefatulLineHeight = Constant.TextInputView.Layout.InputTextField.defaultHeight
@@ -29,7 +29,7 @@ public final class TextInputView: UIView {
       )
     )
     self.placeholderLabel = UILabel()
-    self.placeholderText = model.inputText + Constant.TextInputView.StringLiteral.placeholderText
+    self.placeholderText = ""
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -56,10 +56,27 @@ public final class TextInputView: UIView {
 
 extension TextInputView {
   private func setup() {
+    self.setupPlaceholderText()
     self.setupPlaceholderLabel()
     self.setupInputTextFieldDelegate()
     self.addSubviews()
     self.setupSubviewsLayout()
+  }
+
+  private func setupPlaceholderText() {
+    self.placeholderText = self.makePlaceholderText()
+  }
+
+  private func makePlaceholderText() -> String {
+    guard let lastCharacter = self.model.inputText.last
+    else { return self.model.inputText + Constant.TextInputView.StringLiteral.defaultPlaceholderSuffix }
+
+    let consonants = String(lastCharacter).decomposedStringWithCompatibilityMapping.unicodeScalars
+    if consonants.count >= 3 {
+      return self.model.inputText + Constant.TextInputView.StringLiteral.suffixWithFinalConsonant
+    } else {
+      return self.model.inputText + Constant.TextInputView.StringLiteral.suffixWithoutFinalConsonant
+    }
   }
 
   private func setupPlaceholderLabel() {
@@ -179,11 +196,11 @@ extension TextInputView {
       self.shrinkScale = shrinkScale
     }
 
-    public static let toDoName = Self(inputText: "할 일")
-    public static let groupName = Self(inputText: "그룹명")
-    public static let userNickname = Self(inputText: "닉네임")
-    public static let userId = Self(inputText: "아이디")
-    public static let userDescription = Self(inputText: "소개")
+    public static let toDoName = Self(inputText: Constant.TextInputView.StringLiteral.Model.toDoName)
+    public static let groupName = Self(inputText: Constant.TextInputView.StringLiteral.Model.groupName)
+    public static let userNickname = Self(inputText: Constant.TextInputView.StringLiteral.Model.userNickname)
+    public static let userId = Self(inputText: Constant.TextInputView.StringLiteral.Model.userId)
+    public static let userDescription = Self(inputText: Constant.TextInputView.StringLiteral.Model.userDescription)
   }
 }
 

@@ -32,5 +32,19 @@ extension Constant.TextInputView.Layout.InputTextField {
 }
 
 extension Constant.TextInputView.StringLiteral {
-  public static let placeholderText: String = "을 입력해주세요."
+  public static let defaultPlaceholderSuffix: String = "을(를) 입력해주세요."
+  public static let suffixWithFinalConsonant: String = "을 입력해주세요."
+  public static let suffixWithoutFinalConsonant: String = "를 입력해주세요."
+}
+
+extension Constant.TextInputView.StringLiteral {
+  public enum Model {}
+}
+
+extension Constant.TextInputView.StringLiteral.Model {
+  public static let toDoName = "할 일"
+  public static let groupName = "그룹명"
+  public static let userNickname = "닉네임"
+  public static let userId = "아이디"
+  public static let userDescription = "소개"
 }
