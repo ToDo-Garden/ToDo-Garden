@@ -15,5 +15,11 @@ let package = Package(
   targets: [
     .target(
       name: "TDUtility",
+      dependencies: [
+        "TDCombineExtension",
+      ]
+    ),
+    .target(
+      name: "TDCombineExtension"
     ),
 )
