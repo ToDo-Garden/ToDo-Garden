@@ -16,6 +16,9 @@
 		4FC8C1512B8C575A00BA223E /* ToDoGardenUIAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 4FC8C1502B8C575A00BA223E /* ToDoGardenUIAPI */; };
 		4FDA5E392B4FF1E4006506ED /* Asset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FDA5E382B4FF1E4006506ED /* Asset.xcassets */; };
 		639D79512C19A8E300004B26 /* EditToDoScene in Resources */ = {isa = PBXBuildFile; fileRef = 639D79502C19A8E300004B26 /* EditToDoScene */; };
+		E4DEA1742C2BED0700E3CE3C /* ManageGroupScene in Frameworks */ = {isa = PBXBuildFile; productRef = E4DEA1732C2BED0700E3CE3C /* ManageGroupScene */; };
+		E4DEA1762C2BED0700E3CE3C /* ManageGroupSceneAPI in Frameworks */ = {isa = PBXBuildFile; productRef = E4DEA1752C2BED0700E3CE3C /* ManageGroupSceneAPI */; };
+		E4DEA1782C2BED0700E3CE3C /* ManageGroupSceneEntity in Frameworks */ = {isa = PBXBuildFile; productRef = E4DEA1772C2BED0700E3CE3C /* ManageGroupSceneEntity */; };
 		E4F7D3B22B996B1F00324294 /* ToDoGardenUIConstant in Frameworks */ = {isa = PBXBuildFile; productRef = E4F7D3B12B996B1F00324294 /* ToDoGardenUIConstant */; };
 /* End PBXBuildFile section */
 
@@ -41,6 +44,7 @@
 		4FC8C14A2B87562600BA223E /* ToDoGardenUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ToDoGardenUI; sourceTree = "<group>"; };
 		4FDA5E382B4FF1E4006506ED /* Asset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Asset.xcassets; sourceTree = "<group>"; };
 		639D79502C19A8E300004B26 /* EditToDoScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = EditToDoScene; sourceTree = "<group>"; };
+		E4DEA1722C2BEC2900E3CE3C /* ManageGroupScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ManageGroupScene; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,8 +52,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E4DEA1782C2BED0700E3CE3C /* ManageGroupSceneEntity in Frameworks */,
 				4FC8C1512B8C575A00BA223E /* ToDoGardenUIAPI in Frameworks */,
+				E4DEA1762C2BED0700E3CE3C /* ManageGroupSceneAPI in Frameworks */,
 				4F3D03862B8EF89800C495E5 /* ToDoGardenUIResource in Frameworks */,
+				E4DEA1742C2BED0700E3CE3C /* ManageGroupScene in Frameworks */,
 				4F3D03842B8EF89800C495E5 /* ToDoGardenUIComponent in Frameworks */,
 				E4F7D3B22B996B1F00324294 /* ToDoGardenUIConstant in Frameworks */,
 			);
@@ -88,6 +95,7 @@
 		4F0DF12A2B4EABCE00097B7D /* ToDo-Garden */ = {
 			isa = PBXGroup;
 			children = (
+				E4DEA1722C2BEC2900E3CE3C /* ManageGroupScene */,
 				639D79502C19A8E300004B26 /* EditToDoScene */,
 				4FDA5E372B4FF1B0006506ED /* Resources */,
 				4F6C8B862B73685000F209BC /* Sources */,
@@ -159,6 +167,9 @@
 				4F3D03832B8EF89800C495E5 /* ToDoGardenUIComponent */,
 				4F3D03852B8EF89800C495E5 /* ToDoGardenUIResource */,
 				E4F7D3B12B996B1F00324294 /* ToDoGardenUIConstant */,
+				E4DEA1732C2BED0700E3CE3C /* ManageGroupScene */,
+				E4DEA1752C2BED0700E3CE3C /* ManageGroupSceneAPI */,
+				E4DEA1772C2BED0700E3CE3C /* ManageGroupSceneEntity */,
 			);
 			productName = "ToDo-Garden";
 			productReference = 4F0DF1282B4EABCE00097B7D /* ToDo-Garden.app */;
@@ -533,6 +544,18 @@
 		4FC8C1502B8C575A00BA223E /* ToDoGardenUIAPI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ToDoGardenUIAPI;
+		};
+		E4DEA1732C2BED0700E3CE3C /* ManageGroupScene */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ManageGroupScene;
+		};
+		E4DEA1752C2BED0700E3CE3C /* ManageGroupSceneAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ManageGroupSceneAPI;
+		};
+		E4DEA1772C2BED0700E3CE3C /* ManageGroupSceneEntity */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ManageGroupSceneEntity;
 		};
 		E4F7D3B12B996B1F00324294 /* ToDoGardenUIConstant */ = {
 			isa = XCSwiftPackageProductDependency;
