@@ -23,7 +23,7 @@ struct ExecuteOnceTests {
     )
   }
   
-  @Test("when action execute multiple times then it executes only once")
+  @Test("when action executed multiple times then it executes only once")
   private func whenActionExecuteMultipleTimes_thenItExecutesOnlyOnce() {
     var executionCount = 0
     @ExecuteOnce var action: (() -> Void)?
