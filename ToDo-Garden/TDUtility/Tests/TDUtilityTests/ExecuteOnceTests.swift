@@ -23,4 +23,24 @@ struct ExecuteOnceTests {
     )
   }
   
+  @Test("when action execute multiple times then it executes only once")
+  private func whenActionExecuteMultipleTimes_thenItExecutesOnlyOnce() {
+    var executionCount = 0
+    @ExecuteOnce var action: (() -> Void)?
+    
+    action?()
+    
+    action = {
+      executionCount += 1
+    }
+    #expect(executionCount == 1)
+    
+    action?()
+    action?()
+    action?()
+    #expect(
+      executionCount == 1,
+      "한번만 실행되어야합니다."
+    )
+  }
 }
