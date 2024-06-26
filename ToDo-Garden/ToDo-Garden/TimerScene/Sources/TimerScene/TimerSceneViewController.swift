@@ -6,8 +6,10 @@ import ToDoGardenUIComponent
 
 @MainActor
 protocol TimerSceneDisplayLogic: AnyObject {
-  func updateTimeLabel(time: Double, isFirst: Bool)
-  func displaySomething(viewModel: TimerScene.Something.ViewModel)
+  func updateTargetLabel(time: String)
+  func updateControlButton(isFocused: Bool)
+  func updateTimeLabel(duration: Double, time: String, isFirst: Bool)
+  func updateProgressImage(_ image: UIImage)
 }
 
 public final class TimerSceneViewController: UIViewController, TimerSceneViewControllable {
@@ -47,7 +49,7 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
     )
     circularProgressImageView = UIImageView(image: .progressDefault)
     targetLabel = RemainingTimeView()
-    targetLabel.updateRemainingTime(with: "집중시간 ")
+    targetLabel.updateRemainingTime(with: "집중시간")
     timeLabel = buildTimeLabel()
     controlButton = buildSetTimerButton()
   }
@@ -70,7 +72,7 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
     view.addSubview(stack)
     stack.equalToParent()
   }
-
+  
   private func buildTimeLabel() -> UILabel {
     let label = UILabel()
     label.font = .pretendardHeadLight75
@@ -82,8 +84,9 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
   private func buildSetTimerButton() -> UIButton {
     let button = UIButton()
     button.timerControlButtonDefaultStyle(with: "집중시간 설정")
+    button.feedbackAnimation(0.98, duration: 0.15)
     let action = UIAction { [weak self] _ in
-      
+      self?.interactor?.controlButtonTapped()
     }
     button.addAction(action, for: .touchUpInside)
     return button
@@ -114,24 +117,29 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
 
 // MARK: - Confirm display logic protocol
 extension TimerSceneViewController: TimerSceneDisplayLogic {
-  func updateTimeLabel(time: Double, isFirst: Bool) {
-    if isFirst {
-      print(time)
-      circularProgressView.startAnimation(duration: time, from: 0, to: 1)
-    }
-    timeLabel.text = String(time)
+  func updateTargetLabel(time: String) {
+    targetLabel.updateRemainingTime(with: "집중시간 \(time)분")
   }
   
-  func displaySomething(viewModel: TimerScene.Something.ViewModel) {
-    // self.nameTextField.text = viewModel.name
+  func updateControlButton(isFocused: Bool) {
+    if isFocused {
+      controlButton.timerControlButtonDestructiveStyle(with: "포기할래요")
+    } else {
+      controlButton.timerControlButtonDestructiveStyle(with: "포기할래요")
+    }
   }
-}
-
-// MARK: - Request to interactor
-extension TimerSceneViewController {
-  func doSomething() {
-    let request = TimerScene.Something.Request()
-    self.interactor?.doSomething(request: request)
+  
+  func updateTimeLabel(duration: Double, time: String, isFirst: Bool) {
+    if !circularProgressView.isAnimating, isFirst {
+      circularProgressView
+        .startAnimation(duration: duration, from: 0, to: 1)
+    }
+    timeLabel.text = time
+  }
+  
+  func updateProgressImage(_ image: UIImage) {
+    guard circularProgressImageView.image != image else { return }
+    circularProgressImageView.setImageWithZoomTransition(newImage: image)
   }
 }
 
@@ -142,3 +150,16 @@ extension TimerSceneViewController {
     .build()
 }
 #endif
+
+extension UIImageView {
+  func setImageWithZoomTransition(newImage: UIImage?, duration: TimeInterval = 0.3) {
+    UIView.transition(with: self, duration: duration, options: .transitionCrossDissolve) {
+      self.image = newImage
+      self.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+    } completion: { _ in
+      UIView.animate(withDuration: duration) {
+        self.transform = .identity
+      }
+    }
+  }
+}

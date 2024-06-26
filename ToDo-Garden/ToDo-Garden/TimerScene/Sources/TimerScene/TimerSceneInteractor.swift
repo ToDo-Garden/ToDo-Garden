@@ -3,20 +3,19 @@ import Foundation
 import TimerSceneEntity
 
 protocol TimerSceneDataStore {
-  // var name: String { get set }
 }
 
 @MainActor
 protocol TimerSceneBusinessLogic {
-  func buttonTapped()
-  func doSomething(request: TimerScene.Something.Request)
+  func controlButtonTapped()
 }
 
 @MainActor
 final class TimerSceneInteractor: TimerSceneDataStore {
-  // var name: String = ""
+  var isFocused: Bool = false
   var presenter: TimerScenePresentationLogic?
   private let worker: TimerSceneWorkable
+  
   private var tasks: [AnyHashable: Task<Void, Never>] = [:]
   
   init(worker: TimerSceneWorkable) {
@@ -44,32 +43,20 @@ final class TimerSceneInteractor: TimerSceneDataStore {
 // MARK: - Request to worker
 
 extension TimerSceneInteractor: TimerSceneBusinessLogic {
-  func buttonTapped() {
+  
+  func controlButtonTapped() {
+    guard !isFocused else { return }
     // TODO: Bottom Sheet
-    let date = createDate(minutes: nil, seconds: 2)
-    run {
-      var isFirst = true
-      for try await time in self.worker.countdownStream(date) {
-        presenter?.updateTimeState(time, isFirst: isFirst)
-        if isFirst {
-          isFirst = false
-        }
-      }
-    }
-  }
-  
-  func createDate(minutes: Int?, seconds: Int) -> Date {
-    let calendar = Calendar.current
-    var dateComponents = DateComponents()
-    dateComponents.minute = minutes
-    dateComponents.second = seconds
-    return calendar.date(from: dateComponents) ?? Date()
-  }
-  
-  func doSomething(request: TimerScene.Something.Request) {
-    //		self.someWorker.doSomeWork()
+    let seconds = 10.0
     
-    let response = TimerScene.Something.Response()
-    self.presenter?.presentSomething(response: response)
+    isFocused = true
+    run {
+      presenter?.configureTimerSettings(seconds)
+      for try await time in self.worker.countDownSequence(seconds) {
+        let range = TimerScene.CircularProgressRange(1 - (time / seconds))
+        presenter?.updateTimeState(time, range: range)
+      }
+      isFocused = false
+    }
   }
 }

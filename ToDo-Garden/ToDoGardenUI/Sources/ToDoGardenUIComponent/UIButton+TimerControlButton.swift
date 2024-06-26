@@ -19,6 +19,19 @@ extension UIButton {
 		self.setupDefaultStyleBackgroundImage()
 		self.setupTitleForTimerControlButton(with: title)
 	}
+  
+  public func feedbackAnimation(_ scale: CGFloat, duration: TimeInterval = 0.3) {
+    let action = UIAction { [weak self] _ in
+      UIView.animate(withDuration: duration) {
+        self?.transform = CGAffineTransform(scaleX: scale, y: scale)
+      } completion: { _ in
+        UIView.animate(withDuration: duration) {
+          self?.transform = CGAffineTransform.identity
+        }
+      }
+    }
+    addAction(action, for: .touchUpInside)
+  }
 }
 
 // MARK: - private functions
