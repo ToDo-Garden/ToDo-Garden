@@ -10,7 +10,7 @@ import UIKit
 import ToDoGardenUIConstant
 
 public final class CircularProgressView: UIView {
-  
+  public var isAnimating: Bool = false
   private let progressLayer: CAShapeLayer
   private let progressBackgroundLayer: CAShapeLayer
   
@@ -37,6 +37,7 @@ public final class CircularProgressView: UIView {
   }
   
   public func startAnimation(duration: TimeInterval, from: Float, to value: Float) {
+    self.isAnimating = true
     self.layer.addSublayer(self.progressLayer)
     self.setProgress(duration: duration, from: from, to: value)
   }
@@ -73,8 +74,16 @@ extension CircularProgressView {
     animation.duration = duration
     animation.fromValue = from
     animation.toValue = value
+    animation.delegate = self
     self.progressLayer.strokeEnd = CGFloat(value)
     self.progressLayer.add(animation, forKey: animation.keyPath)
+  }
+}
+
+extension CircularProgressView: CAAnimationDelegate {
+  public func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
+    guard flag else { return }
+    self.isAnimating = false
   }
 }
 
