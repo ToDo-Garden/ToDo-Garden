@@ -24,8 +24,8 @@ public final class ManageGroupTableView: UITableView, ManageGroupTableViewAPI {
   
   public override var intrinsicContentSize: CGSize {
     let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
-    let screenWidth = windowScene?.screen.bounds.width ?? 1.0
-    let screenHeight = windowScene?.screen.bounds.height ?? 1.0
+    let screenWidth = windowScene?.screen.bounds.width ?? CGFloat.zero
+    let screenHeight = windowScene?.screen.bounds.height ?? CGFloat.zero
     let widthInset = Constant.ManageGroupListTableView.widthInset
     let heightInset = Constant.ManageGroupListTableView.heightInset
     
