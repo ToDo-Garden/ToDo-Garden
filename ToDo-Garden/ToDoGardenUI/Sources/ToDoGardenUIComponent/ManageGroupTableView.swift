@@ -23,6 +23,7 @@ public final class ManageGroupTableView: UITableView, ManageGroupTableViewAPI {
   }
   
   public override var intrinsicContentSize: CGSize {
+    // TODO: - 윈도우 접근하지 않는 방법 고려
     let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
     let screenWidth = windowScene?.screen.bounds.width ?? CGFloat.zero
     let screenHeight = windowScene?.screen.bounds.height ?? CGFloat.zero
@@ -43,6 +44,7 @@ public final class ManageGroupTableView: UITableView, ManageGroupTableViewAPI {
       self.leaveEditingMode()
     }
     
+    // TODO: - 잠재적 문제발생 지점. 애니메이션에 대한 컴플리션으로 수정하기
     Task {
       try await Task.sleep(nanoseconds: Constant.ManageGroupListTableView.sleepTime)
       self.reloadSectionExceptFooterCell()
