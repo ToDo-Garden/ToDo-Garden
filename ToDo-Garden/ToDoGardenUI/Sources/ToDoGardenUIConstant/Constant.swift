@@ -30,4 +30,8 @@ public enum Constant {
   public enum TextInputView {}
   public enum ManageGroupListTableViewCell {}
   public enum ManageGroupListTableView {}
+  public enum PomodoroLevelCollectionViewCell { }
+  public enum PomodoroLevelCollectionView { }
+  public enum PomodoroRecordCollectionView { }
+  public enum GardenView { }
 }
