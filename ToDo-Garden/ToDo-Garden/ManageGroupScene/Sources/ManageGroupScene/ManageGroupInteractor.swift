@@ -11,30 +11,30 @@ import ManageGroupSceneAPI
 import ManageGroupSceneEntity
 
 protocol ManageGroupDataStore {
-	// var name: String { get set }
+  // var name: String { get set }
 }
 
 protocol ManageGroupBusinessLogic {
-	func doSomething(request: ManageGroup.Something.Request)
+  func doSomething(request: ManageGroup.Something.Request)
 }
 
 class ManageGroupInteractor: ManageGroupDataStore {
-	// var name: String = ""
-	var presenter: ManageGroupPresentationLogic?
-	private let someWorker: ManageGroupWorkable
-	
-	init(someWorker: ManageGroupWorkable) {
-		self.someWorker = someWorker
-	}
+  // var name: String = ""
+  var presenter: ManageGroupPresentationLogic?
+  private let someWorker: ManageGroupWorkable
+  
+  init(someWorker: ManageGroupWorkable) {
+    self.someWorker = someWorker
+  }
 }
 
 // MARK: - Request to worker
 
 extension ManageGroupInteractor: ManageGroupBusinessLogic {
-	func doSomething(request: ManageGroup.Something.Request) {
-		self.someWorker.doSomeWork()
-		
-		let response = ManageGroup.Something.Response()
-		self.presenter?.presentSomething(response: response)
-	}
+  func doSomething(request: ManageGroup.Something.Request) {
+    self.someWorker.doSomeWork()
+    
+    let response = ManageGroup.Something.Response()
+    self.presenter?.presentSomething(response: response)
+  }
 }

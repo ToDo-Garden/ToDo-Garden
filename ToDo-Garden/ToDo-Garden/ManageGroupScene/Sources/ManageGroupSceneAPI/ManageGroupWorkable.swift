@@ -8,5 +8,5 @@
 import Foundation
 
 public protocol ManageGroupWorkable {
-	func doSomeWork()
+  func doSomeWork()
 }
