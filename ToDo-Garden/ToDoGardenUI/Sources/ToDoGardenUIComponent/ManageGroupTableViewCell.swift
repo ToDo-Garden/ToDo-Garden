@@ -136,7 +136,7 @@ public final class ManageGroupTableViewCell: UITableViewCell, ManageGroupTableVi
   
   private func handleRightButtonAction() {
     if let color = self.configuration?.model?.progressCircle.progressColor.value,
-       let groupName = self.configuration?.model?.groupNameButton.groupName.value {
+    let groupName = self.configuration?.model?.groupNameButton.groupName.value {
       self.rightButtonActionHandler?(color, groupName)
     }
   }
@@ -329,8 +329,8 @@ extension ManageGroupTableViewCell {
   private func animateDisappear() {
     UIView.animate(withDuration: 0.3) { [weak self] in
       self?.rightImageButton?.alpha = 0.0
-    } completion: { [weak self] _ in
-      self?.hideRightImageButton()
+    } completion: { _ in
+      self.hideRightImageButton()
     }
   }
 }
