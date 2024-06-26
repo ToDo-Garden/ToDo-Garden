@@ -30,7 +30,11 @@ let package = Package(
     .target(
       name: "ManageGroupSceneEntity"),
     .target(
-      name: "ManageGroupScene", dependencies: ["ManageGroupSceneAPI", "ManageGroupSceneEntity"]),
+      name: "ManageGroupScene",
+      dependencies: [
+        "ManageGroupSceneAPI", "ManageGroupSceneEntity"
+      ]
+    ),
     .testTarget(
       name: "ManageGroupSceneTests",
       dependencies: ["ManageGroupScene"])
