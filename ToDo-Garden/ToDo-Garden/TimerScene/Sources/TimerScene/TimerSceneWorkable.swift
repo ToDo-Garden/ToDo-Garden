@@ -2,5 +2,5 @@ import Foundation
 
 @MainActor
 public protocol TimerSceneWorkable: Sendable {
-  func countdownStream(_ endTime: Date) -> CountDownSequence
+  var countDownSequence: @Sendable (Double) -> CountDownSequence { get set }
 }

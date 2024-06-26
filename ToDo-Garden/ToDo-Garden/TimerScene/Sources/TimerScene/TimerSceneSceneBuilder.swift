@@ -25,7 +25,7 @@ public struct TimerSceneSceneBuilder {
 extension TimerSceneSceneBuilder.Dependency {
   @MainActor
   static let live = Self(
-    worker: .init(timerClient: .live),
+    worker: .live,
     nextSceneBuilder: Next()
   )
 }

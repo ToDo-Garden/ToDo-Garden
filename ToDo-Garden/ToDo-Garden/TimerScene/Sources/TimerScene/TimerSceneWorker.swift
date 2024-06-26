@@ -1,23 +1,18 @@
 import Foundation
 
 public struct TimerSceneWorker: TimerSceneWorkable, Sendable {
-  let timerClient: TimerClient
+  public var countDownSequence: @Sendable (Double) -> CountDownSequence
   
-  public init(timerClient: TimerClient = .live) {
-    self.timerClient = timerClient
-  }
-  
-  public func countdownStream(_ endTime: Date) -> CountDownSequence {
-    timerClient.stream(endTime)
+  public init(
+    countDownSequence: @Sendable @escaping (Double) -> CountDownSequence
+  ) {
+    self.countDownSequence = countDownSequence
   }
 }
 
-public struct TimerClient: Sendable {
-  private let _dateToTimeInterval: @Sendable (Date) -> TimeInterval
-  
-  public func stream(_ endTime: Date) -> CountDownSequence {
-    let endTime = _dateToTimeInterval(endTime)
-    return CountDownSequence(endTime: endTime)
+extension TimerSceneWorker {
+  static let live = Self { seconds in
+    return CountDownSequence(endTime: seconds)
   }
 }
 
@@ -49,18 +44,5 @@ public struct CountDownSequence: AsyncSequence {
         endTime -= 1
         return endTime
       }    }
-  }
-}
-
-public extension TimerClient {
-  static let live: Self = .init { date in
-    let calendar = Calendar.current
-    let dateComponents = calendar
-      .dateComponents([Calendar.Component.hour, Calendar.Component.minute, Calendar.Component.second], from: date)
-    let hour = (dateComponents.hour ?? 0) * 60 * 60
-    let minutes = (dateComponents.minute ?? 0) * 60
-    let seconds = dateComponents.second ?? 0
-    
-    return TimeInterval(hour + minutes + seconds)
   }
 }
