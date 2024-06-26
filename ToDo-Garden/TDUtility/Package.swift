@@ -25,6 +25,10 @@ let package = Package(
     ),
     .target(
       name: "TDFoundationExtension"
+    ),
+    .testTarget(
+      name: "TDUtilityTests",
+      dependencies: ["TDUtility"]
     )
   ]
 )
