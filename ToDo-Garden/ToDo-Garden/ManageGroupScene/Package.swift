@@ -9,13 +9,16 @@ let package = Package(
   products: [
     .library(
       name: "ManageGroupSceneAPI",
-      targets: ["ManageGroupSceneAPI"]),
+      targets: ["ManageGroupSceneAPI"]
+    ),
     .library(
       name: "ManageGroupSceneEntity",
-      targets: ["ManageGroupSceneEntity"]),
+      targets: ["ManageGroupSceneEntity"]
+    ),
     .library(
       name: "ManageGroupScene",
-      targets: ["ManageGroupScene"])
+      targets: ["ManageGroupScene"]
+    )
   ],
   dependencies: [
     .package(name: "ToDoGardenUI", path: "../ToDoGardenUI")
@@ -28,15 +31,18 @@ let package = Package(
       ]
     ),
     .target(
-      name: "ManageGroupSceneEntity"),
+      name: "ManageGroupSceneEntity"
+    ),
     .target(
       name: "ManageGroupScene",
       dependencies: [
-        "ManageGroupSceneAPI", "ManageGroupSceneEntity"
+        "ManageGroupSceneAPI", 
+        "ManageGroupSceneEntity"
       ]
     ),
     .testTarget(
       name: "ManageGroupSceneTests",
-      dependencies: ["ManageGroupScene"])
+      dependencies: ["ManageGroupScene"]
+    )
   ]
 )
