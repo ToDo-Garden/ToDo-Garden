@@ -40,6 +40,11 @@ public final class RepeatOtherDaysView: ToDoRepeatSelectionView {
   public func updateDate(startDate: String, endDate: String) {
     self.viewModel.updateDate(startDate: startDate, endDate: endDate)
   }
+
+  override func updateUI(isSelected: Bool) {
+    super.updateUI(isSelected: isSelected)
+    self.updateBackgroundColor()
+  }
 }
 
 // MARK: - Private functions
@@ -80,7 +85,6 @@ extension RepeatOtherDaysView {
   private func setupButtonActions() {
     let ringToggleAction = UIAction { [weak self] _ in
       self?.viewModel.ringToggleButtonTapped()
-      self?.updateBackgroundColor()
     }
     
     let dateButtonAction = UIAction { [weak self] _ in
@@ -89,7 +93,6 @@ extension RepeatOtherDaysView {
       }
       
       self?.viewModel.dateButtonSetValueChanged(isSelected: isDateButtonSelected)
-      self?.updateBackgroundColor()
     }
     
     self.ringToggleButton.addAction(ringToggleAction, for: UIControl.Event.touchUpInside)
@@ -204,7 +207,6 @@ extension RepeatOtherDaysView {
 
       self.updateViewModelWhenSelected()
       self.updateUI()
-      self.updateBackgroundColor()
     }
     
     self.viewModel.ringToggleButton.isSelected.bind { [weak self] isSelected in
@@ -220,7 +222,6 @@ extension RepeatOtherDaysView {
       if isSelected == true {
         self?.viewModel.ringToggleButton.isSelected.value = false
       }
-      self?.updateBackgroundColor()
     }
   }
 
