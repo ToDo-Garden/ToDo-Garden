@@ -22,6 +22,7 @@ public final class RepeatOtherDaysView: ToDoRepeatSelectionView {
   override var isSelected: Bool {
     willSet {
       self.viewModel.isSelected.value = newValue
+      self.animateAppearance(isSelected: newValue)
     }
   }
   
@@ -34,16 +35,6 @@ public final class RepeatOtherDaysView: ToDoRepeatSelectionView {
     self.dateButtonSet = DateButtonSet()
     super.init(model: ToDoRepeatSelectionView.Model.anotherDay)
     self.setup()
-  }
-  
-  override public func setSelected() {
-    self.viewModel.toggleSelection()
-    self.animateAppear()
-  }
-  
-  override public func setDeSelected() {
-    super.setDeSelected()
-    self.animateDisappear()
   }
   
   public func updateDate(startDate: String, endDate: String) {
@@ -309,6 +300,14 @@ extension RepeatOtherDaysView {
 
 // MARK: - About animation
 extension RepeatOtherDaysView {
+  private func animateAppearance(isSelected: Bool) {
+    if isSelected {
+      self.animateAppear()
+    } else {
+      self.animateDisappear()
+    }
+  }
+
   private func animateAppear() {
     self.animateLayout()
     UIView.animate(withDuration: Constant.RepeatOtherDaysView.AboutAnimation.duration) {
