@@ -16,6 +16,7 @@ public class ToDoRepeatSelectionView: UIView {
   var selectionImageView: UIImageView
   var tapGestureRecognizer: UITapGestureRecognizer
   var repetitionLabelTopAchor: NSLayoutConstraint
+  var selectionSender: ((Bool) -> Void)?
   var isSelected: Bool {
     willSet {
       self.updateUI(isSelected: newValue)
@@ -49,6 +50,10 @@ public class ToDoRepeatSelectionView: UIView {
 
   public func setDeSelected() {
     self.isSelected = false
+  }
+
+  public func bindTapGesture(sender: @escaping (Bool) -> Void) {
+    self.selectionSender = sender
   }
 
   func updateUI(isSelected: Bool) {
@@ -107,6 +112,7 @@ extension ToDoRepeatSelectionView {
 extension ToDoRepeatSelectionView {
   @objc func didTapView() {
     self.isSelected = !self.isSelected
+    self.selectionSender?(self.isSelected)
   }
 }
 
