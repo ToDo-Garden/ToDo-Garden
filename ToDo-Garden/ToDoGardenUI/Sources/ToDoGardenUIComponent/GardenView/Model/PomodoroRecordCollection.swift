@@ -24,6 +24,11 @@ public struct PomodoroRecordCollection {
   func normalizedPomodoroLevels() -> [PomodoroLevel] {
     return self.pomodoroRecords.map { self.normalizedPomodoroLevel(for: $0.pomodoroCount) }
   }
+  
+  func pomodoroDates() -> [Date] {
+    return self.pomodoroRecords.map { $0.date }
+  }
+}
 
 extension PomodoroRecordCollection {
   /// `count`에 따라 `none`~`perfect` 단계에 해당하는 `PomodoroLevel`로 정규화합니다.
