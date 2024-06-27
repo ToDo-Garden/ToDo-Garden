@@ -14,16 +14,23 @@
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:ToDo-Garden.xcodeproj",
-        "identifier" : "4FC8C1052B8336A100BA223E",
-        "name" : "ToDo-GardenTests"
+        "containerPath" : "container:",
+        "identifier" : "ToDoGardenUITests",
+        "name" : "ToDoGardenUITests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:TDUtility",
+        "containerPath" : "container:..\/TDUtility",
         "identifier" : "TDUtilityTests",
         "name" : "TDUtilityTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/ToDo-Garden.xcodeproj",
+        "identifier" : "4FC8C1052B8336A100BA223E",
+        "name" : "ToDo-GardenTests"
       }
     }
   ],
