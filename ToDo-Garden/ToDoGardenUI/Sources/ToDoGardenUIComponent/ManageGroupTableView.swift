@@ -63,7 +63,7 @@ public final class ManageGroupTableView: UITableView, ManageGroupTableViewAPI {
       return
     }
     visibleCells.forEach { $0.leaveEditingMode() }
-  } 
+  } 
 }
 
 extension ManageGroupTableView {
