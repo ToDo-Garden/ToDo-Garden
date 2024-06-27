@@ -200,8 +200,11 @@ extension RepeatOtherDaysView {
   
   private func bindSelectionStates() {
     self.viewModel.isSelected.bind { [weak self] _ in
-      self?.updateUI()
-      self?.updateBackgroundColor()
+      guard let self else { return }
+
+      self.updateViewModelWhenSelected()
+      self.updateUI()
+      self.updateBackgroundColor()
     }
     
     self.viewModel.ringToggleButton.isSelected.bind { [weak self] isSelected in
@@ -220,7 +223,13 @@ extension RepeatOtherDaysView {
       self?.updateBackgroundColor()
     }
   }
-  
+
+  private func updateViewModelWhenSelected() {
+    if self.viewModel.isSelected.value {
+      self.viewModel.toggleSelection()
+    }
+  }
+
   private func bindVisibilityStates() {
     self.viewModel.divider.isHidden.bind { [weak self] isHidden in
       self?.dividerView.isHidden = isHidden
