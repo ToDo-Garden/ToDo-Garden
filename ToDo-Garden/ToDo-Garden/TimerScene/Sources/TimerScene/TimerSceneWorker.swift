@@ -36,14 +36,15 @@ public struct CountDownSequence: AsyncSequence {
     var isFirst: Bool = true
     
     public mutating func next() async throws -> Double? {
-      guard endTime > 0 else { return nil }
-      if isFirst {
-        isFirst = false
-        return endTime
+      guard self.endTime > 0 else { return nil }
+      if self.isFirst {
+        self.isFirst = false
+        return self.endTime
       } else {
         try await Task.sleep(nanoseconds: timeInterval)
-        endTime -= 1
-        return endTime
-      }    }
+        self.endTime -= 1
+        return self.endTime
+      }
+    }
   }
 }

@@ -37,21 +37,21 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
   // MARK: - View lifecycle
   public override func viewDidLoad() {
     super.viewDidLoad()
-    build()
-    layoutStack()
+    self.build()
+    self.layoutStack()
   }
   
   private func build() {
-    circularProgressView = CircularProgressView(
-      progressColor: .toDoGardenRed,
-      backgroundColor: .toDoGardenLightRed,
+    self.circularProgressView = CircularProgressView(
+      progressColor: UIColor.toDoGardenRed,
+      backgroundColor: UIColor.toDoGardenLightRed,
       lineWidth: 9
     )
-    circularProgressImageView = UIImageView(image: .progressDefault)
-    targetLabel = RemainingTimeView()
-    targetLabel.updateRemainingTime(with: "집중시간")
-    timeLabel = buildTimeLabel()
-    controlButton = buildSetTimerButton()
+    self.circularProgressImageView = UIImageView(image: .progressDefault)
+    self.targetLabel = RemainingTimeView()
+    self.targetLabel.updateRemainingTime(with: "집중시간")
+    self.timeLabel = self.buildTimeLabel()
+    self.controlButton = self.buildSetTimerButton()
   }
   
   private func layoutStack() {
@@ -60,14 +60,14 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
     stack.alignment = .center
     stack.addSpacing(94)
     
-    layoutCircularView(stack)
-    layoutTargetLabel(stack)
+    self.layoutCircularView(stack)
+    self.layoutTargetLabel(stack)
     
-    stack.addArrangedSubViewWithSpacing(timeLabel, spacing: 21)
+    stack.addArrangedSubViewWithSpacing(self.timeLabel, spacing: 21)
     
-    controlButton.setContentHuggingPriority(.defaultLow, for: .horizontal)
-    controlButton.widthAnchor.constraint(equalToConstant: 131).isActive = true
-    stack.addArrangedSubViewWithSpacing(controlButton)
+    self.controlButton.setContentHuggingPriority(.defaultLow, for: .horizontal)
+    self.controlButton.widthAnchor.constraint(equalToConstant: 131).isActive = true
+    stack.addArrangedSubViewWithSpacing(self.controlButton)
     
     view.addSubview(stack)
     stack.equalToParent()
@@ -75,8 +75,8 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
   
   private func buildTimeLabel() -> UILabel {
     let label = UILabel()
-    label.font = .pretendardHeadLight75
-    label.textColor = .toDoGardenGreenDark
+    label.font = UIFont.pretendardHeadLight75
+    label.textColor = UIColor.toDoGardenGreenDark
     label.text = "00:00"
     return label
   }
@@ -93,53 +93,57 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
   }
   
   private func layoutCircularView(_ stack: UIStackView) {
-    circularProgressView.widthAnchor.constraint(equalToConstant: 236).isActive = true
-    circularProgressView.heightAnchor.constraint(equalToConstant: 236).isActive = true
-    stack.addArrangedSubViewWithSpacing(circularProgressView, spacing: 55)
+    self.circularProgressView.widthAnchor.constraint(equalToConstant: 236).isActive = true
+    self.circularProgressView.heightAnchor.constraint(equalToConstant: 236).isActive = true
+    stack.addArrangedSubViewWithSpacing(self.circularProgressView, spacing: 55)
     
-    circularProgressView.addSubview(circularProgressImageView)
-    circularProgressImageView.usingAutolayout()
+    self.circularProgressView.addSubview(self.circularProgressImageView)
+    self.circularProgressImageView.usingAutolayout()
     NSLayoutConstraint.activate([
-      circularProgressImageView.topAnchor.constraint(equalTo: circularProgressView.topAnchor, constant: 16),
-      circularProgressImageView.bottomAnchor.constraint(equalTo: circularProgressView.bottomAnchor, constant: -16),
-      circularProgressImageView.leadingAnchor.constraint(equalTo: circularProgressView.leadingAnchor, constant: 16),
-      circularProgressImageView.trailingAnchor.constraint(equalTo: circularProgressView.trailingAnchor, constant: -16)
+      self.circularProgressImageView.topAnchor
+        .constraint(equalTo: self.circularProgressView.topAnchor, constant: 16),
+      self.circularProgressImageView.bottomAnchor
+        .constraint(equalTo: self.circularProgressView.bottomAnchor, constant: -16),
+      self.circularProgressImageView.leadingAnchor
+        .constraint(equalTo: self.circularProgressView.leadingAnchor, constant: 16),
+      self.circularProgressImageView.trailingAnchor
+        .constraint(equalTo: self.circularProgressView.trailingAnchor, constant: -16)
     ])
   }
   
   private func layoutTargetLabel(_ stack: UIStackView) {
-    targetLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
-    targetLabel.heightAnchor.constraint(equalToConstant: 31).isActive = true
-    targetLabel.updateBackgroundColorForFoucsTime()
-    stack.addArrangedSubViewWithSpacing(targetLabel, spacing: 9)
+    self.targetLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
+    self.targetLabel.heightAnchor.constraint(equalToConstant: 31).isActive = true
+    self.targetLabel.updateBackgroundColorForFoucsTime()
+    stack.addArrangedSubViewWithSpacing(self.targetLabel, spacing: 9)
   }
 }
 
 // MARK: - Confirm display logic protocol
 extension TimerSceneViewController: TimerSceneDisplayLogic {
   func updateTargetLabel(time: String) {
-    targetLabel.updateRemainingTime(with: "집중시간 \(time)분")
+    self.targetLabel.updateRemainingTime(with: "집중시간 \(time)분")
   }
   
   func updateControlButton(isFocused: Bool) {
     if isFocused {
-      controlButton.timerControlButtonDestructiveStyle(with: "포기할래요")
+      self.controlButton.timerControlButtonDestructiveStyle(with: "포기할래요")
     } else {
-      controlButton.timerControlButtonDestructiveStyle(with: "포기할래요")
+      self.controlButton.timerControlButtonDefaultStyle(with: "집중시간 설정")
     }
   }
   
   func updateTimeLabel(duration: Double, time: String, isFirst: Bool) {
-    if !circularProgressView.isAnimating, isFirst {
-      circularProgressView
+    if !self.circularProgressView.isAnimating, isFirst {
+      self.circularProgressView
         .startAnimation(duration: duration, from: 0, to: 1)
     }
-    timeLabel.text = time
+    self.timeLabel.text = time
   }
   
   func updateProgressImage(_ image: UIImage) {
-    guard circularProgressImageView.image != image else { return }
-    circularProgressImageView.setImageWithZoomTransition(newImage: image)
+    guard self.circularProgressImageView.image != image else { return }
+    self.circularProgressImageView.setImageWithZoomTransition(newImage: image)
   }
 }
 

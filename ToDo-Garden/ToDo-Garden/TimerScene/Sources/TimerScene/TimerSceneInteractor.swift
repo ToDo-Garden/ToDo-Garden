@@ -45,18 +45,18 @@ final class TimerSceneInteractor: TimerSceneDataStore {
 extension TimerSceneInteractor: TimerSceneBusinessLogic {
   
   func controlButtonTapped() {
-    guard !isFocused else { return }
+    guard !self.isFocused else { return }
     // TODO: Bottom Sheet
     let seconds = 10.0
     
-    isFocused = true
+    self.isFocused = true
     run {
-      presenter?.configureTimerSettings(seconds)
+      self.presenter?.configureTimerSettings(seconds)
       for try await time in self.worker.countDownSequence(seconds) {
         let range = TimerScene.CircularProgressRange(1 - (time / seconds))
-        presenter?.updateTimeState(time, range: range)
+        self.presenter?.updateTimeState(time, range: range)
       }
-      isFocused = false
+      self.isFocused = false
     }
   }
 }

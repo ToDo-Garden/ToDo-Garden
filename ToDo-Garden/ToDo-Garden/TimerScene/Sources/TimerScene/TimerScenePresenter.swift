@@ -17,16 +17,16 @@ class TimerScenePresenter {
 
 extension TimerScenePresenter: TimerScenePresentationLogic {
   func configureTimerSettings(_ targetTime: Double) {
-    viewController?.updateTargetLabel(time: convertMinutes(targetTime))
-    viewController?.updateControlButton(isFocused: true)
+    self.viewController?.updateTargetLabel(time: self.convertMinutes(targetTime))
+    self.viewController?.updateControlButton(isFocused: true)
   }
   
   func updateTimeState(_ seconds: Double, range: TimerScene.CircularProgressRange) {
     let flag = seconds != 0
-    viewController?
+    self.viewController?
       .updateTimeLabel(duration: seconds, time: convertTime(from: seconds), isFirst: flag)
     
-    viewController?.updateProgressImage(range.image)
+    self.viewController?.updateProgressImage(range.image)
   }
   
   private func convertTime(from seconds: Double) -> String {
@@ -52,11 +52,11 @@ extension TimerScenePresenter: TimerScenePresentationLogic {
 private extension TimerScene.CircularProgressRange {
   var image: UIImage {
     switch self {
-    case .oneThird:
+    case Self.oneThird:
       return UIImage.progressLow
-    case .twoThirds:
+    case Self.twoThirds:
       return UIImage.progressMedium
-    case .whole:
+    case Self.whole:
       return UIImage.progressHigh
     }
   }
