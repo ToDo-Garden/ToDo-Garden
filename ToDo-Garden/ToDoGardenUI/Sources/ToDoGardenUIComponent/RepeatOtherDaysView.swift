@@ -22,6 +22,7 @@ public final class RepeatOtherDaysView: ToDoRepeatSelectionView {
   override var isSelected: Bool {
     willSet {
       self.viewModel.isSelected.value = newValue
+      self.animateAppearance(isSelected: newValue)
     }
   }
   
@@ -36,18 +37,13 @@ public final class RepeatOtherDaysView: ToDoRepeatSelectionView {
     self.setup()
   }
   
-  override public func setSelected() {
-    self.viewModel.toggleSelection()
-    self.animateAppear()
-  }
-  
-  override public func setDeSelected() {
-    super.setDeSelected()
-    self.animateDisappear()
-  }
-  
   public func updateDate(startDate: String, endDate: String) {
     self.viewModel.updateDate(startDate: startDate, endDate: endDate)
+  }
+
+  override func updateUI(isSelected: Bool) {
+    super.updateUI(isSelected: isSelected)
+    self.updateBackgroundColor()
   }
 }
 
@@ -89,7 +85,6 @@ extension RepeatOtherDaysView {
   private func setupButtonActions() {
     let ringToggleAction = UIAction { [weak self] _ in
       self?.viewModel.ringToggleButtonTapped()
-      self?.updateBackgroundColor()
     }
     
     let dateButtonAction = UIAction { [weak self] _ in
@@ -98,7 +93,6 @@ extension RepeatOtherDaysView {
       }
       
       self?.viewModel.dateButtonSetValueChanged(isSelected: isDateButtonSelected)
-      self?.updateBackgroundColor()
     }
     
     self.ringToggleButton.addAction(ringToggleAction, for: UIControl.Event.touchUpInside)
@@ -209,8 +203,10 @@ extension RepeatOtherDaysView {
   
   private func bindSelectionStates() {
     self.viewModel.isSelected.bind { [weak self] _ in
-      self?.updateUI()
-      self?.updateBackgroundColor()
+      guard let self else { return }
+
+      self.updateViewModelWhenSelected()
+      self.updateUI()
     }
     
     self.viewModel.ringToggleButton.isSelected.bind { [weak self] isSelected in
@@ -226,10 +222,15 @@ extension RepeatOtherDaysView {
       if isSelected == true {
         self?.viewModel.ringToggleButton.isSelected.value = false
       }
-      self?.updateBackgroundColor()
     }
   }
-  
+
+  private func updateViewModelWhenSelected() {
+    if self.viewModel.isSelected.value {
+      self.viewModel.toggleSelection()
+    }
+  }
+
   private func bindVisibilityStates() {
     self.viewModel.divider.isHidden.bind { [weak self] isHidden in
       self?.dividerView.isHidden = isHidden
@@ -309,6 +310,14 @@ extension RepeatOtherDaysView {
 
 // MARK: - About animation
 extension RepeatOtherDaysView {
+  private func animateAppearance(isSelected: Bool) {
+    if isSelected {
+      self.animateAppear()
+    } else {
+      self.animateDisappear()
+    }
+  }
+
   private func animateAppear() {
     self.animateLayout()
     UIView.animate(withDuration: Constant.RepeatOtherDaysView.AboutAnimation.duration) {

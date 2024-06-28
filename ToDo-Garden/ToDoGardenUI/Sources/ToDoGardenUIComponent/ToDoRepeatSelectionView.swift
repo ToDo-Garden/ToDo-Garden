@@ -16,9 +16,10 @@ public class ToDoRepeatSelectionView: UIView {
   var selectionImageView: UIImageView
   var tapGestureRecognizer: UITapGestureRecognizer
   var repetitionLabelTopAchor: NSLayoutConstraint
+  var selectionSender: ((Bool) -> Void)?
   var isSelected: Bool {
     willSet {
-      newValue ? self.setSelected() : self.setDeSelected()
+      self.updateUI(isSelected: newValue)
     }
   }
 
@@ -44,17 +45,29 @@ public class ToDoRepeatSelectionView: UIView {
   }
 
   public func setSelected() {
-    self.backgroundColor = UIColor.toDoGardenGreenBackground
-    self.layer.borderColor = UIColor.toDoGardenGreenDark.cgColor
-    self.repetitionLabel.textColor = UIColor.toDoGardenGreenDark
-    self.selectionImageView.isHidden = false
+    self.isSelected = true
   }
 
   public func setDeSelected() {
-    self.backgroundColor = UIColor.clear
-    self.layer.borderColor = UIColor.toDoGardenGray2.cgColor
-    self.repetitionLabel.textColor = UIColor.toDoGardenGray3
-    self.selectionImageView.isHidden = true
+    self.isSelected = false
+  }
+
+  public func bindTapGesture(sender: @escaping (Bool) -> Void) {
+    self.selectionSender = sender
+  }
+
+  func updateUI(isSelected: Bool) {
+    let backgroundColor = isSelected ? UIColor.toDoGardenGreenBackground : UIColor.clear
+    self.backgroundColor = backgroundColor
+
+    let borderColor = isSelected ? UIColor.toDoGardenGreenDark.cgColor : UIColor.toDoGardenGray2.cgColor
+    self.layer.borderColor = borderColor
+
+    let textColor = isSelected ? UIColor.toDoGardenGreenDark : UIColor.toDoGardenGray3
+    self.repetitionLabel.textColor = textColor
+
+    let isHidden = !isSelected
+    self.selectionImageView.isHidden = isHidden
   }
 }
 
@@ -99,6 +112,7 @@ extension ToDoRepeatSelectionView {
 extension ToDoRepeatSelectionView {
   @objc func didTapView() {
     self.isSelected = !self.isSelected
+    self.selectionSender?(self.isSelected)
   }
 }
 
