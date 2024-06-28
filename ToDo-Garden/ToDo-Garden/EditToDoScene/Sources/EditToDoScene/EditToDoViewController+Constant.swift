@@ -20,6 +20,13 @@ extension EditToDoViewController.Constant.Layout {
     static let height: CGFloat = 49
   }
 
+  enum EditModeScrollView {
+    static let topMargin: CGFloat = 30
+    static let leadingMargin: CGFloat = 12
+    static let trailingMargin: CGFloat = 19
+    static let bottomMargin: CGFloat = 150
+  }
+
   enum EditToDoView {
     enum ToDoNameTextField {
       static let leadingMargin: CGFloat = 15.5
