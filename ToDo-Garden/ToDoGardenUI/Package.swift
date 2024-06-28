@@ -49,7 +49,7 @@ let package = Package(
     ),
     .target(name: "ToDoGardenUIConstant"),
     .target(name: "CombineExtension"),
-    .target(name: "FoundationExtension")
+    .target(name: "FoundationExtension"),
     .testTarget(
       name: "ToDoGardenUITests",
       dependencies: ["ToDoGardenUIComponent"]
