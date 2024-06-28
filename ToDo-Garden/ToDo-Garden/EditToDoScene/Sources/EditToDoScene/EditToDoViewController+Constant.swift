@@ -77,3 +77,19 @@ extension EditToDoViewController.Constant.Layout.EditToDoScheduleView {
     static let height: CGFloat = 53
   }
 }
+
+extension EditToDoViewController.Constant.Layout.EditToDoScheduleView.EditToDoRepetitionView {
+  enum RepetitionLabel {
+    static let leadingMargin: CGFloat = 3
+  }
+
+  enum RepeatOnlyTodayButton {
+    static let topMargin: CGFloat = 11
+  }
+
+  enum RepeatOtherDaysView {
+    static let topMargin: CGFloat = 11
+  }
+
+  static let topMargin: CGFloat = 49
+}
