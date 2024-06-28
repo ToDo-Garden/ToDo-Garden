@@ -17,6 +17,7 @@ extension TimerSceneWorker {
 }
 
 public struct CountDownSequence: AsyncSequence {
+  public typealias Element = Double
   let endTime: TimeInterval
   let timeInterval: UInt64
   

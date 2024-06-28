@@ -23,7 +23,6 @@
 		E4DEA1742C2BED0700E3CE3C /* ManageGroupScene in Frameworks */ = {isa = PBXBuildFile; productRef = E4DEA1732C2BED0700E3CE3C /* ManageGroupScene */; };
 		E4DEA1762C2BED0700E3CE3C /* ManageGroupSceneAPI in Frameworks */ = {isa = PBXBuildFile; productRef = E4DEA1752C2BED0700E3CE3C /* ManageGroupSceneAPI */; };
 		E4DEA1782C2BED0700E3CE3C /* ManageGroupSceneEntity in Frameworks */ = {isa = PBXBuildFile; productRef = E4DEA1772C2BED0700E3CE3C /* ManageGroupSceneEntity */; };
-		AE4EE0D62C1FFA3F00483D7F /* TimerScene in Resources */ = {isa = PBXBuildFile; fileRef = AE4EE0D52C1FFA3F00483D7F /* TimerScene */; };
 		E4F7D3B22B996B1F00324294 /* ToDoGardenUIConstant in Frameworks */ = {isa = PBXBuildFile; productRef = E4F7D3B12B996B1F00324294 /* ToDoGardenUIConstant */; };
 /* End PBXBuildFile section */
 
@@ -50,6 +49,7 @@
 		4FC8C14A2B87562600BA223E /* ToDoGardenUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ToDoGardenUI; sourceTree = "<group>"; };
 		4FDA5E382B4FF1E4006506ED /* Asset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Asset.xcassets; sourceTree = "<group>"; };
 		639D79502C19A8E300004B26 /* EditToDoScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = EditToDoScene; sourceTree = "<group>"; };
+		AE930F3C2C2E9306002F26AB /* TimerScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = TimerScene; sourceTree = "<group>"; };
 		E4DEA1722C2BEC2900E3CE3C /* ManageGroupScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ManageGroupScene; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -106,6 +106,7 @@
 		4F0DF12A2B4EABCE00097B7D /* ToDo-Garden */ = {
 			isa = PBXGroup;
 			children = (
+				AE930F3C2C2E9306002F26AB /* TimerScene */,
 				E4DEA1722C2BEC2900E3CE3C /* ManageGroupScene */,
 				639D79502C19A8E300004B26 /* EditToDoScene */,
 				4FDA5E372B4FF1B0006506ED /* Resources */,
@@ -252,7 +253,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4FDA5E392B4FF1E4006506ED /* Asset.xcassets in Resources */,
-				AE4EE0D62C1FFA3F00483D7F /* TimerScene in Resources */,
+				AE4EE0D62C1FFA3F00483D7F /* (null) in Resources */,
 				639D79512C19A8E300004B26 /* EditToDoScene in Resources */,
 				4F0DF1382B4EABD000097B7D /* LaunchScreen.storyboard in Resources */,
 			);
