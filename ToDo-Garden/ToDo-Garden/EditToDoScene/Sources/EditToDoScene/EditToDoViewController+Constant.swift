@@ -9,6 +9,8 @@ extension EditToDoViewController.Constant {
 }
 
 extension EditToDoViewController.Constant.Layout {
+  enum EditToDoView {}
+
   enum CompleteEditingButton {
     static let bottomMargin: CGFloat = 13
   }
@@ -25,36 +27,6 @@ extension EditToDoViewController.Constant.Layout {
     static let leadingMargin: CGFloat = 12
     static let trailingMargin: CGFloat = 19
     static let bottomMargin: CGFloat = 150
-  }
-
-  enum EditToDoView {
-    enum ToDoNameTextField {
-      static let leadingMargin: CGFloat = 15.5
-      static let trailingMargin: CGFloat = 15.5
-      static let height: CGFloat = 23.5
-    }
-
-    enum GroupLabel {
-      static let topMargin: CGFloat = 61
-      static let leadingMargin: CGFloat = 19
-    }
-
-    enum EditGroupRow {
-      static let bottomMargin: CGFloat = 18
-    }
-
-    enum DeleteToDoButton {
-      static let cornerRadius: CGFloat = 10
-      static let topMargin: CGFloat = 28
-      static let leadingMargin: CGFloat = 13
-      static let trailingMargin: CGFloat = 6
-      static let height: CGFloat = 44
-    }
-
-    static let topMargin: CGFloat = 30
-    static let leadingMargin: CGFloat = 12
-    static let trailingMargin: CGFloat = 19
-    static let bottomMargin: CGFloat = 296
   }
 
   enum ToDoScheduleView {
@@ -80,5 +52,32 @@ extension EditToDoViewController.Constant.Layout {
     static let leadingMargin: CGFloat = 30
     static let traillingMargin: CGFloat = 30
     static let bottomMargin: CGFloat = 150
+  }
+}
+
+extension EditToDoViewController.Constant.Layout.EditToDoView {
+  enum ToDoNameTextInputView {
+    static let topMargin: CGFloat = 16.5
+    static let leadingMargin: CGFloat = 15.5
+    static let trailingMargin: CGFloat = 15.5
+    static let height: CGFloat = 23.5
+  }
+
+  enum GroupLabel {
+    static let topMargin: CGFloat = 61
+    static let leadingMargin: CGFloat = 19
+  }
+
+  enum EditGroupRow {
+    static let bottomMargin: CGFloat = 18
+  }
+
+  enum DeleteToDoButton {
+    static let titleLeadingMargin: CGFloat = 14
+    static let cornerRadius: CGFloat = 10
+    static let topMargin: CGFloat = 28
+    static let leadingMargin: CGFloat = 13
+    static let trailingMargin: CGFloat = 6
+    static let height: CGFloat = 44
   }
 }
