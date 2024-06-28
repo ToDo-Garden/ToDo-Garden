@@ -24,6 +24,9 @@ let package = Package(
       targets: ["ToDoGardenUIConstant"]
     )
   ],
+  dependencies: [
+    .package(path: "./TDUtility")
+  ],
   targets: [
     .target(
       name: "ToDoGardenUIAPI",
@@ -38,7 +41,8 @@ let package = Package(
         "ToDoGardenUIConstant",
         "CombineExtension",
         "FoundationExtension",
-        "ToDoGardenUIAPI"
+        "ToDoGardenUIAPI",
+        .product(name: "TDUtility", package: "TDUtility")
       ]
     ),
     .target(
