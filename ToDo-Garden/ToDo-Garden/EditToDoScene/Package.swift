@@ -37,7 +37,9 @@ let package = Package(
       name: "EditToDoScene",
       dependencies: [
         "EditToDoSceneAPI",
-        "EditToDoSceneEntity"
+        "EditToDoSceneEntity",
+        .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI"),
+        .product(name: "ToDoGardenUIResource", package: "ToDoGardenUI")
       ]
     )
   ]
