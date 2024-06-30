@@ -12,14 +12,14 @@ import ToDoGardenUIConstant
 
 final public class ToDoGardenTimePicker: UIPickerView {
   private let configuration: Constant.SettingTimeView.TimePicker
-  private let dateBuilder: DateBuilder
+  private let timeBuilder: TimeBuilder
   
   public init(
     configuration: Constant.SettingTimeView.TimePicker,
-    dateBuilder: DateBuilder = DateBuilder()
+    timeBuilder: TimeBuilder = TimeBuilder()
   ) {
     self.configuration = configuration
-    self.dateBuilder = dateBuilder
+    self.timeBuilder = timeBuilder
     super.init(frame: CGRect.zero)
     self.delegate = self
     self.dataSource = self
@@ -44,12 +44,13 @@ final public class ToDoGardenTimePicker: UIPickerView {
     return self.configuration.dataStore.pickerView.size
   }
   
-  func calculateDate() -> Date {
+  func transformSeconds() -> Double {
     var components = [Int]()
     for index in Int.zero..<self.numberOfComponents {
       components.append(self.selectedRow(inComponent: index))
     }
-    return self.dateBuilder.buildDate(from: components)
+    return self.timeBuilder.buildTimeInterval(from: components)
+  }
   }
   
   private func hideDefaultHighlightedView() {
@@ -188,23 +189,13 @@ final private class HighlightedView: UIView {
   }
 }
 
-public class DateBuilder {
-  private let baseDate: Date
-  
-  public init(baseDate: Date = Date()) {
-    self.baseDate = baseDate
-  }
-  
-  public func buildDate(from components: [Int]) -> Date {
-    var dateComponents = DateComponents()
-    dateComponents.hour = components[0]
-    dateComponents.minute = components[1]
-    
-    if components.count > 2 {
-      dateComponents.second = components[2]
-    }
-    
-    let calendar = Calendar.current
-    return calendar.date(byAdding: dateComponents, to: baseDate) ?? baseDate
+public class TimeBuilder {
+  public init() {}
+
+  public func buildTimeInterval(from components: [Int]) -> Double {
+    let hours = components[0]
+    let minutes = components[1]
+    let seconds = components.count > 2 ? components[2] : 0
+    return Double(hours * 3600 + minutes * 60 + seconds)
   }
 }
