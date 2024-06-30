@@ -16,7 +16,7 @@ extension Constant.SettingTimeView {
   
   private enum Layout {
     static let titleTopMargin: CGFloat = 44.0
-    static let buttonBottomMargin: CGFloat = -16.0
+    static let buttonBottomMargin: CGFloat = -50.0
   }
 }
 
