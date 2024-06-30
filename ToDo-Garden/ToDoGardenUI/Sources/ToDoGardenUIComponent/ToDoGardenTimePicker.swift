@@ -21,8 +21,6 @@ final public class ToDoGardenTimePicker: UIPickerView {
     self.configuration = configuration
     self.timeBuilder = timeBuilder
     super.init(frame: CGRect.zero)
-    self.delegate = self
-    self.dataSource = self
     self.backgroundColor = UIColor.clear
     self.hideDefaultHighlightedView()
     self.addHighlightedView()
@@ -51,6 +49,9 @@ final public class ToDoGardenTimePicker: UIPickerView {
     }
     return self.timeBuilder.buildTimeInterval(from: components)
   }
+  
+  func setInitialSelection() {
+    self.selectRow(10, inComponent: 1, animated: false)
   }
   
   private func hideDefaultHighlightedView() {
@@ -81,40 +82,6 @@ final public class ToDoGardenTimePicker: UIPickerView {
         highlightedView.heightAnchor.constraint(equalToConstant: self.configuration.dataStore.highlightedView.height)
       ]
     )
-  }
-}
-
-extension ToDoGardenTimePicker: UIPickerViewDelegate {
-  public func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
-    return self.configuration.dataStore.pickerView.rowHeight
-  }
-  
-  public func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
-    return self.configuration.dataStore.pickerView.widthForComponent
-  }
-}
-
-extension ToDoGardenTimePicker: UIPickerViewDataSource {
-  public func numberOfComponents(in pickerView: UIPickerView) -> Int {
-    return self.configuration.dataStore.pickerView.numberOfComponents
-  }
-  
-  public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-    return self.configuration.dataStore.pickerView.numberOfRowsInComponent[component]
-  }
-  
-  public func pickerView(
-    _ pickerView: UIPickerView,
-    viewForRow row: Int,
-    forComponent component: Int,
-    reusing view: UIView?
-  ) -> UIView {
-    let view = UILabel()
-    view.textAlignment = NSTextAlignment.center
-    view.text = String(row)
-    view.font = UIFont.pretendardHeadBold
-    view.textColor = UIColor.toDoGardenGreenDark
-    return view
   }
 }
 

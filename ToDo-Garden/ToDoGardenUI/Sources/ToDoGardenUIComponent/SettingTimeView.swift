@@ -13,12 +13,14 @@ import ToDoGardenUIResource
 public class SettingTimeView: UIView {
   private var configuration: Configuration
   private let timepicker: ToDoGardenTimePicker
+  private let button: UIButton
   
   public init(with button: UIButton, for configuration: Configuration) {
     self.configuration = configuration
     self.timepicker = ToDoGardenTimePicker(configuration: self.configuration.dataStore.timePicker)
+    self.button = button
     super.init(frame: CGRect.zero)
-    self.build(with: button)
+    self.build()
   }
   
   @available(*, unavailable)
@@ -33,17 +35,17 @@ public class SettingTimeView: UIView {
     return CGSize.init(width: screenWidth, height: screenHeight / 2)
   }
   
-  public func calculateDate(completion: @escaping (Date) -> Void) {
-    let calculatedDate = self.timepicker.calculateDate()
+  public func transformSeconds(completion: @escaping (Double) -> Void) {
+    let calculatedDate = self.timepicker.transformSeconds()
     completion(calculatedDate)
   }
 }
 
 extension SettingTimeView {
-  private func build(with button: UIButton) {
+  private func build() {
     self.buildTitleLabel()
     self.buildTimePicker()
-    self.buildButton(with: button)
+    self.buildButton()
   }
   
   private func buildTitleLabel() {
@@ -66,6 +68,9 @@ extension SettingTimeView {
   }
   
   private func buildTimePicker() {
+    self.timepicker.delegate = self
+    self.timepicker.dataSource = self
+    self.timepicker.setInitialSelection()
     self.addSubview(self.timepicker)
     
     self.timepicker.usingAutolayout()
@@ -80,17 +85,17 @@ extension SettingTimeView {
     )
   }
   
-  private func buildButton(with button: UIButton) {
-    self.addSubview(button)
+  private func buildButton() {
+    self.addSubview(self.button)
     
-    button.usingAutolayout()
+    self.button.usingAutolayout()
     NSLayoutConstraint.activate(
       [
-        button.bottomAnchor.constraint(
+        self.button.bottomAnchor.constraint(
           equalTo: self.bottomAnchor,
           constant: self.configuration.dataStore.button.bottomMargin
         ),
-        button.centerXAnchor.constraint(equalTo: self.centerXAnchor)
+        self.button.centerXAnchor.constraint(equalTo: self.centerXAnchor)
       ]
     )
   }
@@ -121,18 +126,61 @@ extension SettingTimeView.Configuration {
   )
 }
 
+extension SettingTimeView: UIPickerViewDelegate {
+  private var timePickerConstant: Constant.SettingTimeView.TimePicker.DataStore {
+    return self.configuration.dataStore.timePicker.dataStore
+    }
+  
+  public func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+    return self.timePickerConstant.pickerView.rowHeight
+  }
+  
+  public func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
+    return self.timePickerConstant.pickerView.widthForComponent
+  }
+  
+  public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+    self.button.isEnabled = self.timepicker.transformSeconds() >= Constant.SettingTimeView.minimumTimeInterval
+  }
+}
+
+extension SettingTimeView: UIPickerViewDataSource {
+  public func numberOfComponents(in pickerView: UIPickerView) -> Int {
+    return self.timePickerConstant.pickerView.numberOfComponents
+  }
+  
+  public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    return self.timePickerConstant.pickerView.numberOfRowsInComponent[component]
+  }
+  
+  public func pickerView(
+    _ pickerView: UIPickerView,
+    viewForRow row: Int,
+    forComponent component: Int,
+    reusing view: UIView?
+  ) -> UIView {
+    let view = UILabel()
+    view.textAlignment = NSTextAlignment.center
+    view.text = String(row)
+    view.font = UIFont.pretendardHeadBold
+    view.textColor = UIColor.toDoGardenGreenDark
+    return view
+  }
+}
+
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
   let button = ToDoGardenBoxButton(title: "asdasd", buttonType: .primaryRoundRectButton)
   
-  let view = SettingTimeView(with: button, for: .breakTimeSetting)
+  let view = SettingTimeView(with: button, for: .focusTimeSetting)
   
   let action = UIAction { _ in
-    view.calculateDate { date in print(date) }
+    view.transformSeconds { time in print(time) }
   }
   
   button.addAction(action, for: .touchUpInside)
+  
   return view
 }
 #endif
