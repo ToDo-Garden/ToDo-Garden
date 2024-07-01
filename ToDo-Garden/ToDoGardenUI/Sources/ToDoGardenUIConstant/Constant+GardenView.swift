@@ -20,5 +20,5 @@ extension Constant.GardenView.Layout {
 extension Constant.GardenView.Layout.PomodoroRecordCollectionView {
   public static let topMarginFraction: CGFloat = 18.21 / 119.0
   public static let horizontalMarginFraction: CGFloat = 19.0 / 332.0
-  public static let bottomMMarginFraction: CGFloat = 9.48 / 119.0
+  public static let bottomMarginFraction: CGFloat = 9.48 / 119.0
 }
