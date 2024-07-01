@@ -253,7 +253,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4FDA5E392B4FF1E4006506ED /* Asset.xcassets in Resources */,
-				AE4EE0D62C1FFA3F00483D7F /* (null) in Resources */,
 				639D79512C19A8E300004B26 /* EditToDoScene in Resources */,
 				4F0DF1382B4EABD000097B7D /* LaunchScreen.storyboard in Resources */,
 			);

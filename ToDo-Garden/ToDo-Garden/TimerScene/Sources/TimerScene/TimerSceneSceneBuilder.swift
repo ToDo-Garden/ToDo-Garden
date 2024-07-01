@@ -1,6 +1,6 @@
 import Foundation
 
-import TimerSceneApi
+import TimerSceneAPI
 
 @MainActor
 public struct TimerSceneSceneBuilder {
@@ -24,7 +24,7 @@ public struct TimerSceneSceneBuilder {
 
 extension TimerSceneSceneBuilder.Dependency {
   @MainActor
-  static let live = Self(
+  public static let live = Self(
     worker: TimerSceneWorker.live,
     nextSceneBuilder: Next()
   )
@@ -41,10 +41,9 @@ extension TimerSceneSceneBuilder: TimerSceneSceneBuildable {
   /// - Parameter payload: 런타임에 전달받아야 하는 의존성입니다.
   /// - Returns: 런타임 의존성, VIP Cycle이 설정된 ViewController를 반환합니다.
   public func build() -> TimerSceneViewControllable {
-    let someViewController = self.configureVIPCycle(for: TimerSceneViewController())
-    //		self.setPayload(for: someViewController, with: payload)
+    let timerSceneViewController = self.configureVIPCycle(for: TimerSceneViewController())
     
-    return someViewController
+    return timerSceneViewController
   }
 }
 
@@ -71,6 +70,5 @@ extension TimerSceneSceneBuilder {
   ///   - viewController: 런타임 의존성을 설정할 ViewController 객체입니다.
   ///   - payload: 런타임에 전달할 의존성입니다.
   private func setPayload(for viewController: TimerSceneViewController, with payload: TimerSceneScenePayloadable) {
-    // viewController.router?.dataStore?.name = payload.name
   }
 }

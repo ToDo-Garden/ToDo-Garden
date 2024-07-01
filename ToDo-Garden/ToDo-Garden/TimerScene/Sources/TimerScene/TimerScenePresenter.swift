@@ -1,4 +1,3 @@
-import Foundation
 import UIKit
 
 import TimerSceneEntity
@@ -9,7 +8,7 @@ protocol TimerScenePresentationLogic {
   func updateTimeState(_ seconds: Double, range: TimerScene.CircularProgressRange)
 }
 
-class TimerScenePresenter {
+final class TimerScenePresenter {
 	weak var viewController: TimerSceneDisplayLogic?
 }
 
@@ -24,7 +23,7 @@ extension TimerScenePresenter: TimerScenePresentationLogic {
   func updateTimeState(_ seconds: Double, range: TimerScene.CircularProgressRange) {
     let flag = seconds != 0
     self.viewController?
-      .updateTimeLabel(duration: seconds, time: convertTime(from: seconds), isFirst: flag)
+      .updateTimeLabel(duration: seconds, time: self.convertTime(from: seconds), isFirst: flag)
     
     self.viewController?.updateProgressImage(range.image)
   }
