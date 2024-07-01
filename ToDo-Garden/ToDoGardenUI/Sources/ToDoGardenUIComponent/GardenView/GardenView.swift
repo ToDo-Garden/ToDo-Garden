@@ -34,6 +34,19 @@ public final class GardenView: UIView {
       self.setupLayoutConstraints()
     }
   }
+  
+  public func configure(with pomodoroRecordCollection: PomodoroRecordCollection) {
+    let pomodoroDates = pomodoroRecordCollection.pomodoroDates()
+    let pomodoroLevels = pomodoroRecordCollection.normalizedPomodoroLevels()
+    
+    guard let groupedPomodoroRecordCellItems = PomodoroRecordCellItem.groupedPomodoroRecordCellItem(
+      pomodoroDates: pomodoroDates,
+      pomodoroLevels: pomodoroLevels
+    )
+    else { return }
+    
+    self.pomodoroRecordCollectionView.configure(with: groupedPomodoroRecordCellItems)
+  }
 }
 
 // MARK: - Setup
