@@ -34,6 +34,7 @@ extension TimerSceneViewController.Constant.Layout {
     static let bottomPadding: CGFloat = 55
     static let width: CGFloat = 236
     static let height: CGFloat = 236
+    static let lineWidth: CGFloat = 9
   }
   
   enum ControlButton {

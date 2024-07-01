@@ -46,7 +46,7 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
       circularProgressView: CircularProgressView(
         progressColor: UIColor.toDoGardenRed,
         backgroundColor: UIColor.toDoGardenLightRed,
-        lineWidth: 9
+        lineWidth: Constant.Layout.TimerProgressView.lineWidth
       ),
       dotColor: UIColor.toDoGardenRed
     )
@@ -93,6 +93,7 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
       duration: Constant.Layout.SetTimerButton.animationDuration
     )
     let action = UIAction { [weak self] _ in
+      self?.interactor?.controlButtonTapped()
     }
     button.addAction(action, for: .touchUpInside)
     return button
@@ -148,7 +149,7 @@ extension TimerSceneViewController: TimerSceneDisplayLogic {
   }
   
   func updateTimeLabel(duration: Double, time: String, isFirst: Bool) {
-    if timerProgressView.isAnimating, isFirst {
+    if !timerProgressView.isAnimating, isFirst {
       self.timerProgressView
         .startAnimation(duration: duration, from: 0, to: 1)
     }

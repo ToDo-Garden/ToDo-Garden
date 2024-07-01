@@ -27,24 +27,26 @@ public struct CountDownSequence: AsyncSequence {
   }
   
   public func makeAsyncIterator() -> AsyncIterator {
-    AsyncIterator(endTime: endTime, initTime: endTime, timeInterval: timeInterval)
+    AsyncIterator(endTime: endTime, timeInterval: timeInterval)
   }
   public struct AsyncIterator: AsyncIteratorProtocol {
-    var endTime: TimeInterval
-    let initTime: TimeInterval
-    let timeInterval: UInt64
-    var isFirst: Bool = true
+    private var endTime: TimeInterval
+    private let timeInterval: UInt64
+    private var isFirst: Bool = true
+    
+    init(
+      endTime: TimeInterval,
+      timeInterval: UInt64
+    ) {
+      self.endTime = endTime
+      self.timeInterval = timeInterval
+    }
     
     public mutating func next() async throws -> Double? {
       guard self.endTime > 0 else { return nil }
-      if self.isFirst {
-        self.isFirst = false
-        return self.endTime
-      } else {
-        try await Task.sleep(nanoseconds: timeInterval)
-        self.endTime -= 1
-        return self.endTime
-      }
+      try await Task.sleep(nanoseconds: timeInterval)
+      self.endTime -= 1
+      return self.endTime
     }
   }
 }
