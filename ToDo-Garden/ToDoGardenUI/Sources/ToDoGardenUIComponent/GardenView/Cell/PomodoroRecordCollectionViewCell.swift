@@ -18,4 +18,13 @@ final class PomodoroRecordCollectionViewCell: UICollectionViewCell {
     
     return firstDayOfMonthLabel
   }()
+  
+  private let pomodoroLevelsView: PomodoroLevelCollectionView = {
+    let pomodoroLevelsView = PomodoroLevelCollectionView()
+    pomodoroLevelsView.showsHorizontalScrollIndicator = false
+    pomodoroLevelsView.showsVerticalScrollIndicator = false
+    pomodoroLevelsView.isScrollEnabled = false
+    
+    return pomodoroLevelsView
+  }()
 }
