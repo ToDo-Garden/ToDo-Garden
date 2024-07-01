@@ -86,3 +86,17 @@ extension PomodoroRecordCollectionViewCell {
     ])
   }
 }
+
+// MARK: - configure month label
+
+extension PomodoroRecordCollectionViewCell {
+  private func configureMonthLabel(with pomodoroRecordCellItem: PomodoroRecordCellItem) {
+    guard let firstDayOfMonth = pomodoroRecordCellItem.formattedFirstDayOfMonth()
+    else {
+      self.firstDayOfMonthLabel.text = " "
+      return
+    }
+    
+    self.firstDayOfMonthLabel.text = firstDayOfMonth
+  }
+}
