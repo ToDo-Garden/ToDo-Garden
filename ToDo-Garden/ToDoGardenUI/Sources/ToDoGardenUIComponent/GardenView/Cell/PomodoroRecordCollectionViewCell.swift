@@ -47,6 +47,11 @@ final class PomodoroRecordCollectionViewCell: UICollectionViewCell {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+  
+  func configure(with pomodoroRecordCellItem: PomodoroRecordCellItem) {
+    self.pomodoroLevelsView.configure(with: pomodoroRecordCellItem.pomodoroLevels)
+    self.configureMonthLabel(with: pomodoroRecordCellItem)
+  }
 }
 
 // MARK: - Setup
