@@ -31,7 +31,12 @@ final class PomodoroLevelCollectionView: UICollectionView {
 
 extension PomodoroLevelCollectionView {
   private func setup() {
+    self.setupViewAppearance()
     self.setupDataSource()
+  }
+  
+  private func setupViewAppearance() {
+    self.backgroundColor = UIColor.clear
   }
   
   private func setupDataSource() {
