@@ -1,6 +1,6 @@
 import UIKit
 
-import TimerSceneApi
+import TimerSceneAPI
 import TimerSceneEntity
 import ToDoGardenUIComponent
 
@@ -13,7 +13,7 @@ protocol TimerSceneDisplayLogic: AnyObject {
 }
 
 public final class TimerSceneViewController: UIViewController, TimerSceneViewControllable {
-  private var circularProgressView: CircularProgressView!
+  private var timerProgressView: TimerProgressView!
   private var circularProgressImageView: UIImageView!
   
   private var targetLabel: RemainingTimeView!
@@ -42,14 +42,17 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
   }
   
   private func build() {
-    self.circularProgressView = CircularProgressView(
-      progressColor: UIColor.toDoGardenRed,
-      backgroundColor: UIColor.toDoGardenLightRed,
-      lineWidth: 9
+    self.timerProgressView = TimerProgressView(
+      circularProgressView: CircularProgressView(
+        progressColor: UIColor.toDoGardenRed,
+        backgroundColor: UIColor.toDoGardenLightRed,
+        lineWidth: 9
+      ),
+      dotColor: UIColor.toDoGardenRed
     )
     self.circularProgressImageView = UIImageView(image: .progressDefault)
     self.targetLabel = RemainingTimeView()
-    self.targetLabel.updateRemainingTime(with: "집중시간")
+    self.targetLabel.updateRemainingTime(with: Constant.DefaultViewState.targetLabel)
     self.timeLabel = self.buildTimeLabel()
     self.controlButton = self.buildSetTimerButton()
   }
@@ -58,18 +61,18 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
     let stack = UIStackView()
     stack.axis = .vertical
     stack.alignment = .center
-    stack.addSpacing(94)
+    stack.addSpacing(Constant.Layout.BaseStack.topPadding)
     
     self.layoutCircularView(stack)
     self.layoutTargetLabel(stack)
     
-    stack.addArrangedSubViewWithSpacing(self.timeLabel, spacing: 21)
+    stack.addArrangedSubViewWithSpacing(self.timeLabel, spacing: Constant.Layout.TimeLabel.bottomPadding)
     
     self.controlButton.setContentHuggingPriority(.defaultLow, for: .horizontal)
-    self.controlButton.widthAnchor.constraint(equalToConstant: 131).isActive = true
+    self.controlButton.widthAnchor.constraint(equalToConstant: Constant.Layout.ControlButton.width).isActive = true
     stack.addArrangedSubViewWithSpacing(self.controlButton)
     
-    view.addSubview(stack)
+    self.view.addSubview(stack)
     stack.equalToParent()
   }
   
@@ -77,65 +80,76 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
     let label = UILabel()
     label.font = UIFont.pretendardHeadLight75
     label.textColor = UIColor.toDoGardenGreenDark
-    label.text = "00:00"
+    label.text = Constant.DefaultViewState.timeLabel
     return label
   }
   
   private func buildSetTimerButton() -> UIButton {
     let button = UIButton()
-    button.timerControlButtonDefaultStyle(with: "집중시간 설정")
-    button.feedbackAnimation(0.98, duration: 0.15)
+    button.timerControlButtonDefaultStyle(with: Constant.DefaultViewState.setTimerButton)
+    
+    button.feedbackAnimation(
+      Constant.Layout.SetTimerButton.animationScale,
+      duration: Constant.Layout.SetTimerButton.animationDuration
+    )
     let action = UIAction { [weak self] _ in
-      self?.interactor?.controlButtonTapped()
     }
     button.addAction(action, for: .touchUpInside)
     return button
   }
   
   private func layoutCircularView(_ stack: UIStackView) {
-    self.circularProgressView.widthAnchor.constraint(equalToConstant: 236).isActive = true
-    self.circularProgressView.heightAnchor.constraint(equalToConstant: 236).isActive = true
-    stack.addArrangedSubViewWithSpacing(self.circularProgressView, spacing: 55)
+    self.timerProgressView.widthAnchor
+      .constraint(equalToConstant: Constant.Layout.TimerProgressView.width).isActive = true
+    self.timerProgressView.heightAnchor
+      .constraint(equalToConstant: Constant.Layout.TimerProgressView.height).isActive = true
+    stack.addArrangedSubViewWithSpacing(
+      self.timerProgressView,
+      spacing: Constant.Layout.TimerProgressView.bottomPadding
+    )
     
-    self.circularProgressView.addSubview(self.circularProgressImageView)
+    self.timerProgressView.addSubview(self.circularProgressImageView)
     self.circularProgressImageView.usingAutolayout()
+    let padding = Constant.Layout.TimerProgressView.innerPadding
     NSLayoutConstraint.activate([
       self.circularProgressImageView.topAnchor
-        .constraint(equalTo: self.circularProgressView.topAnchor, constant: 16),
+        .constraint(equalTo: self.timerProgressView.topAnchor, constant: padding),
       self.circularProgressImageView.bottomAnchor
-        .constraint(equalTo: self.circularProgressView.bottomAnchor, constant: -16),
+        .constraint(equalTo: self.timerProgressView.bottomAnchor, constant: -padding),
       self.circularProgressImageView.leadingAnchor
-        .constraint(equalTo: self.circularProgressView.leadingAnchor, constant: 16),
+        .constraint(equalTo: self.timerProgressView.leadingAnchor, constant: padding),
       self.circularProgressImageView.trailingAnchor
-        .constraint(equalTo: self.circularProgressView.trailingAnchor, constant: -16)
+        .constraint(equalTo: self.timerProgressView.trailingAnchor, constant: -padding)
     ])
   }
   
   private func layoutTargetLabel(_ stack: UIStackView) {
-    self.targetLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
-    self.targetLabel.heightAnchor.constraint(equalToConstant: 31).isActive = true
+    self.targetLabel.widthAnchor
+      .constraint(equalToConstant: Constant.Layout.TargetLabel.width).isActive = true
+    self.targetLabel.heightAnchor
+      .constraint(equalToConstant: Constant.Layout.TargetLabel.height).isActive = true
     self.targetLabel.updateBackgroundColorForFoucsTime()
-    stack.addArrangedSubViewWithSpacing(self.targetLabel, spacing: 9)
+    stack.addArrangedSubViewWithSpacing(self.targetLabel, spacing: Constant.Layout.TargetLabel.bottomPadding)
   }
 }
 
 // MARK: - Confirm display logic protocol
 extension TimerSceneViewController: TimerSceneDisplayLogic {
   func updateTargetLabel(time: String) {
-    self.targetLabel.updateRemainingTime(with: "집중시간 \(time)분")
+    self.targetLabel.updateRemainingTime(with: Constant.TargetLabel.updated(time))
   }
   
   func updateControlButton(isFocused: Bool) {
     if isFocused {
-      self.controlButton.timerControlButtonDestructiveStyle(with: "포기할래요")
+      self.controlButton.timerControlButtonDestructiveStyle(with: Constant.ControlButton.giveUp)
     } else {
-      self.controlButton.timerControlButtonDefaultStyle(with: "집중시간 설정")
+      self.controlButton.timerControlButtonDefaultStyle(with: Constant.ControlButton.setFocusTime)
     }
   }
   
   func updateTimeLabel(duration: Double, time: String, isFirst: Bool) {
-    if !self.circularProgressView.isAnimating, isFirst {
-      self.circularProgressView
+    if timerProgressView.isAnimating, isFirst {
+      self.timerProgressView
         .startAnimation(duration: duration, from: 0, to: 1)
     }
     self.timeLabel.text = time
@@ -154,16 +168,3 @@ extension TimerSceneViewController: TimerSceneDisplayLogic {
     .build()
 }
 #endif
-
-extension UIImageView {
-  func setImageWithZoomTransition(newImage: UIImage?, duration: TimeInterval = 0.3) {
-    UIView.transition(with: self, duration: duration, options: .transitionCrossDissolve) {
-      self.image = newImage
-      self.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
-    } completion: { _ in
-      UIView.animate(withDuration: duration) {
-        self.transform = .identity
-      }
-    }
-  }
-}
