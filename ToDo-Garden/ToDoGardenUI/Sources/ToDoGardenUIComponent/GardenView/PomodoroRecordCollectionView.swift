@@ -10,17 +10,38 @@ import UIKit
 import ToDoGardenUIConstant
 
 final class PomodoroRecordCollectionView: UICollectionView {
+  private var gardenRecordCollectionViewDataSource: DataSource?
   
   init() {
     super.init(
       frame: CGRect.zero,
       collectionViewLayout: Self.makeGardenRecordCollectionViewLayout()
     )
+    self.setup()
   }
   
   @available(*, unavailable)
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+  
+  func configure(with pomodoroRecordCellItems: [PomodoroRecordCellItem]) {
+    var snapshot = Snapshot()
+    snapshot.appendSections([Section.main])
+    snapshot.appendItems(pomodoroRecordCellItems)
+    self.gardenRecordCollectionViewDataSource?.apply(snapshot)
+  }
+}
+
+// MARK: - Setup
+
+extension PomodoroRecordCollectionView {
+  private func setup() {
+    self.setupDataSource()
+  }
+  
+  private func setupDataSource() {
+    self.gardenRecordCollectionViewDataSource = self.makeDataSource()
   }
 }
 
@@ -63,6 +84,30 @@ extension PomodoroRecordCollectionView {
       widthDimension: NSCollectionLayoutDimension.fractionalWidth(groupWidthFraction),
       heightDimension: NSCollectionLayoutDimension.fractionalHeight(groupHeightFraction)
     )
+  }
+}
+
+// MARK: - Setup data source
+
+extension PomodoroRecordCollectionView {
+  private func makeDataSource() -> DataSource {
+    let pomodoroCollectionViewCellRegistration = self.pomodoroRecordCollectionViewCellRegistration()
+    
+    return DataSource(collectionView: self) { pomodoroRecordCollectionView, indexPath, pomodoroRecordItem in
+      let pomodoroRecordCollectionViewCell = pomodoroRecordCollectionView.dequeueConfiguredReusableCell(
+        using: pomodoroCollectionViewCellRegistration,
+        for: indexPath,
+        item: pomodoroRecordItem
+      )
+      
+      return pomodoroRecordCollectionViewCell
+    }
+  }
+  
+  private func pomodoroRecordCollectionViewCellRegistration() -> CellRegistration {
+    return CellRegistration { pomodoroRecordCollectionViewCell, _, pomodoroRecordItem in
+      pomodoroRecordCollectionViewCell.configure(with: pomodoroRecordItem)
+    }
   }
 }
 
