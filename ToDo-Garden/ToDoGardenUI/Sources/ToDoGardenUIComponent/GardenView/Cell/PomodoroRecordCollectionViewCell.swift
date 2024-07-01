@@ -27,4 +27,14 @@ final class PomodoroRecordCollectionViewCell: UICollectionViewCell {
     
     return pomodoroLevelsView
   }()
+  
+  private let contentStackView: UIStackView = {
+    let contentStackView = UIStackView()
+    contentStackView.axis = NSLayoutConstraint.Axis.vertical
+    contentStackView.distribution = UIStackView.Distribution.fill
+    contentStackView.alignment = UIStackView.Alignment.fill
+    contentStackView.spacing = 1
+    
+    return contentStackView
+  }()
 }
