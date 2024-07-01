@@ -14,6 +14,10 @@ final class PomodoroLevelCollectionView: UICollectionView {
   private var pomodoroLevelCollectionViewDataSource: DataSource?
   
   init() {
+    super.init(
+      frame: CGRect.zero,
+      collectionViewLayout: Self.makePomodoroLevelCollectionViewLayout()
+    )
     self.setup()
   }
   
@@ -32,6 +36,45 @@ extension PomodoroLevelCollectionView {
   
   private func setupDataSource() {
     self.pomodoroLevelCollectionViewDataSource = self.makeDataSource()
+  }
+}
+
+extension PomodoroLevelCollectionView {
+  private static func makePomodoroLevelCollectionViewLayout() -> UICollectionViewCompositionalLayout {
+    let itemSize = Self.makeItemSize()
+    let item = NSCollectionLayoutItem(layoutSize: itemSize)
+    let groupSize = Self.makeGroupSize()
+    let group = NSCollectionLayoutGroup.vertical(
+      layoutSize: groupSize,
+      subitems: [item]
+    )
+    group.interItemSpacing = NSCollectionLayoutSpacing.flexible(
+      Constant.PomodoroLevelCollectionView.Layout.Group.interItemSpacing
+    )
+    let section = NSCollectionLayoutSection(group: group)
+    let layout = UICollectionViewCompositionalLayout(section: section)
+    
+    return layout
+  }
+  
+  private static func makeItemSize() -> NSCollectionLayoutSize {
+    let itemWidthFraction: CGFloat = Constant.PomodoroLevelCollectionView.Layout.Item.widthFraction
+    let itemHeightFraction: CGFloat = Constant.PomodoroLevelCollectionView.Layout.Item.heightFraction
+    
+    return NSCollectionLayoutSize(
+      widthDimension: NSCollectionLayoutDimension.fractionalWidth(itemWidthFraction),
+      heightDimension: NSCollectionLayoutDimension.fractionalWidth(itemHeightFraction)
+    )
+  }
+  
+  private static func makeGroupSize() -> NSCollectionLayoutSize {
+    let groupWidthFraction: CGFloat = Constant.PomodoroLevelCollectionView.Layout.Group.widthFraction
+    let groupHeightFraction: CGFloat = Constant.PomodoroLevelCollectionView.Layout.Group.heightFraction
+    
+    return NSCollectionLayoutSize(
+      widthDimension: NSCollectionLayoutDimension.fractionalWidth(groupWidthFraction),
+      heightDimension: NSCollectionLayoutDimension.fractionalHeight(groupHeightFraction)
+    )
   }
 }
 
