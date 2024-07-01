@@ -25,6 +25,14 @@ final class PomodoroLevelCollectionView: UICollectionView {
   required init(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+  
+  func configure(with pomodoroLevels: [PomodoroLevel]) {
+    var snapshot = Snapshot()
+    snapshot.appendSections([Section.main])
+    let pomodoroLevelCellItems = pomodoroLevels.map { PomodoroLevelCellItem(pomodoroLevel: $0) }
+    snapshot.appendItems(pomodoroLevelCellItems)
+    self.pomodoroLevelCollectionViewDataSource?.apply(snapshot)
+  }
 }
 
 // MARK: - Setup
