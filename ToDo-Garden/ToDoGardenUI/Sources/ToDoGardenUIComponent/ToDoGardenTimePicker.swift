@@ -12,17 +12,15 @@ import ToDoGardenUIConstant
 
 final public class ToDoGardenTimePicker: UIPickerView {
   private let configuration: Constant.SettingTimeView.TimePicker
-  private let dateBuilder: DateBuilder
+  private let timeBuilder: TimeBuilder
   
   public init(
     configuration: Constant.SettingTimeView.TimePicker,
-    dateBuilder: DateBuilder = DateBuilder()
+    timeBuilder: TimeBuilder = TimeBuilder()
   ) {
     self.configuration = configuration
-    self.dateBuilder = dateBuilder
+    self.timeBuilder = timeBuilder
     super.init(frame: CGRect.zero)
-    self.delegate = self
-    self.dataSource = self
     self.backgroundColor = UIColor.clear
     self.hideDefaultHighlightedView()
     self.addHighlightedView()
@@ -44,12 +42,16 @@ final public class ToDoGardenTimePicker: UIPickerView {
     return self.configuration.dataStore.pickerView.size
   }
   
-  func calculateDate() -> Date {
+  func transformSeconds() -> Double {
     var components = [Int]()
     for index in Int.zero..<self.numberOfComponents {
       components.append(self.selectedRow(inComponent: index))
     }
-    return self.dateBuilder.buildDate(from: components)
+    return self.timeBuilder.buildTimeInterval(from: components)
+  }
+  
+  func setInitialSelection() {
+    self.selectRow(10, inComponent: 1, animated: false)
   }
   
   private func hideDefaultHighlightedView() {
@@ -80,40 +82,6 @@ final public class ToDoGardenTimePicker: UIPickerView {
         highlightedView.heightAnchor.constraint(equalToConstant: self.configuration.dataStore.highlightedView.height)
       ]
     )
-  }
-}
-
-extension ToDoGardenTimePicker: UIPickerViewDelegate {
-  public func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
-    return self.configuration.dataStore.pickerView.rowHeight
-  }
-  
-  public func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
-    return self.configuration.dataStore.pickerView.widthForComponent
-  }
-}
-
-extension ToDoGardenTimePicker: UIPickerViewDataSource {
-  public func numberOfComponents(in pickerView: UIPickerView) -> Int {
-    return self.configuration.dataStore.pickerView.numberOfComponents
-  }
-  
-  public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-    return self.configuration.dataStore.pickerView.numberOfRowsInComponent[component]
-  }
-  
-  public func pickerView(
-    _ pickerView: UIPickerView,
-    viewForRow row: Int,
-    forComponent component: Int,
-    reusing view: UIView?
-  ) -> UIView {
-    let view = UILabel()
-    view.textAlignment = NSTextAlignment.center
-    view.text = String(row)
-    view.font = UIFont.pretendardHeadBold
-    view.textColor = UIColor.toDoGardenGreenDark
-    return view
   }
 }
 
@@ -188,23 +156,13 @@ final private class HighlightedView: UIView {
   }
 }
 
-public class DateBuilder {
-  private let baseDate: Date
-  
-  public init(baseDate: Date = Date()) {
-    self.baseDate = baseDate
-  }
-  
-  public func buildDate(from components: [Int]) -> Date {
-    var dateComponents = DateComponents()
-    dateComponents.hour = components[0]
-    dateComponents.minute = components[1]
-    
-    if components.count > 2 {
-      dateComponents.second = components[2]
-    }
-    
-    let calendar = Calendar.current
-    return calendar.date(byAdding: dateComponents, to: baseDate) ?? baseDate
+public class TimeBuilder {
+  public init() {}
+
+  public func buildTimeInterval(from components: [Int]) -> Double {
+    let hours = components[0]
+    let minutes = components[1]
+    let seconds = components.count > 2 ? components[2] : 0
+    return Double(hours * 3600 + minutes * 60 + seconds)
   }
 }

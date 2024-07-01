@@ -8,6 +8,8 @@
 import Foundation
 
 extension Constant.SettingTimeView {
+  public static let minimumTimeInterval: Double = 600.0
+  
   private enum StringLiteral {
     static let focusTimeTitle: String = "집중시간 설정"
     static let breakTimeTitle: String = "휴식시간 설정"
@@ -16,7 +18,7 @@ extension Constant.SettingTimeView {
   
   private enum Layout {
     static let titleTopMargin: CGFloat = 44.0
-    static let buttonBottomMargin: CGFloat = -16.0
+    static let buttonBottomMargin: CGFloat = -50.0
   }
 }
 
