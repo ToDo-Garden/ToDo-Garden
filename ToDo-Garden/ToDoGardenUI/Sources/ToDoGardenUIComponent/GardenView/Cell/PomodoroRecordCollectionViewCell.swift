@@ -81,14 +81,7 @@ extension PomodoroRecordCollectionViewCell {
   }
   
   private func setupContentsStackViewLayoutConstraints() {
-    self.contentStackView.usingAutolayout()
-    
-    NSLayoutConstraint.activate([
-      self.contentStackView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-      self.contentStackView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
-      self.contentStackView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
-      self.contentStackView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor)
-    ])
+    self.contentStackView.equalToParent()
   }
 }
 
