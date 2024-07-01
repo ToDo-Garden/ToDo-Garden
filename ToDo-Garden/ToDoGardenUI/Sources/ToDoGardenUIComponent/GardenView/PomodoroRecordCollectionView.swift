@@ -37,7 +37,15 @@ final class PomodoroRecordCollectionView: UICollectionView {
 
 extension PomodoroRecordCollectionView {
   private func setup() {
+    self.setupViewAppearance()
     self.setupDataSource()
+  }
+  
+  private func setupViewAppearance() {
+    self.backgroundColor = UIColor.clear
+    self.showsVerticalScrollIndicator = false
+    self.showsHorizontalScrollIndicator = false
+    self.isScrollEnabled = false
   }
   
   private func setupDataSource() {
