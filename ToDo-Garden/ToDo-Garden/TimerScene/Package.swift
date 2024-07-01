@@ -18,19 +18,15 @@ let package = Package(
       name: "TimerScene",
       dependencies: [
         "TimerSceneEntity",
-        "TimerSceneApi",
+        "TimerSceneAPI",
         .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI")
       ]
     ),
     .target(
-      name: "TimerSceneApi",
-      dependencies: [
-        .product(name: "ToDoGardenUIAPI", package: "ToDoGardenUI")
-      ]
+      name: "TimerSceneAPI",
+      dependencies: [.product(name: "ToDoGardenUIAPI", package: "ToDoGardenUI")]
     ),
-    .target(
-      name: "TimerSceneEntity"
-    ),
+    .target(name: "TimerSceneEntity"),
     .testTarget(
       name: "TimerSceneTests",
       dependencies: ["TimerScene"]
