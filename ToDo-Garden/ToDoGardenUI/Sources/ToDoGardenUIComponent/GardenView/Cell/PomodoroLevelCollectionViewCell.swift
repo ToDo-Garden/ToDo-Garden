@@ -21,6 +21,10 @@ final class PomodoroLevelCollectionViewCell: UICollectionViewCell {
       self.setupCornerRadius()
     }
   }
+  
+  func configure(with pomodoroLevel: PomodoroLevel) {
+    self.backgroundColor = pomodoroLevel.color
+  }
 }
 
 extension PomodoroLevelCollectionViewCell {
