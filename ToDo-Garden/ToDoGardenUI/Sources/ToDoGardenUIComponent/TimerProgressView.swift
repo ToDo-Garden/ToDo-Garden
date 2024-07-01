@@ -10,6 +10,9 @@ import UIKit
 import ToDoGardenUIConstant
 
 public final class TimerProgressView: UIView {
+  public var isAnimating: Bool {
+    self.circularProgressView.isAnimating
+  }
   private let circularProgressView: CircularProgressView
   private let dot: UIView
   private var toValue: Double?
