@@ -13,4 +13,19 @@ enum PomodoroLevel {
   case middle
   case high
   case perfect
+  
+  var color: UIColor {
+    switch self {
+    case PomodoroLevel.none:
+      return UIColor.toDoGardenGrassNone
+    case PomodoroLevel.low:
+      return UIColor.toDoGardenGrassLow
+    case PomodoroLevel.middle:
+      return UIColor.toDoGardenGrassMiddle
+    case PomodoroLevel.high:
+      return UIColor.toDoGardenGrassHigh
+    case PomodoroLevel.perfect:
+      return UIColor.toDoGardenGrassPerfect
+    }
+  }
 }
