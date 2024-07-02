@@ -19,6 +19,7 @@ extension Styled.Row {
     stack.addSpacing()
     self.buildColorView(stack: stack, color: model.color)
     self.buildRightView(stack: stack, views: views)
+    self.bindingGroupNameState(label: label)
   }
   
   private func buildColorView(stack: UIStackView, color: UIColor) {
@@ -45,5 +46,15 @@ extension Styled.Row {
       ]
     )
     stack.addArrangedSubview(rightView)
+  }
+
+  private func bindingGroupNameState(label: UILabel) {
+    self.$configuration
+      .map(\.listPrimaryModel?.title)
+      .removeDuplicates()
+      .sink { [weak label] title in
+        label?.text = title
+      }
+      .store(in: &cancellables)
   }
 }
