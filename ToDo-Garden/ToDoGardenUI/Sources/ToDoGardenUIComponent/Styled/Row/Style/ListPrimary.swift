@@ -17,12 +17,13 @@ extension Styled.Row {
     label.text = model.title
     stack.addArrangedSubview(label)
     stack.addSpacing()
-    self.buildColorView(stack: stack, color: model.color)
+    let colorView = self.buildColorView(stack: stack, color: model.color)
     self.buildRightView(stack: stack, views: views)
     self.bindingGroupNameState(label: label)
+    self.bindingGroupColorState(colorView: colorView)
   }
   
-  private func buildColorView(stack: UIStackView, color: UIColor) {
+  private func buildColorView(stack: UIStackView, color: UIColor) -> UIView {
     let colorView = UIView()
     colorView.backgroundColor = color
     colorView.layer.cornerRadius = Constant.Styled.Row.ListPrimary.colorViewCornerRadius
@@ -32,6 +33,7 @@ extension Styled.Row {
       colorView.heightAnchor.constraint(equalToConstant: Constant.Styled.Row.ListPrimary.colorViewSize.height)
     ])
     stack.addArrangedSubview(colorView)
+    return colorView
   }
 
   private func buildRightView(stack: UIStackView, views: [UIView]? = nil) {
@@ -54,6 +56,16 @@ extension Styled.Row {
       .removeDuplicates()
       .sink { [weak label] title in
         label?.text = title
+      }
+      .store(in: &cancellables)
+  }
+
+  private func bindingGroupColorState(colorView: UIView) {
+    self.$configuration
+      .map(\.listPrimaryModel?.color)
+      .removeDuplicates()
+      .sink { [weak colorView] color in
+        colorView?.backgroundColor = color
       }
       .store(in: &cancellables)
   }
