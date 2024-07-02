@@ -79,6 +79,11 @@ extension Styled.Row.Configuration {
   public struct ListPrimaryModel: Equatable {
     let title: String
     let color: UIColor
+
+    public init(title: String, color: UIColor) {
+      self.title = title
+      self.color = color
+    }
   }
   
   public struct RepeatOtherDaysModel: Equatable {
