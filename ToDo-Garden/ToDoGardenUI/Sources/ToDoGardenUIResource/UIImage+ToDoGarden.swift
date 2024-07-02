@@ -74,4 +74,16 @@ extension UIImage {
   public static let backwardButtonImage = UIImage(
     resource: .backwardButton
   )
+  public static let progressDefault = UIImage(
+    resource: .progressDefault
+  )
+  public static let progressLow = UIImage(
+    resource: .progressLow
+  )
+  public static let progressMedium = UIImage(
+    resource: .progressMedium
+  )
+  public static let progressHigh = UIImage(
+    resource: .progressHigh
+  )
 }

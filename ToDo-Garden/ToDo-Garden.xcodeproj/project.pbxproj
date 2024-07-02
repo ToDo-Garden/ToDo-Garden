@@ -49,6 +49,7 @@
 		4FC8C14A2B87562600BA223E /* ToDoGardenUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ToDoGardenUI; sourceTree = "<group>"; };
 		4FDA5E382B4FF1E4006506ED /* Asset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Asset.xcassets; sourceTree = "<group>"; };
 		639D79502C19A8E300004B26 /* EditToDoScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = EditToDoScene; sourceTree = "<group>"; };
+		AE930F3C2C2E9306002F26AB /* TimerScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = TimerScene; sourceTree = "<group>"; };
 		E4DEA1722C2BEC2900E3CE3C /* ManageGroupScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ManageGroupScene; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -105,6 +106,7 @@
 		4F0DF12A2B4EABCE00097B7D /* ToDo-Garden */ = {
 			isa = PBXGroup;
 			children = (
+				AE930F3C2C2E9306002F26AB /* TimerScene */,
 				E4DEA1722C2BEC2900E3CE3C /* ManageGroupScene */,
 				639D79502C19A8E300004B26 /* EditToDoScene */,
 				4FDA5E372B4FF1B0006506ED /* Resources */,
