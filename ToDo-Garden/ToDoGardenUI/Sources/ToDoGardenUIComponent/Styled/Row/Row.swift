@@ -19,7 +19,22 @@ extension Styled {
         }
       }
     }
-    
+
+    public var groupListModel: Configuration.ListPrimaryModel? {
+      get {
+        if let groupListModel = self.configuration.listPrimaryModel {
+          return groupListModel
+        }
+        return nil
+      }
+      set {
+        if var model = self.configuration.listPrimaryModel, let newValue {
+          model = newValue
+          self.configuration = Configuration.listPrimary(model)
+        }
+      }
+    }
+
     @Published var configuration: Configuration
     var cancellables: Set<AnyCancellable> = []
     
