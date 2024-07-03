@@ -11,6 +11,7 @@ extension Constant.GroupSelectionView {
   public enum Animation {}
   public enum Layout {}
   public enum Model {}
+  public enum StringLiteral {}
 }
 
 extension Constant.GroupSelectionView.Animation {
@@ -60,4 +61,8 @@ extension Constant.GroupSelectionView.Model {
     public static let cellHeight: CGFloat = 45
     public static let visibleCellCount = 3
   }
+}
+
+extension Constant.GroupSelectionView.StringLiteral {
+  public static let defaultGroupName = "그룹 1"
 }
