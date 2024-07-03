@@ -20,6 +20,7 @@ extension Constant.GroupSelectionView.Layout {
   public enum TableViewContainer {}
   public enum EditableGroupTableView {}
   public enum EditableGroupTableViewCell {}
+  public enum EditableGroupTableViewDelegate {}
 }
 
 extension Constant.GroupSelectionView.Layout.TableViewContainer {
@@ -47,4 +48,8 @@ extension Constant.GroupSelectionView.Layout.EditableGroupTableViewCell {
   public enum SeparatorView {
     public static let width: CGFloat = 1.0
   }
+}
+
+extension Constant.GroupSelectionView.Layout.EditableGroupTableViewDelegate {
+  public static let headerViewHeight: CGFloat = 2.0
 }
