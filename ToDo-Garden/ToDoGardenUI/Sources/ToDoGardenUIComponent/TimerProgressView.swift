@@ -43,12 +43,11 @@ public final class TimerProgressView: UIView {
   /// 타이머 애니메이션을 시작하는 메소드입니다.
   /// - Parameters:
   ///   - duration: `TimerInterval` 동안 실행될지 결정하는 파라미터입니다.
-  ///   - from: `TimerProgressView`의 애니메이션이 시작되는 지점을 나타내는 값입니다.
-  ///   - value: TimerProgressView`의 애니메이션이 종료되는 지점을 나타내는 값입니다.
-  public func startAnimation(duration: TimeInterval, from: Double, to value: Double) {
-    self.toValue = value
-    self.addAnimation(duration: duration, from: from, to: value)
-    self.circularProgressView.startAnimation(duration: duration, from: Float(from), to: Float(value))
+  ///   - toValue: TimerProgressView`의 애니메이션이 종료되는 지점을 나타내는 값입니다.
+  public func startAnimation(duration: TimeInterval, to toValue: Double) {
+    self.toValue = toValue
+    self.addAnimation(duration: duration, to: toValue)
+    self.circularProgressView.startAnimation(duration: duration, from: Float.zero, to: Float(toValue))
   }
 }
 
@@ -102,8 +101,8 @@ extension TimerProgressView {
 // MARK: - Setup animation
 
 extension TimerProgressView {
-  private func addAnimation(duration: TimeInterval, from: Double, to value: Double) {
-    let circularPath = self.makeCircularPath(fromValue: from, toValue: value)
+  private func addAnimation(duration: TimeInterval, to toValue: Double) {
+    let circularPath = self.makeCircularPath(toValue: toValue)
     let animationKeyPath = Constant.TimerProgressView.StringLiteral.Dot.Animation.keyPath
     let animation = CAKeyframeAnimation(keyPath: animationKeyPath)
     animation.delegate = self
@@ -115,7 +114,7 @@ extension TimerProgressView {
     self.dot.layer.add(animation, forKey: nil)
   }
   
-  private func makeCircularPath(fromValue: Double, toValue: Double) -> UIBezierPath {
+  private func makeCircularPath(toValue: Double) -> UIBezierPath {
     self.layoutIfNeeded()
     let startAngle = -(Double.pi / 2)
     let endAngle = (2 * Double.pi)
@@ -125,7 +124,7 @@ extension TimerProgressView {
     let circularPath = UIBezierPath(
       arcCenter: arcCenter,
       radius: radius,
-      startAngle: startAngle + (2 * Double.pi) * fromValue,
+      startAngle: startAngle,
       endAngle: endAngle * toValue + startAngle,
       clockwise: true
     )
@@ -167,7 +166,7 @@ extension TimerProgressView: CAAnimationDelegate {
     ),
     dotColor: UIColor.toDoGardenGreenDark
   )
-  timerProgressView.startAnimation(duration: 10.0, from: 0.3, to: 0.7)
+  timerProgressView.startAnimation(duration: 10.0, to: 0.7)
   
   return timerProgressView
 }
