@@ -18,6 +18,7 @@ extension Constant.GroupSelectionView.Animation {
 
 extension Constant.GroupSelectionView.Layout {
   public enum TableViewContainer {}
+  public enum EditableGroupTableView {}
 }
 
 extension Constant.GroupSelectionView.Layout.TableViewContainer {
@@ -33,4 +34,10 @@ extension Constant.GroupSelectionView.Layout.TableViewContainer.Layer {
   public static let shadowOffset = CGSize(width: 0, height: 2)
   public static let shadowRadius: CGFloat = 4
   public static let cornerRadius: CGFloat = 9
+}
+
+extension Constant.GroupSelectionView.Layout.EditableGroupTableView {
+  public enum Layer {
+    public static let cornerRadius: CGFloat = 9
+  }
 }
