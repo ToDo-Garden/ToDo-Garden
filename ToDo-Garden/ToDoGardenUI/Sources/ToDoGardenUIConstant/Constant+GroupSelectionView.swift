@@ -7,4 +7,10 @@
 
 import Foundation
 
-extension Constant.GroupSelectionView {}
+extension Constant.GroupSelectionView {
+  public enum Animation {}
+}
+
+extension Constant.GroupSelectionView.Animation {
+  public static let duration: CGFloat = 0.2
+}
