@@ -14,7 +14,16 @@ public final class TimerProgressView: UIView {
     self.circularProgressView.isAnimating
   }
   private let circularProgressView: CircularProgressView
-  private let dot: UIView
+  private let dot: UIView = {
+    let dotWidth = Constant.TimerProgressView.Layout.Dot.width
+    let dotHeight = Constant.TimerProgressView.Layout.Dot.height
+    let dot = UIView(
+      frame: CGRect(x: 0, y: 0, width: dotWidth, height: dotHeight)
+    )
+    dot.isHidden = true
+    
+    return dot
+  }()
   private var toValue: Double?
   
   public init(
@@ -22,11 +31,6 @@ public final class TimerProgressView: UIView {
     dotColor: UIColor
   ) {
     self.circularProgressView = circularProgressView
-    let dotWidth = Constant.TimerProgressView.Layout.Dot.width
-    let dotHeight = Constant.TimerProgressView.Layout.Dot.height
-    self.dot = UIView(
-      frame: CGRect(x: 0, y: 0, width: dotWidth, height: dotHeight)
-    )
     super.init(frame: CGRect.zero)
     self.setupViews(with: dotColor)
   }
@@ -107,7 +111,7 @@ extension TimerProgressView {
     animation.duration = duration
     animation.calculationMode = CAAnimationCalculationMode.paced
     animation.isRemovedOnCompletion = false
-    
+    self.dot.isHidden = false
     self.dot.layer.add(animation, forKey: nil)
   }
   
