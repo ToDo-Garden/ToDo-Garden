@@ -10,6 +10,7 @@ import Foundation
 extension Constant.GroupSelectionView {
   public enum Animation {}
   public enum Layout {}
+  public enum Model {}
 }
 
 extension Constant.GroupSelectionView.Animation {
@@ -52,4 +53,11 @@ extension Constant.GroupSelectionView.Layout.EditableGroupTableViewCell {
 
 extension Constant.GroupSelectionView.Layout.EditableGroupTableViewDelegate {
   public static let headerViewHeight: CGFloat = 2.0
+}
+
+extension Constant.GroupSelectionView.Model {
+  public enum Primary {
+    public static let cellHeight: CGFloat = 45
+    public static let visibleCellCount = 3
+  }
 }
