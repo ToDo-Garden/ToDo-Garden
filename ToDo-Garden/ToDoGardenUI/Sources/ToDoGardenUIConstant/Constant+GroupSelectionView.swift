@@ -19,6 +19,7 @@ extension Constant.GroupSelectionView.Animation {
 extension Constant.GroupSelectionView.Layout {
   public enum TableViewContainer {}
   public enum EditableGroupTableView {}
+  public enum EditableGroupTableViewCell {}
 }
 
 extension Constant.GroupSelectionView.Layout.TableViewContainer {
@@ -39,5 +40,11 @@ extension Constant.GroupSelectionView.Layout.TableViewContainer.Layer {
 extension Constant.GroupSelectionView.Layout.EditableGroupTableView {
   public enum Layer {
     public static let cornerRadius: CGFloat = 9
+  }
+}
+
+extension Constant.GroupSelectionView.Layout.EditableGroupTableViewCell {
+  public enum SeparatorView {
+    public static let width: CGFloat = 1.0
   }
 }
