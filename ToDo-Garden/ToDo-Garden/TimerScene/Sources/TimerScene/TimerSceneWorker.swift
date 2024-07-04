@@ -30,10 +30,18 @@ public struct CountDownSequence: AsyncSequence {
   }
   
   public struct AsyncIterator: AsyncIteratorProtocol {
+    ///
+    ///   endTime: CountDownSequnce의 생성자를 통해 초기화 되는 값
+    ///   ex: 10초 카운트 시퀀스의 경우 endTime이 10으로 초기화 된다.
     private var endTime: TimeInterval
     private let timeInterval: UInt64
-    
+    ///
+    ///   targetTime: AsyncIterator가 초기화 될 때 생성되며, 값이 방출될 때 마다( == next 함수가 호출될 때 마다)
+    ///   1초씩 증가함으로 써 보정 값하고 비교할 수 있는 수치.
     private var targetTime: TimeInterval
+    ///
+    ///   timeCorrection: sleepForCorrectTime 함수 내부에 sleepTime이 음수가 발생할 경우를 대비해서 만든 값
+    ///   다음 주기의 시간 값까지 초과 시킨 경우 sleepTime이 음수가 나옵니다.
     private var timeCorrection: TimeInterval
     
     init(endTime: TimeInterval, timeInterval: UInt64) {
@@ -56,12 +64,17 @@ public struct CountDownSequence: AsyncSequence {
       let current = Date().timeIntervalSince1970
       let sleepTime = self.targetTime - current + self.timeCorrection
       if sleepTime > 0 {
-        try await Task.sleep(nanoseconds: UInt64(sleepTime * Double(self.timeInterval)))
-        self.timeCorrection = 0
+        let nanoseconds = UInt64(sleepTime * Double(self.timeInterval))
+        try await Task.sleep(nanoseconds: nanoseconds)
+        self.resetTimeCorrenction()
       } else {
         try Task.checkCancellation()
         self.timeCorrection = sleepTime
       }
+    }
+    
+    private mutating func resetTimeCorrenction() {
+      self.timeCorrection = 0
     }
   }
 }
