@@ -1,5 +1,5 @@
 //
-//  GroupSelectionTableViewCell.swift
+//  EditableGroupTableViewCell.swift
 //
 //
 //  Created by Wood on 7/4/24.
@@ -9,7 +9,7 @@ import UIKit
 
 import ToDoGardenUIConstant
 
-final class GroupSelectionTableViewCell: UITableViewCell {
+final class EditableGroupTableViewCell: UITableViewCell {
   private let editableGroupRow: Styled.Row
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -33,18 +33,31 @@ final class GroupSelectionTableViewCell: UITableViewCell {
 
 // MARK: Private Functions
 
-extension GroupSelectionTableViewCell {
+extension EditableGroupTableViewCell {
   private func setup() {
-    self.addEditableGroupRow()
-    self.setupEditableGroupRowLayout()
+    let separatorView = self.makeSeperatorView()
+    self.addSubviews(with: separatorView)
+    self.setupSubviewsLayout(with: separatorView)
+  }
+
+  private func makeSeperatorView() -> UIView {
+    let separatorView = UIView()
+    separatorView.backgroundColor = UIColor.toDoGardenGray1
+    return separatorView
   }
 }
 
 // MARK: About Auto Layout
 
-extension GroupSelectionTableViewCell {
-  private func addEditableGroupRow() {
+extension EditableGroupTableViewCell {
+  private func addSubviews(with separtorView: UIView) {
     self.contentView.addSubview(self.editableGroupRow)
+    self.contentView.addSubview(separtorView)
+  }
+
+  private func setupSubviewsLayout(with separatorView: UIView) {
+    self.setupEditableGroupRowLayout()
+    self.setupSeparatorViewLayout(separatorView)
   }
 
   private func setupEditableGroupRowLayout() {
@@ -55,6 +68,19 @@ extension GroupSelectionTableViewCell {
         self.editableGroupRow.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
         self.editableGroupRow.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
         self.editableGroupRow.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor)
+      ]
+    )
+  }
+
+  private func setupSeparatorViewLayout(_ separatorView: UIView) {
+    separatorView.usingAutolayout()
+
+    let layout = Constant.GroupSelectionView.Layout.EditableGroupTableViewCell.SeparatorView.self
+    NSLayoutConstraint.activate(
+      [
+        separatorView.topAnchor.constraint(equalTo: self.bottomAnchor),
+        separatorView.widthAnchor.constraint(equalTo: self.widthAnchor),
+        separatorView.heightAnchor.constraint(equalToConstant: layout.width)
       ]
     )
   }
