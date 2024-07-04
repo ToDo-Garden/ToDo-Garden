@@ -32,3 +32,9 @@ extension EditableGroupItem: Hashable {
     hasher.combine(self.groupId)
   }
 }
+
+extension EditableGroupItem: Comparable {
+  public static func < (lhs: EditableGroupItem, rhs: EditableGroupItem) -> Bool {
+    return lhs.groupId > rhs.groupId
+  }
+}
