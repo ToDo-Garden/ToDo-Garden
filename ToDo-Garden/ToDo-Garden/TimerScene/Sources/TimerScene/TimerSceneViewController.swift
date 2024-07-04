@@ -151,7 +151,7 @@ extension TimerSceneViewController: TimerSceneDisplayLogic {
   func updateTimeLabel(duration: Double, time: String, isFirst: Bool) {
     if !timerProgressView.isAnimating, isFirst {
       self.timerProgressView
-        .startAnimation(duration: duration, from: 0, to: 1)
+        .startAnimation(duration: duration, to: 1)
     }
     self.timeLabel.text = time
   }
