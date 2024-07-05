@@ -20,7 +20,7 @@ extension Styled.Row {
     let colorView = self.buildColorView(stack: stack, color: model.color)
     stack.addArrangedSubview(colorView)
     self.setupColorViewLayout(colorView)
-    self.buildRightView(stack: stack, views: views)
+    self.setupRightViewLayout(stack: stack, views: views)
     self.bindingGroupNameState(label: label)
     self.bindingGroupColorState(colorView: colorView)
   }
@@ -40,7 +40,7 @@ extension Styled.Row {
     ])
   }
 
-  private func buildRightView(stack: UIStackView, views: [UIView]? = nil) {
+  private func setupRightViewLayout(stack: UIStackView, views: [UIView]? = nil) {
     guard let rightView = views?.first
     else { return }
 
