@@ -22,7 +22,8 @@ let package = Package(
     )
   ],
   dependencies: [
-    Package.Dependency.package(path: "../ToDoGardenUI")
+    Package.Dependency.package(path: "../ToDoGardenUI"),
+    Package.Dependency.package(path: "../TDUtility")
   ],
   targets: [
     .target(
@@ -49,6 +50,10 @@ let package = Package(
         Target.Dependency.product(
           name: "ToDoGardenUIResource",
           package: "ToDoGardenUI"
+        ),
+        Target.Dependency.product(
+          name: "TDUtility",
+          package: "TDUtility"
         )
       ]
     )
