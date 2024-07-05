@@ -1,5 +1,5 @@
 //
-//  ShareGardenSceneViewController+Header.swift
+//  ShareGardenSceneViewController+HeaderView.swift
 //
 //
 //  Created by Noah on 7/5/24.
@@ -10,7 +10,7 @@ import UIKit
 import ToDoGardenUIComponent
 
 extension ShareGardenSceneViewController {
-  final class Header: UIStackView {
+  final class HeaderView: UIStackView {
     
     // MARK: - Object life cycle
     
