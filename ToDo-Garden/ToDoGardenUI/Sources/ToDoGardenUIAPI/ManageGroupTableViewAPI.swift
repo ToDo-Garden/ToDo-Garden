@@ -9,4 +9,5 @@ import Foundation
 
 public protocol ManageGroupTableViewAPI {
   func setEditingMode(_ editing: Bool, animated: Bool)
+  func reloadData()
 }
