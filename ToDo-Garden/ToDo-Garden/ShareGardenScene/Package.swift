@@ -9,13 +9,40 @@ let package = Package(
   ],
   products: [
     .library(
+      name: "ShareGardenSceneEntity",
+      targets: ["ShareGardenSceneEntity"]
+    ),
+    .library(
+      name: "ShareGardenSceneAPI",
+      targets: ["ShareGardenSceneAPI"]
+    ),
+    .library(
       name: "ShareGardenScene",
       targets: ["ShareGardenScene"]
     )
   ],
+  dependencies: [
+    Package.Dependency.package(path: "../ToDoGardenUI")
+  ],
   targets: [
     .target(
-      name: "ShareGardenScene"
+      name: "ShareGardenSceneEntity"
+    ),
+    .target(
+      name: "ShareGardenSceneAPI",
+      dependencies: [
+        Target.Dependency.product(
+          name: "ToDoGardenUIAPI",
+          package: "ToDoGardenUI"
+        )
+      ]
+    ),
+    .target(
+      name: "ShareGardenScene",
+      dependencies: [
+        "ShareGardenSceneEntity",
+        "ShareGardenSceneAPI"
+      ]
     )
   ]
 )
