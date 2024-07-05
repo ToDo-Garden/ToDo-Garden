@@ -25,7 +25,7 @@ enum Constant {
     static let tableViewTop: CGFloat = 25.0
   }
   
-  enum AboutAnimation {
+  enum Animation {
     static let duration = 0.3
   }
 }
