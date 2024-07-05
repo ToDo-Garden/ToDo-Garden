@@ -15,14 +15,21 @@ enum Constant {
   }
   
   enum Layout {
-    static let cellHeight: CGFloat = 45.0
-    static let cellLeadingNormal: CGFloat = 20.0
-    static let cellLeadingEdit: CGFloat = -5.0
-    static let footerHeight: CGFloat = 60.0
-    static let footerLeadingNormal: CGFloat = 5.0
-    static let footerLeadingEdit: CGFloat = 30.0
-    static let tableViewLeading: CGFloat = 20.0
-    static let tableViewTop: CGFloat = 25.0
+    
+    enum Cell {
+      static let height: CGFloat = 45.0
+      static let leadingNormal: CGFloat = 20.0
+      static let leadingEdit: CGFloat = -5.0
+    }
+    enum FooterView {
+      static let height: CGFloat = 60.0
+      static let leadingNormal: CGFloat = 5.0
+      static let leadingEdit: CGFloat = 30.0
+    }
+    enum TableView {
+      static let leading: CGFloat = 20.0
+      static let top: CGFloat = 25.0
+    }
   }
   
   enum Animation {
