@@ -24,6 +24,16 @@ extension ShareGardenSceneViewController {
       
       return titleLabel
     }()
+    
+    private let shareButton: UIButton = {
+      let shareButton = UIButton()
+      shareButton.setImage(
+        UIImage.shareIconImage,
+        for: UIControl.State.normal
+      )
+      
+      return shareButton
+    }()
     // MARK: - Object life cycle
     
     init() {
