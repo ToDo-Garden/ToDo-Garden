@@ -8,10 +8,22 @@
 import UIKit
 
 import ToDoGardenUIComponent
+import ToDoGardenUIResource
 
 extension ShareGardenSceneViewController {
   final class HeaderView: UIStackView {
     
+    // MARK: - UI Properties
+    
+    private let titleLabel: UILabel = {
+      let titleLabel = UILabel()
+      titleLabel.text = "나의 가든"
+      titleLabel.numberOfLines = 1
+      titleLabel.font = UIFont.pretendardHeadBold
+      titleLabel.textColor = UIColor.toDoGardenGreenDark
+      
+      return titleLabel
+    }()
     // MARK: - Object life cycle
     
     init() {
