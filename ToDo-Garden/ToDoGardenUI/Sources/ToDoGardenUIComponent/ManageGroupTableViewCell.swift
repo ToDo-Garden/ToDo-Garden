@@ -26,6 +26,7 @@ public final class ManageGroupTableViewCell: UITableViewCell, ManageGroupTableVi
     self.groupNameButton = nil
     self.rightImageButton = nil
     super.init(style: style, reuseIdentifier: reuseIdentifier)
+    self.backgroundColor = UIColor.clear
     self.contentView.backgroundColor = UIColor.clear
     self.selectionStyle = UITableViewCell.SelectionStyle.none
   }
