@@ -18,22 +18,26 @@ extension Styled.Row {
     stack.addArrangedSubview(label)
     stack.addSpacing()
     let colorView = self.buildColorView(stack: stack, color: model.color)
+    stack.addArrangedSubview(colorView)
+    self.setupColorViewLayout(colorView)
     self.buildRightView(stack: stack, views: views)
     self.bindingGroupNameState(label: label)
     self.bindingGroupColorState(colorView: colorView)
   }
-  
+
   private func buildColorView(stack: UIStackView, color: UIColor) -> UIView {
     let colorView = UIView()
     colorView.backgroundColor = color
     colorView.layer.cornerRadius = Constant.Styled.Row.ListPrimary.colorViewCornerRadius
+    return colorView
+  }
+
+  private func setupColorViewLayout(_ colorView: UIView) {
     colorView.usingAutolayout()
     NSLayoutConstraint.activate([
       colorView.widthAnchor.constraint(equalToConstant: Constant.Styled.Row.ListPrimary.colorViewSize.width),
       colorView.heightAnchor.constraint(equalToConstant: Constant.Styled.Row.ListPrimary.colorViewSize.height)
     ])
-    stack.addArrangedSubview(colorView)
-    return colorView
   }
 
   private func buildRightView(stack: UIStackView, views: [UIView]? = nil) {
