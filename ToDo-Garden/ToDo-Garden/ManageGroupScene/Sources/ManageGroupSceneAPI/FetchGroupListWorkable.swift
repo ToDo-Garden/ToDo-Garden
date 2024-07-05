@@ -7,6 +7,8 @@
 
 import Foundation
 
-public protocol ManageGroupWorkable {
-  func doSomeWork()
+import ManageGroupSceneEntity
+
+public protocol FetchGroupListWorkable {
+  func fetchGroupList(request: ManageGroup.FetchGroupList.Request)
 }
