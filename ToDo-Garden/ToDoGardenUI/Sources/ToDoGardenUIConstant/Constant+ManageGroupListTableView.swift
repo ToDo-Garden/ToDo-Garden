@@ -8,7 +8,7 @@
 import Foundation
 
 extension Constant.ManageGroupListTableView {
-  public static let widthInset: CGFloat = -25.0
+  public static let widthInset: CGFloat = -5.0
   public static let heightInset: CGFloat = -170.0
   public static let sleepTime: UInt64 = UInt64(300000000)
 }
