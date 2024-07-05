@@ -38,6 +38,7 @@ extension ShareGardenSceneViewController {
     
     init() {
       super.init(frame: CGRect.zero)
+      self.setup()
     }
     
     @available(*, unavailable)
@@ -51,6 +52,7 @@ extension ShareGardenSceneViewController {
 extension ShareGardenSceneViewController.HeaderView {
   private func setup() {
     self.setupAppearance()
+    self.setupLayoutPriorities()
     self.addSubviews()
   }
   
@@ -58,6 +60,26 @@ extension ShareGardenSceneViewController.HeaderView {
     self.axis = NSLayoutConstraint.Axis.horizontal
     self.distribution = UIStackView.Distribution.fill
     self.alignment = UIStackView.Alignment.center
+  }
+  
+  private func setupLayoutPriorities() {
+    self.titleLabel.setContentCompressionResistancePriority(
+      UILayoutPriority.defaultLow,
+      for: NSLayoutConstraint.Axis.horizontal
+    )
+    self.titleLabel.setContentHuggingPriority(
+      UILayoutPriority.defaultLow,
+      for: NSLayoutConstraint.Axis.horizontal
+    )
+    
+    self.shareButton.setContentHuggingPriority(
+      UILayoutPriority.required,
+      for: NSLayoutConstraint.Axis.horizontal
+    )
+    self.shareButton.setContentCompressionResistancePriority(
+      UILayoutPriority.required,
+      for: NSLayoutConstraint.Axis.horizontal
+    )
   }
   
   private func addSubviews() {
