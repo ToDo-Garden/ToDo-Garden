@@ -9,5 +9,14 @@ import Foundation
 
 extension ShareGardenSceneViewController {
   enum Constant {
+    enum StringLiteral { }
+  }
+}
+
+// MARK: - String literal
+
+extension ShareGardenSceneViewController.Constant.StringLiteral {
+  enum HeaderView {
+    static let title = "나의 가든"
   }
 }

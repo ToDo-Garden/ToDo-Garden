@@ -19,7 +19,7 @@ extension ShareGardenSceneViewController {
     
     private let titleLabel: UILabel = {
       let titleLabel = UILabel()
-      titleLabel.text = "나의 가든"
+      titleLabel.text = Constant.StringLiteral.HeaderView.title
       titleLabel.numberOfLines = 1
       titleLabel.font = UIFont.pretendardHeadBold
       titleLabel.textColor = UIColor.toDoGardenGreenDark
