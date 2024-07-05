@@ -44,5 +44,24 @@ extension ShareGardenSceneViewController {
     required init(coder: NSCoder) {
       fatalError("init(coder:) has not been implemented")
     }
+}
+
+// MARK: - Setup
+
+extension ShareGardenSceneViewController.HeaderView {
+  private func setup() {
+    self.setupAppearance()
+    self.addSubviews()
+  }
+  
+  private func setupAppearance() {
+    self.axis = NSLayoutConstraint.Axis.horizontal
+    self.distribution = UIStackView.Distribution.fill
+    self.alignment = UIStackView.Alignment.center
+  }
+  
+  private func addSubviews() {
+    self.addArrangedSubview(self.titleLabel)
+    self.addArrangedSubview(self.shareButton)
   }
 }
