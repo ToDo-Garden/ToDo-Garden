@@ -13,7 +13,7 @@ import ShareGardenSceneEntity
 protocol ShareGardenSceneDisplayLogic: AnyObject {
 }
 
-class ShareGardenSceneViewController: UIViewController, ShareGardenSceneViewControllable {
+final class ShareGardenSceneViewController: UIViewController, ShareGardenSceneViewControllable {
   
   // MARK: - VIP Properties
   

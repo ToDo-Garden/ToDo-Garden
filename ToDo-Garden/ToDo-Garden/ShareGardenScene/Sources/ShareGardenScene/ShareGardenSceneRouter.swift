@@ -16,7 +16,7 @@ protocol ShareGardenSceneDataPassing {
   var dataStore: ShareGardenSceneDataStore? { get }
 }
 
-class ShareGardenSceneRouter: ShareGardenSceneDataPassing {
+final class ShareGardenSceneRouter: ShareGardenSceneDataPassing {
   weak var viewController: ShareGardenSceneViewController?
   var dataStore: ShareGardenSceneDataStore?
   

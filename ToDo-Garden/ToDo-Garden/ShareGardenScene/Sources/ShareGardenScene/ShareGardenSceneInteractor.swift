@@ -16,7 +16,7 @@ protocol ShareGardenSceneDataStore {
 protocol ShareGardenSceneBusinessLogic {
 }
 
-class ShareGardenSceneInteractor: ShareGardenSceneDataStore {
+final class ShareGardenSceneInteractor: ShareGardenSceneDataStore {
   var presenter: ShareGardenScenePresentationLogic?
   private let shareGardenSceneWorker: ShareGardenSceneWorkable
   

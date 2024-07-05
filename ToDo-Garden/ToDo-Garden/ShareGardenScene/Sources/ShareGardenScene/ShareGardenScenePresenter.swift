@@ -12,7 +12,7 @@ import ShareGardenSceneEntity
 protocol ShareGardenScenePresentationLogic {
 }
 
-class ShareGardenScenePresenter {
+final class ShareGardenScenePresenter {
   weak var viewController: ShareGardenSceneDisplayLogic?
 }
 
