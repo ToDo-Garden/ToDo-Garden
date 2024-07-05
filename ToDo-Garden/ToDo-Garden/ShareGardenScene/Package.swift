@@ -45,6 +45,10 @@ let package = Package(
         Target.Dependency.product(
           name: "ToDoGardenUIComponent",
           package: "ToDoGardenUI"
+        ),
+        Target.Dependency.product(
+          name: "ToDoGardenUIResource",
+          package: "ToDoGardenUI"
         )
       ]
     )
