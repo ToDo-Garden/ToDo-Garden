@@ -7,8 +7,20 @@
 
 import UIKit
 
+import ToDoGardenUIComponent
+
 extension ShareGardenSceneViewController {
-  final class Header: UIView {
+  final class Header: UIStackView {
     
+    // MARK: - Object life cycle
+    
+    init() {
+      super.init(frame: CGRect.zero)
+    }
+    
+    @available(*, unavailable)
+    required init(coder: NSCoder) {
+      fatalError("init(coder:) has not been implemented")
+    }
   }
 }
