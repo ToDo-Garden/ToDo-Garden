@@ -75,7 +75,7 @@ extension ManageGroupTableView {
     self.dragInteractionEnabled = true
   }
   
-  public func reloadSectionExceptVisibleAndFooterCells() {
+  private func reloadSectionExceptVisibleAndFooterCells() {
     let section = 0
     let numberOfRows = self.numberOfRows(inSection: section)
     guard numberOfRows > 1 else {
