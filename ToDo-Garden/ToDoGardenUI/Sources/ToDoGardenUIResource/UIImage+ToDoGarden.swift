@@ -86,4 +86,7 @@ extension UIImage {
   public static let progressHigh = UIImage(
     resource: .progressHigh
   )
+  public static let shareIconImage = UIImage(
+    resource: .icShare
+  )
 }
