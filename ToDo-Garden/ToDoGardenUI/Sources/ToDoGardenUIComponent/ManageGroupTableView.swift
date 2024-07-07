@@ -43,12 +43,8 @@ public final class ManageGroupTableView: UITableView, ManageGroupTableViewAPI {
     } else {
       self.leaveEditingMode()
     }
-    
-    // TODO: - 잠재적 문제발생 지점. 애니메이션에 대한 컴플리션으로 수정하기
-    Task {
-      try await Task.sleep(nanoseconds: Constant.ManageGroupListTableView.sleepTime)
-      self.reloadSectionExceptVisibleAndFooterCells()
-    }
+
+    self.reloadSectionExceptFooterCells()
   }
   
   private func enterEditingMode() {
@@ -75,20 +71,21 @@ extension ManageGroupTableView {
     self.dragInteractionEnabled = true
   }
   
-  private func reloadSectionExceptVisibleAndFooterCells() {
+  private func reloadSectionExceptFooterCells() {
     let section = 0
     let numberOfRows = self.numberOfRows(inSection: section)
     guard numberOfRows > 1 else {
       return
     }
     let visibleIndexPaths = self.indexPathsForVisibleRows ?? []
+    
     var indexPathsToReload: [IndexPath] = []
-    for row in 0...(numberOfRows - 1) {
+    for row in 0..<numberOfRows {
       let indexPath = IndexPath(row: row, section: section)
-      if !visibleIndexPaths.contains(indexPath) && row != numberOfRows - 1 {
+      if !visibleIndexPaths.contains(indexPath) {
         indexPathsToReload.append(indexPath)
       }
     }
-    self.reloadRows(at: indexPathsToReload, with: UITableView.RowAnimation.none)
+    self.reloadRows(at: indexPathsToReload, with: .none)
   }
 }
