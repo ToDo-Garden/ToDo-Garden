@@ -16,7 +16,8 @@ extension ManageGroupTableViewCell {
         id: String,
         groupName: String,
         progressColor: UIColor,
-        progressRate: Float
+        progressRate: Float,
+        isEditing: Bool
       )
       case secondary(
         id: String,
@@ -36,7 +37,7 @@ extension ManageGroupTableViewCell {
     private func createParameters(for style: Style) -> ModelParameters {
       let constants = Constant.ManageGroupListTableViewCell.self
       switch style {
-      case .primary(let id, let groupName, let progressColor, let progressRate):
+      case .primary(let id, let groupName, let progressColor, let progressRate, let isEditing):
         return ModelParameters(
           id: id,
           groupName: groupName,
@@ -44,7 +45,7 @@ extension ManageGroupTableViewCell {
           progressRate: progressRate,
           isCreateToDoButton: false,
           rightImage: UIImage.forwardButtonImage,
-          rightImageHidden: true,
+          rightImageHidden: !isEditing,
           rightImageTrailing: constants.RightImageView.trailingPrimary
         )
       case .secondary(let id, let groupName, let progressColor, let progressRate):
