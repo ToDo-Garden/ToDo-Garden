@@ -21,6 +21,9 @@
 		63C1A0EF2C2FD74100B6D6DE /* EditToDoScene in Frameworks */ = {isa = PBXBuildFile; productRef = 63C1A0EE2C2FD74100B6D6DE /* EditToDoScene */; };
 		63C1A0F12C2FD74100B6D6DE /* EditToDoSceneAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 63C1A0F02C2FD74100B6D6DE /* EditToDoSceneAPI */; };
 		63C1A0F32C2FD74100B6D6DE /* EditToDoSceneEntity in Frameworks */ = {isa = PBXBuildFile; productRef = 63C1A0F22C2FD74100B6D6DE /* EditToDoSceneEntity */; };
+		E40EB3F32C3BBD64004D5329 /* PostGroupScene in Frameworks */ = {isa = PBXBuildFile; productRef = E40EB3F22C3BBD64004D5329 /* PostGroupScene */; };
+		E40EB3F52C3BBD88004D5329 /* PostGroupSceneAPI in Frameworks */ = {isa = PBXBuildFile; productRef = E40EB3F42C3BBD88004D5329 /* PostGroupSceneAPI */; };
+		E40EB3F72C3BBD88004D5329 /* PostGroupSceneEntity in Frameworks */ = {isa = PBXBuildFile; productRef = E40EB3F62C3BBD88004D5329 /* PostGroupSceneEntity */; };
 		E4DEA1742C2BED0700E3CE3C /* ManageGroupScene in Frameworks */ = {isa = PBXBuildFile; productRef = E4DEA1732C2BED0700E3CE3C /* ManageGroupScene */; };
 		E4DEA1762C2BED0700E3CE3C /* ManageGroupSceneAPI in Frameworks */ = {isa = PBXBuildFile; productRef = E4DEA1752C2BED0700E3CE3C /* ManageGroupSceneAPI */; };
 		E4DEA1782C2BED0700E3CE3C /* ManageGroupSceneEntity in Frameworks */ = {isa = PBXBuildFile; productRef = E4DEA1772C2BED0700E3CE3C /* ManageGroupSceneEntity */; };
@@ -52,6 +55,7 @@
 		4FEB41402C36864D00E3682A /* ShareGardenScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ShareGardenScene; sourceTree = "<group>"; };
 		639D79502C19A8E300004B26 /* EditToDoScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = EditToDoScene; sourceTree = "<group>"; };
 		AE930F3C2C2E9306002F26AB /* TimerScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = TimerScene; sourceTree = "<group>"; };
+		E4754C0F2C3BB9790079CFAE /* PostGroupScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = PostGroupScene; sourceTree = "<group>"; };
 		E4DEA1722C2BEC2900E3CE3C /* ManageGroupScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ManageGroupScene; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -61,6 +65,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				63C1A0F12C2FD74100B6D6DE /* EditToDoSceneAPI in Frameworks */,
+				E40EB3F72C3BBD88004D5329 /* PostGroupSceneEntity in Frameworks */,
 				E4DEA1782C2BED0700E3CE3C /* ManageGroupSceneEntity in Frameworks */,
 				4FEB41422C3686DB00E3682A /* ShareGardenScene in Frameworks */,
 				4FC8C1512B8C575A00BA223E /* ToDoGardenUIAPI in Frameworks */,
@@ -68,6 +73,8 @@
 				4F3D03862B8EF89800C495E5 /* ToDoGardenUIResource in Frameworks */,
 				E4DEA1742C2BED0700E3CE3C /* ManageGroupScene in Frameworks */,
 				4F3D03842B8EF89800C495E5 /* ToDoGardenUIComponent in Frameworks */,
+				E40EB3F52C3BBD88004D5329 /* PostGroupSceneAPI in Frameworks */,
+				E40EB3F32C3BBD64004D5329 /* PostGroupScene in Frameworks */,
 				4F577A2D2C2BE05F0006F44F /* TDUtility in Frameworks */,
 				63C1A0F32C2FD74100B6D6DE /* EditToDoSceneEntity in Frameworks */,
 				63C1A0EF2C2FD74100B6D6DE /* EditToDoScene in Frameworks */,
@@ -109,6 +116,7 @@
 		4F0DF12A2B4EABCE00097B7D /* ToDo-Garden */ = {
 			isa = PBXGroup;
 			children = (
+				E4754C0F2C3BB9790079CFAE /* PostGroupScene */,
 				4FEB41402C36864D00E3682A /* ShareGardenScene */,
 				AE930F3C2C2E9306002F26AB /* TimerScene */,
 				E4DEA1722C2BEC2900E3CE3C /* ManageGroupScene */,
@@ -191,6 +199,9 @@
 				63C1A0F02C2FD74100B6D6DE /* EditToDoSceneAPI */,
 				63C1A0F22C2FD74100B6D6DE /* EditToDoSceneEntity */,
 				4FEB41412C3686DB00E3682A /* ShareGardenScene */,
+				E40EB3F22C3BBD64004D5329 /* PostGroupScene */,
+				E40EB3F42C3BBD88004D5329 /* PostGroupSceneAPI */,
+				E40EB3F62C3BBD88004D5329 /* PostGroupSceneEntity */,
 			);
 			productName = "ToDo-Garden";
 			productReference = 4F0DF1282B4EABCE00097B7D /* ToDo-Garden.app */;
@@ -585,6 +596,18 @@
 		63C1A0F22C2FD74100B6D6DE /* EditToDoSceneEntity */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = EditToDoSceneEntity;
+		};
+		E40EB3F22C3BBD64004D5329 /* PostGroupScene */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PostGroupScene;
+		};
+		E40EB3F42C3BBD88004D5329 /* PostGroupSceneAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PostGroupSceneAPI;
+		};
+		E40EB3F62C3BBD88004D5329 /* PostGroupSceneEntity */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PostGroupSceneEntity;
 		};
 		E4DEA1732C2BED0700E3CE3C /* ManageGroupScene */ = {
 			isa = XCSwiftPackageProductDependency;
