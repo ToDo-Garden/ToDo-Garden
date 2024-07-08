@@ -33,7 +33,10 @@ final class EditableGroupTableViewCell: UITableViewCell {
   func updateUI(groupItem: EditableGroupItem) {
     let groupName = groupItem.groupName
     let groupColor = groupItem.groupColor
-    self.groupRow.groupModel = Styled.Row.Configuration.ListPrimaryModel(title: groupName, color: groupColor)
+    self.editableGroupRow.groupListModel = Styled.Row.Configuration.ListPrimaryModel(
+      title: groupName,
+      color: groupColor
+    )
   }
 }
 
@@ -90,4 +93,11 @@ extension EditableGroupTableViewCell {
       ]
     )
   }
+}
+
+@available(iOS 17.0, *)
+#Preview {
+  let cell = EditableGroupTableViewCell()
+  cell.updateUI(groupItem: EditableGroupItem(groupId: 0, groupName: "영어독해", groupColor: UIColor.toDoGardenGreenDark))
+  return cell
 }
