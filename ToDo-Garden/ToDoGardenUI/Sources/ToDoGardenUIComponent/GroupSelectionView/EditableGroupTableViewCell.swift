@@ -29,6 +29,12 @@ final class EditableGroupTableViewCell: UITableViewCell {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+
+  func updateUI(groupItem: EditableGroupItem) {
+    let groupName = groupItem.groupName
+    let groupColor = groupItem.groupColor
+    self.groupRow.groupModel = Styled.Row.Configuration.ListPrimaryModel(title: groupName, color: groupColor)
+  }
 }
 
 // MARK: Private Functions
