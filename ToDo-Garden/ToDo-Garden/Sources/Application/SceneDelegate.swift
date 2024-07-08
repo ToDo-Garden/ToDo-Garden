@@ -7,6 +7,7 @@
 
 import UIKit
 
+import ToDoGardenUIComponent
 import ToDoGardenUIResource
 
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -27,6 +28,7 @@ extension SceneDelegate {
 	private func setupWindow(with scene: UIScene) {
 		guard let windowScene = (scene as? UIWindowScene) else { return }
 		self.window = UIWindow(windowScene: windowScene)
+    NavigationBarUIUpdator.update(with: self.window)
 	}
 	
 	private func registerCustomFonts() {
