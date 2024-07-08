@@ -21,6 +21,7 @@ extension NavigationBarUIUpdator {
   private static func updateNavigationBarApperance(with window: UIWindow?) {
     let appearance = UINavigationBarAppearance()
     self.updateBackButtonAppearance(appearance)
+    self.updateNavigationBarTitle(appearance)
     UINavigationBar.appearance().standardAppearance = appearance
     UINavigationBar.appearance().scrollEdgeAppearance = appearance
   }
@@ -39,5 +40,12 @@ extension NavigationBarUIUpdator {
     )
     let backIndicatorImage = UIImage.backwardButtonImage.withAlignmentRectInsets(imageInsets)
     appearance.setBackIndicatorImage(backIndicatorImage, transitionMaskImage: backIndicatorImage)
+  }
+
+  private static func updateNavigationBarTitle(_ appearance: UINavigationBarAppearance) {
+    appearance.titleTextAttributes = [
+      NSAttributedString.Key.foregroundColor: UIColor.toDoGardenGreenDark,
+      NSAttributedString.Key.font: UIFont.pretendardHeadBold
+    ]
   }
 }
