@@ -93,7 +93,12 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
       duration: Constant.Layout.SetTimerButton.animationDuration
     )
     let action = UIAction { [weak self] _ in
-      self?.interactor?.controlButtonTapped()
+      let bottom = FocusTimeSettings()
+      bottom.completion = {
+        self?.interactor?.setTimer(for: $0)
+      }
+      bottom.sheetPresentationController?.detents = [.medium()]
+      self?.present(bottom, animated: true)
     }
     button.addAction(action, for: .touchUpInside)
     return button
@@ -159,6 +164,43 @@ extension TimerSceneViewController: TimerSceneDisplayLogic {
   func updateProgressImage(_ image: UIImage) {
     guard self.circularProgressImageView.image != image else { return }
     self.circularProgressImageView.setImageWithZoomTransition(newImage: image)
+  }
+}
+
+extension TimerSceneViewController {
+  private final class FocusTimeSettings: UIViewController {
+    var completion: ((Double) -> Void)?
+    
+    override func viewDidLoad() {
+      view.backgroundColor = UIColor.toDoGardenWhite
+      let stack = UIStackView()
+      stack.axis = .vertical
+      let button = self.buildButton()
+      let settingTimeView = SettingTimeView(with: button, for: .focusTimeSetting)
+      let action = self.builButtonAction(settingTimeView)
+      button.addAction(action, for: .touchUpInside)
+      
+      stack.addArrangedSubview(settingTimeView)
+      view.addSubview(stack)
+      stack.equalToParent()
+    }
+    
+    private func buildButton() -> UIButton {
+      let button = UIButton()
+      button.timerControlButtonDefaultStyle(with: "시작하기")
+      let width = TimerSceneViewController.Constant.Layout.ControlButton.width
+      button.widthAnchor.constraint(equalToConstant: width).isActive = true
+      return button
+    }
+    
+    private func builButtonAction(_ settingTimeView: SettingTimeView) -> UIAction {
+      return UIAction { [weak self, weak settingTimeView]_ in
+        guard let seconds = settingTimeView?.seconds else { return }
+        self?.completion?(seconds)
+        // TODO: - 화면을 제거하는 로직은 외부에서 처리하는게 더 적합합니다.
+        self?.dismiss(animated: true)
+      }
+    }
   }
 }
 

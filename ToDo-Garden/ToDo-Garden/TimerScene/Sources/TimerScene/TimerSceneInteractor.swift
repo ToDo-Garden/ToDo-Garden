@@ -7,7 +7,7 @@ protocol TimerSceneDataStore {
 
 @MainActor
 protocol TimerSceneBusinessLogic {
-  func controlButtonTapped()
+  func setTimer(for seconds: Double)
 }
 
 @MainActor
@@ -44,11 +44,7 @@ final class TimerSceneInteractor: TimerSceneDataStore {
 
 extension TimerSceneInteractor: TimerSceneBusinessLogic {
   
-  func controlButtonTapped() {
-    guard !self.isFocused else { return }
-    // TODO: Bottom Sheet
-    let seconds = 10.0
-    
+  func setTimer(for seconds: Double) {
     self.isFocused = true
     run {
       self.presenter?.configureTimerSettings(seconds)
