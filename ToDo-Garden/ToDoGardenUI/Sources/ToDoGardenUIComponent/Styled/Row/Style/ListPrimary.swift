@@ -17,23 +17,30 @@ extension Styled.Row {
     label.text = model.title
     stack.addArrangedSubview(label)
     stack.addSpacing()
-    self.buildColorView(stack: stack, color: model.color)
-    self.buildRightView(stack: stack, views: views)
+    let colorView = self.buildColorView(stack: stack, color: model.color)
+    stack.addArrangedSubview(colorView)
+    self.setupColorViewLayout(colorView)
+    self.setupRightViewLayout(stack: stack, views: views)
+    self.bindingGroupNameState(label: label)
+    self.bindingGroupColorState(colorView: colorView)
   }
-  
-  private func buildColorView(stack: UIStackView, color: UIColor) {
+
+  private func buildColorView(stack: UIStackView, color: UIColor) -> UIView {
     let colorView = UIView()
     colorView.backgroundColor = color
     colorView.layer.cornerRadius = Constant.Styled.Row.ListPrimary.colorViewCornerRadius
+    return colorView
+  }
+
+  private func setupColorViewLayout(_ colorView: UIView) {
     colorView.usingAutolayout()
     NSLayoutConstraint.activate([
       colorView.widthAnchor.constraint(equalToConstant: Constant.Styled.Row.ListPrimary.colorViewSize.width),
       colorView.heightAnchor.constraint(equalToConstant: Constant.Styled.Row.ListPrimary.colorViewSize.height)
     ])
-    stack.addArrangedSubview(colorView)
   }
 
-  private func buildRightView(stack: UIStackView, views: [UIView]? = nil) {
+  private func setupRightViewLayout(stack: UIStackView, views: [UIView]? = nil) {
     guard let rightView = views?.first
     else { return }
 
@@ -45,5 +52,25 @@ extension Styled.Row {
       ]
     )
     stack.addArrangedSubview(rightView)
+  }
+
+  private func bindingGroupNameState(label: UILabel) {
+    self.$configuration
+      .map(\.listPrimaryModel?.title)
+      .removeDuplicates()
+      .sink { [weak label] title in
+        label?.text = title
+      }
+      .store(in: &cancellables)
+  }
+
+  private func bindingGroupColorState(colorView: UIView) {
+    self.$configuration
+      .map(\.listPrimaryModel?.color)
+      .removeDuplicates()
+      .sink { [weak colorView] color in
+        colorView?.backgroundColor = color
+      }
+      .store(in: &cancellables)
   }
 }
