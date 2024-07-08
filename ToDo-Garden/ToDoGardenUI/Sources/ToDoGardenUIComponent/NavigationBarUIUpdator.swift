@@ -16,3 +16,28 @@ public final class NavigationBarUIUpdator {
     self.updateAction?()
   }
 }
+
+extension NavigationBarUIUpdator {
+  private static func updateNavigationBarApperance(with window: UIWindow?) {
+    let appearance = UINavigationBarAppearance()
+    self.updateBackButtonAppearance(appearance)
+    UINavigationBar.appearance().standardAppearance = appearance
+    UINavigationBar.appearance().scrollEdgeAppearance = appearance
+  }
+
+  private static func updateBackButtonAppearance(_ appearance: UINavigationBarAppearance) {
+    UINavigationBar.appearance().tintColor = UIColor.toDoGardenGreenDark
+    appearance.backButtonAppearance.normal.titleTextAttributes = [
+      NSAttributedString.Key.font: UIFont.systemFont(ofSize: 0)
+    ]
+
+    let imageInsets = UIEdgeInsets(
+      top: 0,
+      left: -15,
+      bottom: 0,
+      right: 0
+    )
+    let backIndicatorImage = UIImage.backwardButtonImage.withAlignmentRectInsets(imageInsets)
+    appearance.setBackIndicatorImage(backIndicatorImage, transitionMaskImage: backIndicatorImage)
+  }
+}
