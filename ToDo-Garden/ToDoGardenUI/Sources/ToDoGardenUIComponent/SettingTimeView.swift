@@ -35,6 +35,10 @@ public class SettingTimeView: UIView {
     return CGSize.init(width: screenWidth, height: screenHeight / 2)
   }
   
+  public var seconds: Double {
+    self.timepicker.transformSeconds()
+  }
+  
   public func transformSeconds(completion: @escaping (Double) -> Void) {
     let calculatedDate = self.timepicker.transformSeconds()
     completion(calculatedDate)
