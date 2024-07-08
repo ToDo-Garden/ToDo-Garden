@@ -19,13 +19,14 @@ extension UIViewController {
     self.present(base, animated: false)
   }
   
-  public func closeAlert() {
+  public func closeAlert(completion: @escaping () -> Void = { }) {
     guard let dimmingView = self.view.viewWithTag(dimmingID) else { return }
     UIView.animate(withDuration: 0.3) {
       dimmingView.alpha = 0
       self.dismiss(animated: false)
     } completion: { _ in
       dimmingView.removeFromSuperview()
+      completion()
     }
   }
 }
