@@ -13,7 +13,9 @@ public final class NavigationBarUIUpdator {
   @ExecuteOnce private static var updateAction: (() -> Void)?
 
   public static func update(with window: UIWindow?) {
-    self.updateAction?()
+    self.updateAction = {
+      self.updateNavigationBarApperance(with: window)
+    }
   }
 }
 
@@ -22,6 +24,7 @@ extension NavigationBarUIUpdator {
     let appearance = UINavigationBarAppearance()
     self.updateBackButtonAppearance(appearance)
     self.updateNavigationBarTitle(appearance)
+    self.updateNavigationBarBottomLine(appearance, with: window)
     UINavigationBar.appearance().standardAppearance = appearance
     UINavigationBar.appearance().scrollEdgeAppearance = appearance
   }
@@ -47,5 +50,28 @@ extension NavigationBarUIUpdator {
       NSAttributedString.Key.foregroundColor: UIColor.toDoGardenGreenDark,
       NSAttributedString.Key.font: UIFont.pretendardHeadBold
     ]
+  }
+
+  private static func updateNavigationBarBottomLine(_ appearance: UINavigationBarAppearance, with window: UIWindow?) {
+    appearance.backgroundColor = UIColor.toDoGardenWhite
+    if let shadowImage = self.makeShadowImage(with: window) {
+      appearance.shadowImage = shadowImage
+    } else {
+      appearance.shadowColor = UIColor.toDoGardenGreenGray
+    }
+  }
+
+  private static func makeShadowImage(with window: UIWindow?) -> UIImage? {
+    guard let screenWidth = window?.screen.bounds.width
+    else { return nil }
+
+    let shadowSize = CGSize(width: screenWidth, height: 1.0)
+    let shadowImage = UIGraphicsImageRenderer(size: shadowSize).image { context in
+      UIColor.toDoGardenGreenGray.setFill()
+      let rect = CGRect(origin: CGPoint.zero, size: shadowSize)
+      context.fill(rect)
+    }
+
+    return shadowImage
   }
 }
