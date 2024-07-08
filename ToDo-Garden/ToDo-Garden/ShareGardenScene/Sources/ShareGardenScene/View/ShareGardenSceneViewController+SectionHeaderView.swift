@@ -1,5 +1,5 @@
 //
-//  ShareGardenSceneViewController+HeaderView.swift
+//  ShareGardenSceneViewController+SectionHeaderView.swift
 //
 //
 //  Created by Noah on 7/5/24.
@@ -13,7 +13,7 @@ import ToDoGardenUIComponent
 import ToDoGardenUIResource
 
 extension ShareGardenSceneViewController {
-  final class HeaderView: UIStackView {
+  final class SectionHeaderView: UIStackView {
     
     // MARK: - UI Properties
     
@@ -66,7 +66,7 @@ extension ShareGardenSceneViewController {
 
 // MARK: - Setup
 
-extension ShareGardenSceneViewController.HeaderView {
+extension ShareGardenSceneViewController.SectionHeaderView {
   private func setup() {
     self.setupAppearance()
     self.setupLayoutPriorities()
