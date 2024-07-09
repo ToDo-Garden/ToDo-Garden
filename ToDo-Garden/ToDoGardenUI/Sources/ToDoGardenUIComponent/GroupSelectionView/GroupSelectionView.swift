@@ -26,7 +26,8 @@ public final class GroupSelectionView: UIView {
           title: Constant.GroupSelectionView.StringLiteral.defaultGroupName,
           color: UIColor.toDoGardenYellow
         )
-      )
+      ),
+      with: [self.showGroupListButton]
     )
     self.editableGroupListTableView = UITableView()
     self.tableViewHeightConstraint = NSLayoutConstraint()
@@ -215,4 +216,10 @@ extension GroupSelectionView {
       visibleCellCount: Constant.GroupSelectionView.Model.Primary.visibleCellCount
     )
   }
+}
+
+@available(iOS 17.0, *)
+#Preview {
+  let groupSelectionView = GroupSelectionView(model: GroupSelectionView.Model.primary)
+  return groupSelectionView
 }
