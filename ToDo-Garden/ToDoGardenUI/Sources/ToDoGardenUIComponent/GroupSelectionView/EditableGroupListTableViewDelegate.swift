@@ -52,6 +52,38 @@ extension EditableGroupTableViewDelegate: UITableViewDelegate {
   func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
     return Constant.GroupSelectionView.Layout.EditableGroupTableViewDelegate.headerViewHeight
   }
+
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    guard let newItem = self.tableViewDataSource.itemIdentifier(for: indexPath)
+    else { return }
+
+    let oldItem = self.currentGroupItem
+    self.currentGroupItem = newItem
+
+    var snapshot = insertInCorrectOrder(oldItem: oldItem)
+    snapshot.deleteItems([newItem])
+    self.tableViewDataSource.apply(snapshot, animatingDifferences: true)
+  }
+
+  private func insertInCorrectOrder(oldItem: EditableGroupItem?) ->
+  NSDiffableDataSourceSnapshot<EditableGroupSection, EditableGroupItem> {
+    var snapshot = self.tableViewDataSource.snapshot()
+    guard let oldItem = oldItem
+    else { return snapshot }
+
+    let items = snapshot.itemIdentifiers
+    if let index = self.editableGroupIndexDictionary[oldItem.groupId] {
+      if index == 0 {
+        let beforeItem = items[0]
+        snapshot.insertItems([oldItem], beforeItem: beforeItem)
+      } else {
+        let afterItem = items[index - 1]
+        snapshot.insertItems([oldItem], afterItem: afterItem)
+      }
+    }
+
+    return snapshot
+  }
 }
 
 // MARK: Private Functions
