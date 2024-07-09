@@ -88,14 +88,34 @@ public enum ManageGroup {
       }
     }
   }
+  
+  public enum ReorderGroup {
     public struct Request {
-      public init() { }
+      let userInfo: String
+      public var reorderedGroups: [ReorderedGroup]
+      
+      public init() {
+        self.userInfo = "something"
+        self.reorderedGroups = []
+      }
     }
+    
     public struct Response {
-      public init() { }
+      public let data: Bool
+      public init(with data: Bool) {
+        self.data = data
+      }
     }
+    
     public struct ViewModel {
-      public init() { }
+      public var data: Bool
+      public init(with data: Bool) {
+        self.data = data
+      }
+    }
+  }
+}
+
 extension ManageGroup {
   public struct ReorderedGroup {
     let id: String
