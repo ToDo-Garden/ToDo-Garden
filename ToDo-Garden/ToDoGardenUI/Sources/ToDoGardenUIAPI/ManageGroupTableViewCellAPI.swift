@@ -16,7 +16,8 @@ public protocol ManageGroupTableViewCellAPI {
     id: String,
     groupName: String,
     progressColor: UIColor,
-    progressRate: Float
+    progressRate: Float,
+    isEditing: Bool
   )
   
   func applyModelSecondary(

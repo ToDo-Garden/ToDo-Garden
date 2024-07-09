@@ -26,6 +26,7 @@ public final class ManageGroupTableViewCell: UITableViewCell, ManageGroupTableVi
     self.groupNameButton = nil
     self.rightImageButton = nil
     super.init(style: style, reuseIdentifier: reuseIdentifier)
+    self.backgroundColor = UIColor.clear
     self.contentView.backgroundColor = UIColor.clear
     self.selectionStyle = UITableViewCell.SelectionStyle.none
   }
@@ -67,14 +68,16 @@ public final class ManageGroupTableViewCell: UITableViewCell, ManageGroupTableVi
     id: String,
     groupName: String,
     progressColor: UIColor,
-    progressRate: Float
+    progressRate: Float,
+    isEditing: Bool
   ) {
     self.configuration = Configuration.init(
       style: Configuration.Style.primary(
         id: id,
         groupName: groupName,
         progressColor: progressColor,
-        progressRate: progressRate
+        progressRate: progressRate,
+        isEditing: isEditing
       )
     )
     
