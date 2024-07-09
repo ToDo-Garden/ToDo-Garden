@@ -39,8 +39,31 @@ public final class GroupSelectionView: UIView {
 
 extension GroupSelectionView {
   private func setup() {
+    self.setupShowGroupMenuButton()
     self.addSubviews()
     self.setupSubviewsLayout()
+  }
+
+  private func setupShowGroupMenuButton() {
+    self.showGroupListButton.setImage(UIImage.forwardButtonImage, for: UIControl.State.normal)
+    self.showGroupListButton.changesSelectionAsPrimaryAction = true
+    self.showGroupListButton.addAction(self.makeShowEditableGroupButtonAction(), for: UIControl.Event.touchUpInside)
+  }
+
+  private func makeShowEditableGroupButtonAction() -> UIAction {
+    return UIAction { [weak self] _ in
+      guard let self else { return }
+
+      let isSelected = self.showGroupListButton.isSelected
+      self.animateRotatingButton(isSelected: isSelected)
+    }
+  }
+
+  private func animateRotatingButton(isSelected: Bool) {
+    let transform = isSelected ? CGAffineTransform(rotationAngle: CGFloat.pi / 2) : CGAffineTransform.identity
+    UIView.animate(withDuration: Constant.GroupSelectionView.Animation.duration) {
+      self.showGroupListButton.transform = transform
+    }
   }
 }
 
