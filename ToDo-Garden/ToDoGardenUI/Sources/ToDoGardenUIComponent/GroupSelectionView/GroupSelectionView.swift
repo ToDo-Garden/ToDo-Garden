@@ -14,6 +14,7 @@ public final class GroupSelectionView: UIView {
   private let showGroupListButton: UIButton
   private let currentGroupRow: Styled.Row
   private let editableGroupListTableView: UITableView
+  private let editableGroupListTableViewDelegate: EditableGroupTableViewDelegate
   private var tableViewHeightConstraint: NSLayoutConstraint
   private var heightConstraint: NSLayoutConstraint
 
@@ -30,6 +31,10 @@ public final class GroupSelectionView: UIView {
       with: [self.showGroupListButton]
     )
     self.editableGroupListTableView = UITableView()
+    self.editableGroupListTableViewDelegate = EditableGroupTableViewDelegate(
+      tableView: self.editableGroupListTableView,
+      cellHeight: self.model.cellHeight
+    )
     self.tableViewHeightConstraint = NSLayoutConstraint()
     self.heightConstraint = NSLayoutConstraint()
     super.init(frame: CGRect.zero)
