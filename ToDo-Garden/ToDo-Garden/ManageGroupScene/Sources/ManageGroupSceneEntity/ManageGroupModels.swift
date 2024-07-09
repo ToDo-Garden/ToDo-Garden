@@ -46,6 +46,48 @@ public enum ManageGroup {
       }
     }
   }
+  
+  public enum DeleteGroup {
+    public struct Request {
+      public let userInfo: String
+      public let id: String
+      public let index: Int
+      
+      public init(id: String, index: Int) {
+        self.userInfo = "something"
+        self.id = id
+        self.index = index
+      }
+    }
+    
+    public struct Response {
+      public let data: String
+      public let id: String
+      public let index: Int
+      
+      public init(id: String, index: Int) {
+        self.data = "something"
+        self.id = id
+        self.index = index
+      }
+    }
+    
+    public struct ViewModel {
+      public let isDeleted: Bool
+      public let id: String
+      public let index: Int
+      
+      public init(
+        isDeleted: Bool,
+        id: String,
+        index: Int
+      ) {
+        self.isDeleted = isDeleted
+        self.id = id
+        self.index = index
+      }
+    }
+  }
     public struct Request {
       public init() { }
     }
