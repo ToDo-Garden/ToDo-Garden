@@ -23,7 +23,29 @@ public enum ManageGroup {
   }
   // MARK: Use cases
   
-  public enum Something {
+  public enum FetchGroupList {
+    public struct Request {
+      let userInfo: String
+      
+      public init() {
+        self.userInfo = "something"
+      }
+    }
+    
+    public struct Response {
+      let data: String
+      public init(with data: String) {
+        self.data = data
+      }
+    }
+    
+    public struct ViewModel {
+      public var list: [ToDoGroup]
+      public init(with list: [ToDoGroup]) {
+        self.list = list
+      }
+    }
+  }
     public struct Request {
       public init() { }
     }
