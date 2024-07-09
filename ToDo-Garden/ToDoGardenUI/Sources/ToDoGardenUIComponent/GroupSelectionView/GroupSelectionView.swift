@@ -54,12 +54,29 @@ public final class GroupSelectionView: UIView {
   }
 }
 
+protocol GroupDataSendable: AnyObject {
+  func send(groupItem: EditableGroupItem?)
+}
+
+extension GroupSelectionView: GroupDataSendable {
+  func send(groupItem: EditableGroupItem?) {
+    guard let groupItem = groupItem
+    else { return }
+
+    let title = groupItem.groupName
+    let color = groupItem.groupColor
+    let model = Styled.Row.Configuration.ListPrimaryModel(title: title, color: color)
+    self.currentGroupRow.groupListModel = model
+  }
+}
+
 // MARK: Private Functions
 
 extension GroupSelectionView {
   private func setup() {
     self.setupShowGroupMenuButton()
     self.setupEditableGroupListTableView()
+    self.setupSelectedGroupSender()
     self.addSubviews()
     self.setupSubviewsLayout()
   }
@@ -114,6 +131,10 @@ extension GroupSelectionView {
       CACornerMask.layerMinXMaxYCorner,
       CACornerMask.layerMaxXMaxYCorner
     ]
+  }
+
+  private func setupSelectedGroupSender() {
+    self.editableGroupListTableViewDelegate.selectedGroupSender = self
   }
 }
 

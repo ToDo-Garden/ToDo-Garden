@@ -16,7 +16,11 @@ final class EditableGroupTableViewDelegate: NSObject {
     EditableGroupSection,
     EditableGroupItem
   >!
-  private(set) var currentGroupItem: EditableGroupItem?
+  private(set) var currentGroupItem: EditableGroupItem? {
+    willSet { self.selectedGroupSender?.send(groupItem: newValue) }
+  }
+
+  weak var selectedGroupSender: GroupDataSendable?
 
   init(tableView: UITableView, cellHeight: CGFloat) {
     self.cellHeight = cellHeight
