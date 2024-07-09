@@ -40,7 +40,14 @@ public final class GroupSelectionView: UIView {
     super.init(frame: CGRect.zero)
     self.setup()
   }
-  
+
+  public func updateGroup(current: EditableGroupItem, editableList: [EditableGroupItem]) {
+    self.editableGroupListTableViewDelegate.updateGroup(
+      currentItem: current,
+      editableItems: editableList
+    )
+  }
+
   @available(*, unavailable)
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")

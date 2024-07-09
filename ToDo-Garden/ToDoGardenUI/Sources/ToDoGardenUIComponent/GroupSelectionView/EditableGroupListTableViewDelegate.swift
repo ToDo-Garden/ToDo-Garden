@@ -11,15 +11,24 @@ import ToDoGardenUIConstant
 
 final class EditableGroupTableViewDelegate: NSObject {
   private let cellHeight: CGFloat
+  private var editableGroupIndexDictionary: [Int: Int]
   private var tableViewDataSource: UITableViewDiffableDataSource<
     EditableGroupSection,
     EditableGroupItem
   >!
+  private(set) var currentGroupItem: EditableGroupItem?
 
   init(tableView: UITableView, cellHeight: CGFloat) {
     self.cellHeight = cellHeight
+    self.editableGroupIndexDictionary = [:]
     super.init()
     self.setupTableView(tableView)
+  }
+
+  func updateGroup(currentItem: EditableGroupItem, editableItems: [EditableGroupItem]) {
+    self.currentGroupItem = currentItem
+    self.storeEditableGroupIndex(groupItems: editableItems)
+    self.reloadNewEditableGroups(groupItems: editableItems)
   }
 }
 
@@ -66,5 +75,26 @@ extension EditableGroupTableViewDelegate {
       cell.updateUI(groupItem: itemIdentifier)
       return cell
     }
+  }
+
+  private func storeEditableGroupIndex(groupItems: [EditableGroupItem]) {
+    groupItems.enumerated().forEach { (index: Int, item: EditableGroupItem) in
+      let id = item.groupId
+      self.editableGroupIndexDictionary[id] = index
+    }
+  }
+
+  private func reloadNewEditableGroups(groupItems: [EditableGroupItem]) {
+    var snapshot = NSDiffableDataSourceSnapshot<EditableGroupSection, EditableGroupItem>()
+    snapshot.appendSections([.main])
+    let items = groupItems.filter { (item: EditableGroupItem) in
+      if let currentGroupItem = self.currentGroupItem {
+        return item != currentGroupItem
+      }
+
+      return false
+    }
+    snapshot.appendItems(items, toSection: EditableGroupSection.main)
+    self.tableViewDataSource.apply(snapshot, animatingDifferences: true)
   }
 }
