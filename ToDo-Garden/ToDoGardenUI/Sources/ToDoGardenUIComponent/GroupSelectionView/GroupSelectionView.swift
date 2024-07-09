@@ -14,6 +14,8 @@ public final class GroupSelectionView: UIView {
   private let showGroupListButton: UIButton
   private let currentGroupRow: Styled.Row
   private let editableGroupListTableView: UITableView
+  private var tableViewHeightConstraint: NSLayoutConstraint
+  private var heightConstraint: NSLayoutConstraint
 
   public init(model: GroupSelectionView.Model) {
     self.model = model
@@ -27,6 +29,8 @@ public final class GroupSelectionView: UIView {
       )
     )
     self.editableGroupListTableView = UITableView()
+    self.tableViewHeightConstraint = NSLayoutConstraint()
+    self.heightConstraint = NSLayoutConstraint()
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -59,6 +63,7 @@ extension GroupSelectionView {
 
       let isSelected = self.showGroupListButton.isSelected
       self.animateRotatingButton(isSelected: isSelected)
+      self.animateShowingEditableGroupMenu(isSelected: isSelected)
     }
   }
 
@@ -66,6 +71,16 @@ extension GroupSelectionView {
     let transform = isSelected ? CGAffineTransform(rotationAngle: CGFloat.pi / 2) : CGAffineTransform.identity
     UIView.animate(withDuration: Constant.GroupSelectionView.Animation.duration) {
       self.showGroupListButton.transform = transform
+    }
+  }
+
+  private func animateShowingEditableGroupMenu(isSelected: Bool) {
+    let height = self.model.cellHeight * CGFloat(self.model.visibleCellCount)
+    let heightConstant: CGFloat = isSelected ? height : 0
+    UIView.animate(withDuration: Constant.GroupSelectionView.Animation.duration) {
+      self.heightConstraint.constant = heightConstant + self.model.cellHeight
+      self.tableViewHeightConstraint.constant = heightConstant
+      self.superview?.layoutIfNeeded()
     }
   }
 
@@ -101,6 +116,7 @@ extension GroupSelectionView {
     let containerView = self.makeGroupListContainerView()
     self.setupContainerViewLayout(containerView: containerView)
     self.setupGroupListTableViewLayout(with: containerView)
+    self.setupHeightLayout()
   }
 
   private func setupCurrentGroupRowLayout() {
@@ -137,8 +153,11 @@ extension GroupSelectionView {
 
   private func setupContainerViewLayout(containerView: UIView) {
     self.addSubview(containerView)
-
     containerView.usingAutolayout()
+    self.tableViewHeightConstraint = containerView.heightAnchor.constraint(equalToConstant: 0)
+    self.tableViewHeightConstraint.priority = UILayoutPriority.defaultLow
+    self.tableViewHeightConstraint.isActive = true
+
     let layout = Constant.GroupSelectionView.Layout.TableViewContainer.self
     NSLayoutConstraint.activate(
       [
@@ -170,6 +189,12 @@ extension GroupSelectionView {
         self.editableGroupListTableView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
       ]
     )
+  }
+
+  private func setupHeightLayout() {
+    self.heightConstraint = self.heightAnchor.constraint(equalToConstant: 0)
+    self.heightConstraint.priority = UILayoutPriority.defaultLow
+    self.heightConstraint.isActive = true
   }
 }
 
