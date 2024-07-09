@@ -254,5 +254,18 @@ extension GroupSelectionView {
 @available(iOS 17.0, *)
 #Preview {
   let groupSelectionView = GroupSelectionView(model: GroupSelectionView.Model.primary)
+  groupSelectionView.updateGroup(
+    current: EditableGroupItem(groupId: 0, groupName: "CS 지식", groupColor: UIColor.brown),
+    editableList: [
+      .init(groupId: 0, groupName: "CS 지식", groupColor: UIColor.brown),
+      .init(groupId: 1, groupName: "영어", groupColor: UIColor.red),
+      .init(groupId: 2, groupName: "국어", groupColor: UIColor.blue),
+      .init(groupId: 3, groupName: "수학", groupColor: UIColor.systemMint),
+      .init(groupId: 4, groupName: "Swift", groupColor: UIColor.toDoGardenYellow),
+      .init(groupId: 5, groupName: "런닝", groupColor: UIColor.toDoGardenGreenDark),
+      .init(groupId: 6, groupName: "지구과학", groupColor: UIColor.systemGreen),
+      .init(groupId: 7, groupName: "물리", groupColor: UIColor.orange)
+    ]
+  )
   return groupSelectionView
 }
