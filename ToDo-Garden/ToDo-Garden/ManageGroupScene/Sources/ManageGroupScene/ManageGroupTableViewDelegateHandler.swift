@@ -127,7 +127,7 @@ extension ManageGroupTableViewDelegateHandler: UITableViewDropDelegate {
   func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
     guard let destinationIndexPath = coordinator.destinationIndexPath else { return }
     
-    if coordinator.proposal.operation == .move {
+    if coordinator.proposal.operation == UIDropOperation.move {
       self.reorderItems(coordinator: coordinator, destinationIndexPath: destinationIndexPath)
     }
   }
@@ -138,9 +138,12 @@ extension ManageGroupTableViewDelegateHandler: UITableViewDropDelegate {
     withDestinationIndexPath destinationIndexPath: IndexPath?
   ) -> UITableViewDropProposal {
     if session.localDragSession != nil {
-      return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+      return UITableViewDropProposal(
+        operation: UIDropOperation.move,
+        intent: UITableViewDropProposal.Intent.insertAtDestinationIndexPath
+      )
     } else {
-      return UITableViewDropProposal(operation: .cancel)
+      return UITableViewDropProposal(operation: UIDropOperation.cancel)
     }
   }
   
