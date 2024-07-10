@@ -53,8 +53,8 @@ public final class GroupSelectionView: UIView {
     )
   }
 
-  public func getCurrentGroup() -> EditableGroupItem? {
-    return self.editableGroupListTableViewDelegate.currentGroupItem
+  public func getCurrentGroupId() -> Int? {
+    return self.editableGroupListTableViewDelegate.currentGroupItem?.groupId
   }
 }
 
