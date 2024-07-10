@@ -16,3 +16,16 @@ extension UIButton {
     }
   }
 }
+
+@available(iOS 17.0, *)
+#Preview {
+  let button = UIButton()
+  button.setImage(UIImage.forwardButtonImage, for: UIControl.State.normal)
+  button.addAction(
+    UIAction { [weak button] _ in
+      button?.animateRotating(with: 0.2)
+    },
+    for: UIControl.Event.touchUpInside
+  )
+  return button
+}
