@@ -25,11 +25,7 @@ public enum ManageGroup {
   
   public enum FetchGroupList {
     public struct Request {
-      let userInfo: String
-      
-      public init() {
-        self.userInfo = "something"
-      }
+      public init() { }
     }
     
     public struct Response {
@@ -40,7 +36,7 @@ public enum ManageGroup {
     }
     
     public struct ViewModel {
-      public var list: [ToDoGroup]
+      public let list: [ToDoGroup]
       public init(with list: [ToDoGroup]) {
         self.list = list
       }
@@ -49,40 +45,33 @@ public enum ManageGroup {
   
   public enum DeleteGroup {
     public struct Request {
-      public let userInfo: String
       public let id: String
       public let index: Int
       
       public init(id: String, index: Int) {
-        self.userInfo = "something"
         self.id = id
         self.index = index
       }
     }
     
     public struct Response {
-      public let data: String
       public let id: String
       public let index: Int
       
       public init(id: String, index: Int) {
-        self.data = "something"
         self.id = id
         self.index = index
       }
     }
     
     public struct ViewModel {
-      public let isDeleted: Bool
       public let id: String
       public let index: Int
       
       public init(
-        isDeleted: Bool,
         id: String,
         index: Int
       ) {
-        self.isDeleted = isDeleted
         self.id = id
         self.index = index
       }
@@ -91,11 +80,9 @@ public enum ManageGroup {
   
   public enum ReorderGroup {
     public struct Request {
-      let userInfo: String
       public var reorderedGroups: [ReorderedGroup]
       
       public init() {
-        self.userInfo = "something"
         self.reorderedGroups = []
       }
     }
