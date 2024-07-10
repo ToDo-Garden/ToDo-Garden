@@ -121,3 +121,48 @@ extension ManageGroupTableViewDelegateHandler: UITableViewDragDelegate {
     return [UIDragItem(itemProvider: itemProvider)]
   }
 }
+
+// MARK: - UITableViewDropDelegate
+extension ManageGroupTableViewDelegateHandler: UITableViewDropDelegate {
+  func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
+    guard let destinationIndexPath = coordinator.destinationIndexPath else { return }
+    
+    if coordinator.proposal.operation == .move {
+      self.reorderItems(coordinator: coordinator, destinationIndexPath: destinationIndexPath)
+    }
+  }
+  
+  func tableView(
+    _ tableView: UITableView,
+    dropSessionDidUpdate session: UIDropSession,
+    withDestinationIndexPath destinationIndexPath: IndexPath?
+  ) -> UITableViewDropProposal {
+    if session.localDragSession != nil {
+      return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+    } else {
+      return UITableViewDropProposal(operation: .cancel)
+    }
+  }
+  
+  private func reorderItems(coordinator: UITableViewDropCoordinator, destinationIndexPath: IndexPath) {
+    guard let tableView = self.groupListTableView as? UITableView else {
+      return
+    }
+    
+    if let item = coordinator.items.first, let sourceIndexPath = item.sourceIndexPath {
+      tableView.performBatchUpdates({
+        let movedItem = displayedGroups.remove(at: sourceIndexPath.row)
+        displayedGroups.insert(movedItem, at: destinationIndexPath.row)
+        tableView.moveRow(at: sourceIndexPath, to: destinationIndexPath)
+      }, completion: nil)
+      coordinator.drop(item.dragItem, toRowAt: destinationIndexPath)
+      
+      let id = displayedGroups[sourceIndexPath.row].id
+      self.viewController?.addReorderedGroups(
+        id: id,
+        sourceIndex: sourceIndexPath.row,
+        destinationIndex: destinationIndexPath.row
+      )
+    }
+  }
+}
