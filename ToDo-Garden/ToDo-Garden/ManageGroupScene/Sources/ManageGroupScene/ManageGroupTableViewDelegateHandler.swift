@@ -93,7 +93,7 @@ extension ManageGroupTableViewDelegateHandler: UITableViewDelegate {
     forRowAt indexPath: IndexPath
   ) {
     let index = indexPath.row
-    let id = displayedGroups[index].id
+    let id = self.displayedGroups[index].id
     
     if editingStyle == UITableViewCell.EditingStyle.delete {
       self.viewController?.deleteGroup(id: id, index: index)
