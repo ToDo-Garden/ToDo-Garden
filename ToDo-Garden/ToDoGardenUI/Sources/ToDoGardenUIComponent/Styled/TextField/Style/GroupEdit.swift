@@ -27,8 +27,9 @@ extension Styled.TextField {
     line.trackTintColor = UIColor.toDoGardenGray1
     line.usingAutolayout()
     self.addSubview(line)
+    let padding = Constant.Styled.TextField.GroupEdit.bottomLinePadding
     NSLayoutConstraint.activate([
-      line.bottomAnchor.constraint(equalTo: bottomAnchor),
+      line.bottomAnchor.constraint(equalTo: bottomAnchor, constant: padding),
       line.leadingAnchor.constraint(equalTo: leadingAnchor),
       line.trailingAnchor.constraint(equalTo: trailingAnchor),
       line.heightAnchor.constraint(equalToConstant: Constant.Styled.TextField.GroupEdit.bottomLineHeight)
