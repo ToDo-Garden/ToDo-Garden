@@ -38,7 +38,7 @@ final class ManageGroupTableViewDelegateHandler: NSObject {
 // MARK: - UITableViewDataSource
 extension ManageGroupTableViewDelegateHandler: UITableViewDataSource {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return displayedGroups.count
+    return self.displayedGroups.count
   }
   
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
