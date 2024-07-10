@@ -104,3 +104,20 @@ extension ManageGroupTableViewDelegateHandler: UITableViewDelegate {
     return tableView.isEditing
   }
 }
+
+// MARK: - UITableViewDragDelegate
+extension ManageGroupTableViewDelegateHandler: UITableViewDragDelegate {
+  func tableView(_ tableView: UITableView, dragSessionAllowsMoveOperation session: UIDragSession) -> Bool {
+    return tableView.isEditing
+  }
+  
+  func tableView(
+    _ tableView: UITableView,
+    itemsForBeginning session: UIDragSession,
+    at indexPath: IndexPath
+  ) -> [UIDragItem] {
+    let item = displayedGroups[indexPath.row]
+    let itemProvider = NSItemProvider(object: item.id as NSString)
+    return [UIDragItem(itemProvider: itemProvider)]
+  }
+}
