@@ -177,7 +177,7 @@ extension TimerSceneViewController {
       stack.axis = .vertical
       let button = self.buildButton()
       let settingTimeView = SettingTimeView(with: button, for: .focusTimeSetting)
-      let action = self.builButtonAction(settingTimeView)
+      let action = self.buildButtonAction(settingTimeView)
       button.addAction(action, for: .touchUpInside)
       
       stack.addArrangedSubview(settingTimeView)
@@ -193,7 +193,7 @@ extension TimerSceneViewController {
       return button
     }
     
-    private func builButtonAction(_ settingTimeView: SettingTimeView) -> UIAction {
+    private func buildButtonAction(_ settingTimeView: SettingTimeView) -> UIAction {
       return UIAction { [weak self, weak settingTimeView]_ in
         guard let seconds = settingTimeView?.seconds else { return }
         self?.completion?(seconds)
