@@ -21,6 +21,7 @@ public extension Constant.Styled.TextField.Primary.Standard {
 
 public extension Constant.Styled.TextField.GroupEdit {
   static let bottomLineHeight = CGFloat(1)
+  static let bottomLinePadding = CGFloat(4.5)
 }
 
 public extension Constant.Styled.TextField.GroupEdit {
