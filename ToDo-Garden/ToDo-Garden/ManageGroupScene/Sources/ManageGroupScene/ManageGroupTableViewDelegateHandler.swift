@@ -34,3 +34,53 @@ final class ManageGroupTableViewDelegateHandler: NSObject {
     self.viewController = viewController
   }
 }
+
+// MARK: - UITableViewDataSource
+extension ManageGroupTableViewDelegateHandler: UITableViewDataSource {
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    return displayedGroups.count
+  }
+  
+  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    return Constant.Layout.Cell.height
+  }
+  
+  func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    return Constant.Layout.FooterView.height
+  }
+  
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    guard let cell = tableView.dequeueReusableCell(
+      withIdentifier: self.groupListTableViewCell.getIdentifier(),
+      for: indexPath
+    ) as? ManageGroupTableViewCellAPI else {
+      return UITableViewCell()
+    }
+    
+    let singleGroup = displayedGroups[indexPath.row]
+    
+    cell.applyModelPrimary(
+      id: singleGroup.id,
+      groupName: singleGroup.groupName,
+      progressColor: singleGroup.progressColor,
+      progressRate: singleGroup.progressRate,
+      isEditing: tableView.isEditing
+    )
+    
+    if tableView.isEditing {
+      cell.enterEditingMode()
+    } else {
+      cell.leaveEditingMode()
+    }
+    
+    cell.setupRightButtonAction { color, name in
+      self.viewController?.routeToPostGroupScene(groupName: name, color: color)
+    }
+    
+    return cell as? UITableViewCell ?? UITableViewCell()
+  }
+  
+  func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    return self.footerView
+  }
+}
