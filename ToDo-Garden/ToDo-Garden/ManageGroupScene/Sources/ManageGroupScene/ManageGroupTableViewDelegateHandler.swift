@@ -84,3 +84,23 @@ extension ManageGroupTableViewDelegateHandler: UITableViewDataSource {
     return self.footerView
   }
 }
+
+// MARK: - UITableViewDelegate
+extension ManageGroupTableViewDelegateHandler: UITableViewDelegate {
+  func tableView(
+    _ tableView: UITableView,
+    commit editingStyle: UITableViewCell.EditingStyle,
+    forRowAt indexPath: IndexPath
+  ) {
+    let index = indexPath.row
+    let id = displayedGroups[index].id
+    
+    if editingStyle == UITableViewCell.EditingStyle.delete {
+      self.viewController?.deleteGroup(id: id, index: index)
+    }
+  }
+  
+  func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+    return tableView.isEditing
+  }
+}
