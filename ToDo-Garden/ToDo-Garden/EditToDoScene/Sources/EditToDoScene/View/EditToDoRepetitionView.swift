@@ -11,9 +11,11 @@ import ToDoGardenUIComponent
 
 final class EditToDoRepetitionView: UIView {
   private let repetitionLabel: UILabel
+  private let repeatOnlyTodayView: ToDoRepeatSelectionView
 
   init() {
     self.repetitionLabel = UILabel()
+    self.repeatOnlyTodayView = ToDoRepeatSelectionView(model: ToDoRepeatSelectionView.Model.onlyToday)
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -29,6 +31,8 @@ final class EditToDoRepetitionView: UIView {
 extension EditToDoRepetitionView {
   private func setup() {
     self.setupRepetitionLabelUI()
+    self.addSubviews()
+    self.setupSubviewsLayout()
   }
 
   private func setupRepetitionLabelUI() {
@@ -44,10 +48,12 @@ extension EditToDoRepetitionView {
 extension EditToDoRepetitionView {
   private func addSubviews() {
     self.addSubview(self.repetitionLabel)
+    self.addSubview(self.repeatOnlyTodayView)
   }
 
   private func setupSubviewsLayout() {
     self.setupRepetitionLabelLayout()
+    self.setupRepeatOnlyTodayViewLayout()
   }
 
   private func setupRepetitionLabelLayout() {
@@ -61,6 +67,22 @@ extension EditToDoRepetitionView {
           equalTo: self.leadingAnchor,
           constant: layout.RepetitionLabel.leadingMargin
         )
+      ]
+    )
+  }
+
+  private func setupRepeatOnlyTodayViewLayout() {
+    self.repeatOnlyTodayView.usingAutolayout()
+
+    let layout = EditToDoViewController.Constant.Layout.EditToDoScheduleView.EditToDoRepetitionView.self
+    NSLayoutConstraint.activate(
+      [
+        self.repeatOnlyTodayView.topAnchor.constraint(
+          equalTo: self.repetitionLabel.bottomAnchor,
+          constant: layout.RepeatOnlyTodayButton.topMargin
+        ),
+        self.repeatOnlyTodayView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+        self.repeatOnlyTodayView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
       ]
     )
   }
