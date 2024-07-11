@@ -13,11 +13,19 @@ final class EditToDoRepetitionView: UIView {
   private let repetitionLabel: UILabel
   private let repeatOnlyTodayView: ToDoRepeatSelectionView
   private let repeatOtherDaysView: RepeatOtherDaysView
+  private var isRepeatOnlyToday: Bool {
+    willSet { self.updateRepeatOnlyTodayViewUI(isRepeatOnlyToday: newValue) }
+  }
+  private var isRepeatOtherDays: Bool {
+    willSet { self.updateRepeatOtherDaysViewUI(isRepeatOtherDays: newValue) }
+  }
 
   init() {
     self.repetitionLabel = UILabel()
     self.repeatOnlyTodayView = ToDoRepeatSelectionView(model: ToDoRepeatSelectionView.Model.onlyToday)
     self.repeatOtherDaysView = RepeatOtherDaysView(startDate: nil, endDate: nil)
+    self.isRepeatOnlyToday = true
+    self.isRepeatOtherDays = false
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -31,8 +39,25 @@ final class EditToDoRepetitionView: UIView {
 // MARK: Private Functions
 
 extension EditToDoRepetitionView {
+  private func updateRepeatOnlyTodayViewUI(isRepeatOnlyToday: Bool) {
+    if isRepeatOnlyToday {
+      self.repeatOnlyTodayView.setSelected()
+    } else {
+      self.repeatOnlyTodayView.setDeSelected()
+    }
+  }
+
+  private func updateRepeatOtherDaysViewUI(isRepeatOtherDays: Bool) {
+    if isRepeatOtherDays {
+      self.repeatOtherDaysView.setSelected()
+    } else {
+      self.repeatOtherDaysView.setDeSelected()
+    }
+  }
+
   private func setup() {
     self.setupRepetitionLabelUI()
+    self.setRepeatOnlyTodayViewSelected()
     self.addSubviews()
     self.setupSubviewsLayout()
   }
@@ -42,6 +67,10 @@ extension EditToDoRepetitionView {
     self.repetitionLabel.textColor = EditToDoSceneTheme.mainColor
     let text = EditToDoSceneTheme.StringLiteral.ToDoScheduleView.AlarmLabel.text
     self.repetitionLabel.text = text
+  }
+
+  private func setRepeatOnlyTodayViewSelected() {
+    self.repeatOnlyTodayView.setSelected()
   }
 }
 
