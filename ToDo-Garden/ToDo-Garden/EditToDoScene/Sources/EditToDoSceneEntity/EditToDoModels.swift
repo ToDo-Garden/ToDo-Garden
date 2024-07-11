@@ -157,6 +157,32 @@ public enum EditToDo {
       }
     }
   }
+
+  public enum ChangeRepetitionRange {
+    public struct Request {
+      public init() {}
+    }
+
+    public struct Response {
+      public let startDate: Date
+      public let endDate: Date
+
+      public init(startDate: Date, endDate: Date) {
+        self.startDate = startDate
+        self.endDate = endDate
+      }
+    }
+
+    public struct ViewModel {
+      public let startDay: String
+      public let endDay: String
+
+      public init(startDay: String, endDay: String) {
+        self.startDay = startDay
+        self.endDay = endDay
+      }
+    }
+  }
 }
 
 extension EditToDo {
