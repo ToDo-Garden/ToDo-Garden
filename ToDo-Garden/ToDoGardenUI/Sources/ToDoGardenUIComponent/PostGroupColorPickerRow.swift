@@ -13,12 +13,12 @@ import ToDoGardenUIConstant
 final class PostGroupColorPickerRow: UIView, PostGroupColorPickerRowAPI {
   private var listPrimaryRow: Styled.Row
   
-  init(color: UIColor) {
+  init() {
     self.listPrimaryRow = Styled.Row(
       configuration: Styled.Row.Configuration.listPrimary(
         Styled.Row.Configuration.ListPrimaryModel(
           title: "",
-          color: color
+          color: UIColor.toDoGardenGray
         )
       )
     )
@@ -88,7 +88,7 @@ final class PostGroupColorPickerRow: UIView, PostGroupColorPickerRowAPI {
 
 @available(iOS 17.0, *)
 #Preview {
-  let view = PostGroupColorPickerRow(color: .toDoGardenGrassHigh)
+  let view = PostGroupColorPickerRow()
   
   view.usingAutolayout()
   NSLayoutConstraint.activate(
