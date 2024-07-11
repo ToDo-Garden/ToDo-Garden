@@ -66,46 +66,68 @@ public enum EditToDo {
     public struct ToDoEditData {
       public let name: String
       public let groupId: Int
-      
+
       public init(name: String, groupId: Int) {
         self.name = name
         self.groupId = groupId
       }
     }
-    
+
     public struct ToDoScheduleData {
       public let isAlarmOn: Bool
       public let isRepeatOnlyToday: Bool
-      
+
       public init(isAlarmOn: Bool, isRepeatOnlyToday: Bool) {
         self.isAlarmOn = isAlarmOn
         self.isRepeatOnlyToday = isRepeatOnlyToday
       }
     }
-    
+
     public struct Request {
       public let toDoEditData: ToDoEditData
       public let toDoScheduleData: ToDoScheduleData
-      
+
       public init(toDoEditData: ToDoEditData, toDoScheduleData: ToDoScheduleData) {
         self.toDoEditData = toDoEditData
         self.toDoScheduleData = toDoScheduleData
       }
     }
-    
+
     public struct Response {
       public let editResult: Result<Bool, EditToDoError>
-      
+
       public init(editResult: Result<Bool, EditToDoError>) {
         self.editResult = editResult
       }
     }
-    
+
     public struct ViewModel {
       public let editResult: Result<Bool, EditToDoError>
-      
+
       public init(editResult: Result<Bool, EditToDoError>) {
         self.editResult = editResult
+      }
+    }
+  }
+
+  public enum DeleteToDo {
+    public struct Request {
+      public init() {}
+    }
+
+    public struct Response {
+      public let deleteResult: Result<Bool, EditToDoError>
+
+      public init(deleteResult: Result<Bool, EditToDoError>) {
+        self.deleteResult = deleteResult
+      }
+    }
+
+    public struct ViewModel {
+      public let deleteResult: Result<Bool, EditToDoError>
+
+      public init(deleteResult: Result<Bool, EditToDoError>) {
+        self.deleteResult = deleteResult
       }
     }
   }
