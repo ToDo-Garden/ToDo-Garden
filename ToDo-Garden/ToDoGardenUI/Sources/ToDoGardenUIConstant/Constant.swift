@@ -35,4 +35,5 @@ public enum Constant {
   public enum PomodoroRecordCollectionView { }
   public enum GardenView { }
   public enum GroupSelectionView { }
+  public enum PostGroupColorPickerRow { }
 }
