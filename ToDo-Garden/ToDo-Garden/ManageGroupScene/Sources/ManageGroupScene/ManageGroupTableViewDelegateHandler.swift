@@ -154,13 +154,13 @@ extension ManageGroupTableViewDelegateHandler: UITableViewDropDelegate {
     
     if let item = coordinator.items.first, let sourceIndexPath = item.sourceIndexPath {
       tableView.performBatchUpdates({
-        let movedItem = displayedGroups.remove(at: sourceIndexPath.row)
-        displayedGroups.insert(movedItem, at: destinationIndexPath.row)
+        let movedItem = self.displayedGroups.remove(at: sourceIndexPath.row)
+        self.displayedGroups.insert(movedItem, at: destinationIndexPath.row)
         tableView.moveRow(at: sourceIndexPath, to: destinationIndexPath)
       }, completion: nil)
       coordinator.drop(item.dragItem, toRowAt: destinationIndexPath)
       
-      let id = displayedGroups[sourceIndexPath.row].id
+      let id = self.displayedGroups[sourceIndexPath.row].id
       self.viewController?.addReorderedGroups(
         id: id,
         sourceIndex: sourceIndexPath.row,
