@@ -8,13 +8,7 @@
 import UIKit.UIColor
 
 public enum EditToDo {
-  public enum EditToDoError: Error {
-    case networkConnectionRequired
-    case unknownError
-  }
-
   // MARK: Use cases
-  
   public enum FetchToDo {
     public struct Request {
       public init() {}
@@ -94,17 +88,13 @@ public enum EditToDo {
     }
 
     public struct Response {
-      public let editResult: Result<Bool, EditToDoError>
-
-      public init(editResult: Result<Bool, EditToDoError>) {
-        self.editResult = editResult
-      }
+      public let editResult: Result<Bool, Error>
     }
 
     public struct ViewModel {
-      public let editResult: Result<Bool, EditToDoError>
+      public let editResult: Result<Bool, Error>
 
-      public init(editResult: Result<Bool, EditToDoError>) {
+      public init(editResult: Result<Bool, Error>) {
         self.editResult = editResult
       }
     }
@@ -116,17 +106,17 @@ public enum EditToDo {
     }
 
     public struct Response {
-      public let deleteResult: Result<Bool, EditToDoError>
+      public let deleteResult: Result<Bool, Error>
 
-      public init(deleteResult: Result<Bool, EditToDoError>) {
+      public init(deleteResult: Result<Bool, Error>) {
         self.deleteResult = deleteResult
       }
     }
 
     public struct ViewModel {
-      public let deleteResult: Result<Bool, EditToDoError>
+      public let deleteResult: Result<Bool, Error>
 
-      public init(deleteResult: Result<Bool, EditToDoError>) {
+      public init(deleteResult: Result<Bool, Error>) {
         self.deleteResult = deleteResult
       }
     }
