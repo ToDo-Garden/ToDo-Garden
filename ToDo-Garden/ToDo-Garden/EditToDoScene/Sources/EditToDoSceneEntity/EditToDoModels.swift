@@ -11,15 +11,50 @@ public enum EditToDo {
   
   // MARK: Use cases
   
-  public enum Something {
+  public enum FetchToDo {
     public struct Request {
-      public init() { }
+      public init() {}
     }
+
     public struct Response {
-      public init() { }
+      public let toDo: ToDo
+      public let groupList: [Group]
+
+      public init(toDo: ToDo, groupList: [Group]) {
+        self.toDo = toDo
+        self.groupList = groupList
+      }
     }
+
     public struct ViewModel {
-      public init() { }
+      public let toDoName: String
+      public let group: Group
+      public let groupList: [Group]
+      public let isAlarmOn: Bool
+      public let alarmTime: String?
+      public let isRepeatOnlyToday: Bool
+      public let startDay: String?
+      public let endDay: String?
+
+      public init(
+        toDoName: String,
+        group: Group,
+        groupList: [Group],
+        isAlarmOn: Bool,
+        alarmTime: String?,
+        isRepeatOnlyToday: Bool,
+        startDay: String?,
+        endDay: String?
+      ) {
+        self.toDoName = toDoName
+        self.group = group
+        self.groupList = groupList
+        self.isAlarmOn = isAlarmOn
+        self.alarmTime = alarmTime
+        self.isRepeatOnlyToday = isRepeatOnlyToday
+        self.startDay = startDay
+        self.endDay = endDay
+      }
     }
   }
 }
