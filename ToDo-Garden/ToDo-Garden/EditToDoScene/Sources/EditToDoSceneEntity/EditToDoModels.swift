@@ -131,6 +131,32 @@ public enum EditToDo {
       }
     }
   }
+
+  public enum ChangeAlarmTime {
+    public struct Request {
+      public let alarmTime: Double
+
+      public init(alarmTime: Double) {
+        self.alarmTime = alarmTime
+      }
+    }
+
+    public struct Response {
+      public let alarmTime: Date?
+
+      public init(alarmTime: Date?) {
+        self.alarmTime = alarmTime
+      }
+    }
+
+    public struct ViewModel {
+      public let alarmTimeString: String
+
+      public init(alarmTimeString: String) {
+        self.alarmTimeString = alarmTimeString
+      }
+    }
+  }
 }
 
 extension EditToDo {
