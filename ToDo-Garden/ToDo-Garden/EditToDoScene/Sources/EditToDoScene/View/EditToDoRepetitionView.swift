@@ -34,6 +34,20 @@ final class EditToDoRepetitionView: UIView {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+
+  func updateRepetitionUI(
+    isRepeatOnlyToday: Bool,
+    startDay: String? = nil,
+    endDay: String? = nil
+  ) {
+    self.isRepeatOnlyToday = isRepeatOnlyToday
+    self.isRepeatOtherDays = !isRepeatOnlyToday
+    self.updateRepetitionState(startDay: startDay, endDay: endDay)
+  }
+
+  func getIsRepeatOnlyToday() -> Bool {
+    return self.isRepeatOnlyToday
+  }
 }
 
 // MARK: Private Functions
@@ -53,6 +67,17 @@ extension EditToDoRepetitionView {
     } else {
       self.repeatOtherDaysView.setDeSelected()
     }
+  }
+
+  private func updateRepetitionState(startDay: String?, endDay: String?) {
+    guard let startDayString = startDay, let endDayString = endDay
+    else {
+      self.repeatOtherDaysView.ringToggleButton.isSelected = true
+      return
+    }
+
+    self.repeatOtherDaysView.updateDateButtonState(isSelected: true)
+    self.repeatOtherDaysView.updateDate(startDate: startDayString, endDate: endDayString)
   }
 
   private func setup() {
