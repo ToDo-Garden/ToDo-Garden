@@ -11,9 +11,11 @@ import ToDoGardenUIComponent
 
 final class EditToDoScheduleView: UIView {
   private let alarmSwitch: ToDoGardenSwitch
+  private let alarmLabel: UILabel
 
   init() {
     self.alarmSwitch = ToDoGardenSwitch(model: ToDoGardenSwitch.Model.primary)
+    self.alarmLabel = UILabel()
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -28,12 +30,24 @@ final class EditToDoScheduleView: UIView {
 
 extension EditToDoScheduleView {
   private func setup() {
+    self.setupAlarmLabelUI()
     self.addSubviews()
     self.setupSubviewsLayout()
   }
 
+  private func setupAlarmLabelUI() {
+    self.alarmLabel.font = UIFont.pretendardHeadSemiBold
+    self.alarmLabel.textColor = EditToDoSceneTheme.mainColor
+    self.alarmLabel.text = EditToDoSceneTheme.StringLiteral.ToDoScheduleView.AlarmLabel.text
+  }
+}
+
+// MARK: About Layout
+
+extension EditToDoScheduleView {
   private func addSubviews() {
     self.addSubview(self.alarmSwitch)
+    self.addSubview(self.alarmLabel)
   }
 
   private func setupSubviewsLayout() {
