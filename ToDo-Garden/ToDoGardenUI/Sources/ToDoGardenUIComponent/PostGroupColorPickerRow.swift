@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  PostGroupColorPickerRow.swift
 //
 //
 //  Created by SONG on 7/11/24.
@@ -8,6 +8,7 @@
 import UIKit
 
 import ToDoGardenUIAPI
+import ToDoGardenUIConstant
 
 final class PostGroupColorPickerRow: UIView, PostGroupColorPickerRowAPI {
   private var listPrimaryRow: Styled.Row
@@ -62,7 +63,7 @@ final class PostGroupColorPickerRow: UIView, PostGroupColorPickerRowAPI {
   
   private func buildTitleLabel() {
     let label = UILabel()
-    let text = "컬러"
+    let text = Constant.PostGroupColorPickerRow.StringLiteral.title
     label.attributedText = text.applyTextAttributes(
       attributes: [
         NSAttributedString.Key.font: UIFont.pretendardHeadSemiBold,
@@ -76,7 +77,10 @@ final class PostGroupColorPickerRow: UIView, PostGroupColorPickerRowAPI {
     NSLayoutConstraint.activate(
       [
         label.centerYAnchor.constraint(equalTo: self.listPrimaryRow.centerYAnchor),
-        label.leadingAnchor.constraint(equalTo: self.listPrimaryRow.leadingAnchor, constant: 15)
+        label.leadingAnchor.constraint(
+          equalTo: self.listPrimaryRow.leadingAnchor,
+          constant: Constant.PostGroupColorPickerRow.Layout.TitleLabel.leading
+        )
       ]
     )
   }
