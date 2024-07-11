@@ -58,6 +58,7 @@ extension EditToDoRepetitionView {
   private func setup() {
     self.setupRepetitionLabelUI()
     self.setRepeatOnlyTodayViewSelected()
+    self.bindRepeatSelectionViewsTapGesture()
     self.addSubviews()
     self.setupSubviewsLayout()
   }
@@ -71,6 +72,18 @@ extension EditToDoRepetitionView {
 
   private func setRepeatOnlyTodayViewSelected() {
     self.repeatOnlyTodayView.setSelected()
+  }
+  
+  private func bindRepeatSelectionViewsTapGesture() {
+    self.repeatOnlyTodayView.bindTapGesture { [weak self] (isSelected: Bool) in
+      self?.isRepeatOnlyToday = isSelected
+      self?.isRepeatOtherDays = !isSelected
+    }
+
+    self.repeatOtherDaysView.bindTapGesture { [weak self] (isSelected: Bool) in
+      self?.isRepeatOtherDays = isSelected
+      self?.isRepeatOnlyToday = !isSelected
+    }
   }
 }
 
