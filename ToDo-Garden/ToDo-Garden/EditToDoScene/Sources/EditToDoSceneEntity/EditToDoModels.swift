@@ -239,3 +239,18 @@ extension EditToDo {
     }
   }
 }
+
+extension EditToDo {
+  /// 컴파일 에러 방지용 코드로, Scene이 완성된 이후에 삭제할 예정입니다.
+  public enum Something {
+    public struct Request {
+      public init() {}
+    }
+    public struct Response {
+      public init() {}
+    }
+    public struct ViewModel {
+      public init() {}
+    }
+  }
+}
