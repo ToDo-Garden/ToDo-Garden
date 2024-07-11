@@ -15,15 +15,15 @@ protocol ManageGroupDataStore {
 }
 
 protocol ManageGroupBusinessLogic {
-  func doSomething(request: ManageGroup.Something.Request)
+  func doSomething(request: ManageGroup.FetchGroupList.Request)
 }
 
 class ManageGroupInteractor: ManageGroupDataStore {
   // var name: String = ""
   var presenter: ManageGroupPresentationLogic?
-  private let someWorker: ManageGroupWorkable
+  private let someWorker: FetchGroupListWorkable
   
-  init(someWorker: ManageGroupWorkable) {
+  init(someWorker: FetchGroupListWorkable) {
     self.someWorker = someWorker
   }
 }
@@ -31,10 +31,10 @@ class ManageGroupInteractor: ManageGroupDataStore {
 // MARK: - Request to worker
 
 extension ManageGroupInteractor: ManageGroupBusinessLogic {
-  func doSomething(request: ManageGroup.Something.Request) {
-    self.someWorker.doSomeWork()
+  func doSomething(request: ManageGroup.FetchGroupList.Request) {
+    self.someWorker.fetchGroupList(request: request)
     
-    let response = ManageGroup.Something.Response()
+    let response = ManageGroup.FetchGroupList.Response(with: "something")
     self.presenter?.presentSomething(response: response)
   }
 }

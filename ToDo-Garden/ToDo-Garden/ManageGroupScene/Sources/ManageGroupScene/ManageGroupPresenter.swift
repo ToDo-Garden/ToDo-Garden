@@ -10,7 +10,7 @@ import Foundation
 import ManageGroupSceneEntity
 
 protocol ManageGroupPresentationLogic {
-  func presentSomething(response: ManageGroup.Something.Response)
+  func presentSomething(response: ManageGroup.FetchGroupList.Response)
 }
 
 class ManageGroupPresenter {
@@ -20,8 +20,8 @@ class ManageGroupPresenter {
 // MARK: - Request to ViewController
 
 extension ManageGroupPresenter: ManageGroupPresentationLogic {
-  func presentSomething(response: ManageGroup.Something.Response) {
-    let viewModel = ManageGroup.Something.ViewModel()
+  func presentSomething(response: ManageGroup.FetchGroupList.Response) {
+    let viewModel = ManageGroup.FetchGroupList.ViewModel(with: [])
     self.viewController?.displaySomething(viewModel: viewModel)
   }
 }
