@@ -10,7 +10,7 @@ import UIKit
 import ManageGroupSceneEntity
 import ToDoGardenUIAPI
 
-final class ManageGroupTableViewDelegateHandler: NSObject {
+final class ManageGroupTableViewDelegate: NSObject {
   
   // MARK: - Properties
   var displayedGroups: [ManageGroup.ToDoGroup]
@@ -36,7 +36,7 @@ final class ManageGroupTableViewDelegateHandler: NSObject {
 }
 
 // MARK: - UITableViewDataSource
-extension ManageGroupTableViewDelegateHandler: UITableViewDataSource {
+extension ManageGroupTableViewDelegate: UITableViewDataSource {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return self.displayedGroups.count
   }
@@ -86,7 +86,7 @@ extension ManageGroupTableViewDelegateHandler: UITableViewDataSource {
 }
 
 // MARK: - UITableViewDelegate
-extension ManageGroupTableViewDelegateHandler: UITableViewDelegate {
+extension ManageGroupTableViewDelegate: UITableViewDelegate {
   func tableView(
     _ tableView: UITableView,
     commit editingStyle: UITableViewCell.EditingStyle,
@@ -106,7 +106,7 @@ extension ManageGroupTableViewDelegateHandler: UITableViewDelegate {
 }
 
 // MARK: - UITableViewDragDelegate
-extension ManageGroupTableViewDelegateHandler: UITableViewDragDelegate {
+extension ManageGroupTableViewDelegate: UITableViewDragDelegate {
   func tableView(_ tableView: UITableView, dragSessionAllowsMoveOperation session: UIDragSession) -> Bool {
     return tableView.isEditing
   }
@@ -123,7 +123,7 @@ extension ManageGroupTableViewDelegateHandler: UITableViewDragDelegate {
 }
 
 // MARK: - UITableViewDropDelegate
-extension ManageGroupTableViewDelegateHandler: UITableViewDropDelegate {
+extension ManageGroupTableViewDelegate: UITableViewDropDelegate {
   func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
     guard let destinationIndexPath = coordinator.destinationIndexPath else { return }
     
