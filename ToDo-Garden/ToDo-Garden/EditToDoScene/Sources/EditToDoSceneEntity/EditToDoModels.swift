@@ -8,7 +8,11 @@
 import UIKit.UIColor
 
 public enum EditToDo {
-  
+  public enum EditToDoError: Error {
+    case networkConnectionRequired
+    case unknownError
+  }
+
   // MARK: Use cases
   
   public enum FetchToDo {
