@@ -45,6 +45,12 @@ final class EditToDoScheduleView: UIView {
       endDay: endDay
     )
   }
+
+  func getToDoScheduleData() -> (Bool, Bool) {
+    let isAlarmOn = self.alarmSwitch.isOn
+    let isRepeatOnlyToday = self.editToDoRepetitionView.getIsRepeatOnlyToday()
+    return (isAlarmOn, isRepeatOnlyToday)
+  }
 }
 
 // MARK: Private Functions
