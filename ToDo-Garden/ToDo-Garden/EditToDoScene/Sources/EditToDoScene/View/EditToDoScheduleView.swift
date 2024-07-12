@@ -76,6 +76,7 @@ extension EditToDoScheduleView {
   private func setup() {
     self.setupAlarmLabelUI()
     self.setupAlarmSwitchAction()
+    self.setupAlarmTimeSettingButtonDisabled()
     self.addSubviews()
     self.setupSubviewsLayout()
   }
@@ -98,6 +99,10 @@ extension EditToDoScheduleView {
     }
 
     self.alarmSwitch.addAction(action, for: UIControl.Event.valueChanged)
+  }
+
+  private func setupAlarmTimeSettingButtonDisabled() {
+    self.alarmTimeSettingView.disable()
   }
 }
 
@@ -190,4 +195,17 @@ extension EditToDoScheduleView {
       ]
     )
   }
+}
+
+@available(iOS 17.0, *)
+#Preview {
+  let view = UIView()
+  let scheduleView = EditToDoScheduleView()
+  view.addSubview(scheduleView)
+  scheduleView.usingAutolayout()
+  scheduleView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
+  scheduleView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+  scheduleView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -200).isActive = true
+
+  return view
 }
