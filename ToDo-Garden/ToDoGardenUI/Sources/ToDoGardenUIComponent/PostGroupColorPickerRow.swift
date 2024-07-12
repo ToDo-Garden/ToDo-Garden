@@ -10,10 +10,10 @@ import UIKit
 import ToDoGardenUIAPI
 import ToDoGardenUIConstant
 
-final class PostGroupColorPickerRow: UIView, PostGroupColorPickerRowAPI {
+final public class PostGroupColorPickerRow: UIView, PostGroupColorPickerRowAPI {
   private var listPrimaryRow: Styled.Row
   
-  init() {
+  public init() {
     self.listPrimaryRow = Styled.Row(
       configuration: Styled.Row.Configuration.listPrimary(
         Styled.Row.Configuration.ListPrimaryModel(
@@ -31,11 +31,11 @@ final class PostGroupColorPickerRow: UIView, PostGroupColorPickerRowAPI {
     fatalError("init(coder:) has not been implemented")
   }
   
-  func getColor() -> UIColor? {
+  public func getColor() -> UIColor? {
     return self.listPrimaryRow.groupListModel?.color
   }
   
-  func updateColor(with color: UIColor) {
+  public func updateColor(with color: UIColor) {
     self.listPrimaryRow.configuration = Styled.Row.Configuration.listPrimary(
       Styled.Row.Configuration.ListPrimaryModel(
         title: "", color: color
