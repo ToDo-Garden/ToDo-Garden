@@ -33,7 +33,7 @@ public enum TimerScene {
   }
   
   public enum BottomSheetStatus: Sendable, Equatable {
-    case concentrate
-    case resting
+    case focus
+    case rest
   }
 }
