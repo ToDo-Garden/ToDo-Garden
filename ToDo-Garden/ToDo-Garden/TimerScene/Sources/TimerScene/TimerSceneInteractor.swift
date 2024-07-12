@@ -14,9 +14,9 @@ protocol TimerSceneBusinessLogic {
 
 @MainActor
 final class TimerSceneInteractor: TimerSceneDataStore {
-  var isCounting: Bool = false
+  var isCountingDown: Bool = false
   var alertStatus: TimerScene.TimerAlertStatus?
-  var bottomSheetStatus: TimerScene.BottomSheetStatus = .concentrate
+  var bottomSheetStatus: TimerScene.BottomSheetStatus = .focus
   
   var presenter: TimerScenePresentationLogic?
   private let worker: TimerSceneWorkable
@@ -57,56 +57,42 @@ final class TimerSceneInteractor: TimerSceneDataStore {
 
 extension TimerSceneInteractor: TimerSceneBusinessLogic {
   func controlButtonTapped() {
-    if isCounting {
-      self.alertStatus = self.bottomSheetStatus.alertStatus
-      self.presenter?.showAlert(self.bottomSheetStatus.alertStatus)
+    if self.isCountingDown {
+      self.updateAndPresentAlertStatus(self.bottomSheetStatus.countDownInterruptAlert)
     } else {
       self.presenter?.presentBottomSheet(self.bottomSheetStatus)
     }
   }
 
   func setTimer(for seconds: Double) {
-    switch bottomSheetStatus {
-    case .concentrate:
-      self.countdown(for: seconds) { [weak self] in
-        self?.presenter?.clearPresentState()
-        self?.alertStatus = .welldone
-        self?.presenter?.showAlert(.welldone)
-      }
-    case .resting:
-      self.countdown(for: seconds) {
-        self.presenter?.clearPresentState()
-        self.presenter?.showAlert(.fullyCharged)
-      }
-    }
-  }
-  
-  private func countdown(
-    for seconds: Double,
-    completion: @escaping () -> Void
-  ) {
     run(id: CancelTaskID.countdown) {
-      defer { self.isCounting = false }
-      self.isCounting = true
+      defer { self.isCountingDown = false }
+      self.isCountingDown = true
       self.presenter?.configureTimerSettings(self.bottomSheetStatus, for: seconds)
-      for try await time in self.worker.countDownSequence(2) {
+      for try await time in self.worker.countDownSequence(seconds) {
         let range = TimerScene.CircularProgressRange(1 - (time / seconds))
         self.presenter?.updateTimeState(time, range: range)
       }
-      completion()
+      self.presenter?.clearPresentState()
+      self.updateAndPresentAlertStatus(self.bottomSheetStatus.completionAlertStatus)
     }
+  }
+  
+  private func updateAndPresentAlertStatus(_ status: TimerScene.TimerAlertStatus) {
+    self.alertStatus = status
+    self.presenter?.showAlert(status)
   }
   
   func sendAlertAction(_ action: TimerSceneEntity.TimerScene.AlertAction) {
     switch action {
     case .stopConcentration:
-      stopConcentrationAction()
+      self.stopConcentrationAction()
       
     case .keepConcentration:
-      cancel(CancelTaskID.countdown)
-      bottomSheetStatus = .concentrate
-      presenter?.updateViewState(isResting: false)
-      presenter?.presentBottomSheet(.concentrate)
+      self.cancel(CancelTaskID.countdown)
+      self.bottomSheetStatus = .focus
+      self.presenter?.updateViewState(isResting: false)
+      self.presenter?.presentBottomSheet(.focus)
     
     case .goHome:
       self.presenter?.dismiss()
@@ -120,30 +106,29 @@ extension TimerSceneInteractor: TimerSceneBusinessLogic {
     if case .stopConcentration = self.alertStatus {
       self.alertStatus = nil
       self.cancel(CancelTaskID.countdown)
-      presenter?.updateViewState(isResting: false)
+      self.presenter?.updateViewState(isResting: false)
     } else if case .welldone = self.alertStatus {
-      self.bottomSheetStatus = .resting
-      presenter?.updateViewState(isResting: true)
+      self.bottomSheetStatus = .rest
+      self.presenter?.updateViewState(isResting: true)
     }
   }
 }
 
 extension TimerScene.BottomSheetStatus {
-  var alertStatus: TimerScene.TimerAlertStatus {
+  var countDownInterruptAlert: TimerScene.TimerAlertStatus {
     switch self {
-    case .concentrate:
+    case .focus:
       return .stopConcentration
-    case .resting:
+    case .rest:
       return .stopResting
     }
   }
-  
-  var bottomSheet: TimerScene.BottomSheetStatus {
+  var completionAlertStatus: TimerScene.TimerAlertStatus {
     switch self {
-    case .concentrate:
-      return .concentrate
-    case .resting:
-      return .resting
+    case .focus:
+      return .welldone
+    case .rest:
+      return .fullyCharged
     }
   }
 }

@@ -34,7 +34,7 @@ extension TimerScenePresenter: TimerScenePresentationLogic {
     for targetTime: Double
   ) {
     self.viewController?.updateTargetLabel(time: self.convertMinutes(targetTime))
-    self.viewController?.updateControllerButton(isConcentrating: status == .concentrate)
+    self.viewController?.updateControllerButton(isConcentrating: status == .focus)
   }
   
   func updateTimeState(_ seconds: Double, range: TimerScene.CircularProgressRange) {
@@ -112,9 +112,9 @@ private extension TimerScene.TimerAlertStatus {
 private extension TimerScene.BottomSheetStatus {
   var configuration: SettingTimeView.Configuration {
     switch self {
-    case .concentrate:
+    case .focus:
       return .focusTimeSetting
-    case .resting:
+    case .rest:
       return .breakTimeSetting
     }
   }
