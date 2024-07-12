@@ -2,14 +2,23 @@ import UIKit
 
 import TimerSceneAPI
 import TimerSceneEntity
+import ToDoGardenUIAPI
 import ToDoGardenUIComponent
+import ToDoGardenUIConstant
 
 @MainActor
 protocol TimerSceneDisplayLogic: AnyObject {
-  func updateTargetLabel(time: String)
-  func updateControlButton(isFocused: Bool)
-  func updateTimeLabel(duration: Double, time: String, isFirst: Bool)
+  func updateDefaultState()
+  func updateRestingState()
   func updateProgressImage(_ image: UIImage)
+  func updateTargetLabel(time: String)
+  func updateTimeLabel(duration: Double, time: String, isFirst: Bool)
+  func updateControllerButton(isConcentrating: Bool)
+
+  func showAlert(_ configuration: ToDoGardenAlertView.Configuration)
+  func presentBottomSheet(_ configuration: SettingTimeView.Configuration)
+  func clearPresentState()
+  func dismiss()
 }
 
 public final class TimerSceneViewController: UIViewController, TimerSceneViewControllable {
@@ -42,6 +51,7 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
   }
   
   private func build() {
+    self.view.backgroundColor = .toDoGardenWhite
     self.timerProgressView = TimerProgressView(
       circularProgressView: CircularProgressView(
         progressColor: UIColor.toDoGardenRed,
@@ -80,7 +90,7 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
     let label = UILabel()
     label.font = UIFont.pretendardHeadLight75
     label.textColor = UIColor.toDoGardenGreenDark
-    label.text = Constant.DefaultViewState.timeLabel
+    label.text = Constant.TimeLabel.defaultText
     return label
   }
   
@@ -93,12 +103,7 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
       duration: Constant.Layout.SetTimerButton.animationDuration
     )
     let action = UIAction { [weak self] _ in
-      let bottom = FocusTimeSettings()
-      bottom.completion = {
-        self?.interactor?.setTimer(for: $0)
-      }
-      bottom.sheetPresentationController?.detents = [.medium()]
-      self?.present(bottom, animated: true)
+      self?.interactor?.controlButtonTapped()
     }
     button.addAction(action, for: .touchUpInside)
     return button
@@ -141,16 +146,32 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
 
 // MARK: - Confirm display logic protocol
 extension TimerSceneViewController: TimerSceneDisplayLogic {
-  func updateTargetLabel(time: String) {
-    self.targetLabel.updateRemainingTime(with: Constant.TargetLabel.updated(time))
+  // MARK: - View Update
+  func updateDefaultState() {
+    // TODO: - Reset Timer
+    self.view.backgroundColor = .toDoGardenWhite
+    self.targetLabel.updateRemainingTime(with: Constant.DefaultViewState.targetLabel)
+    self.targetLabel.updateBackgroundColorForFoucsTime()
+    self.timeLabel.text = Constant.TimeLabel.defaultText
+    self.controlButton.timerControlButtonDefaultStyle(with: Constant.DefaultViewState.setTimerButton)
   }
   
-  func updateControlButton(isFocused: Bool) {
-    if isFocused {
-      self.controlButton.timerControlButtonDestructiveStyle(with: Constant.ControlButton.giveUp)
-    } else {
-      self.controlButton.timerControlButtonDefaultStyle(with: Constant.ControlButton.setFocusTime)
-    }
+  func updateRestingState() {
+    // TODO: - Update Timer
+    self.view.backgroundColor = UIColor.toDoGardenGreenBackground
+    self.targetLabel.updateRemainingTime(with: Constant.RestingViewState.targetLabel)
+    self.targetLabel.updateBackgroundColorForBreakTime()
+    self.timeLabel.text = Constant.TimeLabel.defaultText
+    self.controlButton.timerControlButtonDefaultStyle(with: Constant.RestingViewState.setTimerButton)
+  }
+  
+  func updateProgressImage(_ image: UIImage) {
+    guard self.circularProgressImageView.image != image else { return }
+    self.circularProgressImageView.setImageWithZoomTransition(newImage: image)
+  }
+  
+  func updateTargetLabel(time: String) {
+    self.targetLabel.updateRemainingTime(with: Constant.TargetLabel.updated(time))
   }
   
   func updateTimeLabel(duration: Double, time: String, isFirst: Bool) {
@@ -161,22 +182,90 @@ extension TimerSceneViewController: TimerSceneDisplayLogic {
     self.timeLabel.text = time
   }
   
-  func updateProgressImage(_ image: UIImage) {
-    guard self.circularProgressImageView.image != image else { return }
-    self.circularProgressImageView.setImageWithZoomTransition(newImage: image)
+  func updateControllerButton(isConcentrating: Bool) {
+    let text = isConcentrating
+    ? Constant.DefaultViewState.setTimerIsSelected
+    : Constant.RestingViewState.setTimerIsSelected
+    self.controlButton.timerControlButtonDefaultStyle(with: text)
+  }
+  
+  // MARK: - ViewController Transition
+  func showAlert(_ configuration: ToDoGardenAlertView.Configuration) {
+    let alert = ToDoGardenAlertController(for: configuration)
+    alert.delegate = self
+    self.showAlert(alert)
+  }
+  
+  func presentBottomSheet(_ configuration: SettingTimeView.Configuration) {
+    let bottomSheet = FocusTimeSettings(configuration: configuration)
+    bottomSheet.completion = { [weak self] in
+      self?.interactor?.setTimer(for: $0)
+    }
+    bottomSheet.sheetPresentationController?.detents = [.medium()]
+    self.present(bottomSheet, animated: true)
+  }
+  
+  func clearPresentState() {
+    if presentedViewController is ToDoGardenAlertController {
+      self.closeAlert()
+    } else if let bottom = presentedViewController as? FocusTimeSettings {
+      bottom.dismiss(animated: true)
+    }
+  }
+  
+  func dismiss() {
+    self.closeAlert { [weak self] in
+      self?.dismiss(animated: true)
+    }
+  }
+}
+
+extension TimerSceneViewController: ToDoGardenAlertControllerDelegate {
+  public func handleButtonAction(
+    _ buttonType: ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType
+  ) {
+    self.closeAlert()
+    self.interactor?.sendAlertAction(self.convertAction(buttonType))
+  }
+  
+  private func convertAction(
+    _ actionType: ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType
+  ) -> TimerScene.AlertAction {
+    if actionType == .cancel {
+      return .cancel
+    } else if actionType == .keepConcentration {
+      return .keepConcentration
+    } else if actionType == .goHome {
+      return .goHome
+    } else if actionType == .stopConcentration {
+      return .stopConcentration
+    } else {
+      fatalError("호출되면 안됩니다.")
+    }
   }
 }
 
 extension TimerSceneViewController {
   private final class FocusTimeSettings: UIViewController {
+    var configuration: SettingTimeView.Configuration
     var completion: ((Double) -> Void)?
+    
+    init(configuration: SettingTimeView.Configuration) {
+      self.configuration = configuration
+      super.init(nibName: nil, bundle: nil)
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+      fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
       view.backgroundColor = UIColor.toDoGardenWhite
       let stack = UIStackView()
       stack.axis = .vertical
       let button = self.buildButton()
-      let settingTimeView = SettingTimeView(with: button, for: .focusTimeSetting)
+      let settingTimeView = SettingTimeView(with: button, for: configuration)
       let action = self.buildButtonAction(settingTimeView)
       button.addAction(action, for: .touchUpInside)
       
