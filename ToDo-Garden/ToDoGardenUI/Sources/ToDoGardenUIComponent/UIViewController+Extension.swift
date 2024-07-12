@@ -7,20 +7,35 @@ extension UIViewController {
     self.modalPresentationStyle = .overFullScreen
     self.splitViewController?.modalTransitionStyle = .crossDissolve
     
+    self.present(base, animated: false) {
+      let dimmingView = self.buildDimmingView()
+      base.view.insertSubview(dimmingView, at: 0)
+      UIView.animate(withDuration: 0.3) {
+        dimmingView.alpha = 1
+      }
+    }
+  }
+  
+  private func buildDimmingView() -> UIView {
     let dimmingView = UIView(frame: self.view.bounds)
+    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dimmingViewTapped))
+    dimmingView.addGestureRecognizer(tapGesture)
     dimmingView.backgroundColor = .black.withAlphaComponent(0.3)
     dimmingView.alpha = 0
     dimmingView.tag = dimmingID
     
-    self.view.addSubview(dimmingView)
-    UIView.animate(withDuration: 0.3) {
-      dimmingView.alpha = 1
-    }
-    self.present(base, animated: false)
+    return dimmingView
+  }
+  
+  @objc private func dimmingViewTapped() {
+    self.closeAlert()
   }
   
   public func closeAlert(completion: @escaping () -> Void = { }) {
-    guard let dimmingView = self.view.viewWithTag(dimmingID) else { return }
+    guard
+      let presentedViewController,
+      let dimmingView = presentedViewController.view.viewWithTag(dimmingID)
+    else { return }
     UIView.animate(withDuration: 0.3) {
       dimmingView.alpha = 0
       self.dismiss(animated: false)
