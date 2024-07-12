@@ -13,11 +13,13 @@ final class EditToDoScheduleView: UIView {
   private let alarmSwitch: ToDoGardenSwitch
   private let alarmLabel: UILabel
   private let alarmTimeSettingView: AlarmTimeView
+  private let editToDoRepetitionView: EditToDoRepetitionView
 
   init() {
     self.alarmSwitch = ToDoGardenSwitch(model: ToDoGardenSwitch.Model.primary)
     self.alarmLabel = UILabel()
     self.alarmTimeSettingView = AlarmTimeView(model: AlarmTimeView.Model.primary)
+    self.editToDoRepetitionView = EditToDoRepetitionView()
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -65,12 +67,15 @@ extension EditToDoScheduleView {
   private func addSubviews() {
     self.addSubview(self.alarmSwitch)
     self.addSubview(self.alarmLabel)
+    self.addSubview(self.alarmTimeSettingView)
+    self.addSubview(self.editToDoRepetitionView)
   }
 
   private func setupSubviewsLayout() {
     self.setupAlarmSwitchLayout()
     self.setupAlarmLabelLayout()
     self.setupAlarmTimeSettingViewLayout()
+    self.setupEditToDoRepetitionViewLayout()
   }
 
   private func setupAlarmSwitchLayout() {
@@ -125,6 +130,23 @@ extension EditToDoScheduleView {
           constant: layout.leadingMargin
         ),
         self.alarmLabel.centerYAnchor.constraint(equalTo: self.alarmSwitch.centerYAnchor)
+      ]
+    )
+  }
+
+  private func setupEditToDoRepetitionViewLayout() {
+    self.editToDoRepetitionView.usingAutolayout()
+
+    let layout = EditToDoViewController.Constant.Layout.EditToDoScheduleView.EditToDoRepetitionView.self
+    NSLayoutConstraint.activate(
+      [
+        self.editToDoRepetitionView.topAnchor.constraint(
+          equalTo: self.alarmTimeSettingView.bottomAnchor,
+          constant: layout.topMargin
+        ),
+        self.editToDoRepetitionView.leadingAnchor.constraint(equalTo: self.alarmTimeSettingView.leadingAnchor),
+        self.editToDoRepetitionView.trailingAnchor.constraint(equalTo: self.alarmTimeSettingView.trailingAnchor),
+        self.editToDoRepetitionView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
       ]
     )
   }
