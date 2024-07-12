@@ -12,10 +12,12 @@ import ToDoGardenUIComponent
 final class EditToDoScheduleView: UIView {
   private let alarmSwitch: ToDoGardenSwitch
   private let alarmLabel: UILabel
+  private let alarmTimeSettingView: AlarmTimeView
 
   init() {
     self.alarmSwitch = ToDoGardenSwitch(model: ToDoGardenSwitch.Model.primary)
     self.alarmLabel = UILabel()
+    self.alarmTimeSettingView = AlarmTimeView(model: AlarmTimeView.Model.primary)
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -31,6 +33,7 @@ final class EditToDoScheduleView: UIView {
 extension EditToDoScheduleView {
   private func setup() {
     self.setupAlarmLabelUI()
+    self.setupAlarmSwitchAction()
     self.addSubviews()
     self.setupSubviewsLayout()
   }
@@ -39,6 +42,20 @@ extension EditToDoScheduleView {
     self.alarmLabel.font = UIFont.pretendardHeadSemiBold
     self.alarmLabel.textColor = EditToDoSceneTheme.mainColor
     self.alarmLabel.text = EditToDoSceneTheme.StringLiteral.ToDoScheduleView.AlarmLabel.text
+  }
+
+  private func setupAlarmSwitchAction() {
+    let action = UIAction { [weak self] _ in
+      guard let self else { return }
+
+      if self.alarmSwitch.isOn {
+        self.alarmTimeSettingView.enable()
+      } else {
+        self.alarmTimeSettingView.disable()
+      }
+    }
+
+    self.alarmSwitch.addAction(action, for: UIControl.Event.valueChanged)
   }
 }
 
@@ -52,6 +69,8 @@ extension EditToDoScheduleView {
 
   private func setupSubviewsLayout() {
     self.setupAlarmSwitchLayout()
+    self.setupAlarmLabelLayout()
+    self.setupAlarmTimeSettingViewLayout()
   }
 
   private func setupAlarmSwitchLayout() {
@@ -68,6 +87,44 @@ extension EditToDoScheduleView {
           equalTo: self.trailingAnchor,
           constant: -layout.trailingMargin
         )
+      ]
+    )
+  }
+
+  private func setupAlarmTimeSettingViewLayout() {
+    self.alarmTimeSettingView.usingAutolayout()
+
+    let layout = EditToDoViewController.Constant.Layout.EditToDoScheduleView.AlarmTimeSettingView.self
+    NSLayoutConstraint.activate(
+      [
+        self.alarmTimeSettingView.topAnchor.constraint(
+          equalTo: self.alarmSwitch.bottomAnchor,
+          constant: layout.topMargin
+        ),
+        self.alarmTimeSettingView.leadingAnchor.constraint(
+          equalTo: self.leadingAnchor,
+          constant: layout.leadingMargin
+        ),
+        self.alarmTimeSettingView.trailingAnchor.constraint(
+          equalTo: self.trailingAnchor,
+          constant: -layout.trailingMargin
+        ),
+        self.alarmTimeSettingView.heightAnchor.constraint(equalToConstant: layout.height)
+      ]
+    )
+  }
+
+  private func setupAlarmLabelLayout() {
+    self.alarmLabel.usingAutolayout()
+
+    let layout = EditToDoViewController.Constant.Layout.EditToDoScheduleView.AlarmLabel.self
+    NSLayoutConstraint.activate(
+      [
+        self.alarmLabel.leadingAnchor.constraint(
+          equalTo: self.alarmTimeSettingView.leadingAnchor,
+          constant: layout.leadingMargin
+        ),
+        self.alarmLabel.centerYAnchor.constraint(equalTo: self.alarmSwitch.centerYAnchor)
       ]
     )
   }
