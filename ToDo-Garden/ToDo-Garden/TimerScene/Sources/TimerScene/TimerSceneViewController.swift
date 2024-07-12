@@ -31,7 +31,6 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
   
   // MARK: - VIP Properties
   var interactor: TimerSceneBusinessLogic?
-  var router: (TimerSceneRoutingLogic & TimerSceneDataPassing)?
   
   // MARK: - Object lifecycle
   public init() {
