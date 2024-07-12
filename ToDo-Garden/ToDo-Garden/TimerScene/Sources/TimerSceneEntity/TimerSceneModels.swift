@@ -1,10 +1,3 @@
-//
-//  TimerSceneModels.swift
-//  
-//
-//  Created by Cloud on 6/17/24.
-//  Copyright (c) 2024 ToDoGarden. All rights reserved.
-
 import Foundation
 
 public enum TimerScene {
@@ -25,15 +18,22 @@ public enum TimerScene {
     }
   }
   
-  public enum Something {
-    public struct Request {
-      public init() { }
-    }
-    public struct Response {
-      public init() { }
-    }
-    public struct ViewModel {
-      public init() { }
-    }
+  public enum TimerAlertStatus: Sendable, Equatable {
+    case fullyCharged
+    case stopResting
+    case welldone
+    case stopConcentration
+  }
+  
+  public enum AlertAction: Sendable, Equatable {
+    case cancel
+    case goHome
+    case stopConcentration
+    case keepConcentration
+  }
+  
+  public enum BottomSheetStatus: Sendable, Equatable {
+    case concentrate
+    case resting
   }
 }
