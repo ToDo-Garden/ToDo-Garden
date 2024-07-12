@@ -1,8 +1,9 @@
 import UIKit
 
+import ToDoGardenUIAPI
 import ToDoGardenUIConstant
 
-public final class TextInputView: UIView {
+public final class TextInputView: UIView, TextInputViewAPI {
   private let model: Model
   private let inputTextField: Styled.TextField
   private let placeholderLabel: UILabel
