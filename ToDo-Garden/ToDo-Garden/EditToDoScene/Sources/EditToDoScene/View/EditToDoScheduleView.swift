@@ -28,11 +28,45 @@ final class EditToDoScheduleView: UIView {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+
+  func updateAlarmTime(isAlarmOn: Bool = true, alarmTime: String?) {
+    self.updateAlarmTimeSettingActivation(by: isAlarmOn)
+    self.updateAlarmTimeSettingViewUI(alarmTime: alarmTime)
+  }
+
+  func updateRepetitionRange(
+    isRepeatOnlyToday: Bool = true,
+    startDay: String?,
+    endDay: String?
+  ) {
+    self.editToDoRepetitionView.updateRepetitionUI(
+      isRepeatOnlyToday: isRepeatOnlyToday,
+      startDay: startDay,
+      endDay: endDay
+    )
+  }
 }
 
 // MARK: Private Functions
 
 extension EditToDoScheduleView {
+  private func updateAlarmTimeSettingActivation(by isAlarmOn: Bool) {
+    self.alarmSwitch.isOn = isAlarmOn
+
+    if isAlarmOn {
+      self.alarmTimeSettingView.enable()
+    } else {
+      self.alarmTimeSettingView.disable()
+    }
+  }
+
+  private func updateAlarmTimeSettingViewUI(alarmTime: String?) {
+    guard let alarmTime = alarmTime
+    else { return }
+
+    self.alarmTimeSettingView.updateAlarmTime(with: alarmTime)
+  }
+
   private func setup() {
     self.setupAlarmLabelUI()
     self.setupAlarmSwitchAction()
