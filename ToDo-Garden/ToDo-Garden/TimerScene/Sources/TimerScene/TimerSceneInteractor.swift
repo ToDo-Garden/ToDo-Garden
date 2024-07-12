@@ -2,9 +2,6 @@ import Foundation
 
 import TimerSceneEntity
 
-protocol TimerSceneDataStore {
-}
-
 @MainActor
 protocol TimerSceneBusinessLogic {
   func controlButtonTapped()
@@ -13,7 +10,7 @@ protocol TimerSceneBusinessLogic {
 }
 
 @MainActor
-final class TimerSceneInteractor: TimerSceneDataStore {
+final class TimerSceneInteractor {
   var isCountingDown: Bool = false
   var alertStatus: TimerScene.TimerAlertStatus?
   var bottomSheetStatus: TimerScene.BottomSheetStatus = .focus
@@ -54,7 +51,6 @@ final class TimerSceneInteractor: TimerSceneDataStore {
 }
 
 // MARK: - Request to worker
-
 extension TimerSceneInteractor: TimerSceneBusinessLogic {
   func controlButtonTapped() {
     if self.isCountingDown {
@@ -89,10 +85,7 @@ extension TimerSceneInteractor: TimerSceneBusinessLogic {
       self.stopConcentrationAction()
       
     case .keepConcentration:
-      self.cancel(CancelTaskID.countdown)
-      self.bottomSheetStatus = .focus
-      self.presenter?.updateViewState(isResting: false)
-      self.presenter?.presentBottomSheet(.focus)
+      self.keepConcentrationAction()
     
     case .goHome:
       self.presenter?.dismiss()
@@ -112,6 +105,13 @@ extension TimerSceneInteractor: TimerSceneBusinessLogic {
       self.presenter?.updateViewState(isResting: true)
     }
   }
+  
+  private func keepConcentrationAction() {
+    self.cancel(CancelTaskID.countdown)
+    self.bottomSheetStatus = .focus
+    self.presenter?.updateViewState(isResting: false)
+    self.presenter?.presentBottomSheet(.focus)
+  }
 }
 
 extension TimerScene.BottomSheetStatus {
@@ -123,6 +123,7 @@ extension TimerScene.BottomSheetStatus {
       return .stopResting
     }
   }
+  
   var completionAlertStatus: TimerScene.TimerAlertStatus {
     switch self {
     case .focus:
