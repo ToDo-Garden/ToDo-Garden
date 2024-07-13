@@ -106,7 +106,7 @@ extension ShareGardenSceneViewController.SectionHeaderView {
   }
   
   private func setupSpacing() {
-    let spacingRatio = ShareGardenSceneViewController.Constant.Layout.HeaderView.spacingRatio
+    let spacingRatio = ShareGardenSceneViewController.Constant.Layout.SectionHeaderView.spacingRatio
     self.spacing = self.bounds.width * spacingRatio
   }
 }

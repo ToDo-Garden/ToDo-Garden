@@ -17,7 +17,7 @@ extension ShareGardenSceneViewController {
 // MARK: - String literal
 
 extension ShareGardenSceneViewController.Constant.StringLiteral {
-  enum HeaderView {
+  enum MyGardenSectionHeaderView {
     static let title = "나의 가든"
   }
 }
@@ -25,7 +25,7 @@ extension ShareGardenSceneViewController.Constant.StringLiteral {
 // MARK: - Layout
 
 extension ShareGardenSceneViewController.Constant.Layout {
-  enum HeaderView {
+  enum SectionHeaderView {
     static let spacingRatio: CGFloat = 194 / 323
   }
 }
