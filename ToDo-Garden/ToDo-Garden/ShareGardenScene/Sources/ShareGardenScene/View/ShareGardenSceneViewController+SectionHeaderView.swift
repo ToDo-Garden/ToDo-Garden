@@ -19,7 +19,6 @@ extension ShareGardenSceneViewController {
     
     private let titleLabel: UILabel = {
       let titleLabel = UILabel()
-      titleLabel.text = Constant.StringLiteral.HeaderView.title
       titleLabel.numberOfLines = 1
       titleLabel.font = UIFont.pretendardHeadBold
       titleLabel.textColor = UIColor.toDoGardenGreenDark
@@ -43,9 +42,9 @@ extension ShareGardenSceneViewController {
     
     // MARK: - Object life cycle
     
-    init() {
+    init(sectionTitle: String) {
       super.init(frame: CGRect.zero)
-      self.setup()
+      self.setup(with: sectionTitle)
     }
     
     @available(*, unavailable)
@@ -67,8 +66,9 @@ extension ShareGardenSceneViewController {
 // MARK: - Setup
 
 extension ShareGardenSceneViewController.SectionHeaderView {
-  private func setup() {
+  private func setup(with sectionTitle: String) {
     self.setupAppearance()
+    self.setupTitle(sectionTitle)
     self.setupLayoutPriorities()
     self.addSubviews()
   }
@@ -77,6 +77,10 @@ extension ShareGardenSceneViewController.SectionHeaderView {
     self.axis = NSLayoutConstraint.Axis.horizontal
     self.distribution = UIStackView.Distribution.fill
     self.alignment = UIStackView.Alignment.center
+  }
+  
+  private func setupTitle(_ title: String) {
+    self.titleLabel.text = title
   }
   
   private func setupLayoutPriorities() {
