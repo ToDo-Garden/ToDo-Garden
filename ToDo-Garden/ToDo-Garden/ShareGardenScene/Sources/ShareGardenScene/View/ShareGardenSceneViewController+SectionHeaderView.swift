@@ -26,15 +26,7 @@ extension ShareGardenSceneViewController {
       return titleLabel
     }()
     
-    private let shareButton: UIButton = {
-      let shareButton = UIButton()
-      shareButton.setImage(
-        UIImage.shareIconImage,
-        for: UIControl.State.normal
-      )
-      
-      return shareButton
-    }()
+    private let rightActionButton: UIButton
     
     // MARK: - Properties
     
@@ -42,7 +34,8 @@ extension ShareGardenSceneViewController {
     
     // MARK: - Object life cycle
     
-    init(sectionTitle: String) {
+    init(sectionTitle: String, rightActionButton: UIButton) {
+      self.rightActionButton = rightActionButton
       super.init(frame: CGRect.zero)
       self.setup(with: sectionTitle)
     }
@@ -59,6 +52,10 @@ extension ShareGardenSceneViewController {
       self.configureSpacingOnce = {
         self.setupSpacing()
       }
+    }
+    
+    func setupRightActionButton(action: UIAction) {
+      self.rightActionButton.addAction(action, for: UIControl.Event.touchUpInside)
     }
   }
 }
@@ -93,11 +90,11 @@ extension ShareGardenSceneViewController.SectionHeaderView {
       for: NSLayoutConstraint.Axis.horizontal
     )
     
-    self.shareButton.setContentHuggingPriority(
+    self.rightActionButton.setContentHuggingPriority(
       UILayoutPriority.required,
       for: NSLayoutConstraint.Axis.horizontal
     )
-    self.shareButton.setContentCompressionResistancePriority(
+    self.rightActionButton.setContentCompressionResistancePriority(
       UILayoutPriority.required,
       for: NSLayoutConstraint.Axis.horizontal
     )
@@ -105,7 +102,7 @@ extension ShareGardenSceneViewController.SectionHeaderView {
   
   private func addSubviews() {
     self.addArrangedSubview(self.titleLabel)
-    self.addArrangedSubview(self.shareButton)
+    self.addArrangedSubview(self.rightActionButton)
   }
   
   private func setupSpacing() {
