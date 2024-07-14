@@ -56,6 +56,14 @@ public final class TimerProgressView: UIView {
     let background: UIColor
     let dot: UIColor
   }
+  
+  /// TimerProgressView 컴포넌트들의 색상을 설정합니다.
+  /// - Parameter colors: progressLayer, backgroundLayer, dot의 색상을 포함하는 `TimerProgressViewColors` 인스턴스입니다.
+  public func setColors(to colors: TimerProgressViewColors) {
+    self.circularProgressView.setupProgressLayerStrokeColor(with: colors.progress)
+    self.circularProgressView.setupProgressBackgroundLayerStrokeColor(with: colors.background)
+    self.dot.backgroundColor = colors.dot
+  }
 }
 
 // MARK: - Setup views
