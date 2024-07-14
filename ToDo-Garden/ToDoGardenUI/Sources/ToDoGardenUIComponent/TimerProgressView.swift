@@ -49,6 +49,13 @@ public final class TimerProgressView: UIView {
     self.addAnimation(duration: duration, to: toValue)
     self.circularProgressView.startAnimation(duration: duration, from: Float.zero, to: Float(toValue))
   }
+  
+  /// TimerProgressView에 사용되는 색상들을 캡슐화한 구조체입니다.
+  public struct TimerProgressViewColors {
+    let progress: UIColor
+    let background: UIColor
+    let dot: UIColor
+  }
 }
 
 // MARK: - Setup views
