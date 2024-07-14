@@ -45,6 +45,10 @@ public final class CircularProgressView: UIView {
   func setupProgressLayerStrokeColor(with color: UIColor) {
     self.progressLayer.strokeColor = color.cgColor
   }
+  
+  func setupProgressBackgroundLayerStrokeColor(with color: UIColor) {
+    self.progressBackgroundLayer.strokeColor = color.cgColor
+  }
 }
 
 // MARK: - Setup animation
