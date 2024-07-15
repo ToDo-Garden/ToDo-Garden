@@ -56,6 +56,15 @@ extension RepeatOtherDaysView: RepeatOtherDaysViewAPI {
   public func updateRepeatEverydayButton(isSelected: Bool) {
     self.ringToggleButton.isSelected = isSelected
   }
+
+  public func addActionToRingToggleButton(_ closure: @escaping (Bool) -> Void) {
+    let buttonAction = UIAction { _ in
+      let isRingToggleButtonSelected = self.ringToggleButton.isSelected
+      closure(isRingToggleButtonSelected)
+    }
+
+    self.ringToggleButton.addAction(buttonAction, for: UIControl.Event.touchUpInside)
+  }
 }
 
 // MARK: - Private functions
