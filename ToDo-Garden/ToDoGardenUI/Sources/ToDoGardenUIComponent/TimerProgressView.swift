@@ -120,7 +120,6 @@ extension TimerProgressView {
     let circularPath = self.makeCircularPath(toValue: toValue)
     let animationKeyPath = Constant.TimerProgressView.StringLiteral.Dot.Animation.keyPath
     let animation = CAKeyframeAnimation(keyPath: animationKeyPath)
-    animation.delegate = self
     animation.path = circularPath.cgPath
     animation.duration = duration
     animation.calculationMode = CAAnimationCalculationMode.paced
@@ -148,25 +147,7 @@ extension TimerProgressView {
   }
 }
 
-// MARK: - Conforming to a protocol
 
-extension TimerProgressView: CAAnimationDelegate {
-  public func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
-    guard let toValue
-    else { return }
-    
-    let startAngle = -(Double.pi / 2)
-    let dotWidth = Constant.TimerProgressView.Layout.Dot.width
-    let dotHeight = Constant.TimerProgressView.Layout.Dot.height
-    let dotRadius = dotWidth / 2
-    let endAngle = (2 * Double.pi) * toValue + startAngle
-    let adjustedAngle = atan2(sin(endAngle), cos(endAngle))
-    let endOfXPosition: CGFloat = self.bounds.midX + (self.bounds.width / 2.0 * cos(adjustedAngle)) - dotRadius
-    let endOfYPosition: CGFloat = self.bounds.midY + (self.bounds.width / 2.0 * sin(adjustedAngle)) - dotRadius
-    self.dot.frame = CGRect(
-      origin: CGPoint(x: endOfXPosition, y: endOfYPosition),
-      size: CGSize(width: dotWidth, height: dotHeight)
-    )
   }
 }
 
