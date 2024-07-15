@@ -83,6 +83,11 @@ extension TimerProgressView {
     self.dot.layer.cornerRadius = self.dot.frame.width / 2
     self.dot.backgroundColor = dotColor
   }
+  
+  private func resetDot() {
+    self.dot.isHidden = true
+    self.dot.layer.removeAllAnimations()
+  }
 }
 
 // MARK: - Add subviews
