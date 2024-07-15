@@ -51,6 +51,10 @@ public final class TextInputView: UIView, TextInputViewAPI {
     self.inputTextField.text = text
     _ = self.inputTextField.becomeFirstResponder()
   }
+
+  public func getEditingText() -> String? {
+    return self.inputTextField.text
+  }
 }
 
 // MARK: Private Functions
