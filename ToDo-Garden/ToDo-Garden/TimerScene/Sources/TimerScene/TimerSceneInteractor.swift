@@ -69,6 +69,7 @@ extension TimerSceneInteractor: TimerSceneBusinessLogic {
         let range = TimerScene.CircularProgressRange(1 - (time / seconds))
         self.presenter?.updateTimeState(time, range: range)
       }
+      try Task.checkCancellation()
       self.presenter?.clearPresentState()
       self.updateAndPresentAlertStatus(self.bottomSheetStatus.completionAlertStatus)
     }
