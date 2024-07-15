@@ -62,6 +62,7 @@ public final class TextInputView: UIView, TextInputViewAPI {
 extension TextInputView {
   private func setup() {
     self.setupInputTextUI()
+    self.setupReturnButtonType()
     self.setupPlaceholderText()
     self.setupPlaceholderLabel()
     self.setupInputTextFieldDelegate()
@@ -72,6 +73,10 @@ extension TextInputView {
   private func setupInputTextUI() {
     self.inputTextField.textColor = UIColor.toDoGardenBlack
     self.inputTextField.font = UIFont.pretendardBodyRegular
+  }
+
+  private func setupReturnButtonType() {
+    self.inputTextField.returnKeyType = UIReturnKeyType.done
   }
 
   private func setupPlaceholderText() {
@@ -116,6 +121,11 @@ extension TextInputView: UITextFieldDelegate {
 
     self.updatePlaceholderLabelText(isEditing: false)
     self.updatePlaceholderLabelPosition(isEditing: false)
+  }
+
+  public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    textField.resignFirstResponder()
+    return true
   }
 
   private func updatePlaceholderLabelText(isEditing: Bool) {
