@@ -45,10 +45,13 @@ public final class TimerProgressView: UIView {
   /// - Parameters:
   ///   - duration: `TimerInterval` 동안 실행될지 결정하는 파라미터입니다.
   ///   - toValue: TimerProgressView`의 애니메이션이 종료되는 지점을 나타내는 값입니다.
+  /// 해당 메소드는 세마포어를 사용하여 작업이 동시에 실행되는 것을 방지합니다.
   public func startAnimation(duration: TimeInterval, to toValue: Double) {
-    self.toValue = toValue
-    self.addAnimation(duration: duration, to: toValue)
-    self.circularProgressView.startAnimation(duration: duration, from: Float.zero, to: Float(toValue))
+    self.performTaskWithSemaphore {
+      self.toValue = toValue
+      self.addAnimation(duration: duration, to: toValue)
+      self.circularProgressView.startAnimation(duration: duration, from: Float.zero, to: Float(toValue))
+    }
   }
   
   /// TimerProgressView에 사용되는 색상들을 캡슐화한 구조체입니다.
