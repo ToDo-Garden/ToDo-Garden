@@ -124,6 +124,7 @@ extension TimerProgressView {
     animation.duration = duration
     animation.calculationMode = CAAnimationCalculationMode.paced
     animation.isRemovedOnCompletion = false
+    animation.fillMode = CAMediaTimingFillMode.forwards
     self.dot.isHidden = false
     self.dot.layer.add(animation, forKey: nil)
   }
