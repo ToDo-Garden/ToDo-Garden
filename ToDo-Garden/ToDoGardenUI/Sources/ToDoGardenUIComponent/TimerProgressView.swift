@@ -65,6 +65,16 @@ public final class TimerProgressView: UIView {
     self.circularProgressView.setupProgressBackgroundLayerStrokeColor(with: colors.background)
     self.dot.backgroundColor = colors.dot
   }
+  
+  /// CircularProgressView의 진행 상태를 초기화하고 점(dot)을 숨깁니다.
+  /// 해당 메소드는 세마포어를 사용하여 작업이 동시에 실행되는 것을 방지합니다.
+  public func resetProgress() {
+    self.performTaskWithSemaphore {
+      self.circularProgressView.resetProgress()
+      self.resetDot()
+      self.toValue = nil
+    }
+  }
 }
 
 // MARK: - Setup views
