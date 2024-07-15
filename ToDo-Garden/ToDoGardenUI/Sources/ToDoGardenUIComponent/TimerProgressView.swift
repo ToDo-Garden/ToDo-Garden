@@ -173,7 +173,7 @@ extension TimerProgressView {
   
   /// 세마포어를 사용하여 작업을 동기화하여 실행하는 헬퍼 메소드입니다.
   /// - Parameter task: 메인 스레드에서 실행할 작업 블록입니다.
-  private func performTaskWithSemaphore(_ task: @escaping () -> Void) {
+  private func performTaskWithSemaphore(_ task: @MainActor @Sendable @escaping () -> Void) {
     DispatchQueue.global().async {
       self.semaphore.wait()
       DispatchQueue.main.async {
