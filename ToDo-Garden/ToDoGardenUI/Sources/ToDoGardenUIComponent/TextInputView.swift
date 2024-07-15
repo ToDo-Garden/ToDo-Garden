@@ -61,11 +61,17 @@ public final class TextInputView: UIView, TextInputViewAPI {
 
 extension TextInputView {
   private func setup() {
+    self.setupInputTextUI()
     self.setupPlaceholderText()
     self.setupPlaceholderLabel()
     self.setupInputTextFieldDelegate()
     self.addSubviews()
     self.setupSubviewsLayout()
+  }
+
+  private func setupInputTextUI() {
+    self.inputTextField.textColor = UIColor.toDoGardenBlack
+    self.inputTextField.font = UIFont.pretendardBodyRegular
   }
 
   private func setupPlaceholderText() {
