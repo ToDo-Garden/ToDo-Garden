@@ -2,11 +2,12 @@ import Combine
 import UIKit
 
 import CombineExtension
+import ToDoGardenUIAPI
 import ToDoGardenUIConstant
 
-public final class ColorPickerList: UIStackView {
-  let colors: [UIColor]
+public final class ColorPickerList: UIStackView, ColorPickerListAPI {
   let itemsPerRow: Int
+  public let colors: [UIColor]
   public var selected: CurrentValueSubject<Int?, Never>
   private var cancellables: Set<AnyCancellable> = []
   
