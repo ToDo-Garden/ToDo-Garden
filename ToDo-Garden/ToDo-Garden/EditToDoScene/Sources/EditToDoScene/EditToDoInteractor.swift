@@ -32,8 +32,6 @@ class EditToDoInteractor: EditToDoDataStore {
 
 extension EditToDoInteractor: EditToDoBusinessLogic {
   func doSomething(request: EditToDo.Something.Request) {
-    self.someWorker.doSomeWork()
-    
     let response = EditToDo.Something.Response()
     self.presenter?.presentSomething(response: response)
   }

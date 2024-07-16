@@ -8,5 +8,5 @@
 import Foundation
 
 public protocol EditToDoWorkable {
-  func doSomeWork()
+  func makeDate(from seconds: Double) -> Date?
 }
