@@ -33,7 +33,7 @@ import Foundation
 /// - 이 클래스가 동시성 환경에서 사용될 경우, projectedValue 프로퍼티에 @Sendable 속성을 명시해야합니다.
 ///   - 해당 내용은 TODO 주석에 기재하였습니다.
 @propertyWrapper
-public final class DynamicProperty<Value> {
+public final class DynamicUIProperty<Value> {
   private var value: Value
   // TODO: changeHandler가 여러개가 되어야 할 경우 관리 자료구조 추가 혹은 관리 비용이 커질 경우 Combine등 다른 프레임워크 고려
   private var changeHandler: ((Value) -> Void)?
