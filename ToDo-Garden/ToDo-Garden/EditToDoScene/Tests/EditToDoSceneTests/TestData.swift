@@ -18,8 +18,10 @@ struct TestData {
     ]
 
     static let invalidSeconds = [
+      Double(-293),
       Double(-1),
-      Double(85501)
+      Double(86400),
+      Double(100000)
     ]
   }
 }

@@ -30,4 +30,13 @@ struct EditToDoWorkerTests {
     #expect(hour == expectedResultHour)
     #expect(minute == expectedResultMinute)
   }
+
+  @Test(
+    "make dates from invalid seconds return nil",
+    arguments: TestData.EditToDoWorkerTests.invalidSeconds
+  ) func test_make_dates_from_invalid_seconds_return_nil(second: Double) throws {
+    let date = self.editToDoWorker.makeDate(from: second)
+
+    #expect(date == nil)
+  }
 }
