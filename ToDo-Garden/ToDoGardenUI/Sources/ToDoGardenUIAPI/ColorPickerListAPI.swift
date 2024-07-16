@@ -8,7 +8,7 @@
 import Combine
 import UIKit.UIColor
 
-public protocol ColorPickerListAPI {
+public protocol ColorPickerListAPI: UIView {
   var colors: [UIColor] { get }
   var selected: CurrentValueSubject<Int?, Never> { get }
 }
