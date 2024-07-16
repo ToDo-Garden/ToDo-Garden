@@ -32,6 +32,7 @@ import Foundation
 /// - 만약 changeHandler가 여러 개여야 한다면, 이를 관리할 자료 구조를 추가하거나, 관리 비용이 커질 경우 Combine 등의 다른 프레임워크를 사용하는 것을 고려하려합니다.
 /// - 이 클래스가 동시성 환경에서 사용될 경우, projectedValue 프로퍼티에 @Sendable 속성을 명시해야합니다.
 ///   - 해당 내용은 TODO 주석에 기재하였습니다.
+@MainActor
 @propertyWrapper
 public final class DynamicUIProperty<Value> {
   private var value: Value
