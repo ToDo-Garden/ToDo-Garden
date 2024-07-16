@@ -4,6 +4,7 @@ import ToDoGardenUIAPI
 import ToDoGardenUIConstant
 
 public final class TextInputView: UIView, TextInputViewAPI {
+  public weak var delegate: TextInputViewDelegate?
   private let model: Model
   private let inputTextField: Styled.TextField
   private let placeholderLabel: UILabel
@@ -121,10 +122,12 @@ extension TextInputView: UITextFieldDelegate {
 
     self.updatePlaceholderLabelText(isEditing: false)
     self.updatePlaceholderLabelPosition(isEditing: false)
+    self.delegate?.textInputViewDidEndEditing(isEmpty: textField.text?.isEmpty ?? true)
   }
 
   public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
     textField.resignFirstResponder()
+    self.delegate?.textInputViewDidEndEditing(isEmpty: textField.text?.isEmpty ?? true)
     return true
   }
 
