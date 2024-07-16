@@ -7,12 +7,14 @@
 
 @testable import TDUtility
 import Testing
+import Foundation
 
 @Suite("DynamicPropertyTests")
+@MainActor
 struct DynamicPropertyTests {
   @Test("초기화 테스트")
   private func initialization() {
-    @DynamicProperty var intValue = 1
+    @DynamicUIProperty var intValue = 1
     #expect(_intValue.wrappedValue == 1)
     
     intValue = 2
@@ -24,18 +26,15 @@ struct DynamicPropertyTests {
     // Given
     let expectedValue = 2
     let initialValue = 10
-    @DynamicProperty var intValue = initialValue
+    @DynamicUIProperty var intValue = initialValue
     
-    await confirmation(expectedCount: 2) { confirmation in
-      _intValue.projectedValue { value in
-        // Then
-        if value == initialValue || value == expectedValue {
-          #expect(true)
-        }
-        confirmation()
+    _intValue.projectedValue { value in
+      // Then
+      if value == initialValue || value == expectedValue {
+        #expect(true)
       }
-      // When
-      intValue = expectedValue
     }
+    // When
+    intValue = expectedValue
   }
 }
