@@ -7,7 +7,6 @@
 
 @testable import TDUtility
 import Testing
-import Foundation
 
 @Suite("DynamicPropertyTests")
 @MainActor
