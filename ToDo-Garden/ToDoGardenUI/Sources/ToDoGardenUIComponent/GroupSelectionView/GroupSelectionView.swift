@@ -265,14 +265,14 @@ extension GroupSelectionView {
   groupSelectionView.updateGroup(
     current: EditableGroupItem(groupId: 0, groupName: "CS 지식", groupColor: UIColor.brown),
     editableList: [
-      .init(groupId: 0, groupName: "CS 지식", groupColor: UIColor.brown),
-      .init(groupId: 1, groupName: "영어", groupColor: UIColor.red),
-      .init(groupId: 2, groupName: "국어", groupColor: UIColor.blue),
-      .init(groupId: 3, groupName: "수학", groupColor: UIColor.systemMint),
-      .init(groupId: 4, groupName: "Swift", groupColor: UIColor.toDoGardenYellow),
-      .init(groupId: 5, groupName: "런닝", groupColor: UIColor.toDoGardenGreenDark),
-      .init(groupId: 6, groupName: "지구과학", groupColor: UIColor.systemGreen),
-      .init(groupId: 7, groupName: "물리", groupColor: UIColor.orange)
+      EditableGroupItem(groupId: 0, groupName: "CS 지식", groupColor: UIColor.brown),
+      EditableGroupItem(groupId: 1, groupName: "영어", groupColor: UIColor.red),
+      EditableGroupItem(groupId: 2, groupName: "국어", groupColor: UIColor.blue),
+      EditableGroupItem(groupId: 3, groupName: "수학", groupColor: UIColor.systemMint),
+      EditableGroupItem(groupId: 4, groupName: "Swift", groupColor: UIColor.toDoGardenYellow),
+      EditableGroupItem(groupId: 5, groupName: "런닝", groupColor: UIColor.toDoGardenGreenDark),
+      EditableGroupItem(groupId: 6, groupName: "지구과학", groupColor: UIColor.systemGreen),
+      EditableGroupItem(groupId: 7, groupName: "물리", groupColor: UIColor.orange)
     ]
   )
   return groupSelectionView
