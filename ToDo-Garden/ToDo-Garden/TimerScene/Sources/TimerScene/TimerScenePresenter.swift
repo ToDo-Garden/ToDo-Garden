@@ -16,7 +16,7 @@ protocol TimerScenePresentationLogic {
 }
 
 final class TimerScenePresenter {
-	weak var viewController: TimerSceneDisplayLogic?
+  weak var viewController: TimerSceneDisplayLogic?
 }
 
 // MARK: - Request to ViewController
@@ -53,7 +53,7 @@ extension TimerScenePresenter: TimerScenePresentationLogic {
     let hours = totalSeconds / secondsPerHour
     let minutes = (totalSeconds % secondsPerHour) / secondsPerMinute
     let seconds = totalSeconds % secondsPerMinute
-
+    
     return hours > 0
     ? String(format: "%02d:%02d:%02d", hours, minutes, seconds)
     : String(format: "%02d:%02d", minutes, seconds)

@@ -50,7 +50,7 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
   }
   
   private func build() {
-    self.view.backgroundColor = .toDoGardenWhite
+    self.view.backgroundColor = UIColor.toDoGardenWhite
     self.timerProgressView = TimerProgressView(
       circularProgressView: CircularProgressView(
         progressColor: UIColor.toDoGardenRed,
@@ -148,7 +148,7 @@ extension TimerSceneViewController: TimerSceneDisplayLogic {
   // MARK: - View Update
   func updateDefaultState() {
     // TODO: - Reset Timer
-    self.view.backgroundColor = .toDoGardenWhite
+    self.view.backgroundColor = UIColor.toDoGardenWhite
     self.targetLabel.updateRemainingTime(with: Constant.DefaultViewState.targetLabel)
     self.targetLabel.updateBackgroundColorForFoucsTime()
     self.timeLabel.text = Constant.TimeLabel.defaultText
@@ -205,10 +205,10 @@ extension TimerSceneViewController: TimerSceneDisplayLogic {
   }
   
   func clearPresentState() {
-    if presentedViewController is ToDoGardenAlertController {
+    if self.presentedViewController is ToDoGardenAlertController {
       self.closeAlert()
-    } else if let bottom = presentedViewController as? FocusTimeSettings {
-      bottom.dismiss(animated: true)
+    } else if let bottomSheet = presentedViewController as? FocusTimeSettings {
+      bottomSheet.dismiss(animated: true)
     }
   }
   
@@ -246,7 +246,7 @@ extension TimerSceneViewController: ToDoGardenAlertControllerDelegate {
 
 extension TimerSceneViewController {
   private final class FocusTimeSettings: UIViewController {
-    var configuration: SettingTimeView.Configuration
+    let configuration: SettingTimeView.Configuration
     var completion: ((Double) -> Void)?
     
     init(configuration: SettingTimeView.Configuration) {
@@ -260,7 +260,7 @@ extension TimerSceneViewController {
     }
     
     override func viewDidLoad() {
-      view.backgroundColor = UIColor.toDoGardenWhite
+      self.view.backgroundColor = UIColor.toDoGardenWhite
       let stack = UIStackView()
       stack.axis = .vertical
       let button = self.buildButton()
@@ -269,7 +269,7 @@ extension TimerSceneViewController {
       button.addAction(action, for: .touchUpInside)
       
       stack.addArrangedSubview(settingTimeView)
-      view.addSubview(stack)
+      self.view.addSubview(stack)
       stack.equalToParent()
     }
     
