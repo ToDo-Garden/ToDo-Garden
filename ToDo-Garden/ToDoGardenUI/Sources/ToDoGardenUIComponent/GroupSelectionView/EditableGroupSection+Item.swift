@@ -7,34 +7,26 @@
 
 import UIKit.UIColor
 
+import ToDoGardenUIAPI
+
 enum EditableGroupSection {
   case main
 }
 
-public struct EditableGroupItem {
+struct EditableGroupItem: GroupSelectionViewItemAPI {
   let groupId: Int
   let groupName: String
   let groupColor: UIColor
-
-  public init(
-    groupId: Int,
-    groupName: String,
-    groupColor: UIColor
-  ) {
-    self.groupId = groupId
-    self.groupName = groupName
-    self.groupColor = groupColor
-  }
 }
 
 extension EditableGroupItem: Hashable {
-  public func hash(into hasher: inout Hasher) {
+  func hash(into hasher: inout Hasher) {
     hasher.combine(self.groupId)
   }
 }
 
 extension EditableGroupItem: Comparable {
-  public static func < (lhs: EditableGroupItem, rhs: EditableGroupItem) -> Bool {
+  static func < (lhs: EditableGroupItem, rhs: EditableGroupItem) -> Bool {
     return lhs.groupId > rhs.groupId
   }
 }
