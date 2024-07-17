@@ -82,7 +82,7 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
     stack.addArrangedSubViewWithSpacing(self.controlButton)
     
     self.view.addSubview(stack)
-    stack.equalToParent()
+    stack.equalToParent(useSafeArea: true)
   }
   
   private func buildTimeLabel() -> UILabel {
@@ -295,7 +295,10 @@ extension TimerSceneViewController {
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  TimerSceneSceneBuilder(dependency: .live)
-    .build()
+  /// Navigation Title Not Displaying Correctly
+  let viewController = TimerSceneSceneBuilder(dependency: .live).build()
+  viewController.title = "영어 독해"
+  let navigation = UINavigationController(rootViewController: viewController)
+  return navigation
 }
 #endif
