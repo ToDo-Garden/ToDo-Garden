@@ -12,3 +12,11 @@ public protocol GroupSelectionViewItemAPI: Hashable, Comparable {
   var groupName: String { get }
   var groupColor: UIColor { get }
 }
+
+public protocol GroupSelectionViewAPI: UIView {
+  func updateGroup(
+    current: any GroupSelectionViewItemAPI,
+    editableList: [any GroupSelectionViewItemAPI]
+  )
+  func getCurrentGroupId() -> Int?
+}

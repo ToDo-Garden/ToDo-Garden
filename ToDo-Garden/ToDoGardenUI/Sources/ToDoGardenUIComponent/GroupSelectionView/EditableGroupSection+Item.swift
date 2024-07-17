@@ -13,20 +13,26 @@ enum EditableGroupSection {
   case main
 }
 
-struct EditableGroupItem: GroupSelectionViewItemAPI {
-  let groupId: Int
-  let groupName: String
-  let groupColor: UIColor
+public struct EditableGroupItem: GroupSelectionViewItemAPI {
+  public let groupId: Int
+  public let groupName: String
+  public let groupColor: UIColor
+
+  public init(groupId: Int, groupName: String, groupColor: UIColor) {
+    self.groupId = groupId
+    self.groupName = groupName
+    self.groupColor = groupColor
+  }
 }
 
 extension EditableGroupItem: Hashable {
-  func hash(into hasher: inout Hasher) {
+  public func hash(into hasher: inout Hasher) {
     hasher.combine(self.groupId)
   }
 }
 
 extension EditableGroupItem: Comparable {
-  static func < (lhs: EditableGroupItem, rhs: EditableGroupItem) -> Bool {
+  public static func < (lhs: EditableGroupItem, rhs: EditableGroupItem) -> Bool {
     return lhs.groupId > rhs.groupId
   }
 }

@@ -7,9 +7,10 @@
 
 import UIKit
 
+import ToDoGardenUIAPI
 import ToDoGardenUIConstant
 
-public final class GroupSelectionView: UIView {
+public final class GroupSelectionView: UIView, GroupSelectionViewAPI {
   private let model: GroupSelectionView.Model
   private let showGroupListButton: UIButton
   private let currentGroupRow: Styled.Row
@@ -46,7 +47,10 @@ public final class GroupSelectionView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
 
-  public func updateGroup(current: EditableGroupItem, editableList: [EditableGroupItem]) {
+  public func updateGroup(
+    current: any GroupSelectionViewItemAPI,
+    editableList: [any GroupSelectionViewItemAPI]
+  ) {
     self.editableGroupListTableViewDelegate.updateGroup(
       currentItem: current,
       editableItems: editableList
