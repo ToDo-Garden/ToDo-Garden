@@ -7,7 +7,13 @@
 
 import UIKit.UIColor
 
-public protocol TextInputViewAPI {
+public protocol TextInputViewAPI: UIView {
+  var delegate: TextInputViewDelegate? { get set }
   func setBeginEditing(with text: String)
   func changeBottomLine(color: UIColor)
+  func getEditingText() -> String?
+}
+
+public protocol TextInputViewDelegate: AnyObject {
+  func textInputViewDidEndEditing(isEmpty: Bool)
 }

@@ -4,6 +4,7 @@ import ToDoGardenUIAPI
 import ToDoGardenUIConstant
 
 public final class TextInputView: UIView, TextInputViewAPI {
+  public weak var delegate: TextInputViewDelegate?
   private let model: Model
   private let inputTextField: Styled.TextField
   private let placeholderLabel: UILabel
@@ -51,17 +52,32 @@ public final class TextInputView: UIView, TextInputViewAPI {
     self.inputTextField.text = text
     _ = self.inputTextField.becomeFirstResponder()
   }
+
+  public func getEditingText() -> String? {
+    return self.inputTextField.text
+  }
 }
 
 // MARK: Private Functions
 
 extension TextInputView {
   private func setup() {
+    self.setupInputTextUI()
+    self.setupReturnButtonType()
     self.setupPlaceholderText()
     self.setupPlaceholderLabel()
     self.setupInputTextFieldDelegate()
     self.addSubviews()
     self.setupSubviewsLayout()
+  }
+
+  private func setupInputTextUI() {
+    self.inputTextField.textColor = UIColor.toDoGardenBlack
+    self.inputTextField.font = UIFont.pretendardBodyRegular
+  }
+
+  private func setupReturnButtonType() {
+    self.inputTextField.returnKeyType = UIReturnKeyType.done
   }
 
   private func setupPlaceholderText() {
@@ -106,6 +122,13 @@ extension TextInputView: UITextFieldDelegate {
 
     self.updatePlaceholderLabelText(isEditing: false)
     self.updatePlaceholderLabelPosition(isEditing: false)
+    self.delegate?.textInputViewDidEndEditing(isEmpty: textField.text?.isEmpty ?? true)
+  }
+
+  public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    textField.resignFirstResponder()
+    self.delegate?.textInputViewDidEndEditing(isEmpty: textField.text?.isEmpty ?? true)
+    return true
   }
 
   private func updatePlaceholderLabelText(isEditing: Bool) {
