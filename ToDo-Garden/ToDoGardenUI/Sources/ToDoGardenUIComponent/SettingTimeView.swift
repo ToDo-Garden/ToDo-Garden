@@ -21,6 +21,7 @@ public class SettingTimeView: UIView {
     self.button = button
     super.init(frame: CGRect.zero)
     self.build()
+    self.backgroundColor = .white
   }
   
   @available(*, unavailable)
@@ -54,6 +55,9 @@ extension SettingTimeView {
   
   private func buildTitleLabel() {
     let titleLabel = UILabel()
+    let multiplier = Constant.SettingTimeView.Layout.titleTopMarginMultiplier
+    let topMargin = self.intrinsicContentSize.height / multiplier
+    
     titleLabel.text = self.configuration.dataStore.title.text
     titleLabel.font = UIFont.pretendardHeadBold
     titleLabel.textColor = UIColor.toDoGardenBlack
@@ -64,7 +68,7 @@ extension SettingTimeView {
       [
         titleLabel.topAnchor.constraint(
           equalTo: self.topAnchor,
-          constant: self.configuration.dataStore.title.topMargin
+          constant: topMargin
         ),
         titleLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor)
       ]
@@ -72,6 +76,8 @@ extension SettingTimeView {
   }
   
   private func buildTimePicker() {
+    let multiplier = Constant.SettingTimeView.Layout.timePickertopMarginMultiplier
+    let topMargin = self.intrinsicContentSize.height / multiplier
     self.timepicker.delegate = self
     self.timepicker.dataSource = self
     self.timepicker.setInitialSelection()
@@ -82,7 +88,7 @@ extension SettingTimeView {
       [
         self.timepicker.topAnchor.constraint(
           equalTo: self.topAnchor,
-          constant: self.configuration.dataStore.timePicker.dataStore.pickerView.topMargin
+          constant: topMargin
         ),
         self.timepicker.centerXAnchor.constraint(equalTo: self.centerXAnchor, constant: -3)
       ]
@@ -91,17 +97,24 @@ extension SettingTimeView {
   
   private func buildButton() {
     self.addSubview(self.button)
-    
     self.button.usingAutolayout()
-    NSLayoutConstraint.activate(
-      [
-        self.button.bottomAnchor.constraint(
-          equalTo: self.bottomAnchor,
-          constant: self.configuration.dataStore.button.bottomMargin
-        ),
-        self.button.centerXAnchor.constraint(equalTo: self.centerXAnchor)
-      ]
-    )
+    
+    let dummyView = UIView()
+    dummyView.usingAutolayout()
+    self.addSubview(dummyView)
+    let dummyTopAnchorConstant = Constant.SettingTimeView.Layout.dummyViewTopWeight
+    
+    NSLayoutConstraint.activate([
+      dummyView.topAnchor.constraint(
+        equalTo: self.timepicker.bottomAnchor,
+        constant: dummyTopAnchorConstant
+      ),
+      dummyView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+      dummyView.widthAnchor.constraint(equalToConstant: CGFloat.zero),
+      dummyView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+      self.button.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+      self.button.centerYAnchor.constraint(equalTo: dummyView.centerYAnchor)
+    ])
   }
 }
 
@@ -133,7 +146,7 @@ extension SettingTimeView.Configuration {
 extension SettingTimeView: UIPickerViewDelegate {
   private var timePickerConstant: Constant.SettingTimeView.TimePicker.DataStore {
     return self.configuration.dataStore.timePicker.dataStore
-    }
+  }
   
   public func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
     return self.timePickerConstant.pickerView.rowHeight
