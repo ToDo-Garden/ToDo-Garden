@@ -33,6 +33,14 @@ final class EditToDoAlarmView: UIView {
   }
 }
 
+// MARK: Theme Color
+
+extension EditToDoAlarmView {
+  func updateThemeColor(to newColor: UIColor) {
+    self.alarmLabel.textColor = newColor
+  }
+}
+
 // MARK: Private Functions
 
 extension EditToDoAlarmView {
