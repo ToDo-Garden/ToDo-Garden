@@ -26,11 +26,32 @@ final class EditToDoAlarmView: UIView {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+
+  func updateAlarm(isOn: Bool, alarmTime: String?) {
+    self.updateAlarmSwitch(isOn: isOn)
+    self.updateAlarmTime(to: alarmTime)
+  }
 }
 
 // MARK: Private Functions
 
 extension EditToDoAlarmView {
+  private func updateAlarmSwitch(isOn: Bool) {
+    self.alarmSwitch.isOn = isOn
+    if isOn {
+      self.alarmTimeSettingView.enable()
+    } else {
+      self.alarmTimeSettingView.disable()
+    }
+  }
+
+  private func updateAlarmTime(to alarmTime: String?) {
+    guard let alarmTime = alarmTime
+    else { return }
+
+    self.alarmTimeSettingView.updateAlarmTime(with: alarmTime)
+  }
+
   private func setup() {
     self.setupAlarmLabelUI()
     self.addSubviews()
