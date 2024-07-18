@@ -70,7 +70,13 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
     let stack = UIStackView()
     stack.axis = .vertical
     stack.alignment = .center
-    stack.addSpacing(Constant.Layout.BaseStack.topPadding)
+    stack.usingAutolayout()
+    self.view.addSubview(stack)
+    
+    NSLayoutConstraint.activate([
+      stack.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+      stack.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
+    ])
     
     self.layoutCircularView(stack)
     self.layoutTargetLabel(stack)
@@ -80,9 +86,6 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
     self.controlButton.setContentHuggingPriority(.defaultLow, for: .horizontal)
     self.controlButton.widthAnchor.constraint(equalToConstant: Constant.Layout.ControlButton.width).isActive = true
     stack.addArrangedSubViewWithSpacing(self.controlButton)
-    
-    self.view.addSubview(stack)
-    stack.equalToParent(useSafeArea: true)
   }
   
   private func buildTimeLabel() -> UILabel {
@@ -109,10 +112,6 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
   }
   
   private func layoutCircularView(_ stack: UIStackView) {
-    self.timerProgressView.widthAnchor
-      .constraint(equalToConstant: Constant.Layout.TimerProgressView.width).isActive = true
-    self.timerProgressView.heightAnchor
-      .constraint(equalToConstant: Constant.Layout.TimerProgressView.height).isActive = true
     stack.addArrangedSubViewWithSpacing(
       self.timerProgressView,
       spacing: Constant.Layout.TimerProgressView.bottomPadding

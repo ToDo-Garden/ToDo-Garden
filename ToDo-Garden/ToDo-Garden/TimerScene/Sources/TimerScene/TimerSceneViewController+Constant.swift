@@ -31,9 +31,6 @@ extension TimerSceneViewController.Constant {
 }
 
 extension TimerSceneViewController.Constant.Layout {
-  enum BaseStack {
-    static let topPadding: CGFloat = 94
-  }
   enum TimerProgressView {
     static let innerPadding: CGFloat = 16
     static let bottomPadding: CGFloat = 55
