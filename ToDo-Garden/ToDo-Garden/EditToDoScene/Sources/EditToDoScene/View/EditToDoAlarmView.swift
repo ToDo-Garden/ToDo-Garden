@@ -12,10 +12,12 @@ import ToDoGardenUIComponent
 final class EditToDoAlarmView: UIView {
   private let alarmSwitch: ToDoGardenSwitch
   private let alarmLabel: UILabel
+  private let alarmTimeSettingView: AlarmTimeView
 
   init() {
     self.alarmSwitch = ToDoGardenSwitch(model: ToDoGardenSwitch.Model.primary)
     self.alarmLabel = UILabel()
+    self.alarmTimeSettingView = AlarmTimeView(model: AlarmTimeView.Model.primary)
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -48,11 +50,13 @@ extension EditToDoAlarmView {
   private func addSubviews() {
     self.addSubview(self.alarmSwitch)
     self.addSubview(self.alarmLabel)
+    self.addSubview(self.alarmTimeSettingView)
   }
 
   private func setupConstraints() {
     self.setupAlarmSwitchConstraints()
     self.setupAlarmLabelConstraints()
+    self.setupAlarmTimeSettingViewConstraints()
   }
 
   private func setupAlarmSwitchConstraints() {
@@ -72,13 +76,31 @@ extension EditToDoAlarmView {
   private func setupAlarmLabelConstraints() {
     self.alarmLabel.usingAutolayout()
 
+    let layout = EditToDoViewController.Constant.Layout.EditToDoScheduleView.AlarmLabel.self
     NSLayoutConstraint.activate(
       [
         self.alarmLabel.leadingAnchor.constraint(
           equalTo: self.leadingAnchor,
-          constant: 4
+          constant: layout.leadingMargin
         ),
         self.alarmLabel.centerYAnchor.constraint(equalTo: self.alarmSwitch.centerYAnchor)
+      ]
+    )
+  }
+
+  private func setupAlarmTimeSettingViewConstraints() {
+    self.alarmTimeSettingView.usingAutolayout()
+
+    let layout = EditToDoViewController.Constant.Layout.EditToDoScheduleView.AlarmTimeSettingView.self
+    NSLayoutConstraint.activate(
+      [
+        self.alarmTimeSettingView.topAnchor.constraint(
+          equalTo: self.alarmSwitch.bottomAnchor,
+          constant: layout.topMargin
+        ),
+        self.alarmTimeSettingView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+        self.alarmTimeSettingView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+        self.alarmTimeSettingView.heightAnchor.constraint(equalToConstant: layout.height)
       ]
     )
   }
