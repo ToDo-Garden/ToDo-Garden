@@ -31,6 +31,10 @@ final class EditToDoAlarmView: UIView {
     self.updateAlarmSwitch(isOn: isOn)
     self.updateAlarmTime(to: alarmTime)
   }
+
+  func setupAlarmSettingAction(_ closure: @escaping () -> Void) {
+    self.alarmTimeSettingView.addAlarmSettingAction(closure)
+  }
 }
 
 // MARK: Theme Color
