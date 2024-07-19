@@ -146,7 +146,14 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
 extension TimerSceneViewController: TimerSceneDisplayLogic {
   // MARK: - View Update
   func updateDefaultState() {
-    // TODO: - Reset Timer
+    self.timerProgressView.resetProgress()
+    self.timerProgressView.setColors(
+      to: TimerProgressView.TimerProgressViewColors(
+        progress: UIColor.toDoGardenRed,
+        background: UIColor.toDoGardenLightRed,
+        dot: UIColor.toDoGardenRed
+      )
+    )
     self.view.backgroundColor = UIColor.toDoGardenWhite
     self.targetLabel.updateRemainingTime(with: Constant.DefaultViewState.targetLabel)
     self.targetLabel.updateBackgroundColorForFoucsTime()
@@ -155,7 +162,14 @@ extension TimerSceneViewController: TimerSceneDisplayLogic {
   }
   
   func updateRestingState() {
-    // TODO: - Update Timer
+    self.timerProgressView.resetProgress()
+    self.timerProgressView.setColors(
+      to: TimerProgressView.TimerProgressViewColors(
+        progress: UIColor.toDoGardenGreenDark,
+        background: UIColor.toDoGardenLeaf,
+        dot: UIColor.toDoGardenGreenDark
+      )
+    )
     self.view.backgroundColor = UIColor.toDoGardenGreenBackground
     self.targetLabel.updateRemainingTime(with: Constant.RestingViewState.targetLabel)
     self.targetLabel.updateBackgroundColorForBreakTime()
@@ -181,10 +195,13 @@ extension TimerSceneViewController: TimerSceneDisplayLogic {
   }
   
   func updateControllerButton(isConcentrating: Bool) {
-    let text = isConcentrating
-    ? Constant.DefaultViewState.setTimerIsSelected
-    : Constant.RestingViewState.setTimerIsSelected
-    self.controlButton.timerControlButtonDefaultStyle(with: text)
+    if isConcentrating {
+      self.controlButton
+        .timerControlButtonDestructiveStyle(with: Constant.DefaultViewState.setTimerIsSelected)
+    } else {
+      self.controlButton
+        .timerControlButtonDefaultStyle(with: Constant.RestingViewState.setTimerIsSelected)
+    }
   }
   
   // MARK: - ViewController Transition
