@@ -58,6 +58,7 @@ public struct CountDownSequence: AsyncSequence {
     ///   timeCorrection: sleepForCorrectTime 함수 내부에 sleepTime이 음수가 발생할 경우를 대비해서 만든 값
     ///   다음 주기의 시간 값까지 초과 시킨 경우 sleepTime이 음수가 나옵니다.
     private var timeCorrection: TimeInterval
+    private var isFirst: Bool = true
     
     init(endTime: TimeInterval, timeInterval: UInt64) {
       self.endTime = endTime
@@ -68,9 +69,13 @@ public struct CountDownSequence: AsyncSequence {
     
     public mutating func next() async throws -> Double? {
       guard self.endTime > 0 else { return nil }
-      self.targetTime += 1.0
-      try await self.sleepForCorrectTime()
-      self.endTime -= 1.0
+      if self.isFirst {
+        self.isFirst = false
+      } else {
+        self.targetTime += 1.0
+        try await self.sleepForCorrectTime()
+        self.endTime -= 1.0
+      }
       
       return self.endTime
     }
