@@ -8,19 +8,33 @@
 import UIKit.UIView
 
 extension UIView {
-	public func usingAutolayout() {
-		self.translatesAutoresizingMaskIntoConstraints = false
-	}
+  public func usingAutolayout() {
+    self.translatesAutoresizingMaskIntoConstraints = false
+  }
   
-  public func equalToParent() {
-    if let superview {
-      self.usingAutolayout()
-      NSLayoutConstraint.activate([
-        topAnchor.constraint(equalTo: superview.topAnchor),
-        leadingAnchor.constraint(equalTo: superview.leadingAnchor),
-        trailingAnchor.constraint(equalTo: superview.trailingAnchor),
-        bottomAnchor.constraint(equalTo: superview.bottomAnchor)
-      ])
+  public func equalToParent(
+    useSafeArea: Bool = false,
+    file: StaticString = #file,
+    line: UInt = #line
+  ) {
+    guard let superview else {
+      debugPrint("Error: No superview found in view hierarchy. Check \(file) at line \(line).")
+      return
     }
+    self.usingAutolayout()
+    NSLayoutConstraint.activate([
+      topAnchor.constraint(
+        equalTo: useSafeArea ? superview.safeAreaLayoutGuide.topAnchor : superview.topAnchor
+      ),
+      leadingAnchor.constraint(
+        equalTo: useSafeArea ? superview.safeAreaLayoutGuide.leadingAnchor : superview.leadingAnchor
+      ),
+      trailingAnchor.constraint(
+        equalTo: useSafeArea ? superview.safeAreaLayoutGuide.trailingAnchor : superview.trailingAnchor
+      ),
+      bottomAnchor.constraint(
+        equalTo: useSafeArea ? superview.safeAreaLayoutGuide.bottomAnchor : superview.bottomAnchor
+      )
+    ])
   }
 }
