@@ -1,18 +1,33 @@
 import Foundation
 
 public struct TimerSceneWorker: TimerSceneWorkable, Sendable {
-  public var countDownSequence: @Sendable (Double) -> CountDownSequence
-  
+  public var countDownStream: @Sendable (Double) -> AsyncThrowingStream<Double, any Error>
   public init(
-    countDownSequence: @Sendable @escaping (Double) -> CountDownSequence
+    countDownStream: @Sendable @escaping (Double) -> AsyncThrowingStream<Double, any Error>
   ) {
-    self.countDownSequence = countDownSequence
+    self.countDownStream = countDownStream
   }
 }
 
 extension TimerSceneWorker {
   static let live = Self { seconds in
-    return CountDownSequence(endTime: seconds)
+    AsyncThrowingStream { continuation in
+      let task = Task {
+        do {
+          for try await second in CountDownSequence(endTime: seconds) {
+            continuation.yield(second)
+            if second == 0 {
+              continuation.finish()
+            }
+          }
+        } catch {
+          try Task.checkCancellation()
+        }
+      }
+      continuation.onTermination = { _ in
+        task.cancel()
+      }
+    }
   }
 }
 
