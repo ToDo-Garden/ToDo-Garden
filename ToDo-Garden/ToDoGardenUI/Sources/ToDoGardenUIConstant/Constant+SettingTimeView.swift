@@ -16,9 +16,10 @@ extension Constant.SettingTimeView {
     static let alarmTimeTitle: String = "시간 설정"
   }
   
-  private enum Layout {
-    static let titleTopMargin: CGFloat = 44.0
-    static let buttonBottomMargin: CGFloat = -50.0
+  public enum Layout {
+    public static let titleTopMarginMultiplier: CGFloat = 11.63
+    public static let timePickertopMarginMultiplier: CGFloat = 5.85
+    public static let dummyViewTopWeight: CGFloat = -20
   }
 }
 
@@ -26,11 +27,9 @@ extension Constant.SettingTimeView {
   public struct DataStore {
     public let title: Title
     public let timePicker: TimePicker
-    public let button: Button
   }
   
   public struct Title {
-    public let topMargin: CGFloat
     public let text: String
   }
   
@@ -116,7 +115,7 @@ extension Constant.SettingTimeView {
             constraint: Constraint.centerX(15.0)
           ),
           secondUnitLabel: UnitLabel(
-            text: StringLiteral.minute,
+            text: StringLiteral.second,
             constraint: Constraint.trailing(-7.0)
           ),
           pickerView: PickerView(
@@ -133,7 +132,6 @@ extension Constant.SettingTimeView {
   }
   
   public struct Button {
-    public let bottomMargin: CGFloat
   }
 }
 
@@ -183,20 +181,17 @@ extension Constant.SettingTimeView.TimePicker {
 
 extension Constant.SettingTimeView {
   public static let focusTimeSetting = DataStore.init(
-    title: Title(topMargin: Layout.titleTopMargin, text: StringLiteral.focusTimeTitle),
-    timePicker: TimePicker.focusTime,
-    button: Button(bottomMargin: Layout.buttonBottomMargin)
+    title: Title(text: StringLiteral.focusTimeTitle),
+    timePicker: TimePicker.focusTime
   )
   
   public static let breakTimeSetting = DataStore.init(
-    title: Title(topMargin: Layout.titleTopMargin, text: StringLiteral.breakTimeTitle),
-    timePicker: TimePicker.breakTime,
-    button: Button(bottomMargin: Layout.buttonBottomMargin)
+    title: Title(text: StringLiteral.breakTimeTitle),
+    timePicker: TimePicker.breakTime
   )
   
   public static let alarmTimeSetting = DataStore.init(
-    title: Title(topMargin: Layout.titleTopMargin, text: StringLiteral.alarmTimeTitle),
-    timePicker: TimePicker.alarmTime,
-    button: Button(bottomMargin: Layout.buttonBottomMargin)
+    title: Title(text: StringLiteral.alarmTimeTitle),
+    timePicker: TimePicker.alarmTime
   )
 }
