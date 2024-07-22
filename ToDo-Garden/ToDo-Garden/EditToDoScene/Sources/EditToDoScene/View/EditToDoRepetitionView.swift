@@ -62,7 +62,7 @@ extension EditToDoRepetitionView {
   private func setupRepetitionLabelUI() {
     self.repetitionLabel.font = UIFont.pretendardHeadSemiBold
     self.repetitionLabel.textColor = EditToDoSceneTheme.mainColor
-    let text = EditToDoSceneTheme.StringLiteral.ToDoScheduleView.AlarmLabel.text
+    let text = EditToDoSceneTheme.StringLiteral.ToDoScheduleView.RepetitionLabel.text
     self.repetitionLabel.text = text
   }
 }
