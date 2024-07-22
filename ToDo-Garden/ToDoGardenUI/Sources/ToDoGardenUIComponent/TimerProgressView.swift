@@ -59,6 +59,16 @@ public final class TimerProgressView: UIView {
     let progress: UIColor
     let background: UIColor
     let dot: UIColor
+    
+    public init(
+      progress: UIColor,
+      background: UIColor,
+      dot: UIColor
+    ) {
+      self.progress = progress
+      self.background = background
+      self.dot = dot
+    }
   }
   
   /// TimerProgressView 컴포넌트들의 색상을 설정합니다.
