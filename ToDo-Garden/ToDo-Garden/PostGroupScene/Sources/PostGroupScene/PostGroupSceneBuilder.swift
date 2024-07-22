@@ -95,7 +95,8 @@ extension PostGroupSceneBuilder {
   /// - Parameters:
   ///   - viewController: 런타임 의존성을 설정할 ViewController 객체입니다.
   ///   - payload: 런타임에 전달할 의존성입니다.
-  private func setPayload(for viewController: PostGroupViewController, with payload: PostGroupScenePayloadable) {
-    // viewController.router?.dataStore?.name = payload.name
+  private func setPayload(for viewController: PostGroupViewController, with payload: PostGroupScenePayloadable?) {
+    // viewController.setPayload(name: payload?.grouName, color: payload?.color)
+    // TODO: PostGroupScenePayloadable 수정후 주석해제 예정
   }
 }
