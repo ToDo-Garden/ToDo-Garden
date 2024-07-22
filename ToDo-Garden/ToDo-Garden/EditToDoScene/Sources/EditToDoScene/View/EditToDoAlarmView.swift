@@ -28,12 +28,12 @@ final class EditToDoAlarmView: UIView {
   }
 
   func enableAlarm() {
-    self.alarmSwitch.isOn = true
+    self.alarmSwitch.setOn(true, animated: true)
     self.alarmTimeSettingView.enable()
   }
 
   func disableAlarm() {
-    self.alarmSwitch.isOn = false
+    self.alarmSwitch.setOn(false, animated: true)
     self.alarmTimeSettingView.disable()
   }
 
@@ -142,4 +142,15 @@ extension EditToDoAlarmView {
       ]
     )
   }
+}
+
+@available(iOS 17.0, *)
+#Preview {
+  let view = EditToDoAlarmView()
+  view.setupSwitchAction {
+    print("switch action called")
+  }
+  view.enableAlarm()
+  view.disableAlarm()
+  return view
 }
