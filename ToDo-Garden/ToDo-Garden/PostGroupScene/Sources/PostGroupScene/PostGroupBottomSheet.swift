@@ -85,12 +85,6 @@ extension PostGroupBottomSheet {
     self.setupColorPickerList()
     self.setupBottomButton()
   }
-
-  private func setupBindings() {
-  }
-  
-  private func setupButtonAction() {
-  }
   
   private func setupDimmedView() {
     self.dimmedView.backgroundColor = UIColor.black.withAlphaComponent(Constant.BottomSheet.DimmedView.normalAlpha)
@@ -261,6 +255,17 @@ extension PostGroupBottomSheet {
   
   @objc private func handleTap(_ sender: UITapGestureRecognizer) {
     self.dismiss(animated: true, completion: nil)
+  }
+  
+  private func setupBindings() {
+    self.colorPickerList.selected
+      .sink { [weak self] selectedIndex in
+        self?.bottomButton.isEnabled = selectedIndex != nil
+      }
+      .store(in: &subscriptions)
+  }
+  
+  private func setupButtonAction() {
   }
 }
 
