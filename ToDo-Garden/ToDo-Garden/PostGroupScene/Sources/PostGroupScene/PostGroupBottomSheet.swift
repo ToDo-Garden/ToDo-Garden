@@ -280,3 +280,34 @@ extension PostGroupBottomSheet {
 protocol PostGroupBottomSheetDelegate: AnyObject {
   func dismissedBottomSheet(color: UIColor)
 }
+
+// MARK: Preview : PostGroupScene의 Package.swift에 있는 주석처리를 해제해주세요.
+
+// import ToDoGardenUIComponent
+// #if DEBUG
+// @available(iOS 17.0, *)
+// #Preview {
+//  let subject =  CurrentValueSubject<Int?, Never>(nil)
+//  
+//  let colorPickerList = ColorPickerList(colors: [
+//    .toDoGardenBlack,
+//    .toDoGardenBlue,
+//    .toDoGardenBrown,
+//    .toDoGardenEditButtonBlue,
+//    .toDoGardenEditButtonRed,
+//    .toDoGardenEditButtonYellow,
+//    .toDoGardenGrassHigh,
+//    .toDoGardenGrassLow,
+//    .toDoGardenGrassMiddle,
+//    .toDoGardenGray,
+//    .toDoGardenOlive,
+//    .toDoGardenPink
+//  ], itemsPerRow: 6, selected: subject)
+//  
+//  let button = ToDoGardenBoxButton(title: "확인", buttonType: .primaryRoundRectButton)
+//  
+//  let vc = PostGroupBottomSheet(colorPickerList: colorPickerList, bottomButton: button)
+//  
+//  return vc
+// }
+// #endif
