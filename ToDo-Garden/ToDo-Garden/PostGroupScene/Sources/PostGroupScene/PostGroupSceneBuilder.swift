@@ -1,24 +1,47 @@
 //
 //  PostGroupSceneBuilder.swift
-//  
+//
 //
 //  Created by SONG on 7/8/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
-import Foundation
+import UIKit.UIButton
 
 import PostGroupSceneAPI
 import PostGroupSceneEntity
+import ToDoGardenUIAPI
 
 public struct PostGroupSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
   public struct Dependency {
-    let someWorker: PostGroupWorkable
-    let nextSceneBuilder: NextSceneBuildable
+    let postGroupWorker: PostGroupWorkable
+    let nextSceneBuilder: NextSceneBuildable?
     
-    public init(someWorker: PostGroupWorkable, nextSceneBuilder: NextSceneBuildable) {
-      self.someWorker = someWorker
+    let textInputView: TextInputViewAPI
+    let colorRow: PostGroupColorPickerRowAPI
+    let colorPickerList: ColorPickerListAPI
+    let colorPickButton: UIButton
+    let bottomButton: UIButton
+    let modalBottomButton: UIButton
+    
+    public init(
+      postGroupWorker: PostGroupWorkable,
+      nextSceneBuilder: NextSceneBuildable?,
+      textInputView: TextInputViewAPI,
+      colorRow: PostGroupColorPickerRowAPI,
+      colorPickerList: ColorPickerListAPI,
+      colorPickButton: UIButton,
+      bottomButton: UIButton,
+      modalBottomButton: UIButton
+    ) {
+      self.postGroupWorker = postGroupWorker
       self.nextSceneBuilder = nextSceneBuilder
+      self.textInputView = textInputView
+      self.colorRow = colorRow
+      self.colorPickerList = colorPickerList
+      self.colorPickButton = colorPickButton
+      self.bottomButton = bottomButton
+      self.modalBottomButton = modalBottomButton
     }
   }
   
