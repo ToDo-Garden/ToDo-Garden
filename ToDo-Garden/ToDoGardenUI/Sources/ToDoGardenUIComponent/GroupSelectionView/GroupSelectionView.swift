@@ -259,21 +259,24 @@ extension GroupSelectionView {
   }
 }
 
+/// 그룹 정보를 업데이트하는 GroupSelectionViewItemAPI의 구체타입이 선언되어 있지 않습니다.
+/// Preview로 동작을 확인하고 싶으시다면 EditableGroupItem에 GroupSelectionViewItemAPI 프로토콜을 채택 후
+/// 주석을 코드로 변환해주세요
 @available(iOS 17.0, *)
 #Preview {
   let groupSelectionView = GroupSelectionView(model: GroupSelectionView.Model.primary)
-  groupSelectionView.updateGroup(
-    current: EditableGroupItem(groupId: 0, groupName: "CS 지식", groupColor: UIColor.brown),
-    editableList: [
-      EditableGroupItem(groupId: 0, groupName: "CS 지식", groupColor: UIColor.brown),
-      EditableGroupItem(groupId: 1, groupName: "영어", groupColor: UIColor.red),
-      EditableGroupItem(groupId: 2, groupName: "국어", groupColor: UIColor.blue),
-      EditableGroupItem(groupId: 3, groupName: "수학", groupColor: UIColor.systemMint),
-      EditableGroupItem(groupId: 4, groupName: "Swift", groupColor: UIColor.toDoGardenYellow),
-      EditableGroupItem(groupId: 5, groupName: "런닝", groupColor: UIColor.toDoGardenGreenDark),
-      EditableGroupItem(groupId: 6, groupName: "지구과학", groupColor: UIColor.systemGreen),
-      EditableGroupItem(groupId: 7, groupName: "물리", groupColor: UIColor.orange)
-    ]
-  )
+//  groupSelectionView.updateGroup(
+//    current: EditableGroupItem(groupId: 0, groupName: "CS 지식", groupColor: UIColor.brown),
+//    editableList: [
+//      EditableGroupItem(groupId: 0, groupName: "CS 지식", groupColor: UIColor.brown),
+//      EditableGroupItem(groupId: 1, groupName: "영어", groupColor: UIColor.red),
+//      EditableGroupItem(groupId: 2, groupName: "국어", groupColor: UIColor.blue),
+//      EditableGroupItem(groupId: 3, groupName: "수학", groupColor: UIColor.systemMint),
+//      EditableGroupItem(groupId: 4, groupName: "Swift", groupColor: UIColor.toDoGardenYellow),
+//      EditableGroupItem(groupId: 5, groupName: "런닝", groupColor: UIColor.toDoGardenGreenDark),
+//      EditableGroupItem(groupId: 6, groupName: "지구과학", groupColor: UIColor.systemGreen),
+//      EditableGroupItem(groupId: 7, groupName: "물리", groupColor: UIColor.orange)
+//    ]
+//  )
   return groupSelectionView
 }

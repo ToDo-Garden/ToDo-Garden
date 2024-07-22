@@ -13,7 +13,7 @@ enum EditableGroupSection {
   case main
 }
 
-public struct EditableGroupItem: GroupSelectionViewItemAPI {
+public struct EditableGroupItem {
   public let groupId: Int
   public let groupName: String
   public let groupColor: UIColor
