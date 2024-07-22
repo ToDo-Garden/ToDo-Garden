@@ -76,6 +76,13 @@ final class PostGroupBottomSheet: UIViewController {
 
 extension PostGroupBottomSheet {
   private func setupView() {
+    self.view.backgroundColor = UIColor.clear
+    self.setupDimmedView()
+    self.setupBottomSheetView()
+    self.setupGrabberView()
+    self.setupNavigationBar()
+    self.setupColorPickerList()
+    self.setupBottomButton()
   }
   
   private func setupGesture() {
@@ -85,6 +92,151 @@ extension PostGroupBottomSheet {
   }
   
   private func setupButtonAction() {
+  }
+  private func setupDimmedView() {
+    self.dimmedView.backgroundColor = UIColor.black.withAlphaComponent(Constant.BottomSheet.DimmedView.normalAlpha)
+    self.dimmedView.alpha = CGFloat.zero
+    self.view.addSubview(self.dimmedView)
+    
+    self.dimmedView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      self.dimmedView.topAnchor.constraint(equalTo: self.view.topAnchor),
+      self.dimmedView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+      self.dimmedView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+      self.dimmedView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
+    ])
+  }
+  
+  private func setupBottomSheetView() {
+    self.bottomSheetView.backgroundColor = UIColor.white
+    self.bottomSheetView.layer.cornerRadius = Constant.BottomSheet.BottomSheetView.cornerRadius
+    self.bottomSheetView.layer.masksToBounds = true
+    self.view.addSubview(self.bottomSheetView)
+    
+    self.bottomSheetView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      self.bottomSheetView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+      self.bottomSheetView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+      self.bottomSheetView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+      self.bottomSheetView.heightAnchor.constraint(equalToConstant: self.bottomSheetHeight)
+    ])
+  }
+  
+  private func setupGrabberView() {
+    self.grabberView.backgroundColor = UIColor.lightGray
+    self.grabberView.layer.cornerRadius = Constant.BottomSheet.GrabberView.cornerRadius
+    self.bottomSheetView.addSubview(self.grabberView)
+    
+    self.grabberView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      self.grabberView.topAnchor.constraint(
+        equalTo: self.bottomSheetView.topAnchor,
+        constant: Constant.BottomSheet.GrabberView.topMargin
+      ),
+      self.grabberView.centerXAnchor.constraint(equalTo: self.bottomSheetView.centerXAnchor),
+      self.grabberView.widthAnchor.constraint(equalToConstant: Constant.BottomSheet.GrabberView.width),
+      self.grabberView.heightAnchor.constraint(equalToConstant: Constant.BottomSheet.GrabberView.height)
+    ])
+  }
+  
+  private func setupColorPickerList() {
+    let topMargin = self.bottomSheetHeight / Constant.BottomSheet.ColorPickerList.multiplier
+    self.bottomSheetView.addSubview(self.colorPickerList)
+    
+    self.colorPickerList.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      self.colorPickerList.topAnchor.constraint(equalTo: self.bottomSheetView.topAnchor, constant: topMargin),
+      self.colorPickerList.centerXAnchor.constraint(equalTo: self.bottomSheetView.centerXAnchor)
+    ])
+  }
+  
+  private func setupBottomButton() {
+    let bottomMargin = self.bottomSheetHeight / Constant.BottomSheet.BottomButton.multiplier
+    self.bottomSheetView.addSubview(self.bottomButton)
+    
+    self.bottomButton.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      self.bottomButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+      self.bottomButton.bottomAnchor.constraint(equalTo: self.bottomSheetView.bottomAnchor, constant: bottomMargin)
+    ])
+  }
+  private func setupNavigationBar() {
+    let navigationBarView = createNavigationBarView()
+    let titleLabel = createTitleLabel()
+    let cancelButton = createCancelButton()
+    
+    navigationBarView.addSubview(titleLabel)
+    navigationBarView.addSubview(cancelButton)
+    bottomSheetView.addSubview(navigationBarView)
+    
+    setupConstraints(for: navigationBarView, titleLabel: titleLabel, cancelButton: cancelButton)
+  }
+  
+  private func createNavigationBarView() -> UIView {
+    let navigationBarView = UIView()
+    navigationBarView.backgroundColor = UIColor.clear
+    navigationBarView.translatesAutoresizingMaskIntoConstraints = false
+    return navigationBarView
+  }
+  
+  private func createTitleLabel() -> UILabel {
+    let titleLabel = UILabel()
+    let titleLabelText = Constant.BottomSheet.StringLiteral.title
+    
+    titleLabel.attributedText = titleLabelText.applyTextAttributes(
+      attributes: [
+        NSAttributedString.Key.font: UIFont.pretendardHeadBold,
+        NSAttributedString.Key.foregroundColor: UIColor.toDoGardenGreenDark
+      ]
+    )
+    
+    titleLabel.textAlignment = .center
+    titleLabel.translatesAutoresizingMaskIntoConstraints = false
+    return titleLabel
+  }
+  
+  private func createCancelButton() -> UIButton {
+    let cancelButton = UIButton(type: .system)
+    let text = Constant.BottomSheet.StringLiteral.cancel
+    
+    cancelButton.setAttributedTitle(text.applyTextAttributes(
+      attributes: [
+        NSAttributedString.Key.font: UIFont.pretendardBodyRegular,
+        NSAttributedString.Key.foregroundColor: UIColor.toDoGardenGreenDark
+      ]
+    ), for: UIControl.State.normal)
+    
+    cancelButton.backgroundColor = UIColor.clear
+    cancelButton.addAction(UIAction { _ in self.dismiss(animated: true) }, for: UIControl.Event.touchUpInside)
+    cancelButton.translatesAutoresizingMaskIntoConstraints = false
+    return cancelButton
+  }
+  
+  private func setupConstraints(
+    for navigationBarView: UIView,
+    titleLabel: UILabel,
+    cancelButton: UIButton
+  ) {
+    let topMargin = self.bottomSheetHeight / Constant.BottomSheet.NavigationBar.multiplier
+    NSLayoutConstraint.activate(
+      [
+        navigationBarView.topAnchor.constraint(equalTo: bottomSheetView.topAnchor, constant: topMargin),
+        navigationBarView.leadingAnchor.constraint(equalTo: bottomSheetView.leadingAnchor),
+        navigationBarView.trailingAnchor.constraint(equalTo: bottomSheetView.trailingAnchor),
+        navigationBarView.heightAnchor.constraint(
+          equalToConstant: Constant.BottomSheet.NavigationBar.height
+        ),
+        
+        titleLabel.centerXAnchor.constraint(equalTo: navigationBarView.centerXAnchor),
+        titleLabel.centerYAnchor.constraint(equalTo: navigationBarView.centerYAnchor),
+        
+        cancelButton.trailingAnchor.constraint(
+          equalTo: navigationBarView.trailingAnchor,
+          constant: Constant.BottomSheet.NavigationBar.trailingMargin
+        ),
+        cancelButton.centerYAnchor.constraint(equalTo: navigationBarView.centerYAnchor)
+      ]
+    )
   }
 }
 
