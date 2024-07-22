@@ -6,9 +6,9 @@ import TimerSceneAPI
 public struct TimerSceneSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
   public struct Dependency {
-    let worker: TimerSceneWorker
+    let worker: TimerSceneWorkable
     
-    public init(worker: TimerSceneWorker) {
+    public init(worker: any TimerSceneWorkable) {
       self.worker = worker
     }
   }
