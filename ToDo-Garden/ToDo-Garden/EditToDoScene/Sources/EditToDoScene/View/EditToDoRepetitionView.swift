@@ -43,6 +43,10 @@ final class EditToDoRepetitionView: UIView {
     self.repeatOtherDaysView.ringToggleButton.isSelected = false
     self.repeatOtherDaysView.updateDateButtonState(isSelected: true)
   }
+
+  func updateRepetitionRange(startDay: String, endDay: String) {
+    self.repeatOtherDaysView.updateDate(startDate: startDay, endDate: endDay)
+  }
 }
 
 // MARK: Private Functions

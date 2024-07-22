@@ -45,6 +45,10 @@ final class EditToDoScheduleView: UIView {
   func updateToRepeatInRange() {
     self.editToDoRepetitionView.setRepeatRangeSelected()
   }
+
+  func updateRepetitionRange(from startDay: String, to endDay: String) {
+    self.editToDoRepetitionView.updateRepetitionRange(startDay: startDay, endDay: endDay)
+  }
 }
 
 // MARK: Private Functions
