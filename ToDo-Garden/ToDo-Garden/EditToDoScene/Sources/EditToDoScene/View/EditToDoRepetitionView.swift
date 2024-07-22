@@ -13,19 +13,11 @@ final class EditToDoRepetitionView: UIView {
   private let repetitionLabel: UILabel
   private let repeatOnlyTodayView: ToDoRepeatSelectionView
   private let repeatOtherDaysView: RepeatOtherDaysView
-  private var isRepeatOnlyToday: Bool {
-    willSet { self.updateRepeatOnlyTodayViewUI(isRepeatOnlyToday: newValue) }
-  }
-  private var isRepeatOtherDays: Bool {
-    willSet { self.updateRepeatOtherDaysViewUI(isRepeatOtherDays: newValue) }
-  }
 
   init() {
     self.repetitionLabel = UILabel()
     self.repeatOnlyTodayView = ToDoRepeatSelectionView(model: ToDoRepeatSelectionView.Model.onlyToday)
     self.repeatOtherDaysView = RepeatOtherDaysView(startDate: nil, endDate: nil)
-    self.isRepeatOnlyToday = true
-    self.isRepeatOtherDays = false
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -35,55 +27,34 @@ final class EditToDoRepetitionView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
 
-  func updateRepetitionUI(
-    isRepeatOnlyToday: Bool,
-    startDay: String? = nil,
-    endDay: String? = nil
-  ) {
-    self.isRepeatOnlyToday = isRepeatOnlyToday
-    self.isRepeatOtherDays = !isRepeatOnlyToday
-    self.updateRepetitionState(startDay: startDay, endDay: endDay)
+  func setRepeatOnlyTodaySelected() {
+    self.repeatOnlyTodayView.setSelected()
+    self.repeatOtherDaysView.setDeSelected()
   }
 
-  func getIsRepeatOnlyToday() -> Bool {
-    return self.isRepeatOnlyToday
+  func setRepeatEverydaySelected() {
+    self.setRepeatOtherDaysViewSelected()
+    self.repeatOtherDaysView.ringToggleButton.isSelected = true
+    self.repeatOtherDaysView.updateDateButtonState(isSelected: false)
+  }
+
+  func setRepeatRangeSelected() {
+    self.setRepeatOtherDaysViewSelected()
+    self.repeatOtherDaysView.ringToggleButton.isSelected = false
+    self.repeatOtherDaysView.updateDateButtonState(isSelected: true)
   }
 }
 
 // MARK: Private Functions
 
 extension EditToDoRepetitionView {
-  private func updateRepeatOnlyTodayViewUI(isRepeatOnlyToday: Bool) {
-    if isRepeatOnlyToday {
-      self.repeatOnlyTodayView.setSelected()
-    } else {
-      self.repeatOnlyTodayView.setDeSelected()
-    }
-  }
-
-  private func updateRepeatOtherDaysViewUI(isRepeatOtherDays: Bool) {
-    if isRepeatOtherDays {
-      self.repeatOtherDaysView.setSelected()
-    } else {
-      self.repeatOtherDaysView.setDeSelected()
-    }
-  }
-
-  private func updateRepetitionState(startDay: String?, endDay: String?) {
-    guard let startDayString = startDay, let endDayString = endDay
-    else {
-      self.repeatOtherDaysView.ringToggleButton.isSelected = true
-      return
-    }
-
-    self.repeatOtherDaysView.updateDateButtonState(isSelected: true)
-    self.repeatOtherDaysView.updateDate(startDate: startDayString, endDate: endDayString)
+  private func setRepeatOtherDaysViewSelected() {
+    self.repeatOnlyTodayView.setDeSelected()
+    self.repeatOtherDaysView.setSelected()
   }
 
   private func setup() {
     self.setupRepetitionLabelUI()
-    self.setRepeatOnlyTodayViewSelected()
-    self.bindRepeatSelectionViewsTapGesture()
     self.addSubviews()
     self.setupSubviewsLayout()
   }
@@ -93,22 +64,6 @@ extension EditToDoRepetitionView {
     self.repetitionLabel.textColor = EditToDoSceneTheme.mainColor
     let text = EditToDoSceneTheme.StringLiteral.ToDoScheduleView.AlarmLabel.text
     self.repetitionLabel.text = text
-  }
-
-  private func setRepeatOnlyTodayViewSelected() {
-    self.repeatOnlyTodayView.setSelected()
-  }
-  
-  private func bindRepeatSelectionViewsTapGesture() {
-    self.repeatOnlyTodayView.bindTapGesture { [weak self] (isSelected: Bool) in
-      self?.isRepeatOnlyToday = isSelected
-      self?.isRepeatOtherDays = !isSelected
-    }
-
-    self.repeatOtherDaysView.bindTapGesture { [weak self] (isSelected: Bool) in
-      self?.isRepeatOtherDays = isSelected
-      self?.isRepeatOnlyToday = !isSelected
-    }
   }
 }
 
@@ -173,5 +128,4 @@ extension EditToDoRepetitionView {
       ]
     )
   }
-
 }

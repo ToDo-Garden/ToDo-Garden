@@ -34,22 +34,16 @@ final class EditToDoScheduleView: UIView {
     self.updateAlarmTimeSettingViewUI(alarmTime: alarmTime)
   }
 
-  func updateRepetitionRange(
-    isRepeatOnlyToday: Bool = true,
-    startDay: String?,
-    endDay: String?
-  ) {
-    self.editToDoRepetitionView.updateRepetitionUI(
-      isRepeatOnlyToday: isRepeatOnlyToday,
-      startDay: startDay,
-      endDay: endDay
-    )
+  func updateToRepeatOnlyToday() {
+    self.editToDoRepetitionView.setRepeatOnlyTodaySelected()
   }
 
-  func getToDoScheduleData() -> (Bool, Bool) {
-    let isAlarmOn = self.alarmSwitch.isOn
-    let isRepeatOnlyToday = self.editToDoRepetitionView.getIsRepeatOnlyToday()
-    return (isAlarmOn, isRepeatOnlyToday)
+  func updateToRepeatEveryday() {
+    self.editToDoRepetitionView.setRepeatEverydaySelected()
+  }
+
+  func updateToRepeatInRange() {
+    self.editToDoRepetitionView.setRepeatRangeSelected()
   }
 }
 
