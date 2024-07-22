@@ -85,15 +85,13 @@ extension PostGroupBottomSheet {
     self.setupColorPickerList()
     self.setupBottomButton()
   }
-  
-  private func setupGesture() {
-  }
 
   private func setupBindings() {
   }
   
   private func setupButtonAction() {
   }
+  
   private func setupDimmedView() {
     self.dimmedView.backgroundColor = UIColor.black.withAlphaComponent(Constant.BottomSheet.DimmedView.normalAlpha)
     self.dimmedView.alpha = CGFloat.zero
@@ -252,6 +250,17 @@ extension PostGroupBottomSheet {
         cancelButton.centerYAnchor.constraint(equalTo: navigationBarView.centerYAnchor)
       ]
     )
+  }
+}
+
+extension PostGroupBottomSheet {
+  private func setupGesture() {
+    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleTap))
+    self.dimmedView.addGestureRecognizer(tapGesture)
+  }
+  
+  @objc private func handleTap(_ sender: UITapGestureRecognizer) {
+    self.dismiss(animated: true, completion: nil)
   }
 }
 
