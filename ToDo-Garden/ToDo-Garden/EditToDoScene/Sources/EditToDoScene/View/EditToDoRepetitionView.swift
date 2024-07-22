@@ -49,6 +49,33 @@ final class EditToDoRepetitionView: UIView {
   }
 }
 
+// MARK: Set up Tap Gesture Action
+
+extension EditToDoRepetitionView {
+  func setupRepeatOnlyTodayViewAction(_ closure: @escaping (Bool) -> Void) {
+    self.repeatOnlyTodayView.bindTapGesture { _ in
+      let isOnlyTodayViewSelected = true
+      closure(isOnlyTodayViewSelected)
+    }
+  }
+
+  func setupRepeatOtherDaysViewAction(_ closure: @escaping (Bool) -> Void) {
+    self.repeatOtherDaysView.bindTapGesture { _ in
+      let isOnlyTodayViewSelected = false
+      closure(isOnlyTodayViewSelected)
+    }
+  }
+
+  func setupRepeatEverydayButtonAction(_ closure: @escaping (Bool) -> Void) {
+    let everydayButtonAction = UIAction { _ in
+      let isSelected = self.repeatOtherDaysView.ringToggleButton.isSelected
+      closure(isSelected)
+    }
+
+    self.repeatOtherDaysView.ringToggleButton.addAction(everydayButtonAction, for: UIControl.Event.touchUpInside)
+  }
+}
+
 // MARK: Private Functions
 
 extension EditToDoRepetitionView {

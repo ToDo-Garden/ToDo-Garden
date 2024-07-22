@@ -45,9 +45,21 @@ final class EditToDoScheduleView: UIView {
   func updateToRepeatInRange() {
     self.editToDoRepetitionView.setRepeatRangeSelected()
   }
+}
 
-  func updateRepetitionRange(from startDay: String, to endDay: String) {
-    self.editToDoRepetitionView.updateRepetitionRange(startDay: startDay, endDay: endDay)
+// MARK: Set up Subviews Action
+
+extension EditToDoScheduleView {
+  func setupActionWhenSelectRepeatOnlyTodayView(_ closure: @escaping (Bool) -> Void) {
+    self.editToDoRepetitionView.setupRepeatOnlyTodayViewAction(closure)
+  }
+
+  func setupActionWhenSelectRepeatOtherDaysView(_ closure: @escaping (Bool) -> Void) {
+    self.editToDoRepetitionView.setupRepeatOtherDaysViewAction(closure)
+  }
+
+  func setupActionWhenSelectRepeatEveryDayButton(_ closure: @escaping (Bool) -> Void) {
+    self.editToDoRepetitionView.setupRepeatEverydayButtonAction(closure)
   }
 }
 
@@ -199,6 +211,7 @@ extension EditToDoScheduleView {
 #Preview {
   let view = UIView()
   let scheduleView = EditToDoScheduleView()
+  scheduleView.updateToRepeatEveryday()
   view.addSubview(scheduleView)
   scheduleView.usingAutolayout()
   scheduleView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
