@@ -266,6 +266,14 @@ extension PostGroupBottomSheet {
   }
   
   private func setupButtonAction() {
+    self.bottomButton.addAction(UIAction { _ in
+      guard let index = self.colorPickerList.selected.value else {
+        return
+      }
+      let color = self.colorPickerList.colors[index]
+      self.delegate?.dismissedBottomSheet(color: color)
+      self.dismiss(animated: true)
+    }, for: UIControl.Event.touchUpInside)
   }
 }
 
