@@ -78,9 +78,9 @@ extension PostGroupSceneBuilder {
   /// - Parameter viewController: VIPCycle을 설정할 viewController입니다.
   /// - Returns: VIP Cycle 설정이 완료된 `ViewControllable` 프로토콜을 준수한 `ViewController` 인스턴스를 반환합니다.
   private func configureVIPCycle(for viewController: PostGroupViewController) -> PostGroupViewController {
-    let interactor = PostGroupInteractor(someWorker: self.dependency.someWorker)
+    let interactor = PostGroupInteractor(someWorker: self.dependency.postGroupWorker)
     let presenter = PostGroupPresenter()
-    let router = PostGroupRouter(nextSceneBuilder: self.dependency.nextSceneBuilder)
+    let router = PostGroupRouter(nextSceneBuilder: nil)
     viewController.interactor = interactor
     viewController.router = router
     interactor.presenter = presenter
