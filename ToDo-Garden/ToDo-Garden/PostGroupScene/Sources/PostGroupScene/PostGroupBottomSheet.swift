@@ -46,6 +46,7 @@ final class PostGroupBottomSheet: UIViewController {
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
+    self.animatePresenting()
   }
   
   override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
@@ -160,6 +161,20 @@ extension PostGroupBottomSheet {
       self.bottomButton.bottomAnchor.constraint(equalTo: self.bottomSheetView.bottomAnchor, constant: bottomMargin)
     ])
   }
+  
+  private func animatePresenting() {
+    self.dimmedView.alpha = CGFloat.zero
+    self.bottomSheetView.transform = CGAffineTransform(
+      translationX: CGFloat.zero,
+      y: self.bottomSheetHeight
+    )
+    
+    UIView.animate(withDuration: Constant.BottomSheet.Animation.duration) {
+      self.dimmedView.alpha = Constant.BottomSheet.DimmedView.presentingAlpha
+      self.bottomSheetView.transform = CGAffineTransform.identity
+    }
+  }
+  
   private func setupNavigationBar() {
     let navigationBarView = createNavigationBarView()
     let titleLabel = createTitleLabel()
