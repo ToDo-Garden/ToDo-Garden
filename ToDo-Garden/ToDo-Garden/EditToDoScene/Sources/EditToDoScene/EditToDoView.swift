@@ -30,6 +30,14 @@ extension EditToDoView {
   private func setup() {
     self.setupSubviewsLayout()
   }
+
+  private func makeGroupLabel() -> UILabel {
+    let groupLabel = UILabel()
+    groupLabel.font = UIFont.pretendardHeadSemiBold
+    groupLabel.textColor = EditToDoSceneTheme.mainColor
+    groupLabel.text = EditToDoSceneTheme.StringLiteral.EditToDoView.GroupLabel.text
+    return groupLabel
+  }
 }
 
 // MARK: About Layout
@@ -37,6 +45,7 @@ extension EditToDoView {
 extension EditToDoView {
   private func setupSubviewsLayout() {
     self.setupToDoNameInputViewLayout()
+    self.setupGroupLabelLayout(label: self.makeGroupLabel())
   }
 
   private func setupToDoNameInputViewLayout() {
@@ -59,6 +68,25 @@ extension EditToDoView {
           constant: -layout.trailingMargin
         ),
         self.toDoNameInputView.heightAnchor.constraint(equalToConstant: layout.height)
+      ]
+    )
+  }
+
+  private func setupGroupLabelLayout(label: UILabel) {
+    self.addSubview(label)
+    label.usingAutolayout()
+
+    let layout = EditToDoViewController.Constant.Layout.EditToDoView.GroupLabel.self
+    NSLayoutConstraint.activate(
+      [
+        label.topAnchor.constraint(
+          equalTo: self.toDoNameInputView.bottomAnchor,
+          constant: layout.topMargin
+        ),
+        label.leadingAnchor.constraint(
+          equalTo: self.leadingAnchor,
+          constant: layout.leadingMargin
+        )
       ]
     )
   }
