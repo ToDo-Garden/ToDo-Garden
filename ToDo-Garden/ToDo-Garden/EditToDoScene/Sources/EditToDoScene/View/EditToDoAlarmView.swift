@@ -40,6 +40,18 @@ final class EditToDoAlarmView: UIView {
   func updateAlarmTime(_ alarmTime: String) {
     self.alarmTimeSettingView.updateAlarmTime(with: alarmTime)
   }
+}
+
+// MARK: Set up Subviews Action
+
+extension EditToDoAlarmView {
+  func setupSwitchAction(_ closure: @escaping () -> Void) {
+    let switchAction = UIAction { _ in
+      closure()
+    }
+
+    self.alarmSwitch.addAction(switchAction, for: UIControl.Event.valueChanged)
+  }
 
   func setupAlarmSettingAction(_ closure: @escaping () -> Void) {
     self.alarmTimeSettingView.addAlarmSettingAction(closure)
