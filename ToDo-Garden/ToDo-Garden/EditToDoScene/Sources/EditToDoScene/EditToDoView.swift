@@ -14,6 +14,8 @@ final class EditToDoView: UIView {
   private let groupSelectionView: GroupSelectionViewAPI
   private let deleteToDoButton: UIButton
 
+  weak var delegate: EditToDoView.EditToDoViewDelegate?
+
   init(toDoNameInputView: TextInputViewAPI, groupSelectionView: GroupSelectionViewAPI) {
     self.toDoNameInputView = toDoNameInputView
     self.groupSelectionView = groupSelectionView
@@ -48,11 +50,21 @@ final class EditToDoView: UIView {
   }
 }
 
+// MARK: EditToDoView Delegate Functions
+
+extension EditToDoView {
+  /// EditToDoViewController가 채택할 Delegate 프로토콜입니다.
+  /// EditToDoView의 Subview들에서 발생한 이벤트들을 전달하는 역할을 합니다.
+  protocol EditToDoViewDelegate: AnyObject {
+    func didSelectDeleteToDoButton()
+  }
+}
+
 // MARK: Private Functions
 
 extension EditToDoView {
   private func setup() {
-    self.setupDeleteToDoButtonUI()
+    self.setupDeleteToDoButton()
     self.setupSubviewsLayout()
   }
 
@@ -64,7 +76,7 @@ extension EditToDoView {
     return groupLabel
   }
 
-  private func setupDeleteToDoButtonUI() {
+  private func setupDeleteToDoButton() {
     self.deleteToDoButton.backgroundColor = UIColor.toDoGardenGreenBackground
     let cornerRadius = EditToDoViewController.Constant.Layout.EditToDoView.DeleteToDoButton.cornerRadius
     self.deleteToDoButton.layer.cornerRadius = cornerRadius
@@ -77,6 +89,15 @@ extension EditToDoView {
       ]
     )
     self.deleteToDoButton.setAttributedTitle(title, for: UIControl.State.normal)
+    self.setupDeleteToDoButtonAction()
+  }
+
+  private func setupDeleteToDoButtonAction() {
+    let deleteToDoAction = UIAction { _ in
+      self.delegate?.didSelectDeleteToDoButton()
+    }
+
+    self.deleteToDoButton.addAction(deleteToDoAction, for: UIControl.Event.touchUpInside)
   }
 }
 
