@@ -30,6 +30,22 @@ final class EditToDoView: UIView {
   func updateToDoName(_ name: String) {
     self.toDoNameInputView.setBeginEditing(with: name)
   }
+
+  func updateGroup(
+    current: EditToDoView.GroupItem,
+    editableGroupList: [EditToDoView.GroupItem]
+  ) {
+    self.toDoNameInputView.changeBottomLine(color: current.groupColor)
+    self.groupSelectionView.updateGroup(current: current, editableList: editableGroupList)
+  }
+
+  func getCurrentGroupId() -> Int? {
+    return self.groupSelectionView.getCurrentGroupId()
+  }
+
+  func getEditingText() -> String? {
+    return self.toDoNameInputView.getEditingText()
+  }
 }
 
 // MARK: Private Functions
@@ -175,5 +191,17 @@ extension EditToDoView {
         titleLabel.centerYAnchor.constraint(equalTo: self.deleteToDoButton.centerYAnchor)
       ]
     )
+  }
+}
+
+extension EditToDoView {
+  struct GroupItem: GroupSelectionViewItemAPI {
+    let groupId: Int
+    let groupName: String
+    let groupColor: UIColor
+
+    static func < (lhs: EditToDoView.GroupItem, rhs: EditToDoView.GroupItem) -> Bool {
+      lhs.groupId > rhs.groupId
+    }
   }
 }
