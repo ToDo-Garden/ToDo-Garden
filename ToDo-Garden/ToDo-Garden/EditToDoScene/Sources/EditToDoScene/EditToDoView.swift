@@ -60,11 +60,52 @@ extension EditToDoView {
   }
 }
 
+// MARK: GroupSelectionView Delegate Functions
+
+extension EditToDoView: GroupSelectionViewDelegate {
+  func didSelectGroup(color: UIColor) {
+    self.toDoNameInputView.changeBottomLine(color: color)
+  }
+
+  private func setupGroupSelectionViewDelegate() {
+    self.groupSelectionView.delegate = self
+  }
+}
+
+// MARK: Tap Gesture Functions
+
+extension EditToDoView: UIGestureRecognizerDelegate {
+  func gestureRecognizer(
+    _ gestureRecognizer: UIGestureRecognizer,
+    shouldReceive touch: UITouch
+  ) -> Bool {
+    self.inActiveNameEditModeWhenTouchEmptySpace(touch)
+  }
+
+  private func inActiveNameEditModeWhenTouchEmptySpace(_ touch: UITouch) -> Bool {
+    guard touch.view == self
+    else { return false }
+
+    if self.toDoNameInputView.isFirstResponder {
+      self.toDoNameInputView.resignFirstResponder()
+    }
+
+    return true
+  }
+
+  private func setupTapGestureDelegate() {
+    let tapGestureRecognizer = UITapGestureRecognizer()
+    tapGestureRecognizer.delegate = self
+  }
+}
+
 // MARK: Private Functions
 
 extension EditToDoView {
   private func setup() {
     self.setupDeleteToDoButton()
+    self.setupGroupSelectionViewDelegate()
+    self.setupTapGestureDelegate()
     self.setupSubviewsLayout()
   }
 
