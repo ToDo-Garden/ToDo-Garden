@@ -64,6 +64,7 @@ class PostGroupViewController: UIViewController, PostGroupViewControllable {
     self.setupTextInputView()
     self.setupPostGroupColorPickerRow()
     self.setupColorPickButton()
+    self.setupBottomButton()
   }
   
   private func setupTextInputView() {
@@ -129,6 +130,47 @@ class PostGroupViewController: UIViewController, PostGroupViewControllable {
       self.bottomSheet.setupCurrentColor(color: self.postGroupColorPickerRow.getColor())
       self.present(self.bottomSheet, animated: true)
     }, for: UIControl.Event.touchUpInside)
+  }
+  
+  private func setupBottomButton() {
+    self.doneBottomButton.translatesAutoresizingMaskIntoConstraints = false
+    self.view.addSubview(self.doneBottomButton)
+    
+    self.doneBottomButton.isEnabled = self.isButtonEnabled()
+    
+    NSLayoutConstraint.activate(
+      [
+        self.doneBottomButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+        self.doneBottomButton.bottomAnchor.constraint(
+          equalTo: self.view.safeAreaLayoutGuide.bottomAnchor,
+          constant: Constant.BottomButton.bottomMargin
+        )
+      ]
+    )
+  }
+  
+  private func isButtonEnabled() -> Bool {
+    return !(self.isTextFieldEmpty()) && !(self.isColorEmpty())
+  }
+  
+  private func isTextFieldEmpty() -> Bool {
+    guard let currentText = self.textInputView.getEditingText() else {
+      return true
+    }
+    
+    return currentText.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty
+  }
+  
+  private func isColorEmpty() -> Bool {
+    guard let currentColor = self.postGroupColorPickerRow.getColor() else {
+      return true
+    }
+    
+    if currentColor == UIColor.toDoGardenGrassNone {
+      return true
+    } else {
+      return false
+    }
   }
 }
 
