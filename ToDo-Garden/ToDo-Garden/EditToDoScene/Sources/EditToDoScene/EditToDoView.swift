@@ -95,6 +95,7 @@ extension EditToDoView: UIGestureRecognizerDelegate {
 
   private func setupTapGestureDelegate() {
     let tapGestureRecognizer = UITapGestureRecognizer()
+    self.addGestureRecognizer(tapGestureRecognizer)
     tapGestureRecognizer.delegate = self
   }
 }
