@@ -101,6 +101,10 @@ extension PostGroupBottomSheet {
   
   private func setupBottomSheetView() {
     self.bottomSheetView.backgroundColor = UIColor.white
+    self.bottomSheetView.layer.maskedCorners = [
+      CACornerMask.layerMinXMinYCorner,
+      CACornerMask.layerMaxXMinYCorner
+    ]
     self.bottomSheetView.layer.cornerRadius = Constant.BottomSheet.BottomSheetView.cornerRadius
     self.bottomSheetView.layer.masksToBounds = true
     self.view.addSubview(self.bottomSheetView)
