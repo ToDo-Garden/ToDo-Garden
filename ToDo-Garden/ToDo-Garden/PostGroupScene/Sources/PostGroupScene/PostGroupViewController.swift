@@ -210,10 +210,8 @@ extension PostGroupViewController: PostGroupBottomSheetDelegate {
 // @available(iOS 17.0, *)
 // #Preview {
 //  let textInputView = TextInputView(model: .groupName)
-//  
 //  let colorPickerRow = PostGroupColorPickerRow()
 //  let subject =  CurrentValueSubject<Int?, Never>(nil)
-//  
 //  let colorPickerList = ColorPickerList(colors: [
 //    .toDoGardenBlack,
 //    .toDoGardenBlue,
@@ -228,12 +226,9 @@ extension PostGroupViewController: PostGroupBottomSheetDelegate {
 //    .toDoGardenOlive,
 //    .toDoGardenPink
 //  ], itemsPerRow: 6, selected: subject)
-//  
 //  let colorPickButton = UIButton()
 //  colorPickButton.setImage(UIImage.forwardButtonImage, for: .normal)
-//  
-//  
-//  
+//
 //  let vc = PostGroupViewController(
 //    textInputView: textInputView,
 //    postGroupColorPickerRow: colorPickerRow,
