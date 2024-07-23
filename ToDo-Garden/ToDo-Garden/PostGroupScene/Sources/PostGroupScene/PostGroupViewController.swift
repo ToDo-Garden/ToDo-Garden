@@ -60,7 +60,31 @@ class PostGroupViewController: UIViewController, PostGroupViewControllable {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    self.doSomething()
+    // TODO: NavigationBar setup
+    self.setupTextInputView()
+  }
+  
+  private func setupTextInputView() {
+    self.textInputView.delegate = self
+    self.textInputView.translatesAutoresizingMaskIntoConstraints = false
+    self.view.addSubview(self.textInputView)
+    
+    NSLayoutConstraint.activate(
+      [
+        self.textInputView.topAnchor.constraint(
+          equalTo: self.view.safeAreaLayoutGuide.topAnchor,
+          constant: Constant.TextInputView.margin
+        ),
+        self.textInputView.leadingAnchor.constraint(
+          equalTo: self.view.leadingAnchor,
+          constant: Constant.TextInputView.margin
+        ),
+        self.textInputView.trailingAnchor.constraint(
+          equalTo: self.view.trailingAnchor,
+          constant: -Constant.TextInputView.margin
+        )
+      ]
+    )
   }
 }
 
