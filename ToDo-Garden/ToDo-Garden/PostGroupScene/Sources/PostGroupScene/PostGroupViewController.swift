@@ -24,7 +24,7 @@ class PostGroupViewController: UIViewController, PostGroupViewControllable {
   
   private let textInputView: TextInputViewAPI
   private let postGroupColorPickerRow: PostGroupColorPickerRowAPI
-  private let bottomSheet: PostGroupBottomSheet
+  private let postGroupBottomSheet: PostGroupBottomSheet
   private let colorPickButton: UIButton
   private let doneBottomButton: UIButton
   
@@ -40,7 +40,7 @@ class PostGroupViewController: UIViewController, PostGroupViewControllable {
   ) {
     self.textInputView = textInputView
     self.postGroupColorPickerRow = postGroupColorPickerRow
-    self.bottomSheet = PostGroupBottomSheet(
+    self.postGroupBottomSheet = PostGroupBottomSheet(
       colorPickerList: colorPickerList,
       bottomButton: modalBottomButton
     )
@@ -48,7 +48,7 @@ class PostGroupViewController: UIViewController, PostGroupViewControllable {
     self.doneBottomButton = bottomButton
     super.init(nibName: nil, bundle: nil)
     self.view.backgroundColor = UIColor.white
-    self.bottomSheet.delegate = self
+    self.postGroupBottomSheet.delegate = self
   }
   
   @available(*, unavailable)
@@ -127,8 +127,8 @@ class PostGroupViewController: UIViewController, PostGroupViewControllable {
     )
     
     self.colorPickButton.addAction( UIAction { _ in
-      self.bottomSheet.setupCurrentColor(color: self.postGroupColorPickerRow.getColor())
-      self.present(self.bottomSheet, animated: true)
+      self.postGroupBottomSheet.setupCurrentColor(color: self.postGroupColorPickerRow.getColor())
+      self.present(self.postGroupBottomSheet, animated: true)
     }, for: UIControl.Event.touchUpInside)
   }
   
