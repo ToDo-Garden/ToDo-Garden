@@ -201,3 +201,48 @@ extension PostGroupViewController: PostGroupBottomSheetDelegate {
   func dismissedBottomSheet(color: UIColor) {
   }
 }
+
+// MARK: Preview : PostGroupScene의 Package.swift에 있는 주석처리를 해제해주세요.
+//
+// import Combine
+// import ToDoGardenUIComponent
+// #if DEBUG
+// @available(iOS 17.0, *)
+// #Preview {
+//  let textInputView = TextInputView(model: .groupName)
+//  
+//  let colorPickerRow = PostGroupColorPickerRow()
+//  let subject =  CurrentValueSubject<Int?, Never>(nil)
+//  
+//  let colorPickerList = ColorPickerList(colors: [
+//    .toDoGardenBlack,
+//    .toDoGardenBlue,
+//    .toDoGardenBrown,
+//    .toDoGardenEditButtonBlue,
+//    .toDoGardenEditButtonRed,
+//    .toDoGardenEditButtonYellow,
+//    .toDoGardenGrassHigh,
+//    .toDoGardenGrassLow,
+//    .toDoGardenGrassMiddle,
+//    .toDoGardenGray2,
+//    .toDoGardenOlive,
+//    .toDoGardenPink
+//  ], itemsPerRow: 6, selected: subject)
+//  
+//  let colorPickButton = UIButton()
+//  colorPickButton.setImage(UIImage.forwardButtonImage, for: .normal)
+//  
+//  
+//  
+//  let vc = PostGroupViewController(
+//    textInputView: textInputView,
+//    postGroupColorPickerRow: colorPickerRow,
+//    colorPickerList: colorPickerList,
+//    colorPickButton: colorPickButton,
+//    bottomButton: ToDoGardenBoxButton(title: "확인", buttonType: .primaryRoundRectButton),
+//    modalBottomButton: ToDoGardenBoxButton(title: "확인", buttonType: .primaryRoundRectButton)
+//  )
+//  
+//  return vc
+// }
+// #endif
