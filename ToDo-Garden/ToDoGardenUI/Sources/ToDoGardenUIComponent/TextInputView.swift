@@ -45,6 +45,11 @@ public final class TextInputView: UIView, TextInputViewAPI {
     fatalError("init(coder:) has not been implemented")
   }
 
+  public override func resignFirstResponder() -> Bool {
+    super.resignFirstResponder()
+    return self.inputTextField.resignFirstResponder()
+  }
+
   public func changeBottomLine(color: UIColor) {
     self.inputTextField.mainColor = color
   }
