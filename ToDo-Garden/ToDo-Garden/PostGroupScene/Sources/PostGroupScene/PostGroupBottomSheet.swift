@@ -167,15 +167,15 @@ extension PostGroupBottomSheet {
   }
   
   private func setupNavigationBar() {
-    let navigationBarView = createNavigationBarView()
-    let titleLabel = createTitleLabel()
-    let cancelButton = createCancelButton()
+    let navigationBarView = self.createNavigationBarView()
+    let titleLabel = self.createTitleLabel()
+    let cancelButton = self.createCancelButton()
     
     navigationBarView.addSubview(titleLabel)
     navigationBarView.addSubview(cancelButton)
-    bottomSheetView.addSubview(navigationBarView)
-    
-    setupConstraints(for: navigationBarView, titleLabel: titleLabel, cancelButton: cancelButton)
+    self.bottomSheetView.addSubview(navigationBarView)
+  
+    self.setupConstraints(for: navigationBarView, titleLabel: titleLabel, cancelButton: cancelButton)
   }
   
   private func createNavigationBarView() -> UIView {
@@ -202,7 +202,7 @@ extension PostGroupBottomSheet {
   }
   
   private func createCancelButton() -> UIButton {
-    let cancelButton = UIButton(type: .system)
+    let cancelButton = UIButton(type: UIButton.ButtonType.system)
     let text = Constant.BottomSheet.StringLiteral.cancel
     
     cancelButton.setAttributedTitle(text.applyTextAttributes(
@@ -269,6 +269,7 @@ extension PostGroupBottomSheet {
       guard let index = self.colorPickerList.selected.value else {
         return
       }
+      
       let color = self.colorPickerList.colors[index]
       self.delegate?.dismissedBottomSheet(color: color)
       self.dismiss(animated: true)
