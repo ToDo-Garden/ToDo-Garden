@@ -18,7 +18,7 @@ final public class PostGroupColorPickerRow: UIView, PostGroupColorPickerRowAPI {
       configuration: Styled.Row.Configuration.listPrimary(
         Styled.Row.Configuration.ListPrimaryModel(
           title: "",
-          color: UIColor.toDoGardenGray
+          color: UIColor.toDoGardenGrassNone
         )
       )
     )
