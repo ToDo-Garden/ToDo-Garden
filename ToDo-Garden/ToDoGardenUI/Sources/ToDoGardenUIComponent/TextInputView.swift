@@ -23,6 +23,10 @@ public final class TextInputView: UIView, TextInputViewAPI {
     return CGSize(width: 0, height: self.height)
   }
 
+  public override var isFirstResponder: Bool {
+    return self.inputTextField.isFirstResponder
+  }
+
   public init(model: Model) {
     self.model = model
     self.inputTextField = Styled.TextField(
