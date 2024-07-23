@@ -63,6 +63,7 @@ class PostGroupViewController: UIViewController, PostGroupViewControllable {
     // TODO: NavigationBar setup
     self.setupTextInputView()
     self.setupPostGroupColorPickerRow()
+    self.setupColorPickButton()
   }
   
   private func setupTextInputView() {
@@ -109,6 +110,25 @@ class PostGroupViewController: UIViewController, PostGroupViewControllable {
         )
       ]
     )
+  }
+  
+  private func setupColorPickButton() {
+    self.colorPickButton.translatesAutoresizingMaskIntoConstraints = false
+    self.view.addSubview(self.colorPickButton)
+    
+    NSLayoutConstraint.activate(
+      [
+        self.colorPickButton.centerYAnchor.constraint(equalTo: self.postGroupColorPickerRow.centerYAnchor),
+        self.colorPickButton.centerXAnchor.constraint(equalTo: self.postGroupColorPickerRow.trailingAnchor),
+        self.colorPickButton.widthAnchor.constraint(equalToConstant: Constant.ColorPickButton.length),
+        self.colorPickButton.heightAnchor.constraint(equalToConstant: Constant.ColorPickButton.length)
+      ]
+    )
+    
+    self.colorPickButton.addAction( UIAction { _ in
+      self.bottomSheet.setupCurrentColor(color: self.postGroupColorPickerRow.getColor())
+      self.present(self.bottomSheet, animated: true)
+    }, for: UIControl.Event.touchUpInside)
   }
 }
 
