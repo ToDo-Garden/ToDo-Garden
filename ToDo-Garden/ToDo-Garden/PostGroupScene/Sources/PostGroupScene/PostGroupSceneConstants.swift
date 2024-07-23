@@ -8,6 +8,24 @@
 import Foundation
 
 enum Constant {
+  enum TextInputView {
+    static let margin: CGFloat = 30.0
+  }
+  
+  enum ColorPickerRow {
+    static let topMargin: CGFloat = 45.0
+    static let leadingMargin: CGFloat = 15.0
+    static let trailingMargin: CGFloat = -30.0
+  }
+  
+  enum ColorPickButton {
+    static let length: CGFloat = 24.0
+  }
+  
+  enum BottomButton {
+    static let bottomMargin: CGFloat = -50.0
+  }
+  
   enum BottomSheet {
     static let multiplier: CGFloat = 0.41
   }
