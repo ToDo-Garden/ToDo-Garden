@@ -175,6 +175,7 @@ extension EditToDoView {
     self.addSubview(self.deleteToDoButton)
     self.setupTitleLabelLayout(of: self.deleteToDoButton)
     self.deleteToDoButton.translatesAutoresizingMaskIntoConstraints = false
+    self.sendSubviewToBack(self.deleteToDoButton)
 
     let layout = EditToDoViewController.Constant.Layout.EditToDoView.DeleteToDoButton.self
     NSLayoutConstraint.activate(
@@ -226,3 +227,31 @@ extension EditToDoView {
     }
   }
 }
+
+// MARK: Preview를 확인하기 위해 Package.swift 파일에서 UIComponent 의존성을 추가해주세요.
+//  import ToDoGardenUIComponent
+//  @available(iOS 17.0, *)
+//  #Preview {
+//    let scheduleView = EditToDoView(
+//      toDoNameInputView: TextInputView(model: TextInputView.Model.toDoName),
+//      groupSelectionView: GroupSelectionView(model: GroupSelectionView.Model.primary)
+//    )
+//    scheduleView.updateGroup(
+//      current: EditToDoView.GroupItem(groupId: 002, groupName: "영어", groupColor: UIColor.toDoGardenRed),
+//      editableGroupList: [
+//        EditToDoView.GroupItem(groupId: 001, groupName: "CS 지식", groupColor: UIColor.toDoGardenBrown),
+//        EditToDoView.GroupItem(groupId: 002, groupName: "영어", groupColor: UIColor.toDoGardenRed),
+//        EditToDoView.GroupItem(groupId: 003, groupName: "국어", groupColor: UIColor.toDoGardenBlue),
+//        EditToDoView.GroupItem(groupId: 004, groupName: "수학", groupColor: UIColor.toDoGardenMint),
+//        EditToDoView.GroupItem(groupId: 005, groupName: "Swift", groupColor: UIColor.toDoGardenYellow),
+//        EditToDoView.GroupItem(groupId: 006, groupName: "런닝", groupColor: UIColor.toDoGardenPurple),
+//        EditToDoView.GroupItem(groupId: 007, groupName: "지구과학", groupColor: UIColor.toDoGardenGreenDark),
+//        EditToDoView.GroupItem(groupId: 008, groupName: "물리", groupColor: UIColor.toDoGardenOrange)
+//      ]
+//    )
+//    scheduleView.translatesAutoresizingMaskIntoConstraints = false
+//    scheduleView.widthAnchor.constraint(equalToConstant: 400).isActive = true
+//    scheduleView.heightAnchor.constraint(equalToConstant: 600).isActive = true
+//
+//    return scheduleView
+//  }
