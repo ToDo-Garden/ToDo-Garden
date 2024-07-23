@@ -11,7 +11,7 @@ final class PostGroupBottomSheet: UIViewController {
   private let bottomSheetView: UIView
   private let grabberView: UIView
   private let colorPickerList: ColorPickerListAPI
-  private let bottomButton: UIButton
+  private let doneBottomButton: UIButton
   
   private var bottomSheetHeight: CGFloat {
     return view.bounds.height * Constant.BottomSheet.multiplier
@@ -24,11 +24,10 @@ final class PostGroupBottomSheet: UIViewController {
     self.bottomSheetView = UIView()
     self.grabberView = UIView()
     self.colorPickerList = colorPickerList
-    self.bottomButton = bottomButton
+    self.doneBottomButton = bottomButton
     super.init(nibName: nil, bundle: nil)
     self.modalPresentationStyle = UIModalPresentationStyle.overFullScreen
     self.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
-    
   }
   
   @available(*, unavailable)
@@ -145,12 +144,12 @@ extension PostGroupBottomSheet {
   
   private func setupBottomButton() {
     let bottomMargin = self.bottomSheetHeight / Constant.BottomSheet.BottomButton.multiplier
-    self.bottomSheetView.addSubview(self.bottomButton)
+    self.bottomSheetView.addSubview(self.doneBottomButton)
     
-    self.bottomButton.translatesAutoresizingMaskIntoConstraints = false
+    self.doneBottomButton.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
-      self.bottomButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-      self.bottomButton.bottomAnchor.constraint(equalTo: self.bottomSheetView.bottomAnchor, constant: bottomMargin)
+      self.doneBottomButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+      self.doneBottomButton.bottomAnchor.constraint(equalTo: self.bottomSheetView.bottomAnchor, constant: bottomMargin)
     ])
   }
   
@@ -260,13 +259,13 @@ extension PostGroupBottomSheet {
   private func setupBindings() {
     self.colorPickerList.selected
       .sink { [weak self] selectedIndex in
-        self?.bottomButton.isEnabled = selectedIndex != nil
+        self?.doneBottomButton.isEnabled = selectedIndex != nil
       }
-      .store(in: &subscriptions)
+      .store(in: &self.subscriptions)
   }
   
   private func setupButtonAction() {
-    self.bottomButton.addAction(UIAction { _ in
+    self.doneBottomButton.addAction(UIAction { _ in
       guard let index = self.colorPickerList.selected.value else {
         return
       }
