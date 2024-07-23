@@ -1,6 +1,6 @@
 //
 //  PostGroupViewController.swift
-//  
+//
 //
 //  Created by SONG on 7/8/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
@@ -9,6 +9,7 @@ import UIKit
 
 import PostGroupSceneAPI
 import PostGroupSceneEntity
+import ToDoGardenUIAPI
 
 protocol PostGroupDisplayLogic: AnyObject {
   func displaySomething(viewModel: PostGroup.Something.ViewModel)
@@ -21,10 +22,33 @@ class PostGroupViewController: UIViewController, PostGroupViewControllable {
   var interactor: PostGroupBusinessLogic?
   var router: (PostGroupRoutingLogic & PostGroupDataPassing)?
   
+  private let textInputView: TextInputViewAPI
+  private let postGroupColorPickerRow: PostGroupColorPickerRowAPI
+  private let bottomSheet: PostGroupBottomSheet
+  private let colorPickButton: UIButton
+  private let doneBottomButton: UIButton
+  
   // MARK: - Object lifecycle
   
-  init() {
+  init(
+    textInputView: TextInputViewAPI,
+    postGroupColorPickerRow: PostGroupColorPickerRowAPI,
+    colorPickerList: ColorPickerListAPI,
+    colorPickButton: UIButton,
+    bottomButton: UIButton,
+    modalBottomButton: UIButton
+  ) {
+    self.textInputView = textInputView
+    self.postGroupColorPickerRow = postGroupColorPickerRow
+    self.bottomSheet = PostGroupBottomSheet(
+      colorPickerList: colorPickerList,
+      bottomButton: modalBottomButton
+    )
+    self.colorPickButton = colorPickButton
+    self.doneBottomButton = bottomButton
     super.init(nibName: nil, bundle: nil)
+    self.view.backgroundColor = UIColor.white
+    self.bottomSheet.delegate = self
   }
   
   @available(*, unavailable)
