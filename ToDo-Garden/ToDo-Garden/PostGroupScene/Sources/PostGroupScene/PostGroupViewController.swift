@@ -190,3 +190,14 @@ extension PostGroupViewController {
     self.interactor?.doSomething(request: request)
   }
 }
+
+extension PostGroupViewController: TextInputViewDelegate {
+  func textInputViewDidEndEditing(isEmpty: Bool) {
+    self.doneBottomButton.isEnabled = self.isButtonEnabled()
+  }
+}
+
+extension PostGroupViewController: PostGroupBottomSheetDelegate {
+  func dismissedBottomSheet(color: UIColor) {
+  }
+}
