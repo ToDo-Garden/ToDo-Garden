@@ -6,7 +6,7 @@ import ToDoGardenUIAPI
 import ToDoGardenUIResource
 
 final class PostGroupBottomSheet: UIViewController {
-  var delegate: PostGroupBottomSheetDelegate?
+  weak var delegate: PostGroupBottomSheetDelegate?
   private let dimmedView: UIView
   private let bottomSheetView: UIView
   private let grabberView: UIView
