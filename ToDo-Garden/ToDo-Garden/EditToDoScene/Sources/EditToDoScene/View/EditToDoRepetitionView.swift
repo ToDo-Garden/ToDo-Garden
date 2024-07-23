@@ -14,6 +14,8 @@ final class EditToDoRepetitionView: UIView {
   private let repeatOnlyTodayView: ToDoRepeatSelectionView
   private let repeatOtherDaysView: RepeatOtherDaysView
 
+  weak var delegate: EditToDoRepetitionViewDelegate?
+
   init() {
     self.repetitionLabel = UILabel()
     self.repeatOnlyTodayView = ToDoRepeatSelectionView(model: ToDoRepeatSelectionView.Model.onlyToday)
@@ -49,33 +51,6 @@ final class EditToDoRepetitionView: UIView {
   }
 }
 
-// MARK: Set up Tap Gesture Action
-
-extension EditToDoRepetitionView {
-  func setupRepeatOnlyTodayViewAction(_ closure: @escaping (Bool) -> Void) {
-    self.repeatOnlyTodayView.bindTapGesture { _ in
-      let isOnlyTodayViewSelected = true
-      closure(isOnlyTodayViewSelected)
-    }
-  }
-
-  func setupRepeatOtherDaysViewAction(_ closure: @escaping (Bool) -> Void) {
-    self.repeatOtherDaysView.bindTapGesture { _ in
-      let isOnlyTodayViewSelected = false
-      closure(isOnlyTodayViewSelected)
-    }
-  }
-
-  func setupRepeatEverydayButtonAction(_ closure: @escaping (Bool) -> Void) {
-    let everydayButtonAction = UIAction { _ in
-      let isSelected = self.repeatOtherDaysView.ringToggleButton.isSelected
-      closure(isSelected)
-    }
-
-    self.repeatOtherDaysView.ringToggleButton.addAction(everydayButtonAction, for: UIControl.Event.touchUpInside)
-  }
-}
-
 // MARK: Private Functions
 
 extension EditToDoRepetitionView {
@@ -86,6 +61,8 @@ extension EditToDoRepetitionView {
 
   private func setup() {
     self.setupRepetitionLabelUI()
+    self.setupRepeatOnlyTodayViewDelegate()
+    self.setupRepeatEverydayButtonDelegate()
     self.addSubviews()
     self.setupSubviewsLayout()
   }
@@ -95,6 +72,27 @@ extension EditToDoRepetitionView {
     self.repetitionLabel.textColor = EditToDoSceneTheme.mainColor
     let text = EditToDoSceneTheme.StringLiteral.ToDoScheduleView.RepetitionLabel.text
     self.repetitionLabel.text = text
+  }
+
+  private func setupRepeatOnlyTodayViewDelegate() {
+    self.repeatOnlyTodayView.bindTapGesture { _ in
+      let isOnlyToday = true
+      self.delegate?.didSelectOnlyTodayView(isOnlyToday: isOnlyToday)
+    }
+
+    self.repeatOtherDaysView.bindTapGesture { _ in
+      let isOnlyToday = false
+      self.delegate?.didSelectOnlyTodayView(isOnlyToday: isOnlyToday)
+    }
+  }
+
+  private func setupRepeatEverydayButtonDelegate() {
+    let buttonAction = UIAction { _ in
+      let isSelected = self.repeatOtherDaysView.ringToggleButton.isSelected
+      self.delegate?.didSelectEverydayButton(isSelected: isSelected)
+    }
+
+    self.repeatOtherDaysView.ringToggleButton.addAction(buttonAction, for: UIControl.Event.touchUpInside)
   }
 }
 

@@ -29,8 +29,7 @@ final class EditToDoScheduleView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
 
-  func updateAlarmTime(isAlarmOn: Bool = true, alarmTime: String?) {
-    self.updateAlarmTimeSettingActivation(by: isAlarmOn)
+  func updateAlarmTime(alarmTime: String?) {
     self.updateAlarmTimeSettingViewUI(alarmTime: alarmTime)
   }
 
@@ -47,35 +46,31 @@ final class EditToDoScheduleView: UIView {
   }
 }
 
-// MARK: Set up Subviews Action
+// MARK: EditToDoRepetitionView Delegate Functions
 
-extension EditToDoScheduleView {
-  func setupActionWhenSelectRepeatOnlyTodayView(_ closure: @escaping (Bool) -> Void) {
-    self.editToDoRepetitionView.setupRepeatOnlyTodayViewAction(closure)
-  }
+protocol EditToDoRepetitionViewDelegate: AnyObject {
+  func didSelectOnlyTodayView(isOnlyToday: Bool)
+  func didSelectEverydayButton(isSelected: Bool)
+}
 
-  func setupActionWhenSelectRepeatOtherDaysView(_ closure: @escaping (Bool) -> Void) {
-    self.editToDoRepetitionView.setupRepeatOtherDaysViewAction(closure)
-  }
+extension EditToDoScheduleView: EditToDoRepetitionViewDelegate {
+  func didSelectOnlyTodayView(isOnlyToday: Bool) {}
+  func didSelectEverydayButton(isSelected: Bool) {}
+}
 
-  func setupActionWhenSelectRepeatEveryDayButton(_ closure: @escaping (Bool) -> Void) {
-    self.editToDoRepetitionView.setupRepeatEverydayButtonAction(closure)
-  }
+// MARK: EditToDoAlarmView Delegate Functions
+
+protocol EditToDoAlarmViewDelegate: AnyObject {
+  func didToggleSwitch()
+}
+
+extension EditToDoScheduleView: EditToDoAlarmViewDelegate {
+  func didToggleSwitch() {}
 }
 
 // MARK: Private Functions
 
 extension EditToDoScheduleView {
-  private func updateAlarmTimeSettingActivation(by isAlarmOn: Bool) {
-    self.alarmSwitch.isOn = isAlarmOn
-
-    if isAlarmOn {
-      self.alarmTimeSettingView.enable()
-    } else {
-      self.alarmTimeSettingView.disable()
-    }
-  }
-
   private func updateAlarmTimeSettingViewUI(alarmTime: String?) {
     guard let alarmTime = alarmTime
     else { return }
@@ -85,6 +80,7 @@ extension EditToDoScheduleView {
 
   private func setup() {
     self.setupAlarmLabelUI()
+    self.setupDelegate()
     self.setupAlarmSwitchAction()
     self.setupAlarmTimeSettingButtonDisabled()
     self.addSubviews()
@@ -95,6 +91,10 @@ extension EditToDoScheduleView {
     self.alarmLabel.font = UIFont.pretendardHeadSemiBold
     self.alarmLabel.textColor = EditToDoSceneTheme.mainColor
     self.alarmLabel.text = EditToDoSceneTheme.StringLiteral.ToDoScheduleView.AlarmLabel.text
+  }
+
+  private func setupDelegate() {
+    self.editToDoRepetitionView.delegate = self
   }
 
   private func setupAlarmSwitchAction() {
