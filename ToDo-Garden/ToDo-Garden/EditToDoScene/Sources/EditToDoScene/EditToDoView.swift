@@ -11,9 +11,11 @@ import ToDoGardenUIAPI
 
 final class EditToDoView: UIView {
   private let toDoNameInputView: TextInputViewAPI
+  private let groupSelectionView: GroupSelectionViewAPI
 
-  init(textInputView: TextInputViewAPI) {
-    self.toDoNameInputView = textInputView
+  init(toDoNameInputView: TextInputViewAPI, groupSelectionView: GroupSelectionViewAPI) {
+    self.toDoNameInputView = toDoNameInputView
+    self.groupSelectionView = groupSelectionView
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -45,7 +47,9 @@ extension EditToDoView {
 extension EditToDoView {
   private func setupSubviewsLayout() {
     self.setupToDoNameInputViewLayout()
-    self.setupGroupLabelLayout(label: self.makeGroupLabel())
+    let groupLabel = self.makeGroupLabel()
+    self.setupGroupLabelLayout(label: groupLabel)
+    self.setupGroupSelectionViewLayout(with: groupLabel)
   }
 
   private func setupToDoNameInputViewLayout() {
@@ -74,7 +78,7 @@ extension EditToDoView {
 
   private func setupGroupLabelLayout(label: UILabel) {
     self.addSubview(label)
-    label.usingAutolayout()
+    label.translatesAutoresizingMaskIntoConstraints = false
 
     let layout = EditToDoViewController.Constant.Layout.EditToDoView.GroupLabel.self
     NSLayoutConstraint.activate(
@@ -87,6 +91,22 @@ extension EditToDoView {
           equalTo: self.leadingAnchor,
           constant: layout.leadingMargin
         )
+      ]
+    )
+  }
+
+  private func setupGroupSelectionViewLayout(with label: UILabel) {
+    self.addSubview(self.groupSelectionView)
+    self.groupSelectionView.translatesAutoresizingMaskIntoConstraints = false
+
+    NSLayoutConstraint.activate(
+      [
+        self.groupSelectionView.topAnchor.constraint(
+          equalTo: label.bottomAnchor,
+          constant: 10
+        ),
+        self.groupSelectionView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+        self.groupSelectionView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
       ]
     )
   }
