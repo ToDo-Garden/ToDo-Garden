@@ -62,6 +62,7 @@ class PostGroupViewController: UIViewController, PostGroupViewControllable {
     super.viewDidLoad()
     // TODO: NavigationBar setup
     self.setupTextInputView()
+    self.setupPostGroupColorPickerRow()
   }
   
   private func setupTextInputView() {
@@ -82,6 +83,29 @@ class PostGroupViewController: UIViewController, PostGroupViewControllable {
         self.textInputView.trailingAnchor.constraint(
           equalTo: self.view.trailingAnchor,
           constant: -Constant.TextInputView.margin
+        )
+      ]
+    )
+  }
+  
+  private func setupPostGroupColorPickerRow() {
+    self.view.addSubview(self.postGroupColorPickerRow)
+    
+    self.postGroupColorPickerRow.translatesAutoresizingMaskIntoConstraints = false
+    
+    NSLayoutConstraint.activate(
+      [
+        self.postGroupColorPickerRow.topAnchor.constraint(
+          equalTo: self.textInputView.bottomAnchor,
+          constant: Constant.ColorPickerRow.topMargin
+        ),
+        self.postGroupColorPickerRow.leadingAnchor.constraint(
+          equalTo: self.view.leadingAnchor,
+          constant: Constant.ColorPickerRow.leadingMargin
+        ),
+        self.postGroupColorPickerRow.trailingAnchor.constraint(
+          equalTo: self.view.trailingAnchor,
+          constant: Constant.ColorPickerRow.trailingMargin
         )
       ]
     )
