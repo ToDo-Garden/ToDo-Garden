@@ -12,10 +12,12 @@ import ToDoGardenUIAPI
 final class EditToDoView: UIView {
   private let toDoNameInputView: TextInputViewAPI
   private let groupSelectionView: GroupSelectionViewAPI
+  private let deleteToDoButton: UIButton
 
   init(toDoNameInputView: TextInputViewAPI, groupSelectionView: GroupSelectionViewAPI) {
     self.toDoNameInputView = toDoNameInputView
     self.groupSelectionView = groupSelectionView
+    self.deleteToDoButton = UIButton()
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -24,12 +26,17 @@ final class EditToDoView: UIView {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+
+  func updateToDoName(_ name: String) {
+    self.toDoNameInputView.setBeginEditing(with: name)
+  }
 }
 
 // MARK: Private Functions
 
 extension EditToDoView {
   private func setup() {
+    self.setupDeleteToDoButtonUI()
     self.setupSubviewsLayout()
   }
 
@@ -39,6 +46,21 @@ extension EditToDoView {
     groupLabel.textColor = EditToDoSceneTheme.mainColor
     groupLabel.text = EditToDoSceneTheme.StringLiteral.EditToDoView.GroupLabel.text
     return groupLabel
+  }
+
+  private func setupDeleteToDoButtonUI() {
+    self.deleteToDoButton.backgroundColor = UIColor.toDoGardenGreenBackground
+    let cornerRadius = EditToDoViewController.Constant.Layout.EditToDoView.DeleteToDoButton.cornerRadius
+    self.deleteToDoButton.layer.cornerRadius = cornerRadius
+    self.deleteToDoButton.setTitleColor(UIColor.toDoGardenEditButtonRed, for: UIControl.State.normal)
+    let title = NSAttributedString(
+      string: EditToDoSceneTheme.StringLiteral.EditToDoView.DeleteToDoButton.title,
+      attributes: [
+        NSAttributedString.Key.font: UIFont.pretendardHeadSemiBold,
+        NSAttributedString.Key.strokeColor: UIColor.toDoGardenEditButtonRed
+      ]
+    )
+    self.deleteToDoButton.setAttributedTitle(title, for: UIControl.State.normal)
   }
 }
 
@@ -50,6 +72,7 @@ extension EditToDoView {
     let groupLabel = self.makeGroupLabel()
     self.setupGroupLabelLayout(label: groupLabel)
     self.setupGroupSelectionViewLayout(with: groupLabel)
+    self.setupDeleteToDoButtonLayout()
   }
 
   private func setupToDoNameInputViewLayout() {
@@ -107,6 +130,49 @@ extension EditToDoView {
         ),
         self.groupSelectionView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
         self.groupSelectionView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+      ]
+    )
+  }
+
+  private func setupDeleteToDoButtonLayout() {
+    self.addSubview(self.deleteToDoButton)
+    self.setupTitleLabelLayout(of: self.deleteToDoButton)
+    self.deleteToDoButton.translatesAutoresizingMaskIntoConstraints = false
+
+    let layout = EditToDoViewController.Constant.Layout.EditToDoView.DeleteToDoButton.self
+    NSLayoutConstraint.activate(
+      [
+        self.deleteToDoButton.topAnchor.constraint(
+          equalTo: self.groupSelectionView.topAnchor,
+          constant: 59
+        ),
+        self.deleteToDoButton.leadingAnchor.constraint(
+          equalTo: self.leadingAnchor,
+          constant: layout.leadingMargin
+        ),
+        self.deleteToDoButton.trailingAnchor.constraint(
+          equalTo: self.trailingAnchor,
+          constant: -layout.trailingMargin
+        ),
+        self.deleteToDoButton.heightAnchor.constraint(equalToConstant: layout.height)
+      ]
+    )
+  }
+
+  private func setupTitleLabelLayout(of button: UIButton) {
+    button.titleLabel?.translatesAutoresizingMaskIntoConstraints = false
+
+    guard let titleLabel = button.titleLabel
+    else { return }
+
+    let layout = EditToDoViewController.Constant.Layout.EditToDoView.DeleteToDoButton.self
+    NSLayoutConstraint.activate(
+      [
+        titleLabel.leadingAnchor.constraint(
+          equalTo: self.deleteToDoButton.leadingAnchor,
+          constant: layout.titleLeadingMargin
+        ),
+        titleLabel.centerYAnchor.constraint(equalTo: self.deleteToDoButton.centerYAnchor)
       ]
     )
   }
