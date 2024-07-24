@@ -144,6 +144,7 @@ extension EditToDoAlarmView {
   }
 }
 
+#if DEBUG
 @available(iOS 17.0, *)
 #Preview {
   let view = EditToDoAlarmView()
@@ -154,3 +155,4 @@ extension EditToDoAlarmView {
   view.disableAlarm()
   return view
 }
+#endif
