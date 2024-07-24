@@ -27,11 +27,15 @@ final class EditToDoAlarmView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
 
+  /// 해당 메서드는 서버로 부터 받아온 투두 정보를 바탕으로 알림 스위치를 활성화시키는 메서드입니다.
+  /// 사용자가 기존에 알림을 비활성화 했었을 경우에 호출합니다.
   func enableAlarm() {
     self.alarmSwitch.setOn(true, animated: true)
     self.alarmTimeSettingView.enable()
   }
 
+  /// 해당 메서드는 서버로 부터 받아온 투두 정보를 바탕으로 알림 스위치를 비활성화시키는 메서드입니다.
+  /// 사용자가 기존에 알림을 비활성화 했었을 경우에 호출합니다.
   func disableAlarm() {
     self.alarmSwitch.setOn(false, animated: true)
     self.alarmTimeSettingView.disable()
@@ -53,6 +57,7 @@ extension EditToDoAlarmView {
     self.alarmSwitch.addAction(switchAction, for: UIControl.Event.valueChanged)
   }
 
+  /// 알림 시간 설정 버튼을 눌렀을 때 Modal로 SettingTimeView를 띄우는 액션을 지정하는데 사용됩니다.
   func setupAlarmSettingAction(_ closure: @escaping () -> Void) {
     self.alarmTimeSettingView.addAlarmSettingAction(closure)
   }
