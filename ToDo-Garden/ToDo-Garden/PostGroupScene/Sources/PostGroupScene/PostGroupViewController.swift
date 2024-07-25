@@ -166,12 +166,8 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
     guard let currentColor = self.postGroupColorPickerRow.getColor() else {
       return true
     }
-    
-    if currentColor == UIColor.toDoGardenGrassNone {
-      return true
-    } else {
-      return false
-    }
+
+    return currentColor == UIColor.toDoGardenGrassNone
   }
 }
 
