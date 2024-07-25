@@ -2,11 +2,12 @@ import Combine
 import UIKit
 
 import CombineExtension
+import ToDoGardenUIAPI
 import ToDoGardenUIConstant
 
-public final class ColorPickerList: UIStackView {
-  let colors: [UIColor]
+public final class ColorPickerList: UIStackView, ColorPickerListAPI {
   let itemsPerRow: Int
+  public let colors: [UIColor]
   public var selected: CurrentValueSubject<Int?, Never>
   private var cancellables: Set<AnyCancellable> = []
   
@@ -66,8 +67,7 @@ public final class ColorPickerList: UIStackView {
     self.selected
       .pairwise()
       .sink { [weak button] old, new in
-        guard let button 
-        else { return }
+        guard let button else { return }
         if index == old, old != new {
           button.isSelected = false
         }
@@ -103,6 +103,7 @@ public final class ColorPickerList: UIStackView {
 
 private final class ColorButton: UIButton {
   private var padding: CGFloat
+  private var innerView: UIView!
   
   override var isSelected: Bool {
     didSet {
@@ -129,33 +130,34 @@ private final class ColorButton: UIButton {
   
   fileprivate override func layoutSubviews() {
     super.layoutSubviews()
-    if
-      let configuration,
-      configuration.background.cornerRadius != self.bounds.width / 2 {
-      self.configuration?.background.cornerRadius = self.bounds.width / 2
-    }
-    if self.layer.cornerRadius != self.bounds.width / 2 {
-      self.layer.cornerRadius = self.bounds.width / 2
-    }
+    innerView.layer.cornerRadius = innerView.bounds.width / 2
+    self.layer.cornerRadius = self.bounds.width / 2
   }
   
   private func build(backgroundColor: UIColor, selectedColor: UIColor?) {
-    self.buildConfiguration(backgroundColor)
+    self.innerView = buildInnerView(backgroundColor)
+    self.addSubview(innerView)
+    self.layoutInnerView()
     if let selectedColor {
       self.layer.borderColor = selectedColor.cgColor
     }
   }
   
-  private func buildConfiguration(_ backgroundColor: UIColor) {
-    self.configuration = UIButton.Configuration.filled()
-    self.configuration?.background.backgroundInsets = NSDirectionalEdgeInsets(
-      top: self.padding,
-      leading: self.padding,
-      bottom: self.padding,
-      trailing: self.padding
-    )
-    self.configuration?.background.backgroundColor = backgroundColor
-    self.changesSelectionAsPrimaryAction = true
+  private func buildInnerView(_ backgroundColor: UIColor) -> UIView {
+    let view = UIView()
+    view.isUserInteractionEnabled = false
+    view.backgroundColor = backgroundColor
+    return view
+  }
+  
+  private func layoutInnerView() {
+    self.innerView.usingAutolayout()
+    NSLayoutConstraint.activate([
+      self.innerView.topAnchor.constraint(equalTo: self.topAnchor, constant: self.padding),
+      self.innerView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: self.padding),
+      self.innerView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -self.padding),
+      self.innerView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -self.padding)
+    ])
   }
 }
 

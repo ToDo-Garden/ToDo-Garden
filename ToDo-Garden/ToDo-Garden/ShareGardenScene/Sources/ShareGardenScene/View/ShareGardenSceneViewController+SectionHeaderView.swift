@@ -1,0 +1,112 @@
+//
+//  ShareGardenSceneViewController+SectionHeaderView.swift
+//
+//
+//  Created by Noah on 7/5/24.
+//
+
+import UIKit
+
+import TDUtility
+
+import ToDoGardenUIComponent
+import ToDoGardenUIResource
+
+extension ShareGardenSceneViewController {
+  final class SectionHeaderView: UIStackView {
+    
+    // MARK: - UI Properties
+    
+    private let titleLabel: UILabel = {
+      let titleLabel = UILabel()
+      titleLabel.numberOfLines = 1
+      titleLabel.font = UIFont.pretendardHeadBold
+      titleLabel.textColor = UIColor.toDoGardenGreenDark
+      
+      return titleLabel
+    }()
+    
+    private let rightActionButton: UIButton
+    
+    // MARK: - Properties
+    
+    @ExecuteOnce private var configureSpacingOnce: (() -> Void)?
+    
+    // MARK: - Object life cycle
+    
+    init(sectionTitle: String, rightActionButton: UIButton) {
+      self.rightActionButton = rightActionButton
+      super.init(frame: CGRect.zero)
+      self.setup(with: sectionTitle)
+    }
+    
+    @available(*, unavailable)
+    required init(coder: NSCoder) {
+      fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - View life cycle
+    
+    override func layoutSubviews() {
+      super.layoutSubviews()
+      self.configureSpacingOnce = {
+        self.setupSpacing()
+      }
+    }
+    
+    func setupRightActionButton(action: UIAction) {
+      self.rightActionButton.addAction(action, for: UIControl.Event.touchUpInside)
+    }
+  }
+}
+
+// MARK: - Setup
+
+extension ShareGardenSceneViewController.SectionHeaderView {
+  private func setup(with sectionTitle: String) {
+    self.setupAppearance()
+    self.setupTitle(sectionTitle)
+    self.setupLayoutPriorities()
+    self.addSubviews()
+  }
+  
+  private func setupAppearance() {
+    self.axis = NSLayoutConstraint.Axis.horizontal
+    self.distribution = UIStackView.Distribution.fill
+    self.alignment = UIStackView.Alignment.center
+  }
+  
+  private func setupTitle(_ title: String) {
+    self.titleLabel.text = title
+  }
+  
+  private func setupLayoutPriorities() {
+    self.titleLabel.setContentCompressionResistancePriority(
+      UILayoutPriority.defaultLow,
+      for: NSLayoutConstraint.Axis.horizontal
+    )
+    self.titleLabel.setContentHuggingPriority(
+      UILayoutPriority.defaultLow,
+      for: NSLayoutConstraint.Axis.horizontal
+    )
+    
+    self.rightActionButton.setContentHuggingPriority(
+      UILayoutPriority.required,
+      for: NSLayoutConstraint.Axis.horizontal
+    )
+    self.rightActionButton.setContentCompressionResistancePriority(
+      UILayoutPriority.required,
+      for: NSLayoutConstraint.Axis.horizontal
+    )
+  }
+  
+  private func addSubviews() {
+    self.addArrangedSubview(self.titleLabel)
+    self.addArrangedSubview(self.rightActionButton)
+  }
+  
+  private func setupSpacing() {
+    let spacingRatio = ShareGardenSceneViewController.Constant.Layout.SectionHeaderView.spacingRatio
+    self.spacing = self.bounds.width * spacingRatio
+  }
+}

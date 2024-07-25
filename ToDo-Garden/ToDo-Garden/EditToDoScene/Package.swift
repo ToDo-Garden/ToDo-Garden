@@ -38,7 +38,8 @@ let package = Package(
       dependencies: [
         "EditToDoSceneAPI",
         "EditToDoSceneEntity",
-        .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI"),
+        .product(name: "ToDoGardenUIAPI", package: "ToDoGardenUI"),
+        // .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI"),
         .product(name: "ToDoGardenUIResource", package: "ToDoGardenUI")
       ]
     )
