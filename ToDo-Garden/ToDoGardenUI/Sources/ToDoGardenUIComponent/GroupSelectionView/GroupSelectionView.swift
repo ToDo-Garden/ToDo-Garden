@@ -19,6 +19,8 @@ public final class GroupSelectionView: UIView, GroupSelectionViewAPI {
   private var tableViewHeightConstraint: NSLayoutConstraint
   private var heightConstraint: NSLayoutConstraint
 
+  public weak var delegate: GroupSelectionViewDelegate?
+
   public init(model: GroupSelectionView.Model) {
     self.model = model
     self.showGroupListButton = UIButton()
@@ -75,6 +77,7 @@ extension GroupSelectionView: GroupDataSendable {
     let color = groupItem.groupColor
     let model = Styled.Row.Configuration.ListPrimaryModel(title: title, color: color)
     self.currentGroupRow.groupListModel = model
+    self.delegate?.didSelectGroup(color: color)
   }
 }
 

@@ -23,6 +23,10 @@ public final class TextInputView: UIView, TextInputViewAPI {
     return CGSize(width: 0, height: self.height)
   }
 
+  public override var isFirstResponder: Bool {
+    return self.inputTextField.isFirstResponder
+  }
+
   public init(model: Model) {
     self.model = model
     self.inputTextField = Styled.TextField(
@@ -39,6 +43,11 @@ public final class TextInputView: UIView, TextInputViewAPI {
   @available(*, unavailable)
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+
+  public override func resignFirstResponder() -> Bool {
+    super.resignFirstResponder()
+    return self.inputTextField.resignFirstResponder()
   }
 
   public func changeBottomLine(color: UIColor) {
