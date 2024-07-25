@@ -10,6 +10,7 @@ import UIKit
 import PostGroupSceneAPI
 import PostGroupSceneEntity
 import ToDoGardenUIAPI
+import ToDoGardenUIResource
 
 protocol PostGroupDisplayLogic: AnyObject {
   func displaySomething(viewModel: PostGroup.Something.ViewModel)
