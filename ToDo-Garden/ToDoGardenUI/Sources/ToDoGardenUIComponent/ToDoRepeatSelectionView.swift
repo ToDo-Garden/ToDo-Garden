@@ -118,7 +118,6 @@ extension ToDoRepeatSelectionView {
 
 extension ToDoRepeatSelectionView {
   @objc func didTapView() {
-    self.isSelected = !self.isSelected
     self.selectionSender?(self.isSelected)
   }
 }
@@ -208,7 +207,6 @@ extension ToDoRepeatSelectionView {
 @available(iOS 17.0, *)
 #Preview {
   let view = ToDoRepeatSelectionView(model: ToDoRepeatSelectionView.Model.anotherDay)
-
   return view
 }
 #endif
