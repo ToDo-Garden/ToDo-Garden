@@ -102,6 +102,9 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
           equalTo: self.textInputView.bottomAnchor,
           constant: Constant.ColorPickerRow.topMargin
         ),
+        self.postGroupColorPickerRow.heightAnchor.constraint(
+          equalToConstant: Constant.ColorPickerRow.height
+        ),
         self.postGroupColorPickerRow.leadingAnchor.constraint(
           equalTo: self.view.leadingAnchor,
           constant: Constant.ColorPickerRow.leadingMargin

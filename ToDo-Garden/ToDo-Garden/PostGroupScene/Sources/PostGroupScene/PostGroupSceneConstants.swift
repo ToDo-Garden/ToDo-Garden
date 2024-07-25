@@ -13,7 +13,8 @@ enum Constant {
   }
   
   enum ColorPickerRow {
-    static let topMargin: CGFloat = 45.0
+    static let topMargin: CGFloat = 20.0
+    static let height: CGFloat = 40.0
     static let leadingMargin: CGFloat = 15.0
     static let trailingMargin: CGFloat = -30.0
   }
