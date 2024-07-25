@@ -16,7 +16,7 @@ protocol PostGroupDisplayLogic: AnyObject {
   func displaySomething(viewModel: PostGroup.Something.ViewModel)
 }
 
-class PostGroupViewController: UIViewController, PostGroupViewControllable {
+final class PostGroupViewController: UIViewController, PostGroupViewControllable {
   
   // MARK: - VIP Properties
   
