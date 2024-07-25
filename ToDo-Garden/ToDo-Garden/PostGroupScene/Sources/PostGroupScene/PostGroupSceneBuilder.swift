@@ -1,24 +1,47 @@
 //
 //  PostGroupSceneBuilder.swift
-//  
+//
 //
 //  Created by SONG on 7/8/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
-import Foundation
+import UIKit.UIButton
 
 import PostGroupSceneAPI
 import PostGroupSceneEntity
+import ToDoGardenUIAPI
 
 public struct PostGroupSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
   public struct Dependency {
-    let someWorker: PostGroupWorkable
-    let nextSceneBuilder: NextSceneBuildable
+    let postGroupWorker: PostGroupWorkable
+    let nextSceneBuilder: NextSceneBuildable?
     
-    public init(someWorker: PostGroupWorkable, nextSceneBuilder: NextSceneBuildable) {
-      self.someWorker = someWorker
+    let textInputView: TextInputViewAPI
+    let colorRow: PostGroupColorPickerRowAPI
+    let colorPickerList: ColorPickerListAPI
+    let colorPickButton: UIButton
+    let bottomButton: UIButton
+    let modalBottomButton: UIButton
+    
+    public init(
+      postGroupWorker: PostGroupWorkable,
+      nextSceneBuilder: NextSceneBuildable?,
+      textInputView: TextInputViewAPI,
+      colorRow: PostGroupColorPickerRowAPI,
+      colorPickerList: ColorPickerListAPI,
+      colorPickButton: UIButton,
+      bottomButton: UIButton,
+      modalBottomButton: UIButton
+    ) {
+      self.postGroupWorker = postGroupWorker
       self.nextSceneBuilder = nextSceneBuilder
+      self.textInputView = textInputView
+      self.colorRow = colorRow
+      self.colorPickerList = colorPickerList
+      self.colorPickButton = colorPickButton
+      self.bottomButton = bottomButton
+      self.modalBottomButton = modalBottomButton
     }
   }
   
@@ -33,11 +56,20 @@ extension PostGroupSceneBuilder: PostGroupSceneBuildable {
   ///  VIP Cycle, 런타임 의존성이 설정된 ViewController 인스턴스를 반환하는 함수입니다.
   /// - Parameter payload: 런타임에 전달받아야 하는 의존성입니다.
   /// - Returns: 런타임 의존성, VIP Cycle이 설정된 ViewController를 반환합니다.
-  public func build(with payload: PostGroupScenePayloadable) -> PostGroupViewControllable {
-    let someViewController = self.configureVIPCycle(for: PostGroupViewController())
-    self.setPayload(for: someViewController, with: payload)
+  public func build(with payload: PostGroupScenePayloadable?) -> PostGroupViewControllable {
+    let postGroupViewController = self.configureVIPCycle(
+      for: PostGroupViewController(
+        textInputView: self.dependency.textInputView,
+        postGroupColorPickerRow: self.dependency.colorRow,
+        colorPickerList: self.dependency.colorPickerList,
+        colorPickButton: self.dependency.colorPickButton,
+        bottomButton: self.dependency.bottomButton,
+        modalBottomButton: self.dependency.modalBottomButton
+      )
+    )
+    self.setPayload(for: postGroupViewController, with: payload)
     
-    return someViewController
+    return postGroupViewController
   }
 }
 
@@ -46,9 +78,9 @@ extension PostGroupSceneBuilder {
   /// - Parameter viewController: VIPCycle을 설정할 viewController입니다.
   /// - Returns: VIP Cycle 설정이 완료된 `ViewControllable` 프로토콜을 준수한 `ViewController` 인스턴스를 반환합니다.
   private func configureVIPCycle(for viewController: PostGroupViewController) -> PostGroupViewController {
-    let interactor = PostGroupInteractor(someWorker: self.dependency.someWorker)
+    let interactor = PostGroupInteractor(someWorker: self.dependency.postGroupWorker)
     let presenter = PostGroupPresenter()
-    let router = PostGroupRouter(nextSceneBuilder: self.dependency.nextSceneBuilder)
+    let router = PostGroupRouter(nextSceneBuilder: nil)
     viewController.interactor = interactor
     viewController.router = router
     interactor.presenter = presenter
@@ -63,7 +95,8 @@ extension PostGroupSceneBuilder {
   /// - Parameters:
   ///   - viewController: 런타임 의존성을 설정할 ViewController 객체입니다.
   ///   - payload: 런타임에 전달할 의존성입니다.
-  private func setPayload(for viewController: PostGroupViewController, with payload: PostGroupScenePayloadable) {
-    // viewController.router?.dataStore?.name = payload.name
+  private func setPayload(for viewController: PostGroupViewController, with payload: PostGroupScenePayloadable?) {
+    // viewController.setPayload(name: payload?.grouName, color: payload?.color)
+    // TODO: PostGroupScenePayloadable 수정후 주석해제 예정
   }
 }
