@@ -108,6 +108,7 @@ extension EditableGroupTableViewDelegate {
   private func setupTableView(_ tableView: UITableView) {
     tableView.delegate = self
     self.tableViewDataSource = self.makeDiffableDataSource(tableView: tableView)
+    self.tableViewDataSource.defaultRowAnimation = UITableView.RowAnimation.right
     tableView.dataSource = self.tableViewDataSource
   }
 
