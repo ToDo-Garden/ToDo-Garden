@@ -65,7 +65,7 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
     self.setupTextInputView()
     self.setupPostGroupColorPickerRow()
     self.setupColorPickButton()
-    self.setupBottomButton()
+    self.setupDoneBottomButton()
   }
   
   private func setupTextInputView() {
@@ -133,11 +133,11 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
     }, for: UIControl.Event.touchUpInside)
   }
   
-  private func setupBottomButton() {
+  private func setupDoneBottomButton() {
     self.doneBottomButton.translatesAutoresizingMaskIntoConstraints = false
     self.view.addSubview(self.doneBottomButton)
     
-    self.doneBottomButton.isEnabled = self.isButtonEnabled()
+    self.doneBottomButton.isEnabled = self.isDoneBottomButtonEnabled()
     
     NSLayoutConstraint.activate(
       [
@@ -150,7 +150,7 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
     )
   }
   
-  private func isButtonEnabled() -> Bool {
+  private func isDoneBottomButtonEnabled() -> Bool {
     return !(self.isTextFieldEmpty()) && !(self.isColorEmpty())
   }
   
@@ -194,7 +194,7 @@ extension PostGroupViewController {
 
 extension PostGroupViewController: TextInputViewDelegate {
   func textInputViewDidEndEditing(isEmpty: Bool) {
-    self.doneBottomButton.isEnabled = self.isButtonEnabled()
+    self.doneBottomButton.isEnabled = self.isDoneBottomButtonEnabled()
   }
 }
 
