@@ -93,31 +93,21 @@ extension GroupSelectionView {
 
   private func setupShowGroupMenuButton() {
     self.showGroupListButton.setImage(UIImage.forwardButtonImage, for: UIControl.State.normal)
-    self.showGroupListButton.changesSelectionAsPrimaryAction = true
-    self.showGroupListButton.addAction(self.makeShowEditableGroupButtonAction(), for: UIControl.Event.touchUpInside)
-  }
 
-  private func makeShowEditableGroupButtonAction() -> UIAction {
-    return UIAction { [weak self] _ in
+    let buttonAction = UIAction { [weak self] _ in
       guard let self else { return }
 
       let isSelected = self.showGroupListButton.isSelected
-      self.animateRotatingButton(isSelected: isSelected)
+      self.showGroupListButton.animateRotating(with: Constant.GroupSelectionView.Animation.duration)
       self.animateShowingEditableGroupMenu(isSelected: isSelected)
     }
-  }
-
-  private func animateRotatingButton(isSelected: Bool) {
-    let transform = isSelected ? CGAffineTransform(rotationAngle: CGFloat.pi / 2) : CGAffineTransform.identity
-    UIView.animate(withDuration: Constant.GroupSelectionView.Animation.duration) {
-      self.showGroupListButton.transform = transform
-    }
+    self.showGroupListButton.addAction(buttonAction, for: UIControl.Event.touchUpInside)
   }
 
   private func animateShowingEditableGroupMenu(isSelected: Bool) {
     let height = self.model.cellHeight * CGFloat(self.model.visibleCellCount)
-    let heightConstant: CGFloat = isSelected ? height : 0
-    let isSeparatorLineHidden = !isSelected
+    let heightConstant: CGFloat = isSelected ? 0 : height
+    let isSeparatorLineHidden = isSelected
     UIView.animate(withDuration: Constant.GroupSelectionView.Animation.duration) {
       self.heightConstraint.constant = heightConstant + self.model.cellHeight
       self.tableViewHeightConstraint.constant = heightConstant
