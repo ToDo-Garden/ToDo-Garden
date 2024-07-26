@@ -112,6 +112,7 @@ extension EditToDoScheduleView {
   }
 }
 
+#if DEBUG
 @available(iOS 17.0, *)
 #Preview {
   let view = UIView()
@@ -125,3 +126,4 @@ extension EditToDoScheduleView {
 
   return view
 }
+#endif
