@@ -10,15 +10,11 @@ import UIKit
 import ToDoGardenUIComponent
 
 final class EditToDoScheduleView: UIView {
-  private let alarmSwitch: ToDoGardenSwitch
-  private let alarmLabel: UILabel
-  private let alarmTimeSettingView: AlarmTimeView
+  private let editToDoAlarmView: EditToDoAlarmView
   private let editToDoRepetitionView: EditToDoRepetitionView
 
   init() {
-    self.alarmSwitch = ToDoGardenSwitch(model: ToDoGardenSwitch.Model.primary)
-    self.alarmLabel = UILabel()
-    self.alarmTimeSettingView = AlarmTimeView(model: AlarmTimeView.Model.primary)
+    self.editToDoAlarmView = EditToDoAlarmView()
     self.editToDoRepetitionView = EditToDoRepetitionView()
     super.init(frame: CGRect.zero)
     self.setup()
@@ -29,8 +25,8 @@ final class EditToDoScheduleView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
 
-  func updateAlarmTime(alarmTime: String?) {
-    self.updateAlarmTimeSettingViewUI(alarmTime: alarmTime)
+  func updateAlarmTime(alarmTime: String) {
+    self.editToDoAlarmView.updateAlarmTime(alarmTime)
   }
 
   func updateToRepeatOnlyToday() {
@@ -71,48 +67,14 @@ extension EditToDoScheduleView: EditToDoAlarmViewDelegate {
 // MARK: Private Functions
 
 extension EditToDoScheduleView {
-  private func updateAlarmTimeSettingViewUI(alarmTime: String?) {
-    guard let alarmTime = alarmTime
-    else { return }
-
-    self.alarmTimeSettingView.updateAlarmTime(with: alarmTime)
-  }
-
   private func setup() {
-    self.setupAlarmLabelUI()
     self.setupDelegate()
-    self.setupAlarmSwitchAction()
-    self.setupAlarmTimeSettingButtonDisabled()
     self.addSubviews()
     self.setupSubviewsLayout()
   }
 
-  private func setupAlarmLabelUI() {
-    self.alarmLabel.font = UIFont.pretendardHeadSemiBold
-    self.alarmLabel.textColor = EditToDoSceneTheme.mainColor
-    self.alarmLabel.text = EditToDoSceneTheme.StringLiteral.ToDoScheduleView.AlarmLabel.text
-  }
-
   private func setupDelegate() {
     self.editToDoRepetitionView.delegate = self
-  }
-
-  private func setupAlarmSwitchAction() {
-    let action = UIAction { [weak self] _ in
-      guard let self else { return }
-
-      if self.alarmSwitch.isOn {
-        self.alarmTimeSettingView.enable()
-      } else {
-        self.alarmTimeSettingView.disable()
-      }
-    }
-
-    self.alarmSwitch.addAction(action, for: UIControl.Event.valueChanged)
-  }
-
-  private func setupAlarmTimeSettingButtonDisabled() {
-    self.alarmTimeSettingView.disable()
   }
 }
 
@@ -120,71 +82,24 @@ extension EditToDoScheduleView {
 
 extension EditToDoScheduleView {
   private func addSubviews() {
-    self.addSubview(self.alarmSwitch)
-    self.addSubview(self.alarmLabel)
-    self.addSubview(self.alarmTimeSettingView)
+    self.addSubview(self.editToDoAlarmView)
     self.addSubview(self.editToDoRepetitionView)
   }
 
   private func setupSubviewsLayout() {
-    self.setupAlarmSwitchLayout()
-    self.setupAlarmLabelLayout()
-    self.setupAlarmTimeSettingViewLayout()
+    self.setupEditToDoAlarmViewLayout()
     self.setupEditToDoRepetitionViewLayout()
   }
 
-  private func setupAlarmSwitchLayout() {
-    self.alarmSwitch.usingAutolayout()
+  private func setupEditToDoAlarmViewLayout() {
+    self.editToDoAlarmView.usingAutolayout()
 
-    let layout = EditToDoViewController.Constant.Layout.EditToDoScheduleView.AlarmSwitch.self
     NSLayoutConstraint.activate(
       [
-        self.alarmSwitch.topAnchor.constraint(
-          equalTo: self.topAnchor,
-          constant: layout.topMargin
-        ),
-        self.alarmSwitch.trailingAnchor.constraint(
-          equalTo: self.trailingAnchor,
-          constant: -layout.trailingMargin
-        )
-      ]
-    )
-  }
-
-  private func setupAlarmTimeSettingViewLayout() {
-    self.alarmTimeSettingView.usingAutolayout()
-
-    let layout = EditToDoViewController.Constant.Layout.EditToDoScheduleView.AlarmTimeSettingView.self
-    NSLayoutConstraint.activate(
-      [
-        self.alarmTimeSettingView.topAnchor.constraint(
-          equalTo: self.alarmSwitch.bottomAnchor,
-          constant: layout.topMargin
-        ),
-        self.alarmTimeSettingView.leadingAnchor.constraint(
-          equalTo: self.leadingAnchor,
-          constant: layout.leadingMargin
-        ),
-        self.alarmTimeSettingView.trailingAnchor.constraint(
-          equalTo: self.trailingAnchor,
-          constant: -layout.trailingMargin
-        ),
-        self.alarmTimeSettingView.heightAnchor.constraint(equalToConstant: layout.height)
-      ]
-    )
-  }
-
-  private func setupAlarmLabelLayout() {
-    self.alarmLabel.usingAutolayout()
-
-    let layout = EditToDoViewController.Constant.Layout.EditToDoScheduleView.AlarmLabel.self
-    NSLayoutConstraint.activate(
-      [
-        self.alarmLabel.leadingAnchor.constraint(
-          equalTo: self.alarmTimeSettingView.leadingAnchor,
-          constant: layout.leadingMargin
-        ),
-        self.alarmLabel.centerYAnchor.constraint(equalTo: self.alarmSwitch.centerYAnchor)
+        self.editToDoAlarmView.topAnchor.constraint(equalTo: self.topAnchor),
+        self.editToDoAlarmView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+        self.editToDoAlarmView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+        self.editToDoAlarmView.heightAnchor.constraint(equalToConstant: 92)
       ]
     )
   }
@@ -196,12 +111,12 @@ extension EditToDoScheduleView {
     NSLayoutConstraint.activate(
       [
         self.editToDoRepetitionView.topAnchor.constraint(
-          equalTo: self.alarmTimeSettingView.bottomAnchor,
+          equalTo: self.editToDoAlarmView.bottomAnchor,
           constant: layout.topMargin
         ),
-        self.editToDoRepetitionView.leadingAnchor.constraint(equalTo: self.alarmTimeSettingView.leadingAnchor),
-        self.editToDoRepetitionView.trailingAnchor.constraint(equalTo: self.alarmTimeSettingView.trailingAnchor),
-        self.editToDoRepetitionView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+        self.editToDoRepetitionView.leadingAnchor.constraint(equalTo: self.editToDoAlarmView.leadingAnchor),
+        self.editToDoRepetitionView.trailingAnchor.constraint(equalTo: self.editToDoAlarmView.trailingAnchor),
+        self.editToDoRepetitionView.heightAnchor.constraint(equalToConstant: 231)
       ]
     )
   }
