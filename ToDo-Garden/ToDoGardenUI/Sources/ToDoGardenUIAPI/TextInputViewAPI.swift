@@ -15,5 +15,5 @@ public protocol TextInputViewAPI: UIView {
 }
 
 public protocol TextInputViewDelegate: AnyObject {
-  func textInputViewDidEndEditing(isEmpty: Bool)
+  func textInputViewDidChange()
 }
