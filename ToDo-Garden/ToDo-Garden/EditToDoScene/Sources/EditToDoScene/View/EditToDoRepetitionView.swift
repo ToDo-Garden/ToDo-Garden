@@ -51,6 +51,13 @@ final class EditToDoRepetitionView: UIView {
   }
 }
 
+// MARK: EditToDoRepetitionView Delegate Functions
+
+protocol EditToDoRepetitionViewDelegate: AnyObject {
+  func didSelectOnlyTodayView(isOnlyToday: Bool)
+  func didSelectEverydayButton(isSelected: Bool)
+}
+
 // MARK: Private Functions
 
 extension EditToDoRepetitionView {

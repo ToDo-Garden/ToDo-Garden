@@ -42,26 +42,11 @@ final class EditToDoScheduleView: UIView {
   }
 }
 
-// MARK: EditToDoRepetitionView Delegate Functions
-
-protocol EditToDoRepetitionViewDelegate: AnyObject {
-  func didSelectOnlyTodayView(isOnlyToday: Bool)
-  func didSelectEverydayButton(isSelected: Bool)
-}
+// MARK: Delegate Functions
 
 extension EditToDoScheduleView: EditToDoRepetitionViewDelegate {
   func didSelectOnlyTodayView(isOnlyToday: Bool) {}
   func didSelectEverydayButton(isSelected: Bool) {}
-}
-
-// MARK: EditToDoAlarmView Delegate Functions
-
-protocol EditToDoAlarmViewDelegate: AnyObject {
-  func didToggleSwitch()
-}
-
-extension EditToDoScheduleView: EditToDoAlarmViewDelegate {
-  func didToggleSwitch() {}
 }
 
 // MARK: Private Functions
