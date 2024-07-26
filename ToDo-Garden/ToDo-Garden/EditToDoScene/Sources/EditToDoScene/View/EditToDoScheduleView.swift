@@ -44,9 +44,13 @@ final class EditToDoScheduleView: UIView {
 
 // MARK: Delegate Functions
 
-extension EditToDoScheduleView: EditToDoRepetitionViewDelegate {
+/// 하위 뷰들에서 이벤트를 입력받았을 때 Delegate로 전달받아 호출되는 메서드들입니다.
+extension EditToDoScheduleView: EditToDoRepetitionViewDelegate, EditToDoAlarmViewDelegate {
   func didSelectOnlyTodayView(isOnlyToday: Bool) {}
   func didSelectEverydayButton(isSelected: Bool) {}
+
+  func didToggleSwitch() {}
+  func didSelectAlarmSettingButton() {}
 }
 
 // MARK: Private Functions
@@ -60,6 +64,7 @@ extension EditToDoScheduleView {
 
   private func setupDelegate() {
     self.editToDoRepetitionView.delegate = self
+    self.editToDoAlarmView.delegate = self
   }
 }
 

@@ -14,6 +14,8 @@ final class EditToDoAlarmView: UIView {
   private let alarmLabel: UILabel
   private let alarmTimeSettingView: AlarmTimeView
 
+  weak var delegate: EditToDoAlarmViewDelegate?
+
   init() {
     self.alarmSwitch = ToDoGardenSwitch(model: ToDoGardenSwitch.Model.primary)
     self.alarmLabel = UILabel()
@@ -46,21 +48,11 @@ final class EditToDoAlarmView: UIView {
   }
 }
 
-// MARK: Set up Subviews Action
+// MARK: EditToDoAlarmView Delegate
 
-extension EditToDoAlarmView {
-  func setupSwitchAction(_ closure: @escaping () -> Void) {
-    let switchAction = UIAction { _ in
-      closure()
-    }
-
-    self.alarmSwitch.addAction(switchAction, for: UIControl.Event.valueChanged)
-  }
-
-  /// 알림 시간 설정 버튼을 눌렀을 때 Modal로 SettingTimeView를 띄우는 액션을 지정하는데 사용됩니다.
-  func setupAlarmSettingAction(_ closure: @escaping () -> Void) {
-    self.alarmTimeSettingView.addAlarmSettingAction(closure)
-  }
+protocol EditToDoAlarmViewDelegate: AnyObject {
+  func didToggleSwitch()
+  func didSelectAlarmSettingButton()
 }
 
 // MARK: Theme Color
@@ -76,6 +68,8 @@ extension EditToDoAlarmView {
 extension EditToDoAlarmView {
   private func setup() {
     self.setupAlarmLabelUI()
+    self.setupAlarmSwitchAction()
+    self.setupAlarmSettingButtonAction()
     self.addSubviews()
     self.setupConstraints()
   }
@@ -84,6 +78,20 @@ extension EditToDoAlarmView {
     self.alarmLabel.font = UIFont.pretendardHeadSemiBold
     let text = EditToDoSceneTheme.StringLiteral.ToDoScheduleView.AlarmLabel.text
     self.alarmLabel.text = text
+  }
+
+  private func setupAlarmSwitchAction() {
+    let switchAction = UIAction { _ in
+      self.delegate?.didToggleSwitch()
+    }
+
+    self.alarmSwitch.addAction(switchAction, for: UIControl.Event.valueChanged)
+  }
+
+  private func setupAlarmSettingButtonAction() {
+    self.alarmTimeSettingView.addAlarmSettingAction {
+      self.delegate?.didSelectAlarmSettingButton()
+    }
   }
 }
 
@@ -153,9 +161,6 @@ extension EditToDoAlarmView {
 @available(iOS 17.0, *)
 #Preview {
   let view = EditToDoAlarmView()
-  view.setupSwitchAction {
-    print("switch action called")
-  }
   view.enableAlarm()
   view.disableAlarm()
   return view
