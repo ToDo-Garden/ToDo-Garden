@@ -14,6 +14,7 @@ public final class GroupSelectionView: UIView, GroupSelectionViewAPI {
   private let model: GroupSelectionView.Model
   private let showGroupListButton: UIButton
   private let currentGroupRow: Styled.Row
+  private let groupListSeparatorLineView: UIView
   private let editableGroupListTableView: UITableView
   private let editableGroupListTableViewDelegate: EditableGroupTableViewDelegate
   private var tableViewHeightConstraint: NSLayoutConstraint
@@ -33,6 +34,7 @@ public final class GroupSelectionView: UIView, GroupSelectionViewAPI {
       ),
       with: [self.showGroupListButton]
     )
+    self.groupListSeparatorLineView = UIView()
     self.editableGroupListTableView = UITableView()
     self.editableGroupListTableViewDelegate = EditableGroupTableViewDelegate(
       tableView: self.editableGroupListTableView,
@@ -94,33 +96,25 @@ extension GroupSelectionView {
 
   private func setupShowGroupMenuButton() {
     self.showGroupListButton.setImage(UIImage.forwardButtonImage, for: UIControl.State.normal)
-    self.showGroupListButton.changesSelectionAsPrimaryAction = true
-    self.showGroupListButton.addAction(self.makeShowEditableGroupButtonAction(), for: UIControl.Event.touchUpInside)
-  }
 
-  private func makeShowEditableGroupButtonAction() -> UIAction {
-    return UIAction { [weak self] _ in
+    let buttonAction = UIAction { [weak self] _ in
       guard let self else { return }
 
       let isSelected = self.showGroupListButton.isSelected
-      self.animateRotatingButton(isSelected: isSelected)
+      self.showGroupListButton.animateRotating(with: Constant.GroupSelectionView.Animation.duration)
       self.animateShowingEditableGroupMenu(isSelected: isSelected)
     }
-  }
-
-  private func animateRotatingButton(isSelected: Bool) {
-    let transform = isSelected ? CGAffineTransform(rotationAngle: CGFloat.pi / 2) : CGAffineTransform.identity
-    UIView.animate(withDuration: Constant.GroupSelectionView.Animation.duration) {
-      self.showGroupListButton.transform = transform
-    }
+    self.showGroupListButton.addAction(buttonAction, for: UIControl.Event.touchUpInside)
   }
 
   private func animateShowingEditableGroupMenu(isSelected: Bool) {
     let height = self.model.cellHeight * CGFloat(self.model.visibleCellCount)
-    let heightConstant: CGFloat = isSelected ? height : 0
+    let heightConstant: CGFloat = isSelected ? 0 : height
+    let isSeparatorLineHidden = isSelected
     UIView.animate(withDuration: Constant.GroupSelectionView.Animation.duration) {
       self.heightConstraint.constant = heightConstant + self.model.cellHeight
       self.tableViewHeightConstraint.constant = heightConstant
+      self.groupListSeparatorLineView.isHidden = isSeparatorLineHidden
       self.superview?.layoutIfNeeded()
     }
   }
@@ -160,6 +154,7 @@ extension GroupSelectionView {
     self.setupCurrentGroupRowLayout()
     let containerView = self.makeGroupListContainerView()
     self.setupContainerViewLayout(containerView: containerView)
+    self.setupGroupListSeparatorLineViewLayout(with: containerView)
     self.setupGroupListTableViewLayout(with: containerView)
     self.setupHeightLayout()
   }
@@ -222,13 +217,30 @@ extension GroupSelectionView {
     )
   }
 
+  private func setupGroupListSeparatorLineViewLayout(with containerView: UIView) {
+    self.groupListSeparatorLineView.isHidden = true
+    self.groupListSeparatorLineView.backgroundColor = UIColor.toDoGardenGreenGray
+    containerView.addSubview(self.groupListSeparatorLineView)
+    self.groupListSeparatorLineView.usingAutolayout()
+
+    let height = Constant.GroupSelectionView.Layout.EditableGroupTableViewDelegate.headerViewHeight
+    NSLayoutConstraint.activate(
+      [
+        self.groupListSeparatorLineView.topAnchor.constraint(equalTo: containerView.topAnchor),
+        self.groupListSeparatorLineView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+        self.groupListSeparatorLineView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+        self.groupListSeparatorLineView.heightAnchor.constraint(equalToConstant: height)
+      ]
+    )
+  }
+
   private func setupGroupListTableViewLayout(with containerView: UIView) {
     containerView.addSubview(self.editableGroupListTableView)
     self.editableGroupListTableView.usingAutolayout()
 
     NSLayoutConstraint.activate(
       [
-        self.editableGroupListTableView.topAnchor.constraint(equalTo: containerView.topAnchor),
+        self.editableGroupListTableView.topAnchor.constraint(equalTo: self.groupListSeparatorLineView.bottomAnchor),
         self.editableGroupListTableView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
         self.editableGroupListTableView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
         self.editableGroupListTableView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)

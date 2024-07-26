@@ -87,8 +87,9 @@ extension EditableGroupTableViewCell {
     let layout = Constant.GroupSelectionView.Layout.EditableGroupTableViewCell.SeparatorView.self
     NSLayoutConstraint.activate(
       [
-        separatorView.topAnchor.constraint(equalTo: self.bottomAnchor),
-        separatorView.widthAnchor.constraint(equalTo: self.widthAnchor),
+        separatorView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
+        separatorView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
+        separatorView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
         separatorView.heightAnchor.constraint(equalToConstant: layout.width)
       ]
     )

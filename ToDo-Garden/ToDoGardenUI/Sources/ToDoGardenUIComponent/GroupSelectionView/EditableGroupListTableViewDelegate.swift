@@ -48,16 +48,6 @@ extension EditableGroupTableViewDelegate: UITableViewDelegate {
     return self.cellHeight
   }
 
-  func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-    let headerView = UIView()
-    headerView.backgroundColor = UIColor.toDoGardenGreenGray
-    return headerView
-  }
-
-  func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-    return Constant.GroupSelectionView.Layout.EditableGroupTableViewDelegate.headerViewHeight
-  }
-
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     guard let newItem = self.tableViewDataSource.itemIdentifier(for: indexPath)
     else { return }
@@ -118,6 +108,7 @@ extension EditableGroupTableViewDelegate {
   private func setupTableView(_ tableView: UITableView) {
     tableView.delegate = self
     self.tableViewDataSource = self.makeDiffableDataSource(tableView: tableView)
+    self.tableViewDataSource.defaultRowAnimation = UITableView.RowAnimation.right
     tableView.dataSource = self.tableViewDataSource
   }
 

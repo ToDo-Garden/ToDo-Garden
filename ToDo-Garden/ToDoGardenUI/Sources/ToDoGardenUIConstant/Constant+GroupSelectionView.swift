@@ -28,7 +28,7 @@ extension Constant.GroupSelectionView.Layout {
 extension Constant.GroupSelectionView.Layout.TableViewContainer {
   public enum Layer {}
 
-  public static let topMargin: CGFloat = 6
+  public static let topMargin: CGFloat = 14
   public static let leadingMargin: CGFloat = 10
   public static let trailingMargin: CGFloat = 5
 }
