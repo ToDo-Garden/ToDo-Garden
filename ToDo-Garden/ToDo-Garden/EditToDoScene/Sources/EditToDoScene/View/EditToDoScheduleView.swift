@@ -25,6 +25,14 @@ final class EditToDoScheduleView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
 
+  func updateToAlarmOn() {
+    self.editToDoAlarmView.enableAlarm()
+  }
+
+  func updateToAlarmOff() {
+    self.editToDoAlarmView.disableAlarm()
+  }
+
   func updateAlarmTime(alarmTime: String) {
     self.editToDoAlarmView.updateAlarmTime(alarmTime)
   }
