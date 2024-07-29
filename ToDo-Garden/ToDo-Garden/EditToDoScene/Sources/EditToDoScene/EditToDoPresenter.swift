@@ -11,6 +11,7 @@ import EditToDoSceneEntity
 
 protocol EditToDoPresentationLogic {
   func presentFetchedToDo(response: EditToDo.FetchToDo.Response)
+  func presentDeleteResult(response: EditToDo.DeleteToDo.Response)
   func presentSomething(response: EditToDo.Something.Response)
 }
 
@@ -22,7 +23,8 @@ class EditToDoPresenter {
 
 extension EditToDoPresenter: EditToDoPresentationLogic {
   func presentFetchedToDo(response: EditToDo.FetchToDo.Response) {}
-  
+  func presentDeleteResult(response: EditToDo.DeleteToDo.Response) {}
+
   func presentSomething(response: EditToDo.Something.Response) {
     let viewModel = EditToDo.Something.ViewModel()
     self.viewController?.displaySomething(viewModel: viewModel)

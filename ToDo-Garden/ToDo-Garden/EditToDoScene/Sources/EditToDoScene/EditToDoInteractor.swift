@@ -16,6 +16,7 @@ protocol EditToDoDataStore {
 
 protocol EditToDoBusinessLogic {
   func fetchToDo(request: EditToDo.FetchToDo.Request)
+  func deleteToDo(request: EditToDo.DeleteToDo.Request)
   func doSomething(request: EditToDo.Something.Request)
 }
 
@@ -43,6 +44,7 @@ final class EditToDoInteractor: EditToDoDataStore {
 // MARK: - Request to worker
 
 extension EditToDoInteractor: EditToDoBusinessLogic {
+  /// 서버로부터 수정할 투두의 정보를 받아오는 메서드입니다.
   func fetchToDo(request: EditToDo.FetchToDo.Request) {
     guard let toDoData = try? self.toDoWorker.fetchToDo(id: self.toDoId),
       let groupList = try? self.groupWorker.fetchGroupList()
@@ -61,6 +63,13 @@ extension EditToDoInteractor: EditToDoBusinessLogic {
     self.presenter?.presentFetchedToDo(response: response)
   }
   
+  /// 서버에 투두의 삭제를 요청하는 메서드입니다.
+  func deleteToDo(request: EditToDo.DeleteToDo.Request) {
+    let result = self.toDoWorker.deleteToDo(id: self.toDoId)
+    let response = EditToDo.DeleteToDo.Response(deleteResult: result)
+    self.presenter?.presentDeleteResult(response: response)
+  }
+
   /// EditToDoViewController 컴파일 에러 방지 코드입니다.
   func doSomething(request: EditToDo.Something.Request) {}
 }
