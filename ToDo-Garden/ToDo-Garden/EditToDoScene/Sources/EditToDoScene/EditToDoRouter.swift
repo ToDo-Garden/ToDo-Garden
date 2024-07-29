@@ -14,7 +14,7 @@ protocol EditToDoRoutingLogic {
 }
 
 protocol EditToDoDataPassing {
-  var dataStore: EditToDoDataStore? { get }
+  var dataStore: EditToDoDataStore? { get set }
 }
 
 class EditToDoRouter: EditToDoDataPassing {

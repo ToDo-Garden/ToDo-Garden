@@ -11,15 +11,15 @@ import EditToDoSceneAPI
 import EditToDoSceneEntity
 
 protocol EditToDoDataStore {
-  // var name: String { get set }
+  var toDoId: Int? { get set }
 }
 
 protocol EditToDoBusinessLogic {
   func doSomething(request: EditToDo.Something.Request)
 }
 
-class EditToDoInteractor: EditToDoDataStore {
-  // var name: String = ""
+final class EditToDoInteractor: EditToDoDataStore {
+  var toDoId: Int?
 
   // MARK: VIP Objects
   var presenter: EditToDoPresentationLogic?
