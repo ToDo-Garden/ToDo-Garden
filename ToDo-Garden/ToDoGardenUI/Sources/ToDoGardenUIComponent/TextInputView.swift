@@ -131,13 +131,15 @@ extension TextInputView: UITextFieldDelegate {
 
     self.updatePlaceholderLabelText(isEditing: false)
     self.updatePlaceholderLabelPosition(isEditing: false)
-    self.delegate?.textInputViewDidEndEditing(isEmpty: textField.text?.isEmpty ?? true)
   }
 
   public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
     textField.resignFirstResponder()
-    self.delegate?.textInputViewDidEndEditing(isEmpty: textField.text?.isEmpty ?? true)
     return true
+  }
+  
+  public func textFieldDidChangeSelection(_ textField: UITextField) {
+    self.delegate?.textInputViewDidChange()
   }
 
   private func updatePlaceholderLabelText(isEditing: Bool) {
