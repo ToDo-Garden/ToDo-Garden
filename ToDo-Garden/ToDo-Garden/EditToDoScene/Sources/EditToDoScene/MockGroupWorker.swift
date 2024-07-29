@@ -10,7 +10,9 @@ import UIKit.UIColor
 import EditToDoSceneEntity
 
 /// Group Context를 가정한 Mock Worker 입니다.
-final class MockGroupWorker {
+public final class MockGroupWorker {
+  public init() {}
+
   func fetchGroupList() throws -> [EditToDo.Group] {
     return MockData.groupList
   }
