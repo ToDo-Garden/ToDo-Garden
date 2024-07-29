@@ -19,6 +19,7 @@ protocol EditToDoBusinessLogic {
 }
 
 final class EditToDoInteractor: EditToDoDataStore {
+  private var toDo: EditToDo.ToDo?
   var toDoId: Int?
 
   // MARK: VIP Objects
@@ -41,10 +42,25 @@ final class EditToDoInteractor: EditToDoDataStore {
 // MARK: - Request to worker
 
 extension EditToDoInteractor: EditToDoBusinessLogic {
-  func doSomething(request: EditToDo.Something.Request) {
-    self.someWorker.doSomeWork()
+  func doSomething(request: EditToDo.Something.Request) {}
+}
 
-    let response = EditToDo.Something.Response()
-    self.presenter?.presentSomething(response: response)
+// MARK: Private Functions
+
+extension EditToDoInteractor {
+  private func makeRepetitionViewState(
+    isOnlyToday: Bool,
+    isEveryday: Bool?
+  ) -> EditToDo.EditToDoRepetitionViewState {
+    self.toDo?.repetition.isOnlyToday = isOnlyToday
+    guard isOnlyToday == false
+    else { return EditToDo.EditToDoRepetitionViewState.repeatOnlyToday }
+
+    let isRepeatEveryday = isEveryday ?? (self.toDo?.repetition.isRepeatEveryday ?? true)
+    self.toDo?.repetition.isRepeatEveryday = isRepeatEveryday
+    guard isRepeatEveryday == false
+    else { return EditToDo.EditToDoRepetitionViewState.repeatEveryday }
+
+    return EditToDo.EditToDoRepetitionViewState.repeatInRange
   }
 }

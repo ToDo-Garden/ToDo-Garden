@@ -235,6 +235,13 @@ extension EditToDo {
       self.endDate = endDate
     }
   }
+
+  /// 투두 반복 설정 뷰의 상태를 나타내는 데이터입니다.
+  public enum EditToDoRepetitionViewState {
+    case repeatOnlyToday
+    case repeatEveryday
+    case repeatInRange
+  }
 }
 
 extension EditToDo {
