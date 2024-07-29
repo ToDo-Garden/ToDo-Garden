@@ -10,6 +10,7 @@ import Foundation
 import EditToDoSceneEntity
 
 protocol EditToDoPresentationLogic {
+  func presentAlarmActivation(response: EditToDo.ChangeAlarmActivation.Response)
   func presentChangedRepetition(response: EditToDo.ChangeRepetition.Response)
   func presentFetchedToDo(response: EditToDo.FetchToDo.Response)
   func presentDeleteResult(response: EditToDo.DeleteToDo.Response)
@@ -24,6 +25,7 @@ class EditToDoPresenter {
 // MARK: - Request to ViewController
 
 extension EditToDoPresenter: EditToDoPresentationLogic {
+  func presentAlarmActivation(response: EditToDo.ChangeAlarmActivation.Response) {}
   func presentChangedRepetition(response: EditToDo.ChangeRepetition.Response) {}
   func presentFetchedToDo(response: EditToDo.FetchToDo.Response) {}
   func presentDeleteResult(response: EditToDo.DeleteToDo.Response) {}

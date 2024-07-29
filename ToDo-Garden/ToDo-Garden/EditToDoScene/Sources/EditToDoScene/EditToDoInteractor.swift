@@ -16,6 +16,7 @@ protocol EditToDoDataStore {
 
 protocol EditToDoBusinessLogic {
   func changeReptition(request: EditToDo.ChangeRepetition.Request)
+  func changeAlarmActivation(request: EditToDo.ChangeAlarmActivation.Request)
   func fetchToDo(request: EditToDo.FetchToDo.Request)
   func deleteToDo(request: EditToDo.DeleteToDo.Request)
   func editToDo(request: EditToDo.CompleteEditToDo.Request)
@@ -46,6 +47,16 @@ final class EditToDoInteractor: EditToDoDataStore {
 // MARK: - Request to worker
 
 extension EditToDoInteractor: EditToDoBusinessLogic {
+  /// 사용자가 투두 알림 스위치를 통해 활성화 여부를 변경했을 때 호출되는 메서드입니다.
+  func changeAlarmActivation(request: EditToDo.ChangeAlarmActivation.Request) {
+    guard let isAlarmOn = self.toDo?.alarm.isAlarmOn
+    else { return }
+
+    self.toDo?.alarm.isAlarmOn = !isAlarmOn
+    let response = EditToDo.ChangeAlarmActivation.Response(isAlarmOn: !isAlarmOn)
+    self.presenter?.presentAlarmActivation(response: response)
+  }
+  
   /// 사용자가 투두 반복 설정 뷰를 선택했을 때 호출하는 메서드입니다.
   /// ex) 사용자가 화면에서 (오늘만 or 다른날도 or 매일) 할래요 뷰를 눌렀음
   func changeReptition(request: EditToDo.ChangeRepetition.Request) {
