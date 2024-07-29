@@ -209,9 +209,9 @@ extension EditToDo {
 
   public struct ToDoAlarm {
     public let isAlarmOn: Bool
-    public var alarmTime: Date?
+    public var alarmTime: Int?
 
-    public init(isAlarmOn: Bool, alarmTime: Date?) {
+    public init(isAlarmOn: Bool, alarmTime: Int?) {
       self.isAlarmOn = isAlarmOn
       self.alarmTime = alarmTime
     }
@@ -219,11 +219,18 @@ extension EditToDo {
 
   public struct ToDoRepetition {
     public var isOnlyToday: Bool
+    public var isRepeatEveryday: Bool
     public var startDate: Date?
     public var endDate: Date?
 
-    public init(isOnlyToday: Bool, startDate: Date?, endDate: Date?) {
+    public init(
+      isOnlyToday: Bool,
+      isRepeatEveryday: Bool,
+      startDate: Date? = nil,
+      endDate: Date? = nil
+    ) {
       self.isOnlyToday = isOnlyToday
+      self.isRepeatEveryday = isRepeatEveryday
       self.startDate = startDate
       self.endDate = endDate
     }
