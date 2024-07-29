@@ -39,7 +39,7 @@ let package = Package(
         "EditToDoSceneAPI",
         "EditToDoSceneEntity",
         .product(name: "ToDoGardenUIAPI", package: "ToDoGardenUI"),
-        // .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI"),
+        .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI"),
         .product(name: "ToDoGardenUIResource", package: "ToDoGardenUI")
       ]
     )
