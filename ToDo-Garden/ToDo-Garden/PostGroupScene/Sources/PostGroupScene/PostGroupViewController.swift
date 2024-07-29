@@ -169,7 +169,7 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
     guard let currentColor = self.postGroupColorPickerRow.getColor() else {
       return true
     }
-
+    
     return currentColor == UIColor.toDoGardenGrassNone
   }
 }
@@ -192,7 +192,7 @@ extension PostGroupViewController {
 }
 
 extension PostGroupViewController: TextInputViewDelegate {
-  func textInputViewDidEndEditing(isEmpty: Bool) {
+  func textInputViewDidChange() {
     self.doneBottomButton.isEnabled = self.isDoneBottomButtonEnabled()
   }
 }
@@ -237,7 +237,7 @@ extension PostGroupViewController: PostGroupBottomSheetDelegate {
 //    bottomButton: ToDoGardenBoxButton(title: "확인", buttonType: .primaryRoundRectButton),
 //    modalBottomButton: ToDoGardenBoxButton(title: "확인", buttonType: .primaryRoundRectButton)
 //  )
-//  
+//
 //  return vc
 // }
 // #endif
