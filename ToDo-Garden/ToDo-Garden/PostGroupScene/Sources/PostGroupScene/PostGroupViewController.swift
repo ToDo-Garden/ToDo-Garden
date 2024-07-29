@@ -13,7 +13,9 @@ import ToDoGardenUIAPI
 import ToDoGardenUIResource
 
 protocol PostGroupDisplayLogic: AnyObject {
-  func displaySomething(viewModel: PostGroup.Something.ViewModel)
+  func displayChangedColor(viewModel: PostGroup.ChangeColor.ViewModel)
+  func displayPayload(viewModel: PostGroup.SetPayload.ViewModel)
+  func displayTouchedDondButton(viewModel: PostGroup.TouchDoneButton.ViewModel)
 }
 
 final class PostGroupViewController: UIViewController, PostGroupViewControllable {
@@ -68,6 +70,10 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
     self.setupDoneBottomButton()
   }
   
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    self.setPayload()
+  }
   private func setupTextInputView() {
     self.textInputView.delegate = self
     self.textInputView.translatesAutoresizingMaskIntoConstraints = false
@@ -93,7 +99,6 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
   
   private func setupPostGroupColorPickerRow() {
     self.view.addSubview(self.postGroupColorPickerRow)
-    
     self.postGroupColorPickerRow.translatesAutoresizingMaskIntoConstraints = false
     
     NSLayoutConstraint.activate(
@@ -151,6 +156,19 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
         )
       ]
     )
+    
+    self.doneBottomButton.addAction(
+      UIAction { [weak self] _ in
+        guard let groupName = self?.textInputView.getEditingText(),
+          let groupColor = self?.postGroupColorPickerRow.getColor() else {
+          return
+        }
+        
+        let request = PostGroup.TouchDoneButton.Request(groupName: groupName, groupColor: groupColor)
+        self?.interactor?.touchDoneButton(request: request)
+      },
+      for: UIControl.Event.touchUpInside
+    )
   }
   
   private func isDoneBottomButtonEnabled() -> Bool {
@@ -169,7 +187,7 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
     guard let currentColor = self.postGroupColorPickerRow.getColor() else {
       return true
     }
-
+    
     return currentColor == UIColor.toDoGardenGrassNone
   }
 }
@@ -177,28 +195,42 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
 // MARK: - Confirm display logic protocol
 
 extension PostGroupViewController: PostGroupDisplayLogic {
-  func displaySomething(viewModel: PostGroup.Something.ViewModel) {
-    // self.nameTextField.text = viewModel.name
+  func displayChangedColor(viewModel: PostGroupSceneEntity.PostGroup.ChangeColor.ViewModel) {
+    self.postGroupColorPickerRow.updateColor(with: viewModel.groupColor)
+    self.doneBottomButton.isEnabled = self.isDoneBottomButtonEnabled()
+    self.textInputView.changeBottomLine(color: viewModel.groupColor)
+  }
+  
+  func displayPayload(viewModel: PostGroupSceneEntity.PostGroup.SetPayload.ViewModel) {
+    self.textInputView.setBeginEditing(with: viewModel.groupName)
+    self.postGroupColorPickerRow.updateColor(with: viewModel.groupColor ?? UIColor.toDoGardenGrassNone)
+    self.doneBottomButton.isEnabled = viewModel.isDoneBottomButtonEnable
+  }
+  
+  func displayTouchedDondButton(viewModel: PostGroup.TouchDoneButton.ViewModel) {
+    print("Route to ManageGroupScene")
   }
 }
 
 // MARK: - Request to interactor
 
 extension PostGroupViewController {
-  func doSomething() {
-    let request = PostGroup.Something.Request()
-    self.interactor?.doSomething(request: request)
+  func setPayload() {
+    self.interactor?.setPayload()
   }
 }
 
 extension PostGroupViewController: TextInputViewDelegate {
-  func textInputViewDidEndEditing(isEmpty: Bool) {
+  
+  func textInputViewDidChange() {
     self.doneBottomButton.isEnabled = self.isDoneBottomButtonEnabled()
   }
 }
 
 extension PostGroupViewController: PostGroupBottomSheetDelegate {
   func dismissedBottomSheet(color: UIColor) {
+    let request = PostGroup.ChangeColor.Request(groupColor: color)
+    self.interactor?.changeColor(request: request)
   }
 }
 
