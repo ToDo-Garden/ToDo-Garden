@@ -1,40 +1,90 @@
 //
 //  PostGroupInteractor.swift
-//  
+//
 //
 //  Created by SONG on 7/8/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
-import Foundation
+import UIKit.UIColor
 
 import PostGroupSceneAPI
 import PostGroupSceneEntity
 
 protocol PostGroupDataStore {
-  // var name: String { get set }
+  var payload: PostGroupScenePayloadable? { get set }
 }
 
 protocol PostGroupBusinessLogic {
-  func doSomething(request: PostGroup.Something.Request)
+  func setPayload()
+  func changeColor(request: PostGroup.ChangeColor.Request)
+  func touchDoneButton(request: PostGroup.TouchDoneButton.Request)
 }
 
 class PostGroupInteractor: PostGroupDataStore {
-  // var name: String = ""
   var presenter: PostGroupPresentationLogic?
-  private let someWorker: PostGroupWorkable
+  private let postGroupWorker: PostGroupWorkable
+  var payload: PostGroupScenePayloadable?
   
-  init(someWorker: PostGroupWorkable) {
-    self.someWorker = someWorker
+  init(postGroupWorker: PostGroupWorkable) {
+    self.postGroupWorker = postGroupWorker
   }
 }
 
 // MARK: - Request to worker
 
 extension PostGroupInteractor: PostGroupBusinessLogic {
-  func doSomething(request: PostGroup.Something.Request) {
-    self.someWorker.doSomeWork()
+  func touchDoneButton(request: PostGroupSceneEntity.PostGroup.TouchDoneButton.Request) {
+    guard let groupID = payload?.groupID else { return }
     
-    let response = PostGroup.Something.Response()
-    self.presenter?.presentSomething(response: response)
+    self.postGroupWorker.touchDoneButton(
+      groupID: groupID,
+      groupName: request.groupName,
+      groupColor: request.groupColor
+    )
+    
+    let response = PostGroup.TouchDoneButton.Response(
+      groupID: groupID,
+      groupName: request.groupName,
+      groupColor: request.groupColor
+    )
+    
+    self.presenter?.presentTouchedDoneButton(response: response)
+  }
+  
+  func changeColor(request: PostGroup.ChangeColor.Request) {
+    self.postGroupWorker.changeColor(groupColor: request.groupColor)
+    // 성공했다고 가정
+    let response = PostGroup.ChangeColor.Response(groupID: "ID", groupColor: request.groupColor)
+    self.presenter?.presentChangedColor(response: response)
+  }
+  
+  func setPayload() {
+    let isButtonEnable: Bool = self.isButtonEnable(groupName: payload?.groupName, groupColor: payload?.groupColor)
+    
+    let response = PostGroup.SetPayload.Response(
+      groupName: self.convertGroupName(groupName: payload?.groupName),
+      groupColor: payload?.groupColor,
+      isDoneBottomButtonEnable: isButtonEnable
+    )
+    self.presenter?.presentSetPayload(response: response)
+  }
+}
+
+extension PostGroupInteractor {
+  private func convertGroupName(groupName: String?) -> String {
+    guard let groupName = groupName else {
+      return ""
+    }
+    return groupName
+  }
+  
+  private func isButtonEnable(groupName: String?, groupColor: UIColor?) -> Bool {
+    var isButtonEnable: Bool
+    if (groupName == nil) || (groupColor == nil) {
+      isButtonEnable = false
+    } else {
+      isButtonEnable = true
+    }
+    return isButtonEnable
   }
 }
