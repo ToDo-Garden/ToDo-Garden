@@ -63,38 +63,34 @@ public enum EditToDo {
   }
   
   public enum CompleteEditToDo {
-    public struct ToDoEditData {
-      public let name: String
-      public let groupId: Int
-
-      public init(name: String, groupId: Int) {
-        self.name = name
-        self.groupId = groupId
-      }
-    }
-
-    public struct ToDoScheduleData {
-      public let isAlarmOn: Bool
-      public let isRepeatOnlyToday: Bool
-
-      public init(isAlarmOn: Bool, isRepeatOnlyToday: Bool) {
-        self.isAlarmOn = isAlarmOn
-        self.isRepeatOnlyToday = isRepeatOnlyToday
-      }
-    }
-
     public struct Request {
-      public let toDoEditData: ToDoEditData
-      public let toDoScheduleData: ToDoScheduleData
+      public struct DisplayedGroup {
+        public let id: Int
+        public let name: String
+        public let color: UIColor
 
-      public init(toDoEditData: ToDoEditData, toDoScheduleData: ToDoScheduleData) {
-        self.toDoEditData = toDoEditData
-        self.toDoScheduleData = toDoScheduleData
+        public init(id: Int, name: String, color: UIColor) {
+          self.id = id
+          self.name = name
+          self.color = color
+        }
+      }
+
+      public let toDoName: String
+      public let displayedGroup: DisplayedGroup
+
+      init(toDoName: String, displayedGroup: DisplayedGroup) {
+        self.toDoName = toDoName
+        self.displayedGroup = displayedGroup
       }
     }
 
     public struct Response {
       public let editResult: Result<Bool, Error>
+
+      public init(editResult: Result<Bool, Error>) {
+        self.editResult = editResult
+      }
     }
 
     public struct ViewModel {
@@ -183,8 +179,8 @@ public enum EditToDo {
 
 extension EditToDo {
   public struct ToDo {
-    public let name: String
-    public let groupData: Group
+    public var name: String
+    public var groupData: Group
     public var alarm: ToDoAlarm
     public var repetition: ToDoRepetition
 
