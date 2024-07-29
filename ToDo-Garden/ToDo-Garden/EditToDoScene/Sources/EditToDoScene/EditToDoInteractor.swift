@@ -15,6 +15,7 @@ protocol EditToDoDataStore {
 }
 
 protocol EditToDoBusinessLogic {
+  func fetchToDo(request: EditToDo.FetchToDo.Request)
   func doSomething(request: EditToDo.Something.Request)
 }
 
@@ -42,6 +43,25 @@ final class EditToDoInteractor: EditToDoDataStore {
 // MARK: - Request to worker
 
 extension EditToDoInteractor: EditToDoBusinessLogic {
+  func fetchToDo(request: EditToDo.FetchToDo.Request) {
+    guard let toDoData = try? self.toDoWorker.fetchToDo(id: self.toDoId),
+      let groupList = try? self.groupWorker.fetchGroupList()
+    else { return }
+
+    self.toDo = toDoData
+    
+    let isOnlyToday = toDoData.repetition.isOnlyToday
+    let isEveryday = toDoData.repetition.isRepeatEveryday
+    let repetitionViewState = self.makeRepetitionViewState(isOnlyToday: isOnlyToday, isEveryday: isEveryday)
+    let response = EditToDo.FetchToDo.Response(
+      toDo: toDoData,
+      groupList: groupList,
+      repetitionViewState: repetitionViewState
+    )
+    self.presenter?.presentFetchedToDo(response: response)
+  }
+  
+  /// EditToDoViewController 컴파일 에러 방지 코드입니다.
   func doSomething(request: EditToDo.Something.Request) {}
 }
 

@@ -17,10 +17,16 @@ public enum EditToDo {
     public struct Response {
       public let toDo: ToDo
       public let groupList: [Group]
+      public let repetitionViewState: EditToDoRepetitionViewState
 
-      public init(toDo: ToDo, groupList: [Group]) {
+      public init(
+        toDo: ToDo,
+        groupList: [Group],
+        repetitionViewState: EditToDoRepetitionViewState
+      ) {
         self.toDo = toDo
         self.groupList = groupList
+        self.repetitionViewState = repetitionViewState
       }
     }
 
