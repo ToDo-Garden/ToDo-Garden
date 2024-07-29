@@ -78,7 +78,7 @@ extension PostGroupSceneBuilder {
   /// - Parameter viewController: VIPCycle을 설정할 viewController입니다.
   /// - Returns: VIP Cycle 설정이 완료된 `ViewControllable` 프로토콜을 준수한 `ViewController` 인스턴스를 반환합니다.
   private func configureVIPCycle(for viewController: PostGroupViewController) -> PostGroupViewController {
-    let interactor = PostGroupInteractor(someWorker: self.dependency.postGroupWorker)
+    let interactor = PostGroupInteractor(postGroupWorker: self.dependency.postGroupWorker)
     let presenter = PostGroupPresenter()
     let router = PostGroupRouter(nextSceneBuilder: nil)
     viewController.interactor = interactor
@@ -96,7 +96,6 @@ extension PostGroupSceneBuilder {
   ///   - viewController: 런타임 의존성을 설정할 ViewController 객체입니다.
   ///   - payload: 런타임에 전달할 의존성입니다.
   private func setPayload(for viewController: PostGroupViewController, with payload: PostGroupScenePayloadable?) {
-    // viewController.setPayload(name: payload?.grouName, color: payload?.color)
-    // TODO: PostGroupScenePayloadable 수정후 주석해제 예정
+    viewController.router?.dataStore?.payload = payload
   }
 }
