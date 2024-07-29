@@ -150,6 +150,35 @@ public enum EditToDo {
     }
   }
 
+  // 사용자가 투두를 오늘만 또는 다른날에도 반복하도록 설정하는 유스케이스입니다.
+  public enum ChangeRepetition {
+    public struct Request {
+      public let isOnlyToday: Bool
+      public let isEveryday: Bool?
+
+      public init(isOnlyToday: Bool, isEveryday: Bool?) {
+        self.isOnlyToday = isOnlyToday
+        self.isEveryday = isEveryday
+      }
+    }
+
+    public struct Response {
+      public let editToDoRepetitionViewState: EditToDoRepetitionViewState
+
+      public init(editToDoRepetitionViewState: EditToDoRepetitionViewState) {
+        self.editToDoRepetitionViewState = editToDoRepetitionViewState
+      }
+    }
+
+    public struct ViewModel {
+      public let editToDoRepetitionViewState: EditToDoRepetitionViewState
+
+      public init(editToDoRepetitionViewState: EditToDoRepetitionViewState) {
+        self.editToDoRepetitionViewState = editToDoRepetitionViewState
+      }
+    }
+  }
+
   public enum ChangeRepetitionRange {
     public struct Request {
       public init() {}
