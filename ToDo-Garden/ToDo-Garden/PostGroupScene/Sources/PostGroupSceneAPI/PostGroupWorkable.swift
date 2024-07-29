@@ -5,8 +5,13 @@
 //  Created by SONG on 7/8/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
-import Foundation
+import UIKit.UIColor
 
 public protocol PostGroupWorkable {
-  func doSomeWork()
+  func changeColor(groupColor: UIColor)
+  func touchDoneButton(
+    groupID: String,
+    groupName: String,
+    groupColor: UIColor
+  )
 }
