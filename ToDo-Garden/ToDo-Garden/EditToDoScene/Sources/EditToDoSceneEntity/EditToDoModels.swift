@@ -150,7 +150,7 @@ public enum EditToDo {
     }
   }
 
-  // 사용자가 투두를 오늘만 또는 다른날에도 반복하도록 설정하는 유스케이스입니다.
+  /// 사용자가 투두를 오늘만 또는 다른날에도 반복하도록 설정하는 유스케이스입니다.
   public enum ChangeRepetition {
     public struct Request {
       public let isOnlyToday: Bool
@@ -201,6 +201,29 @@ public enum EditToDo {
       public init(startDay: String, endDay: String) {
         self.startDay = startDay
         self.endDay = endDay
+      }
+    }
+  }
+
+  /// 사용자가 투두 알림 여부를 스위치로 활성화 및 비활성화 시키는 유스케이스입니다.
+  public enum ChangeAlarmActivation {
+    public struct Request {
+      public init() {}
+    }
+
+    public struct Response {
+      public let isAlarmOn: Bool
+
+      public init(isAlarmOn: Bool) {
+        self.isAlarmOn = isAlarmOn
+      }
+    }
+
+    public struct ViewModel {
+      public let isAlarmOn: Bool
+
+      public init(isAlarmOn: Bool) {
+        self.isAlarmOn = isAlarmOn
       }
     }
   }
