@@ -56,6 +56,10 @@ final public class ToDoGardenTimePicker: UIPickerView {
 
     self.updateSelectedComponent(TimeComponents.hour, value: hour)
     self.updateSelectedComponent(TimeComponents.minute, value: minute)
+
+    guard self.configuration != Constant.SettingTimeView.TimePicker.alarmTime
+    else { return }
+
     self.updateSelectedComponent(TimeComponents.seconds, value: seconds)
   }
 
