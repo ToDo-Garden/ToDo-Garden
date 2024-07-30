@@ -123,14 +123,13 @@ extension EditToDoInteractor {
     isEveryday: Bool?
   ) -> EditToDo.EditToDoRepetitionViewState {
     self.toDo?.repetition.isOnlyToday = isOnlyToday
-    guard isOnlyToday == false
-    else { return EditToDo.EditToDoRepetitionViewState.repeatOnlyToday }
+    if isOnlyToday {
+      return EditToDo.EditToDoRepetitionViewState.repeatOnlyToday
+    }
 
     let isRepeatEveryday = isEveryday ?? (self.toDo?.repetition.isRepeatEveryday ?? true)
     self.toDo?.repetition.isRepeatEveryday = isRepeatEveryday
-    guard isRepeatEveryday == false
-    else { return EditToDo.EditToDoRepetitionViewState.repeatEveryday }
-
-    return EditToDo.EditToDoRepetitionViewState.repeatInRange
+    let state: EditToDo.EditToDoRepetitionViewState = isRepeatEveryday ? .repeatEveryday : .repeatInRange
+    return state
   }
 }
