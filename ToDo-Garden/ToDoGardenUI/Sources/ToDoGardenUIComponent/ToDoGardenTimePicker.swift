@@ -83,6 +83,13 @@ final public class ToDoGardenTimePicker: UIPickerView {
       ]
     )
   }
+
+extension ToDoGardenTimePicker {
+  enum TimeComponents: Int {
+    case hour    = 0
+    case minute  = 1
+    case seconds = 2
+  }
 }
 
 final private class HighlightedView: UIView {
