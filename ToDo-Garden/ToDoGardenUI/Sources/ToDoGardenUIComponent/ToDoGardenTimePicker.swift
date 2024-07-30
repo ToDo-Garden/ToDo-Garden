@@ -84,6 +84,30 @@ final public class ToDoGardenTimePicker: UIPickerView {
     )
   }
 
+  private func verifyTotalComponentValue(hour: Int, minute: Int, seconds: Int) -> Bool {
+    return self.verifyTime(of: TimeComponents.hour, hour) &&
+      self.verifyTime(of: TimeComponents.minute, minute) &&
+      self.verifyTime(of: TimeComponents.seconds, seconds)
+  }
+
+  private func verifyTime(of component: TimeComponents, _ value: Int) -> Bool {
+    let maximumValue: Int
+    let minimumValue: Int
+    switch component {
+    case TimeComponents.hour:
+      minimumValue = 0
+      maximumValue = 23
+      return minimumValue <= value && value <= maximumValue
+    case TimeComponents.minute:
+      minimumValue = 0
+      maximumValue = 60
+      return minimumValue <= value && value <= maximumValue
+    case TimeComponents.seconds:
+      minimumValue = 0
+      maximumValue = 60
+      return minimumValue <= value && value <= maximumValue
+    }
+  }
 extension ToDoGardenTimePicker {
   enum TimeComponents: Int {
     case hour    = 0
