@@ -102,6 +102,17 @@ extension EditToDoInteractor: EditToDoBusinessLogic {
 
   /// 서버에 투두의 수정을 요청하는 메서드입니다.
   func editToDo(request: EditToDo.CompleteEditToDo.Request) {
+    let editResult: Result<Void, Error>
+    do {
+      let editedToDo = try self.makeToDoForEdit(with: request)
+      try self.toDoWorker.editToDo(editedToDo)
+      editResult = Result.success(())
+    } catch let error {
+      editResult = Result.failure(error)
+    }
+
+    let response = EditToDo.CompleteEditToDo.Response(editResult: editResult)
+    self.presenter?.presentEditResult(response: response)
   }
 
   /// EditToDoViewController 컴파일 에러 방지 코드입니다.
@@ -124,5 +135,29 @@ extension EditToDoInteractor {
     self.toDo?.repetition.isRepeatEveryday = isRepeatEveryday
     let state: EditToDo.EditToDoRepetitionViewState = isRepeatEveryday ? .repeatEveryday : .repeatInRange
     return state
+  }
+
+  private func makeToDoForEdit(
+    with request: EditToDo.CompleteEditToDo.Request
+  ) throws -> EditToDo.ToDo {
+    guard var editedToDo = self.toDo
+    else { throw EditToDoInteractorError.toDoDataNotExisted }
+
+    editedToDo.name = request.toDoName
+    editedToDo.groupData = EditToDo.Group(
+      id: request.displayedGroup.id,
+      name: request.displayedGroup.name,
+      color: request.displayedGroup.color
+    )
+
+    return editedToDo
+  }
+}
+
+// MARK: Private Functions
+
+extension EditToDoInteractor {
+  enum EditToDoInteractorError: Error {
+    case toDoDataNotExisted
   }
 }
