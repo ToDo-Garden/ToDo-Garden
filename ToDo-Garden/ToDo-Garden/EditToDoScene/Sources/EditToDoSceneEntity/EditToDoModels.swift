@@ -86,17 +86,17 @@ public enum EditToDo {
     }
 
     public struct Response {
-      public let editResult: Result<Bool, Error>
+      public let editResult: Result<Void, Error>
 
-      public init(editResult: Result<Bool, Error>) {
+      public init(editResult: Result<Void, Error>) {
         self.editResult = editResult
       }
     }
 
     public struct ViewModel {
-      public let editResult: Result<Bool, Error>
+      public let editResult: Result<Void, Error>
 
-      public init(editResult: Result<Bool, Error>) {
+      public init(editResult: Result<Void, Error>) {
         self.editResult = editResult
       }
     }
@@ -108,17 +108,17 @@ public enum EditToDo {
     }
 
     public struct Response {
-      public let deleteResult: Result<Bool, Error>
+      public let deleteResult: Result<Void, Error>
 
-      public init(deleteResult: Result<Bool, Error>) {
+      public init(deleteResult: Result<Void, Error>) {
         self.deleteResult = deleteResult
       }
     }
 
     public struct ViewModel {
-      public let deleteResult: Result<Bool, Error>
+      public let deleteResult: Result<Void, Error>
 
-      public init(deleteResult: Result<Bool, Error>) {
+      public init(deleteResult: Result<Void, Error>) {
         self.deleteResult = deleteResult
       }
     }

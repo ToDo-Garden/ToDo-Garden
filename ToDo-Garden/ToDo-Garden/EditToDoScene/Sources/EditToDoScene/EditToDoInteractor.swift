@@ -88,27 +88,20 @@ extension EditToDoInteractor: EditToDoBusinessLogic {
   
   /// 서버에 투두의 삭제를 요청하는 메서드입니다.
   func deleteToDo(request: EditToDo.DeleteToDo.Request) {
-    let result = self.toDoWorker.deleteToDo(id: self.toDoId)
-    let response = EditToDo.DeleteToDo.Response(deleteResult: result)
+    let deleteResult: Result<Void, Error>
+    do {
+      try self.toDoWorker.deleteToDo(id: self.toDoId)
+      deleteResult = Result.success(())
+    } catch let error {
+      deleteResult = Result.failure(error)
+    }
+
+    let response = EditToDo.DeleteToDo.Response(deleteResult: deleteResult)
     self.presenter?.presentDeleteResult(response: response)
   }
 
   /// 서버에 투두의 수정을 요청하는 메서드입니다.
   func editToDo(request: EditToDo.CompleteEditToDo.Request) {
-    guard var editedToDo = self.toDo
-    else {
-      let response = EditToDo.CompleteEditToDo.Response(editResult: .success(false))
-      self.presenter?.presentEditResult(response: response)
-      return
-    }
-
-    editedToDo.name = request.toDoName
-    let group = request.displayedGroup
-    editedToDo.groupData = EditToDo.Group(id: group.id, name: group.name, color: group.color)
-    
-    let result = self.toDoWorker.editToDo(editedToDo)
-    let response = EditToDo.CompleteEditToDo.Response(editResult: result)
-    self.presenter?.presentEditResult(response: response)
   }
 
   /// EditToDoViewController 컴파일 에러 방지 코드입니다.
