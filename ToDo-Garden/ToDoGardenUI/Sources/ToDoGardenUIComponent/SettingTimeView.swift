@@ -194,8 +194,9 @@ extension SettingTimeView: UIPickerViewDataSource {
 #Preview {
   let button = ToDoGardenBoxButton(title: "asdasd", buttonType: .primaryRoundRectButton)
   
-  let view = SettingTimeView(with: button, for: .focusTimeSetting)
-  
+  let view = SettingTimeView(with: button, for: .alarmTimeSetting)
+  view.updateSelectedTime(hour: 20, minute: 18)
+
   let action = UIAction { _ in
     view.transformSeconds { time in print(time) }
   }
