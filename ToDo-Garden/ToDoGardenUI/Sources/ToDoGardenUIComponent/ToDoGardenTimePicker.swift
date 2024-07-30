@@ -49,7 +49,16 @@ final public class ToDoGardenTimePicker: UIPickerView {
     }
     return self.timeBuilder.buildTimeInterval(from: components)
   }
-  
+
+  func updateSelectedTime(hour: Int, minute: Int, seconds: Int = 0) {
+    guard self.verifyTotalComponentValue(hour: hour, minute: minute, seconds: seconds)
+    else { return }
+
+    self.updateSelectedComponent(TimeComponents.hour, value: hour)
+    self.updateSelectedComponent(TimeComponents.minute, value: minute)
+    self.updateSelectedComponent(TimeComponents.seconds, value: seconds)
+  }
+
   func setInitialSelection() {
     self.selectRow(10, inComponent: 1, animated: false)
   }
@@ -108,6 +117,13 @@ final public class ToDoGardenTimePicker: UIPickerView {
       return minimumValue <= value && value <= maximumValue
     }
   }
+
+  private func updateSelectedComponent(_ component: TimeComponents, value: Int) {
+    let componentIndex = component.rawValue
+    self.selectRow(value, inComponent: componentIndex, animated: false)
+  }
+}
+
 extension ToDoGardenTimePicker {
   enum TimeComponents: Int {
     case hour    = 0

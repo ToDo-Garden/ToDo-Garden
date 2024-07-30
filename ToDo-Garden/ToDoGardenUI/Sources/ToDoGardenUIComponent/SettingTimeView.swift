@@ -44,6 +44,10 @@ public class SettingTimeView: UIView {
     let calculatedDate = self.timepicker.transformSeconds()
     completion(calculatedDate)
   }
+
+  public func updateSelectedTime(hour: Int, minute: Int, seconds: Int = 0) {
+    self.timepicker.updateSelectedTime(hour: hour, minute: minute, seconds: seconds)
+  }
 }
 
 extension SettingTimeView {
