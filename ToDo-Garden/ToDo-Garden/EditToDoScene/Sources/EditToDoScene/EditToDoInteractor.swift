@@ -69,20 +69,27 @@ extension EditToDoInteractor: EditToDoBusinessLogic {
 
   /// 서버로부터 수정할 투두의 정보를 받아오는 메서드입니다.
   func fetchToDo(request: EditToDo.FetchToDo.Request) {
-    guard let toDoData = try? self.toDoWorker.fetchToDo(id: self.toDoId),
-      let groupList = try? self.groupWorker.fetchGroupList()
-    else { return }
+    let fetchResult: Result<EditToDo.FetchToDo.Response.FetchedToDo, Error>
+    do {
+      let toDo = try self.toDoWorker.fetchToDo(id: self.toDoId)
+      let group = try self.groupWorker.fetchGroupList()
+      let repetitionViewState = self.makeRepetitionViewState(
+        isOnlyToday: toDo.repetition.isOnlyToday,
+        isEveryday: toDo.repetition.isRepeatEveryday
+      )
 
-    self.toDo = toDoData
-    
-    let isOnlyToday = toDoData.repetition.isOnlyToday
-    let isEveryday = toDoData.repetition.isRepeatEveryday
-    let repetitionViewState = self.makeRepetitionViewState(isOnlyToday: isOnlyToday, isEveryday: isEveryday)
-    let response = EditToDo.FetchToDo.Response(
-      toDo: toDoData,
-      groupList: groupList,
-      repetitionViewState: repetitionViewState
-    )
+      let fetchedToDo = EditToDo.FetchToDo.Response.FetchedToDo(
+        toDo: toDo,
+        groupList: group,
+        repetitionViewState: repetitionViewState
+      )
+
+      fetchResult = Result.success(fetchedToDo)
+    } catch let error {
+      fetchResult = Result.failure(error)
+    }
+
+    let response = EditToDo.FetchToDo.Response(fetchResult: fetchResult)
     self.presenter?.presentFetchedToDo(response: response)
   }
   

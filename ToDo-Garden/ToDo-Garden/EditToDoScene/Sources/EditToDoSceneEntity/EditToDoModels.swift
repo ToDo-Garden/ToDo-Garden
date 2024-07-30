@@ -15,53 +15,69 @@ public enum EditToDo {
     }
 
     public struct Response {
-      public let toDo: ToDo
-      public let groupList: [Group]
-      public let repetitionViewState: EditToDoRepetitionViewState
+      public struct FetchedToDo {
+        public let toDo: ToDo
+        public let groupList: [Group]
+        public let repetitionViewState: EditToDoRepetitionViewState
 
-      public init(
-        toDo: ToDo,
-        groupList: [Group],
-        repetitionViewState: EditToDoRepetitionViewState
-      ) {
-        self.toDo = toDo
-        self.groupList = groupList
-        self.repetitionViewState = repetitionViewState
+        public init(
+          toDo: ToDo,
+          groupList: [Group],
+          repetitionViewState: EditToDoRepetitionViewState
+        ) {
+          self.toDo = toDo
+          self.groupList = groupList
+          self.repetitionViewState = repetitionViewState
+        }
+      }
+
+      public let fetchResult: Result<FetchedToDo, Error>
+
+      public init(fetchResult: Result<FetchedToDo, Error>) {
+        self.fetchResult = fetchResult
       }
     }
 
     public struct ViewModel {
-      public let toDoName: String
-      public let group: Group
-      public let groupList: [Group]
-      public let isAlarmOn: Bool
-      public let alarmTime: String?
-      public let isRepeatOnlyToday: Bool
-      public let startDay: String?
-      public let endDay: String?
+      public struct DisplayedToDo {
+        public let toDoName: String
+        public let group: Group
+        public let groupList: [Group]
+        public let isAlarmOn: Bool
+        public let alarmTime: String?
+        public let repetitionViewState: EditToDoRepetitionViewState
+        public let startDay: String?
+        public let endDay: String?
 
-      public init(
-        toDoName: String,
-        group: Group,
-        groupList: [Group],
-        isAlarmOn: Bool,
-        alarmTime: String?,
-        isRepeatOnlyToday: Bool,
-        startDay: String?,
-        endDay: String?
-      ) {
-        self.toDoName = toDoName
-        self.group = group
-        self.groupList = groupList
-        self.isAlarmOn = isAlarmOn
-        self.alarmTime = alarmTime
-        self.isRepeatOnlyToday = isRepeatOnlyToday
-        self.startDay = startDay
-        self.endDay = endDay
+        public init(
+          toDoName: String,
+          group: Group,
+          groupList: [Group],
+          isAlarmOn: Bool,
+          alarmTime: String?,
+          repetitionViewState: EditToDoRepetitionViewState,
+          startDay: String?,
+          endDay: String?
+        ) {
+          self.toDoName = toDoName
+          self.group = group
+          self.groupList = groupList
+          self.isAlarmOn = isAlarmOn
+          self.alarmTime = alarmTime
+          self.repetitionViewState = repetitionViewState
+          self.startDay = startDay
+          self.endDay = endDay
+        }
+      }
+
+      public let fetchedToDoResult: Result<DisplayedToDo, Error>
+
+      public init(fetchedToDoResult: Result<DisplayedToDo, Error>) {
+        self.fetchedToDoResult = fetchedToDoResult
       }
     }
   }
-  
+
   public enum CompleteEditToDo {
     public struct Request {
       public struct DisplayedGroup {
