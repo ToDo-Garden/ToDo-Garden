@@ -7,6 +7,7 @@
 
 import UIKit
 
+import ToDoGardenUIAPI
 import ToDoGardenUIComponent
 
 final class EditToDoAlarmView: UIView {
@@ -48,7 +49,7 @@ final class EditToDoAlarmView: UIView {
 
 // MARK: Set up Subviews Action
 
-extension EditToDoAlarmView {
+extension EditToDoAlarmView: AlarmTimeViewDelegate {
   func setupSwitchAction(_ closure: @escaping () -> Void) {
     let switchAction = UIAction { _ in
       closure()
@@ -57,9 +58,10 @@ extension EditToDoAlarmView {
     self.alarmSwitch.addAction(switchAction, for: UIControl.Event.valueChanged)
   }
 
-  /// 알림 시간 설정 버튼을 눌렀을 때 Modal로 SettingTimeView를 띄우는 액션을 지정하는데 사용됩니다.
-  func setupAlarmSettingAction(_ closure: @escaping () -> Void) {
-    self.alarmTimeSettingView.addAlarmSettingAction(closure)
+  /// 알림 시간 설정 버튼이 눌렸을 때 호출되는 메서드입니다.
+  /// 상위 뷰에 이벤트 발생 여부를 전달합니다. (구현 예정)
+  func didSelectAlarmTimeSettingButton() {
+
   }
 }
 
@@ -76,6 +78,7 @@ extension EditToDoAlarmView {
 extension EditToDoAlarmView {
   private func setup() {
     self.setupAlarmLabelUI()
+    self.setupSubviewDelegate()
     self.addSubviews()
     self.setupConstraints()
   }
@@ -84,6 +87,10 @@ extension EditToDoAlarmView {
     self.alarmLabel.font = UIFont.pretendardHeadSemiBold
     let text = EditToDoSceneTheme.StringLiteral.ToDoScheduleView.AlarmLabel.text
     self.alarmLabel.text = text
+  }
+
+  private func setupSubviewDelegate() {
+    self.alarmTimeSettingView.delegate = self
   }
 }
 
