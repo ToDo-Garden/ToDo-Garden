@@ -59,13 +59,13 @@ extension ManageGroupTableViewDelegate: UITableViewDataSource {
     
     let singleGroup = displayedGroups[indexPath.row]
     
-    cell.applyModelPrimary(
-      id: singleGroup.id,
-      groupName: singleGroup.groupName,
-      progressColor: singleGroup.progressColor,
-      progressRate: singleGroup.progressRate,
-      isEditing: tableView.isEditing
-    )
+    //    cell.applyModelPrimary(
+    //      id: singleGroup.id,
+    //      groupName: singleGroup.groupName,
+    //      progressColor: singleGroup.progressColor,
+    //      progressRate: singleGroup.progressRate,
+    //      isEditing: tableView.isEditing
+    //    )
     
     if tableView.isEditing {
       cell.enterEditingMode()
@@ -74,7 +74,8 @@ extension ManageGroupTableViewDelegate: UITableViewDataSource {
     }
     
     cell.setupRightButtonAction { color, name in
-      self.viewController?.routeToPostGroupScene(groupName: name, color: color)
+      print("routeToPostGroupScene with \(color),\(name) ")
+      //      self.viewController?.routeToPostGroupScene(groupName: name, color: color)
     }
     
     return cell as? UITableViewCell ?? UITableViewCell()
@@ -96,7 +97,7 @@ extension ManageGroupTableViewDelegate: UITableViewDelegate {
     let id = self.displayedGroups[index].id
     
     if editingStyle == UITableViewCell.EditingStyle.delete {
-      self.viewController?.deleteGroup(id: id, index: index)
+      //      self.viewController?.deleteGroup(id: id, index: index)
     }
   }
   
@@ -161,11 +162,11 @@ extension ManageGroupTableViewDelegate: UITableViewDropDelegate {
       coordinator.drop(item.dragItem, toRowAt: destinationIndexPath)
       
       let id = self.displayedGroups[sourceIndexPath.row].id
-      self.viewController?.addReorderedGroups(
-        id: id,
-        sourceIndex: sourceIndexPath.row,
-        destinationIndex: destinationIndexPath.row
-      )
+      //      self.viewController?.addReorderedGroups(
+      //        id: id,
+      //        sourceIndex: sourceIndexPath.row,
+      //        destinationIndex: destinationIndexPath.row
+      //      )
     }
   }
 }

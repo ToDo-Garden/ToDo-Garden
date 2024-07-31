@@ -8,7 +8,9 @@
 import Foundation
 
 public enum ManageGroup {
-  
+  public struct ToDoGroup {
+    public let id: String
+  }
   // MARK: Use cases
   
   public enum Something {
