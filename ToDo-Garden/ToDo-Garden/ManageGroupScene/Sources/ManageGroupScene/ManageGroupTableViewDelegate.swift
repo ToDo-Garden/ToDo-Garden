@@ -57,7 +57,7 @@ extension ManageGroupTableViewDelegate: UITableViewDataSource {
       return UITableViewCell()
     }
     
-    let singleGroup = displayedGroups[indexPath.row]
+    //    let singleGroup = displayedGroups[indexPath.row]
     
     //    cell.applyModelPrimary(
     //      id: singleGroup.id,
@@ -93,8 +93,8 @@ extension ManageGroupTableViewDelegate: UITableViewDelegate {
     commit editingStyle: UITableViewCell.EditingStyle,
     forRowAt indexPath: IndexPath
   ) {
-    let index = indexPath.row
-    let id = self.displayedGroups[index].id
+    //    let index = indexPath.row
+    //    let id = self.displayedGroups[index].id
     
     if editingStyle == UITableViewCell.EditingStyle.delete {
       //      self.viewController?.deleteGroup(id: id, index: index)
@@ -161,7 +161,7 @@ extension ManageGroupTableViewDelegate: UITableViewDropDelegate {
       }, completion: nil)
       coordinator.drop(item.dragItem, toRowAt: destinationIndexPath)
       
-      let id = self.displayedGroups[sourceIndexPath.row].id
+      //      let id = self.displayedGroups[sourceIndexPath.row].id
       //      self.viewController?.addReorderedGroups(
       //        id: id,
       //        sourceIndex: sourceIndexPath.row,
