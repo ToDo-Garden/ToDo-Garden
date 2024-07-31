@@ -7,10 +7,11 @@
 
 import UIKit
 
+import ToDoGardenUIAPI
 import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
-public final class AlarmTimeView: UIView {
+public final class AlarmTimeView: UIView, AlarmTimeViewAPI {
   private var model: AlarmTimeView.Model
   private var timeLabel: UILabel
   private var alarmSettingButton: UIButton

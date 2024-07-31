@@ -8,5 +8,7 @@
 import UIKit.UIView
 
 public protocol AlarmTimeViewAPI: UIView {
-  
+  func enable()
+  func disable()
+  func updateAlarmTime(with text: String)
 }
