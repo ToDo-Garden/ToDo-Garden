@@ -11,15 +11,21 @@ import EditToDoSceneAPI
 import EditToDoSceneEntity
 
 protocol EditToDoDataStore {
-  // var name: String { get set }
+  var toDoId: Int? { get set }
 }
 
 protocol EditToDoBusinessLogic {
+  func changeReptition(request: EditToDo.ChangeRepetition.Request)
+  func changeAlarmActivation(request: EditToDo.ChangeAlarmActivation.Request)
+  func fetchToDo(request: EditToDo.FetchToDo.Request)
+  func deleteToDo(request: EditToDo.DeleteToDo.Request)
+  func editToDo(request: EditToDo.CompleteEditToDo.Request)
   func doSomething(request: EditToDo.Something.Request)
 }
 
-class EditToDoInteractor: EditToDoDataStore {
-  // var name: String = ""
+final class EditToDoInteractor: EditToDoDataStore {
+  private var toDo: EditToDo.ToDo?
+  var toDoId: Int?
 
   // MARK: VIP Objects
   var presenter: EditToDoPresentationLogic?
@@ -41,10 +47,124 @@ class EditToDoInteractor: EditToDoDataStore {
 // MARK: - Request to worker
 
 extension EditToDoInteractor: EditToDoBusinessLogic {
-  func doSomething(request: EditToDo.Something.Request) {
-    self.someWorker.doSomeWork()
+  /// 사용자가 투두 알림 스위치를 통해 활성화 여부를 변경했을 때 호출되는 메서드입니다.
+  func changeAlarmActivation(request: EditToDo.ChangeAlarmActivation.Request) {
+    guard let isAlarmOn = self.toDo?.alarm.isAlarmOn
+    else { return }
 
-    let response = EditToDo.Something.Response()
-    self.presenter?.presentSomething(response: response)
+    self.toDo?.alarm.isAlarmOn = !isAlarmOn
+    let response = EditToDo.ChangeAlarmActivation.Response(isAlarmOn: !isAlarmOn)
+    self.presenter?.presentAlarmActivation(response: response)
+  }
+  
+  /// 사용자가 투두 반복 설정 뷰를 선택했을 때 호출하는 메서드입니다.
+  /// ex) 사용자가 화면에서 (오늘만 or 다른날도 or 매일) 할래요 뷰를 눌렀음
+  func changeReptition(request: EditToDo.ChangeRepetition.Request) {
+    let isOnlyToday = request.isOnlyToday
+    let isEveryday = request.isEveryday
+    let repetitionViewState = self.makeRepetitionViewState(isOnlyToday: isOnlyToday, isEveryday: isEveryday)
+    let response = EditToDo.ChangeRepetition.Response(editToDoRepetitionViewState: repetitionViewState)
+    self.presenter?.presentChangedRepetition(response: response)
+  }
+
+  /// 서버로부터 수정할 투두의 정보를 받아오는 메서드입니다.
+  func fetchToDo(request: EditToDo.FetchToDo.Request) {
+    let fetchResult: Result<EditToDo.FetchToDo.Response.FetchedToDo, Error>
+    do {
+      let toDo = try self.toDoWorker.fetchToDo(id: self.toDoId)
+      let group = try self.groupWorker.fetchGroupList()
+      let repetitionViewState = self.makeRepetitionViewState(
+        isOnlyToday: toDo.repetition.isOnlyToday,
+        isEveryday: toDo.repetition.isRepeatEveryday
+      )
+
+      let fetchedToDo = EditToDo.FetchToDo.Response.FetchedToDo(
+        toDo: toDo,
+        groupList: group,
+        repetitionViewState: repetitionViewState
+      )
+
+      fetchResult = Result.success(fetchedToDo)
+    } catch let error {
+      fetchResult = Result.failure(error)
+    }
+
+    let response = EditToDo.FetchToDo.Response(fetchResult: fetchResult)
+    self.presenter?.presentFetchedToDo(response: response)
+  }
+  
+  /// 서버에 투두의 삭제를 요청하는 메서드입니다.
+  func deleteToDo(request: EditToDo.DeleteToDo.Request) {
+    let deleteResult: Result<Void, Error>
+    do {
+      try self.toDoWorker.deleteToDo(id: self.toDoId)
+      deleteResult = Result.success(())
+    } catch let error {
+      deleteResult = Result.failure(error)
+    }
+
+    let response = EditToDo.DeleteToDo.Response(deleteResult: deleteResult)
+    self.presenter?.presentDeleteResult(response: response)
+  }
+
+  /// 서버에 투두의 수정을 요청하는 메서드입니다.
+  func editToDo(request: EditToDo.CompleteEditToDo.Request) {
+    let editResult: Result<Void, Error>
+    do {
+      let editedToDo = try self.makeToDoForEdit(with: request)
+      try self.toDoWorker.editToDo(editedToDo)
+      editResult = Result.success(())
+    } catch let error {
+      editResult = Result.failure(error)
+    }
+
+    let response = EditToDo.CompleteEditToDo.Response(editResult: editResult)
+    self.presenter?.presentEditResult(response: response)
+  }
+
+  /// EditToDoViewController 컴파일 에러 방지 코드입니다.
+  func doSomething(request: EditToDo.Something.Request) {}
+}
+
+// MARK: Private Functions
+
+extension EditToDoInteractor {
+  private func makeRepetitionViewState(
+    isOnlyToday: Bool,
+    isEveryday: Bool?
+  ) -> EditToDo.EditToDoRepetitionViewState {
+    self.toDo?.repetition.isOnlyToday = isOnlyToday
+    if isOnlyToday {
+      return EditToDo.EditToDoRepetitionViewState.repeatOnlyToday
+    }
+
+    let isRepeatEveryday = isEveryday ?? (self.toDo?.repetition.isRepeatEveryday ?? true)
+    self.toDo?.repetition.isRepeatEveryday = isRepeatEveryday
+    let state: EditToDo.EditToDoRepetitionViewState = isRepeatEveryday ? .repeatEveryday : .repeatInRange
+    return state
+  }
+
+  private func makeToDoForEdit(
+    with request: EditToDo.CompleteEditToDo.Request
+  ) throws -> EditToDo.ToDo {
+    guard var editedToDo = self.toDo
+    else { throw EditToDoInteractorError.toDoDataNotExisted }
+
+    editedToDo.name = request.toDoName
+    editedToDo.groupData = EditToDo.Group(
+      id: request.displayedGroup.id,
+      name: request.displayedGroup.name,
+      color: request.displayedGroup.color
+    )
+
+    return editedToDo
+  }
+}
+
+// MARK: Private Functions
+
+extension EditToDoInteractor {
+  enum EditToDoInteractorError: Error {
+    case toDoDataNotExisted
   }
 }

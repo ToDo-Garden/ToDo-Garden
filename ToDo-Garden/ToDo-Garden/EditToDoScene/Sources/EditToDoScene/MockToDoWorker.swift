@@ -13,16 +13,16 @@ import EditToDoSceneEntity
 public final class MockToDoWorker {
   public init() {}
 
-  func fetchToDo(id: Int?) throws -> EditToDo.ToDo {
+  func fetchToDo(id: Int?) throws(MockToDoWorkerError) -> EditToDo.ToDo {
     return MockData.FetchToDo.firstData
   }
 
-  func deleteToDo(id: Int?) -> Result<Bool, Error> {
-    return Result.success(true)
+  func deleteToDo(id: Int?) throws(MockToDoWorkerError) {
+
   }
 
-  func editToDo(_ toDo: EditToDo.ToDo?) -> Result<Bool, Error> {
-    return Result.success(true)
+  func editToDo(_ toDo: EditToDo.ToDo) throws(MockToDoWorkerError) {
+    throw MockToDoWorkerError.unknownError
   }
 }
 
@@ -88,5 +88,13 @@ extension MockToDoWorker {
 
       static let defaultCalendar = Calendar(identifier: Calendar.Identifier.gregorian)
     }
+  }
+}
+
+// MARK: Error
+
+extension MockToDoWorker {
+  enum MockToDoWorkerError: Error {
+    case unknownError
   }
 }
