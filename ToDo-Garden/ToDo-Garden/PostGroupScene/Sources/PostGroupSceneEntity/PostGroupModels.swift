@@ -13,13 +13,16 @@ public enum PostGroup {
   public enum ChangeColor {
     public struct Request {
       public let groupColor: UIColor
+      
       public init(groupColor: UIColor) {
         self.groupColor = groupColor
       }
     }
+    
     public struct Response {
       public let groupID: String
       public let groupColor: UIColor
+      
       public init(groupID: String, groupColor: UIColor) {
         self.groupID = groupID
         self.groupColor = groupColor
@@ -27,6 +30,7 @@ public enum PostGroup {
     }
     public struct ViewModel {
       public let groupColor: UIColor
+      
       public init(groupColor: UIColor) {
         self.groupColor = groupColor
       }
@@ -39,6 +43,7 @@ public enum PostGroup {
       public let groupName: String
       public let groupColor: UIColor?
       public let isDoneBottomButtonEnable: Bool
+      
       public init(
         groupName: String,
         groupColor: UIColor?,
@@ -49,10 +54,12 @@ public enum PostGroup {
         self.isDoneBottomButtonEnable = isDoneBottomButtonEnable
       }
     }
+    
     public struct ViewModel {
       public let groupName: String
       public let groupColor: UIColor?
       public let isDoneBottomButtonEnable: Bool
+      
       public init(
         groupName: String,
         groupColor: UIColor?,
@@ -69,15 +76,18 @@ public enum PostGroup {
     public struct Request {
       public let groupName: String
       public let groupColor: UIColor
+      
       public init(groupName: String, groupColor: UIColor) {
         self.groupName = groupName
         self.groupColor = groupColor
       }
     }
+    
     public struct Response {
       public let groupID: String
       public let groupName: String
       public let groupColor: UIColor
+      
       public init(
         groupID: String,
         groupName: String,
@@ -88,7 +98,9 @@ public enum PostGroup {
         self.groupColor = groupColor
       }
     }
+    
     public struct ViewModel {
+      
       public init() {
       }
     }

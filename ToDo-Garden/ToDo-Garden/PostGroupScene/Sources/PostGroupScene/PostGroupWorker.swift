@@ -18,7 +18,7 @@ public struct PostGroupWorker: PostGroupWorkable {
   }
   
   public func touchDoneButton(groupID: String, groupName: String, groupColor: UIColor) {
-    
+    // 서버에 그룹 변경을 요청 
   }
 }
 

@@ -34,7 +34,9 @@ class PostGroupInteractor: PostGroupDataStore {
 
 extension PostGroupInteractor: PostGroupBusinessLogic {
   func touchDoneButton(request: PostGroupSceneEntity.PostGroup.TouchDoneButton.Request) {
-    guard let groupID = payload?.groupID else { return }
+    guard let groupID = payload?.groupID else {
+      return
+    }
     
     self.postGroupWorker.touchDoneButton(
       groupID: groupID,
