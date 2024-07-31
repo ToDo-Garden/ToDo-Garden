@@ -221,7 +221,6 @@ extension PostGroupViewController {
 }
 
 extension PostGroupViewController: TextInputViewDelegate {
-  
   func textInputViewDidChange() {
     self.doneBottomButton.isEnabled = self.isDoneBottomButtonEnabled()
   }
@@ -269,7 +268,7 @@ extension PostGroupViewController: PostGroupBottomSheetDelegate {
 //    bottomButton: ToDoGardenBoxButton(title: "확인", buttonType: .primaryRoundRectButton),
 //    modalBottomButton: ToDoGardenBoxButton(title: "확인", buttonType: .primaryRoundRectButton)
 //  )
-//  
+//
 //  return vc
 // }
 // #endif

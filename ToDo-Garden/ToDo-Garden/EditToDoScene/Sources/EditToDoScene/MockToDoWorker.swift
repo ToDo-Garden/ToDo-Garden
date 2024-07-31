@@ -10,7 +10,9 @@ import UIKit.UIColor
 import EditToDoSceneEntity
 
 /// ToDo Context를 가정한 Mock Worker 입니다.
-final class MockToDoWorker {
+public final class MockToDoWorker {
+  public init() {}
+
   func fetchToDo(id: Int?) throws -> EditToDo.ToDo {
     return MockData.FetchToDo.firstData
   }
