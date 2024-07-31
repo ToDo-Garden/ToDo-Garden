@@ -7,10 +7,11 @@
 
 import UIKit
 
+import ToDoGardenUIAPI
 import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
-public class SettingTimeView: UIView {
+public class SettingTimeView: UIView, SettingTimeViewAPI {
   private var configuration: Configuration
   private let timepicker: ToDoGardenTimePicker
   private let button: UIButton
