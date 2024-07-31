@@ -14,7 +14,7 @@ protocol PostGroupRoutingLogic {
 }
 
 protocol PostGroupDataPassing {
-  var dataStore: PostGroupDataStore? { get }
+  var dataStore: PostGroupDataStore? { get set }
 }
 
 class PostGroupRouter: PostGroupDataPassing {

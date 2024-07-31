@@ -5,11 +5,13 @@
 //  Created by SONG on 7/8/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
-import Foundation
+import UIKit.UIColor
 
 /// 런타임에 전달받을 의존성을 선언한 구조체입니다.
 public protocol PostGroupScenePayloadable {
-  // var name: String { get }
+  var groupID: String? { get }
+  var groupName: String? { get }
+  var groupColor: UIColor? { get }
 }
 
 public protocol PostGroupSceneBuildable {
