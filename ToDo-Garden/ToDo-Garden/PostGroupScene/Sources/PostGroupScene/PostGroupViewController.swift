@@ -70,8 +70,8 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
     self.setupDoneBottomButton()
   }
   
-  override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
     self.setPayload()
   }
   private func setupTextInputView() {
