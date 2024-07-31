@@ -18,20 +18,25 @@ public struct PostGroupWorker: PostGroupWorkable {
   }
   
   public func touchDoneButton(groupID: String, groupName: String, groupColor: UIColor) {
-    // 서버에 그룹 변경을 요청 
+    // 서버에 그룹 변경을 요청
   }
 }
 
 extension PostGroupWorker {
   private func hexStringFromColor(_ color: UIColor) -> String {
+    let multiplier: CGFloat = 255.0
+    let redShift: Int = 16
+    let greenShift: Int = 8
+    
     var red: CGFloat = CGFloat.zero
     var green: CGFloat = CGFloat.zero
     var blue: CGFloat = CGFloat.zero
     var alpha: CGFloat = CGFloat.zero
     
     color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-    
-    let rgb: Int = (Int)(red * 255) << 16 | (Int)(green * 255) << 8 | (Int)(blue * 255) << 0
+    let rgb: Int = (Int(red * multiplier) << redShift) |
+    (Int(green * multiplier) << greenShift) |
+    (Int(blue * multiplier))
     
     return String(format: "#%06x", rgb)
   }
