@@ -16,6 +16,8 @@ public final class AlarmTimeView: UIView, AlarmTimeViewAPI {
   private var timeLabel: UILabel
   private var alarmSettingButton: UIButton
 
+  public weak var delegate: AlarmTimeViewDelegate?
+
   public init(model: AlarmTimeView.Model) {
     self.model = model
     self.timeLabel = UILabel()
@@ -46,14 +48,6 @@ public final class AlarmTimeView: UIView, AlarmTimeViewAPI {
   public func updateAlarmTime(with text: String) {
     self.setupAlarmSettingButtonTitle(with: text)
   }
-
-  public func addAlarmSettingAction(_ closure: @escaping () -> Void) {
-    let buttonAction = UIAction { _ in
-      closure()
-    }
-
-    self.alarmSettingButton.addAction(buttonAction, for: UIControl.Event.touchUpInside)
-  }
 }
 
 // MARK: Private Functions
@@ -83,6 +77,7 @@ extension AlarmTimeView {
     self.setupAlarmSettingButtonConfiguration()
     self.setupAlarmSettingButtonUpdateHandler()
     self.setupAlarmSettingButtonTitle(with: self.model.alarmTime)
+    self.setupAlarmSettingButtonAction()
   }
 
   private func setupAlarmSettingButtonConfiguration() {
@@ -115,6 +110,14 @@ extension AlarmTimeView {
     )
     let attributedTitle = AttributedString(text, attributes: attributes)
     self.alarmSettingButton.configuration?.attributedTitle = attributedTitle
+  }
+
+  private func setupAlarmSettingButtonAction() {
+    let buttonAction = UIAction { _ in
+      self.delegate?.didSelectAlarmTimeSettingButton()
+    }
+
+    self.alarmSettingButton.addAction(buttonAction, for: UIControl.Event.touchUpInside)
   }
 }
 
