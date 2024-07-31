@@ -64,7 +64,7 @@ extension PostGroupInteractor: PostGroupBusinessLogic {
     let isButtonEnable: Bool = self.isButtonEnable(groupName: payload?.groupName, groupColor: payload?.groupColor)
     
     let response = PostGroup.SetPayload.Response(
-      groupName: self.convertGroupName(groupName: payload?.groupName),
+      groupName: payload?.groupName ?? "",
       groupColor: payload?.groupColor,
       isDoneBottomButtonEnable: isButtonEnable
     )
@@ -73,12 +73,6 @@ extension PostGroupInteractor: PostGroupBusinessLogic {
 }
 
 extension PostGroupInteractor {
-  private func convertGroupName(groupName: String?) -> String {
-    guard let groupName = groupName else {
-      return ""
-    }
-    return groupName
-  }
   
   private func isButtonEnable(groupName: String?, groupColor: UIColor?) -> Bool {
     var isButtonEnable: Bool
