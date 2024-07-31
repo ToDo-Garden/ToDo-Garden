@@ -12,10 +12,10 @@ import ManageGroupSceneAPI
 public struct ManageGroupSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
   public struct Dependency {
-    let someWorker: ManageGroupWorkable
+    let someWorker: FetchGroupListWorkable
     let nextSceneBuilder: NextSceneBuildable
     
-    public init(someWorker: ManageGroupWorkable, nextSceneBuilder: NextSceneBuildable) {
+    public init(someWorker: FetchGroupListWorkable, nextSceneBuilder: NextSceneBuildable) {
       self.someWorker = someWorker
       self.nextSceneBuilder = nextSceneBuilder
     }

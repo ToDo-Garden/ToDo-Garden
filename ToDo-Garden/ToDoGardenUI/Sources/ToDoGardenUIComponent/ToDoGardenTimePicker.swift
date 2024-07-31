@@ -49,7 +49,20 @@ final public class ToDoGardenTimePicker: UIPickerView {
     }
     return self.timeBuilder.buildTimeInterval(from: components)
   }
-  
+
+  func updateSelectedTime(hour: Int, minute: Int, seconds: Int = 0) {
+    guard self.verifyTotalComponentValue(hour: hour, minute: minute, seconds: seconds)
+    else { return }
+
+    self.updateSelectedComponent(TimeComponents.hour, value: hour)
+    self.updateSelectedComponent(TimeComponents.minute, value: minute)
+
+    guard self.configuration != Constant.SettingTimeView.TimePicker.alarmTime
+    else { return }
+
+    self.updateSelectedComponent(TimeComponents.seconds, value: seconds)
+  }
+
   func setInitialSelection() {
     self.selectRow(10, inComponent: 1, animated: false)
   }
@@ -82,6 +95,44 @@ final public class ToDoGardenTimePicker: UIPickerView {
         highlightedView.heightAnchor.constraint(equalToConstant: self.configuration.dataStore.highlightedView.height)
       ]
     )
+  }
+
+  private func verifyTotalComponentValue(hour: Int, minute: Int, seconds: Int) -> Bool {
+    return self.verifyTime(of: TimeComponents.hour, hour) &&
+      self.verifyTime(of: TimeComponents.minute, minute) &&
+      self.verifyTime(of: TimeComponents.seconds, seconds)
+  }
+
+  private func verifyTime(of component: TimeComponents, _ value: Int) -> Bool {
+    let maximumValue: Int
+    let minimumValue: Int
+    switch component {
+    case TimeComponents.hour:
+      minimumValue = 0
+      maximumValue = 23
+      return minimumValue <= value && value <= maximumValue
+    case TimeComponents.minute:
+      minimumValue = 0
+      maximumValue = 60
+      return minimumValue <= value && value <= maximumValue
+    case TimeComponents.seconds:
+      minimumValue = 0
+      maximumValue = 60
+      return minimumValue <= value && value <= maximumValue
+    }
+  }
+
+  private func updateSelectedComponent(_ component: TimeComponents, value: Int) {
+    let componentIndex = component.rawValue
+    self.selectRow(value, inComponent: componentIndex, animated: false)
+  }
+}
+
+extension ToDoGardenTimePicker {
+  enum TimeComponents: Int {
+    case hour    = 0
+    case minute  = 1
+    case seconds = 2
   }
 }
 

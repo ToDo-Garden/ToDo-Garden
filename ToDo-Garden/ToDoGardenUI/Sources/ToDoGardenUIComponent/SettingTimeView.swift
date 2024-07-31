@@ -7,10 +7,11 @@
 
 import UIKit
 
+import ToDoGardenUIAPI
 import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
-public class SettingTimeView: UIView {
+public final class SettingTimeView: UIView, SettingTimeViewAPI {
   private var configuration: Configuration
   private let timepicker: ToDoGardenTimePicker
   private let button: UIButton
@@ -21,6 +22,7 @@ public class SettingTimeView: UIView {
     self.button = button
     super.init(frame: CGRect.zero)
     self.build()
+    self.backgroundColor = .white
   }
   
   @available(*, unavailable)
@@ -35,9 +37,17 @@ public class SettingTimeView: UIView {
     return CGSize.init(width: screenWidth, height: screenHeight / 2)
   }
   
+  public var seconds: Double {
+    self.timepicker.transformSeconds()
+  }
+  
   public func transformSeconds(completion: @escaping (Double) -> Void) {
     let calculatedDate = self.timepicker.transformSeconds()
     completion(calculatedDate)
+  }
+
+  public func updateSelectedTime(hour: Int, minute: Int, seconds: Int = 0) {
+    self.timepicker.updateSelectedTime(hour: hour, minute: minute, seconds: seconds)
   }
 }
 
@@ -50,6 +60,9 @@ extension SettingTimeView {
   
   private func buildTitleLabel() {
     let titleLabel = UILabel()
+    let multiplier = Constant.SettingTimeView.Layout.titleTopMarginMultiplier
+    let topMargin = self.intrinsicContentSize.height / multiplier
+    
     titleLabel.text = self.configuration.dataStore.title.text
     titleLabel.font = UIFont.pretendardHeadBold
     titleLabel.textColor = UIColor.toDoGardenBlack
@@ -60,7 +73,7 @@ extension SettingTimeView {
       [
         titleLabel.topAnchor.constraint(
           equalTo: self.topAnchor,
-          constant: self.configuration.dataStore.title.topMargin
+          constant: topMargin
         ),
         titleLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor)
       ]
@@ -68,6 +81,8 @@ extension SettingTimeView {
   }
   
   private func buildTimePicker() {
+    let multiplier = Constant.SettingTimeView.Layout.timePickertopMarginMultiplier
+    let topMargin = self.intrinsicContentSize.height / multiplier
     self.timepicker.delegate = self
     self.timepicker.dataSource = self
     self.timepicker.setInitialSelection()
@@ -78,7 +93,7 @@ extension SettingTimeView {
       [
         self.timepicker.topAnchor.constraint(
           equalTo: self.topAnchor,
-          constant: self.configuration.dataStore.timePicker.dataStore.pickerView.topMargin
+          constant: topMargin
         ),
         self.timepicker.centerXAnchor.constraint(equalTo: self.centerXAnchor, constant: -3)
       ]
@@ -87,17 +102,24 @@ extension SettingTimeView {
   
   private func buildButton() {
     self.addSubview(self.button)
-    
     self.button.usingAutolayout()
-    NSLayoutConstraint.activate(
-      [
-        self.button.bottomAnchor.constraint(
-          equalTo: self.bottomAnchor,
-          constant: self.configuration.dataStore.button.bottomMargin
-        ),
-        self.button.centerXAnchor.constraint(equalTo: self.centerXAnchor)
-      ]
-    )
+    
+    let dummyView = UIView()
+    dummyView.usingAutolayout()
+    self.addSubview(dummyView)
+    let dummyTopAnchorConstant = Constant.SettingTimeView.Layout.dummyViewTopWeight
+    
+    NSLayoutConstraint.activate([
+      dummyView.topAnchor.constraint(
+        equalTo: self.timepicker.bottomAnchor,
+        constant: dummyTopAnchorConstant
+      ),
+      dummyView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+      dummyView.widthAnchor.constraint(equalToConstant: CGFloat.zero),
+      dummyView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+      self.button.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+      self.button.centerYAnchor.constraint(equalTo: dummyView.centerYAnchor)
+    ])
   }
 }
 
@@ -129,7 +151,7 @@ extension SettingTimeView.Configuration {
 extension SettingTimeView: UIPickerViewDelegate {
   private var timePickerConstant: Constant.SettingTimeView.TimePicker.DataStore {
     return self.configuration.dataStore.timePicker.dataStore
-    }
+  }
   
   public func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
     return self.timePickerConstant.pickerView.rowHeight
@@ -173,8 +195,9 @@ extension SettingTimeView: UIPickerViewDataSource {
 #Preview {
   let button = ToDoGardenBoxButton(title: "asdasd", buttonType: .primaryRoundRectButton)
   
-  let view = SettingTimeView(with: button, for: .focusTimeSetting)
-  
+  let view = SettingTimeView(with: button, for: .alarmTimeSetting)
+  view.updateSelectedTime(hour: 20, minute: 18)
+
   let action = UIAction { _ in
     view.transformSeconds { time in print(time) }
   }

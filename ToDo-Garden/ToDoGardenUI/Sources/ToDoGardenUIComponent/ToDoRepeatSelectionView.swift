@@ -7,6 +7,7 @@
 
 import UIKit
 
+import ToDoGardenUIAPI
 import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
@@ -44,18 +45,6 @@ public class ToDoRepeatSelectionView: UIView {
     return Constant.ToDoRepeatSelectionView.Layout.size
   }
 
-  public func setSelected() {
-    self.isSelected = true
-  }
-
-  public func setDeSelected() {
-    self.isSelected = false
-  }
-
-  public func bindTapGesture(sender: @escaping (Bool) -> Void) {
-    self.selectionSender = sender
-  }
-
   func updateUI(isSelected: Bool) {
     let backgroundColor = isSelected ? UIColor.toDoGardenGreenBackground : UIColor.clear
     self.backgroundColor = backgroundColor
@@ -68,6 +57,24 @@ public class ToDoRepeatSelectionView: UIView {
 
     let isHidden = !isSelected
     self.selectionImageView.isHidden = isHidden
+  }
+}
+
+extension ToDoRepeatSelectionView: ToDoRepeatSelectionViewAPI {
+  public var view: UIView {
+    return self
+  }
+
+  public func setSelected() {
+    self.isSelected = true
+  }
+
+  public func setDeSelected() {
+    self.isSelected = false
+  }
+
+  public func bindTapGesture(sender: @escaping (Bool) -> Void) {
+    self.selectionSender = sender
   }
 }
 
@@ -111,7 +118,6 @@ extension ToDoRepeatSelectionView {
 
 extension ToDoRepeatSelectionView {
   @objc func didTapView() {
-    self.isSelected = !self.isSelected
     self.selectionSender?(self.isSelected)
   }
 }
@@ -201,7 +207,6 @@ extension ToDoRepeatSelectionView {
 @available(iOS 17.0, *)
 #Preview {
   let view = ToDoRepeatSelectionView(model: ToDoRepeatSelectionView.Model.anotherDay)
-
   return view
 }
 #endif

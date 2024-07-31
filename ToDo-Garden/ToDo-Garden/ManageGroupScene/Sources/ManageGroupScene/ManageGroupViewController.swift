@@ -11,7 +11,7 @@ import ManageGroupSceneAPI
 import ManageGroupSceneEntity
 
 protocol ManageGroupDisplayLogic: AnyObject {
-  func displaySomething(viewModel: ManageGroup.Something.ViewModel)
+  func displaySomething(viewModel: ManageGroup.FetchGroupList.ViewModel)
 }
 
 class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
@@ -43,7 +43,7 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
 // MARK: - Confirm display logic protocol
 
 extension ManageGroupViewController: ManageGroupDisplayLogic {
-  func displaySomething(viewModel: ManageGroup.Something.ViewModel) {
+  func displaySomething(viewModel: ManageGroup.FetchGroupList.ViewModel) {
     // self.nameTextField.text = viewModel.name
   }
 }
@@ -52,7 +52,7 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
 
 extension ManageGroupViewController {
   func doSomething() {
-    let request = ManageGroup.Something.Request()
+    let request = ManageGroup.FetchGroupList.Request()
     self.interactor?.doSomething(request: request)
   }
 }

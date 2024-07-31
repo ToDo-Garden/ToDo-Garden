@@ -45,6 +45,14 @@ public final class AlarmTimeView: UIView {
   public func updateAlarmTime(with text: String) {
     self.setupAlarmSettingButtonTitle(with: text)
   }
+
+  public func addAlarmSettingAction(_ closure: @escaping () -> Void) {
+    let buttonAction = UIAction { _ in
+      closure()
+    }
+
+    self.alarmSettingButton.addAction(buttonAction, for: UIControl.Event.touchUpInside)
+  }
 }
 
 // MARK: Private Functions

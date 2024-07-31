@@ -9,8 +9,14 @@ extension TimerSceneViewController {
 extension TimerSceneViewController.Constant {
   enum DefaultViewState {
     static let targetLabel: String = "집중시간"
-    static let timeLabel: String = "00:00"
     static let setTimerButton: String = "집중시간 설정"
+    static let setTimerIsSelected: String = "포기할래요"
+  }
+  
+  enum RestingViewState {
+    static let targetLabel: String = "휴식시간"
+    static let setTimerButton: String = "휴식시간 설정"
+    static let setTimerIsSelected: String = "그만 쉴래요"
   }
   
   enum TargetLabel {
@@ -19,16 +25,12 @@ extension TimerSceneViewController.Constant {
     }
   }
   
-  enum ControlButton {
-    static let setFocusTime: String = "집중시간 설정"
-    static let giveUp: String = "포기할래요"
+  enum TimeLabel {
+    static let defaultText: String = "00:00"
   }
 }
 
 extension TimerSceneViewController.Constant.Layout {
-  enum BaseStack {
-    static let topPadding: CGFloat = 94
-  }
   enum TimerProgressView {
     static let innerPadding: CGFloat = 16
     static let bottomPadding: CGFloat = 55

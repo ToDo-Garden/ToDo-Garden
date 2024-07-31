@@ -1,6 +1,6 @@
 //
 //  PostGroupPresenter.swift
-//  
+//
 //
 //  Created by SONG on 7/8/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
@@ -10,7 +10,9 @@ import Foundation
 import PostGroupSceneEntity
 
 protocol PostGroupPresentationLogic {
-  func presentSomething(response: PostGroup.Something.Response)
+  func presentChangedColor(response: PostGroup.ChangeColor.Response)
+  func presentLoadGroupData(response: PostGroup.LoadGroupData.Response)
+  func presentTouchedDoneButton(response: PostGroup.TouchDoneButton.Response)
 }
 
 class PostGroupPresenter {
@@ -20,8 +22,22 @@ class PostGroupPresenter {
 // MARK: - Request to ViewController
 
 extension PostGroupPresenter: PostGroupPresentationLogic {
-  func presentSomething(response: PostGroup.Something.Response) {
-    let viewModel = PostGroup.Something.ViewModel()
-    self.viewController?.displaySomething(viewModel: viewModel)
+  func presentChangedColor(response: PostGroup.ChangeColor.Response) {
+    let viewModel = PostGroup.ChangeColor.ViewModel(groupColor: response.groupColor)
+    self.viewController?.displayChangedColor(viewModel: viewModel)
+  }
+  
+  func presentLoadGroupData(response: PostGroup.LoadGroupData.Response) {
+    let viewModel = PostGroup.LoadGroupData.ViewModel(
+      groupName: response.groupName,
+      groupColor: response.groupColor,
+      isDoneBottomButtonEnable: response.isDoneBottomButtonEnable
+    )
+    self.viewController?.displayPayload(viewModel: viewModel)
+  }
+  
+  func presentTouchedDoneButton(response: PostGroup.TouchDoneButton.Response) {
+    let viewModel = PostGroup.TouchDoneButton.ViewModel()
+    self.viewController?.displayTouchedDondButton(viewModel: viewModel)
   }
 }

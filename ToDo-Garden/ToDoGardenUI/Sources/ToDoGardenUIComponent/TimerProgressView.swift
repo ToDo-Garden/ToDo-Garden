@@ -10,6 +10,7 @@ import UIKit
 import ToDoGardenUIConstant
 
 public final class TimerProgressView: UIView {
+  private let semaphore = DispatchSemaphore(value: 1)
   public var isAnimating: Bool {
     self.circularProgressView.isAnimating
   }
@@ -44,10 +45,48 @@ public final class TimerProgressView: UIView {
   /// - Parameters:
   ///   - duration: `TimerInterval` 동안 실행될지 결정하는 파라미터입니다.
   ///   - toValue: TimerProgressView`의 애니메이션이 종료되는 지점을 나타내는 값입니다.
+  /// 해당 메소드는 세마포어를 사용하여 작업이 동시에 실행되는 것을 방지합니다.
   public func startAnimation(duration: TimeInterval, to toValue: Double) {
-    self.toValue = toValue
-    self.addAnimation(duration: duration, to: toValue)
-    self.circularProgressView.startAnimation(duration: duration, from: Float.zero, to: Float(toValue))
+    self.performTaskWithSemaphore {
+      self.toValue = toValue
+      self.addAnimation(duration: duration, to: toValue)
+      self.circularProgressView.startAnimation(duration: duration, from: Float.zero, to: Float(toValue))
+    }
+  }
+  
+  /// TimerProgressView에 사용되는 색상들을 캡슐화한 구조체입니다.
+  public struct TimerProgressViewColors: Sendable {
+    let progress: UIColor
+    let background: UIColor
+    let dot: UIColor
+    
+    public init(
+      progress: UIColor,
+      background: UIColor,
+      dot: UIColor
+    ) {
+      self.progress = progress
+      self.background = background
+      self.dot = dot
+    }
+  }
+  
+  /// TimerProgressView 컴포넌트들의 색상을 설정합니다.
+  /// - Parameter colors: progressLayer, backgroundLayer, dot의 색상을 포함하는 `TimerProgressViewColors` 인스턴스입니다.
+  public func setColors(to colors: TimerProgressViewColors) {
+    self.circularProgressView.setupProgressLayerStrokeColor(with: colors.progress)
+    self.circularProgressView.setupProgressBackgroundLayerStrokeColor(with: colors.background)
+    self.dot.backgroundColor = colors.dot
+  }
+  
+  /// CircularProgressView의 진행 상태를 초기화하고 점(dot)을 숨깁니다.
+  /// 해당 메소드는 세마포어를 사용하여 작업이 동시에 실행되는 것을 방지합니다.
+  public func resetProgress() {
+    self.performTaskWithSemaphore {
+      self.circularProgressView.resetProgress()
+      self.resetDot()
+      self.toValue = nil
+    }
   }
 }
 
@@ -67,6 +106,11 @@ extension TimerProgressView {
   private func setupDot(with dotColor: UIColor) {
     self.dot.layer.cornerRadius = self.dot.frame.width / 2
     self.dot.backgroundColor = dotColor
+  }
+  
+  private func resetDot() {
+    self.dot.isHidden = true
+    self.dot.layer.removeAllAnimations()
   }
 }
 
@@ -105,11 +149,11 @@ extension TimerProgressView {
     let circularPath = self.makeCircularPath(toValue: toValue)
     let animationKeyPath = Constant.TimerProgressView.StringLiteral.Dot.Animation.keyPath
     let animation = CAKeyframeAnimation(keyPath: animationKeyPath)
-    animation.delegate = self
     animation.path = circularPath.cgPath
     animation.duration = duration
     animation.calculationMode = CAAnimationCalculationMode.paced
     animation.isRemovedOnCompletion = false
+    animation.fillMode = CAMediaTimingFillMode.forwards
     self.dot.isHidden = false
     self.dot.layer.add(animation, forKey: nil)
   }
@@ -133,25 +177,20 @@ extension TimerProgressView {
   }
 }
 
-// MARK: - Conforming to a protocol
+// MARK: - Using semaphore
 
-extension TimerProgressView: CAAnimationDelegate {
-  public func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
-    guard let toValue
-    else { return }
-    
-    let startAngle = -(Double.pi / 2)
-    let dotWidth = Constant.TimerProgressView.Layout.Dot.width
-    let dotHeight = Constant.TimerProgressView.Layout.Dot.height
-    let dotRadius = dotWidth / 2
-    let endAngle = (2 * Double.pi) * toValue + startAngle
-    let adjustedAngle = atan2(sin(endAngle), cos(endAngle))
-    let endOfXPosition: CGFloat = self.bounds.midX + (self.bounds.width / 2.0 * cos(adjustedAngle)) - dotRadius
-    let endOfYPosition: CGFloat = self.bounds.midY + (self.bounds.width / 2.0 * sin(adjustedAngle)) - dotRadius
-    self.dot.frame = CGRect(
-      origin: CGPoint(x: endOfXPosition, y: endOfYPosition),
-      size: CGSize(width: dotWidth, height: dotHeight)
-    )
+extension TimerProgressView {
+  
+  /// 세마포어를 사용하여 작업을 동기화하여 실행하는 헬퍼 메소드입니다.
+  /// - Parameter task: 메인 스레드에서 실행할 작업 블록입니다.
+  private func performTaskWithSemaphore(_ task: @MainActor @Sendable @escaping () -> Void) {
+    DispatchQueue.global().async {
+      self.semaphore.wait()
+      DispatchQueue.main.async {
+        task()
+        self.semaphore.signal()
+      }
+    }
   }
 }
 

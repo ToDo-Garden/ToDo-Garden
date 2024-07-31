@@ -1,27 +1,118 @@
 //
 //  ManageGroupModels.swift
-//  
+//
 //
 //  Created by SONG on 6/26/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
-import Foundation
+import UIKit.UIColor
 
 public enum ManageGroup {
   public struct ToDoGroup {
     public let id: String
+    public let groupName: String
+    public let progressColor: UIColor
+    public let progressRate: Float
+    
+    public init(id: String, groupName: String, progressColor: UIColor, progressRate: Float) {
+      self.id = id
+      self.groupName = groupName
+      self.progressColor = progressColor
+      self.progressRate = progressRate
+    }
   }
   // MARK: Use cases
   
-  public enum Something {
+  public enum FetchGroupList {
     public struct Request {
       public init() { }
     }
+    
     public struct Response {
-      public init() { }
+      let data: String
+      public init(with data: String) {
+        self.data = data
+      }
     }
+    
     public struct ViewModel {
-      public init() { }
+      public let list: [ToDoGroup]
+      public init(with list: [ToDoGroup]) {
+        self.list = list
+      }
+    }
+  }
+  
+  public enum DeleteGroup {
+    public struct Request {
+      public let id: String
+      public let index: Int
+      
+      public init(id: String, index: Int) {
+        self.id = id
+        self.index = index
+      }
+    }
+    
+    public struct Response {
+      public let id: String
+      public let index: Int
+      
+      public init(id: String, index: Int) {
+        self.id = id
+        self.index = index
+      }
+    }
+    
+    public struct ViewModel {
+      public let id: String
+      public let index: Int
+      
+      public init(
+        id: String,
+        index: Int
+      ) {
+        self.id = id
+        self.index = index
+      }
+    }
+  }
+  
+  public enum ReorderGroup {
+    public struct Request {
+      public var reorderedGroups: [ReorderedGroup]
+      
+      public init() {
+        self.reorderedGroups = []
+      }
+    }
+    
+    public struct Response {
+      public let data: Bool
+      public init(with data: Bool) {
+        self.data = data
+      }
+    }
+    
+    public struct ViewModel {
+      public var data: Bool
+      public init(with data: Bool) {
+        self.data = data
+      }
+    }
+  }
+}
+
+extension ManageGroup {
+  public struct ReorderedGroup {
+    let id: String
+    let sourceIndex: Int
+    let destinationIndex: Int
+    
+    public init(id: String, sourceIndex: Int, destinationIndex: Int) {
+      self.id = id
+      self.sourceIndex = sourceIndex
+      self.destinationIndex = destinationIndex
     }
   }
 }
