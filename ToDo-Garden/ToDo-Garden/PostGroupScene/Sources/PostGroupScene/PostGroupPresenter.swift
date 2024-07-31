@@ -11,7 +11,7 @@ import PostGroupSceneEntity
 
 protocol PostGroupPresentationLogic {
   func presentChangedColor(response: PostGroup.ChangeColor.Response)
-  func presentSetPayload(response: PostGroup.SetPayload.Response)
+  func presentLoadGroupData(response: PostGroup.LoadGroupData.Response)
   func presentTouchedDoneButton(response: PostGroup.TouchDoneButton.Response)
 }
 
@@ -27,8 +27,8 @@ extension PostGroupPresenter: PostGroupPresentationLogic {
     self.viewController?.displayChangedColor(viewModel: viewModel)
   }
   
-  func presentSetPayload(response: PostGroup.SetPayload.Response) {
-    let viewModel = PostGroup.SetPayload.ViewModel(
+  func presentLoadGroupData(response: PostGroup.LoadGroupData.Response) {
+    let viewModel = PostGroup.LoadGroupData.ViewModel(
       groupName: response.groupName,
       groupColor: response.groupColor,
       isDoneBottomButtonEnable: response.isDoneBottomButtonEnable

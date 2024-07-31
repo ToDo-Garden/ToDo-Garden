@@ -14,7 +14,7 @@ import ToDoGardenUIResource
 
 protocol PostGroupDisplayLogic: AnyObject {
   func displayChangedColor(viewModel: PostGroup.ChangeColor.ViewModel)
-  func displayPayload(viewModel: PostGroup.SetPayload.ViewModel)
+  func displayPayload(viewModel: PostGroup.LoadGroupData.ViewModel)
   func displayTouchedDondButton(viewModel: PostGroup.TouchDoneButton.ViewModel)
 }
 
@@ -72,7 +72,7 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    self.setPayload()
+    self.loadGroupData()
   }
   private func setupTextInputView() {
     self.textInputView.delegate = self
@@ -201,7 +201,7 @@ extension PostGroupViewController: PostGroupDisplayLogic {
     self.textInputView.changeBottomLine(color: viewModel.groupColor)
   }
   
-  func displayPayload(viewModel: PostGroupSceneEntity.PostGroup.SetPayload.ViewModel) {
+  func displayPayload(viewModel: PostGroupSceneEntity.PostGroup.LoadGroupData.ViewModel) {
     self.textInputView.setBeginEditing(with: viewModel.groupName)
     self.postGroupColorPickerRow.updateColor(with: viewModel.groupColor ?? UIColor.toDoGardenGrassNone)
     self.doneBottomButton.isEnabled = viewModel.isDoneBottomButtonEnable
@@ -215,8 +215,8 @@ extension PostGroupViewController: PostGroupDisplayLogic {
 // MARK: - Request to interactor
 
 extension PostGroupViewController {
-  func setPayload() {
-    self.interactor?.setPayload()
+  func loadGroupData() {
+    self.interactor?.loadGroupData()
   }
 }
 

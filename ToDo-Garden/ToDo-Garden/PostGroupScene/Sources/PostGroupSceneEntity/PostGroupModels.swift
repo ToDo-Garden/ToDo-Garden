@@ -37,7 +37,7 @@ public enum PostGroup {
     }
   }
   
-  public enum SetPayload {
+  public enum LoadGroupData {
     
     public struct Response {
       public let groupName: String

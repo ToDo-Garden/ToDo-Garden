@@ -67,7 +67,7 @@ extension PostGroupSceneBuilder: PostGroupSceneBuildable {
         modalBottomButton: self.dependency.modalBottomButton
       )
     )
-    self.setPayload(for: postGroupViewController, with: payload)
+    self.loadGroupData(for: postGroupViewController, with: payload)
     
     return postGroupViewController
   }
@@ -95,7 +95,7 @@ extension PostGroupSceneBuilder {
   /// - Parameters:
   ///   - viewController: 런타임 의존성을 설정할 ViewController 객체입니다.
   ///   - payload: 런타임에 전달할 의존성입니다.
-  private func setPayload(for viewController: PostGroupViewController, with payload: PostGroupScenePayloadable?) {
+  private func loadGroupData(for viewController: PostGroupViewController, with payload: PostGroupScenePayloadable?) {
     viewController.router?.dataStore?.payload = payload
   }
 }

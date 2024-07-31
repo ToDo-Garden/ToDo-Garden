@@ -15,7 +15,7 @@ protocol PostGroupDataStore {
 }
 
 protocol PostGroupBusinessLogic {
-  func setPayload()
+  func loadGroupData()
   func changeColor(request: PostGroup.ChangeColor.Request)
   func touchDoneButton(request: PostGroup.TouchDoneButton.Request)
 }
@@ -60,15 +60,15 @@ extension PostGroupInteractor: PostGroupBusinessLogic {
     self.presenter?.presentChangedColor(response: response)
   }
   
-  func setPayload() {
+  func loadGroupData() {
     let isButtonEnable: Bool = self.isButtonEnable(groupName: payload?.groupName, groupColor: payload?.groupColor)
     
-    let response = PostGroup.SetPayload.Response(
+    let response = PostGroup.LoadGroupData.Response(
       groupName: payload?.groupName ?? "",
       groupColor: payload?.groupColor,
       isDoneBottomButtonEnable: isButtonEnable
     )
-    self.presenter?.presentSetPayload(response: response)
+    self.presenter?.presentLoadGroupData(response: response)
   }
 }
 
