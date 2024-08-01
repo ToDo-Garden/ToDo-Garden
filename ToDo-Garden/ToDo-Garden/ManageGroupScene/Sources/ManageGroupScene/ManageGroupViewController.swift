@@ -148,6 +148,53 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
       ]
     )
   }
+  
+  private func buildAddGroupFooterButton() -> UIView {
+    let footerView = self.createFooterView()
+    self.configureFooterButton(in: footerView)
+    self.setupFooterButtonConstraints(in: footerView)
+    self.setupFooterButtonAction()
+    return footerView
+  }
+  
+  private func createFooterView() -> UIView {
+    let footerView = UIView(
+      frame: CGRect(
+        origin: CGPoint.zero,
+        size: CGSize(width: self.groupListTableView.frame.size.width, height: Constant.Layout.FooterView.height)
+      )
+    )
+    footerView.backgroundColor = UIColor.white
+    return footerView
+  }
+  
+  private func configureFooterButton(in footerView: UIView) {
+    footerView.addSubview(self.addGroupfooterButton)
+    self.addGroupfooterButton.translatesAutoresizingMaskIntoConstraints = false
+    self.footerViewLeadingConstraint = self.addGroupfooterButton.leadingAnchor.constraint(
+      equalTo: footerView.leadingAnchor,
+      constant: Constant.Layout.FooterView.leadingNormal
+    )
+  }
+  
+  private func setupFooterButtonConstraints(in footerView: UIView) {
+    guard let footerViewLeadingConstraint = self.footerViewLeadingConstraint else {
+      return
+    }
+    
+    NSLayoutConstraint.activate([
+      self.addGroupfooterButton.centerYAnchor.constraint(equalTo: footerView.centerYAnchor),
+      footerViewLeadingConstraint
+    ])
+  }
+  
+  private func setupFooterButtonAction() {
+    self.addGroupfooterButton.addAction(
+      UIAction { _ in
+        self.routeToPostGroupScene(groupName: nil, color: nil)
+      },
+      for: UIControl.Event.touchUpInside
+    )
   }
 }
 
