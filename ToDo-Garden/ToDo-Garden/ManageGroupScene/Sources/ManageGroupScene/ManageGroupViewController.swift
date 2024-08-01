@@ -213,6 +213,7 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
   
   func displayDeletedGroup(viewModel: ManageGroup.DeleteGroup.ViewModel) {
     // TODO: 이후 PR에 포함될 예정
+  }
  
   func displayReorderedGroup(viewModel: ManageGroup.ReorderGroup.ViewModel) {
     // TODO: 이후 PR에 포함될 예정

@@ -27,12 +27,13 @@ protocol ManageGroupBusinessLogic {
 
 class ManageGroupInteractor: ManageGroupDataStore {
   var presenter: ManageGroupPresentationLogic?
-  private let someWorker: FetchGroupListWorkable
+  //  private var reorderedGroups: [ManageGroup.ReorderedGroup]
   private let manageGroupWorker: ManageGroupWorkable
   
   init(
     worker: ManageGroupWorkable
   ) {
+    //    self.reorderedGroups = []
     self.manageGroupWorker = worker
   }
 }
