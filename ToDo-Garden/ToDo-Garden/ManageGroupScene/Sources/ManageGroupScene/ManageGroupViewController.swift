@@ -14,7 +14,9 @@ import ToDoGardenUIAPI
 import ToDoGardenUIResource
 
 protocol ManageGroupDisplayLogic: AnyObject {
-  func displaySomething(viewModel: ManageGroup.FetchGroupList.ViewModel)
+  func displayFetchedGroupList(viewModel: ManageGroup.FetchGroupList.ViewModel)
+  func displayDeletedGroup(viewModel: ManageGroup.DeleteGroup.ViewModel)
+  func displayReorderedGroup(viewModel: ManageGroup.ReorderGroup.ViewModel)
 }
 
 class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
