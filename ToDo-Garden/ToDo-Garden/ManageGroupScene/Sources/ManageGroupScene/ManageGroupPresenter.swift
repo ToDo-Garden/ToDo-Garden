@@ -5,23 +5,54 @@
 //  Created by SONG on 6/26/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
-import Foundation
+import UIKit.UIColor
 
 import ManageGroupSceneEntity
 
 protocol ManageGroupPresentationLogic {
-  func presentSomething(response: ManageGroup.FetchGroupList.Response)
+  func presentFetchedGroupList(response: ManageGroup.FetchGroupList.Response)
+  func presentDeletedGroup(response: ManageGroup.DeleteGroup.Response)
+  func presentReorderedGroup(response: ManageGroup.ReorderGroup.Response)
 }
 
 class ManageGroupPresenter {
   weak var viewController: ManageGroupDisplayLogic?
+  private let fetchedData: [ManageGroup.ToDoGroup] = [
+    ManageGroup.ToDoGroup(id: "1", groupName: "수학 공부", progressColor: .red, progressRate: 0.5),
+    ManageGroup.ToDoGroup(id: "2", groupName: "영어 학습 및 연습", progressColor: .blue, progressRate: 0.3),
+    ManageGroup.ToDoGroup(id: "3", groupName: "과학과 기술 분야 탐구", progressColor: .green, progressRate: 0.7),
+    ManageGroup.ToDoGroup(id: "4", groupName: "프로그래밍과 코딩 도전", progressColor: .purple, progressRate: 0.2),
+    ManageGroup.ToDoGroup(id: "5", groupName: "역사와 문화 이해", progressColor: .orange, progressRate: 0.9),
+    ManageGroup.ToDoGroup(id: "6", groupName: "음악과 예술 감상", progressColor: .yellow, progressRate: 0.4),
+    ManageGroup.ToDoGroup(id: "7", groupName: "미술과 디자인 창작", progressColor: .cyan, progressRate: 0.6),
+    ManageGroup.ToDoGroup(id: "8", groupName: "체육 운동과 스포츠", progressColor: .magenta, progressRate: 0.8),
+    ManageGroup.ToDoGroup(id: "9", groupName: "경제와 금융의 기초 이해", progressColor: .brown, progressRate: 0.3),
+    ManageGroup.ToDoGroup(id: "10", groupName: "사회 문제 탐구", progressColor: .black, progressRate: 0.7),
+    ManageGroup.ToDoGroup(id: "11", groupName: "컴퓨터 과학의 기본 개념", progressColor: .systemPink, progressRate: 0.5),
+    ManageGroup.ToDoGroup(id: "12", groupName: "문학과 시 이해와 해석", progressColor: .systemIndigo, progressRate: 0.2),
+    ManageGroup.ToDoGroup(id: "13", groupName: "요리와 조리 기술 연마", progressColor: .systemBrown, progressRate: 0.9),
+    ManageGroup.ToDoGroup(id: "14", groupName: "자동차 수리와 정비", progressColor: .systemPurple, progressRate: 0.6),
+    ManageGroup.ToDoGroup(id: "15", groupName: "정치와 법의 기본 개념", progressColor: .systemOrange, progressRate: 0.4),
+    ManageGroup.ToDoGroup(id: "16", groupName: "화학 실험과 실험실 작업", progressColor: .red, progressRate: 0.3),
+    ManageGroup.ToDoGroup(id: "17", groupName: "언어 학습과 외국어 구사", progressColor: .blue, progressRate: 0.6),
+    ManageGroup.ToDoGroup(id: "18", groupName: "생물학 연구와 생명 과학", progressColor: .green, progressRate: 0.8),
+    ManageGroup.ToDoGroup(id: "19", groupName: "디지털 아트와 그래픽 디자인", progressColor: .purple, progressRate: 0.1),
+    ManageGroup.ToDoGroup(id: "20", groupName: "건강과 웰빙의 기본 지식", progressColor: .orange, progressRate: 0.5)
+  ]
 }
 
 // MARK: - Request to ViewController
 
 extension ManageGroupPresenter: ManageGroupPresentationLogic {
-  func presentSomething(response: ManageGroup.FetchGroupList.Response) {
-    let viewModel = ManageGroup.FetchGroupList.ViewModel(with: [])
-    self.viewController?.displaySomething(viewModel: viewModel)
+  func presentFetchedGroupList(response: ManageGroup.FetchGroupList.Response) {
+    let todoGroup = self.fetchedData
+    let viewModel = ManageGroup.FetchGroupList.ViewModel(with: todoGroup)
+    self.viewController?.displayFetchedGroupList(viewModel: viewModel)
+  }
+  
+  func presentDeletedGroup(response: ManageGroup.DeleteGroup.Response) {
+  }
+  
+  func presentReorderedGroup(response: ManageGroup.ReorderGroup.Response) {
   }
 }
