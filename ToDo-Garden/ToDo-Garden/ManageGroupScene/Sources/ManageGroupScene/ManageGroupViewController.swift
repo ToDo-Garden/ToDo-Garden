@@ -201,8 +201,15 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
 // MARK: - Confirm display logic protocol
 
 extension ManageGroupViewController: ManageGroupDisplayLogic {
-  func displaySomething(viewModel: ManageGroup.FetchGroupList.ViewModel) {
-    // self.nameTextField.text = viewModel.name
+  func displayFetchedGroupList(viewModel: ManageGroup.FetchGroupList.ViewModel) {
+    self.displayedGroups = viewModel.list
+    self.manageGroupTableViewDelegate?.displayedGroups = viewModel.list
+    self.groupListTableView.reloadData()
+  }
+  
+  func displayDeletedGroup(viewModel: ManageGroup.DeleteGroup.ViewModel) {
+ 
+  func displayReorderedGroup(viewModel: ManageGroup.ReorderGroup.ViewModel) {
   }
 }
 
