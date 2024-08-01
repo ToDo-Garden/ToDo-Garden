@@ -101,6 +101,53 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
       self.rightBarButton.isEnabled = true
     }
   }
+  
+  private func setupTableView() {
+    let footerView = self.buildAddGroupFooterButton()
+    
+    self.manageGroupTableViewDelegate = ManageGroupTableViewDelegate(
+      displayedGroups: self.displayedGroups,
+      tableView: self.groupListTableView,
+      cell: self.groupListTableViewCell,
+      footerView: footerView,
+      viewController: self
+    )
+    self.groupListTableView.delegate = self.manageGroupTableViewDelegate
+    self.groupListTableView.dataSource = self.manageGroupTableViewDelegate
+    self.groupListTableView.dragDelegate = self.manageGroupTableViewDelegate
+    self.groupListTableView.dropDelegate = self.manageGroupTableViewDelegate
+    
+    self.setupTableViewNoBounce()
+    self.setupTableViewLayout()
+  }
+  
+  private func setupTableViewNoBounce() {
+    self.groupListTableView.bounces = false
+  }
+  
+  private func setupTableViewLayout() {
+    self.view.addSubview(self.groupListTableView)
+    self.groupListTableView.translatesAutoresizingMaskIntoConstraints = false
+    
+    self.tableViewLeadingConstraint = self.groupListTableView.leadingAnchor.constraint(
+      equalTo: self.view.leadingAnchor,
+      constant: Constant.Layout.TableView.leading
+    )
+    
+    guard let tableViewLeadingConstraint = self.tableViewLeadingConstraint else {
+      return
+    }
+    
+    NSLayoutConstraint.activate(
+      [
+        tableViewLeadingConstraint,
+        self.groupListTableView.topAnchor.constraint(
+          equalTo: self.view.safeAreaLayoutGuide.topAnchor,
+          constant: Constant.Layout.TableView.top
+        )
+      ]
+    )
+  }
   }
 }
 
