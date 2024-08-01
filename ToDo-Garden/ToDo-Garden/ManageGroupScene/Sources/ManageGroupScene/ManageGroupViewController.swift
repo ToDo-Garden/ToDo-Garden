@@ -214,3 +214,15 @@ extension ManageGroupViewController {
     self.interactor?.doSomething(request: request)
   }
 }
+// MARK: - Request to interactor
+
+extension ManageGroupViewController {
+  func routeToPostGroupScene(groupName: String?, color: UIColor?) {
+    guard let groupName = groupName, let color = color else {
+      print("route To AddGroup")
+      return
+    }
+    
+    print("route To EditGroup with \(groupName), \(color)")
+  }
+}
