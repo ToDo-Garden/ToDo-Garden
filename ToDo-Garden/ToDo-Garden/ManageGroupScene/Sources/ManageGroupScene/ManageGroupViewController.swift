@@ -208,19 +208,38 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
   }
   
   func displayDeletedGroup(viewModel: ManageGroup.DeleteGroup.ViewModel) {
+    // TODO: 이후 PR에 포함될 예정
  
   func displayReorderedGroup(viewModel: ManageGroup.ReorderGroup.ViewModel) {
+    // TODO: 이후 PR에 포함될 예정
   }
 }
 
 // MARK: - Request to interactor
 
 extension ManageGroupViewController {
-  func doSomething() {
+  func fetchGroupList() {
     let request = ManageGroup.FetchGroupList.Request()
-    self.interactor?.doSomething(request: request)
+    self.interactor?.fetchGroupList(request: request)
+  }
+  
+  func deleteGroup(id: String, index: Int) {
+    // TODO: 이후 PR에 포함될 예정
+  }
+  
+  func reorderGroup() {
+    // TODO: 이후 PR에 포함될 예정
+  }
+  
+  func addReorderedGroups(
+    id: String,
+    sourceIndex: Int,
+    destinationIndex: Int
+  ) {
+    // TODO: 이후 PR에 포함될 예정 
   }
 }
+
 // MARK: - Request to interactor
 
 extension ManageGroupViewController {
