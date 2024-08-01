@@ -5,9 +5,9 @@
 //  Created by SONG on 6/24/24.
 //
 
-import UIKit.UIColor
+import UIKit
 
-public protocol ManageGroupTableViewCellAPI {
+public protocol ManageGroupTableViewCellAPI: UITableViewCell {
   func startAnimation()
   func enterEditingMode()
   func leaveEditingMode()
