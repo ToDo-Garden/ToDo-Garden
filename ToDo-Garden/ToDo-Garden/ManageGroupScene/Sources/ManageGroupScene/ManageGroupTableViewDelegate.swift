@@ -57,15 +57,15 @@ extension ManageGroupTableViewDelegate: UITableViewDataSource {
       return UITableViewCell()
     }
     
-    //    let singleGroup = displayedGroups[indexPath.row]
+    let singleGroup = displayedGroups[indexPath.row]
     
-    //    cell.applyModelPrimary(
-    //      id: singleGroup.id,
-    //      groupName: singleGroup.groupName,
-    //      progressColor: singleGroup.progressColor,
-    //      progressRate: singleGroup.progressRate,
-    //      isEditing: tableView.isEditing
-    //    )
+    cell.applyModelPrimary(
+      id: singleGroup.id,
+      groupName: singleGroup.groupName,
+      progressColor: singleGroup.progressColor,
+      progressRate: singleGroup.progressRate,
+      isEditing: tableView.isEditing
+    )
     
     if tableView.isEditing {
       cell.enterEditingMode()
@@ -75,10 +75,10 @@ extension ManageGroupTableViewDelegate: UITableViewDataSource {
     
     cell.setupRightButtonAction { color, name in
       print("routeToPostGroupScene with \(color),\(name) ")
-      //      self.viewController?.routeToPostGroupScene(groupName: name, color: color)
+      self.viewController?.routeToPostGroupScene(groupName: name, color: color)
     }
     
-    return cell as? UITableViewCell ?? UITableViewCell()
+    return cell
   }
   
   func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
@@ -93,12 +93,12 @@ extension ManageGroupTableViewDelegate: UITableViewDelegate {
     commit editingStyle: UITableViewCell.EditingStyle,
     forRowAt indexPath: IndexPath
   ) {
-    //    let index = indexPath.row
-    //    let id = self.displayedGroups[index].id
-    
-    if editingStyle == UITableViewCell.EditingStyle.delete {
-      //      self.viewController?.deleteGroup(id: id, index: index)
-    }
+//    let index = indexPath.row
+//    let id = self.displayedGroups[index].id
+//    
+//    if editingStyle == UITableViewCell.EditingStyle.delete {
+//      self.viewController?.deleteGroup(id: id, index: index)
+//    }
   }
   
   func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -149,24 +149,20 @@ extension ManageGroupTableViewDelegate: UITableViewDropDelegate {
   }
   
   private func reorderItems(coordinator: UITableViewDropCoordinator, destinationIndexPath: IndexPath) {
-    guard let tableView = self.groupListTableView as? UITableView else {
-      return
-    }
-    
     if let item = coordinator.items.first, let sourceIndexPath = item.sourceIndexPath {
-      tableView.performBatchUpdates({
+      self.groupListTableView.performBatchUpdates({
         let movedItem = self.displayedGroups.remove(at: sourceIndexPath.row)
         self.displayedGroups.insert(movedItem, at: destinationIndexPath.row)
-        tableView.moveRow(at: sourceIndexPath, to: destinationIndexPath)
+        self.groupListTableView.moveRow(at: sourceIndexPath, to: destinationIndexPath)
       }, completion: nil)
       coordinator.drop(item.dragItem, toRowAt: destinationIndexPath)
       
-      //      let id = self.displayedGroups[sourceIndexPath.row].id
-      //      self.viewController?.addReorderedGroups(
-      //        id: id,
-      //        sourceIndex: sourceIndexPath.row,
-      //        destinationIndex: destinationIndexPath.row
-      //      )
+      let id = self.displayedGroups[sourceIndexPath.row].id
+      self.viewController?.addReorderedGroups(
+        id: id,
+        sourceIndex: sourceIndexPath.row,
+        destinationIndex: destinationIndexPath.row
+      )
     }
   }
 }
