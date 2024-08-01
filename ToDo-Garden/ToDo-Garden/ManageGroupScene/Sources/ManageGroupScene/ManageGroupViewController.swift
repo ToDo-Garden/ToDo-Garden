@@ -26,9 +26,31 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
   var interactor: ManageGroupBusinessLogic?
   var router: (ManageGroupRoutingLogic & ManageGroupDataPassing)?
   
+  private let groupListTableView: ManageGroupTableViewAPI
+  private let groupListTableViewCell: ManageGroupTableViewCellAPI
+  
+  private var rightBarButton: UIBarButtonItem
+  private var addGroupfooterButton: UIButton
+  private var displayedGroups: [ManageGroup.ToDoGroup]
+  
+  private var tableViewLeadingConstraint: NSLayoutConstraint?
+  private var footerViewLeadingConstraint: NSLayoutConstraint?
+  
+  private var manageGroupTableViewDelegate: ManageGroupTableViewDelegate?
+  
   // MARK: - Object lifecycle
   
-  init() {
+  init(
+    tableView: ManageGroupTableViewAPI,
+    cell: ManageGroupTableViewCellAPI,
+    footerButton: UIButton
+  ) {
+    self.displayedGroups = ManageGroup.FetchGroupList.ViewModel(with: []).list
+    self.groupListTableView = tableView
+    self.groupListTableViewCell = cell
+    self.addGroupfooterButton = footerButton
+    self.rightBarButton = UIBarButtonItem()
+    self.manageGroupTableViewDelegate = nil
     super.init(nibName: nil, bundle: nil)
   }
   
