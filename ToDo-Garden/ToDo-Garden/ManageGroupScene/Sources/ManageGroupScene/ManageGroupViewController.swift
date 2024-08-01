@@ -63,7 +63,11 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    self.doSomething()
+    self.view.backgroundColor = .white
+    self.setupTableView()
+    self.setupNavigationBar()
+    self.fetchGroupList()
+  }
   
   private func setupNavigationBar() {
     self.navigationItem.title = Constant.StringLiteral.navigationbarTitle
