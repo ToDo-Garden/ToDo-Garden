@@ -18,7 +18,7 @@ final class TimerSceneInteractor {
   var presenter: TimerScenePresentationLogic?
   private let worker: TimerSceneWorkable
   
-  private var tasks: [AnyHashable: Task<Void, Never>] = [:]
+  public var tasks: [AnyHashable: Task<Void, Never>] = [:]
   
   init(worker: TimerSceneWorkable) {
     self.worker = worker
@@ -108,7 +108,6 @@ extension TimerSceneInteractor: TimerSceneBusinessLogic {
   }
   
   private func keepConcentrationAction() {
-    self.cancel(CancelTaskID.countdown)
     self.bottomSheetStatus = .focus
     self.presenter?.updateViewState(isResting: false)
     self.presenter?.presentBottomSheet(.focus)
