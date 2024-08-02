@@ -73,9 +73,9 @@ extension ManageGroupTableViewDelegate: UITableViewDataSource {
       cell.leaveEditingMode()
     }
     
-    cell.setupRightButtonAction { color, name in
+    cell.setupRightButtonAction { [weak self] color, name in
       print("routeToPostGroupScene with \(color),\(name) ")
-      self.viewController?.routeToPostGroupScene(groupName: name, color: color)
+      self?.viewController?.routeToPostGroupScene(groupName: name, color: color)
     }
     
     return cell
