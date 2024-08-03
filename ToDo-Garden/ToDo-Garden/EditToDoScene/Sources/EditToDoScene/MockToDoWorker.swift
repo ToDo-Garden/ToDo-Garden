@@ -13,15 +13,15 @@ import EditToDoSceneEntity
 public final class MockToDoWorker {
   public init() {}
 
-  func fetchToDo(id: Int?) throws(MockToDoWorkerError) -> EditToDo.ToDo {
+  func fetchToDo(id: Int?) throws -> EditToDo.ToDo {
     return MockData.FetchToDo.firstData
   }
 
-  func deleteToDo(id: Int?) throws(MockToDoWorkerError) {
+  func deleteToDo(id: Int?) throws {
 
   }
 
-  func editToDo(_ toDo: EditToDo.ToDo) throws(MockToDoWorkerError) {
+  func editToDo(_ toDo: EditToDo.ToDo) throws {
     throw MockToDoWorkerError.unknownError
   }
 }
