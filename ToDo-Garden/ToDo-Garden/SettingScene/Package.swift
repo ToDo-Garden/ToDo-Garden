@@ -1,22 +1,43 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 5.10
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
   name: "SettingScene",
-  platforms: [.macOS(.v10_15), .iOS(.v13), .tvOS(.v13), .watchOS(.v6), .macCatalyst(.v13)],
+  platforms: [.iOS(.v15)],
   products: [
-    // Products define the executables and libraries a package produces, making them visible to other packages.
+    .library(
+      name: "SettingSceneAPI",
+      targets: ["SettingSceneAPI"]
+    ),
+    .library(
+      name: "SettingSceneEntity",
+      targets: ["SettingSceneEntity"]
+    ),
     .library(
       name: "SettingScene",
-      targets: ["SettingScene"])
+      targets: ["SettingScene"]
+    )
+  ],
+  dependencies: [
+    .package(name: "ToDoGardenUI", path: "../ToDoGardenUI")
   ],
   targets: [
-    // Targets are the basic building blocks of a package, defining a module or a test suite.
-    // Targets can depend on other targets in this package and products from dependencies.
     .target(
-      name: "SettingScene"),
+      name: "SettingSceneAPI",
+      dependencies: [
+        .product(name: "ToDoGardenUIAPI", package: "ToDoGardenUI")
+      ]
+    ),
+    .target(name: "SettingSceneEntity"),
+    .target(
+      name: "SettingScene",
+      dependencies: [
+        "SettingSceneAPI",
+        "SettingSceneEntity"
+      ]
+    ),
     .testTarget(
       name: "SettingSceneTests",
       dependencies: ["SettingScene"]
