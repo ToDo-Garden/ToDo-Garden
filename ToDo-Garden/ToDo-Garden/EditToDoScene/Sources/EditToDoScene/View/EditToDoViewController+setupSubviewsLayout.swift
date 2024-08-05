@@ -10,6 +10,7 @@ import UIKit
 extension EditToDoViewController {
   func setupSubviewsLayout() {
     self.setupEditToDoSegmentedControlLayout()
+    self.setupCompleteEditButtonLayout()
     self.setupEditModeScrollViewLayout()
   }
 
@@ -35,6 +36,21 @@ extension EditToDoViewController {
         self.editToDoSegmentedControl.heightAnchor.constraint(
           equalToConstant: constant.height
         )
+      ]
+    )
+  }
+
+  private func setupCompleteEditButtonLayout() {
+    self.view.addSubview(self.completeEditButton)
+    self.completeEditButton.translatesAutoresizingMaskIntoConstraints = false
+
+    NSLayoutConstraint.activate(
+      [
+        self.completeEditButton.bottomAnchor.constraint(
+          equalTo: self.view.safeAreaLayoutGuide.bottomAnchor,
+          constant: -EditToDoViewController.Constant.Layout.CompleteEditingButton.bottomMargin
+        ),
+        self.completeEditButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
       ]
     )
   }

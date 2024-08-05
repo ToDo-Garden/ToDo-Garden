@@ -19,6 +19,7 @@ protocol EditToDoDisplayLogic: AnyObject {
 final class EditToDoViewController: UIViewController, EditToDoViewControllable {
   private(set) var editToDoSegmentedControl: EditToDoSegmentedControl
   private(set) var editModeScrollView: UIScrollView
+  private(set) var completeEditButton: UIButton
 
   @ExecuteOnce private var scrollToEditToDoMode: (() -> Void)?
 
@@ -32,6 +33,10 @@ final class EditToDoViewController: UIViewController, EditToDoViewControllable {
   init() {
     self.editToDoSegmentedControl = EditToDoSegmentedControl()
     self.editModeScrollView = UIScrollView()
+    self.completeEditButton = ToDoGardenBoxButton(
+      title: EditToDoSceneTheme.StringLiteral.CompleteEditingButton.title,
+      buttonType: ToDoGardenBoxButton.Configuration.primaryRoundRectButton
+    )
     super.init(nibName: nil, bundle: nil)
   }
   
