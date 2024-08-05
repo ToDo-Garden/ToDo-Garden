@@ -7,13 +7,16 @@
 
 import UIKit
 
+import ToDoGardenUIAPI
 import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
-public final class AlarmTimeView: UIView {
+public final class AlarmTimeView: UIView, AlarmTimeViewAPI {
   private var model: AlarmTimeView.Model
   private var timeLabel: UILabel
   private var alarmSettingButton: UIButton
+
+  public weak var delegate: AlarmTimeViewDelegate?
 
   public init(model: AlarmTimeView.Model) {
     self.model = model
@@ -45,14 +48,6 @@ public final class AlarmTimeView: UIView {
   public func updateAlarmTime(with text: String) {
     self.setupAlarmSettingButtonTitle(with: text)
   }
-
-  public func addAlarmSettingAction(_ closure: @escaping () -> Void) {
-    let buttonAction = UIAction { _ in
-      closure()
-    }
-
-    self.alarmSettingButton.addAction(buttonAction, for: UIControl.Event.touchUpInside)
-  }
 }
 
 // MARK: Private Functions
@@ -82,6 +77,7 @@ extension AlarmTimeView {
     self.setupAlarmSettingButtonConfiguration()
     self.setupAlarmSettingButtonUpdateHandler()
     self.setupAlarmSettingButtonTitle(with: self.model.alarmTime)
+    self.setupAlarmSettingButtonAction()
   }
 
   private func setupAlarmSettingButtonConfiguration() {
@@ -114,6 +110,14 @@ extension AlarmTimeView {
     )
     let attributedTitle = AttributedString(text, attributes: attributes)
     self.alarmSettingButton.configuration?.attributedTitle = attributedTitle
+  }
+
+  private func setupAlarmSettingButtonAction() {
+    let buttonAction = UIAction { _ in
+      self.delegate?.didSelectAlarmTimeSettingButton()
+    }
+
+    self.alarmSettingButton.addAction(buttonAction, for: UIControl.Event.touchUpInside)
   }
 }
 

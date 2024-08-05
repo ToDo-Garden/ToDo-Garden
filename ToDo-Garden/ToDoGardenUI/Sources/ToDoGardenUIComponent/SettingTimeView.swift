@@ -7,10 +7,11 @@
 
 import UIKit
 
+import ToDoGardenUIAPI
 import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
-public class SettingTimeView: UIView {
+public final class SettingTimeView: UIView, SettingTimeViewAPI {
   private var configuration: Configuration
   private let timepicker: ToDoGardenTimePicker
   private let button: UIButton
@@ -43,6 +44,10 @@ public class SettingTimeView: UIView {
   public func transformSeconds(completion: @escaping (Double) -> Void) {
     let calculatedDate = self.timepicker.transformSeconds()
     completion(calculatedDate)
+  }
+
+  public func updateSelectedTime(hour: Int, minute: Int, seconds: Int = 0) {
+    self.timepicker.updateSelectedTime(hour: hour, minute: minute, seconds: seconds)
   }
 }
 
@@ -190,8 +195,9 @@ extension SettingTimeView: UIPickerViewDataSource {
 #Preview {
   let button = ToDoGardenBoxButton(title: "asdasd", buttonType: .primaryRoundRectButton)
   
-  let view = SettingTimeView(with: button, for: .focusTimeSetting)
-  
+  let view = SettingTimeView(with: button, for: .alarmTimeSetting)
+  view.updateSelectedTime(hour: 20, minute: 18)
+
   let action = UIAction { _ in
     view.transformSeconds { time in print(time) }
   }

@@ -7,6 +7,7 @@
 
 import UIKit
 
+import ToDoGardenUIAPI
 import ToDoGardenUIComponent
 
 final class EditToDoAlarmView: UIView {
@@ -70,6 +71,7 @@ extension EditToDoAlarmView {
     self.setupAlarmLabelUI()
     self.setupAlarmSwitchAction()
     self.setupAlarmSettingButtonAction()
+    self.setupSubviewDelegate()
     self.addSubviews()
     self.setupConstraints()
   }
@@ -92,6 +94,10 @@ extension EditToDoAlarmView {
     self.alarmTimeSettingView.addAlarmSettingAction {
       self.delegate?.didSelectAlarmSettingButton()
     }
+  }
+
+  private func setupSubviewDelegate() {
+    self.alarmTimeSettingView.delegate = self
   }
 }
 

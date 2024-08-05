@@ -14,15 +14,15 @@ protocol PostGroupRoutingLogic {
 }
 
 protocol PostGroupDataPassing {
-  var dataStore: PostGroupDataStore? { get }
+  var dataStore: PostGroupDataStore? { get set }
 }
 
 class PostGroupRouter: PostGroupDataPassing {
   weak var viewController: PostGroupViewController?
   var dataStore: PostGroupDataStore?
-  private let nextSceneBuilder: NextSceneBuildable
+  private let nextSceneBuilder: NextSceneBuildable?
   
-  init(nextSceneBuilder: NextSceneBuildable) {
+  init(nextSceneBuilder: NextSceneBuildable?) {
     self.nextSceneBuilder = nextSceneBuilder
   }
 }
@@ -31,7 +31,9 @@ class PostGroupRouter: PostGroupDataPassing {
 
 extension PostGroupRouter: PostGroupRoutingLogic {
   func routeToSomewhere() {
-    let destinationViewController = self.nextSceneBuilder.build(with: NextScenePayload())
+    guard let destinationViewController = self.nextSceneBuilder?.build(
+      with: NextScenePayload()
+    ) else { return }
     
     self.viewController?.present(destinationViewController, animated: true)
   }

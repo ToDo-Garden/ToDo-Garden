@@ -7,7 +7,7 @@
 
 import UIKit.UIColor
 
-public protocol PostGroupColorPickerRowAPI {
+public protocol PostGroupColorPickerRowAPI: UIView {
   func getColor() -> UIColor?
   func updateColor(with color: UIColor)
 }
