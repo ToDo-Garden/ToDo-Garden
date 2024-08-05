@@ -36,7 +36,20 @@ class EditToDoViewController: UIViewController, EditToDoViewControllable {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    self.doSomething()
+    self.setup()
+  }
+}
+
+// MARK: Private Functions
+
+extension EditToDoViewController {
+  private func setup() {
+    self.setupUI()
+  }
+
+  private func setupUI() {
+    self.title = EditToDoSceneTheme.StringLiteral.EditToDoViewController.title
+    self.view.backgroundColor = UIColor.toDoGardenWhite
   }
 }
 
@@ -50,12 +63,7 @@ extension EditToDoViewController: EditToDoDisplayLogic {
 
 // MARK: - Request to interactor
 
-extension EditToDoViewController {
-  func doSomething() {
-    let request = EditToDo.Something.Request()
-    self.interactor?.doSomething(request: request)
-  }
-}
+extension EditToDoViewController {}
 
 #if DEBUG
 @available(iOS 17.0, *)
