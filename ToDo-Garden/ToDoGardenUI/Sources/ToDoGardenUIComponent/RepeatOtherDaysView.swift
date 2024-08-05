@@ -54,7 +54,7 @@ extension RepeatOtherDaysView: RepeatOtherDaysViewAPI {
   }
 
   public func updateRepeatEverydayButton(isSelected: Bool) {
-    self.ringToggleButton.isSelected = isSelected
+    self.viewModel.ringToggleButton.isSelected.value = isSelected
   }
 
   public func addActionToRingToggleButton(_ closure: @escaping (Bool) -> Void) {
@@ -70,12 +70,18 @@ extension RepeatOtherDaysView: RepeatOtherDaysViewAPI {
 // MARK: - Private functions
 extension RepeatOtherDaysView {
   private func setup() {
+    self.removeSelectedStateImageView()
     self.bindViewModel()
     self.usingAutolayout()
     self.setupInitialHeightConstraint()
     self.applyRingToggleButton()
     self.buildStackView()
     self.setupButtonActions()
+  }
+
+  /// ToDoRepeatSelectionView로부터 상속받은 선택 상태일때 보여지는 이미지 뷰를 제거하는 함수입니다.
+  private func removeSelectedStateImageView() {
+    self.selectionImageView.removeFromSuperview()
   }
 
   private func bindViewModel() {

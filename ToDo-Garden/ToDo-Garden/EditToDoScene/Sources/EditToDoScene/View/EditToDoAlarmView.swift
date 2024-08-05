@@ -15,6 +15,8 @@ final class EditToDoAlarmView: UIView {
   private let alarmLabel: UILabel
   private let alarmTimeSettingView: AlarmTimeView
 
+  weak var delegate: EditToDoAlarmViewDelegate?
+
   init() {
     self.alarmSwitch = ToDoGardenSwitch(model: ToDoGardenSwitch.Model.primary)
     self.alarmLabel = UILabel()
@@ -47,21 +49,18 @@ final class EditToDoAlarmView: UIView {
   }
 }
 
-// MARK: Set up Subviews Action
+// MARK: EditToDoAlarmView Delegate
+
+protocol EditToDoAlarmViewDelegate: AnyObject {
+  func didToggleSwitch()
+  func didSelectAlarmSettingButton()
+}
+
+// MARK: AlarmTimeView Delegate Functions
 
 extension EditToDoAlarmView: AlarmTimeViewDelegate {
-  func setupSwitchAction(_ closure: @escaping () -> Void) {
-    let switchAction = UIAction { _ in
-      closure()
-    }
-
-    self.alarmSwitch.addAction(switchAction, for: UIControl.Event.valueChanged)
-  }
-
-  /// 알림 시간 설정 버튼이 눌렸을 때 호출되는 메서드입니다.
-  /// 상위 뷰에 이벤트 발생 여부를 전달합니다. (구현 예정)
   func didSelectAlarmTimeSettingButton() {
-
+    self.delegate?.didSelectAlarmSettingButton()
   }
 }
 
@@ -78,6 +77,7 @@ extension EditToDoAlarmView {
 extension EditToDoAlarmView {
   private func setup() {
     self.setupAlarmLabelUI()
+    self.setupAlarmSwitchAction()
     self.setupSubviewDelegate()
     self.addSubviews()
     self.setupConstraints()
@@ -87,6 +87,14 @@ extension EditToDoAlarmView {
     self.alarmLabel.font = UIFont.pretendardHeadSemiBold
     let text = EditToDoSceneTheme.StringLiteral.ToDoScheduleView.AlarmLabel.text
     self.alarmLabel.text = text
+  }
+
+  private func setupAlarmSwitchAction() {
+    let switchAction = UIAction { _ in
+      self.delegate?.didToggleSwitch()
+    }
+
+    self.alarmSwitch.addAction(switchAction, for: UIControl.Event.valueChanged)
   }
 
   private func setupSubviewDelegate() {
@@ -160,9 +168,6 @@ extension EditToDoAlarmView {
 @available(iOS 17.0, *)
 #Preview {
   let view = EditToDoAlarmView()
-  view.setupSwitchAction {
-    print("switch action called")
-  }
   view.enableAlarm()
   view.disableAlarm()
   return view
