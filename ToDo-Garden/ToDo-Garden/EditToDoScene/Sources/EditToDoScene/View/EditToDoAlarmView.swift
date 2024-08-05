@@ -56,6 +56,14 @@ protocol EditToDoAlarmViewDelegate: AnyObject {
   func didSelectAlarmSettingButton()
 }
 
+// MARK: AlarmTimeView Delegate Functions
+
+extension EditToDoAlarmView: AlarmTimeViewDelegate {
+  func didSelectAlarmTimeSettingButton() {
+    self.delegate?.didSelectAlarmSettingButton()
+  }
+}
+
 // MARK: Theme Color
 
 extension EditToDoAlarmView {
@@ -70,7 +78,6 @@ extension EditToDoAlarmView {
   private func setup() {
     self.setupAlarmLabelUI()
     self.setupAlarmSwitchAction()
-    self.setupAlarmSettingButtonAction()
     self.setupSubviewDelegate()
     self.addSubviews()
     self.setupConstraints()
@@ -88,12 +95,6 @@ extension EditToDoAlarmView {
     }
 
     self.alarmSwitch.addAction(switchAction, for: UIControl.Event.valueChanged)
-  }
-
-  private func setupAlarmSettingButtonAction() {
-    self.alarmTimeSettingView.addAlarmSettingAction {
-      self.delegate?.didSelectAlarmSettingButton()
-    }
   }
 
   private func setupSubviewDelegate() {
