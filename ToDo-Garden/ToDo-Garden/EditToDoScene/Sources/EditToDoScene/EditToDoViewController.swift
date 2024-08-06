@@ -9,13 +9,18 @@ import UIKit
 
 import EditToDoSceneAPI
 import EditToDoSceneEntity
+import TDUtility
+import ToDoGardenUIComponent
 
 protocol EditToDoDisplayLogic: AnyObject {
   func displaySomething(viewModel: EditToDo.Something.ViewModel)
 }
 
-class EditToDoViewController: UIViewController, EditToDoViewControllable {
-  
+final class EditToDoViewController: UIViewController, EditToDoViewControllable {
+  private(set) var editToDoSegmentedControl: EditToDoSegmentedControl
+
+  @ExecuteOnce private var scrollToEditToDoMode: (() -> Void)?
+
   // MARK: - VIP Properties
   
   var interactor: EditToDoBusinessLogic?
@@ -24,6 +29,7 @@ class EditToDoViewController: UIViewController, EditToDoViewControllable {
   // MARK: - Object lifecycle
   
   init() {
+    self.editToDoSegmentedControl = EditToDoSegmentedControl()
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -38,6 +44,14 @@ class EditToDoViewController: UIViewController, EditToDoViewControllable {
     super.viewDidLoad()
     self.setup()
   }
+
+  override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+    self.scrollToEditToDoMode = {
+      self.editToDoSegmentedControl.editMode = EditToDoSegmentedControl.EditMode.todo
+      self.editToDoSegmentedControl.sendActions(for: UIControl.Event.valueChanged)
+    }
+  }
 }
 
 // MARK: Private Functions
@@ -45,6 +59,7 @@ class EditToDoViewController: UIViewController, EditToDoViewControllable {
 extension EditToDoViewController {
   private func setup() {
     self.setupUI()
+    self.setupSubviewsLayout()
   }
 
   private func setupUI() {
