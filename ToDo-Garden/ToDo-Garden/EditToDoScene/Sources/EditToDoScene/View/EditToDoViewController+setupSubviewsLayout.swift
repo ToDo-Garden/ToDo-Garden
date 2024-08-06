@@ -12,6 +12,8 @@ extension EditToDoViewController {
     self.setupEditToDoSegmentedControlLayout()
     self.setupCompleteEditButtonLayout()
     self.setupEditModeScrollViewLayout()
+    let contentView = self.buildEditModeScrollContentView()
+    self.setupEditToDoViewLayout(with: contentView)
   }
 
   private func setupEditToDoSegmentedControlLayout() {
@@ -77,6 +79,47 @@ extension EditToDoViewController {
         self.editModeScrollView.bottomAnchor.constraint(
           equalTo: self.completeEditButton.topAnchor
         )
+      ]
+    )
+  }
+
+  private func buildEditModeScrollContentView() -> UIView {
+    let contentView = UIView()
+    contentView.addSubview(self.editToDoView)
+    contentView.addSubview(self.editToDoScheduleView)
+    self.setupContentViewLayout(contentView: contentView)
+    return contentView
+  }
+
+  private func setupContentViewLayout(contentView: UIView) {
+    self.editModeScrollView.addSubview(contentView)
+    contentView.translatesAutoresizingMaskIntoConstraints = false
+
+    let widthConstraint = self.editModeScrollView.widthAnchor.constraint(greaterThanOrEqualTo: self.view.widthAnchor)
+    widthConstraint.priority = UILayoutPriority.defaultLow
+    widthConstraint.isActive = true
+
+    NSLayoutConstraint.activate(
+      [
+        contentView.topAnchor.constraint(equalTo: self.editModeScrollView.contentLayoutGuide.topAnchor),
+        contentView.leadingAnchor.constraint(equalTo: self.editModeScrollView.contentLayoutGuide.leadingAnchor),
+        contentView.trailingAnchor.constraint(equalTo: self.editModeScrollView.contentLayoutGuide.trailingAnchor),
+        contentView.bottomAnchor.constraint(equalTo: self.editModeScrollView.contentLayoutGuide.bottomAnchor),
+        contentView.heightAnchor.constraint(equalTo: self.editModeScrollView.heightAnchor)
+      ]
+    )
+  }
+
+  private func setupEditToDoViewLayout(with contentView: UIView) {
+    self.editToDoView.translatesAutoresizingMaskIntoConstraints = false
+
+    NSLayoutConstraint.activate(
+      [
+        self.editToDoView.topAnchor.constraint(equalTo: contentView.topAnchor),
+        self.editToDoView.leadingAnchor.constraint(equalTo: self.editToDoScheduleView.trailingAnchor),
+        self.editToDoView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+        self.editToDoView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+        self.editToDoView.widthAnchor.constraint(equalTo: self.editModeScrollView.frameLayoutGuide.widthAnchor)
       ]
     )
   }
