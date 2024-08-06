@@ -97,6 +97,7 @@ extension EditToDoViewController {
   private func setup() {
     self.setupUI()
     self.setupEditModeScrollView()
+    self.setupEditModeSegmentedControlAction()
     self.setupSubviewsLayout()
   }
 
@@ -111,6 +112,23 @@ extension EditToDoViewController {
     self.editModeScrollView.isPagingEnabled = true
     self.editModeScrollView.delegate = self
     self.editModeScrollView.bounces = false
+  }
+
+  private func setupEditModeSegmentedControlAction() {
+    let segmentedControlAction = UIAction { _ in
+      if let editMode = self.editToDoSegmentedControl.editMode {
+        self.changeEditMode(by: editMode)
+      }
+    }
+
+    self.editToDoSegmentedControl.addAction(segmentedControlAction, for: UIControl.Event.valueChanged)
+  }
+
+  private func changeEditMode(by editMode: EditToDoSegmentedControl.EditMode) {
+    let editModeType = EditToDoSegmentedControl.EditMode.self
+    let pointX = editMode == editModeType.notification ? 0 : self.editModeScrollView.frame.width
+    let contentOffset = CGPoint(x: pointX, y: 0)
+    self.editModeScrollView.setContentOffset(contentOffset, animated: true)
   }
 }
 
