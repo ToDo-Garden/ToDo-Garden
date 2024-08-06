@@ -14,6 +14,7 @@ extension EditToDoViewController {
     self.setupEditModeScrollViewLayout()
     let contentView = self.buildEditModeScrollContentView()
     self.setupEditToDoViewLayout(with: contentView)
+    self.setupEditToDoScheduleViewLayout(with: contentView)
   }
 
   private func setupEditToDoSegmentedControlLayout() {
@@ -120,6 +121,19 @@ extension EditToDoViewController {
         self.editToDoView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
         self.editToDoView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
         self.editToDoView.widthAnchor.constraint(equalTo: self.editModeScrollView.frameLayoutGuide.widthAnchor)
+      ]
+    )
+  }
+
+  private func setupEditToDoScheduleViewLayout(with contentView: UIView) {
+    self.editToDoScheduleView.translatesAutoresizingMaskIntoConstraints = false
+
+    NSLayoutConstraint.activate(
+      [
+        self.editToDoScheduleView.topAnchor.constraint(equalTo: contentView.topAnchor),
+        self.editToDoScheduleView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+        self.editToDoScheduleView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+        self.editToDoScheduleView.widthAnchor.constraint(equalTo: self.editModeScrollView.frameLayoutGuide.widthAnchor)
       ]
     )
   }

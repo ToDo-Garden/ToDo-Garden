@@ -87,6 +87,7 @@ extension EditToDoAlarmView {
     self.alarmLabel.font = UIFont.pretendardHeadSemiBold
     let text = EditToDoSceneTheme.StringLiteral.ToDoScheduleView.AlarmLabel.text
     self.alarmLabel.text = text
+    self.alarmLabel.textColor = EditToDoSceneTheme.mainColor
   }
 
   private func setupAlarmSwitchAction() {
@@ -123,10 +124,7 @@ extension EditToDoAlarmView {
     NSLayoutConstraint.activate(
       [
         self.alarmSwitch.topAnchor.constraint(equalTo: self.topAnchor),
-        self.alarmSwitch.trailingAnchor.constraint(
-          equalTo: self.trailingAnchor,
-          constant: -2
-        )
+        self.alarmSwitch.trailingAnchor.constraint(equalTo: self.alarmTimeSettingView.trailingAnchor)
       ]
     )
   }
@@ -138,7 +136,7 @@ extension EditToDoAlarmView {
     NSLayoutConstraint.activate(
       [
         self.alarmLabel.leadingAnchor.constraint(
-          equalTo: self.leadingAnchor,
+          equalTo: self.alarmTimeSettingView.leadingAnchor,
           constant: layout.leadingMargin
         ),
         self.alarmLabel.centerYAnchor.constraint(equalTo: self.alarmSwitch.centerYAnchor)
@@ -156,9 +154,17 @@ extension EditToDoAlarmView {
           equalTo: self.alarmSwitch.bottomAnchor,
           constant: layout.topMargin
         ),
-        self.alarmTimeSettingView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-        self.alarmTimeSettingView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-        self.alarmTimeSettingView.heightAnchor.constraint(equalToConstant: layout.height)
+        self.alarmTimeSettingView.leadingAnchor.constraint(
+          equalTo: self.leadingAnchor,
+          constant: layout.leadingMargin
+        ),
+        self.alarmTimeSettingView.trailingAnchor.constraint(
+          equalTo: self.trailingAnchor,
+          constant: -layout.trailingMargin
+        ),
+        self.alarmTimeSettingView.heightAnchor.constraint(
+          equalToConstant: layout.height
+        )
       ]
     )
   }

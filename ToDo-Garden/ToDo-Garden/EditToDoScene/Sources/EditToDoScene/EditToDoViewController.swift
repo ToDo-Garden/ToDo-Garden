@@ -20,6 +20,7 @@ final class EditToDoViewController: UIViewController, EditToDoViewControllable {
   private(set) var editToDoSegmentedControl: EditToDoSegmentedControl
   private(set) var editModeScrollView: UIScrollView
   private(set) var editToDoView: EditToDoView
+  private(set) var editToDoScheduleView: EditToDoScheduleView
   private(set) var completeEditButton: UIButton
 
   @ExecuteOnce private var scrollToEditToDoMode: (() -> Void)?
@@ -38,6 +39,7 @@ final class EditToDoViewController: UIViewController, EditToDoViewControllable {
       toDoNameInputView: TextInputView(model: TextInputView.Model.toDoName),
       groupSelectionView: GroupSelectionView(model: GroupSelectionView.Model.primary)
     )
+    self.editToDoScheduleView = EditToDoScheduleView()
     self.completeEditButton = ToDoGardenBoxButton(
       title: EditToDoSceneTheme.StringLiteral.CompleteEditingButton.title,
       buttonType: ToDoGardenBoxButton.Configuration.primaryRoundRectButton

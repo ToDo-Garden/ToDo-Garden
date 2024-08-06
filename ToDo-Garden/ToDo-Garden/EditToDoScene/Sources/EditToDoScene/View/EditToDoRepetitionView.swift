@@ -126,7 +126,7 @@ extension EditToDoRepetitionView {
       [
         self.repetitionLabel.topAnchor.constraint(equalTo: self.topAnchor),
         self.repetitionLabel.leadingAnchor.constraint(
-          equalTo: self.leadingAnchor,
+          equalTo: self.repeatOnlyTodayView.leadingAnchor,
           constant: layout.RepetitionLabel.leadingMargin
         )
       ]
@@ -143,8 +143,14 @@ extension EditToDoRepetitionView {
           equalTo: self.repetitionLabel.bottomAnchor,
           constant: layout.RepeatOnlyTodayButton.topMargin
         ),
-        self.repeatOnlyTodayView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-        self.repeatOnlyTodayView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+        self.repeatOnlyTodayView.leadingAnchor.constraint(
+          equalTo: self.leadingAnchor,
+          constant: 18
+        ),
+        self.repeatOnlyTodayView.trailingAnchor.constraint(
+          equalTo: self.trailingAnchor,
+          constant: -11
+        )
       ]
     )
   }
@@ -159,8 +165,8 @@ extension EditToDoRepetitionView {
           equalTo: self.repeatOnlyTodayView.bottomAnchor,
           constant: layout.RepeatOtherDaysView.topMargin
         ),
-        self.repeatOtherDaysView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-        self.repeatOtherDaysView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+        self.repeatOtherDaysView.leadingAnchor.constraint(equalTo: self.repeatOnlyTodayView.leadingAnchor),
+        self.repeatOtherDaysView.trailingAnchor.constraint(equalTo: self.repeatOnlyTodayView.trailingAnchor)
       ]
     )
   }

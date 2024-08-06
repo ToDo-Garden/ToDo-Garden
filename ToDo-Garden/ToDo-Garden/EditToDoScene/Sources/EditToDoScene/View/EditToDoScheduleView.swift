@@ -94,7 +94,10 @@ extension EditToDoScheduleView {
 
     NSLayoutConstraint.activate(
       [
-        self.editToDoAlarmView.topAnchor.constraint(equalTo: self.topAnchor),
+        self.editToDoAlarmView.topAnchor.constraint(
+          equalTo: self.topAnchor,
+          constant: 10
+        ),
         self.editToDoAlarmView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
         self.editToDoAlarmView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
         self.editToDoAlarmView.heightAnchor.constraint(equalToConstant: 92)
