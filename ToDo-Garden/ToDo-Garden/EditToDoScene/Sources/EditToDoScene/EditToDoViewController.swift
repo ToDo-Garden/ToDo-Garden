@@ -69,6 +69,28 @@ final class EditToDoViewController: UIViewController, EditToDoViewControllable {
   }
 }
 
+// MARK: ScrollView Delegate Functions
+
+extension EditToDoViewController: UIScrollViewDelegate {
+  func scrollViewWillEndDragging(
+    _ scrollView: UIScrollView,
+    withVelocity velocity: CGPoint,
+    targetContentOffset: UnsafeMutablePointer<CGPoint>
+  ) {
+    let targetOffset = targetContentOffset.pointee.x
+    self.changeSegmentedControlEditMode(by: targetOffset)
+  }
+
+  /// 화면을 스크롤 했을 때, 수정모드에 맞게 SegmentedControl의 Index를 변경하는 메서드입니다.
+  private func changeSegmentedControlEditMode(by targetOffset: CGFloat) {
+    let scrollViewWidth = self.editModeScrollView.frame.width
+    let targetOffset = targetOffset
+    let editModeType = EditToDoSegmentedControl.EditMode.self
+    let editMode = targetOffset == scrollViewWidth ? editModeType.todo : editModeType.notification
+    self.editToDoSegmentedControl.selectedSegmentIndex = editMode.rawValue
+  }
+}
+
 // MARK: Private Functions
 
 extension EditToDoViewController {
@@ -87,6 +109,7 @@ extension EditToDoViewController {
     self.editModeScrollView.showsVerticalScrollIndicator = false
     self.editModeScrollView.showsHorizontalScrollIndicator = false
     self.editModeScrollView.isPagingEnabled = true
+    self.editModeScrollView.delegate = self
     self.editModeScrollView.bounces = false
   }
 }
