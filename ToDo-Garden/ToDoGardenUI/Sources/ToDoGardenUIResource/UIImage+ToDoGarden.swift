@@ -95,4 +95,7 @@ extension UIImage {
   public static let toDoGardenLogoImage = UIImage(
     resource: .toDoGardenLogo
   )
+  public static let leafImage = UIImage(
+    resource: .leaf
+  )
 }
