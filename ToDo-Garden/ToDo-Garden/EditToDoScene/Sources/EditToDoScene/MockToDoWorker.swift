@@ -9,19 +9,25 @@ import UIKit.UIColor
 
 import EditToDoSceneEntity
 
+public protocol MockToDoWorkable {
+  func fetchToDo(id: Int?) throws -> EditToDo.ToDo
+  func deleteToDo(id: Int?) throws
+  func editToDo(_ toDo: EditToDo.ToDo) throws
+}
+
 /// ToDo Context를 가정한 Mock Worker 입니다.
-public final class MockToDoWorker {
+public final class MockToDoWorker: MockToDoWorkable {
   public init() {}
 
-  func fetchToDo(id: Int?) throws -> EditToDo.ToDo {
+  public func fetchToDo(id: Int?) throws -> EditToDo.ToDo {
     return MockData.FetchToDo.firstData
   }
 
-  func deleteToDo(id: Int?) throws {
+  public func deleteToDo(id: Int?) throws {
 
   }
 
-  func editToDo(_ toDo: EditToDo.ToDo) throws {
+  public func editToDo(_ toDo: EditToDo.ToDo) throws {
     throw MockToDoWorkerError.unknownError
   }
 }

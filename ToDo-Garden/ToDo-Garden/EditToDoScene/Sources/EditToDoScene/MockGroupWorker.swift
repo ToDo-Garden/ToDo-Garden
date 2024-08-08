@@ -9,11 +9,15 @@ import UIKit.UIColor
 
 import EditToDoSceneEntity
 
+public protocol MockGroupWorkable {
+  func fetchGroupList() throws -> [EditToDo.Group]
+}
+
 /// Group Context를 가정한 Mock Worker 입니다.
-public final class MockGroupWorker {
+public final class MockGroupWorker: MockGroupWorkable {
   public init() {}
 
-  func fetchGroupList() throws -> [EditToDo.Group] {
+  public func fetchGroupList() throws -> [EditToDo.Group] {
     return MockData.groupList
   }
 }
