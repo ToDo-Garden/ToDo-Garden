@@ -66,7 +66,7 @@ extension UserGuideButton {
     let userGuideLabel = UILabel()
     userGuideLabel.font = UIFont.pretendardDetailLight
     userGuideLabel.textColor = UIColor.toDoGardenGreenDark
-    userGuideLabel.text = "이용 가이드"
+    userGuideLabel.text = SettingSceneTheme.StringLiteral.UserGuideButton.title
     userGuideLabel.textAlignment = NSTextAlignment.left
     userGuideLabel.setContentHuggingPriority(
       UILayoutPriority.defaultLow,
