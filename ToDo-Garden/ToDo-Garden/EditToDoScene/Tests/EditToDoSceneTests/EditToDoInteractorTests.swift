@@ -125,6 +125,25 @@ import UIKit.UIColor
     }
     #expect(self.mockPresenter.isPresentEditResultCalled)
   }
+
+  @Test(
+    "투두 삭제 요청시 ToDoWorker를 호출하고 EditToDoPresenter에 성공을 전달하는가"
+  ) func test_투두_삭제_요청시_ToDoWorker를_호출하고_EditToDoPresenter에_성공을_전달하는가() throws {
+    self.interactor.toDoId = 100
+    let request = EditToDo.DeleteToDo.Request()
+
+    self.interactor.deleteToDo(request: request)
+
+    #expect(self.mockToDoWorker.isDeleteToDoCalled)
+    let editResult = try #require(self.mockPresenter.deleteResult)
+    switch editResult {
+    case .success:
+      #expect(true)
+    case .failure(let error):
+      #expect(Bool(false), "정상적인 투두 삭제 요청이 실패했습니다. error: \(error)")
+    }
+    #expect(self.mockPresenter.isPresentDeleteResultCalled)
+  }
 }
 
 class EditToDoPresentationLogicSpy: EditToDoPresentationLogic {
