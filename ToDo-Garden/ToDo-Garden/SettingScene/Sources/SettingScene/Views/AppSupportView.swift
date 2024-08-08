@@ -162,3 +162,12 @@ extension AppSupportView {
     )
   }
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let view = AppSupportView()
+  view.widthAnchor.constraint(equalToConstant: 300).isActive = true
+  return view
+}
+#endif
