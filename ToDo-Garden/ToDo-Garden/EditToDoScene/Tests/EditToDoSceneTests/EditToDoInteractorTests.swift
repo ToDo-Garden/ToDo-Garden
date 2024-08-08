@@ -81,6 +81,28 @@ import UIKit.UIColor
     }
     #expect(self.mockPresenter.isPresentFetchedToDoCalled)
   }
+
+  @Test(
+    "투두 수정 요청시 ToDoWorker를 호출하고 EditToDoPresenter에 성공을 전달하는가"
+  ) func test_투두_수정_요청시_ToDoWorker를_호출하고_EditToDoPresenter에_성공을_전달하는가() throws {
+    self.interactor.toDo = EditToDoSceneTestData.Interactor.toDo
+    let request = EditToDo.CompleteEditToDo.Request(
+      toDoName: "영어독해",
+      displayedGroup: EditToDo.CompleteEditToDo.Request.DisplayedGroup(id: 005, name: "국어", color: UIColor.white)
+    )
+
+    self.interactor.editToDo(request: request)
+
+    #expect(self.mockToDoWorker.isEditToDoCalled)
+    let editResult = try #require(self.mockPresenter.editResult)
+    switch editResult {
+    case .success:
+      #expect(true)
+    case .failure(let error):
+      #expect(Bool(false), "정상적인 투두 수정 요청이 실패했습니다. error: \(error)")
+    }
+    #expect(self.mockPresenter.isPresentEditResultCalled)
+  }
 }
 
 class EditToDoPresentationLogicSpy: EditToDoPresentationLogic {
