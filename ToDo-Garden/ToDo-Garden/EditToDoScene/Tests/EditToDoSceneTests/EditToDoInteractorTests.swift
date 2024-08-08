@@ -165,7 +165,7 @@ import UIKit.UIColor
   }
 
   @Test(
-    "투두 알림을 활성화 하면 EditToDoPresetner를 호출하는가"
+    "투두 알림을 활성화 하면 EditToDoPresenter를 호출하는가"
   ) func test_투두_알림을_활성화_하면_EditToDoPresenter를_호출하는가() throws {
     var toDo = EditToDoSceneTestData.Interactor.toDo
     toDo.alarm.isAlarmOn = false
@@ -180,8 +180,8 @@ import UIKit.UIColor
   }
 
   @Test(
-    "투두를 매일 반복하도록 설정하면 EditToDoPresetner를 호출하는가"
-  ) func test_투두를_매일_반복하도록_설정하면_EditToDoPresetner를_호출하는가() throws {
+    "투두를 매일 반복하도록 설정하면 EditToDoPresenter를 호출하는가"
+  ) func test_투두를_매일_반복하도록_설정하면_EditToDoPresenter를_호출하는가() throws {
     var toDo = EditToDoSceneTestData.Interactor.toDo
     toDo.repetition.isRepeatEveryday = false
     self.interactor.toDo = toDo
@@ -196,8 +196,8 @@ import UIKit.UIColor
   }
 
   @Test(
-    "투두를 오늘만 반복하도록 설정하면 EditToDoPresetner를 호출하는가"
-  ) func test_투두를_오늘만_반복하도록_설정하면_EditToDoPresetner를_호출하는가() throws {
+    "투두를 오늘만 반복하도록 설정하면 EditToDoPresenter를 호출하는가"
+  ) func test_투두를_오늘만_반복하도록_설정하면_EditToDoPresenter를_호출하는가() throws {
     var toDo = EditToDoSceneTestData.Interactor.toDo
     toDo.repetition.isOnlyToday = false
     self.interactor.toDo = toDo
@@ -212,8 +212,8 @@ import UIKit.UIColor
   }
 
   @Test(
-    "투두를 일정 기간동안 반복하도록 설정하면 EditToDoPresetner를 호출하는가"
-  ) func test_투두를_일정_기간동안_반복하도록_설정하면_EditToDoPresetner를_호출하는가() throws {
+    "투두를 일정 기간동안 반복하도록 설정하면 EditToDoPresenter를 호출하는가"
+  ) func test_투두를_일정_기간동안_반복하도록_설정하면_EditToDoPresenter를_호출하는가() throws {
     var toDo = EditToDoSceneTestData.Interactor.toDo
     toDo.repetition.isRepeatEveryday = true
     self.interactor.toDo = toDo
