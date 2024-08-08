@@ -21,6 +21,7 @@ extension SettingSceneTheme.StringLiteral {
   enum AppSupportView {}
   enum UserGuideButton {}
   enum UserSettingView {}
+  enum VersionInfoView {}
 }
 
 extension SettingSceneTheme.StringLiteral.AppSupportView {
@@ -39,4 +40,11 @@ extension SettingSceneTheme.StringLiteral.UserSettingView {
   static let userSettingLabelText = "사용자 설정"
   static let alarmSettingButtonTitle = "알림 설정"
   static let remindSettingButtonTitle = "리마인드 설정"
+}
+
+extension SettingSceneTheme.StringLiteral.VersionInfoView {
+  static let versionInfoLabelText = "버전정보"
+  static let updateButtonTitle = "최신버전으로 업데이트"
+  static let latestVersionText = "최신 버전"
+  static let priorVersionText = "업데이트 필요"
 }

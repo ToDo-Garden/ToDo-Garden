@@ -16,6 +16,7 @@ extension SettingViewController.Constant {
   enum UserGuideButton {}
   enum UserSettingView {}
   enum SettingButtonStackView {}
+  enum VersionInfoView {}
 }
 
 extension SettingViewController.Constant.AppSupportView {
@@ -66,4 +67,18 @@ extension SettingViewController.Constant.SettingButtonStackView {
 
   static let spacing: CGFloat = 1.0
   static let buttonHeight: CGFloat = 40
+}
+
+extension SettingViewController.Constant.VersionInfoView {
+  enum VersionInfoLabel {
+    static let topMargin: CGFloat = 7
+    static let leadingMargin: CGFloat = 4
+  }
+
+  enum UpdateButton {
+    static let cornerRadius: CGFloat = 10
+    static let topMargin: CGFloat = 7
+    static let leadingMargin: CGFloat = 21
+    static let height: CGFloat = 40
+  }
 }
