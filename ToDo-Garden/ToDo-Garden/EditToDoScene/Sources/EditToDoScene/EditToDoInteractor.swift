@@ -75,6 +75,7 @@ extension EditToDoInteractor: EditToDoBusinessLogic {
       else { throw EditToDoInteractorError.toDoDataNotExisted }
 
       let toDo = try self.toDoWorker.fetchToDo(id: toDoId)
+      self.toDo = toDo
       let group = try self.groupWorker.fetchGroupList()
       let repetitionViewState = self.makeRepetitionViewState(
         isOnlyToday: toDo.repetition.isOnlyToday,
