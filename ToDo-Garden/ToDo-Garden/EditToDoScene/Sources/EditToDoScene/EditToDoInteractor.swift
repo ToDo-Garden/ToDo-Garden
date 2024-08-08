@@ -24,19 +24,19 @@ protocol EditToDoBusinessLogic {
 }
 
 final class EditToDoInteractor: EditToDoDataStore {
-  private var toDo: EditToDo.ToDo?
   var toDoId: Int?
+  var toDo: EditToDo.ToDo?
 
   // MARK: VIP Objects
   var presenter: EditToDoPresentationLogic?
   private let someWorker: EditToDoWorkable
-  private let toDoWorker: MockToDoWorker
-  private let groupWorker: MockGroupWorker
+  private let toDoWorker: MockToDoWorkable
+  private let groupWorker: MockGroupWorkable
 
   public init(
     someWorker: EditToDoWorkable,
-    toDoWorker: MockToDoWorker,
-    groupWorker: MockGroupWorker
+    toDoWorker: MockToDoWorkable,
+    groupWorker: MockGroupWorkable
   ) {
     self.someWorker = someWorker
     self.toDoWorker = toDoWorker
@@ -71,7 +71,10 @@ extension EditToDoInteractor: EditToDoBusinessLogic {
   func fetchToDo(request: EditToDo.FetchToDo.Request) {
     let fetchResult: Result<EditToDo.FetchToDo.Response.FetchedToDo, Error>
     do {
-      let toDo = try self.toDoWorker.fetchToDo(id: self.toDoId)
+      guard let toDoId = self.toDoId
+      else { throw EditToDoInteractorError.toDoDataNotExisted }
+
+      let toDo = try self.toDoWorker.fetchToDo(id: toDoId)
       let group = try self.groupWorker.fetchGroupList()
       let repetitionViewState = self.makeRepetitionViewState(
         isOnlyToday: toDo.repetition.isOnlyToday,
@@ -97,7 +100,10 @@ extension EditToDoInteractor: EditToDoBusinessLogic {
   func deleteToDo(request: EditToDo.DeleteToDo.Request) {
     let deleteResult: Result<Void, Error>
     do {
-      try self.toDoWorker.deleteToDo(id: self.toDoId)
+      guard let toDoId = self.toDoId
+      else { throw EditToDoInteractorError.toDoDataNotExisted }
+
+      try self.toDoWorker.deleteToDo(id: toDoId)
       deleteResult = Result.success(())
     } catch let error {
       deleteResult = Result.failure(error)
