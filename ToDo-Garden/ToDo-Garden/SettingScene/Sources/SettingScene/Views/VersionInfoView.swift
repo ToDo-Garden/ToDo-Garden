@@ -186,3 +186,19 @@ extension VersionInfoView {
     )
   }
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let stackView = UIStackView()
+  stackView.axis = .vertical
+  stackView.widthAnchor.constraint(equalToConstant: 300).isActive = true
+  let emptyView = UIView()
+  emptyView.heightAnchor.constraint(equalToConstant: 100).isActive = true
+  stackView.addArrangedSubview(emptyView)
+  let view = VersionInfoView()
+  view.updateToPriorVersion("v.0.1.2")
+  stackView.addArrangedSubview(view)
+  return stackView
+}
+#endif
