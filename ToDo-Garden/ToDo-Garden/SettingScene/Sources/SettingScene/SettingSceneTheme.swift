@@ -18,8 +18,17 @@ extension SettingSceneTheme {
 }
 
 extension SettingSceneTheme.StringLiteral {
+  enum AppSupportView {}
   enum UserGuideButton {}
   enum UserSettingView {}
+}
+
+extension SettingSceneTheme.StringLiteral.AppSupportView {
+  static let appSupportLabelText = "앱 정보 및 지원"
+  static let announcementButtonTitle = "공지사항"
+  static let privacyPolicyButtonTitle = "개인정보 처리 방침"
+  static let termsOfUseButtonTitle = "서비스 이용 약관"
+  static let sendFeedbackButtonTitle = "피드백 보내기"
 }
 
 extension SettingSceneTheme.StringLiteral.UserGuideButton {

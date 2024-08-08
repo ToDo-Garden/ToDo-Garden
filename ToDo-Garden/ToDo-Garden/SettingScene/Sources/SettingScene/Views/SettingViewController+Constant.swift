@@ -12,9 +12,21 @@ extension SettingViewController {
 }
 
 extension SettingViewController.Constant {
+  enum AppSupportView {}
   enum UserGuideButton {}
   enum UserSettingView {}
   enum SettingButtonStackView {}
+}
+
+extension SettingViewController.Constant.AppSupportView {
+  enum LeftImageView {
+    static let width: CGFloat = 18
+    static let heightMultiplier: CGFloat = 1.0
+  }
+
+  enum SettingButtonStackView {
+    static let topMargin: CGFloat = 4
+  }
 }
 
 extension SettingViewController.Constant.UserGuideButton {
@@ -32,7 +44,7 @@ extension SettingViewController.Constant.UserSettingView {
     static let width: CGFloat = 18
     static let heightMultiplier: CGFloat = 1.0
   }
-  
+
   enum SettingButtonStackView {
     static let topMargin: CGFloat = 4
   }
