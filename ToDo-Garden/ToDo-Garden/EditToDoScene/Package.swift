@@ -42,6 +42,13 @@ let package = Package(
         .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI"),
         .product(name: "ToDoGardenUIResource", package: "ToDoGardenUI")
       ]
+    ),
+    .testTarget(
+      name: "EditToDoSceneTests",
+      dependencies: [
+        "EditToDoScene",
+        "EditToDoSceneEntity"
+      ]
     )
   ]
 )
