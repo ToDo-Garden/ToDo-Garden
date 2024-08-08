@@ -10,6 +10,8 @@ import UIKit
 final class AppSupportView: UIView {
   private let settingButtonStackView: SettingButtonStackView
 
+  weak var delegate: AppSupportViewDelegate?
+
   init() {
     self.settingButtonStackView = SettingButtonStackView()
     super.init(frame: CGRect.zero)
@@ -21,6 +23,17 @@ final class AppSupportView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
 }
+
+// MARK: Private Functions
+
+protocol AppSupportViewDelegate: AnyObject {
+  func didSelectAnnouncementButton()
+  func didSelectPrivacyPolicyButton()
+  func didSelectTemrsOfUseButton()
+  func didSelectSendFeedBackButton()
+}
+
+// MARK: Private Functions
 
 extension AppSupportView {
   private func setup() {
@@ -100,6 +113,8 @@ extension AppSupportView {
     self.setupUserSettingLabelLayout(userSettingLabel, leftImageView)
   }
 }
+
+// MARK: Auto Layout
 
 extension AppSupportView {
   private func setupLeftImageViewLayout(_ imageView: UIImageView) {

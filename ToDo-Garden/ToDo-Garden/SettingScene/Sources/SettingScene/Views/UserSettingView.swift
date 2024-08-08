@@ -8,15 +8,11 @@
 import UIKit
 
 final class UserSettingView: UIView {
-  private let alarmSettingButton: UIButton
-  private let remindSettingButton: UIButton
   private let settingButtonStackView: SettingButtonStackView
 
   weak var delegate: UserSettingViewDelegate?
 
   init() {
-    self.alarmSettingButton = UIButton()
-    self.remindSettingButton = UIButton()
     self.settingButtonStackView = SettingButtonStackView()
     super.init(frame: CGRect.zero)
     self.setup()
@@ -49,9 +45,9 @@ extension UserSettingView {
       self.delegate?.didSelectSettingAlarmButton()
     }
 
-    self.alarmSettingButton.addAction(action, for: UIControl.Event.touchUpInside)
+    let alarmSettingButton = UIButton(primaryAction: action)
     self.settingButtonStackView.addSettingButton(
-      self.alarmSettingButton,
+      alarmSettingButton,
       title: SettingSceneTheme.StringLiteral.UserSettingView.alarmSettingButtonTitle,
       isForwardImageNeeded: true
     )
@@ -62,9 +58,9 @@ extension UserSettingView {
       self.delegate?.didSelectSettingRemindButton()
     }
 
-    self.remindSettingButton.addAction(action, for: UIControl.Event.touchUpInside)
+    let remindSettingButton = UIButton(primaryAction: action)
     self.settingButtonStackView.addSettingButton(
-      self.remindSettingButton,
+      remindSettingButton,
       title: SettingSceneTheme.StringLiteral.UserSettingView.remindSettingButtonTitle,
       isForwardImageNeeded: true
     )

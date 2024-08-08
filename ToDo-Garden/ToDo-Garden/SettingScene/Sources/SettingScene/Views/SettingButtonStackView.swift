@@ -27,6 +27,7 @@ final class SettingButtonStackView: UIStackView {
 
     self.setupButtonTitle(button, title: title)
     button.backgroundColor = UIColor.toDoGardenWhite
+    button.tintColor = UIColor.toDoGardenGreenDark
     button.heightAnchor.constraint(
       equalToConstant: SettingViewController.Constant.SettingButtonStackView.buttonHeight
     ).isActive = true
