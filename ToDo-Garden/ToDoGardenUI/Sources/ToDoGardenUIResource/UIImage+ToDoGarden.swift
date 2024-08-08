@@ -89,9 +89,6 @@ extension UIImage {
   public static let shareIconImage = UIImage(
     resource: .icShare
   )
-  public static let defaultSettingProfileImage = UIImage(
-    resource: .defaultSettingProfile
-  )
   public static let toDoGardenLogoImage = UIImage(
     resource: .toDoGardenLogo
   )
