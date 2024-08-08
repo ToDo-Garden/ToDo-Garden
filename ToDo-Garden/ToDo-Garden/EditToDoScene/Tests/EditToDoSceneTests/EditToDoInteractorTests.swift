@@ -210,6 +210,22 @@ import UIKit.UIColor
     #expect(self.mockPresenter.isPresentChangedRepetitionCalled)
     #expect(self.mockPresenter.repetitionViewState == .repeatOnlyToday)
   }
+
+  @Test(
+    "투두를 일정 기간동안 반복하도록 설정하면 EditToDoPresetner를 호출하는가"
+  ) func test_투두를_일정_기간동안_반복하도록_설정하면_EditToDoPresetner를_호출하는가() throws {
+    var toDo = EditToDoSceneTestData.Interactor.toDo
+    toDo.repetition.isRepeatEveryday = true
+    self.interactor.toDo = toDo
+    let request = EditToDo.ChangeRepetition.Request(isOnlyToday: false, isEveryday: false)
+
+    self.interactor.changeReptition(request: request)
+
+    let toDoData = try #require(self.interactor.toDo)
+    #expect(toDoData.repetition.isRepeatEveryday == false)
+    #expect(self.mockPresenter.isPresentChangedRepetitionCalled)
+    #expect(self.mockPresenter.repetitionViewState == .repeatInRange)
+  }
 }
 
 class EditToDoPresentationLogicSpy: EditToDoPresentationLogic {
