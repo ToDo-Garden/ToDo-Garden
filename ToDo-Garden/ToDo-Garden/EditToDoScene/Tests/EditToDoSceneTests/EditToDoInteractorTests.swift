@@ -49,3 +49,31 @@ class EditToDoPresentationLogicSpy: EditToDoPresentationLogic {
 
   func presentSomething(response: EditToDo.Something.Response) {}
 }
+
+class MockGroupWorkLogicSpy: MockGroupWorkable {
+  var isFetchGroupListCalled: Bool = false
+
+  func fetchGroupList() throws -> [EditToDoSceneEntity.EditToDo.Group] {
+    self.isFetchGroupListCalled = true
+    return EditToDoSceneTestData.Interactor.groupList
+  }
+}
+
+class MockToDoWorkLogicSpy: MockToDoWorkable {
+  var isFetchToDoCalled: Bool = false
+  var isEditToDoCalled: Bool = false
+  var isDeleteToDoCalled: Bool = false
+
+  func fetchToDo(id: Int?) throws -> EditToDo.ToDo {
+    self.isFetchToDoCalled = true
+    return EditToDoSceneTestData.Interactor.toDo
+  }
+
+  func editToDo(_ toDo: EditToDo.ToDo) throws {
+    self.isEditToDoCalled = true
+  }
+
+  func deleteToDo(id: Int?) throws {
+    self.isDeleteToDoCalled = true
+  }
+}
