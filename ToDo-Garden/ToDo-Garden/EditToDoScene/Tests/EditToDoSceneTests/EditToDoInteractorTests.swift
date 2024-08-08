@@ -182,7 +182,7 @@ import UIKit.UIColor
   @Test(
     "투두를 매일 반복하도록 설정하면 EditToDoPresetner를 호출하는가"
   ) func test_투두를_매일_반복하도록_설정하면_EditToDoPresetner를_호출하는가() throws {
-    var toDo = EditToDoSceneTestData.EditToDoInteractorTests.toDo
+    var toDo = EditToDoSceneTestData.Interactor.toDo
     toDo.repetition.isRepeatEveryday = false
     self.interactor.toDo = toDo
     let request = EditToDo.ChangeRepetition.Request(isOnlyToday: false, isEveryday: true)
@@ -193,6 +193,22 @@ import UIKit.UIColor
     #expect(toDoData.repetition.isRepeatEveryday)
     #expect(self.mockPresenter.isPresentChangedRepetitionCalled)
     #expect(self.mockPresenter.repetitionViewState == .repeatEveryday)
+  }
+
+  @Test(
+    "투두를 오늘만 반복하도록 설정하면 EditToDoPresetner를 호출하는가"
+  ) func test_투두를_오늘만_반복하도록_설정하면_EditToDoPresetner를_호출하는가() throws {
+    var toDo = EditToDoSceneTestData.Interactor.toDo
+    toDo.repetition.isOnlyToday = false
+    self.interactor.toDo = toDo
+    let request = EditToDo.ChangeRepetition.Request(isOnlyToday: true, isEveryday: nil)
+
+    self.interactor.changeReptition(request: request)
+
+    let toDoData = try #require(self.interactor.toDo)
+    #expect(toDoData.repetition.isOnlyToday)
+    #expect(self.mockPresenter.isPresentChangedRepetitionCalled)
+    #expect(self.mockPresenter.repetitionViewState == .repeatOnlyToday)
   }
 }
 
