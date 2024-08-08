@@ -92,12 +92,16 @@ extension EditToDoScheduleView {
   private func setupEditToDoAlarmViewLayout() {
     self.editToDoAlarmView.usingAutolayout()
 
+    let layout = EditToDoViewController.Constant.Layout.EditToDoScheduleView.EditToDoAlarmView.self
     NSLayoutConstraint.activate(
       [
-        self.editToDoAlarmView.topAnchor.constraint(equalTo: self.topAnchor),
+        self.editToDoAlarmView.topAnchor.constraint(
+          equalTo: self.topAnchor,
+          constant: layout.topMargin
+        ),
         self.editToDoAlarmView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
         self.editToDoAlarmView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-        self.editToDoAlarmView.heightAnchor.constraint(equalToConstant: 92)
+        self.editToDoAlarmView.heightAnchor.constraint(equalToConstant: layout.height)
       ]
     )
   }
@@ -114,7 +118,7 @@ extension EditToDoScheduleView {
         ),
         self.editToDoRepetitionView.leadingAnchor.constraint(equalTo: self.editToDoAlarmView.leadingAnchor),
         self.editToDoRepetitionView.trailingAnchor.constraint(equalTo: self.editToDoAlarmView.trailingAnchor),
-        self.editToDoRepetitionView.heightAnchor.constraint(equalToConstant: 231)
+        self.editToDoRepetitionView.heightAnchor.constraint(equalToConstant: layout.height)
       ]
     )
   }

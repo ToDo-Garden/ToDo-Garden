@@ -12,11 +12,11 @@ extension EditToDoSceneTheme {
 
 extension EditToDoSceneTheme.StringLiteral {
   enum CompleteEditingButton {
-    static let title = "ToDo 편집"
+    static let title = "완료"
   }
 
   enum EditToDoViewController {
-    static let title = "완료"
+    static let title = "ToDo 편집"
   }
 
   enum EditToDoView {

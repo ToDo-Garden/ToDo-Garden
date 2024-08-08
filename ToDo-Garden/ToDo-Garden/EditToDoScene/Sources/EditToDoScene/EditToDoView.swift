@@ -201,11 +201,12 @@ extension EditToDoView {
     self.addSubview(self.groupSelectionView)
     self.groupSelectionView.translatesAutoresizingMaskIntoConstraints = false
 
+    let layout = EditToDoViewController.Constant.Layout.EditToDoView.GroupSelectionView.self
     NSLayoutConstraint.activate(
       [
         self.groupSelectionView.topAnchor.constraint(
           equalTo: label.bottomAnchor,
-          constant: 10
+          constant: layout.topMargin
         ),
         self.groupSelectionView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
         self.groupSelectionView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
@@ -224,7 +225,7 @@ extension EditToDoView {
       [
         self.deleteToDoButton.topAnchor.constraint(
           equalTo: self.groupSelectionView.topAnchor,
-          constant: 59
+          constant: layout.topMargin
         ),
         self.deleteToDoButton.leadingAnchor.constraint(
           equalTo: self.leadingAnchor,

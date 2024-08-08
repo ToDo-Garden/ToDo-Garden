@@ -87,6 +87,7 @@ extension EditToDoAlarmView {
     self.alarmLabel.font = UIFont.pretendardHeadSemiBold
     let text = EditToDoSceneTheme.StringLiteral.ToDoScheduleView.AlarmLabel.text
     self.alarmLabel.text = text
+    self.alarmLabel.textColor = EditToDoSceneTheme.mainColor
   }
 
   private func setupAlarmSwitchAction() {
@@ -123,10 +124,7 @@ extension EditToDoAlarmView {
     NSLayoutConstraint.activate(
       [
         self.alarmSwitch.topAnchor.constraint(equalTo: self.topAnchor),
-        self.alarmSwitch.trailingAnchor.constraint(
-          equalTo: self.trailingAnchor,
-          constant: -2
-        )
+        self.alarmSwitch.trailingAnchor.constraint(equalTo: self.alarmTimeSettingView.trailingAnchor)
       ]
     )
   }
@@ -134,12 +132,12 @@ extension EditToDoAlarmView {
   private func setupAlarmLabelConstraints() {
     self.alarmLabel.usingAutolayout()
 
-    let layout = EditToDoViewController.Constant.Layout.EditToDoScheduleView.AlarmLabel.self
+    let layout = EditToDoViewController.Constant.Layout.EditToDoScheduleView.EditToDoAlarmView.self
     NSLayoutConstraint.activate(
       [
         self.alarmLabel.leadingAnchor.constraint(
-          equalTo: self.leadingAnchor,
-          constant: layout.leadingMargin
+          equalTo: self.alarmTimeSettingView.leadingAnchor,
+          constant: layout.AlarmLabel.leadingMargin
         ),
         self.alarmLabel.centerYAnchor.constraint(equalTo: self.alarmSwitch.centerYAnchor)
       ]
@@ -149,16 +147,24 @@ extension EditToDoAlarmView {
   private func setupAlarmTimeSettingViewConstraints() {
     self.alarmTimeSettingView.usingAutolayout()
 
-    let layout = EditToDoViewController.Constant.Layout.EditToDoScheduleView.AlarmTimeSettingView.self
+    let layout = EditToDoViewController.Constant.Layout.EditToDoScheduleView.EditToDoAlarmView.self
     NSLayoutConstraint.activate(
       [
         self.alarmTimeSettingView.topAnchor.constraint(
           equalTo: self.alarmSwitch.bottomAnchor,
-          constant: layout.topMargin
+          constant: layout.AlarmTimeSettingView.topMargin
         ),
-        self.alarmTimeSettingView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-        self.alarmTimeSettingView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-        self.alarmTimeSettingView.heightAnchor.constraint(equalToConstant: layout.height)
+        self.alarmTimeSettingView.leadingAnchor.constraint(
+          equalTo: self.leadingAnchor,
+          constant: layout.AlarmTimeSettingView.leadingMargin
+        ),
+        self.alarmTimeSettingView.trailingAnchor.constraint(
+          equalTo: self.trailingAnchor,
+          constant: -layout.AlarmTimeSettingView.trailingMargin
+        ),
+        self.alarmTimeSettingView.heightAnchor.constraint(
+          equalToConstant: layout.AlarmTimeSettingView.height
+        )
       ]
     )
   }
