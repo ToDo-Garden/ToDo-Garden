@@ -12,6 +12,8 @@ final class VersionInfoView: UIView {
   private let currentVersionLabel: UILabel
   private let updateButton: UIButton
 
+  weak var delegate: VersionInfoViewDelegate?
+
   init() {
     self.upToDateVersionLabel = UILabel()
     self.currentVersionLabel = UILabel()
@@ -36,6 +38,10 @@ final class VersionInfoView: UIView {
     self.currentVersionLabel.text = version
     self.updateButton.isHidden = false
   }
+}
+
+protocol VersionInfoViewDelegate: AnyObject {
+  func didSelectUpdateButton()
 }
 
 // MARK: Private Functions
@@ -83,6 +89,7 @@ extension VersionInfoView {
     let layout = SettingViewController.Constant.VersionInfoView.UpdateButton.self
     self.updateButton.layer.cornerRadius = layout.cornerRadius
     self.setupUpdateButtonTitle()
+    self.setupUpdateButtonAction()
   }
 
   private func setupUpdateButtonTitle() {
@@ -102,6 +109,14 @@ extension VersionInfoView {
       equalTo: self.updateButton.leadingAnchor,
       constant: SettingViewController.Constant.VersionInfoView.UpdateButton.leadingMargin
     ).isActive = true
+  }
+
+  private func setupUpdateButtonAction() {
+    let action = UIAction { _ in
+      self.delegate?.didSelectUpdateButton()
+    }
+
+    self.updateButton.addAction(action, for: UIControl.Event.touchUpInside)
   }
 }
 
