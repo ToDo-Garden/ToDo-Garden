@@ -163,6 +163,21 @@ import UIKit.UIColor
     }
     #expect(self.mockPresenter.isPresentDeleteResultCalled)
   }
+
+  @Test(
+    "투두 알림을 활성화 하면 EditToDoPresetner를 호출하는가"
+  ) func test_투두_알림을_활성화_하면_EditToDoPresenter를_호출하는가() throws {
+    var toDo = EditToDoSceneTestData.Interactor.toDo
+    toDo.alarm.isAlarmOn = false
+    self.interactor.toDo = toDo
+    let request = EditToDo.ChangeAlarmActivation.Request()
+
+    self.interactor.changeAlarmActivation(request: request)
+
+    let toDoData = try #require(self.interactor.toDo)
+    #expect(toDoData.alarm.isAlarmOn)
+    #expect(self.mockPresenter.isPresentAlarmActivationCalled)
+  }
 }
 
 class EditToDoPresentationLogicSpy: EditToDoPresentationLogic {
