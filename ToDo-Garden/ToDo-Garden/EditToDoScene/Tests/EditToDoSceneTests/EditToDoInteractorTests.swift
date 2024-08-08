@@ -61,6 +61,26 @@ import UIKit.UIColor
     }
     #expect(self.mockPresenter.isPresentFetchedToDoCalled)
   }
+
+  @Test(
+    "투두 데이터를 불러올 때 아이디가 없으면 ToDoWorker와 GroupWorker를 호출하지 않고 EditToDoPresenter에 에러를 전달하는가"
+  ) func test_투두_데이터를_불러올때_아이디가_없으면_ToDoWorker와_GroupWorker를_호출하지_않고_EditToDoPresenter에_에러를_전달하는가() throws {
+    let request = EditToDo.FetchToDo.Request()
+
+    self.interactor.fetchToDo(request: request)
+
+    #expect(self.mockToDoWorker.isFetchToDoCalled == false)
+    #expect(self.mockGroupWorker.isFetchGroupListCalled == false)
+    let fetchResult = try #require(mockPresenter.fetchResult)
+    switch fetchResult {
+    case .success:
+      #expect(Bool(false), "투두 아이디가 존재하지 않는데 데이터를 불러왔습니다.")
+    case .failure(let error):
+      let interactorError = try #require(error as? EditToDoInteractor.EditToDoInteractorError)
+      #expect(interactorError == EditToDoInteractor.EditToDoInteractorError.toDoDataNotExisted)
+    }
+    #expect(self.mockPresenter.isPresentFetchedToDoCalled)
+  }
 }
 
 class EditToDoPresentationLogicSpy: EditToDoPresentationLogic {
