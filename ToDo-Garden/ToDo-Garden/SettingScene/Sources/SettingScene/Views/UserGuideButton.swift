@@ -33,11 +33,12 @@ extension UserGuideButton {
 
   private func setupStackViewUI() {
     self.isLayoutMarginsRelativeArrangement = true
-    self.layoutMargins = UIEdgeInsets(top: 7, left: 15, bottom: 7, right: 8)
-    self.spacing = 5
+    let constant = SettingViewController.Constant.UserGuideButton.self
+    self.layoutMargins = constant.layoutMargins
+    self.spacing = constant.spacing
     self.backgroundColor = UIColor.toDoGardenGreenBackground
-    self.layer.cornerRadius = 10
-    self.layer.borderWidth = 1.0
+    self.layer.cornerRadius = constant.Layer.cornerRadius
+    self.layer.borderWidth = constant.Layer.borderWidth
     self.layer.borderColor = UIColor.toDoGardenGreenGray.cgColor
   }
 
@@ -84,3 +85,10 @@ extension UserGuideButton {
     self.addArrangedSubview(rightForwardImageView)
   }
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  return UserGuideButton()
+}
+#endif
