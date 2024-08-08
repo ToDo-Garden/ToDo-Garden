@@ -44,14 +44,14 @@ extension EditToDoViewController.Constant.Layout.EditToDoView {
     static let leadingMargin: CGFloat = 19
   }
 
-  enum EditGroupRow {
-    static let bottomMargin: CGFloat = 18
+  enum GroupSelectionView {
+    static let topMargin: CGFloat = 18
   }
 
   enum DeleteToDoButton {
     static let titleLeadingMargin: CGFloat = 14
     static let cornerRadius: CGFloat = 10
-    static let topMargin: CGFloat = 28
+    static let topMargin: CGFloat = 59
     static let leadingMargin: CGFloat = 13
     static let trailingMargin: CGFloat = 6
     static let height: CGFloat = 44
@@ -59,13 +59,11 @@ extension EditToDoViewController.Constant.Layout.EditToDoView {
 }
 
 extension EditToDoViewController.Constant.Layout.EditToDoScheduleView {
+  enum EditToDoAlarmView {}
   enum EditToDoRepetitionView {}
+}
 
-  enum AlarmSwitch {
-    static let topMargin: CGFloat = 10
-    static let trailingMargin: CGFloat = 20
-  }
-
+extension EditToDoViewController.Constant.Layout.EditToDoScheduleView.EditToDoAlarmView {
   enum AlarmLabel {
     static let leadingMargin: CGFloat = 4
   }
@@ -76,6 +74,9 @@ extension EditToDoViewController.Constant.Layout.EditToDoScheduleView {
     static let trailingMargin: CGFloat = 11
     static let height: CGFloat = 53
   }
+
+  static let topMargin: CGFloat = 10
+  static let height: CGFloat = 92
 }
 
 extension EditToDoViewController.Constant.Layout.EditToDoScheduleView.EditToDoRepetitionView {
@@ -83,8 +84,10 @@ extension EditToDoViewController.Constant.Layout.EditToDoScheduleView.EditToDoRe
     static let leadingMargin: CGFloat = 3
   }
 
-  enum RepeatOnlyTodayButton {
+  enum RepeatOnlyTodayView {
     static let topMargin: CGFloat = 11
+    static let leadingMargin: CGFloat = 18
+    static let trailingMargin: CGFloat = 11
   }
 
   enum RepeatOtherDaysView {
@@ -92,4 +95,5 @@ extension EditToDoViewController.Constant.Layout.EditToDoScheduleView.EditToDoRe
   }
 
   static let topMargin: CGFloat = 49
+  static let height: CGFloat = 231
 }

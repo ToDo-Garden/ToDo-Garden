@@ -141,15 +141,15 @@ extension EditToDoRepetitionView {
       [
         self.repeatOnlyTodayView.topAnchor.constraint(
           equalTo: self.repetitionLabel.bottomAnchor,
-          constant: layout.RepeatOnlyTodayButton.topMargin
+          constant: layout.RepeatOnlyTodayView.topMargin
         ),
         self.repeatOnlyTodayView.leadingAnchor.constraint(
           equalTo: self.leadingAnchor,
-          constant: 18
+          constant: layout.RepeatOnlyTodayView.leadingMargin
         ),
         self.repeatOnlyTodayView.trailingAnchor.constraint(
           equalTo: self.trailingAnchor,
-          constant: -11
+          constant: -layout.RepeatOnlyTodayView.trailingMargin
         )
       ]
     )
