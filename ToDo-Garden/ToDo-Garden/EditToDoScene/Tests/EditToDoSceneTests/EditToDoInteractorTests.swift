@@ -144,6 +144,25 @@ import UIKit.UIColor
     }
     #expect(self.mockPresenter.isPresentDeleteResultCalled)
   }
+
+  @Test(
+    "투두 삭제 요청시 투두 ID가 존재하지 않으면 ToDoWorker를 호출하지 않고 EditToDoPresenter에 에러를 전달하는가"
+  ) func test_투두_삭제_요청시_투두_ID가_존재하지_않으면_ToDoWorker를_호출하지_않고_EditToDoPresenter에_에러를_전달하는가() throws {
+    let request = EditToDo.DeleteToDo.Request()
+
+    self.interactor.deleteToDo(request: request)
+
+    #expect(self.mockToDoWorker.isDeleteToDoCalled == false)
+    let editResult = try #require(self.mockPresenter.deleteResult)
+    switch editResult {
+    case .success:
+      #expect(Bool(false), "투두 ID가 존재하지 않음에도 불구하고 삭제 요청이 성공했습니다.")
+    case .failure(let someError):
+      let error = try #require(someError as? EditToDoInteractor.EditToDoInteractorError)
+      #expect(error == EditToDoInteractor.EditToDoInteractorError.toDoDataNotExisted)
+    }
+    #expect(self.mockPresenter.isPresentDeleteResultCalled)
+  }
 }
 
 class EditToDoPresentationLogicSpy: EditToDoPresentationLogic {
