@@ -7,9 +7,12 @@
 
 import UIKit
 
+/// 설정 화면에서 필요한 여러개의 버튼들을 담는 StackView 입니다. 
+/// UserSettingView, AppSupportView에서 사용됩니다.
 final class SettingButtonStackView: UIStackView {
   init() {
     super.init(frame: CGRect.zero)
+    self.setup()
   }
 
   @available(*, unavailable)

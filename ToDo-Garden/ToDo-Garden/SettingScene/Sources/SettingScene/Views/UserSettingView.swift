@@ -136,3 +136,12 @@ extension UserSettingView {
     )
   }
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let view = UserSettingView()
+  view.widthAnchor.constraint(equalToConstant: 300).isActive = true
+  return view
+}
+#endif
