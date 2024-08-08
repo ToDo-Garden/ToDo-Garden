@@ -242,4 +242,5 @@ struct MockPresenter: TimerScenePresentationLogic {
     _dismiss?()
   }
 }
-// swiftlint:enable xctfail_message identifier_name line_length function_body_length opening_brace unused_closure_parameter type_name
+// swiftlint:enable xctfail_message identifier_name line_length function_body_length unused_closure_parameter type_name
+// swiftlint:enable opening_brace
