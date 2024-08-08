@@ -24,6 +24,18 @@ final class VersionInfoView: UIView {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+
+  func updateToLatestVersion(_ version: String) {
+    self.upToDateVersionLabel.text = SettingSceneTheme.StringLiteral.VersionInfoView.latestVersionText
+    self.currentVersionLabel.text = version
+    self.updateButton.isHidden = true
+  }
+
+  func updateToPriorVersion(_ version: String) {
+    self.upToDateVersionLabel.text = SettingSceneTheme.StringLiteral.VersionInfoView.priorVersionText
+    self.currentVersionLabel.text = version
+    self.updateButton.isHidden = false
+  }
 }
 
 // MARK: Private Functions
@@ -45,7 +57,7 @@ extension VersionInfoView {
     let attachment = NSTextAttachment(image: UIImage.leafImage)
     text.append(NSAttributedString(attachment: attachment))
     let title = NSAttributedString(
-      string: SettingSceneTheme.StringLiteral.VersionInfoView.latestVersionText,
+      string: SettingSceneTheme.StringLiteral.VersionInfoView.versionInfoLabelText,
       attributes: [
         NSAttributedString.Key.font: UIFont.pretendardBodySemiBold15,
         NSAttributedString.Key.foregroundColor: SettingSceneTheme.mainColor
