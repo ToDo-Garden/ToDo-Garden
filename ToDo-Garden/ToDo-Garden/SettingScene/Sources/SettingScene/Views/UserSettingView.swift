@@ -12,6 +12,8 @@ final class UserSettingView: UIView {
   private let remindSettingButton: UIButton
   private let settingButtonStackView: SettingButtonStackView
 
+  weak var delegate: UserSettingViewDelegate?
+
   init() {
     self.alarmSettingButton = UIButton()
     self.remindSettingButton = UIButton()
@@ -26,6 +28,13 @@ final class UserSettingView: UIView {
   }
 }
 
+// MARK: Delegate Functions
+
+protocol UserSettingViewDelegate: AnyObject {
+  func didSelectSettingAlarmButton()
+  func didSelectSettingRemindButton()
+}
+
 // MARK: Private Functions
 
 extension UserSettingView {
@@ -37,7 +46,7 @@ extension UserSettingView {
 
   private func setupAlarmSettingButtonAction() {
     let action = UIAction { _ in
-
+      self.delegate?.didSelectSettingAlarmButton()
     }
 
     self.alarmSettingButton.addAction(action, for: UIControl.Event.touchUpInside)
@@ -50,7 +59,7 @@ extension UserSettingView {
 
   private func setupRemindSettingButtonAction() {
     let action = UIAction { _ in
-
+      self.delegate?.didSelectSettingRemindButton()
     }
 
     self.remindSettingButton.addAction(action, for: UIControl.Event.touchUpInside)
