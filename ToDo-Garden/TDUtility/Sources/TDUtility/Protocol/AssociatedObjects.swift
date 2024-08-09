@@ -51,7 +51,7 @@ extension AssociatedObjects {
   
   /// wrapper around `objc_setAssociatedObject`
   /// - Parameters:
-  ///   - value: 연관시킬 값. nil인 경우 연관 객체를 설정하지 않음
+  ///   - value: 연관시킬 값
   ///   - key: 값을 연관시킬 때 사용할 키 문자열이며, 고유해야합니다.
   ///   - policy: 연관 객체의 메모리 관리 정책, 기본값은 `retainNonatomic`
   public func ao_setOptional(
@@ -59,8 +59,7 @@ extension AssociatedObjects {
     key: String,
     policy: objc_AssociationPolicy = AssociationPolicy.retainNonatomic
   ) {
-    guard let value,
-      let unsafeRawPointerKey = UnsafeRawPointer(bitPattern: key.hashValue)
+    guard let unsafeRawPointerKey = UnsafeRawPointer(bitPattern: key.hashValue)
     else { return }
     
     objc_setAssociatedObject(self, unsafeRawPointerKey, value, policy)
