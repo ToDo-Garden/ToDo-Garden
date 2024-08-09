@@ -5,6 +5,8 @@
 //  Created by Noah on 8/8/24.
 //
 
-import Foundation
+import UIKit
 
 public protocol IterableElement { }
+
+extension UIView: IterableElement { }
