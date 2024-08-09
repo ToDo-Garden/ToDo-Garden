@@ -30,6 +30,13 @@ extension UIView {
     
     self.recursiveStartShimmerLayerAnimation()
   }
+  
+  public func stopShimmering() {
+    guard self.filteredShimmeringSubviews.isEmpty == false
+    else { return }
+    
+    self.recursiveClearShimmerLayer()
+  }
 }
 
 // MARK: - Start  Shimmer animation
@@ -55,5 +62,25 @@ extension UIView {
     else { return }
     
     shimmerLayer.startAnimation()
+  }
+}
+
+// MARK: - Stop Shimmer animation
+
+extension UIView {
+  private func recursiveClearShimmerLayer() {
+    self.filteredShimmeringSubviews.recursiveSearch {
+      self.clearShimmerLayer()
+    } recursiveBlock: { subview in
+      subview.recursiveClearShimmerLayer()
+    }
+  }
+  
+  private func clearShimmerLayer() {
+    guard var shimmerLayer = self._shimmerLayer
+    else { return }
+    
+    shimmerLayer.clearShimmerLayer()
+    self._shimmerLayer = nil
   }
 }
