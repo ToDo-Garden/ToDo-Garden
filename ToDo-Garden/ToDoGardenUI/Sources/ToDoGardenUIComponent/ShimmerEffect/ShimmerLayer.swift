@@ -16,3 +16,9 @@ extension ShimmerLayer {
     static let gradientLightGrey = UIColor(red: 201 / 255.0, green: 201 / 255.0, blue: 201 / 255.0, alpha: 1)
   }
 }
+
+extension ShimmerLayer {
+  struct AnimationKey {
+    static let shimmerAnimation = "skeletonAnimation"
+  }
+}
