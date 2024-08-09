@@ -30,6 +30,14 @@ extension ShimmerLayer {
     ]
   }
   
+  private func addAnimation() {
+    let skeletonAnimationGroup = self.makeSlidingAnimation()
+    self.maskLayer.add(
+      skeletonAnimationGroup,
+      forKey: ShimmerLayer.AnimationKey.shimmerAnimation
+    )
+  }
+  
   private func makeSlidingAnimation(duration: CFTimeInterval = 2.5) -> CAAnimationGroup {
     let startPointAnimation = CABasicAnimation(keyPath: #keyPath(CAGradientLayer.startPoint))
     startPointAnimation.fromValue = CGPoint(x: -1, y: 0.5)
