@@ -11,14 +11,14 @@ protocol TimerSceneBusinessLogic {
 
 @MainActor
 final class TimerSceneInteractor {
-  var isCountingDown: Bool = false
-  var alertStatus: TimerScene.TimerAlertStatus?
-  var bottomSheetStatus: TimerScene.BottomSheetStatus = .focus
+  public var isCountingDown: Bool = false
+  public var alertStatus: TimerScene.TimerAlertStatus?
+  public var bottomSheetStatus: TimerScene.BottomSheetStatus = .focus
   
   var presenter: TimerScenePresentationLogic?
   private let worker: TimerSceneWorkable
   
-  private var tasks: [AnyHashable: Task<Void, Never>] = [:]
+  public var tasks: [AnyHashable: Task<Void, Never>] = [:]
   
   init(worker: TimerSceneWorkable) {
     self.worker = worker
@@ -61,9 +61,9 @@ extension TimerSceneInteractor: TimerSceneBusinessLogic {
   }
 
   func setTimer(for seconds: Double) {
+    self.isCountingDown = true
     run(id: CancelTaskID.countdown) {
       defer { self.isCountingDown = false }
-      self.isCountingDown = true
       self.presenter?.configureTimerSettings(self.bottomSheetStatus, for: seconds)
       for try await time in self.worker.countDownStream(seconds) {
         let range = TimerScene.CircularProgressRange(1 - (time / seconds))
@@ -108,7 +108,6 @@ extension TimerSceneInteractor: TimerSceneBusinessLogic {
   }
   
   private func keepConcentrationAction() {
-    self.cancel(CancelTaskID.countdown)
     self.bottomSheetStatus = .focus
     self.presenter?.updateViewState(isResting: false)
     self.presenter?.presentBottomSheet(.focus)
