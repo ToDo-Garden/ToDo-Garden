@@ -12,7 +12,7 @@ struct ShimmerLayer {
   private weak var holder: UIView?
   
   init(
-    shimmerHolder holder: UIView? = nil,
+    shimmerHolder holder: UIView?,
     backgroundColor: UIColor = ShimmerLayer.Color.gradientDarkGrey,
     highlightColor: UIColor = ShimmerLayer.Color.gradientLightGrey
   ) {
