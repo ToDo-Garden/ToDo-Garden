@@ -8,6 +8,15 @@
 import UIKit
 
 struct ShimmerLayer {
+  let maskLayer: CAGradientLayer
+  private weak var holder: UIView?
+  
+  init(
+    shimmerHolder holder: UIView? = nil
+  ) {
+    self.maskLayer = CAGradientLayer()
+    self.holder = holder
+  }
 }
 
 extension ShimmerLayer {
