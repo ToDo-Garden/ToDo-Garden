@@ -29,6 +29,26 @@ extension ShimmerLayer {
       backgroundColor.cgColor
     ]
   }
+  
+  private func makeSlidingAnimation(duration: CFTimeInterval = 2.5) -> CAAnimationGroup {
+    let startPointAnimation = CABasicAnimation(keyPath: #keyPath(CAGradientLayer.startPoint))
+    startPointAnimation.fromValue = CGPoint(x: -1, y: 0.5)
+    startPointAnimation.toValue = CGPoint(x: 1, y: 0.5)
+    
+    let endPointAnimation = CABasicAnimation(keyPath: #keyPath(CAGradientLayer.endPoint))
+    endPointAnimation.fromValue = CGPoint(x: 0, y: 0.5)
+    endPointAnimation.toValue = CGPoint(x: 2, y: 0.5)
+    
+    let group = CAAnimationGroup()
+    group.animations = [startPointAnimation, endPointAnimation]
+    group.repeatCount = Float.infinity
+    group.duration = duration
+    group.autoreverses = false
+    group.isRemovedOnCompletion = false
+    group.beginTime = 0.0
+    
+    return group
+  }
 }
 
 extension ShimmerLayer {
