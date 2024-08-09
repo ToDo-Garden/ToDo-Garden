@@ -20,6 +20,14 @@ struct ShimmerLayer {
     self.holder = holder
     self.setupMaskLayerColors(backgroundColor: backgroundColor, highlightColor: highlightColor)
   }
+  
+  mutating func clearShimmerLayer(completion: (() -> Void)? = nil) {
+    self.maskLayer.removeAllAnimations()
+    self.maskLayer.removeFromSuperlayer()
+    self.holder = nil
+    completion?()
+  }
+}
 
 extension ShimmerLayer {
   private func setupMaskLayerColors(backgroundColor: UIColor, highlightColor: UIColor) {
