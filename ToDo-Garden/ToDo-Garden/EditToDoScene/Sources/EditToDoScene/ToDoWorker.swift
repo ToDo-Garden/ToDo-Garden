@@ -9,14 +9,14 @@ import UIKit.UIColor
 
 import EditToDoSceneEntity
 
-public protocol MockToDoWorkable {
+public protocol ToDoWorkLogic {
   func fetchToDo(id: Int?) throws -> EditToDo.ToDo
   func deleteToDo(id: Int?) throws
   func editToDo(_ toDo: EditToDo.ToDo) throws
 }
 
 /// ToDo Context를 가정한 Mock Worker 입니다.
-public final class MockToDoWorker: MockToDoWorkable {
+public final class ToDoWorker: ToDoWorkLogic {
   public init() {}
 
   public func fetchToDo(id: Int?) throws -> EditToDo.ToDo {
@@ -34,7 +34,7 @@ public final class MockToDoWorker: MockToDoWorkable {
 
 // MARK: Mock Data
 
-extension MockToDoWorker {
+extension ToDoWorker {
   enum MockData {
     enum FetchToDo {
       static let firstData = EditToDo.ToDo(
@@ -78,13 +78,13 @@ extension MockToDoWorker {
           isOnlyToday: false,
           isRepeatEveryday: false,
           startDate: DateComponents(
-            calendar: MockToDoWorker.MockData.FetchToDo.defaultCalendar,
+            calendar: ToDoWorker.MockData.FetchToDo.defaultCalendar,
             year: 2024,
             month: 6,
             day: 22
           ).date,
           endDate: DateComponents(
-            calendar: MockToDoWorker.MockData.FetchToDo.defaultCalendar,
+            calendar: ToDoWorker.MockData.FetchToDo.defaultCalendar,
             year: 2024,
             month: 7,
             day: 03
@@ -99,7 +99,7 @@ extension MockToDoWorker {
 
 // MARK: Error
 
-extension MockToDoWorker {
+extension ToDoWorker {
   enum MockToDoWorkerError: Error {
     case unknownError
   }

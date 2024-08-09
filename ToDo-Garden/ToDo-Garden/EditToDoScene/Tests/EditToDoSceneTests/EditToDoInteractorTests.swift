@@ -270,7 +270,7 @@ class EditToDoPresentationLogicSpy: EditToDoPresentationLogic {
   func presentSomething(response: EditToDo.Something.Response) {}
 }
 
-class MockGroupWorkLogicSpy: MockGroupWorkable {
+class MockGroupWorkLogicSpy: GroupWorkLogic {
   var isFetchGroupListCalled: Bool = false
 
   func fetchGroupList() throws -> [EditToDoSceneEntity.EditToDo.Group] {
@@ -279,7 +279,7 @@ class MockGroupWorkLogicSpy: MockGroupWorkable {
   }
 }
 
-class MockToDoWorkLogicSpy: MockToDoWorkable {
+class MockToDoWorkLogicSpy: ToDoWorkLogic {
   var isFetchToDoCalled: Bool = false
   var isEditToDoCalled: Bool = false
   var isDeleteToDoCalled: Bool = false

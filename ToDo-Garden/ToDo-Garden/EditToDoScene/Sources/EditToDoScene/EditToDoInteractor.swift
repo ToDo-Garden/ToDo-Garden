@@ -30,13 +30,13 @@ final class EditToDoInteractor: EditToDoDataStore {
   // MARK: VIP Objects
   var presenter: EditToDoPresentationLogic?
   private let someWorker: EditToDoWorkable
-  private let toDoWorker: MockToDoWorkable
-  private let groupWorker: MockGroupWorkable
+  private let toDoWorker: ToDoWorkLogic
+  private let groupWorker: GroupWorkLogic
 
   public init(
     someWorker: EditToDoWorkable,
-    toDoWorker: MockToDoWorkable,
-    groupWorker: MockGroupWorkable
+    toDoWorker: ToDoWorkLogic,
+    groupWorker: GroupWorkLogic
   ) {
     self.someWorker = someWorker
     self.toDoWorker = toDoWorker

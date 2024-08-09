@@ -13,14 +13,14 @@ public struct EditToDoSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
   public struct Dependency {
     let someWorker: EditToDoWorkable
-    let toDoWorker: MockToDoWorker
-    let groupWorker: MockGroupWorker
+    let toDoWorker: ToDoWorker
+    let groupWorker: GroupWorker
     let nextSceneBuilder: NextSceneBuildable
 
     public init(
       someWorker: EditToDoWorkable,
-      toDoWorker: MockToDoWorker,
-      groupWorker: MockGroupWorker,
+      toDoWorker: ToDoWorker,
+      groupWorker: GroupWorker,
       nextSceneBuilder: NextSceneBuildable
     ) {
       self.someWorker = someWorker
