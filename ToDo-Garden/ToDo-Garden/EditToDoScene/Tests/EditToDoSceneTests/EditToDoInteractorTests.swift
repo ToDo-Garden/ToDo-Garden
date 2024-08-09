@@ -45,17 +45,7 @@ import UIKit.UIColor
     case .success(let fetchedToDo):
       let toDo = try #require(self.interactor.toDo)
       // TODO: fetchedToDo가 올바른지 20개의 변수가 올바른지 확인?
-      #expect(toDo.name == fetchedToDo.toDo.name)
-      #expect(toDo.groupData.id == fetchedToDo.toDo.groupData.id)
-      #expect(toDo.groupData.name == fetchedToDo.toDo.groupData.name)
-      #expect(toDo.groupData.color == fetchedToDo.toDo.groupData.color)
-      #expect(toDo.alarm.isAlarmOn == fetchedToDo.toDo.alarm.isAlarmOn)
-      #expect(toDo.alarm.alarmTime == fetchedToDo.toDo.alarm.alarmTime)
-      #expect(toDo.repetition.isOnlyToday == fetchedToDo.toDo.repetition.isOnlyToday)
-      #expect(toDo.repetition.isRepeatEveryday == fetchedToDo.toDo.repetition.isRepeatEveryday)
-      #expect(toDo.repetition.startDate == fetchedToDo.toDo.repetition.startDate)
-      #expect(toDo.repetition.endDate == fetchedToDo.toDo.repetition.endDate)
-      #expect(fetchedToDo.repetitionViewState == expectedRepetitionViewState)
+      #expect(toDo == fetchedToDo.toDo)
     case .failure(let error):
       #expect(Bool(false), "투두 데이터를 받아오는데 실패했습니다. error: \(error)")
     }
