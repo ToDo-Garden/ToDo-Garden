@@ -12,10 +12,22 @@ struct ShimmerLayer {
   private weak var holder: UIView?
   
   init(
-    shimmerHolder holder: UIView? = nil
+    shimmerHolder holder: UIView? = nil,
+    backgroundColor: UIColor = ShimmerLayer.Color.gradientDarkGrey,
+    highlightColor: UIColor = ShimmerLayer.Color.gradientLightGrey
   ) {
     self.maskLayer = CAGradientLayer()
     self.holder = holder
+    self.setupMaskLayerColors(backgroundColor: backgroundColor, highlightColor: highlightColor)
+  }
+
+extension ShimmerLayer {
+  private func setupMaskLayerColors(backgroundColor: UIColor, highlightColor: UIColor) {
+    self.maskLayer.colors = [
+      backgroundColor.cgColor,
+      highlightColor.cgColor,
+      backgroundColor.cgColor
+    ]
   }
 }
 
