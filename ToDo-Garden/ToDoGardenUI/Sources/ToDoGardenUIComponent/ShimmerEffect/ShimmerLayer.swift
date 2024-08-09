@@ -21,6 +21,19 @@ struct ShimmerLayer {
     self.setupMaskLayerColors(backgroundColor: backgroundColor, highlightColor: highlightColor)
   }
   
+  @MainActor
+  func startAnimation() {
+    guard let holder
+    else { return }
+    
+    holder.layoutIfNeeded()
+    
+    self.maskLayer.frame = holder.bounds
+    self.maskLayer.cornerRadius = holder.layer.cornerRadius
+    self.maskLayer.masksToBounds = true
+    self.addAnimation()
+  }
+  
   mutating func clearShimmerLayer(completion: (() -> Void)? = nil) {
     self.maskLayer.removeAllAnimations()
     self.maskLayer.removeFromSuperlayer()
