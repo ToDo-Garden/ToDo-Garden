@@ -28,7 +28,7 @@ extension AssociatedObjects {
   /// - Returns: 해당 키와 연관된 객체가 있으면 그 객체를 반환하고, 없으면 nil을 반환합니다.
   public func ao_get(key: String) -> Any? {
     guard let unsafeRawPointerKey = UnsafeRawPointer(bitPattern: key.hashValue)
-    else { return  nil }
+    else { return nil }
       
     return objc_getAssociatedObject(self, unsafeRawPointerKey)
   }
