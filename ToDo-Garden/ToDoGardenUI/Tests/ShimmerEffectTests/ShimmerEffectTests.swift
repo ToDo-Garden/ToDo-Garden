@@ -42,5 +42,10 @@ struct ShimmerEffectTests {
     
     #expect(subview._shimmerLayer != nil)
     #expect(subview2._shimmerLayer != nil)
+    
+    rootView.stopShimmering()
+    
+    #expect(subview._shimmerLayer == nil)
+    #expect(subview2._shimmerLayer == nil)
   }
 }
