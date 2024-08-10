@@ -27,7 +27,7 @@ struct ShimmerEffectTests {
   }
   
   @Test
-  private func startShimmeringTests() {
+  private func shimmerContromMethodsTests() {
     let rootView = UIView()
     let subview = UIView()
     subview.isShimmering = true
