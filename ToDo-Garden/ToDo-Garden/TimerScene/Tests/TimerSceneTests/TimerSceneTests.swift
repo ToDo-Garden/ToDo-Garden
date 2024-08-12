@@ -158,6 +158,7 @@ final class TimerSceneTests: XCTestCase {
     interactor.presenter = mockPresenter
     interactor.sendAlertAction(.keepConcentration)
     XCTAssert(interactor.bottomSheetStatus == .focus)
+    XCTAssert(interactor.tasks.isEmpty)
     await fulfillment(of: [exp, exp2])
   }
   
@@ -178,7 +179,7 @@ final class TimerSceneTests: XCTestCase {
 }
 
 struct MockWorker: TimerSceneWorkable {
-  var countDownStream: @Sendable (Double) -> AsyncThrowingStream<Double, any Error>
+  var countDownStream: @Sendable (Double) -> AsyncStream<Double>
 }
 
 extension MockWorker {

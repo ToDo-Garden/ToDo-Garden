@@ -108,6 +108,7 @@ extension TimerSceneInteractor: TimerSceneBusinessLogic {
   }
   
   private func keepConcentrationAction() {
+    self.cancel(CancelTaskID.countdown)
     self.bottomSheetStatus = .focus
     self.presenter?.updateViewState(isResting: false)
     self.presenter?.presentBottomSheet(.focus)

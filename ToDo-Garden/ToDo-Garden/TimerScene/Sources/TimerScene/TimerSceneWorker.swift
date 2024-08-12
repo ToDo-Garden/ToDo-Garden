@@ -1,33 +1,44 @@
 import Foundation
 
 public struct TimerSceneWorker: TimerSceneWorkable, Sendable {
-  public var countDownStream: @Sendable (Double) -> AsyncThrowingStream<Double, any Error>
+  public var countDownStream: @Sendable (Double) -> AsyncStream<Double>
   public init(
-    countDownStream: @Sendable @escaping (Double) -> AsyncThrowingStream<Double, any Error>
+    countDownStream: @Sendable @escaping (Double) -> AsyncStream<Double>
   ) {
     self.countDownStream = countDownStream
   }
 }
 
-extension TimerSceneWorker {
-  static let live = Self { seconds in
-    AsyncThrowingStream { continuation in
-      let task = Task {
-        do {
-          for try await second in CountDownSequence(endTime: seconds) {
-            continuation.yield(second)
-            if second == 0 {
-              continuation.finish()
-            }
-          }
-        } catch {
-          try Task.checkCancellation()
-        }
+@preconcurrency import Combine
+
+public extension Publisher where Output: Sendable {
+  var stream: AsyncStream<Output> {
+    AsyncStream<Output> { continuation in
+      let cancellable = self.sink { _ in
+        continuation.finish()
+      } receiveValue: { value in
+        continuation.yield(value)
       }
+      
       continuation.onTermination = { _ in
-        task.cancel()
+        cancellable.cancel()
       }
     }
+  }
+}
+
+extension TimerSceneWorker {
+  static let live = Self { seconds in
+    return Timer
+      .publish(every: 1, on: .main, in: .common)
+      .autoconnect()
+      .scan(seconds) { value, _ in
+        max(value - 1, 0)
+      }
+      .prefix(while: { $0 > 0 })
+      .append(0)
+      .eraseToAnyPublisher()
+      .stream
   }
 }
 
