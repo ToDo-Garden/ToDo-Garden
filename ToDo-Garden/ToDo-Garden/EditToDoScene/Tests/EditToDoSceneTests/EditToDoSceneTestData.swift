@@ -11,6 +11,7 @@ import UIKit
 
 enum EditToDoSceneTestData {
   enum Interactor {
+    static let toDoId = 100
     static let toDo = EditToDo.ToDo(
       name: "영단어 30개 외우기",
       groupData: EditToDo.Group(id: 002, name: "영어", color: UIColor.toDoGardenRed),
@@ -30,5 +31,10 @@ enum EditToDoSceneTestData {
       EditToDo.Group(id: 002, name: "영어", color: UIColor.toDoGardenRed),
       EditToDo.Group(id: 003, name: "국어", color: UIColor.toDoGardenBlue)
     ]
+    static let fetchedToDo = EditToDo.FetchToDo.Response.FetchedToDo(
+      toDo: toDo,
+      groupList: groupList,
+      repetitionViewState: .repeatOnlyToday
+    )
   }
 }

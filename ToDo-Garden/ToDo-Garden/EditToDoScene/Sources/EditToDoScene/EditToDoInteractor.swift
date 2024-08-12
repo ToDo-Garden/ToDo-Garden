@@ -34,7 +34,7 @@ final class EditToDoInteractor: EditToDoDataStore {
   private let groupWorker: GroupWorkLogic
 
   public init(
-    someWorker: EditToDoWorkable,
+    someWorker: EditToDoWorkable = EditToDoWorker(),
     toDoWorker: ToDoWorkLogic,
     groupWorker: GroupWorkLogic
   ) {
@@ -168,10 +168,8 @@ extension EditToDoInteractor {
   }
 }
 
-// MARK: Private Functions
+// MARK: Errors
 
-extension EditToDoInteractor {
-  enum EditToDoInteractorError: Error {
-    case toDoDataNotExisted
-  }
+enum EditToDoInteractorError: Error {
+  case toDoDataNotExisted
 }
