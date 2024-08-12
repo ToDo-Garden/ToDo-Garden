@@ -20,21 +20,12 @@ protocol EditToDoDataPassing {
 class EditToDoRouter: EditToDoDataPassing {
   weak var viewController: EditToDoViewController?
   var dataStore: EditToDoDataStore?
-  private let nextSceneBuilder: NextSceneBuildable
-  
-  init(nextSceneBuilder: NextSceneBuildable) {
-    self.nextSceneBuilder = nextSceneBuilder
-  }
 }
 
 // MARK: - Routing
 
 extension EditToDoRouter: EditToDoRoutingLogic {
-  func routeToSomewhere() {
-    let destinationViewController = self.nextSceneBuilder.build(with: NextScenePayload())
-    
-    self.viewController?.present(destinationViewController, animated: true)
-  }
+  func routeToSomewhere() {}
 }
 
 // MARK: - Declare Payload for scene
