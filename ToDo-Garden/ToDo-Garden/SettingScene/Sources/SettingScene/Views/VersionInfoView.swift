@@ -93,22 +93,14 @@ extension VersionInfoView {
   }
 
   private func setupUpdateButtonTitle() {
-    let title = NSAttributedString(
-      string: SettingSceneTheme.StringLiteral.VersionInfoView.updateButtonTitle,
-      attributes: [
-        NSAttributedString.Key.font: UIFont.pretendardBodyMedium,
-        NSAttributedString.Key.foregroundColor: SettingSceneTheme.mainColor
-      ]
-    )
-    self.updateButton.setAttributedTitle(title, for: UIControl.State.normal)
-    self.updateButton.titleLabel?.translatesAutoresizingMaskIntoConstraints = false
-    self.updateButton.titleLabel?.centerYAnchor.constraint(
-      equalTo: self.updateButton.centerYAnchor
-    ).isActive = true
-    self.updateButton.titleLabel?.leadingAnchor.constraint(
-      equalTo: self.updateButton.leadingAnchor,
-      constant: SettingViewController.Constant.VersionInfoView.UpdateButton.leadingMargin
-    ).isActive = true
+    var configuration = UIButton.Configuration.plain()
+    var title = AttributedString(SettingSceneTheme.StringLiteral.VersionInfoView.updateButtonTitle)
+    title.font = UIFont.pretendardBodySemiBold
+    title.foregroundColor = SettingSceneTheme.mainColor
+    configuration.attributedTitle = title
+    configuration.cornerStyle = UIButton.Configuration.CornerStyle.large
+    self.updateButton.configuration = configuration
+    self.updateButton.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.leading
   }
 
   private func setupUpdateButtonAction() {
