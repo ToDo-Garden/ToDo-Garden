@@ -56,7 +56,12 @@ class EditToDoInteractorTests: XCTestCase {
   }
 
   func test_투두가_존재하면_투두를_성공적으로_수정하는가() throws {
-    let mockToDoWorker = MockToDoWorker()
+    let mockToDoWorker = MockToDoWorker(
+      editToDoValidationClosure: {
+        XCTAssert($0.name == EditToDoSceneTestData.Interactor.toDoNameForEdit)
+        XCTAssert($0.groupData == EditToDoSceneTestData.Interactor.groupForEdit)
+      }
+    )
     let mockGroupWorker = MockGroupWorker()
     let interactor = EditToDoInteractor(
       toDoWorker: mockToDoWorker,
@@ -67,10 +72,11 @@ class EditToDoInteractorTests: XCTestCase {
     )
     interactor.presenter = mockPresenter
     interactor.toDo = EditToDoSceneTestData.Interactor.toDo
+    let groupForEdit = EditToDoSceneTestData.Interactor.groupForEdit
     let request = EditToDo.CompleteEditToDo.Request(
-      toDoName: "투두",
+      toDoName: EditToDoSceneTestData.Interactor.toDoNameForEdit,
       displayedGroup: EditToDo.CompleteEditToDo.Request.DisplayedGroup(
-        id: 000, name: "그룹 1", color: UIColor.red
+        id: groupForEdit.id, name: groupForEdit.name, color: groupForEdit.color
       )
     )
 
@@ -90,10 +96,11 @@ class EditToDoInteractorTests: XCTestCase {
       }
     )
     interactor.presenter = mockPresenter
+    let group = EditToDoSceneTestData.Interactor.groupForEdit
     let request = EditToDo.CompleteEditToDo.Request(
-      toDoName: "투두",
+      toDoName: EditToDoSceneTestData.Interactor.toDoNameForEdit,
       displayedGroup: EditToDo.CompleteEditToDo.Request.DisplayedGroup(
-        id: 000, name: "그룹 1", color: UIColor.red
+        id: group.id, name: group.name, color: group.color
       )
     )
 
@@ -297,6 +304,16 @@ class MockToDoPresenter: EditToDoPresentationLogic {
 }
 
 struct MockToDoWorker: ToDoWorkLogic {
+  var editToDoValidationClosure: ((_ toDoForEdit: EditToDo.ToDo) -> Void)?
+
+  init(
+    editToDoValidationClosure: ((
+      _ toDoForEdit: EditToDo.ToDo
+    ) -> Void)? = { _ in XCTFail("editToDo unexpectedly called") }
+  ) {
+    self.editToDoValidationClosure = editToDoValidationClosure
+  }
+
   func fetchToDo(id: Int?) throws -> EditToDoSceneEntity.EditToDo.ToDo {
     return EditToDoSceneTestData.Interactor.toDo
   }
@@ -306,7 +323,7 @@ struct MockToDoWorker: ToDoWorkLogic {
   }
 
   func editToDo(_ toDo: EditToDoSceneEntity.EditToDo.ToDo) throws {
-
+    self.editToDoValidationClosure?(toDo)
   }
 }
 

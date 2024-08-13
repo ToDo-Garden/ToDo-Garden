@@ -36,5 +36,7 @@ enum EditToDoSceneTestData {
       groupList: groupList,
       repetitionViewState: .repeatOnlyToday
     )
+    static let toDoNameForEdit = "투두"
+    static let groupForEdit = EditToDo.Group(id: 000, name: "그룹 1", color: UIColor.red)
   }
 }
