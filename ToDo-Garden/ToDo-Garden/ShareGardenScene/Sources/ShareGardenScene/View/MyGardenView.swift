@@ -8,6 +8,7 @@
 import UIKit
 
 import TDUtility
+import ToDoGardenUIComponent
 import ToDoGardenUIResource
 
 extension ShareGardenSceneViewController {
@@ -25,6 +26,19 @@ extension ShareGardenSceneViewController {
       )
       
       return sectionHeaderView
+    }()
+    
+    private let profileInfoView: Styled.Row = {
+      let profileInfoView = Styled.Row(
+        configuration: Styled.Row.Configuration.profile(
+          Styled.Row.Configuration.ProfileModel.primary(
+            title: "이인우",
+            description: "함께하는 걸 좋아하는 iOS개발자"
+          )
+        )
+      )
+      
+      return profileInfoView
     }()
     
     // MARK: - Properties
@@ -65,6 +79,7 @@ extension ShareGardenSceneViewController.MyGardenView {
   
   private func addSubviews() {
     self.addArrangedSubview(self.sectionHeaderView)
+    self.addArrangedSubview(self.profileInfoView)
   }
 }
 
