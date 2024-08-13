@@ -32,7 +32,8 @@ public class CalendarView: UIView {
     self.heightConstraint = NSLayoutConstraint()
     self.calendarViewDelegate = CalendarViewSingleSelectionDelegate(
       collectionView: self.dateCollectionView,
-      collectionViewLayoutModel: model.collectionViewLayout
+      collectionViewLayoutModel: model.collectionViewLayout,
+      cellIdentifier: CalendarCollectionViewCell.identifier
     )
     super.init(frame: CGRect.zero)
     self.setup()

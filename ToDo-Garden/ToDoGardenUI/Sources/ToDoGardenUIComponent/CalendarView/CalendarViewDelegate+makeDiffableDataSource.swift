@@ -8,14 +8,14 @@
 import UIKit
 
 extension CalendarViewSingleSelectionDelegate {
-  func makeDiffableDataSource()
+  func makeDiffableDataSource(identifier: String)
   -> UICollectionViewDiffableDataSource<CalendarSection, CalendarItem> {
     return UICollectionViewDiffableDataSource<
       CalendarSection,
       CalendarItem
     >(collectionView: self.collectionView) { (collectionView, indexPath, dayItem) in
       guard let cell = collectionView.dequeueReusableCell(
-        withReuseIdentifier: CalendarCollectionViewCell.identifier,
+        withReuseIdentifier: identifier,
         for: indexPath
       ) as? CalendarCollectionViewCell
       else { return UICollectionViewCell() }

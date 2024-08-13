@@ -19,6 +19,7 @@ protocol CalendarViewControllable: UICollectionViewDelegate {
 }
 
 class CalendarViewSingleSelectionDelegate: NSObject {
+  private let cellIdentifier: String
   private let calendarDataGenerator: CalendarDataGeneratable
   private let collectionViewLayoutModel: CalendarView.Model.CollectionViewLayout
   
@@ -34,7 +35,8 @@ class CalendarViewSingleSelectionDelegate: NSObject {
   
   init(
     collectionView: UICollectionView,
-    collectionViewLayoutModel: CalendarView.Model.CollectionViewLayout
+    collectionViewLayoutModel: CalendarView.Model.CollectionViewLayout,
+    cellIdentifier: String
   ) {
     self.calendarDataGenerator = CalendarDataGenerator(calendar: Calendar.localeUpdated)
     self.dateFormatter = DateFormatter()
@@ -42,6 +44,7 @@ class CalendarViewSingleSelectionDelegate: NSObject {
     self.collectionView = collectionView
     self.currentIndexPath = IndexPath(item: 0, section: 3)
     self.initialContentOffset = CGPoint()
+    self.cellIdentifier = cellIdentifier
     super.init()
     self.setupDateFormatter()
     self.setupCollectionViewDataSource()
@@ -110,8 +113,8 @@ extension CalendarViewSingleSelectionDelegate {
 // MARK: Diffable DataSource
 
 extension CalendarViewSingleSelectionDelegate {
-  private func setupCollectionViewDataSource() {
-    self.collectionViewDataSource = self.makeDiffableDataSource()
+  func setupCollectionViewDataSource() {
+    self.collectionViewDataSource = self.makeDiffableDataSource(identifier: self.cellIdentifier)
     self.collectionView.dataSource = self.collectionViewDataSource
   }
   
