@@ -83,6 +83,10 @@ extension CalendarViewSingleSelectionDelegate: CalendarViewControllable {
     let dateString = formattedString[0] + " \(formattedString[1])"
     return String(dateString)
   }
+  
+  func getSelectedItem() -> CalendarItem? {
+    return self.selectedItem
+  }
 }
 
 // MARK: Private Functions
@@ -133,7 +137,7 @@ extension CalendarViewSingleSelectionDelegate {
     else { return }
     
     guard let deletedSnapshot = try? self.deleteSections(to: self.collectionViewDataSource.snapshot()),
-          let updatedSnapshot = try? self.insertNewSection(to: deletedSnapshot)
+      let updatedSnapshot = try? self.insertNewSection(to: deletedSnapshot)
     else { return }
     
     self.currentIndexPath.section = 3
