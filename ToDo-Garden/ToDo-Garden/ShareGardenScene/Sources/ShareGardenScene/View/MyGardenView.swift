@@ -65,6 +65,8 @@ extension ShareGardenSceneViewController {
   }
 }
 
+// MARK: - Setup view appearance
+
 extension ShareGardenSceneViewController.MyGardenView {
   private func setup() {
     self.setupStackView()
@@ -84,6 +86,8 @@ extension ShareGardenSceneViewController.MyGardenView {
   }
 }
 
+// MARK: - Setup layout constraints
+
 extension ShareGardenSceneViewController.MyGardenView {
   private func setupLayoutConstraints() {
     self.setupSectionHeaderViewLayoutConstraints()
@@ -102,6 +106,8 @@ extension ShareGardenSceneViewController.MyGardenView {
     self.sectionHeaderView.isLayoutMarginsRelativeArrangement = true
   }
 }
+
+// MARK: - Setup shimmer
 
 extension ShareGardenSceneViewController.MyGardenView {
   private func setupShimmering() {
