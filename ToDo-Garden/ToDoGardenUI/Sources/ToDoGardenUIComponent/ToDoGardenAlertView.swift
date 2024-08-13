@@ -284,4 +284,8 @@ extension ToDoGardenAlertView.Configuration {
   public static let askToStopResting: Self = ToDoGardenAlertView.Configuration.init(
     contents: Constant.ToDoGardenAlertView.Content.askToStopResting.viewState
   )
+
+  public static let failToFetchToDo: Self = ToDoGardenAlertView.Configuration.init(
+    contents: Constant.ToDoGardenAlertView.Content.failToFetchToDo.viewState
+  )
 }

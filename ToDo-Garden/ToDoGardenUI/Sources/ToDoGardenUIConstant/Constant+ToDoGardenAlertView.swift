@@ -19,6 +19,7 @@ extension Constant.ToDoGardenAlertView {
     case askToUnsubscribe
     case askToLogout
     case askToStopResting
+    case failToFetchToDo
   }
 }
 
@@ -85,6 +86,7 @@ extension Constant.ToDoGardenAlertView.Content {
     case unsubscribe
     case logout
     case stopConcentration
+    case retry
   }
   
   private struct Layout {
@@ -254,6 +256,25 @@ extension Constant.ToDoGardenAlertView.Content {
         buttons: [
           ButtonLabelState(text: "홈으로", isRed: true, buttonActionType: ButtonActionType.goHome),
           ButtonLabelState(text: "집중하기", isRed: false, buttonActionType: ButtonActionType.keepConcentration)
+        ],
+        stackView: StackViewState(isHorizontal: true, height: layoutConstant.stackviewHeightForHorizontal)
+      )
+    
+    case .failToFetchToDo:
+      return ViewState(
+        backPlane: BackPlaneState(
+          width: layoutConstant.commonWidth,
+          height: layoutConstant.heightForHorizontal,
+          cornerRadius: layoutConstant.cornerRadius
+        ),
+        title: TitleViewState(text: "투두 조회 실패", topMargin: layoutConstant.titleTopMarginForHorizontal),
+        description: DescriptionViewState(
+          text: "투두 정보를\n받아오지 못 했어요.",
+          topMargin: layoutConstant.descriptionTopMarginForHorizontal
+        ),
+        buttons: [
+          ButtonLabelState(text: "재시도", isRed: false, buttonActionType: ButtonActionType.retry),
+          ButtonLabelState(text: "홈으로", isRed: true, buttonActionType: ButtonActionType.goHome)
         ],
         stackView: StackViewState(isHorizontal: true, height: layoutConstant.stackviewHeightForHorizontal)
       )
