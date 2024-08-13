@@ -13,7 +13,7 @@ public struct TimerSceneWorker: TimerSceneWorkable, Sendable {
 extension TimerSceneWorker {
   static let live = Self { seconds in
     return Timer
-      .publish(every: 1, on: .main, in: .common)
+      .publish(every: 1, on: RunLoop.main, in: RunLoop.Mode.common)
       .autoconnect()
       .scan(seconds) { value, _ in
         max(value - 1, 0)
