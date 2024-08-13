@@ -13,7 +13,7 @@ class CalendarCollectionViewCell: UICollectionViewCell, ReusableIdentifier {
   private var toDoExistenceView: UIView
   private var isThisMonth: Bool
   var dayLabel: UILabel
-  
+
   override var isSelected: Bool {
     willSet {
       if newValue {
@@ -23,7 +23,7 @@ class CalendarCollectionViewCell: UICollectionViewCell, ReusableIdentifier {
       }
     }
   }
-  
+
   override init(frame: CGRect) {
     self.toDoExistenceView = UIView()
     self.dayLabel = UILabel()
@@ -31,22 +31,22 @@ class CalendarCollectionViewCell: UICollectionViewCell, ReusableIdentifier {
     super.init(frame: CGRect.zero)
     self.setup()
   }
-  
+
   @available(*, unavailable)
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   override func prepareForReuse() {
     super.prepareForReuse()
     self.isThisMonth = true
     self.deSelected()
   }
-  
+
   func updateText(with dayString: String) {
     self.dayLabel.text = dayString
   }
-  
+
   func updateTextColor(with isThisMonth: Bool) {
     if isThisMonth == false {
       self.isThisMonth = false
@@ -62,13 +62,13 @@ extension CalendarCollectionViewCell {
     self.backgroundColor = UIColor.toDoGardenGreenDark
     self.dayLabel.textColor = UIColor.toDoGardenWhite
   }
-  
+
   private func deSelected() {
     self.backgroundColor = UIColor.toDoGardenWhite
     let textColor = self.isThisMonth ? UIColor.toDoGardenGreenDark : UIColor.toDoGardenGreenGray
     self.dayLabel.textColor = textColor
   }
-  
+
   private func setup() {
     self.setupLayer()
     self.setupToDoExistenceView()
@@ -76,16 +76,16 @@ extension CalendarCollectionViewCell {
     self.addSubviews()
     self.setupSubviewsLayout()
   }
-  
+
   private func setupLayer() {
     self.layer.cornerRadius = Constant.CalendarView.Layout.CollectionViewCell.cornerRadius
   }
-  
+
   private func setupDayLabel() {
     self.dayLabel.font = UIFont.pretendardBodySemiBold
     self.dayLabel.textColor = UIColor.toDoGardenGreenDark
   }
-  
+
   private func setupToDoExistenceView() {
     self.toDoExistenceView.backgroundColor = UIColor.toDoGardenGray3
     let cornerRadius = Constant.CalendarView.Layout.CollectionViewCell.ToDoExistenceView.cornerRadius
@@ -101,12 +101,12 @@ extension CalendarCollectionViewCell {
     self.addSubview(self.toDoExistenceView)
     self.addSubview(self.dayLabel)
   }
-  
+
   private func setupSubviewsLayout() {
     self.setupToDoExistenceViewLayout()
     self.setupDayLabelLayout()
   }
-  
+
   private func setupToDoExistenceViewLayout() {
     self.toDoExistenceView.usingAutolayout()
     
@@ -123,7 +123,7 @@ extension CalendarCollectionViewCell {
       ]
     )
   }
-  
+
   private func setupDayLabelLayout() {
     self.dayLabel.usingAutolayout()
     

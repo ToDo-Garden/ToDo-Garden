@@ -29,7 +29,7 @@ extension CalendarViewSingleSelectionDelegate {
       return cell
     }
   }
-  
+
   private func makeDayString(from date: Date) -> String {
     let formattedDateString = self.dateFormatter.string(from: date).split(separator: " ")
     guard let dayString = formattedDateString.last
@@ -37,7 +37,7 @@ extension CalendarViewSingleSelectionDelegate {
     
     return String(dayString)
   }
-  
+
   private func updateCellToSelected(with item: CalendarItem?) {
     guard let selectedItem = item
     else { return }
@@ -51,7 +51,7 @@ extension CalendarViewSingleSelectionDelegate {
       scrollPosition: []
     )
   }
-  
+
   private func getIndexPath(of item: CalendarItem) -> IndexPath? {
     let snapshot = self.collectionViewDataSource.snapshot()
     let section = snapshot.sectionIdentifiers[self.currentIndexPath.section]

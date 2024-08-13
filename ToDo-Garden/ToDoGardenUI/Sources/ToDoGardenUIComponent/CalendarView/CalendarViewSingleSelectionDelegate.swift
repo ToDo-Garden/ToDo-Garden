@@ -58,7 +58,7 @@ extension CalendarViewSingleSelectionDelegate: CalendarViewControllable {
   func fetchWeekdaySymbols() -> [String] {
     return self.calendarDataGenerator.fetchWeekdaySymbols()
   }
-  
+
   func scrollCalendar(to scrollDirection: CalendarScrollDirection, animated: Bool) {
     self.currentIndexPath.section += scrollDirection.rawValue
     self.collectionView.scrollToItem(
@@ -68,14 +68,14 @@ extension CalendarViewSingleSelectionDelegate: CalendarViewControllable {
     )
     self.scrollDelegate?.didScroll()
   }
-  
+
   func getCollectionViewHeight() -> CGFloat {
     let snapshot = self.collectionViewDataSource.snapshot()
     let currentSection = snapshot.sectionIdentifiers[self.currentIndexPath.section]
     let itemCount = snapshot.itemIdentifiers(inSection: currentSection).count
     return self.calculateHeight(items: itemCount)
   }
-  
+
   func getDateString() -> String {
     let snapShot = self.collectionViewDataSource.snapshot()
     let currentSectionDate = snapShot.sectionIdentifiers[self.currentIndexPath.section].firstDay
@@ -83,7 +83,7 @@ extension CalendarViewSingleSelectionDelegate: CalendarViewControllable {
     let dateString = formattedString[0] + " \(formattedString[1])"
     return String(dateString)
   }
-  
+
   func getSelectedItem() -> CalendarItem? {
     return self.selectedItem
   }
@@ -102,7 +102,7 @@ extension CalendarViewSingleSelectionDelegate {
     
     self.dateFormatter.dateFormat = Constant.CalendarView.StringLiteral.dateFormat
   }
-  
+
   private func calculateHeight(items count: Int) -> CGFloat {
     let numberOfRows = CGFloat(count / 7)
     let totalItemHeight = self.collectionViewLayoutModel.itemSize.height * numberOfRows
@@ -121,7 +121,7 @@ extension CalendarViewSingleSelectionDelegate {
     self.collectionViewDataSource = self.makeDiffableDataSource(identifier: self.cellIdentifier)
     self.collectionView.dataSource = self.collectionViewDataSource
   }
-  
+
   private func loadInitialMonthSnapshot() {
     let snapshot = self.collectionViewDataSource.snapshot()
     let dateRange = (-3...3)
@@ -130,7 +130,7 @@ extension CalendarViewSingleSelectionDelegate {
     
     self.collectionViewDataSource.apply(newSnapshot)
   }
-  
+
   private func reloadAllSnapshot() {
     let lastSection = self.collectionViewDataSource.snapshot().sectionIdentifiers.count - 1
     guard self.currentIndexPath.section <= 0 || self.currentIndexPath.section >= lastSection
@@ -149,7 +149,7 @@ extension CalendarViewSingleSelectionDelegate {
       self.moveToCurrentMonth()
     }
   }
-  
+
   private func deleteSections(
     to snapshot: NSDiffableDataSourceSnapshot<CalendarSection, CalendarItem>
   ) throws -> NSDiffableDataSourceSnapshot<CalendarSection, CalendarItem> {
@@ -167,7 +167,7 @@ extension CalendarViewSingleSelectionDelegate {
     
     return newSnapshot
   }
-  
+
   private func insertNewSection(
     to snapshot: NSDiffableDataSourceSnapshot<CalendarSection, CalendarItem>
   ) throws -> NSDiffableDataSourceSnapshot<CalendarSection, CalendarItem> {
@@ -178,7 +178,7 @@ extension CalendarViewSingleSelectionDelegate {
       isAppendFirst: isAppendFirst
     )
   }
-  
+
   private func addMonthData(
     to snapshot: NSDiffableDataSourceSnapshot<CalendarSection, CalendarItem>,
     with dateRange: ClosedRange<Int>,
@@ -213,7 +213,7 @@ extension CalendarViewSingleSelectionDelegate {
     
     return newSnapshot
   }
-  
+
   private func moveToCurrentMonth() {
     let currentMonthOffset = CGPoint(
       x: self.collectionView.frame.width * 3,
@@ -229,7 +229,7 @@ extension CalendarViewSingleSelectionDelegate: UICollectionViewDelegate {
   func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
     self.initialContentOffset = scrollView.contentOffset
   }
-  
+
   func scrollViewWillEndDragging(
     _ scrollView: UIScrollView,
     withVelocity velocity: CGPoint,
@@ -250,7 +250,7 @@ extension CalendarViewSingleSelectionDelegate: UICollectionViewDelegate {
     self.currentIndexPath.section += scrollDirection.rawValue
     self.scrollDelegate?.didScroll()
   }
-  
+
   private func calculateScrollDireciton(
     _ contentOffset: CGFloat,
     _ targetContentOffset: CGFloat,
@@ -269,11 +269,11 @@ extension CalendarViewSingleSelectionDelegate: UICollectionViewDelegate {
     return contentOffset > targetContentOffset ?
     CalendarScrollDirection.left : CalendarScrollDirection.right
   }
-  
+
   func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
     self.reloadAllSnapshot()
   }
-  
+
   func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
     self.reloadAllSnapshot()
   }
@@ -292,7 +292,7 @@ extension CalendarViewSingleSelectionDelegate {
     self.scrollCalendar(to: scrollDirection, animated: true)
     self.selectedItem = selectedNewItem
   }
-  
+
   private func getScrollDirection(
     selectedItem: CalendarItem,
     section indexPath: IndexPath
