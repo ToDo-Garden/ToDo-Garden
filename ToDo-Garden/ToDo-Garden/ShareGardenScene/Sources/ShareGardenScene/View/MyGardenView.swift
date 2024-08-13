@@ -60,7 +60,7 @@ extension ShareGardenSceneViewController.MyGardenView {
     self.spacing = 14
     self.distribution = UIStackView.Distribution.fillEqually
     self.axis = NSLayoutConstraint.Axis.vertical
-    self.alignment = UIStackView.Alignment.center
+    self.alignment = UIStackView.Alignment.fill
   }
   
   private func addSubviews() {
@@ -74,12 +74,15 @@ extension ShareGardenSceneViewController.MyGardenView {
   }
   
   private func setupSectionHeaderViewLayoutConstraints() {
-    let leadingMargin: CGFloat = self.bounds.width * (28 / 375)
-    let trailingMargin: CGFloat = self.bounds.width * (24 / 375)
+    let leftInset: CGFloat = self.bounds.width * (28 / 375)
+    let rightInset: CGFloat = self.bounds.width * (24 / 375)
     
-    NSLayoutConstraint.activate([
-      self.sectionHeaderView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: leadingMargin),
-      self.sectionHeaderView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -trailingMargin)
-    ])
+    self.sectionHeaderView.layoutMargins = UIEdgeInsets(
+      top: CGFloat.zero,
+      left: leftInset,
+      bottom: CGFloat.zero,
+      right: rightInset
+    )
+    self.sectionHeaderView.isLayoutMarginsRelativeArrangement = true
   }
 }
