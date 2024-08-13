@@ -15,13 +15,23 @@ protocol SettingDisplayLogic: AnyObject {
   func displaySomething(viewModel: Setting.Something.ViewModel)
 }
 
-class SettingViewController: UIViewController, SettingViewControllable {
+final class SettingViewController: UIViewController, SettingViewControllable {
+  private(set) var profileRow: Styled.Row
+
   var interactor: SettingBusinessLogic?
   var router: (SettingRoutingLogic & SettingDataPassing)?
   
   // MARK: - Object lifecycle
   
   init() {
+    self.profileRow = Styled.Row(
+      configuration: Styled.Row.Configuration.profile(
+        Styled.Row.Configuration.ProfileModel.primary(
+          title: "",
+          description: SettingSceneTheme.StringLiteral.ProfileRow.description
+        )
+      )
+    )
     super.init(nibName: nil, bundle: nil)
   }
   
