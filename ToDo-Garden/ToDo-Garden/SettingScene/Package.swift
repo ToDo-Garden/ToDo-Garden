@@ -35,7 +35,10 @@ let package = Package(
       name: "SettingScene",
       dependencies: [
         "SettingSceneAPI",
-        "SettingSceneEntity"
+        "SettingSceneEntity",
+        .product(name: "ToDoGardenUIAPI", package: "ToDoGardenUI"),
+        .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI"),
+        .product(name: "ToDoGardenUIResource", package: "ToDoGardenUI")
       ]
     ),
     .testTarget(
