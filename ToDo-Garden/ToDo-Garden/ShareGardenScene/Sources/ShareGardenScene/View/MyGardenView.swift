@@ -54,6 +54,7 @@ extension ShareGardenSceneViewController {
       super.layoutSubviews()
       self.setupLayoutIfNeeded = {
         self.setupLayoutConstraints()
+        self.setupShimmering()
       }
     }
     
@@ -99,5 +100,22 @@ extension ShareGardenSceneViewController.MyGardenView {
       right: rightInset
     )
     self.sectionHeaderView.isLayoutMarginsRelativeArrangement = true
+  }
+}
+
+extension ShareGardenSceneViewController.MyGardenView {
+  private func setupShimmering() {
+    self.setupProfileInfoViewShimmering()
+  }
+  
+  private func setupProfileInfoViewShimmering() {
+    var stack = profileInfoView.subviews
+    
+    while stack.isEmpty == false {
+      let currentView = stack.removeLast()
+      currentView.isShimmering = true
+      
+      stack.append(contentsOf: currentView.subviews)
+    }
   }
 }
