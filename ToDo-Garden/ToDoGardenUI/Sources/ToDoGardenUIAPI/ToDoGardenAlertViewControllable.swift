@@ -11,6 +11,7 @@ public protocol ToDoGardenAlertViewControllable: ViewControllable {
   var delegate: ToDoGardenAlertControllerDelegate? { get set }
 }
 
+@MainActor
 public protocol ToDoGardenAlertControllerDelegate: AnyObject {
   func handleButtonAction(_ buttonType: Constant.ToDoGardenAlertView.Content.ButtonActionType)
 }

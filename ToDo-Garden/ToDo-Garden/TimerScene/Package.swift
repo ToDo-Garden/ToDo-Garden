@@ -20,7 +20,8 @@ let package = Package(
         "TimerSceneEntity",
         "TimerSceneAPI",
         .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI")
-      ]
+      ],
+      swiftSettings: [.enableExperimentalFeature("StrictConcurrency")]
     ),
     .target(
       name: "TimerSceneAPI",
