@@ -80,7 +80,7 @@ protocol CalendarScrollSendable: AnyObject {
 }
 
 extension CalendarView: CalendarScrollSendable {
-  @objc func didScroll() {
+  func didScroll() {
     self.updateCollectionViewHeight()
     self.updateMonthLabelText()
   }
