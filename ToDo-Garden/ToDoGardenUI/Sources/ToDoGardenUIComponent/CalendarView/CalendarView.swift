@@ -9,17 +9,17 @@ import UIKit
 
 import ToDoGardenUIConstant
 
-public final class CalendarView: UIView {
+public class CalendarView: UIView {
   private let model: Model
-  private let calendarViewDelegate: CalendarViewControllable
   private var isLayoutSubviewsCalled: Bool
-
   private let monthLabel: UILabel
   private let leftScrollButton: UIButton
   private let rightScrollButton: UIButton
   private let weekdaySymbolStackView: UIStackView
-  private let dateCollectionView: UICollectionView
   private var heightConstraint: NSLayoutConstraint
+  
+  let dateCollectionView: UICollectionView
+  var calendarViewDelegate: CalendarViewControllable
 
   public init(model: Model) {
     self.model = model
@@ -67,7 +67,7 @@ extension CalendarView {
     self.setupCollectionViewScrollDelegate()
   }
 
-  private func setupCollectionViewScrollDelegate() {
+  func setupCollectionViewScrollDelegate() {
     self.calendarViewDelegate.scrollDelegate = self
   }
 }
@@ -79,7 +79,7 @@ protocol CalendarScrollSendable: AnyObject {
 }
 
 extension CalendarView: CalendarScrollSendable {
-  func didScroll() {
+  @objc func didScroll() {
     self.updateCollectionViewHeight()
     self.updateMonthLabelText()
   }
