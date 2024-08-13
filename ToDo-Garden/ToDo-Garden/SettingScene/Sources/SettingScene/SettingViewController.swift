@@ -9,15 +9,13 @@ import UIKit
 
 import SettingSceneAPI
 import SettingSceneEntity
+import ToDoGardenUIComponent
 
 protocol SettingDisplayLogic: AnyObject {
   func displaySomething(viewModel: Setting.Something.ViewModel)
 }
 
 class SettingViewController: UIViewController, SettingViewControllable {
-  
-  // MARK: - VIP Properties
-  
   var interactor: SettingBusinessLogic?
   var router: (SettingRoutingLogic & SettingDataPassing)?
   

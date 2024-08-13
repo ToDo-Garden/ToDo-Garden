@@ -19,6 +19,7 @@ extension SettingSceneTheme {
 
 extension SettingSceneTheme.StringLiteral {
   enum AppSupportView {}
+  enum SettingLabel {}
   enum UserGuideButton {}
   enum UserSettingView {}
   enum VersionInfoView {}
@@ -30,6 +31,10 @@ extension SettingSceneTheme.StringLiteral.AppSupportView {
   static let privacyPolicyButtonTitle = "개인정보 처리 방침"
   static let termsOfUseButtonTitle = "서비스 이용 약관"
   static let sendFeedbackButtonTitle = "피드백 보내기"
+}
+
+extension SettingSceneTheme.StringLiteral.SettingLabel {
+  static let text = "설정"
 }
 
 extension SettingSceneTheme.StringLiteral.UserGuideButton {

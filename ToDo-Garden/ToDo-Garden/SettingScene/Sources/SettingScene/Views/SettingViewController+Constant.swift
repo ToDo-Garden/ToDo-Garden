@@ -16,6 +16,7 @@ extension SettingViewController.Constant {
   enum UserGuideButton {}
   enum UserSettingView {}
   enum SettingButtonStackView {}
+  enum SettingLabel {}
   enum VersionInfoView {}
 }
 
@@ -67,6 +68,10 @@ extension SettingViewController.Constant.SettingButtonStackView {
 
   static let spacing: CGFloat = 1.0
   static let buttonHeight: CGFloat = 40
+}
+
+extension SettingViewController.Constant.SettingLabel {
+  static let topMargin: CGFloat = 21
 }
 
 extension SettingViewController.Constant.VersionInfoView {
