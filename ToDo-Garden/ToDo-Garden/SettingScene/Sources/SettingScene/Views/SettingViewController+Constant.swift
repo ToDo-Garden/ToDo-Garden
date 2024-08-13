@@ -40,6 +40,9 @@ extension SettingViewController.Constant.UserGuideButton {
 
   static let spacing: CGFloat = 3
   static let layoutMargins = UIEdgeInsets(top: 7, left: 11, bottom: 7, right: 8)
+
+  static let topMargin: CGFloat = 21
+  static let height: CGFloat = 40
 }
 
 extension SettingViewController.Constant.UserSettingView {

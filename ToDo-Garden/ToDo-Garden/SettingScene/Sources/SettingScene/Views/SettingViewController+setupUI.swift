@@ -12,6 +12,7 @@ import ToDoGardenUIComponent
 extension SettingViewController {
   func setupUI() {
     self.setupSettingLabel()
+    self.setupUserGuideButton()
   }
 }
 
@@ -24,12 +25,18 @@ extension SettingViewController {
     self.setupSettingLabelLayout(settingLabel)
     self.setupProfileRowLayout(settingLabel)
   }
+
+  private func setupUserGuideButton() {
+    let userGuideButton = UserGuideButton()
+    self.setupUserGuideButtonLayout(userGuideButton)
+  }
 }
 
 // MARK: Auto Layout
 
 extension SettingViewController {
   private func setupSettingLabelLayout(_ label: UILabel) {
+    self.view.addSubview(label)
     label.usingAutolayout()
 
     NSLayoutConstraint.activate(
@@ -45,6 +52,7 @@ extension SettingViewController {
   }
 
   private func setupProfileRowLayout(_ label: UILabel) {
+    self.view.addSubview(self.profileRow)
     self.profileRow.usingAutolayout()
 
     NSLayoutConstraint.activate(
@@ -61,6 +69,23 @@ extension SettingViewController {
           equalTo: self.view.safeAreaLayoutGuide.trailingAnchor,
           constant: -Constant.ProfileRow.trailingMargin
         )
+      ]
+    )
+  }
+
+  private func setupUserGuideButtonLayout(_ userGuideButton: UIView) {
+    self.view.addSubview(userGuideButton)
+    userGuideButton.usingAutolayout()
+
+    NSLayoutConstraint.activate(
+      [
+        userGuideButton.topAnchor.constraint(
+          equalTo: self.profileRow.bottomAnchor,
+          constant: Constant.UserGuideButton.topMargin
+        ),
+        userGuideButton.leadingAnchor.constraint(equalTo: self.profileRow.leadingAnchor),
+        userGuideButton.trailingAnchor.constraint(equalTo: self.profileRow.trailingAnchor),
+        userGuideButton.heightAnchor.constraint(equalToConstant: Constant.UserGuideButton.height)
       ]
     )
   }

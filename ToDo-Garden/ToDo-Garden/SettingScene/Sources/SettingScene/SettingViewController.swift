@@ -44,6 +44,7 @@ final class SettingViewController: UIViewController, SettingViewControllable {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    self.setupUI()
     self.doSomething()
   }
 }
