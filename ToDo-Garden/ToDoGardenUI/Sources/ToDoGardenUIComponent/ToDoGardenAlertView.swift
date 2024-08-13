@@ -288,4 +288,8 @@ extension ToDoGardenAlertView.Configuration {
   public static let failToFetchToDo: Self = ToDoGardenAlertView.Configuration.init(
     contents: Constant.ToDoGardenAlertView.Content.failToFetchToDo.viewState
   )
+
+  public static let temporaryErrorOccured: Self = ToDoGardenAlertView.Configuration.init(
+    contents: Constant.ToDoGardenAlertView.Content.temporaryErrorOccured.viewState
+  )
 }

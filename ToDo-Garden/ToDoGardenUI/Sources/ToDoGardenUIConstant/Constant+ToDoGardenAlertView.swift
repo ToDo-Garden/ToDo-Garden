@@ -20,6 +20,7 @@ extension Constant.ToDoGardenAlertView {
     case askToLogout
     case askToStopResting
     case failToFetchToDo
+    case temporaryErrorOccured
   }
 }
 
@@ -274,6 +275,25 @@ extension Constant.ToDoGardenAlertView.Content {
         ),
         buttons: [
           ButtonLabelState(text: "재시도", isRed: false, buttonActionType: ButtonActionType.retry),
+          ButtonLabelState(text: "홈으로", isRed: true, buttonActionType: ButtonActionType.goHome)
+        ],
+        stackView: StackViewState(isHorizontal: true, height: layoutConstant.stackviewHeightForHorizontal)
+      )
+
+    case .temporaryErrorOccured:
+      return ViewState(
+        backPlane: BackPlaneState(
+          width: layoutConstant.commonWidth,
+          height: layoutConstant.heightForHorizontal,
+          cornerRadius: layoutConstant.cornerRadius
+        ),
+        title: TitleViewState(text: "오류 발생", topMargin: layoutConstant.titleTopMarginForHorizontal),
+        description: DescriptionViewState(
+          text: "잠시 후\n다시 시도해주세요!",
+          topMargin: layoutConstant.descriptionTopMarginForHorizontal
+        ),
+        buttons: [
+          ButtonLabelState(text: "확인했어요", isRed: false, buttonActionType: ButtonActionType.cancel),
           ButtonLabelState(text: "홈으로", isRed: true, buttonActionType: ButtonActionType.goHome)
         ],
         stackView: StackViewState(isHorizontal: true, height: layoutConstant.stackviewHeightForHorizontal)
