@@ -36,6 +36,14 @@ extension DateRangeSelectionDelegate {
       self.updateSingleSelection(visibleCells: visibleCells, startIndexPaths: startIndexPaths)
     }
   }
+  
+  func clearSelection() {
+    let selectedIndexPaths = self.collectionView.indexPathsForSelectedItems ?? []
+    for indexPath in selectedIndexPaths {
+      self.collectionView.deselectItem(at: indexPath, animated: false)
+    }
+  }
+  
   private func getVisibleCells(isAfterReload: Bool) -> [DateRangeCollectionViewCell] {
     if isAfterReload {
       let newSection = 3
