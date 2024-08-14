@@ -13,7 +13,19 @@ public final class DateRangePickerCalender: CalendarView {
   
   public override init(model: CalendarView.Model) {
     super.init(model: model)
-
+    self.calendarViewDelegate = DateRangeSelectionDelegate(
+      collectionView: self.dateCollectionView,
+      collectionViewLayoutModel: model.collectionViewLayout,
+      cellIdentifier: DateRangeCollectionViewCell.identifier
+    )
+    self.setupCollectionViewScrollDelegate()
+    self.dateCollectionView.delegate = self.calendarViewDelegate
+    self.dateCollectionView.allowsMultipleSelection = true
+    self.layer.borderWidth = CGFloat.zero
+    self.dateCollectionView.register(
+      DateRangeCollectionViewCell.self,
+      forCellWithReuseIdentifier: DateRangeCollectionViewCell.identifier
+    )
   }
   
   @available(*, deprecated)
