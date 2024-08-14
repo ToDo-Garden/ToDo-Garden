@@ -54,6 +54,9 @@ extension SettingViewController.Constant.UserSettingView {
   enum SettingButtonStackView {
     static let topMargin: CGFloat = 4
   }
+
+  static let topMargin: CGFloat = 22
+  static let height: CGFloat = 101
 }
 
 extension SettingViewController.Constant.SettingButtonStackView {
