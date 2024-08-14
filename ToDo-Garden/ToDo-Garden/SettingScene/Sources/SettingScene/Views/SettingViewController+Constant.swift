@@ -96,6 +96,10 @@ extension SettingViewController.Constant.VersionInfoView {
     static let leadingMargin: CGFloat = 21
     static let height: CGFloat = 40
   }
+
+  static let topMargin: CGFloat = 22
+  static let leadingMargin: CGFloat = 4
+  static let height: CGFloat = 81
 }
 
 extension SettingViewController.Constant.ProfileRow {

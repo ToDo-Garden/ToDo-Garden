@@ -41,6 +41,7 @@ extension SettingViewController {
   private func setupAppSupportView(with userSettingView: UIView) {
     let appSupportView = AppSupportView()
     self.setupAppSupportViewLayout(appSupportView, with: userSettingView)
+    self.setupVersionInfoViewLayout(with: appSupportView)
   }
 }
 
@@ -132,6 +133,26 @@ extension SettingViewController {
         appSupportView.leadingAnchor.constraint(equalTo: self.profileRow.leadingAnchor),
         appSupportView.trailingAnchor.constraint(equalTo: self.profileRow.trailingAnchor),
         appSupportView.heightAnchor.constraint(equalToConstant: Constant.AppSupportView.height)
+      ]
+    )
+  }
+
+  private func setupVersionInfoViewLayout(with appSupportView: UIView) {
+    self.view.addSubview(self.versionInfoView)
+    self.versionInfoView.usingAutolayout()
+
+    NSLayoutConstraint.activate(
+      [
+        self.versionInfoView.topAnchor.constraint(
+          equalTo: appSupportView.bottomAnchor,
+          constant: Constant.VersionInfoView.topMargin
+        ),
+        self.versionInfoView.leadingAnchor.constraint(
+          equalTo: appSupportView.leadingAnchor,
+          constant: -Constant.VersionInfoView.leadingMargin
+        ),
+        self.versionInfoView.trailingAnchor.constraint(equalTo: appSupportView.trailingAnchor),
+        self.versionInfoView.heightAnchor.constraint(equalToConstant: Constant.VersionInfoView.height)
       ]
     )
   }

@@ -17,6 +17,7 @@ protocol SettingDisplayLogic: AnyObject {
 
 final class SettingViewController: UIViewController, SettingViewControllable {
   private(set) var profileRow: Styled.Row
+  private(set) var versionInfoView: VersionInfoView
 
   var interactor: SettingBusinessLogic?
   var router: (SettingRoutingLogic & SettingDataPassing)?
@@ -32,6 +33,7 @@ final class SettingViewController: UIViewController, SettingViewControllable {
         )
       )
     )
+    self.versionInfoView = VersionInfoView()
     super.init(nibName: nil, bundle: nil)
   }
   
