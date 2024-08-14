@@ -1,5 +1,5 @@
 //
-//  DateRangePickerCalender.swift
+//  DateRangePickerCalendar.swift
 //
 //
 //  Created by SONG on 8/5/24.
@@ -9,7 +9,7 @@ import UIKit
 
 import ToDoGardenUIConstant
 
-public final class DateRangePickerCalender: CalendarView {
+public final class DateRangePickerCalendar: CalendarView {
   
   public override init(model: CalendarView.Model) {
     super.init(model: model)
@@ -37,7 +37,7 @@ public final class DateRangePickerCalender: CalendarView {
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  let calendarView = DateRangePickerCalender(model: CalendarView.Model.primary)
+  let calendarView = DateRangePickerCalendar(model: CalendarView.Model.primary)
   calendarView.widthAnchor.constraint(equalToConstant: 323).isActive = true
   return calendarView
 }
