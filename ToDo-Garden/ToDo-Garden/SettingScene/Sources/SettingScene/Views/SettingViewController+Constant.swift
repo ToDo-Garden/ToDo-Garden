@@ -82,6 +82,7 @@ extension SettingViewController.Constant.SettingButtonStackView {
 
 extension SettingViewController.Constant.SettingLabel {
   static let topMargin: CGFloat = 21
+  static let leadingMargin: CGFloat = 28
 }
 
 extension SettingViewController.Constant.VersionInfoView {
@@ -103,7 +104,11 @@ extension SettingViewController.Constant.VersionInfoView {
 }
 
 extension SettingViewController.Constant.ProfileRow {
+  enum Layer {
+    static let cornerRadius: CGFloat = 10
+    static let borderWidth: CGFloat = 1.0
+  }
+
   static let topMargin: CGFloat = 15
-  static let leadingMargin: CGFloat = 28
   static let trailingMargin: CGFloat = 28
 }

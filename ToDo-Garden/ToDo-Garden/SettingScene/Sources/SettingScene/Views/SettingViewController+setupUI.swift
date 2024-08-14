@@ -12,6 +12,7 @@ import ToDoGardenUIComponent
 extension SettingViewController {
   func setupUI() {
     self.setupSettingLabel()
+    self.setupProfileRowUI()
     self.setupUserGuideButton()
   }
 }
@@ -24,6 +25,12 @@ extension SettingViewController {
     settingLabel.textColor = SettingSceneTheme.mainColor
     self.setupSettingLabelLayout(settingLabel)
     self.setupProfileRowLayout(settingLabel)
+  }
+
+  private func setupProfileRowUI() {
+    self.profileRow.layer.cornerRadius = Constant.ProfileRow.Layer.cornerRadius
+    self.profileRow.layer.borderWidth = Constant.ProfileRow.Layer.borderWidth
+    self.profileRow.layer.borderColor = UIColor.toDoGardenGreenBackground.cgColor
   }
 
   private func setupUserGuideButton() {
@@ -58,8 +65,10 @@ extension SettingViewController {
           equalTo: self.view.safeAreaLayoutGuide.topAnchor,
           constant: Constant.SettingLabel.topMargin
         ),
-        label.leadingAnchor.constraint(equalTo: self.profileRow.leadingAnchor),
-        label.trailingAnchor.constraint(equalTo: self.profileRow.trailingAnchor)
+        label.leadingAnchor.constraint(
+          equalTo: self.view.safeAreaLayoutGuide.leadingAnchor,
+          constant: Constant.SettingLabel.leadingMargin
+        )
       ]
     )
   }
@@ -74,10 +83,7 @@ extension SettingViewController {
           equalTo: label.bottomAnchor,
           constant: Constant.ProfileRow.topMargin
         ),
-        self.profileRow.leadingAnchor.constraint(
-          equalTo: self.view.safeAreaLayoutGuide.leadingAnchor,
-          constant: Constant.ProfileRow.leadingMargin
-        ),
+        self.profileRow.leadingAnchor.constraint(equalTo: label.leadingAnchor),
         self.profileRow.trailingAnchor.constraint(
           equalTo: self.view.safeAreaLayoutGuide.trailingAnchor,
           constant: -Constant.ProfileRow.trailingMargin
