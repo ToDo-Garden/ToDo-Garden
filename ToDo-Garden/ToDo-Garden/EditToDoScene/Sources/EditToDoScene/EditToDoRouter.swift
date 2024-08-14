@@ -10,7 +10,6 @@ import Foundation
 import EditToDoSceneAPI
 
 protocol EditToDoRoutingLogic {
-  func routeToSomewhere()
 }
 
 protocol EditToDoDataPassing {
@@ -25,13 +24,4 @@ class EditToDoRouter: EditToDoDataPassing {
 // MARK: - Routing
 
 extension EditToDoRouter: EditToDoRoutingLogic {
-  func routeToSomewhere() {}
-}
-
-// MARK: - Declare Payload for scene
-
-extension EditToDoRouter {
-  struct NextScenePayload: NextScenePayloadable {
-    // var name: String
-  }
 }

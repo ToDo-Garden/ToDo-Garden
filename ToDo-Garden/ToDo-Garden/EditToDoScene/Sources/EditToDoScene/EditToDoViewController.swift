@@ -13,7 +13,6 @@ import TDUtility
 import ToDoGardenUIComponent
 
 protocol EditToDoDisplayLogic: AnyObject {
-  func displaySomething(viewModel: EditToDo.Something.ViewModel)
 }
 
 final class EditToDoViewController: UIViewController, EditToDoViewControllable {
@@ -132,9 +131,6 @@ extension EditToDoViewController {
 // MARK: - Confirm display logic protocol
 
 extension EditToDoViewController: EditToDoDisplayLogic {
-  func displaySomething(viewModel: EditToDo.Something.ViewModel) {
-    // self.nameTextField.text = viewModel.name
-  }
 }
 
 // MARK: - Request to interactor

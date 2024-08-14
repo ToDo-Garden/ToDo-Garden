@@ -20,7 +20,6 @@ protocol EditToDoBusinessLogic {
   func fetchToDo(request: EditToDo.FetchToDo.Request)
   func deleteToDo(request: EditToDo.DeleteToDo.Request)
   func editToDo(request: EditToDo.CompleteEditToDo.Request)
-  func doSomething(request: EditToDo.Something.Request)
 }
 
 final class EditToDoInteractor: EditToDoDataStore {
@@ -128,9 +127,6 @@ extension EditToDoInteractor: EditToDoBusinessLogic {
     let response = EditToDo.CompleteEditToDo.Response(editResult: editResult)
     self.presenter?.presentEditResult(response: response)
   }
-
-  /// EditToDoViewController 컴파일 에러 방지 코드입니다.
-  func doSomething(request: EditToDo.Something.Request) {}
 }
 
 // MARK: Private Functions

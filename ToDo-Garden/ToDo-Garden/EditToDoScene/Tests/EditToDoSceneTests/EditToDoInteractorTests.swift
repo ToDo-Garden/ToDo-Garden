@@ -299,8 +299,6 @@ class MockToDoPresenter: EditToDoPresentationLogic {
   func presentChangedRepetition(response: EditToDoSceneEntity.EditToDo.ChangeRepetition.Response) {
     self.presentRepetitionValidationClosure?(response.editToDoRepetitionViewState)
   }
-
-  func presentSomething(response: EditToDoSceneEntity.EditToDo.Something.Response) {}
 }
 
 struct MockToDoWorker: ToDoWorkLogic {
