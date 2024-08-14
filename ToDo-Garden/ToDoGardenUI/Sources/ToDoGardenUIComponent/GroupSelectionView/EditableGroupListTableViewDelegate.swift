@@ -31,13 +31,12 @@ final class EditableGroupTableViewDelegate: NSObject {
   }
 
   func updateGroup(
-    currentItem: any GroupSelectionViewItemAPI,
-    editableItems: [any GroupSelectionViewItemAPI]
+    currentItem: EditableGroupItem,
+    editableItems: [EditableGroupItem]
   ) {
-    self.updateCurrentGroup(item: currentItem)
-    let groupItems = self.makeEditableGroupItems(items: editableItems)
-    self.storeEditableGroupIndex(groupItems: groupItems)
-    self.reloadNewEditableGroups(groupItems: groupItems)
+    self.currentGroupItem = currentItem
+    self.storeEditableGroupIndex(groupItems: editableItems)
+    self.reloadNewEditableGroups(groupItems: editableItems)
   }
 }
 
@@ -84,27 +83,6 @@ extension EditableGroupTableViewDelegate: UITableViewDelegate {
 // MARK: Private Functions
 
 extension EditableGroupTableViewDelegate {
-  private func updateCurrentGroup(item: any GroupSelectionViewItemAPI) {
-    let currentItem = EditableGroupItem(
-      groupId: item.groupId,
-      groupName: item.groupName,
-      groupColor: item.groupColor
-    )
-    self.currentGroupItem = currentItem
-  }
-
-  private func makeEditableGroupItems(
-    items: [any GroupSelectionViewItemAPI]
-  ) -> [EditableGroupItem] {
-    return items.map { (item: any GroupSelectionViewItemAPI) in
-      return EditableGroupItem(
-        groupId: item.groupId,
-        groupName: item.groupName,
-        groupColor: item.groupColor
-      )
-    }
-  }
-
   private func setupTableView(_ tableView: UITableView) {
     tableView.delegate = self
     self.tableViewDataSource = self.makeDiffableDataSource(tableView: tableView)

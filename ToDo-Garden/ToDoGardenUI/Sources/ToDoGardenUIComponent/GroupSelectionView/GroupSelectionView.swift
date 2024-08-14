@@ -10,7 +10,7 @@ import UIKit
 import ToDoGardenUIAPI
 import ToDoGardenUIConstant
 
-public final class GroupSelectionView: UIView, GroupSelectionViewAPI {
+public final class GroupSelectionView: UIView {
   private let model: GroupSelectionView.Model
   private let showGroupListButton: UIButton
   private let currentGroupRow: Styled.Row
@@ -52,8 +52,8 @@ public final class GroupSelectionView: UIView, GroupSelectionViewAPI {
   }
 
   public func updateGroup(
-    current: any GroupSelectionViewItemAPI,
-    editableList: [any GroupSelectionViewItemAPI]
+    current: EditableGroupItem,
+    editableList: [EditableGroupItem]
   ) {
     self.editableGroupListTableViewDelegate.updateGroup(
       currentItem: current,
