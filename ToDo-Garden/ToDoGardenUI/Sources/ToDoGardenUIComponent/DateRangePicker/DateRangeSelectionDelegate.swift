@@ -81,4 +81,15 @@ final class DateRangeSelectionDelegate: CalendarViewSingleSelectionDelegate {
     self.updateSelectionState()
     self.updateVisibleSelection()
   }
+  
+  // MARK: - UIScrollViewDelegate Methods
+  
+  override func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+    super.scrollViewDidEndScrollingAnimation(scrollView)
+    self.updateVisibleSelection(isAfterReload: true)
+  }
+  
+  func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    self.updateVisibleSelection()
+  }
 }
