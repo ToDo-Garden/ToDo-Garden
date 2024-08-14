@@ -13,20 +13,17 @@ public struct EditToDoSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
   public struct Dependency {
     let someWorker: EditToDoWorkable
-    let toDoWorker: MockToDoWorker
-    let groupWorker: MockGroupWorker
-    let nextSceneBuilder: NextSceneBuildable
+    let toDoWorker: ToDoWorkLogic
+    let groupWorker: GroupWorkLogic
 
     public init(
       someWorker: EditToDoWorkable,
-      toDoWorker: MockToDoWorker,
-      groupWorker: MockGroupWorker,
-      nextSceneBuilder: NextSceneBuildable
+      toDoWorker: ToDoWorkLogic,
+      groupWorker: GroupWorkLogic
     ) {
       self.someWorker = someWorker
       self.toDoWorker = toDoWorker
       self.groupWorker = groupWorker
-      self.nextSceneBuilder = nextSceneBuilder
     }
   }
 
@@ -60,7 +57,7 @@ extension EditToDoSceneBuilder {
       groupWorker: self.dependency.groupWorker
     )
     let presenter = EditToDoPresenter()
-    let router = EditToDoRouter(nextSceneBuilder: self.dependency.nextSceneBuilder)
+    let router = EditToDoRouter()
     viewController.interactor = interactor
     viewController.router = router
     interactor.presenter = presenter

@@ -15,7 +15,7 @@ public enum EditToDo {
     }
 
     public struct Response {
-      public struct FetchedToDo {
+      public struct FetchedToDo: Equatable {
         public let toDo: ToDo
         public let groupList: [Group]
         public let repetitionViewState: EditToDoRepetitionViewState
@@ -246,7 +246,7 @@ public enum EditToDo {
 }
 
 extension EditToDo {
-  public struct ToDo {
+  public struct ToDo: Equatable {
     public var name: String
     public var groupData: Group
     public var alarm: ToDoAlarm
@@ -263,9 +263,22 @@ extension EditToDo {
       self.alarm = alarm
       self.repetition = repetition
     }
+
+    public static func == (lhs: EditToDo.ToDo, rhs: EditToDo.ToDo) -> Bool {
+      return lhs.name == rhs.name
+      && lhs.groupData.id == rhs.groupData.id
+      && lhs.groupData.name == rhs.groupData.name
+      && lhs.groupData.color == rhs.groupData.color
+      && lhs.alarm.isAlarmOn == rhs.alarm.isAlarmOn
+      && lhs.alarm.alarmTime == rhs.alarm.alarmTime
+      && lhs.repetition.isOnlyToday == rhs.repetition.isOnlyToday
+      && lhs.repetition.isRepeatEveryday == rhs.repetition.isRepeatEveryday
+      && lhs.repetition.startDate == rhs.repetition.startDate
+      && lhs.repetition.endDate == rhs.repetition.endDate
+    }
   }
 
-  public struct Group {
+  public struct Group: Equatable {
     public let id: Int
     public let name: String
     public let color: UIColor
@@ -312,6 +325,10 @@ extension EditToDo {
     case repeatEveryday
     case repeatInRange
   }
+}
+
+extension EditToDo.ToDo {
+
 }
 
 extension EditToDo {
