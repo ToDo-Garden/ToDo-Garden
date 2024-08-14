@@ -30,6 +30,9 @@ extension SettingViewController.Constant.AppSupportView {
   enum SettingButtonStackView {
     static let topMargin: CGFloat = 4
   }
+
+  static let topMargin: CGFloat = 22
+  static let height: CGFloat = 179
 }
 
 extension SettingViewController.Constant.UserGuideButton {

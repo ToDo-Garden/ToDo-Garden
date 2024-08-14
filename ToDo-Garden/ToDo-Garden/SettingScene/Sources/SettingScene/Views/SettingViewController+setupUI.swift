@@ -35,6 +35,12 @@ extension SettingViewController {
   private func setupUserSettingView(with userGuideButton: UIView) {
     let userSettingView = UserSettingView()
     self.setupUserSettingViewLayout(userSettingView, with: userGuideButton)
+    self.setupAppSupportView(with: userSettingView)
+  }
+
+  private func setupAppSupportView(with userSettingView: UIView) {
+    let appSupportView = AppSupportView()
+    self.setupAppSupportViewLayout(appSupportView, with: userSettingView)
   }
 }
 
@@ -109,6 +115,23 @@ extension SettingViewController {
         userSettingView.leadingAnchor.constraint(equalTo: self.profileRow.leadingAnchor),
         userSettingView.trailingAnchor.constraint(equalTo: self.profileRow.trailingAnchor),
         userSettingView.heightAnchor.constraint(equalToConstant: Constant.UserSettingView.height)
+      ]
+    )
+  }
+
+  private func setupAppSupportViewLayout(_ appSupportView: UIView, with userSettingView: UIView) {
+    self.view.addSubview(appSupportView)
+    appSupportView.usingAutolayout()
+
+    NSLayoutConstraint.activate(
+      [
+        appSupportView.topAnchor.constraint(
+          equalTo: userSettingView.bottomAnchor,
+          constant: Constant.AppSupportView.topMargin
+        ),
+        appSupportView.leadingAnchor.constraint(equalTo: self.profileRow.leadingAnchor),
+        appSupportView.trailingAnchor.constraint(equalTo: self.profileRow.trailingAnchor),
+        appSupportView.heightAnchor.constraint(equalToConstant: Constant.AppSupportView.height)
       ]
     )
   }
