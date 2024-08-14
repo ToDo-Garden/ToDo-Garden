@@ -27,4 +27,27 @@ final class DateRangeSelectionDelegate: CalendarViewSingleSelectionDelegate {
     )
   }
   
+  // MARK: - UICollectionViewDelegate Methods
+  
+  func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+    guard let touchedItem = self.collectionViewDataSource.itemIdentifier(for: indexPath) else { return }
+    
+    switch self.currentSelectionState {
+    case RangeSelectionState.startAndEnd:
+      self.clearSelection()
+      self.startDate = touchedItem
+      self.endDate = nil
+      collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+    case RangeSelectionState.startOnly:
+      collectionView.deselectItem(at: indexPath, animated: false)
+      self.startDate = nil
+      self.endDate = nil
+      self.clearSelection()
+    case RangeSelectionState.empty:
+      break
+    }
+    
+    self.updateSelectionState()
+    self.updateVisibleSelection()
+  }
 }
