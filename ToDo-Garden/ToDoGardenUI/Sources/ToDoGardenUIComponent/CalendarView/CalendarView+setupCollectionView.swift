@@ -28,7 +28,7 @@ extension CalendarView {
     let section = self.makeSection(by: group, with: collectionViewModel.lineSpacing)
     let configuration = UICollectionViewCompositionalLayoutConfiguration()
     configuration.scrollDirection = UICollectionView.ScrollDirection.horizontal
-
+    
     return UICollectionViewCompositionalLayout(
       section: section,
       configuration: configuration
@@ -53,10 +53,10 @@ extension CalendarView {
       widthDimension: NSCollectionLayoutDimension.fractionalWidth(1.0),
       heightDimension: item.layoutSize.heightDimension
     )
-
+    
     let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
     group.interItemSpacing = NSCollectionLayoutSpacing.flexible(itemSpacing)
-
+    
     return group
   }
 

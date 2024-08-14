@@ -11,7 +11,7 @@ import ToDoGardenUIConstant
 
 protocol CalendarViewControllable: UICollectionViewDelegate {
   var scrollDelegate: CalendarScrollSendable? { get set }
-
+  
   func fetchWeekdaySymbols() -> [String]
   func getCollectionViewHeight() -> CGFloat
   func scrollCalendar(to scrollDirection: CalendarScrollDirection, animated: Bool)
@@ -19,6 +19,7 @@ protocol CalendarViewControllable: UICollectionViewDelegate {
 }
 
 class CalendarViewSingleSelectionDelegate: NSObject {
+  private let cellIdentifier: String
   private let calendarDataGenerator: CalendarDataGeneratable
   private let collectionViewLayoutModel: CalendarView.Model.CollectionViewLayout
   
@@ -29,12 +30,13 @@ class CalendarViewSingleSelectionDelegate: NSObject {
   
   let collectionView: UICollectionView
   let dateFormatter: DateFormatter
-
+  
   weak var scrollDelegate: CalendarScrollSendable?
-
+  
   init(
     collectionView: UICollectionView,
-    collectionViewLayoutModel: CalendarView.Model.CollectionViewLayout
+    collectionViewLayoutModel: CalendarView.Model.CollectionViewLayout,
+    cellIdentifier: String
   ) {
     self.calendarDataGenerator = CalendarDataGenerator(calendar: Calendar.localeUpdated)
     self.dateFormatter = DateFormatter()
@@ -42,6 +44,7 @@ class CalendarViewSingleSelectionDelegate: NSObject {
     self.collectionView = collectionView
     self.currentIndexPath = IndexPath(item: 0, section: 3)
     self.initialContentOffset = CGPoint()
+    self.cellIdentifier = cellIdentifier
     super.init()
     self.setupDateFormatter()
     self.setupCollectionViewDataSource()
@@ -80,6 +83,10 @@ extension CalendarViewSingleSelectionDelegate: CalendarViewControllable {
     let dateString = formattedString[0] + " \(formattedString[1])"
     return String(dateString)
   }
+
+  func getSelectedItem() -> CalendarItem? {
+    return self.selectedItem
+  }
 }
 
 // MARK: Private Functions
@@ -92,7 +99,7 @@ extension CalendarViewSingleSelectionDelegate {
     } else {
       self.dateFormatter.locale = Locale.autoupdatingCurrent
     }
-
+    
     self.dateFormatter.dateFormat = Constant.CalendarView.StringLiteral.dateFormat
   }
 
@@ -102,7 +109,7 @@ extension CalendarViewSingleSelectionDelegate {
     let totalInsets = self.collectionViewLayoutModel.lineSpacing * (numberOfRows - 1)
     let collectionViewHeight = totalItemHeight + totalInsets
     let defaultHeight: CGFloat = Constant.CalendarView.Layout.CollectionView.defaultHeight
-
+    
     return defaultHeight + collectionViewHeight
   }
 }
@@ -110,8 +117,8 @@ extension CalendarViewSingleSelectionDelegate {
 // MARK: Diffable DataSource
 
 extension CalendarViewSingleSelectionDelegate {
-  private func setupCollectionViewDataSource() {
-    self.collectionViewDataSource = self.makeDiffableDataSource()
+  func setupCollectionViewDataSource() {
+    self.collectionViewDataSource = self.makeDiffableDataSource(identifier: self.cellIdentifier)
     self.collectionView.dataSource = self.collectionViewDataSource
   }
 
@@ -120,7 +127,7 @@ extension CalendarViewSingleSelectionDelegate {
     let dateRange = (-3...3)
     guard let newSnapshot = try? self.addMonthData(to: snapshot, with: dateRange, isAppendFirst: false)
     else { return }
-
+    
     self.collectionViewDataSource.apply(newSnapshot)
   }
 
@@ -128,13 +135,13 @@ extension CalendarViewSingleSelectionDelegate {
     let lastSection = self.collectionViewDataSource.snapshot().sectionIdentifiers.count - 1
     guard self.currentIndexPath.section <= 0 || self.currentIndexPath.section >= lastSection
     else { return }
-
+    
     guard let deletedSnapshot = try? self.deleteSections(to: self.collectionViewDataSource.snapshot()),
-    let updatedSnapshot = try? self.insertNewSection(to: deletedSnapshot)
+      let updatedSnapshot = try? self.insertNewSection(to: deletedSnapshot)
     else { return }
-
+    
     self.currentIndexPath.section = 3
-
+    
     self.collectionViewDataSource.apply(
       updatedSnapshot,
       animatingDifferences: false
@@ -147,17 +154,17 @@ extension CalendarViewSingleSelectionDelegate {
     to snapshot: NSDiffableDataSourceSnapshot<CalendarSection, CalendarItem>
   ) throws -> NSDiffableDataSourceSnapshot<CalendarSection, CalendarItem> {
     var newSnapshot = snapshot
-
+    
     for _ in (0...2) {
       let sections = newSnapshot.sectionIdentifiers
       guard let sectionToDelete = self.currentIndexPath.section == 0 ? sections.last : sections.first
       else { throw CalendarViewDelegateError.snapshotIsNotLoaded }
-
+      
       let itemsToDelete = newSnapshot.itemIdentifiers(inSection: sectionToDelete)
       newSnapshot.deleteItems(itemsToDelete)
       newSnapshot.deleteSections([sectionToDelete])
     }
-
+    
     return newSnapshot
   }
 
@@ -181,21 +188,21 @@ extension CalendarViewSingleSelectionDelegate {
     let sections = newSnapshot.sectionIdentifiers
     guard let firstDay = isAppendFirst ? sections.first?.firstDay : sections.last?.firstDay ?? Date()
     else { throw CalendarViewDelegateError.snapshotIsNotLoaded }
-
+    
     for value in dateRange {
       let addValue = self.currentIndexPath.section == 0 ? -value : value
       let monthData = try self.calendarDataGenerator.fetchMonthData(from: firstDay, add: addValue)
-
+      
       let section = CalendarSection(firstDay: monthData.firstDayOfMonth)
       if isAppendFirst {
         guard let beforeSection = newSnapshot.sectionIdentifiers.first
         else { throw CalendarViewDelegateError.snapshotIsNotLoaded }
-
+        
         newSnapshot.insertSections([section], beforeSection: beforeSection)
       } else {
         newSnapshot.appendSections([section])
       }
-
+      
       let items = monthData.dates.map { (day: MonthData.Day) in
         let date = day.date
         let isThisMonth = day.isThisMonth
@@ -203,7 +210,7 @@ extension CalendarViewSingleSelectionDelegate {
       }
       newSnapshot.appendItems(items, toSection: section)
     }
-
+    
     return newSnapshot
   }
 
@@ -232,14 +239,14 @@ extension CalendarViewSingleSelectionDelegate: UICollectionViewDelegate {
     let targetContentOffset = targetContentOffset.pointee.x
     let velocity = velocity.x
     let scrollViewWidth = scrollView.frame.width
-
+    
     guard let scrollDirection = self.calculateScrollDireciton(
       contentOffset,
       targetContentOffset,
       velocity,
       scrollViewWidth / 2
     ) else { return }
-
+    
     self.currentIndexPath.section += scrollDirection.rawValue
     self.scrollDelegate?.didScroll()
   }
@@ -253,12 +260,12 @@ extension CalendarViewSingleSelectionDelegate: UICollectionViewDelegate {
     guard velocity == 0 else {
       return velocity > 0 ? CalendarScrollDirection.right : CalendarScrollDirection.left
     }
-
+    
     let hasScrolledFarEnough = abs(contentOffset - self.initialContentOffset.x) > scrollViewHalfWidth
     guard hasScrolledFarEnough else {
       return nil
     }
-
+    
     return contentOffset > targetContentOffset ?
     CalendarScrollDirection.left : CalendarScrollDirection.right
   }
@@ -278,10 +285,10 @@ extension CalendarViewSingleSelectionDelegate {
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     guard let selectedNewItem = self.collectionViewDataSource.itemIdentifier(for: indexPath)
     else { return }
-
+    
     guard let scrollDirection = getScrollDirection(selectedItem: selectedNewItem, section: indexPath)
     else { return }
-
+    
     self.scrollCalendar(to: scrollDirection, animated: true)
     self.selectedItem = selectedNewItem
   }
@@ -292,14 +299,14 @@ extension CalendarViewSingleSelectionDelegate {
   ) -> CalendarScrollDirection? {
     guard let currentDate = self.collectionViewDataSource.sectionIdentifier(for: indexPath.section)?.firstDay
     else { return nil }
-
+    
     let comparisonResult = self.calendarDataGenerator.compareMonth(from: selectedItem.date, with: currentDate)
     guard comparisonResult != ComparisonResult.orderedSame
     else {
       self.selectedItem = selectedItem
       return nil
     }
-
+    
     return comparisonResult == ComparisonResult.orderedAscending ? .left : .right
   }
 }

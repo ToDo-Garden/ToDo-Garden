@@ -9,18 +9,18 @@ import UIKit
 
 import ToDoGardenUIConstant
 
-public final class CalendarView: UIView {
+public class CalendarView: UIView {
   private let model: Model
-  private let calendarViewDelegate: CalendarViewControllable
   private var isLayoutSubviewsCalled: Bool
-
   private let monthLabel: UILabel
   private let leftScrollButton: UIButton
   private let rightScrollButton: UIButton
   private let weekdaySymbolStackView: UIStackView
-  private let dateCollectionView: UICollectionView
   private var heightConstraint: NSLayoutConstraint
-
+  
+  let dateCollectionView: UICollectionView
+  var calendarViewDelegate: CalendarViewControllable
+  
   public init(model: Model) {
     self.model = model
     self.isLayoutSubviewsCalled = false
@@ -32,17 +32,18 @@ public final class CalendarView: UIView {
     self.heightConstraint = NSLayoutConstraint()
     self.calendarViewDelegate = CalendarViewSingleSelectionDelegate(
       collectionView: self.dateCollectionView,
-      collectionViewLayoutModel: model.collectionViewLayout
+      collectionViewLayoutModel: model.collectionViewLayout,
+      cellIdentifier: CalendarCollectionViewCell.identifier
     )
     super.init(frame: CGRect.zero)
     self.setup()
   }
-
+  
   @available(*, deprecated)
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-
+  
   public override func layoutSubviews() {
     super.layoutSubviews()
     self.scrollToCurrentMonth()
@@ -61,13 +62,13 @@ extension CalendarView {
       self.isLayoutSubviewsCalled = true
     }
   }
-
+  
   private func setup() {
     self.setupUI()
     self.setupCollectionViewScrollDelegate()
   }
-
-  private func setupCollectionViewScrollDelegate() {
+  
+  func setupCollectionViewScrollDelegate() {
     self.calendarViewDelegate.scrollDelegate = self
   }
 }
@@ -127,7 +128,7 @@ extension CalendarView {
 
   private func setupBackButton() {
     self.leftScrollButton.setImage(UIImage.backwardButtonImage, for: UIControl.State.normal)
-
+    
     let action = UIAction { [weak self] _ in
       self?.calendarViewDelegate.scrollCalendar(to: CalendarScrollDirection.left, animated: true)
     }
@@ -136,7 +137,7 @@ extension CalendarView {
 
   private func setupForwardButton() {
     self.rightScrollButton.setImage(UIImage.forwardButtonImage, for: UIControl.State.normal)
-
+    
     let action = UIAction { [weak self] _ in
       self?.calendarViewDelegate.scrollCalendar(to: CalendarScrollDirection.right, animated: true)
     }
@@ -184,7 +185,7 @@ extension CalendarView {
 
   private func setupMonthLabelLayout() {
     self.monthLabel.usingAutolayout()
-
+    
     NSLayoutConstraint.activate(
       [
         self.monthLabel.topAnchor.constraint(
@@ -202,7 +203,7 @@ extension CalendarView {
 
   private func setupBackButtonLayout() {
     self.leftScrollButton.usingAutolayout()
-
+    
     NSLayoutConstraint.activate(
       [
         self.leftScrollButton.trailingAnchor.constraint(
@@ -222,7 +223,7 @@ extension CalendarView {
 
   private func setupForwardButtonLayout() {
     self.rightScrollButton.usingAutolayout()
-
+    
     NSLayoutConstraint.activate(
       [
         self.rightScrollButton.centerYAnchor.constraint(equalTo: self.monthLabel.centerYAnchor),
@@ -242,14 +243,14 @@ extension CalendarView {
 
   private func setupWeekdaySymbolStackViewLayout() {
     self.weekdaySymbolStackView.usingAutolayout()
-
+    
     let topConstraint = self.weekdaySymbolStackView.topAnchor.constraint(
       equalTo: self.monthLabel.bottomAnchor,
       constant: Constant.CalendarView.Layout.WeekdaySymbolStackView.topMargin
     )
     topConstraint.priority = UILayoutPriority.defaultLow
     topConstraint.isActive = true
-
+    
     NSLayoutConstraint.activate(
       [
         self.weekdaySymbolStackView.leadingAnchor.constraint(
@@ -266,7 +267,7 @@ extension CalendarView {
 
   private func setupCollectionViewLayout() {
     self.dateCollectionView.usingAutolayout()
-
+    
     NSLayoutConstraint.activate(
       [
         self.dateCollectionView.topAnchor.constraint(
@@ -302,7 +303,7 @@ extension CalendarView {
     let borderWidth: CGFloat
     let cornerRadius: CGFloat
     let collectionViewLayout: Model.CollectionViewLayout
-
+    
     public static let primary = Self(
       borderWidth: Constant.CalendarView.Model.Primary.borderWidth,
       cornerRadius: Constant.CalendarView.Model.Primary.cornerRadius,

@@ -9,10 +9,10 @@ import UIKit
 
 import ToDoGardenUIConstant
 
-final class CalendarCollectionViewCell: UICollectionViewCell, ReusableIdentifier {
+class CalendarCollectionViewCell: UICollectionViewCell, ReusableIdentifier {
   private var toDoExistenceView: UIView
-  private var dayLabel: UILabel
   private var isThisMonth: Bool
+  var dayLabel: UILabel
 
   override var isSelected: Bool {
     willSet {
@@ -109,7 +109,7 @@ extension CalendarCollectionViewCell {
 
   private func setupToDoExistenceViewLayout() {
     self.toDoExistenceView.usingAutolayout()
-
+    
     NSLayoutConstraint.activate(
       [
         self.toDoExistenceView.leadingAnchor.constraint(equalTo: self.dayLabel.leadingAnchor),
@@ -126,7 +126,7 @@ extension CalendarCollectionViewCell {
 
   private func setupDayLabelLayout() {
     self.dayLabel.usingAutolayout()
-
+    
     NSLayoutConstraint.activate([
       self.dayLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor),
       self.dayLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor)
