@@ -50,4 +50,35 @@ final class DateRangeSelectionDelegate: CalendarViewSingleSelectionDelegate {
     self.updateSelectionState()
     self.updateVisibleSelection()
   }
+  
+  override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    super.collectionView(collectionView, didSelectItemAt: indexPath)
+    
+    guard let selectedItem = self.collectionViewDataSource.itemIdentifier(for: indexPath) else { return }
+    
+    switch self.currentSelectionState {
+    case RangeSelectionState.startAndEnd:
+      self.clearSelection()
+      self.startDate = selectedItem
+      self.endDate = nil
+      self.selectedDateRange = (start: selectedItem.date, end: selectedItem.date)
+    case RangeSelectionState.startOnly:
+      guard let startDate = self.startDate else { return }
+      if selectedItem.date < startDate.date {
+        self.clearSelection()
+        self.startDate = selectedItem
+        self.endDate = nil
+        self.selectedDateRange = (start: selectedItem.date, end: selectedItem.date)
+      } else {
+        self.endDate = selectedItem
+        self.selectedDateRange = (start: startDate.date, end: selectedItem.date)
+      }
+    case RangeSelectionState.empty:
+      self.startDate = selectedItem
+      self.selectedDateRange = (start: selectedItem.date, end: selectedItem.date)
+    }
+    
+    self.updateSelectionState()
+    self.updateVisibleSelection()
+  }
 }
