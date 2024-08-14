@@ -20,8 +20,7 @@ extension Constant.ToDoGardenAlertView {
     case askToLogout
     case askToStopResting
     case failToFetchToDo
-    case temporaryErrorOccurred
-    case networkErrorOccurred
+    case errorOccurred(String)
   }
 }
 
@@ -281,7 +280,7 @@ extension Constant.ToDoGardenAlertView.Content {
         stackView: StackViewState(isHorizontal: true, height: layoutConstant.stackviewHeightForHorizontal)
       )
 
-    case .temporaryErrorOccurred:
+    case .errorOccurred(let errorDescription):
       return ViewState(
         backPlane: BackPlaneState(
           width: layoutConstant.commonWidth,
@@ -290,26 +289,7 @@ extension Constant.ToDoGardenAlertView.Content {
         ),
         title: TitleViewState(text: "오류 발생", topMargin: layoutConstant.titleTopMarginForHorizontal),
         description: DescriptionViewState(
-          text: "잠시 후\n다시 시도해주세요!",
-          topMargin: layoutConstant.descriptionTopMarginForHorizontal
-        ),
-        buttons: [
-          ButtonLabelState(text: "확인했어요", isRed: false, buttonActionType: ButtonActionType.cancel),
-          ButtonLabelState(text: "홈으로", isRed: true, buttonActionType: ButtonActionType.goHome)
-        ],
-        stackView: StackViewState(isHorizontal: true, height: layoutConstant.stackviewHeightForHorizontal)
-      )
-
-    case .networkErrorOccurred:
-      return ViewState(
-        backPlane: BackPlaneState(
-          width: layoutConstant.commonWidth,
-          height: layoutConstant.heightForHorizontal,
-          cornerRadius: layoutConstant.cornerRadius
-        ),
-        title: TitleViewState(text: "오류 발생", topMargin: layoutConstant.titleTopMarginForHorizontal),
-        description: DescriptionViewState(
-          text: "네트워크 연결이\n불안정합니다.",
+          text: errorDescription,
           topMargin: layoutConstant.descriptionTopMarginForHorizontal
         ),
         buttons: [
