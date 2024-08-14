@@ -13,6 +13,7 @@ import TDUtility
 import ToDoGardenUIComponent
 
 protocol EditToDoDisplayLogic: AnyObject {
+  func displayFetchedToDo(viewModel: EditToDo.FetchToDo.ViewModel)
 }
 
 final class EditToDoViewController: UIViewController, EditToDoViewControllable {
@@ -55,6 +56,11 @@ final class EditToDoViewController: UIViewController, EditToDoViewControllable {
     self.setup()
   }
 
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    self.fetchToDo()
+  }
+
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
     // MARK: 투두 수정화면 진입시 투두 수정 모드로 변경합니다.
@@ -63,6 +69,21 @@ final class EditToDoViewController: UIViewController, EditToDoViewControllable {
       self.editToDoSegmentedControl.sendActions(for: UIControl.Event.valueChanged)
     }
   }
+}
+
+// MARK: - Request to interactor
+
+extension EditToDoViewController {
+  private func fetchToDo() {
+    let request = EditToDo.FetchToDo.Request()
+    self.interactor?.fetchToDo(request: request)
+  }
+}
+
+// MARK: - Confirm display logic protocol
+
+extension EditToDoViewController: EditToDoDisplayLogic {
+  func displayFetchedToDo(viewModel: EditToDo.FetchToDo.ViewModel) {}
 }
 
 // MARK: ScrollView Delegate Functions
@@ -127,15 +148,6 @@ extension EditToDoViewController {
     self.editModeScrollView.setContentOffset(contentOffset, animated: true)
   }
 }
-
-// MARK: - Confirm display logic protocol
-
-extension EditToDoViewController: EditToDoDisplayLogic {
-}
-
-// MARK: - Request to interactor
-
-extension EditToDoViewController {}
 
 #if DEBUG
 @available(iOS 17.0, *)

@@ -292,9 +292,9 @@ extension EditToDo {
 
   public struct ToDoAlarm {
     public var isAlarmOn: Bool
-    public var alarmTime: Int?
+    public var alarmTime: Double?
 
-    public init(isAlarmOn: Bool, alarmTime: Int?) {
+    public init(isAlarmOn: Bool, alarmTime: Double?) {
       self.isAlarmOn = isAlarmOn
       self.alarmTime = alarmTime
     }
