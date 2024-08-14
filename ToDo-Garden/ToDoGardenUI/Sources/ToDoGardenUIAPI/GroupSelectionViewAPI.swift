@@ -22,7 +22,3 @@ public protocol GroupSelectionViewAPI: UIView {
   )
   func getCurrentGroupId() -> Int?
 }
-
-public protocol GroupSelectionViewDelegate: AnyObject {
-  func didSelectGroup(color: UIColor)
-}

@@ -66,6 +66,10 @@ public final class GroupSelectionView: UIView {
   }
 }
 
+public protocol GroupSelectionViewDelegate: AnyObject {
+  func didSelectGroup(color: UIColor)
+}
+
 protocol GroupDataSendable: AnyObject {
   func send(groupItem: EditableGroupItem?)
 }
