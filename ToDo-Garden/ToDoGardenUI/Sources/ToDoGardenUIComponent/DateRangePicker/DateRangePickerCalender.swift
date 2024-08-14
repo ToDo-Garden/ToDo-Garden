@@ -33,3 +33,12 @@ public final class DateRangePickerCalender: CalendarView {
     fatalError("init(coder:) has not been implemented")
   }
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let calendarView = DateRangePickerCalender(model: CalendarView.Model.primary)
+  calendarView.widthAnchor.constraint(equalToConstant: 323).isActive = true
+  return calendarView
+}
+#endif
