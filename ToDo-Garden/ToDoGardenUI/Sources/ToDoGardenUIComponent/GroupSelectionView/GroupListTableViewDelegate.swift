@@ -14,10 +14,10 @@ final class GroupListTableViewDelegate: NSObject {
   private let cellHeight: CGFloat
   private var editableGroupIndexDictionary: [Int: Int]
   private var tableViewDataSource: UITableViewDiffableDataSource<
-    EditableGroupSection,
-    EditableGroupItem
+    GroupSelectionViewSection,
+    GroupSelectionViewItem
   >!
-  private(set) var currentGroupItem: EditableGroupItem? {
+  private(set) var currentGroupItem: GroupSelectionViewItem? {
     willSet { self.groupListSelectionDelegate?.send(groupItem: newValue) }
   }
 
@@ -31,8 +31,8 @@ final class GroupListTableViewDelegate: NSObject {
   }
 
   func updateGroup(
-    currentItem: EditableGroupItem,
-    editableItems: [EditableGroupItem]
+    currentItem: GroupSelectionViewItem,
+    editableItems: [GroupSelectionViewItem]
   ) {
     self.currentGroupItem = currentItem
     self.storeEditableGroupIndex(groupItems: editableItems)
@@ -41,7 +41,7 @@ final class GroupListTableViewDelegate: NSObject {
 }
 
 protocol GroupListSelectionDelegate: AnyObject {
-  func send(groupItem: EditableGroupItem?)
+  func send(groupItem: GroupSelectionViewItem?)
 }
 
 // MARK: TableView Delegate Functions
@@ -63,8 +63,8 @@ extension GroupListTableViewDelegate: UITableViewDelegate {
     self.tableViewDataSource.apply(snapshot, animatingDifferences: true)
   }
 
-  private func insertInCorrectOrder(oldItem: EditableGroupItem?) ->
-  NSDiffableDataSourceSnapshot<EditableGroupSection, EditableGroupItem> {
+  private func insertInCorrectOrder(oldItem: GroupSelectionViewItem?) ->
+  NSDiffableDataSourceSnapshot<GroupSelectionViewSection, GroupSelectionViewItem> {
     var snapshot = self.tableViewDataSource.snapshot()
     guard let oldItem = oldItem
     else { return snapshot }
@@ -95,15 +95,15 @@ extension GroupListTableViewDelegate {
   }
 
   private func makeDiffableDataSource(tableView: UITableView) -> UITableViewDiffableDataSource<
-    EditableGroupSection,
-    EditableGroupItem
+    GroupSelectionViewSection,
+    GroupSelectionViewItem
   > {
     return UITableViewDiffableDataSource<
-      EditableGroupSection,
-      EditableGroupItem
+      GroupSelectionViewSection,
+      GroupSelectionViewItem
     >(tableView: tableView) { (tableView, indexPath, itemIdentifier) in
       guard let cell = tableView.dequeueReusableCell(
-        type: EditableGroupTableViewCell.self,
+        type: GroupSelectionViewCell.self,
         for: indexPath
       ) else { return UITableViewCell() }
 
@@ -112,24 +112,24 @@ extension GroupListTableViewDelegate {
     }
   }
 
-  private func storeEditableGroupIndex(groupItems: [EditableGroupItem]) {
-    groupItems.enumerated().forEach { (index: Int, item: EditableGroupItem) in
+  private func storeEditableGroupIndex(groupItems: [GroupSelectionViewItem]) {
+    groupItems.enumerated().forEach { (index: Int, item: GroupSelectionViewItem) in
       let id = item.groupId
       self.editableGroupIndexDictionary[id] = index
     }
   }
 
-  private func reloadNewEditableGroups(groupItems: [EditableGroupItem]) {
-    var snapshot = NSDiffableDataSourceSnapshot<EditableGroupSection, EditableGroupItem>()
+  private func reloadNewEditableGroups(groupItems: [GroupSelectionViewItem]) {
+    var snapshot = NSDiffableDataSourceSnapshot<GroupSelectionViewSection, GroupSelectionViewItem>()
     snapshot.appendSections([.main])
-    let items = groupItems.filter { (item: EditableGroupItem) in
+    let items = groupItems.filter { (item: GroupSelectionViewItem) in
       if let currentGroupItem = self.currentGroupItem {
         return item != currentGroupItem
       }
 
       return false
     }
-    snapshot.appendItems(items, toSection: EditableGroupSection.main)
+    snapshot.appendItems(items, toSection: GroupSelectionViewSection.main)
     self.tableViewDataSource.apply(snapshot, animatingDifferences: true)
   }
 }

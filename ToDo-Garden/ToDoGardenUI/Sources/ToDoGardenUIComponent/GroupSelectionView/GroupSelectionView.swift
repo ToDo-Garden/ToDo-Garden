@@ -52,8 +52,8 @@ public final class GroupSelectionView: UIView {
   }
 
   public func updateGroup(
-    current: EditableGroupItem,
-    editableList: [EditableGroupItem]
+    current: GroupSelectionViewItem,
+    editableList: [GroupSelectionViewItem]
   ) {
     self.groupListTableViewDelegate.updateGroup(
       currentItem: current,
@@ -71,7 +71,7 @@ public protocol GroupSelectionViewDelegate: AnyObject {
 }
 
 extension GroupSelectionView: GroupListSelectionDelegate {
-  func send(groupItem: EditableGroupItem?) {
+  func send(groupItem: GroupSelectionViewItem?) {
     guard let groupItem = groupItem
     else { return }
 
@@ -121,8 +121,8 @@ extension GroupSelectionView {
 
   private func setupEditableGroupListTableView() {
     self.groupListTableView.register(
-      EditableGroupTableViewCell.self,
-      forCellReuseIdentifier: EditableGroupTableViewCell.identifier
+      GroupSelectionViewCell.self,
+      forCellReuseIdentifier: GroupSelectionViewCell.identifier
     )
     self.setupEditableGroupListTableViewUI()
   }

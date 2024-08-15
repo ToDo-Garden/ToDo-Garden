@@ -1,5 +1,5 @@
 //
-//  EditableGroupTableViewCell.swift
+//  GroupSelectionViewCell.swift
 //
 //
 //  Created by Wood on 7/4/24.
@@ -9,7 +9,7 @@ import UIKit
 
 import ToDoGardenUIConstant
 
-final class EditableGroupTableViewCell: UITableViewCell {
+final class GroupSelectionViewCell: UITableViewCell {
   private let editableGroupRow: Styled.Row
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -30,7 +30,7 @@ final class EditableGroupTableViewCell: UITableViewCell {
     fatalError("init(coder:) has not been implemented")
   }
 
-  func updateUI(groupItem: EditableGroupItem) {
+  func updateUI(groupItem: GroupSelectionViewItem) {
     let groupName = groupItem.groupName
     let groupColor = groupItem.groupColor
     self.editableGroupRow.groupListModel = Styled.Row.Configuration.ListPrimaryModel(
@@ -42,7 +42,7 @@ final class EditableGroupTableViewCell: UITableViewCell {
 
 // MARK: Private Functions
 
-extension EditableGroupTableViewCell {
+extension GroupSelectionViewCell {
   private func setup() {
     let separatorView = self.makeSeperatorView()
     self.addSubviews(with: separatorView)
@@ -58,7 +58,7 @@ extension EditableGroupTableViewCell {
 
 // MARK: About Auto Layout
 
-extension EditableGroupTableViewCell {
+extension GroupSelectionViewCell {
   private func addSubviews(with separtorView: UIView) {
     self.contentView.addSubview(self.editableGroupRow)
     self.contentView.addSubview(separtorView)
@@ -98,7 +98,11 @@ extension EditableGroupTableViewCell {
 
 @available(iOS 17.0, *)
 #Preview {
-  let cell = EditableGroupTableViewCell()
-  cell.updateUI(groupItem: EditableGroupItem(groupId: 0, groupName: "영어독해", groupColor: UIColor.toDoGardenGreenDark))
+  let cell = GroupSelectionViewCell()
+  cell.updateUI(
+    groupItem: GroupSelectionViewItem(
+      groupId: 0, groupName: "영어독해", groupColor: UIColor.toDoGardenGreenDark
+    )
+  )
   return cell
 }
