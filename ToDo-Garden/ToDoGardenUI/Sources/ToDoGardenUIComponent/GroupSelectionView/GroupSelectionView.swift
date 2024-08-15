@@ -15,8 +15,8 @@ public final class GroupSelectionView: UIView {
   private let showGroupListButton: UIButton
   private let currentGroupRow: Styled.Row
   private let groupListSeparatorLineView: UIView
-  private let editableGroupListTableView: UITableView
-  private let editableGroupListTableViewDelegate: EditableGroupTableViewDelegate
+  private let groupListTableView: UITableView
+  private let groupListTableViewDelegate: GroupListTableViewDelegate
   private var tableViewHeightConstraint: NSLayoutConstraint
   private var heightConstraint: NSLayoutConstraint
 
@@ -35,9 +35,9 @@ public final class GroupSelectionView: UIView {
       with: [self.showGroupListButton]
     )
     self.groupListSeparatorLineView = UIView()
-    self.editableGroupListTableView = UITableView()
-    self.editableGroupListTableViewDelegate = EditableGroupTableViewDelegate(
-      tableView: self.editableGroupListTableView,
+    self.groupListTableView = UITableView()
+    self.groupListTableViewDelegate = GroupListTableViewDelegate(
+      tableView: self.groupListTableView,
       cellHeight: self.model.cellHeight
     )
     self.tableViewHeightConstraint = NSLayoutConstraint()
@@ -55,14 +55,14 @@ public final class GroupSelectionView: UIView {
     current: EditableGroupItem,
     editableList: [EditableGroupItem]
   ) {
-    self.editableGroupListTableViewDelegate.updateGroup(
+    self.groupListTableViewDelegate.updateGroup(
       currentItem: current,
       editableItems: editableList
     )
   }
 
   public func getCurrentGroupId() -> Int? {
-    return self.editableGroupListTableViewDelegate.currentGroupItem?.groupId
+    return self.groupListTableViewDelegate.currentGroupItem?.groupId
   }
 }
 
@@ -70,11 +70,7 @@ public protocol GroupSelectionViewDelegate: AnyObject {
   func didSelectGroup(color: UIColor)
 }
 
-protocol GroupDataSendable: AnyObject {
-  func send(groupItem: EditableGroupItem?)
-}
-
-extension GroupSelectionView: GroupDataSendable {
+extension GroupSelectionView: GroupListSelectionDelegate {
   func send(groupItem: EditableGroupItem?) {
     guard let groupItem = groupItem
     else { return }
@@ -124,7 +120,7 @@ extension GroupSelectionView {
   }
 
   private func setupEditableGroupListTableView() {
-    self.editableGroupListTableView.register(
+    self.groupListTableView.register(
       EditableGroupTableViewCell.self,
       forCellReuseIdentifier: EditableGroupTableViewCell.identifier
     )
@@ -132,18 +128,18 @@ extension GroupSelectionView {
   }
 
   private func setupEditableGroupListTableViewUI() {
-    self.editableGroupListTableView.sectionHeaderTopPadding = 0
-    self.editableGroupListTableView.separatorStyle = UITableViewCell.SeparatorStyle.none
+    self.groupListTableView.sectionHeaderTopPadding = 0
+    self.groupListTableView.separatorStyle = UITableViewCell.SeparatorStyle.none
     let layout = Constant.GroupSelectionView.Layout.EditableGroupTableView.Layer.self
-    self.editableGroupListTableView.layer.cornerRadius = layout.cornerRadius
-    self.editableGroupListTableView.layer.maskedCorners = [
+    self.groupListTableView.layer.cornerRadius = layout.cornerRadius
+    self.groupListTableView.layer.maskedCorners = [
       CACornerMask.layerMinXMaxYCorner,
       CACornerMask.layerMaxXMaxYCorner
     ]
   }
 
   private func setupSelectedGroupSender() {
-    self.editableGroupListTableViewDelegate.selectedGroupSender = self
+    self.groupListTableViewDelegate.groupListSelectionDelegate = self
   }
 }
 
@@ -239,15 +235,15 @@ extension GroupSelectionView {
   }
 
   private func setupGroupListTableViewLayout(with containerView: UIView) {
-    containerView.addSubview(self.editableGroupListTableView)
-    self.editableGroupListTableView.usingAutolayout()
+    containerView.addSubview(self.groupListTableView)
+    self.groupListTableView.usingAutolayout()
 
     NSLayoutConstraint.activate(
       [
-        self.editableGroupListTableView.topAnchor.constraint(equalTo: self.groupListSeparatorLineView.bottomAnchor),
-        self.editableGroupListTableView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-        self.editableGroupListTableView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-        self.editableGroupListTableView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+        self.groupListTableView.topAnchor.constraint(equalTo: self.groupListSeparatorLineView.bottomAnchor),
+        self.groupListTableView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+        self.groupListTableView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+        self.groupListTableView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
       ]
     )
   }

@@ -1,5 +1,5 @@
 //
-//  EditableGroupTableViewDelegate.swift
+//  GroupListTableViewDelegate.swift
 //
 //
 //  Created by Wood on 7/9/24.
@@ -10,7 +10,7 @@ import UIKit
 import ToDoGardenUIAPI
 import ToDoGardenUIConstant
 
-final class EditableGroupTableViewDelegate: NSObject {
+final class GroupListTableViewDelegate: NSObject {
   private let cellHeight: CGFloat
   private var editableGroupIndexDictionary: [Int: Int]
   private var tableViewDataSource: UITableViewDiffableDataSource<
@@ -18,10 +18,10 @@ final class EditableGroupTableViewDelegate: NSObject {
     EditableGroupItem
   >!
   private(set) var currentGroupItem: EditableGroupItem? {
-    willSet { self.selectedGroupSender?.send(groupItem: newValue) }
+    willSet { self.groupListSelectionDelegate?.send(groupItem: newValue) }
   }
 
-  weak var selectedGroupSender: GroupDataSendable?
+  weak var groupListSelectionDelegate: GroupListSelectionDelegate?
 
   init(tableView: UITableView, cellHeight: CGFloat) {
     self.cellHeight = cellHeight
@@ -40,9 +40,13 @@ final class EditableGroupTableViewDelegate: NSObject {
   }
 }
 
+protocol GroupListSelectionDelegate: AnyObject {
+  func send(groupItem: EditableGroupItem?)
+}
+
 // MARK: TableView Delegate Functions
 
-extension EditableGroupTableViewDelegate: UITableViewDelegate {
+extension GroupListTableViewDelegate: UITableViewDelegate {
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return self.cellHeight
   }
@@ -82,7 +86,7 @@ extension EditableGroupTableViewDelegate: UITableViewDelegate {
 
 // MARK: Private Functions
 
-extension EditableGroupTableViewDelegate {
+extension GroupListTableViewDelegate {
   private func setupTableView(_ tableView: UITableView) {
     tableView.delegate = self
     self.tableViewDataSource = self.makeDiffableDataSource(tableView: tableView)
