@@ -7,18 +7,19 @@
 
 import UIKit
 
-import ToDoGardenUIAPI
+import EditToDoSceneEntity
+import ToDoGardenUIComponent
 
 final class EditToDoView: UIView {
-  private let toDoNameInputView: TextInputViewAPI
-  private let groupSelectionView: GroupSelectionViewAPI
+  private let toDoNameInputView: TextInputView
+  private let groupSelectionView: GroupSelectionView
   private let deleteToDoButton: UIButton
 
   weak var delegate: EditToDoView.EditToDoViewDelegate?
 
-  init(toDoNameInputView: TextInputViewAPI, groupSelectionView: GroupSelectionViewAPI) {
-    self.toDoNameInputView = toDoNameInputView
-    self.groupSelectionView = groupSelectionView
+  init() {
+    self.toDoNameInputView = TextInputView(model: TextInputView.Model.groupName)
+    self.groupSelectionView = GroupSelectionView(model: GroupSelectionView.Model.primary)
     self.deleteToDoButton = UIButton()
     super.init(frame: CGRect.zero)
     self.setup()
@@ -34,11 +35,13 @@ final class EditToDoView: UIView {
   }
 
   func updateGroup(
-    current: EditToDoView.GroupItem,
-    editableGroupList: [EditToDoView.GroupItem]
+    current: EditToDo.Group,
+    editableGroupList: [EditToDo.Group]
   ) {
-    self.toDoNameInputView.changeBottomLine(color: current.groupColor)
-    self.groupSelectionView.updateGroup(current: current, editableList: editableGroupList)
+    self.toDoNameInputView.changeBottomLine(color: current.color)
+    let currentItem = self.makeGroupSelectionViewItem(from: current)
+    let groupSelectionViewItemList = editableGroupList.map { self.makeGroupSelectionViewItem(from: $0) }
+    self.groupSelectionView.updateGroup(current: currentItem, editableList: groupSelectionViewItemList)
   }
 
   func getCurrentGroupId() -> Int? {
@@ -87,7 +90,7 @@ extension EditToDoView: UIGestureRecognizerDelegate {
     else { return false }
 
     if self.toDoNameInputView.isFirstResponder {
-      self.toDoNameInputView.resignFirstResponder()
+      _ = self.toDoNameInputView.resignFirstResponder()
     }
 
     return true
@@ -140,6 +143,14 @@ extension EditToDoView {
     }
 
     self.deleteToDoButton.addAction(deleteToDoAction, for: UIControl.Event.touchUpInside)
+  }
+
+  private func makeGroupSelectionViewItem(from group: EditToDo.Group) -> GroupSelectionViewItem {
+    return GroupSelectionViewItem(
+      groupId: group.id,
+      groupName: group.name,
+      groupColor: group.color
+    )
   }
 }
 
@@ -256,18 +267,6 @@ extension EditToDoView {
         titleLabel.centerYAnchor.constraint(equalTo: self.deleteToDoButton.centerYAnchor)
       ]
     )
-  }
-}
-
-extension EditToDoView {
-  struct GroupItem: GroupSelectionViewItemAPI {
-    let groupId: Int
-    let groupName: String
-    let groupColor: UIColor
-
-    static func < (lhs: EditToDoView.GroupItem, rhs: EditToDoView.GroupItem) -> Bool {
-      lhs.groupId > rhs.groupId
-    }
   }
 }
 
