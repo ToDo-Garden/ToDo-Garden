@@ -25,10 +25,11 @@ final class SettingViewController: UIViewController, SettingViewControllable {
   // MARK: - Object lifecycle
   
   init() {
+    // TODO: 프로필 UI를 확인하기 위해 "울버린" 사용자명을 임시로 추가했으며, VIP 로직 구현 이후에 삭제할 예정입니다.
     self.profileRow = Styled.Row(
       configuration: Styled.Row.Configuration.profile(
         Styled.Row.Configuration.ProfileModel.primary(
-          title: "",
+          title: "울버린",
           description: SettingSceneTheme.StringLiteral.ProfileRow.description
         )
       )
@@ -48,6 +49,8 @@ final class SettingViewController: UIViewController, SettingViewControllable {
     super.viewDidLoad()
     self.setupUI()
     self.doSomething()
+    // TODO: VersionInfoView의 UI를 확인하기 위해 임시로 추가한 로직으로, VIP 로직 구현 이후에 삭제할 예정입니다.
+    self.versionInfoView.updateToPriorVersion("v 0.1.2")
   }
 }
 
