@@ -7,18 +7,19 @@
 
 import UIKit
 
-import ToDoGardenUIAPI
+import EditToDoSceneEntity
+import ToDoGardenUIComponent
 
 final class EditToDoView: UIView {
-  private let toDoNameInputView: TextInputViewAPI
-  private let groupSelectionView: GroupSelectionViewAPI
+  private let toDoNameInputView: TextInputView
+  private let groupSelectionView: GroupSelectionView
   private let deleteToDoButton: UIButton
 
   weak var delegate: EditToDoView.EditToDoViewDelegate?
 
-  init(toDoNameInputView: TextInputViewAPI, groupSelectionView: GroupSelectionViewAPI) {
-    self.toDoNameInputView = toDoNameInputView
-    self.groupSelectionView = groupSelectionView
+  init() {
+    self.toDoNameInputView = TextInputView(model: TextInputView.Model.groupName)
+    self.groupSelectionView = GroupSelectionView(model: GroupSelectionView.Model.primary)
     self.deleteToDoButton = UIButton()
     super.init(frame: CGRect.zero)
     self.setup()
@@ -34,11 +35,13 @@ final class EditToDoView: UIView {
   }
 
   func updateGroup(
-    current: EditToDoView.GroupItem,
-    editableGroupList: [EditToDoView.GroupItem]
+    current: EditToDo.Group,
+    editableGroupList: [EditToDo.Group]
   ) {
-    self.toDoNameInputView.changeBottomLine(color: current.groupColor)
-    self.groupSelectionView.updateGroup(current: current, editableList: editableGroupList)
+    self.toDoNameInputView.changeBottomLine(color: current.color)
+    let currentItem = self.makeGroupSelectionViewItem(from: current)
+    let groupSelectionViewItemList = editableGroupList.map { self.makeGroupSelectionViewItem(from: $0) }
+    self.groupSelectionView.updateGroup(current: currentItem, editableList: groupSelectionViewItemList)
   }
 
   func getCurrentGroupId() -> Int? {
@@ -87,7 +90,7 @@ extension EditToDoView: UIGestureRecognizerDelegate {
     else { return false }
 
     if self.toDoNameInputView.isFirstResponder {
-      self.toDoNameInputView.resignFirstResponder()
+      _ = self.toDoNameInputView.resignFirstResponder()
     }
 
     return true
@@ -140,6 +143,14 @@ extension EditToDoView {
     }
 
     self.deleteToDoButton.addAction(deleteToDoAction, for: UIControl.Event.touchUpInside)
+  }
+
+  private func makeGroupSelectionViewItem(from group: EditToDo.Group) -> GroupSelectionViewItem {
+    return GroupSelectionViewItem(
+      groupId: group.id,
+      groupName: group.name,
+      groupColor: group.color
+    )
   }
 }
 
@@ -259,42 +270,22 @@ extension EditToDoView {
   }
 }
 
-extension EditToDoView {
-  struct GroupItem: GroupSelectionViewItemAPI {
-    let groupId: Int
-    let groupName: String
-    let groupColor: UIColor
-
-    static func < (lhs: EditToDoView.GroupItem, rhs: EditToDoView.GroupItem) -> Bool {
-      lhs.groupId > rhs.groupId
-    }
-  }
+@available(iOS 17.0, *)
+#Preview {
+  let editToDoView = EditToDoView()
+  editToDoView.updateGroup(
+    current: EditToDo.Group(id: 003, name: "국어", color: UIColor.toDoGardenBlue),
+    editableGroupList: [
+      EditToDo.Group(id: 001, name: "CS 지식", color: UIColor.toDoGardenBrown),
+      EditToDo.Group(id: 002, name: "영어", color: UIColor.toDoGardenRed),
+      EditToDo.Group(id: 003, name: "국어", color: UIColor.toDoGardenBlue),
+      EditToDo.Group(id: 004, name: "수학", color: UIColor.toDoGardenMint),
+      EditToDo.Group(id: 005, name: "Swift", color: UIColor.toDoGardenYellow),
+      EditToDo.Group(id: 006, name: "런닝", color: UIColor.toDoGardenPurple),
+      EditToDo.Group(id: 007, name: "지구과학", color: UIColor.toDoGardenGreenDark),
+      EditToDo.Group(id: 008, name: "물리", color: UIColor.toDoGardenOrange)
+    ]
+  )
+  editToDoView.widthAnchor.constraint(equalToConstant: 400).isActive = true
+  return editToDoView
 }
-
-// MARK: Preview를 확인하기 위해 Package.swift 파일에서 UIComponent 의존성을 추가해주세요.
-//  import ToDoGardenUIComponent
-//  @available(iOS 17.0, *)
-//  #Preview {
-//    let scheduleView = EditToDoView(
-//      toDoNameInputView: TextInputView(model: TextInputView.Model.toDoName),
-//      groupSelectionView: GroupSelectionView(model: GroupSelectionView.Model.primary)
-//    )
-//    scheduleView.updateGroup(
-//      current: EditToDoView.GroupItem(groupId: 002, groupName: "영어", groupColor: UIColor.toDoGardenRed),
-//      editableGroupList: [
-//        EditToDoView.GroupItem(groupId: 001, groupName: "CS 지식", groupColor: UIColor.toDoGardenBrown),
-//        EditToDoView.GroupItem(groupId: 002, groupName: "영어", groupColor: UIColor.toDoGardenRed),
-//        EditToDoView.GroupItem(groupId: 003, groupName: "국어", groupColor: UIColor.toDoGardenBlue),
-//        EditToDoView.GroupItem(groupId: 004, groupName: "수학", groupColor: UIColor.toDoGardenMint),
-//        EditToDoView.GroupItem(groupId: 005, groupName: "Swift", groupColor: UIColor.toDoGardenYellow),
-//        EditToDoView.GroupItem(groupId: 006, groupName: "런닝", groupColor: UIColor.toDoGardenPurple),
-//        EditToDoView.GroupItem(groupId: 007, groupName: "지구과학", groupColor: UIColor.toDoGardenGreenDark),
-//        EditToDoView.GroupItem(groupId: 008, groupName: "물리", groupColor: UIColor.toDoGardenOrange)
-//      ]
-//    )
-//    scheduleView.translatesAutoresizingMaskIntoConstraints = false
-//    scheduleView.widthAnchor.constraint(equalToConstant: 400).isActive = true
-//    scheduleView.heightAnchor.constraint(equalToConstant: 600).isActive = true
-//
-//    return scheduleView
-//  }

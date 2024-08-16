@@ -14,15 +14,9 @@ public protocol GroupSelectionViewItemAPI: Hashable, Comparable {
 }
 
 public protocol GroupSelectionViewAPI: UIView {
-  var delegate: GroupSelectionViewDelegate? { get set }
-
   func updateGroup(
     current: any GroupSelectionViewItemAPI,
     editableList: [any GroupSelectionViewItemAPI]
   )
   func getCurrentGroupId() -> Int?
-}
-
-public protocol GroupSelectionViewDelegate: AnyObject {
-  func didSelectGroup(color: UIColor)
 }
