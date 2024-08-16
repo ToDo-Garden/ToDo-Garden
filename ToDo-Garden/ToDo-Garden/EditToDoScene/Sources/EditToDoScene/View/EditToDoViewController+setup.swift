@@ -14,6 +14,7 @@ extension EditToDoViewController {
     self.setupUI()
     self.setupEditModeScrollView()
     self.setupEditModeSegmentedControlAction()
+    self.setupCompleteEditButtonAction()
     self.setupSubviewsLayout()
   }
 

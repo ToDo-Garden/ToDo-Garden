@@ -111,7 +111,19 @@ extension EditToDoViewController: EditToDoDisplayLogic {
     }
   }
 
-  func displayEditToDoResult(viewModel: EditToDo.CompleteEditToDo.ViewModel) {}
+  func displayEditToDoResult(viewModel: EditToDo.CompleteEditToDo.ViewModel) {
+    switch viewModel.editResult {
+    case Result.success:
+      self.router?.routeToToDoListScene()
+    case Result.failure(let error):
+      let errorMessage = (error as CustomStringConvertible).description
+      let errorOccurredAlert = ToDoGardenAlertController(
+        for: ToDoGardenAlertView.Configuration.errorOccurred(errorMessage)
+      )
+      errorOccurredAlert.delegate = self
+      self.showAlert(errorOccurredAlert)
+    }
+  }
 }
 
 // MARK: ToDoGardenAlertController Delegate Functions
