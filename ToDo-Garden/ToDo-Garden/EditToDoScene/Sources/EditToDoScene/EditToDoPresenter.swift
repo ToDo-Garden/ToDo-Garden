@@ -43,7 +43,18 @@ extension EditToDoPresenter: EditToDoPresentationLogic {
   }
   
   func presentDeleteResult(response: EditToDo.DeleteToDo.Response) {}
-  func presentEditResult(response: EditToDo.CompleteEditToDo.Response) {}
+
+  func presentEditResult(response: EditToDo.CompleteEditToDo.Response) {
+    switch response.editResult {
+    case Result.success:
+      let viewModel = EditToDo.CompleteEditToDo.ViewModel(editResult: Result.success(()))
+      self.viewController?.displayEditToDoResult(viewModel: viewModel)
+    case Result.failure(let error):
+      let viewModel = EditToDo.CompleteEditToDo.ViewModel(editResult: Result.failure(error))
+      self.viewController?.displayEditToDoResult(viewModel: viewModel)
+    }
+  }
+
   func presentAlarmActivation(response: EditToDo.ChangeAlarmActivation.Response) {}
   func presentChangedRepetition(response: EditToDo.ChangeRepetition.Response) {}
 }
