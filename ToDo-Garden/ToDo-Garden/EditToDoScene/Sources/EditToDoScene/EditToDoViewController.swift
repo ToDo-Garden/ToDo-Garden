@@ -149,9 +149,22 @@ extension EditToDoViewController {
   }
 }
 
+extension EditToDoViewController {
+  struct EditToDoScenePayload: EditToDoScenePayloadable {
+    var toDoId: Int
+  }
+}
+
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  return UINavigationController(rootViewController: EditToDoViewController())
+  let editToDoViewController = EditToDoSceneBuilder(
+    dependency: EditToDoSceneBuilder.Dependency(
+      someWorker: EditToDoWorker(),
+      toDoWorker: ToDoWorker(),
+      groupWorker: GroupWorker()
+    )
+  ).build(with: EditToDoViewController.EditToDoScenePayload(toDoId: 0))
+  return UINavigationController(rootViewController: editToDoViewController)
 }
 #endif
