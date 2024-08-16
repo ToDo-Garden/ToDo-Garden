@@ -62,7 +62,7 @@ final class EditToDoViewController: UIViewController, EditToDoViewControllable {
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    self.fetchToDo()
+    self.interactor?.fetchToDo()
   }
 
   override func viewDidLayoutSubviews() {
@@ -78,22 +78,12 @@ final class EditToDoViewController: UIViewController, EditToDoViewControllable {
 // MARK: - Request to interactor
 
 extension EditToDoViewController {
-  private func fetchToDo() {
-    let request = EditToDo.FetchToDo.Request()
-    self.interactor?.fetchToDo(request: request)
-  }
-
   func editToDo() {
     if let toDoNameForEdit = self.editToDoView.getEditingText(),
       let groupForEdit = self.editToDoView.getCurrentGroup() {
       let request = EditToDo.CompleteEditToDo.Request(toDoName: toDoNameForEdit, displayedGroup: groupForEdit)
       self.interactor?.editToDo(request: request)
     }
-  }
-
-  func deleteToDo() {
-    let request = EditToDo.DeleteToDo.Request()
-    self.interactor?.deleteToDo(request: request)
   }
 }
 
@@ -145,11 +135,11 @@ extension EditToDoViewController: ToDoGardenAlertControllerDelegate {
     self.closeAlert()
     switch buttonType {
     case .retry:
-      self.fetchToDo()
+      self.interactor?.fetchToDo()
     case .goHome:
       self.router?.routeToToDoListScene()
     case .delete:
-      self.deleteToDo()
+      self.interactor?.deleteToDo()
     default:
       break
     }
