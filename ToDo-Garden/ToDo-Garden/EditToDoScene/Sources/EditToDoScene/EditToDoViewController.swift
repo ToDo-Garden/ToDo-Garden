@@ -16,6 +16,7 @@ import ToDoGardenUIConstant
 
 protocol EditToDoDisplayLogic: AnyObject {
   func displayFetchedToDo(viewModel: EditToDo.FetchToDo.ViewModel)
+  func displayDeleteToDoResult(viewModel: EditToDo.DeleteToDo.ViewModel)
   func displayEditToDoResult(viewModel: EditToDo.CompleteEditToDo.ViewModel)
 }
 
@@ -114,6 +115,9 @@ extension EditToDoViewController: EditToDoDisplayLogic {
       failToFetchAlert.delegate = self
       self.showAlert(failToFetchAlert)
     }
+  }
+
+  func displayDeleteToDoResult(viewModel: EditToDo.DeleteToDo.ViewModel) {
   }
 
   func displayEditToDoResult(viewModel: EditToDo.CompleteEditToDo.ViewModel) {

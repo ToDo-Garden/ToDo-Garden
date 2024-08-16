@@ -42,7 +42,16 @@ extension EditToDoPresenter: EditToDoPresentationLogic {
     }
   }
   
-  func presentDeleteResult(response: EditToDo.DeleteToDo.Response) {}
+  func presentDeleteResult(response: EditToDo.DeleteToDo.Response) {
+    switch response.deleteResult {
+    case Result.success:
+      let viewModel = EditToDo.DeleteToDo.ViewModel(deleteResult: Result.success(()))
+      self.viewController?.displayDeleteToDoResult(viewModel: viewModel)
+    case Result.failure(let error):
+      let viewModel = EditToDo.DeleteToDo.ViewModel(deleteResult: Result.failure(error))
+      self.viewController?.displayDeleteToDoResult(viewModel: viewModel)
+    }
+  }
 
   func presentEditResult(response: EditToDo.CompleteEditToDo.Response) {
     switch response.editResult {
