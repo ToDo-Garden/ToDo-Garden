@@ -20,7 +20,7 @@ public final class ToDoWorker: ToDoWorkLogic {
   public init() {}
 
   public func fetchToDo(id: Int?) throws -> EditToDo.ToDo {
-    return MockData.FetchToDo.firstData
+    throw MockToDoWorkerError.unknownError
   }
 
   public func deleteToDo(id: Int?) throws {

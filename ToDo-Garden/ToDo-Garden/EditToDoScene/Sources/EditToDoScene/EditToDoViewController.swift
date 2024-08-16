@@ -10,7 +10,9 @@ import UIKit
 import EditToDoSceneAPI
 import EditToDoSceneEntity
 import TDUtility
+import ToDoGardenUIAPI
 import ToDoGardenUIComponent
+import ToDoGardenUIConstant
 
 protocol EditToDoDisplayLogic: AnyObject {
   func displayFetchedToDo(viewModel: EditToDo.FetchToDo.ViewModel)
@@ -83,7 +85,40 @@ extension EditToDoViewController {
 // MARK: - Confirm display logic protocol
 
 extension EditToDoViewController: EditToDoDisplayLogic {
-  func displayFetchedToDo(viewModel: EditToDo.FetchToDo.ViewModel) {}
+  func displayFetchedToDo(viewModel: EditToDo.FetchToDo.ViewModel) {
+    switch viewModel.fetchedToDoResult {
+    case Result.success(let displayedToDo):
+      self.editToDoView.updateToDoName(displayedToDo.toDoName)
+      self.editToDoView.updateGroup(current: displayedToDo.group, editableGroupList: displayedToDo.groupList)
+      self.updateAlarmState(isAlarmOn: displayedToDo.isAlarmOn)
+      self.updateRepetitionViewState(displayedToDo.repetitionViewState)
+      if let alarmTime = displayedToDo.alarmTime {
+        self.editToDoScheduleView.updateAlarmTime(alarmTime: alarmTime)
+      }
+    case Result.failure:
+      let failToFetchAlert = ToDoGardenAlertController(for: ToDoGardenAlertView.Configuration.failToFetchToDo)
+      failToFetchAlert.delegate = self
+      self.showAlert(failToFetchAlert)
+    }
+  }
+}
+
+// MARK: ToDoGardenAlertController Delegate Functions
+
+extension EditToDoViewController: ToDoGardenAlertControllerDelegate {
+  func handleButtonAction(
+    _ buttonType: ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType
+  ) {
+    self.closeAlert()
+    switch buttonType {
+    case .retry:
+      self.fetchToDo()
+    case .goHome:
+      self.router?.routeToToDoListScene()
+    default:
+      break
+    }
+  }
 }
 
 // MARK: ScrollView Delegate Functions
@@ -108,22 +143,52 @@ extension EditToDoViewController: UIScrollViewDelegate {
   }
 }
 
+// MARK: Private Functions
+
+extension EditToDoViewController {
+  private func updateAlarmState(isAlarmOn: Bool) {
+    if isAlarmOn {
+      self.editToDoScheduleView.updateToAlarmOn()
+    } else {
+      self.editToDoScheduleView.updateToAlarmOff()
+    }
+  }
+
+  private func updateRepetitionViewState(_ state: EditToDo.EditToDoRepetitionViewState) {
+    switch state {
+    case .repeatOnlyToday:
+      self.editToDoScheduleView.updateToRepeatOnlyToday()
+    case .repeatEveryday:
+      self.editToDoScheduleView.updateToRepeatEveryday()
+    case .repeatInRange:
+      self.editToDoScheduleView.updateToRepeatInRange()
+    }
+  }
+}
+
 extension EditToDoViewController {
   struct EditToDoScenePayload: EditToDoScenePayloadable {
     var toDoId: Int
+  }
+
+  class SomeViewController: UIViewController {
+    override func viewDidAppear(_ animated: Bool) {
+      super.viewDidAppear(animated)
+      let editToDoViewController = EditToDoSceneBuilder(
+        dependency: EditToDoSceneBuilder.Dependency(
+          someWorker: EditToDoWorker(),
+          toDoWorker: ToDoWorker(),
+          groupWorker: GroupWorker()
+        )
+      ).build(with: EditToDoViewController.EditToDoScenePayload(toDoId: 0))
+      self.navigationController?.pushViewController(editToDoViewController, animated: true)
+    }
   }
 }
 
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  let editToDoViewController = EditToDoSceneBuilder(
-    dependency: EditToDoSceneBuilder.Dependency(
-      someWorker: EditToDoWorker(),
-      toDoWorker: ToDoWorker(),
-      groupWorker: GroupWorker()
-    )
-  ).build(with: EditToDoViewController.EditToDoScenePayload(toDoId: 0))
-  return UINavigationController(rootViewController: editToDoViewController)
+  return UINavigationController(rootViewController: EditToDoViewController.SomeViewController())
 }
 #endif

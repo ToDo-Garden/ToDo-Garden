@@ -10,6 +10,7 @@ import Foundation
 import EditToDoSceneAPI
 
 protocol EditToDoRoutingLogic {
+  func routeToToDoListScene()
 }
 
 protocol EditToDoDataPassing {
@@ -24,4 +25,7 @@ class EditToDoRouter: EditToDoDataPassing {
 // MARK: - Routing
 
 extension EditToDoRouter: EditToDoRoutingLogic {
+  func routeToToDoListScene() {
+    self.viewController?.navigationController?.popViewController(animated: true)
+  }
 }
