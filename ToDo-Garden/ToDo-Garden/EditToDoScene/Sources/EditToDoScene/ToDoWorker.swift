@@ -20,7 +20,7 @@ public final class ToDoWorker: ToDoWorkLogic {
   public init() {}
 
   public func fetchToDo(id: Int?) throws -> EditToDo.ToDo {
-    return MockData.FetchToDo.secondData
+    throw MockToDoWorkerError.networkConnectionRequired
   }
 
   public func deleteToDo(id: Int?) throws {

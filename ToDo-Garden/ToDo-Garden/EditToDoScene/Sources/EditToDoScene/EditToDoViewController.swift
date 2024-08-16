@@ -118,6 +118,12 @@ extension EditToDoViewController: EditToDoDisplayLogic {
   }
 
   func displayDeleteToDoResult(viewModel: EditToDo.DeleteToDo.ViewModel) {
+    switch viewModel.deleteResult {
+    case Result.success:
+      self.router?.routeToToDoListScene()
+    case Result.failure(let error):
+      self.showErrorAlert(error)
+    }
   }
 
   func displayEditToDoResult(viewModel: EditToDo.CompleteEditToDo.ViewModel) {
@@ -125,12 +131,7 @@ extension EditToDoViewController: EditToDoDisplayLogic {
     case Result.success:
       self.router?.routeToToDoListScene()
     case Result.failure(let error):
-      let errorMessage = (error as CustomStringConvertible).description
-      let errorOccurredAlert = ToDoGardenAlertController(
-        for: ToDoGardenAlertView.Configuration.errorOccurred(errorMessage)
-      )
-      errorOccurredAlert.delegate = self
-      self.showAlert(errorOccurredAlert)
+      self.showErrorAlert(error)
     }
   }
 }
@@ -153,6 +154,15 @@ extension EditToDoViewController: ToDoGardenAlertControllerDelegate {
       break
     }
   }
+
+  private func showErrorAlert(_ error: Error) {
+    let errorMessage = (error as CustomStringConvertible).description
+    let errorOccurredAlert = ToDoGardenAlertController(
+      for: ToDoGardenAlertView.Configuration.errorOccurred(errorMessage)
+    )
+    errorOccurredAlert.delegate = self
+    self.showAlert(errorOccurredAlert)
+  }
 }
 
 // MARK: Subviews Delegate Functions
@@ -164,8 +174,6 @@ extension EditToDoViewController: EditToDoView.EditToDoViewDelegate {
     self.showAlert(deleteToDoAlert)
   }
 }
-
-// MARK: Subviews Delegate Functions
 
 // MARK: ScrollView Delegate Functions
 
