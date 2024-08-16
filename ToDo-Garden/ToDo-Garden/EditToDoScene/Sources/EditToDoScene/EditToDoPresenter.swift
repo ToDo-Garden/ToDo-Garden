@@ -91,7 +91,7 @@ extension EditToDoPresenter {
   }
 
   private func makeAlarmTimeString(from time: Double?) -> String? {
-    if let time = time {
+    if let time {
       let timeIntValue = Int(time)
       let secondsPerHour = 3600
       let secondsPerMinute = 60
@@ -104,8 +104,8 @@ extension EditToDoPresenter {
   }
 
   private func makeDayString(from date: Date?) -> String? {
-    if let unwarppedDate = date {
-      return self.dateFormatter.string(from: unwarppedDate)
+    if let date {
+      return self.dateFormatter.string(from: date)
     } else {
       return nil
     }
