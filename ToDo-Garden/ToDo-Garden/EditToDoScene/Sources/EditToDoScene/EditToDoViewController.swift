@@ -26,12 +26,12 @@ final class EditToDoViewController: UIViewController, EditToDoViewControllable {
   @ExecuteOnce private var scrollToEditToDoMode: (() -> Void)?
 
   // MARK: - VIP Properties
-  
+
   var interactor: EditToDoBusinessLogic?
   var router: (EditToDoRoutingLogic & EditToDoDataPassing)?
-  
+
   // MARK: - Object lifecycle
-  
+
   init() {
     self.editToDoSegmentedControl = EditToDoSegmentedControl()
     self.editModeScrollView = UIScrollView()
@@ -43,14 +43,14 @@ final class EditToDoViewController: UIViewController, EditToDoViewControllable {
     )
     super.init(nibName: nil, bundle: nil)
   }
-  
+
   @available(*, unavailable)
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   // MARK: - View lifecycle
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
     self.setup()
@@ -105,47 +105,6 @@ extension EditToDoViewController: UIScrollViewDelegate {
     let editModeType = EditToDoSegmentedControl.EditMode.self
     let editMode = targetOffset == scrollViewWidth ? editModeType.todo : editModeType.notification
     self.editToDoSegmentedControl.selectedSegmentIndex = editMode.rawValue
-  }
-}
-
-// MARK: Private Functions
-
-extension EditToDoViewController {
-  private func setup() {
-    self.setupUI()
-    self.setupEditModeScrollView()
-    self.setupEditModeSegmentedControlAction()
-    self.setupSubviewsLayout()
-  }
-
-  private func setupUI() {
-    self.title = EditToDoSceneTheme.StringLiteral.EditToDoViewController.title
-    self.view.backgroundColor = UIColor.toDoGardenWhite
-  }
-
-  private func setupEditModeScrollView() {
-    self.editModeScrollView.showsVerticalScrollIndicator = false
-    self.editModeScrollView.showsHorizontalScrollIndicator = false
-    self.editModeScrollView.isPagingEnabled = true
-    self.editModeScrollView.delegate = self
-    self.editModeScrollView.bounces = false
-  }
-
-  private func setupEditModeSegmentedControlAction() {
-    let segmentedControlAction = UIAction { _ in
-      if let editMode = self.editToDoSegmentedControl.editMode {
-        self.changeEditMode(by: editMode)
-      }
-    }
-
-    self.editToDoSegmentedControl.addAction(segmentedControlAction, for: UIControl.Event.valueChanged)
-  }
-
-  private func changeEditMode(by editMode: EditToDoSegmentedControl.EditMode) {
-    let editModeType = EditToDoSegmentedControl.EditMode.self
-    let pointX = editMode == editModeType.notification ? 0 : self.editModeScrollView.frame.width
-    let contentOffset = CGPoint(x: pointX, y: 0)
-    self.editModeScrollView.setContentOffset(contentOffset, animated: true)
   }
 }
 
