@@ -1,5 +1,5 @@
 //
-//  EditToDoViewController+setupSubviewsLayout.swift
+//  EditToDoViewController+setup.swift
 //
 //
 //  Created by Wood on 8/5/24.
@@ -45,6 +45,14 @@ extension EditToDoViewController {
     let pointX = editMode == editModeType.notification ? 0 : self.editModeScrollView.frame.width
     let contentOffset = CGPoint(x: pointX, y: 0)
     self.editModeScrollView.setContentOffset(contentOffset, animated: true)
+  }
+
+  private func setupCompleteEditButtonAction() {
+    let editAction = UIAction { _ in
+      self.editToDo()
+    }
+
+    self.completeEditButton.addAction(editAction, for: UIControl.Event.touchUpInside)
   }
 
   private func setupSubviewsLayout() {

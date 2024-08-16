@@ -95,7 +95,7 @@ public enum EditToDo {
       public let toDoName: String
       public let displayedGroup: DisplayedGroup
 
-      init(toDoName: String, displayedGroup: DisplayedGroup) {
+      public init(toDoName: String, displayedGroup: DisplayedGroup) {
         self.toDoName = toDoName
         self.displayedGroup = displayedGroup
       }

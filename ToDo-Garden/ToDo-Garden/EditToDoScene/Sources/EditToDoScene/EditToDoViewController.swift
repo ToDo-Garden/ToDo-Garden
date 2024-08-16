@@ -80,6 +80,14 @@ extension EditToDoViewController {
     let request = EditToDo.FetchToDo.Request()
     self.interactor?.fetchToDo(request: request)
   }
+
+  func editToDo() {
+    if let toDoNameForEdit = self.editToDoView.getEditingText(),
+      let groupForEdit = self.editToDoView.getCurrentGroup() {
+      let request = EditToDo.CompleteEditToDo.Request(toDoName: toDoNameForEdit, displayedGroup: groupForEdit)
+      self.interactor?.editToDo(request: request)
+    }
+  }
 }
 
 // MARK: - Confirm display logic protocol

@@ -44,8 +44,16 @@ final class EditToDoView: UIView {
     self.groupSelectionView.updateGroup(current: currentItem, editableList: groupSelectionViewItemList)
   }
 
-  func getCurrentGroupId() -> Int? {
-    return self.groupSelectionView.getCurrentGroupId()
+  func getCurrentGroup() -> EditToDo.CompleteEditToDo.Request.DisplayedGroup? {
+    if let currentGroup = self.groupSelectionView.getCurrentGroup() {
+      return EditToDo.CompleteEditToDo.Request.DisplayedGroup(
+        id: currentGroup.groupId,
+        name: currentGroup.groupName,
+        color: currentGroup.groupColor
+      )
+    } else {
+      return nil
+    }
   }
 
   func getEditingText() -> String? {
