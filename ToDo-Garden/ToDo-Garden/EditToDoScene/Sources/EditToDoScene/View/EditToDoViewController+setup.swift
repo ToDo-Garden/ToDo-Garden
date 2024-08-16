@@ -15,6 +15,7 @@ extension EditToDoViewController {
     self.setupEditModeScrollView()
     self.setupEditModeSegmentedControlAction()
     self.setupCompleteEditButtonAction()
+    self.setupSubviewsDelegate()
     self.setupSubviewsLayout()
   }
 
@@ -56,6 +57,14 @@ extension EditToDoViewController {
     self.completeEditButton.addAction(editAction, for: UIControl.Event.touchUpInside)
   }
 
+  private func setupSubviewsDelegate() {
+    self.editToDoView.delegate = self
+  }
+}
+
+// MARK: Auto Layout
+
+extension EditToDoViewController {
   private func setupSubviewsLayout() {
     self.setupEditToDoSegmentedControlLayout()
     self.setupCompleteEditButtonLayout()

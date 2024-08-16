@@ -89,6 +89,11 @@ extension EditToDoViewController {
       self.interactor?.editToDo(request: request)
     }
   }
+
+  func deleteToDo() {
+    let request = EditToDo.DeleteToDo.Request()
+    self.interactor?.deleteToDo(request: request)
+  }
 }
 
 // MARK: - Confirm display logic protocol
@@ -138,11 +143,25 @@ extension EditToDoViewController: ToDoGardenAlertControllerDelegate {
       self.fetchToDo()
     case .goHome:
       self.router?.routeToToDoListScene()
+    case .delete:
+      self.deleteToDo()
     default:
       break
     }
   }
 }
+
+// MARK: Subviews Delegate Functions
+
+extension EditToDoViewController: EditToDoView.EditToDoViewDelegate {
+  func didSelectDeleteToDoButton() {
+    let deleteToDoAlert = ToDoGardenAlertController(for: ToDoGardenAlertView.Configuration.askToDeleteToDo)
+    deleteToDoAlert.delegate = self
+    self.showAlert(deleteToDoAlert)
+  }
+}
+
+// MARK: Subviews Delegate Functions
 
 // MARK: ScrollView Delegate Functions
 
