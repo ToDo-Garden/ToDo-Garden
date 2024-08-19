@@ -8,15 +8,16 @@ import Foundation
 
 extension DateRangeSelectionDelegate {
   func updateSelectionState() {
-    if startDate != nil {
-      if endDate != nil {
-        self.currentSelectionState = RangeSelectionState.startAndEnd
-      } else {
-        self.currentSelectionState = RangeSelectionState.startOnly
-      }
-    } else {
-      self.currentSelectionState = RangeSelectionState.empty
-    }
+    let hasStartDate = startDate != nil
+    let hasEndDate = endDate != nil
+    
+    let isRangeComplete = hasStartDate && hasEndDate
+    let isStartDateOnly = hasStartDate && !hasEndDate
+    
+    self.currentSelectionState = 
+    isRangeComplete ? RangeSelectionState.startAndEnd :
+    isStartDateOnly ? RangeSelectionState.startOnly :
+    RangeSelectionState.empty
   }
   
   func updateVisibleSelection(isAfterReload: Bool = false) {
