@@ -24,8 +24,8 @@ final class DateRangeCollectionViewCell: CalendarCollectionViewCell {
     }
   }
   
-  private var rightWingView: UIView
-  private var leftWingView: UIView
+  private let rightWingView: UIView
+  private let leftWingView: UIView
   
   override init(frame: CGRect) {
     self.rightWingView = UIView()
