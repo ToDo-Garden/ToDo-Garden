@@ -24,7 +24,7 @@ final class AppSupportView: UIView {
   }
 }
 
-// MARK: Private Functions
+// MARK: AppSupportView Delegate Functions
 
 protocol AppSupportViewDelegate: AnyObject {
   func didSelectAnnouncementButton()
