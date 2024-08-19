@@ -9,8 +9,14 @@ import Foundation
 
 public enum Guide {
   
-  // MARK: Use cases
+  public enum GuideState: Sendable {
+    case todoCreate
+    case groupManagement
+    case todoEdit
+    case shareTab
+  }
   
+  // MARK: Use cases
   public enum Something {
     public struct Request {
       public init() { }
