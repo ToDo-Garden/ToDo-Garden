@@ -7,8 +7,6 @@
 
 import UIKit
 
-import ToDoGardenUIConstant
-
 public final class DateRangePickerCalendar: CalendarView {
   
   public override init(model: CalendarView.Model) {
