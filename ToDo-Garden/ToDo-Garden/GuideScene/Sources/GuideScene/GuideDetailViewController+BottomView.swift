@@ -37,6 +37,7 @@ extension GuideDetailViewController {
     
     func updateContents(_ contents: [UIView]) {
       self.subviewCount = contents.count
+      self.updateStepLabel()
       for content in contents {
         let view = UIView()
         view.addSubview(content)
@@ -151,7 +152,6 @@ extension GuideDetailViewController {
       let label = UILabel()
       label.font = UIFont.pretendardBodyBold
       label.textColor = UIColor.toDoGardenGreenDark
-      label.text = "1/3"
       
       return label
     }
@@ -196,8 +196,15 @@ extension GuideDetailViewController.BottomView: UIScrollViewDelegate {
     let viewSize = scrollView.bounds.width
     let index = Int(round(scrollView.contentOffset.x / viewSize))
     self.currentIndex = index
+    self.updateStepLabel(currentIndex)
+    self.updateButtons()
+  }
+  
+  private func updateStepLabel(_ index: Int = 0) {
     self.stepLabel.text = "\(index + 1)/\(self.subviewCount)"
-    
+  }
+  
+  private func updateButtons() {
     if self.currentIndex == 0 {
       self.leftButton.isHidden = true
     } else if self.currentIndex == self.subviewCount - 1 {
