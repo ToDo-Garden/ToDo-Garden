@@ -77,9 +77,9 @@ extension ShareGardenSceneViewController.MyGardenView {
   
   private func setupStackView() {
     self.spacing = 14
-    self.distribution = UIStackView.Distribution.fillEqually
+    self.distribution = UIStackView.Distribution.fillProportionally
     self.axis = NSLayoutConstraint.Axis.vertical
-    self.alignment = UIStackView.Alignment.fill
+    self.alignment = UIStackView.Alignment.center
   }
   
   private func addSubviews() {
@@ -94,6 +94,7 @@ extension ShareGardenSceneViewController.MyGardenView {
 extension ShareGardenSceneViewController.MyGardenView {
   private func setupLayoutConstraints() {
     self.setupSectionHeaderViewLayoutConstraints()
+    self.setupProfileInfoViewLayoutConstraints()
   }
   
   private func setupSectionHeaderViewLayoutConstraints() {
@@ -107,6 +108,21 @@ extension ShareGardenSceneViewController.MyGardenView {
       right: rightInset
     )
     self.sectionHeaderView.isLayoutMarginsRelativeArrangement = true
+    
+    self.sectionHeaderView.usingAutolayout()
+    NSLayoutConstraint.activate([
+      self.sectionHeaderView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+      self.sectionHeaderView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+    ])
+  }
+  
+  private func setupProfileInfoViewLayoutConstraints() {
+    self.profileInfoView.usingAutolayout()
+    
+    NSLayoutConstraint.activate([
+      self.profileInfoView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+      self.profileInfoView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+    ])
   }
 }
 
