@@ -25,6 +25,67 @@ extension GuideSceneContentsBuilder {
   )
 }
 
+extension GuideSceneBottomContentsViewBuilder {
+  private func buildStack(subviews: [UIView], spacing: CGFloat) -> UIView {
+    let stack = UIStackView(
+      arrangedSubviews: subviews
+    )
+    stack.axis = .vertical
+    stack.alignment = .leading
+    stack.spacing = spacing
+    
+    return stack
+  }
+  
+  private func wrapping(_ view: UIView) -> UIView {
+    let sp1 = UIView()
+    let sp2 = UIView()
+    
+    let stack = UIStackView(arrangedSubviews: [sp1, view, sp2])
+    stack.axis = .vertical
+    stack.distribution = .equalSpacing
+    sp1.heightAnchor.constraint(equalTo: sp2.heightAnchor).isActive = true
+    stack.subviews.forEach {
+      $0.isUserInteractionEnabled = false
+    }
+    
+    return stack
+  }
+  
+  private func buildLabel(
+    text: String,
+    font: UIFont = UIFont.pretendardBodySemiBold,
+    textColor: UIColor = UIColor.toDoGardenGreenDark
+  ) -> UILabel {
+    let label = UILabel()
+    label.text = text
+    label.font = font
+    label.textColor = textColor
+    label.setContentHuggingPriority(
+      .defaultHigh,
+      for: .horizontal
+    )
+
+    return label
+  }
+  
+  private func addBottomLine(_ view: UIView, width: CGFloat) -> UIView {
+    let line = UIView()
+    line.backgroundColor = UIColor.toDoGardenGreenDark
+    let stack = UIStackView(arrangedSubviews: [view, line])
+    stack.axis = .vertical
+    stack.alignment = .leading
+    
+    line.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor).isActive = true
+    line.widthAnchor.constraint(equalToConstant: width).isActive = true
+
+    
+    line.heightAnchor.constraint(equalToConstant: 1).isActive = true
+    
+    return stack
+  }
+}
+
 // MARK: - Bottom Contents
 struct GuideSceneBottomContentsViewBuilder {
   func buildCreateToDo() -> [UIView] {
@@ -32,13 +93,10 @@ struct GuideSceneBottomContentsViewBuilder {
   }
   
   private func buildCreateToDo1() -> UIView {
-    let label = buildLabel()
-    label.text = "그룹 우측"
-    let label2 = buildLabel()
-    label2.text = " 을 눌러서"
+    let label = buildLabel(text: "그룹 우측")
+    let label2 = buildLabel(text: " 을 눌러서")
     let hstack = UIStackView(arrangedSubviews: [buildCreateToDo1Button(), label2])
-    let label3 = buildLabel()
-    label3.text = "투두를 생성할 수 있어요."
+    let label3 = buildLabel(text: "투두를 생성할 수 있어요.")
     
     return wrapping(
       buildStack(
@@ -70,11 +128,12 @@ struct GuideSceneBottomContentsViewBuilder {
   }
   
   private func buildCreateToDo2() -> UIView {
-    let label = buildLabel()
-    label.text = "생성한 투두를 끝마쳤다면,"
+    let label = buildLabel(text: "생성한 투두를 끝마쳤다면,")
     
-    let label2 = buildLabel()
-    label2.text = "투두를 눌러서 완료할 수 있어요!"
+    let label2 = buildLabel(
+      text: "투두를 눌러서 완료할 수 있어요!",
+      font: UIFont.pretendardHeadSemiBold
+    )
     let line = UIView()
     line.backgroundColor = .toDoGardenGreenDark
     
@@ -94,12 +153,13 @@ struct GuideSceneBottomContentsViewBuilder {
   
   private func buildCreateToDo3() -> UIView {
     let imageView = UIImageView(image: UIImage.timerButtonImage)
-    let label = buildLabel()
-    label.text = "버튼을 눌러서"
+    let label = buildLabel(text: "버튼을 눌러서")
     let hstack = UIStackView(arrangedSubviews: [imageView, label])
     
-    let label2 = buildLabel()
-    label2.text = "타이머를 실행할 수 있어요."
+    let label2 = buildLabel(
+      text: "타이머를 실행할 수 있어요.",
+      font: UIFont.pretendardHeadSemiBold
+    )
     let padding = UIView()
     let hstack2 = UIStackView(arrangedSubviews: [padding, label2])
     padding.widthAnchor.constraint(equalToConstant: 3).isActive = true
