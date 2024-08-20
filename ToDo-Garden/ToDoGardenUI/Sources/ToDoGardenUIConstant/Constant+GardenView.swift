@@ -15,6 +15,8 @@ extension Constant.GardenView.Layout {
   public enum PomodoroRecordCollectionView { }
   public static let cornerRadiusRatio: CGFloat = 13.68 / 332.0
   public static let borderWidth: CGFloat = 1.0
+  public static let contentWidth: CGFloat = 332.0
+  public static let contentHeight: CGFloat = 119.0
 }
 
 extension Constant.GardenView.Layout.PomodoroRecordCollectionView {
