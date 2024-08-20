@@ -41,6 +41,8 @@ extension ShareGardenSceneViewController {
       return profileInfoView
     }()
     
+    private let gardenView: GardenView = GardenView()
+    
     // MARK: - Properties
     
     @ExecuteOnce private var setupLayoutIfNeeded: (() -> Void)?
@@ -83,6 +85,7 @@ extension ShareGardenSceneViewController.MyGardenView {
   private func addSubviews() {
     self.addArrangedSubview(self.sectionHeaderView)
     self.addArrangedSubview(self.profileInfoView)
+    self.addArrangedSubview(self.gardenView)
   }
 }
 
