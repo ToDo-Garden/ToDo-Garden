@@ -173,40 +173,87 @@ struct GuideSceneBottomContentsViewBuilder {
       )
     )
   }
+}
+
+// MARK: - Group Management
+extension GuideSceneBottomContentsViewBuilder {
+  func buildGroupManagement() -> [UIView] {
+    [buildGroupManagement1(), buildGroupManagement2(), buildGroupManagement3()]
+  }
   
-  private func buildStack(subviews: [UIView], spacing: CGFloat) -> UIView {
-    let stack = UIStackView(
-      arrangedSubviews: subviews
+  private func buildGroupManagement1() -> UIView {
+    let label = buildLabel(
+      text: "원하는 그룹을 터치하면",
+      textColor: UIColor.toDoGardenGray3
     )
-    stack.axis = .vertical
-    stack.alignment = .leading
-    stack.spacing = spacing
+    let label2 = buildLabel(
+      text: "그룹 수정 화면에 들어갈 수 있어요.",
+      font: UIFont.pretendardHeadSemiBold
+    )
     
-    return stack
+    return wrapping(buildStack(subviews: [label, label2], spacing: 8))
   }
   
-  private func wrapping(_ view: UIView) -> UIView {
+  private func buildGroupManagement2() -> UIView {
+    let image = UIImage.createToDoButtonImage
+      .resizing(targetSize: CGSize(width: 9, height: 9))
+    let imageView = UIImageView(image: image)
+    imageView.contentMode = UIView.ContentMode.center
     
-    let sp1 = UIView()
-    let sp2 = UIView()
-    
-    let stack = UIStackView(arrangedSubviews: [sp1, view, sp2])
+    let label = buildLabel(text: "그룹 추가하기", font: UIFont.pretendardBodySemiBold13)
+    let line = UIView()
+    line.backgroundColor = UIColor.toDoGardenGreenDark
+    let spacing = UIView()
+    let stack = UIStackView(arrangedSubviews: [label, line, spacing])
     stack.axis = .vertical
-    stack.distribution = .equalSpacing
-    sp1.heightAnchor.constraint(equalTo: sp2.heightAnchor).isActive = true
-    stack.subviews.forEach {
-      $0.isUserInteractionEnabled = false
-    }
+    stack.spacing = 1
+    line.heightAnchor.constraint(equalToConstant: 1).isActive = true
+    spacing.heightAnchor.constraint(equalToConstant: 1).isActive = true
+    stack.setCustomSpacing(0, after: line)
     
-    return stack
+    let label2 = buildLabel(text: "버튼을 터치하면", textColor: UIColor.toDoGardenGray3)
+    let hstack = UIStackView(arrangedSubviews: [imageView, stack, label2])
+    hstack.alignment = .top
+    hstack.spacing = 3
+    imageView.widthAnchor.constraint(equalToConstant: 20).isActive = true
+    imageView.heightAnchor.constraint(equalToConstant: 20).isActive = true
+    
+    let label3 = buildLabel(
+      text: "그룹을 생성할 수 있어요.",
+      font: UIFont.pretendardHeadSemiBold
+    )
+    let spacing2 = UIView()
+    let hstack2 = UIStackView(arrangedSubviews: [spacing2, label3])
+    spacing2.widthAnchor.constraint(equalToConstant: 10).isActive = true
+    
+    
+    return wrapping(buildStack(subviews: [hstack, hstack2], spacing: 8))
   }
   
-  private func buildLabel() -> UILabel {
+  private func buildGroupManagement3() -> UIView {
     let label = UILabel()
-    label.textColor = UIColor.toDoGardenGreenDark
-    label.font = .pretendardBodySemiBold
+    let fullText = "편집 버튼을 누르면"
+    let attributedString = NSMutableAttributedString(string: fullText)
+    label.textColor = .systemGray3
+    let range = (fullText as NSString).range(of: "편집")
+    attributedString.addAttribute(.foregroundColor, value: UIColor.toDoGardenOrange, range: range)
     
-    return label
+    label.attributedText = attributedString
+    label.font = UIFont.pretendardBodySemiBold
+    let label2 = buildLabel(
+      text: "그룹 삭제와 수정을 할 수 있어요.",
+      font: UIFont.pretendardHeadSemiBold
+    )
+    
+    return wrapping(buildStack(subviews: [label, label2], spacing: 8))
   }
 }
 
+
+extension UIImage {
+  func resizing(targetSize size: CGSize) -> UIImage? {
+    UIGraphicsImageRenderer(size: size).image { _ in
+      self.draw(in: CGRect(origin: .zero, size: size))
+    }
+  }
+}
