@@ -58,6 +58,11 @@ extension ShareGardenSceneViewController {
       self.setup()
     }
     
+    @available(*, unavailable)
+    required init(coder: NSCoder) {
+      fatalError("init(coder:) has not been implemented")
+    }
+    
     override func layoutSubviews() {
       super.layoutSubviews()
       self.setupLayoutIfNeeded = {
@@ -66,10 +71,6 @@ extension ShareGardenSceneViewController {
       }
     }
     
-    @available(*, unavailable)
-    required init(coder: NSCoder) {
-      fatalError("init(coder:) has not been implemented")
-    }
   }
 }
 
