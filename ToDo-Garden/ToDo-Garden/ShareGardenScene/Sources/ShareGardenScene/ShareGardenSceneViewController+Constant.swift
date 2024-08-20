@@ -21,6 +21,11 @@ extension ShareGardenSceneViewController.Constant.StringLiteral {
     static let title = "나의 가든"
   }
   
+  enum ProfileInfoView {
+    static let nicknamePlaceholder = "                      "
+    static let descriptionPlaceholder = " "
+  }
+  
   enum FriendsGardenSectionHeaderView {
     static let title = "친구의 가든"
     static let rightActionButtonTitle = "편집"

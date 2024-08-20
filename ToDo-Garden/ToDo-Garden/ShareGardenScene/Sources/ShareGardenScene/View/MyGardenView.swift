@@ -19,9 +19,10 @@ extension ShareGardenSceneViewController {
     private let sectionHeaderView: SectionHeaderView = {
       let shareButton = UIButton()
       shareButton.setImage(UIImage.shareIconImage, for: UIControl.State.normal)
+      let title = ShareGardenSceneViewController.Constant.StringLiteral.MyGardenSectionHeaderView.title
       
       let sectionHeaderView = SectionHeaderView(
-        sectionTitle: "나의 가든",
+        sectionTitle: title,
         rightActionButton: shareButton
       )
       
@@ -29,11 +30,16 @@ extension ShareGardenSceneViewController {
     }()
     
     private let profileInfoView: Styled.Row = {
+      let nicknamePlaceholder = ShareGardenSceneViewController.Constant
+        .StringLiteral.ProfileInfoView.nicknamePlaceholder
+      let descriptionPlaceholder = ShareGardenSceneViewController.Constant
+        .StringLiteral.ProfileInfoView.descriptionPlaceholder
+      
       let profileInfoView = Styled.Row(
         configuration: Styled.Row.Configuration.profile(
           Styled.Row.Configuration.ProfileModel.primary(
-            title: "이인우",
-            description: "함께하는 걸 좋아하는 iOS개발자"
+            title: nicknamePlaceholder,
+            description: descriptionPlaceholder
           )
         )
       )
