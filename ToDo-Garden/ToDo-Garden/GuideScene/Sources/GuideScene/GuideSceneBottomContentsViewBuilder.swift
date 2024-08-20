@@ -1,3 +1,4 @@
+
 import ToDoGardenUIComponent
 
 import UIKit
@@ -33,43 +34,39 @@ struct GuideSceneBottomContentsViewBuilder {
   private func buildCreateToDo1() -> UIView {
     let label = buildLabel()
     label.text = "그룹 우측"
-    
-    let button = UIButton(configuration: .borderedTinted())
-    button.configuration?.title = "버튼"
-    button.configuration?.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
-        var outgoing = incoming
-      outgoing.font = UIFont.pretendardBodySemiBold
-      outgoing.foregroundColor = UIColor.toDoGardenGreenDark
-        return outgoing
-    }
-    
-    let configuration = UIImage.SymbolConfiguration(pointSize: 10, weight: .bold)
-    let configuredImage = UIImage(systemName: "plus")?.withConfiguration(configuration)
-    
-    button.configuration?.image = configuredImage
-    button.configuration?.imagePadding = 2
-    button.configuration?.contentInsets = .init(top: 2, leading: 2, bottom: 2, trailing: 2)
-    
-    button.configuration?.baseForegroundColor = .toDoGardenGreenDark
-    button.configuration?.baseBackgroundColor = .clear
-    
-    button.backgroundColor = .toDoGardenGreenBackground
-    button.layer.cornerRadius = 4
-    
     let label2 = buildLabel()
     label2.text = " 을 눌러서"
-    
-    let hstack = UIStackView(arrangedSubviews: [button, label2])
-    
+    let hstack = UIStackView(arrangedSubviews: [buildCreateToDo1Button(), label2])
     let label3 = buildLabel()
     label3.text = "투두를 생성할 수 있어요."
-
+    
     return wrapping(
       buildStack(
         subviews: [label, hstack, label3],
         spacing: 6
       )
     )
+  }
+  
+  private func buildCreateToDo1Button() -> UIButton {
+    let button = UIButton(configuration: .borderedTinted())
+    button.configuration?.title = "버튼"
+    button.configuration?.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { value in
+      var copy = value
+      copy.font = UIFont.pretendardBodySemiBold
+      copy.foregroundColor = UIColor.toDoGardenGreenDark
+      return copy
+    }
+    let configuration = UIImage.SymbolConfiguration(pointSize: 10, weight: .bold)
+    let configuredImage = UIImage(systemName: "plus")?.withConfiguration(configuration)
+    button.configuration?.image = configuredImage
+    button.configuration?.imagePadding = 2
+    button.configuration?.contentInsets = .init(top: 2, leading: 2, bottom: 2, trailing: 2)
+    button.configuration?.baseForegroundColor = .toDoGardenGreenDark
+    button.configuration?.baseBackgroundColor = .clear
+    button.backgroundColor = .toDoGardenGreenBackground
+    button.layer.cornerRadius = 4
+    return button
   }
   
   private func buildCreateToDo2() -> UIView {
@@ -88,7 +85,7 @@ struct GuideSceneBottomContentsViewBuilder {
     stack.alignment = .leading
     stack.spacing = 8
     stack.setCustomSpacing(2, after: label2)
-
+    
     line.widthAnchor.constraint(equalToConstant: 91).isActive = true
     line.heightAnchor.constraint(equalToConstant: 2).isActive = true
     
@@ -99,9 +96,7 @@ struct GuideSceneBottomContentsViewBuilder {
     let imageView = UIImageView(image: UIImage.timerButtonImage)
     let label = buildLabel()
     label.text = "버튼을 눌러서"
-    
     let hstack = UIStackView(arrangedSubviews: [imageView, label])
-    
     
     let label2 = buildLabel()
     label2.text = "타이머를 실행할 수 있어요."
@@ -153,6 +148,5 @@ struct GuideSceneBottomContentsViewBuilder {
     
     return label
   }
-
 }
 

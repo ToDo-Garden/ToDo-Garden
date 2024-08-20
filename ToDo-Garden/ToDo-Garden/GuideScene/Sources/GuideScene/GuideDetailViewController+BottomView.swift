@@ -59,18 +59,20 @@ extension GuideDetailViewController {
     private func initialTask() {
       let container = self.buildContainer()
       self.addSubview(container)
+      let forwardAction = UIAction { [weak self] _ in
+        self?.moveTo(forward: true)
+      }
       self.leftButton = self.buildButton(
         UIImage.backwardButtonImage,
-        action: UIAction { [weak self] _ in
-          self?.moveTo(forward: true)
-        }
+        action: forwardAction
       )
       self.addSubview(self.leftButton)
+      let backwardAction = UIAction { [weak self] _ in
+        self?.moveTo(forward: false)
+      }
       self.rightButton = self.buildButton(
         UIImage.forwardButtonImage,
-       action: UIAction { [weak self] _ in
-         self?.moveTo(forward: false)
-       }
+        action:backwardAction
       )
       self.addSubview(self.rightButton)
       self.layoutContainer(container)
@@ -173,16 +175,17 @@ extension GuideDetailViewController {
     
     private func layoutButtons() {
       self.leftButton.usingAutolayout()
+      let safeAreaBottom = -self.safeAreaInsets.bottom / 2
       NSLayoutConstraint.activate([
         self.leftButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 24),
-        self.leftButton.centerYAnchor.constraint(equalTo: self.scrollView.centerYAnchor, constant: -self.safeAreaInsets.bottom / 2),
+        self.leftButton.centerYAnchor.constraint(equalTo: self.scrollView.centerYAnchor, constant: safeAreaBottom),
         self.leftButton.widthAnchor.constraint(equalToConstant: 24),
         self.leftButton.heightAnchor.constraint(equalToConstant: 24)
       ])
       self.rightButton.usingAutolayout()
       NSLayoutConstraint.activate([
         self.rightButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -24),
-        self.rightButton.centerYAnchor.constraint(equalTo: self.scrollView.centerYAnchor, constant:  -self.safeAreaInsets.bottom / 2),
+        self.rightButton.centerYAnchor.constraint(equalTo: self.scrollView.centerYAnchor, constant: safeAreaBottom),
         self.rightButton.widthAnchor.constraint(equalToConstant: 24),
         self.rightButton.heightAnchor.constraint(equalToConstant: 24)
       ])
