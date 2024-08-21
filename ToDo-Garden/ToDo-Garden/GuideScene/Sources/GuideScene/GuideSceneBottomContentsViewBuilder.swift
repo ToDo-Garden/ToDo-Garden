@@ -3,34 +3,24 @@ import ToDoGardenUIComponent
 
 import UIKit
 
-struct GuideSceneContentsBuilder: Sendable {
-  var bottomContents: @MainActor @Sendable (Guide.GuideState) -> [UIView]
-}
-
-extension GuideSceneContentsBuilder {
-  static let live = GuideSceneContentsBuilder(
-    bottomContents: { state in
-      let bottomBuilder = GuideSceneBottomContentsViewBuilder()
-      let views: [UIView]
-      switch state {
-      case .todoCreate:
-        views = bottomBuilder.buildCreateToDo()
-      case .groupManagement:
-        views = bottomBuilder.buildGroupManagement()
-      case .todoEdit:
-        views = bottomBuilder.buildToDoEdit()
-      case .shareTab:
-        views = bottomBuilder.buildShareTab()
-      }
-      return views
-        .map { $0.wrapVerticallyCentered() }
+struct GuideSceneBottomContentsViewBuilder {
+  func buildSubviews(_ state: Guide.GuideState) -> [UIView] {
+    switch state {
+    case .todoCreate:
+      return buildCreateToDo()
+    case .groupManagement:
+      return buildGroupManagement()
+    case .todoEdit:
+      return buildToDoEdit()
+    case .shareTab:
+      return buildShareTab()
     }
-  )
+  }
 }
 
 // MARK: - Bottom Contents
-struct GuideSceneBottomContentsViewBuilder {
-  func buildCreateToDo() -> [UIView] {
+extension GuideSceneBottomContentsViewBuilder {
+  private func buildCreateToDo() -> [UIView] {
     return [
       buildCreateToDo1(),
       buildCreateToDo2(),
@@ -115,7 +105,7 @@ struct GuideSceneBottomContentsViewBuilder {
 
 // MARK: - Group Management
 extension GuideSceneBottomContentsViewBuilder {
-  func buildGroupManagement() -> [UIView] {
+  private func buildGroupManagement() -> [UIView] {
     [
       buildGroupManagement1(),
       buildGroupManagement2(),
@@ -196,7 +186,7 @@ extension GuideSceneBottomContentsViewBuilder {
 
 // MARK: - ToDo Edit
 extension GuideSceneBottomContentsViewBuilder {
-  func buildToDoEdit() -> [UIView] {
+  private func buildToDoEdit() -> [UIView] {
     return [
       buildToDoEdit1(),
       buildToDoEdit2(),
@@ -241,7 +231,7 @@ extension GuideSceneBottomContentsViewBuilder {
 
 // MARK: - Share Tab
 extension GuideSceneBottomContentsViewBuilder {
-  func buildShareTab() -> [UIView] {
+  private func buildShareTab() -> [UIView] {
     return [
       buildShareTab1(),
       buildShareTab2()
@@ -304,19 +294,7 @@ extension GuideSceneBottomContentsViewBuilder {
 }
 
 // MARK: - View Utils
-fileprivate extension UIView {
-  func wrapVerticallyCentered() -> UIView {
-    let upSpacing = UIView()
-    let downSpacing = UIView()
-    
-    let stack = UIStackView(arrangedSubviews: [upSpacing, self, downSpacing])
-    stack.axis = .vertical
-    stack.distribution = .equalSpacing
-    upSpacing.heightAnchor.constraint(equalTo: downSpacing.heightAnchor).isActive = true
-    
-    return stack
-  }
-  
+private extension UIView {
   func addBottomLine(width: CGFloat? = nil, height: CGFloat = 1) -> UIView {
     let line = UIView()
     line.backgroundColor = UIColor.toDoGardenGreenDark
@@ -357,7 +335,7 @@ fileprivate extension UIView {
   }
 }
 
-fileprivate extension NSLayoutConstraint.Attribute {
+private extension NSLayoutConstraint.Attribute {
   var isVertical: Bool {
     switch self {
     case .top, .bottom:
@@ -368,7 +346,7 @@ fileprivate extension NSLayoutConstraint.Attribute {
   }
 }
 
-fileprivate extension UIStackView {
+private extension UIStackView {
   convenience init(
     _ axis: NSLayoutConstraint.Axis = .vertical,
     arrangedSubviews: [UIView],
@@ -382,7 +360,7 @@ fileprivate extension UIStackView {
   }
 }
 
-fileprivate extension UILabel {
+private extension UILabel {
   convenience init(
     text: String,
     font: UIFont,
@@ -417,7 +395,7 @@ fileprivate extension UILabel {
   }
 }
 
-fileprivate extension UIImage {
+private extension UIImage {
   func resizing(targetSize size: CGSize) -> UIImage? {
     UIGraphicsImageRenderer(size: size).image { _ in
       self.draw(in: CGRect(origin: .zero, size: size))
