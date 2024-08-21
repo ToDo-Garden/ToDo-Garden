@@ -72,7 +72,7 @@ extension GuideDetailViewController {
       }
       self.rightButton = self.buildButton(
         UIImage.forwardButtonImage,
-        action:backwardAction
+        action: backwardAction
       )
       self.addSubview(self.rightButton)
       self.layoutContainer(container)

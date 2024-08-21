@@ -1,4 +1,4 @@
-
+// swiftlint:disable file_length
 import ToDoGardenUIComponent
 
 import UIKit
@@ -424,3 +424,4 @@ fileprivate extension UIImage {
     }
   }
 }
+// swiftlint:enable file_length
