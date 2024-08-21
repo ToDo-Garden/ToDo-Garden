@@ -15,9 +15,9 @@ extension GuideSceneContentsBuilder {
       case .todoCreate:
         return bottomBuilder.buildCreateToDo()
       case .groupManagement:
-        fatalError()
+        return bottomBuilder.buildGroupManagement()
       case .todoEdit:
-        fatalError()
+        return bottomBuilder.buildToDoEdit()
       case .shareTab:
         fatalError()
       }
@@ -255,5 +255,72 @@ extension UIImage {
     UIGraphicsImageRenderer(size: size).image { _ in
       self.draw(in: CGRect(origin: .zero, size: size))
     }
+  }
+}
+
+// MARK: - ToDo Edit
+extension GuideSceneBottomContentsViewBuilder {
+  func buildToDoEdit() -> [UIView] {
+    return [buildToDoEdit1(), buildToDoEdit2(), buildToDoEdit3()]
+  }
+  
+  private func buildToDoEdit1() -> UIView {
+    let label = buildLabel(text: "오른쪽 스와이프를 통해서", textColor: UIColor.toDoGardenGray3)
+    let label2 = addBottomLine(
+      buildLabel(
+        text: "투두 수정화면에 들어갈 수 있어요.",
+        font: UIFont.pretendardHeadSemiBold
+      ),
+      width: 91
+    )
+    let label3 = addBottomLine(
+      buildLabel(
+        text: "투두 삭제도 가능해요!",
+        font: UIFont.pretendardHeadSemiBold
+      ),
+      width: 60
+    )
+    
+    return wrapping(buildStack(subviews: [label, label2, label3], spacing: 8))
+  }
+  
+  private func buildToDoEdit2() -> UIView {
+    let label = buildLabel(
+      text: "편집 탭에서",
+      textColor: UIColor.toDoGardenGray3
+    )
+    let label2 = buildLabel(
+      text: "투두의 이름과 그룹을",
+      font: UIFont.pretendardHeadSemiBold
+    )
+    let label3 = buildLabel(
+      text: "변경할 수 있어요.",
+      font: UIFont.pretendardHeadSemiBold
+    )
+    
+    return wrapping(
+      buildStack(
+        subviews: [label, label2, label3],
+        spacing: 7
+      )
+    )
+  }
+  
+  private func buildToDoEdit3() -> UIView {
+    let label = buildLabel(
+      text: "알림 탭에서",
+      textColor: UIColor.toDoGardenGray3
+    )
+    let label2 = buildLabel(
+      text: "알림 시간을 설정할 수 있어요.",
+      font: UIFont.pretendardHeadSemiBold
+    )
+    
+    return wrapping(
+      buildStack(
+        subviews: [label, label2],
+        spacing: 5
+      )
+    )
   }
 }
