@@ -19,7 +19,7 @@ extension GuideSceneContentsBuilder {
       case .todoEdit:
         return bottomBuilder.buildToDoEdit()
       case .shareTab:
-        fatalError()
+        return bottomBuilder.buildShareTab()
       }
     }
   )
@@ -65,7 +65,7 @@ extension GuideSceneBottomContentsViewBuilder {
       .defaultHigh,
       for: .horizontal
     )
-
+    
     return label
   }
   
@@ -78,7 +78,7 @@ extension GuideSceneBottomContentsViewBuilder {
     
     line.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor).isActive = true
     line.widthAnchor.constraint(equalToConstant: width).isActive = true
-
+    
     
     line.heightAnchor.constraint(equalToConstant: 1).isActive = true
     
@@ -320,6 +320,71 @@ extension GuideSceneBottomContentsViewBuilder {
       buildStack(
         subviews: [label, label2],
         spacing: 5
+      )
+    )
+  }
+}
+
+// MARK: - Share Tab
+extension GuideSceneBottomContentsViewBuilder {
+  func buildShareTab() -> [UIView] {
+    return [buildShareTab1(), buildShareTab2()]
+  }
+  
+  private func buildShareTab1() -> UIView {
+    let label = buildLabel(
+      text: "공유화면 프로필에서",
+      textColor: UIColor.toDoGardenGray3
+    )
+    
+    let label2 = buildLabel(
+      text: "더보기",
+      textColor: UIColor.toDoGardenGray3
+    )
+    let imageView = UIImageView(image: UIImage.forwardButtonImage)
+    let label3 = buildLabel(text: "버튼을 터치하면", font: UIFont.pretendardHeadSemiBold)
+    let hstack = UIStackView(arrangedSubviews: [label2, imageView, label3])
+    imageView.usingAutolayout()
+    imageView.widthAnchor.constraint(equalToConstant: 24).isActive = true
+    imageView.heightAnchor.constraint(equalToConstant: 24).isActive = true
+    hstack.spacing = -4
+    let label4 = buildLabel(text: "통계화면으로 이동해요.", font: UIFont.pretendardHeadSemiBold)
+    return wrapping(
+      buildStack(
+        subviews: [label, hstack, label4],
+        spacing: 7
+      )
+    )
+  }
+
+  private func buildShareTab2() -> UIView {
+    let label = buildLabel(
+      text: "우측 상단 공유",
+      textColor: UIColor.toDoGardenGray3
+    )
+    let imageView = UIImageView(image: UIImage.shareIconImage)
+    let label2 = buildLabel(
+      text: "버튼을 통해",
+      textColor: UIColor.toDoGardenGray3
+    )
+    let hstack = UIStackView(arrangedSubviews: [label, imageView, label2])
+    hstack.spacing = 1
+    
+    let label3 = buildLabel(
+      text: "열심히 쌓아온 기록을",
+      font: UIFont.pretendardHeadSemiBold
+    )
+    let label4 = buildLabel(
+      text: "인스타그램 스토리를 통해\n공유할 수 있어요.",
+      font: UIFont.pretendardHeadSemiBold
+    )
+    label4.numberOfLines = 2
+    
+    
+    return wrapping(
+      buildStack(
+        subviews: [hstack, label3, label4],
+        spacing: 7
       )
     )
   }
