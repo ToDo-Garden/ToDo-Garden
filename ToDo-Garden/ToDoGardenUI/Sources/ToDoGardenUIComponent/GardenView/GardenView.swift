@@ -16,6 +16,13 @@ public final class GardenView: UIView {
   private let pomodoroRecordCollectionView: PomodoroRecordCollectionView
   @ExecuteOnce private var setupLayoutIfNeeded: (() -> Void)?
   
+  public override var intrinsicContentSize: CGSize {
+    let contentWidth: CGFloat = Constant.GardenView.Layout.contentWidth
+    let contentHeight: CGFloat = Constant.GardenView.Layout.contentHeight
+    
+    return CGSize(width: contentWidth, height: contentHeight)
+  }
+  
   public init() {
     self.pomodoroRecordCollectionView = PomodoroRecordCollectionView()
     super.init(frame: CGRect.zero)
@@ -69,6 +76,8 @@ extension GardenView {
   private func setupLayoutConstraints() {
     self.setupPomodoroRecordsCollectionViewLayoutConstraints()
   }
+  
+  // TODO: - Intrinsic content size를 기준으로 수정
   
   private func setupPomodoroRecordsCollectionViewLayoutConstraints() {
     self.pomodoroRecordCollectionView.usingAutolayout()
