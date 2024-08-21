@@ -70,7 +70,6 @@ extension ShareGardenSceneViewController {
         self.setupShimmering()
       }
     }
-    
   }
 }
 
