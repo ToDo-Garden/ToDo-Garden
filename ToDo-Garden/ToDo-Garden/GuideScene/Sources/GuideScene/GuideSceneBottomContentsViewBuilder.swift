@@ -4,105 +4,57 @@ import ToDoGardenUIComponent
 import UIKit
 
 struct GuideSceneContentsBuilder: Sendable {
-  var bottomContents: @Sendable (Guide.GuideState) -> [UIView]
+  var bottomContents: @MainActor @Sendable (Guide.GuideState) -> [UIView]
 }
 
 extension GuideSceneContentsBuilder {
   static let live = GuideSceneContentsBuilder(
     bottomContents: { state in
       let bottomBuilder = GuideSceneBottomContentsViewBuilder()
+      let views: [UIView]
       switch state {
       case .todoCreate:
-        return bottomBuilder.buildCreateToDo()
+        views = bottomBuilder.buildCreateToDo()
       case .groupManagement:
-        return bottomBuilder.buildGroupManagement()
+        views = bottomBuilder.buildGroupManagement()
       case .todoEdit:
-        return bottomBuilder.buildToDoEdit()
+        views = bottomBuilder.buildToDoEdit()
       case .shareTab:
-        return bottomBuilder.buildShareTab()
+        views = bottomBuilder.buildShareTab()
       }
+      return views
+        .map { $0.wrapVerticallyCentered() }
     }
   )
-}
-
-extension GuideSceneBottomContentsViewBuilder {
-  private func buildStack(subviews: [UIView], spacing: CGFloat) -> UIView {
-    let stack = UIStackView(
-      arrangedSubviews: subviews
-    )
-    stack.axis = .vertical
-    stack.alignment = .leading
-    stack.spacing = spacing
-    
-    return stack
-  }
-  
-  private func wrapping(_ view: UIView) -> UIView {
-    let sp1 = UIView()
-    let sp2 = UIView()
-    
-    let stack = UIStackView(arrangedSubviews: [sp1, view, sp2])
-    stack.axis = .vertical
-    stack.distribution = .equalSpacing
-    sp1.heightAnchor.constraint(equalTo: sp2.heightAnchor).isActive = true
-    stack.subviews.forEach {
-      $0.isUserInteractionEnabled = false
-    }
-    
-    return stack
-  }
-  
-  private func buildLabel(
-    text: String,
-    font: UIFont = UIFont.pretendardBodySemiBold,
-    textColor: UIColor = UIColor.toDoGardenGreenDark
-  ) -> UILabel {
-    let label = UILabel()
-    label.text = text
-    label.font = font
-    label.textColor = textColor
-    label.setContentHuggingPriority(
-      .defaultHigh,
-      for: .horizontal
-    )
-    
-    return label
-  }
-  
-  private func addBottomLine(_ view: UIView, width: CGFloat) -> UIView {
-    let line = UIView()
-    line.backgroundColor = UIColor.toDoGardenGreenDark
-    let stack = UIStackView(arrangedSubviews: [view, line])
-    stack.axis = .vertical
-    stack.alignment = .leading
-    
-    line.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor).isActive = true
-    line.widthAnchor.constraint(equalToConstant: width).isActive = true
-    
-    
-    line.heightAnchor.constraint(equalToConstant: 1).isActive = true
-    
-    return stack
-  }
 }
 
 // MARK: - Bottom Contents
 struct GuideSceneBottomContentsViewBuilder {
   func buildCreateToDo() -> [UIView] {
-    return [buildCreateToDo1(), buildCreateToDo2(), buildCreateToDo3()]
+    return [
+      buildCreateToDo1(),
+      buildCreateToDo2(),
+      buildCreateToDo3()
+    ]
   }
   
   private func buildCreateToDo1() -> UIView {
-    let label = buildLabel(text: "그룹 우측")
-    let label2 = buildLabel(text: " 을 눌러서")
-    let hstack = UIStackView(arrangedSubviews: [buildCreateToDo1Button(), label2])
-    let label3 = buildLabel(text: "투두를 생성할 수 있어요.")
+    let buildLabel: (String) -> UILabel = {
+      UILabel.bodySemibold(text: $0, textColor: UIColor.toDoGardenGreenDark)
+    }
     
-    return wrapping(
-      buildStack(
-        subviews: [label, hstack, label3],
-        spacing: 6
-      )
+    return UIStackView(
+      arrangedSubviews: [
+        buildLabel("그룹 우측"),
+        UIStackView(
+          arrangedSubviews: [
+            buildCreateToDo1Button(),
+            buildLabel(" 을 눌러서")
+          ]
+        ),
+        buildLabel("투두를 생성할 수 있어요.")
+      ],
+      spacing: 6
     )
   }
   
@@ -124,53 +76,39 @@ struct GuideSceneBottomContentsViewBuilder {
     button.configuration?.baseBackgroundColor = .clear
     button.backgroundColor = .toDoGardenGreenBackground
     button.layer.cornerRadius = 4
+    button.isUserInteractionEnabled = false
+    
     return button
   }
   
   private func buildCreateToDo2() -> UIView {
-    let label = buildLabel(text: "생성한 투두를 끝마쳤다면,")
-    
-    let label2 = buildLabel(
-      text: "투두를 눌러서 완료할 수 있어요!",
-      font: UIFont.pretendardHeadSemiBold
+    UIStackView(
+      arrangedSubviews: [
+        UILabel.bodySemibold(text: "생성한 투두를 끝마쳤다면,"),
+        UILabel.headSemibold(text: "투두를 눌러서 완료할 수 있어요!")
+          .addBottomLine(width: 91, height: 2)
+      ],
+      spacing: 8
     )
-    let line = UIView()
-    line.backgroundColor = .toDoGardenGreenDark
-    
-    let stack = UIStackView(
-      arrangedSubviews: [label, label2, line]
-    )
-    stack.axis = .vertical
-    stack.alignment = .leading
-    stack.spacing = 8
-    stack.setCustomSpacing(2, after: label2)
-    
-    line.widthAnchor.constraint(equalToConstant: 91).isActive = true
-    line.heightAnchor.constraint(equalToConstant: 2).isActive = true
-    
-    return wrapping(stack)
   }
   
   private func buildCreateToDo3() -> UIView {
     let imageView = UIImageView(image: UIImage.timerButtonImage)
-    let label = buildLabel(text: "버튼을 눌러서")
-    let hstack = UIStackView(arrangedSubviews: [imageView, label])
-    
-    let label2 = buildLabel(
-      text: "타이머를 실행할 수 있어요.",
-      font: UIFont.pretendardHeadSemiBold
+    let label = UILabel.bodySemibold(
+      text: "버튼을 눌러서",
+      textColor: UIColor.toDoGardenGreenDark
     )
-    let padding = UIView()
-    let hstack2 = UIStackView(arrangedSubviews: [padding, label2])
-    padding.widthAnchor.constraint(equalToConstant: 3).isActive = true
+    let hstack = UIStackView(arrangedSubviews: [imageView, label])
+    imageView.widthAnchor.constraint(equalToConstant: 24).isActive = true
+    imageView.heightAnchor.constraint(equalToConstant: 24).isActive = true
     
-    return wrapping(
-      buildStack(
-        subviews: [
-          hstack, hstack2
-        ],
-        spacing: 8
-      )
+    return UIStackView(
+      arrangedSubviews: [
+        hstack,
+        UILabel.headSemibold(text: "타이머를 실행할 수 있어요.")
+          .addPadding(.leading, value: 3)
+      ],
+      spacing: 8
     )
   }
 }
@@ -178,149 +116,125 @@ struct GuideSceneBottomContentsViewBuilder {
 // MARK: - Group Management
 extension GuideSceneBottomContentsViewBuilder {
   func buildGroupManagement() -> [UIView] {
-    [buildGroupManagement1(), buildGroupManagement2(), buildGroupManagement3()]
+    [
+      buildGroupManagement1(),
+      buildGroupManagement2(),
+      buildGroupManagement3()
+    ]
   }
   
   private func buildGroupManagement1() -> UIView {
-    let label = buildLabel(
-      text: "원하는 그룹을 터치하면",
-      textColor: UIColor.toDoGardenGray3
+    UIStackView(
+      arrangedSubviews: [
+        UILabel.bodySemibold(text: "원하는 그룹을 터치하면"),
+        UILabel.headSemibold(text: "그룹 수정 화면에 들어갈 수 있어요.")
+      ],
+      spacing: 8
     )
-    let label2 = buildLabel(
-      text: "그룹 수정 화면에 들어갈 수 있어요.",
-      font: UIFont.pretendardHeadSemiBold
-    )
-    
-    return wrapping(buildStack(subviews: [label, label2], spacing: 8))
   }
   
   private func buildGroupManagement2() -> UIView {
+    UIStackView(
+      arrangedSubviews: [
+        buildGroupManagement2HStack(),
+        UILabel.headSemibold(text: "그룹을 생성할 수 있어요.")
+          .addPadding(.leading, value: 10)
+      ],
+      spacing: 8
+    )
+  }
+  
+  private func buildGroupManagement2HStack() -> UIStackView {
     let image = UIImage.createToDoButtonImage
       .resizing(targetSize: CGSize(width: 9, height: 9))
     let imageView = UIImageView(image: image)
     imageView.contentMode = UIView.ContentMode.center
     
-    let label = buildLabel(text: "그룹 추가하기", font: UIFont.pretendardBodySemiBold13)
-    let line = UIView()
-    line.backgroundColor = UIColor.toDoGardenGreenDark
-    let spacing = UIView()
-    let stack = UIStackView(arrangedSubviews: [label, line, spacing])
-    stack.axis = .vertical
-    stack.spacing = 1
-    line.heightAnchor.constraint(equalToConstant: 1).isActive = true
-    spacing.heightAnchor.constraint(equalToConstant: 1).isActive = true
-    stack.setCustomSpacing(0, after: line)
-    
-    let label2 = buildLabel(text: "버튼을 터치하면", textColor: UIColor.toDoGardenGray3)
-    let hstack = UIStackView(arrangedSubviews: [imageView, stack, label2])
+    let hstack = UIStackView(
+      .horizontal,
+      arrangedSubviews: [
+        imageView,
+        UILabel.bodySemibold(
+          text: "그룹 추가하기",
+          textColor: UIColor.toDoGardenGreenDark
+        )
+        .addBottomLine(),
+        UILabel.bodySemibold(text: "버튼을 터치하면")
+      ],
+      spacing: 3
+    )
     hstack.alignment = .top
-    hstack.spacing = 3
     imageView.widthAnchor.constraint(equalToConstant: 20).isActive = true
     imageView.heightAnchor.constraint(equalToConstant: 20).isActive = true
     
-    let label3 = buildLabel(
-      text: "그룹을 생성할 수 있어요.",
-      font: UIFont.pretendardHeadSemiBold
-    )
-    let spacing2 = UIView()
-    let hstack2 = UIStackView(arrangedSubviews: [spacing2, label3])
-    spacing2.widthAnchor.constraint(equalToConstant: 10).isActive = true
-    
-    
-    return wrapping(buildStack(subviews: [hstack, hstack2], spacing: 8))
+    return hstack
   }
   
   private func buildGroupManagement3() -> UIView {
     let label = UILabel()
-    let fullText = "편집 버튼을 누르면"
-    let attributedString = NSMutableAttributedString(string: fullText)
-    label.textColor = .systemGray3
-    let range = (fullText as NSString).range(of: "편집")
-    attributedString.addAttribute(.foregroundColor, value: UIColor.toDoGardenOrange, range: range)
-    
-    label.attributedText = attributedString
     label.font = UIFont.pretendardBodySemiBold
-    let label2 = buildLabel(
-      text: "그룹 삭제와 수정을 할 수 있어요.",
-      font: UIFont.pretendardHeadSemiBold
+    let text = "편집 버튼을 누르면"
+    let attributedString = NSMutableAttributedString(string: text)
+    label.textColor = .systemGray3
+    let range = (text as NSString).range(of: "편집")
+    attributedString.addAttribute(
+      NSAttributedString.Key.foregroundColor,
+      value: UIColor.toDoGardenOrange,
+      range: range
     )
+    label.attributedText = attributedString
     
-    return wrapping(buildStack(subviews: [label, label2], spacing: 8))
-  }
-}
-
-
-extension UIImage {
-  func resizing(targetSize size: CGSize) -> UIImage? {
-    UIGraphicsImageRenderer(size: size).image { _ in
-      self.draw(in: CGRect(origin: .zero, size: size))
-    }
+    return UIStackView(
+      arrangedSubviews: [
+        label,
+        UILabel.headSemibold(text: "그룹 삭제와 수정을 할 수 있어요.")
+      ],
+      spacing: 8
+    )
   }
 }
 
 // MARK: - ToDo Edit
 extension GuideSceneBottomContentsViewBuilder {
   func buildToDoEdit() -> [UIView] {
-    return [buildToDoEdit1(), buildToDoEdit2(), buildToDoEdit3()]
+    return [
+      buildToDoEdit1(),
+      buildToDoEdit2(),
+      buildToDoEdit3()
+    ]
   }
   
   private func buildToDoEdit1() -> UIView {
-    let label = buildLabel(text: "오른쪽 스와이프를 통해서", textColor: UIColor.toDoGardenGray3)
-    let label2 = addBottomLine(
-      buildLabel(
-        text: "투두 수정화면에 들어갈 수 있어요.",
-        font: UIFont.pretendardHeadSemiBold
-      ),
-      width: 91
+    UIStackView(
+      arrangedSubviews: [
+        UILabel.bodySemibold(text: "오른쪽 스와이프를 통해서"),
+        UILabel.headSemibold(text: "투두 수정화면에 들어갈 수 있어요.")
+          .addBottomLine(width: 91),
+        UILabel.headSemibold(text: "투두 삭제도 가능해요!")
+          .addBottomLine(width: 60)
+      ],
+      spacing: 8
     )
-    let label3 = addBottomLine(
-      buildLabel(
-        text: "투두 삭제도 가능해요!",
-        font: UIFont.pretendardHeadSemiBold
-      ),
-      width: 60
-    )
-    
-    return wrapping(buildStack(subviews: [label, label2, label3], spacing: 8))
   }
   
   private func buildToDoEdit2() -> UIView {
-    let label = buildLabel(
-      text: "편집 탭에서",
-      textColor: UIColor.toDoGardenGray3
-    )
-    let label2 = buildLabel(
-      text: "투두의 이름과 그룹을",
-      font: UIFont.pretendardHeadSemiBold
-    )
-    let label3 = buildLabel(
-      text: "변경할 수 있어요.",
-      font: UIFont.pretendardHeadSemiBold
-    )
-    
-    return wrapping(
-      buildStack(
-        subviews: [label, label2, label3],
-        spacing: 7
-      )
+    UIStackView(
+      arrangedSubviews: [
+        UILabel.bodySemibold(text: "편집 탭에서"),
+        UILabel.headSemibold(text: "투두의 이름과 그룹을"),
+        UILabel.headSemibold(text: "변경할 수 있어요.")
+      ],
+      spacing: 7
     )
   }
   
   private func buildToDoEdit3() -> UIView {
-    let label = buildLabel(
-      text: "알림 탭에서",
-      textColor: UIColor.toDoGardenGray3
-    )
-    let label2 = buildLabel(
-      text: "알림 시간을 설정할 수 있어요.",
-      font: UIFont.pretendardHeadSemiBold
-    )
-    
-    return wrapping(
-      buildStack(
-        subviews: [label, label2],
-        spacing: 5
-      )
+    UIStackView(
+      arrangedSubviews: [
+        UILabel.bodySemibold(text: "알림 탭에서"),
+        UILabel.headSemibold(text: "알림 시간을 설정할 수 있어요.")
+      ],
+      spacing: 5
     )
   }
 }
@@ -328,64 +242,185 @@ extension GuideSceneBottomContentsViewBuilder {
 // MARK: - Share Tab
 extension GuideSceneBottomContentsViewBuilder {
   func buildShareTab() -> [UIView] {
-    return [buildShareTab1(), buildShareTab2()]
+    return [
+      buildShareTab1(),
+      buildShareTab2()
+    ]
   }
   
   private func buildShareTab1() -> UIView {
-    let label = buildLabel(
-      text: "공유화면 프로필에서",
-      textColor: UIColor.toDoGardenGray3
-    )
-    
-    let label2 = buildLabel(
-      text: "더보기",
-      textColor: UIColor.toDoGardenGray3
-    )
-    let imageView = UIImageView(image: UIImage.forwardButtonImage)
-    let label3 = buildLabel(text: "버튼을 터치하면", font: UIFont.pretendardHeadSemiBold)
-    let hstack = UIStackView(arrangedSubviews: [label2, imageView, label3])
-    imageView.usingAutolayout()
-    imageView.widthAnchor.constraint(equalToConstant: 24).isActive = true
-    imageView.heightAnchor.constraint(equalToConstant: 24).isActive = true
-    hstack.spacing = -4
-    let label4 = buildLabel(text: "통계화면으로 이동해요.", font: UIFont.pretendardHeadSemiBold)
-    return wrapping(
-      buildStack(
-        subviews: [label, hstack, label4],
-        spacing: 7
-      )
+    UIStackView(
+      arrangedSubviews: [
+        UILabel.bodySemibold(text: "공유화면 프로필에서"),
+        buildShareTab2HStack(),
+        UILabel.headSemibold(text: "통계화면으로 이동해요.")
+      ],
+      spacing: 7
     )
   }
-
+  
+  private func buildShareTab2HStack() -> UIStackView {
+    let imageView = UIImageView(image: UIImage.forwardButtonImage)
+    let stack = UIStackView(
+      .horizontal,
+      arrangedSubviews: [
+        UILabel.bodySemibold(text: "더보기"),
+        imageView,
+        UILabel.headSemibold(text: "버튼을 터치하면")
+      ],
+      alignment: .center,
+      spacing: -4
+    )
+    imageView.widthAnchor.constraint(equalToConstant: 24).isActive = true
+    imageView.heightAnchor.constraint(equalToConstant: 24).isActive = true
+    
+    return stack
+  }
+  
   private func buildShareTab2() -> UIView {
-    let label = buildLabel(
-      text: "우측 상단 공유",
-      textColor: UIColor.toDoGardenGray3
-    )
-    let imageView = UIImageView(image: UIImage.shareIconImage)
-    let label2 = buildLabel(
-      text: "버튼을 통해",
-      textColor: UIColor.toDoGardenGray3
-    )
-    let hstack = UIStackView(arrangedSubviews: [label, imageView, label2])
-    hstack.spacing = 1
+    let hstack = buildShareTab2HStack2()
+    let label = UILabel.headSemibold(text: "열심히 쌓아온 기록을")
+    let label2 = UILabel.headSemibold(text: "인스타그램 스토리를 통해\n공유할 수 있어요.")
+    label2.numberOfLines = 2
     
-    let label3 = buildLabel(
-      text: "열심히 쌓아온 기록을",
-      font: UIFont.pretendardHeadSemiBold
+    return UIStackView(
+      arrangedSubviews: [hstack, label, label2],
+      spacing: 7
     )
-    let label4 = buildLabel(
-      text: "인스타그램 스토리를 통해\n공유할 수 있어요.",
-      font: UIFont.pretendardHeadSemiBold
+  }
+  
+  private func buildShareTab2HStack2() -> UIStackView {
+    UIStackView(
+      .horizontal,
+      arrangedSubviews: [
+        UILabel.bodySemibold(text: "우측 상단 공유"),
+        UIImageView(image: UIImage.shareIconImage),
+        UILabel.bodySemibold(text: "버튼을 통해")
+      ],
+      alignment: .center,
+      spacing: 1
     )
-    label4.numberOfLines = 2
+  }
+}
+
+// MARK: - View Utils
+fileprivate extension UIView {
+  func wrapVerticallyCentered() -> UIView {
+    let upSpacing = UIView()
+    let downSpacing = UIView()
     
+    let stack = UIStackView(arrangedSubviews: [upSpacing, self, downSpacing])
+    stack.axis = .vertical
+    stack.distribution = .equalSpacing
+    upSpacing.heightAnchor.constraint(equalTo: downSpacing.heightAnchor).isActive = true
     
-    return wrapping(
-      buildStack(
-        subviews: [hstack, label3, label4],
-        spacing: 7
-      )
+    return stack
+  }
+  
+  func addBottomLine(width: CGFloat? = nil, height: CGFloat = 1) -> UIView {
+    let line = UIView()
+    line.backgroundColor = UIColor.toDoGardenGreenDark
+    
+    let stack = UIStackView(arrangedSubviews: [self, line])
+    stack.axis = .vertical
+    stack.alignment = .leading
+    
+    if let width {
+      line.widthAnchor.constraint(lessThanOrEqualTo: self.widthAnchor).isActive = true
+      line.widthAnchor.constraint(equalToConstant: width).isActive = true
+    } else {
+      line.widthAnchor.constraint(equalTo: self.widthAnchor).isActive = true
+    }
+    line.heightAnchor.constraint(equalToConstant: height).isActive = true
+    
+    return stack
+  }
+  
+  func addPadding(_ edge: NSLayoutConstraint.Attribute, value: CGFloat) -> UIView {
+    let spacing = UIView()
+    let subviews: [UIView]
+    switch edge {
+    case .leading, .top:
+      subviews = [spacing, self]
+    case .trailing, .bottom:
+      subviews = [self, spacing]
+    default:
+      subviews = []
+    }
+    let stack = UIStackView(arrangedSubviews: subviews)
+    if edge.isVertical {
+      stack.axis = .vertical
+    }
+    spacing.widthAnchor.constraint(equalToConstant: value).isActive = true
+    
+    return stack
+  }
+}
+
+fileprivate extension NSLayoutConstraint.Attribute {
+  var isVertical: Bool {
+    switch self {
+    case .top, .bottom:
+      return true
+    default:
+      return false
+    }
+  }
+}
+
+fileprivate extension UIStackView {
+  convenience init(
+    _ axis: NSLayoutConstraint.Axis = .vertical,
+    arrangedSubviews: [UIView],
+    alignment: Alignment = .leading,
+    spacing: CGFloat
+  ) {
+    self.init(arrangedSubviews: arrangedSubviews)
+    self.axis = axis
+    self.spacing = spacing
+    self.alignment = alignment
+  }
+}
+
+fileprivate extension UILabel {
+  convenience init(
+    text: String,
+    font: UIFont,
+    textColor: UIColor
+  ) {
+    self.init(frame: .zero)
+    self.text = text
+    self.font = font
+    self.textColor = textColor
+  }
+  
+  static func bodySemibold(
+    text: String,
+    textColor: UIColor = UIColor.toDoGardenGray3
+  ) -> UILabel {
+    UILabel(
+      text: text,
+      font: UIFont.pretendardBodySemiBold,
+      textColor: textColor
     )
+  }
+  
+  static func headSemibold(
+    text: String,
+    textColor: UIColor = UIColor.toDoGardenGreenDark
+  ) -> UILabel {
+    UILabel(
+      text: text,
+      font: UIFont.pretendardHeadSemiBold,
+      textColor: textColor
+    )
+  }
+}
+
+fileprivate extension UIImage {
+  func resizing(targetSize size: CGSize) -> UIImage? {
+    UIGraphicsImageRenderer(size: size).image { _ in
+      self.draw(in: CGRect(origin: .zero, size: size))
+    }
   }
 }
