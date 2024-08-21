@@ -210,7 +210,9 @@ extension GuideDetailViewController.BottomView: UIScrollViewDelegate {
   private func updateButtons() {
     if self.currentIndex == 0 {
       self.leftButton.isHidden = true
+      self.rightButton.isHidden = false
     } else if self.currentIndex == self.subviewCount - 1 {
+      self.leftButton.isHidden = false
       self.rightButton.isHidden = true
     } else {
       self.leftButton.isHidden = false
