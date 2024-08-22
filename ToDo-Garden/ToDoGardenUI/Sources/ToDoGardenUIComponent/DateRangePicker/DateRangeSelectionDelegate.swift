@@ -86,10 +86,6 @@ final class DateRangeSelectionDelegate: CalendarViewSingleSelectionDelegate {
   
   // MARK: - UIScrollViewDelegate Methods
   
-  override func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-    super.scrollViewDidEndScrollingAnimation(scrollView)
-  }
-  
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
     let debounceInterval: TimeInterval = 0.07
     let currentTime = Date().timeIntervalSince1970
