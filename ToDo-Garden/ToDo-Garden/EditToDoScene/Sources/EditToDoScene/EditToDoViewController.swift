@@ -18,6 +18,7 @@ protocol EditToDoDisplayLogic: AnyObject {
   func displayFetchedToDo(viewModel: EditToDo.FetchToDo.ViewModel)
   func displayDeleteToDoResult(viewModel: EditToDo.DeleteToDo.ViewModel)
   func displayEditToDoResult(viewModel: EditToDo.CompleteEditToDo.ViewModel)
+  func displayChangedRepetition(viewModel: EditToDo.ChangeRepetition.ViewModel)
 }
 
 final class EditToDoViewController: UIViewController, EditToDoViewControllable {
@@ -141,6 +142,10 @@ extension EditToDoViewController: EditToDoDisplayLogic {
     case Result.failure(let error):
       self.showErrorAlert(error)
     }
+  }
+
+  func displayChangedRepetition(viewModel: EditToDo.ChangeRepetition.ViewModel) {
+    
   }
 }
 
