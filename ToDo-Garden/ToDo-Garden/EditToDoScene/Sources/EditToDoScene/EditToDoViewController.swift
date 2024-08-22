@@ -19,6 +19,7 @@ protocol EditToDoDisplayLogic: AnyObject {
   func displayDeleteToDoResult(viewModel: EditToDo.DeleteToDo.ViewModel)
   func displayEditToDoResult(viewModel: EditToDo.CompleteEditToDo.ViewModel)
   func displayChangedRepetition(viewModel: EditToDo.ChangeRepetition.ViewModel)
+  func displayChangedAlarm(viewModel: EditToDo.ChangeAlarmActivation.ViewModel)
 }
 
 final class EditToDoViewController: UIViewController, EditToDoViewControllable {
@@ -146,6 +147,10 @@ extension EditToDoViewController: EditToDoDisplayLogic {
 
   func displayChangedRepetition(viewModel: EditToDo.ChangeRepetition.ViewModel) {
     self.updateRepetitionViewState(viewModel.editToDoRepetitionViewState)
+  }
+
+  func displayChangedAlarm(viewModel: EditToDo.ChangeAlarmActivation.ViewModel) {
+    self.updateAlarmState(isAlarmOn: viewModel.isAlarmOn)
   }
 }
 

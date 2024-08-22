@@ -64,7 +64,10 @@ extension EditToDoPresenter: EditToDoPresentationLogic {
     }
   }
 
-  func presentAlarmActivation(response: EditToDo.ChangeAlarmActivation.Response) {}
+  func presentAlarmActivation(response: EditToDo.ChangeAlarmActivation.Response) {
+    let viewModel = EditToDo.ChangeAlarmActivation.ViewModel(isAlarmOn: response.isAlarmOn)
+    self.viewController?.displayChangedAlarm(viewModel: viewModel)
+  }
 
   func presentChangedRepetition(response: EditToDo.ChangeRepetition.Response) {
     let viewState = response.editToDoRepetitionViewState
