@@ -108,6 +108,7 @@ extension SettingViewController {
     self.settingCollectionView.isScrollEnabled = false
     self.settingCollectionViewDataSource = self.makeDiffableDataSource(with: self.settingCollectionView)
     self.settingCollectionView.dataSource = self.settingCollectionViewDataSource
+    self.settingCollectionView.collectionViewLayout = self.makeCompositionalLayout()
     self.loadSettingCollectionViewData()
   }
 
