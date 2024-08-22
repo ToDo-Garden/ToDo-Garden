@@ -87,11 +87,13 @@ extension EditToDoViewController: EditToDoScheduleViewDelegate {
   }
 
   func didSelectOnlyTodayView(isOnlyToday: Bool) {
-
+    let request = EditToDo.ChangeRepetition.Request(isOnlyToday: isOnlyToday, isEveryday: nil)
+    self.interactor?.changeReptition(request: request)
   }
 
   func didSelectEverydayButton(isSelected: Bool) {
-
+    let request = EditToDo.ChangeRepetition.Request(isOnlyToday: false, isEveryday: isSelected)
+    self.interactor?.changeReptition(request: request)
   }
 
   func didToggleSwitch() {
