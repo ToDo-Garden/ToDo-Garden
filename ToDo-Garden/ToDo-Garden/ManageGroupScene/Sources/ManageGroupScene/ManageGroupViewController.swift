@@ -110,10 +110,7 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
     
     self.manageGroupTableViewDelegate = ManageGroupTableViewDelegate(
       displayedGroups: self.displayedGroups,
-      tableView: self.groupListTableView,
-      cell: self.groupListTableViewCell,
-      footerView: footerView,
-      viewController: self
+      footerView: footerView
     )
     
     self.groupListTableView.delegate = self.manageGroupTableViewDelegate
