@@ -12,28 +12,11 @@ extension SettingViewController {
 }
 
 extension SettingViewController.Constant {
-  enum AppSupportView {}
-  enum UserGuideButton {}
-  enum UserSettingView {}
-  enum SettingButtonStackView {}
   enum SettingLabel {}
-  enum VersionInfoView {}
   enum ProfileRow {}
+  enum UserGuideButton {}
   enum SettingCollectionView {}
-}
-
-extension SettingViewController.Constant.AppSupportView {
-  enum LeftImageView {
-    static let width: CGFloat = 18
-    static let heightMultiplier: CGFloat = 1.0
-  }
-
-  enum SettingButtonStackView {
-    static let topMargin: CGFloat = 4
-  }
-
-  static let topMargin: CGFloat = 22
-  static let height: CGFloat = 179
+  enum VersionInfoView {}
 }
 
 extension SettingViewController.Constant.UserGuideButton {
@@ -47,38 +30,6 @@ extension SettingViewController.Constant.UserGuideButton {
 
   static let topMargin: CGFloat = 21
   static let height: CGFloat = 40
-}
-
-extension SettingViewController.Constant.UserSettingView {
-  enum LeftImageView {
-    static let width: CGFloat = 18
-    static let heightMultiplier: CGFloat = 1.0
-  }
-
-  enum SettingButtonStackView {
-    static let topMargin: CGFloat = 4
-  }
-
-  static let topMargin: CGFloat = 22
-  static let height: CGFloat = 101
-}
-
-extension SettingViewController.Constant.SettingButtonStackView {
-  enum Layer {
-    static let cornerRadius: CGFloat = 10
-    static let borderWidth: CGFloat = 1.0
-  }
-
-  enum ImageView {
-    static let trailingMargin: CGFloat = 8
-  }
-
-  enum TitleLabel {
-    static let leadingMargin: CGFloat = 12
-  }
-
-  static let spacing: CGFloat = 1.0
-  static let buttonHeight: CGFloat = 40
 }
 
 extension SettingViewController.Constant.SettingLabel {
