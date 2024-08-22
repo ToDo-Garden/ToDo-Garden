@@ -19,6 +19,7 @@ extension SettingViewController.Constant {
   enum SettingLabel {}
   enum VersionInfoView {}
   enum ProfileRow {}
+  enum SettingCollectionView {}
 }
 
 extension SettingViewController.Constant.AppSupportView {
@@ -111,4 +112,9 @@ extension SettingViewController.Constant.ProfileRow {
 
   static let topMargin: CGFloat = 15
   static let trailingMargin: CGFloat = 28
+}
+
+extension SettingViewController.Constant.SettingCollectionView {
+  static let topMargin: CGFloat = 22
+  static let height: CGFloat = 306
 }
