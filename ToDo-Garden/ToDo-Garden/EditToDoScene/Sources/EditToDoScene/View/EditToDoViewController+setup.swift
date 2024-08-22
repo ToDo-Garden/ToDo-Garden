@@ -1,5 +1,5 @@
 //
-//  EditToDoViewController+setupSubviewsLayout.swift
+//  EditToDoViewController+setup.swift
 //
 //
 //  Created by Wood on 8/5/24.
@@ -7,8 +7,65 @@
 
 import UIKit
 
+import ToDoGardenUIComponent
+
 extension EditToDoViewController {
-  func setupSubviewsLayout() {
+  func setup() {
+    self.setupUI()
+    self.setupEditModeScrollView()
+    self.setupEditModeSegmentedControlAction()
+    self.setupCompleteEditButtonAction()
+    self.setupSubviewsDelegate()
+    self.setupSubviewsLayout()
+  }
+
+  private func setupUI() {
+    self.title = EditToDoSceneTheme.StringLiteral.EditToDoViewController.title
+    self.view.backgroundColor = UIColor.toDoGardenWhite
+  }
+
+  private func setupEditModeScrollView() {
+    self.editModeScrollView.showsVerticalScrollIndicator = false
+    self.editModeScrollView.showsHorizontalScrollIndicator = false
+    self.editModeScrollView.isPagingEnabled = true
+    self.editModeScrollView.delegate = self
+    self.editModeScrollView.bounces = false
+  }
+
+  private func setupEditModeSegmentedControlAction() {
+    let segmentedControlAction = UIAction { _ in
+      if let editMode = self.editToDoSegmentedControl.editMode {
+        self.changeEditMode(by: editMode)
+      }
+    }
+
+    self.editToDoSegmentedControl.addAction(segmentedControlAction, for: UIControl.Event.valueChanged)
+  }
+
+  private func changeEditMode(by editMode: EditToDoSegmentedControl.EditMode) {
+    let editModeType = EditToDoSegmentedControl.EditMode.self
+    let pointX = editMode == editModeType.notification ? 0 : self.editModeScrollView.frame.width
+    let contentOffset = CGPoint(x: pointX, y: 0)
+    self.editModeScrollView.setContentOffset(contentOffset, animated: true)
+  }
+
+  private func setupCompleteEditButtonAction() {
+    let editAction = UIAction { _ in
+      self.editToDo()
+    }
+
+    self.completeEditButton.addAction(editAction, for: UIControl.Event.touchUpInside)
+  }
+
+  private func setupSubviewsDelegate() {
+    self.editToDoView.delegate = self
+  }
+}
+
+// MARK: Auto Layout
+
+extension EditToDoViewController {
+  private func setupSubviewsLayout() {
     self.setupEditToDoSegmentedControlLayout()
     self.setupCompleteEditButtonLayout()
     self.setupEditModeScrollViewLayout()

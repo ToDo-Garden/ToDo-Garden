@@ -17,10 +17,9 @@ protocol EditToDoDataStore {
 protocol EditToDoBusinessLogic {
   func changeReptition(request: EditToDo.ChangeRepetition.Request)
   func changeAlarmActivation(request: EditToDo.ChangeAlarmActivation.Request)
-  func fetchToDo(request: EditToDo.FetchToDo.Request)
-  func deleteToDo(request: EditToDo.DeleteToDo.Request)
+  func fetchToDo()
+  func deleteToDo()
   func editToDo(request: EditToDo.CompleteEditToDo.Request)
-  func doSomething(request: EditToDo.Something.Request)
 }
 
 final class EditToDoInteractor: EditToDoDataStore {
@@ -68,7 +67,7 @@ extension EditToDoInteractor: EditToDoBusinessLogic {
   }
 
   /// 서버로부터 수정할 투두의 정보를 받아오는 메서드입니다.
-  func fetchToDo(request: EditToDo.FetchToDo.Request) {
+  func fetchToDo() {
     let fetchResult: Result<EditToDo.FetchToDo.Response.FetchedToDo, Error>
     do {
       guard let toDoId = self.toDoId
@@ -98,7 +97,7 @@ extension EditToDoInteractor: EditToDoBusinessLogic {
   }
   
   /// 서버에 투두의 삭제를 요청하는 메서드입니다.
-  func deleteToDo(request: EditToDo.DeleteToDo.Request) {
+  func deleteToDo() {
     let deleteResult: Result<Void, Error>
     do {
       guard let toDoId = self.toDoId
@@ -128,9 +127,6 @@ extension EditToDoInteractor: EditToDoBusinessLogic {
     let response = EditToDo.CompleteEditToDo.Response(editResult: editResult)
     self.presenter?.presentEditResult(response: response)
   }
-
-  /// EditToDoViewController 컴파일 에러 방지 코드입니다.
-  func doSomething(request: EditToDo.Something.Request) {}
 }
 
 // MARK: Private Functions

@@ -61,8 +61,8 @@ public final class GroupSelectionView: UIView {
     )
   }
 
-  public func getCurrentGroupId() -> Int? {
-    return self.groupListTableViewDelegate.currentGroupItem?.groupId
+  public func getCurrentGroup() -> GroupSelectionViewItem? {
+    return self.groupListTableViewDelegate.currentGroupItem
   }
 }
 

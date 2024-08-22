@@ -20,7 +20,7 @@ public final class ToDoWorker: ToDoWorkLogic {
   public init() {}
 
   public func fetchToDo(id: Int?) throws -> EditToDo.ToDo {
-    return MockData.FetchToDo.firstData
+    throw MockToDoWorkerError.networkConnectionRequired
   }
 
   public func deleteToDo(id: Int?) throws {
@@ -100,7 +100,17 @@ extension ToDoWorker {
 // MARK: Error
 
 extension ToDoWorker {
-  enum MockToDoWorkerError: Error {
+  enum MockToDoWorkerError: Error, CustomStringConvertible {
     case unknownError
+    case networkConnectionRequired
+
+    var description: String {
+      switch self {
+      case MockToDoWorkerError.unknownError:
+        return "잠시 후\n 다시 시도해주세요!"
+      case MockToDoWorkerError.networkConnectionRequired:
+        return "네트워크 연결이 불안정합니다."
+      }
+    }
   }
 }

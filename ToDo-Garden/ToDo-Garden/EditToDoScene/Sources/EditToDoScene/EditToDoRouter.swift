@@ -10,7 +10,7 @@ import Foundation
 import EditToDoSceneAPI
 
 protocol EditToDoRoutingLogic {
-  func routeToSomewhere()
+  func routeToToDoListScene()
 }
 
 protocol EditToDoDataPassing {
@@ -25,13 +25,7 @@ class EditToDoRouter: EditToDoDataPassing {
 // MARK: - Routing
 
 extension EditToDoRouter: EditToDoRoutingLogic {
-  func routeToSomewhere() {}
-}
-
-// MARK: - Declare Payload for scene
-
-extension EditToDoRouter {
-  struct NextScenePayload: NextScenePayloadable {
-    // var name: String
+  func routeToToDoListScene() {
+    self.viewController?.navigationController?.popViewController(animated: true)
   }
 }

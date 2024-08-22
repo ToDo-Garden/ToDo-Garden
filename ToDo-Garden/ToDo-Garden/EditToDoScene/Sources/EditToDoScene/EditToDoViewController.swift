@@ -10,10 +10,14 @@ import UIKit
 import EditToDoSceneAPI
 import EditToDoSceneEntity
 import TDUtility
+import ToDoGardenUIAPI
 import ToDoGardenUIComponent
+import ToDoGardenUIConstant
 
 protocol EditToDoDisplayLogic: AnyObject {
-  func displaySomething(viewModel: EditToDo.Something.ViewModel)
+  func displayFetchedToDo(viewModel: EditToDo.FetchToDo.ViewModel)
+  func displayDeleteToDoResult(viewModel: EditToDo.DeleteToDo.ViewModel)
+  func displayEditToDoResult(viewModel: EditToDo.CompleteEditToDo.ViewModel)
 }
 
 final class EditToDoViewController: UIViewController, EditToDoViewControllable {
@@ -26,12 +30,12 @@ final class EditToDoViewController: UIViewController, EditToDoViewControllable {
   @ExecuteOnce private var scrollToEditToDoMode: (() -> Void)?
 
   // MARK: - VIP Properties
-  
+
   var interactor: EditToDoBusinessLogic?
   var router: (EditToDoRoutingLogic & EditToDoDataPassing)?
-  
+
   // MARK: - Object lifecycle
-  
+
   init() {
     self.editToDoSegmentedControl = EditToDoSegmentedControl()
     self.editModeScrollView = UIScrollView()
@@ -43,17 +47,22 @@ final class EditToDoViewController: UIViewController, EditToDoViewControllable {
     )
     super.init(nibName: nil, bundle: nil)
   }
-  
+
   @available(*, unavailable)
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   // MARK: - View lifecycle
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
     self.setup()
+  }
+
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    self.interactor?.fetchToDo()
   }
 
   override func viewDidLayoutSubviews() {
@@ -63,6 +72,96 @@ final class EditToDoViewController: UIViewController, EditToDoViewControllable {
       self.editToDoSegmentedControl.editMode = EditToDoSegmentedControl.EditMode.todo
       self.editToDoSegmentedControl.sendActions(for: UIControl.Event.valueChanged)
     }
+  }
+}
+
+// MARK: - Request to interactor
+
+extension EditToDoViewController {
+  func editToDo() {
+    if let toDoNameForEdit = self.editToDoView.getEditingText(),
+      let groupForEdit = self.editToDoView.getCurrentGroup() {
+      let request = EditToDo.CompleteEditToDo.Request(toDoName: toDoNameForEdit, displayedGroup: groupForEdit)
+      self.interactor?.editToDo(request: request)
+    }
+  }
+}
+
+// MARK: - Confirm display logic protocol
+
+extension EditToDoViewController: EditToDoDisplayLogic {
+  func displayFetchedToDo(viewModel: EditToDo.FetchToDo.ViewModel) {
+    switch viewModel.fetchedToDoResult {
+    case Result.success(let displayedToDo):
+      self.editToDoView.updateToDoName(displayedToDo.toDoName)
+      self.editToDoView.updateGroup(current: displayedToDo.group, editableGroupList: displayedToDo.groupList)
+      self.updateAlarmState(isAlarmOn: displayedToDo.isAlarmOn)
+      self.updateRepetitionViewState(displayedToDo.repetitionViewState)
+      if let alarmTime = displayedToDo.alarmTime {
+        self.editToDoScheduleView.updateAlarmTime(alarmTime: alarmTime)
+      }
+    case Result.failure:
+      let failToFetchAlert = ToDoGardenAlertController(for: ToDoGardenAlertView.Configuration.failToFetchToDo)
+      failToFetchAlert.delegate = self
+      self.showAlert(failToFetchAlert)
+    }
+  }
+
+  func displayDeleteToDoResult(viewModel: EditToDo.DeleteToDo.ViewModel) {
+    switch viewModel.deleteResult {
+    case Result.success:
+      self.router?.routeToToDoListScene()
+    case Result.failure(let error):
+      self.showErrorAlert(error)
+    }
+  }
+
+  func displayEditToDoResult(viewModel: EditToDo.CompleteEditToDo.ViewModel) {
+    switch viewModel.editResult {
+    case Result.success:
+      self.router?.routeToToDoListScene()
+    case Result.failure(let error):
+      self.showErrorAlert(error)
+    }
+  }
+}
+
+// MARK: ToDoGardenAlertController Delegate Functions
+
+extension EditToDoViewController: ToDoGardenAlertControllerDelegate {
+  func handleButtonAction(
+    _ buttonType: ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType
+  ) {
+    self.closeAlert()
+    switch buttonType {
+    case .retry:
+      self.interactor?.fetchToDo()
+    case .goHome:
+      self.router?.routeToToDoListScene()
+    case .delete:
+      self.interactor?.deleteToDo()
+    default:
+      break
+    }
+  }
+
+  private func showErrorAlert(_ error: Error) {
+    let errorMessage = (error as CustomStringConvertible).description
+    let errorOccurredAlert = ToDoGardenAlertController(
+      for: ToDoGardenAlertView.Configuration.errorOccurred(errorMessage)
+    )
+    errorOccurredAlert.delegate = self
+    self.showAlert(errorOccurredAlert)
+  }
+}
+
+// MARK: Subviews Delegate Functions
+
+extension EditToDoViewController: EditToDoView.EditToDoViewDelegate {
+  func didSelectDeleteToDoButton() {
+    let deleteToDoAlert = ToDoGardenAlertController(for: ToDoGardenAlertView.Configuration.askToDeleteToDo)
+    deleteToDoAlert.delegate = self
+    self.showAlert(deleteToDoAlert)
   }
 }
 
@@ -91,59 +190,49 @@ extension EditToDoViewController: UIScrollViewDelegate {
 // MARK: Private Functions
 
 extension EditToDoViewController {
-  private func setup() {
-    self.setupUI()
-    self.setupEditModeScrollView()
-    self.setupEditModeSegmentedControlAction()
-    self.setupSubviewsLayout()
-  }
-
-  private func setupUI() {
-    self.title = EditToDoSceneTheme.StringLiteral.EditToDoViewController.title
-    self.view.backgroundColor = UIColor.toDoGardenWhite
-  }
-
-  private func setupEditModeScrollView() {
-    self.editModeScrollView.showsVerticalScrollIndicator = false
-    self.editModeScrollView.showsHorizontalScrollIndicator = false
-    self.editModeScrollView.isPagingEnabled = true
-    self.editModeScrollView.delegate = self
-    self.editModeScrollView.bounces = false
-  }
-
-  private func setupEditModeSegmentedControlAction() {
-    let segmentedControlAction = UIAction { _ in
-      if let editMode = self.editToDoSegmentedControl.editMode {
-        self.changeEditMode(by: editMode)
-      }
+  private func updateAlarmState(isAlarmOn: Bool) {
+    if isAlarmOn {
+      self.editToDoScheduleView.updateToAlarmOn()
+    } else {
+      self.editToDoScheduleView.updateToAlarmOff()
     }
-
-    self.editToDoSegmentedControl.addAction(segmentedControlAction, for: UIControl.Event.valueChanged)
   }
 
-  private func changeEditMode(by editMode: EditToDoSegmentedControl.EditMode) {
-    let editModeType = EditToDoSegmentedControl.EditMode.self
-    let pointX = editMode == editModeType.notification ? 0 : self.editModeScrollView.frame.width
-    let contentOffset = CGPoint(x: pointX, y: 0)
-    self.editModeScrollView.setContentOffset(contentOffset, animated: true)
-  }
-}
-
-// MARK: - Confirm display logic protocol
-
-extension EditToDoViewController: EditToDoDisplayLogic {
-  func displaySomething(viewModel: EditToDo.Something.ViewModel) {
-    // self.nameTextField.text = viewModel.name
+  private func updateRepetitionViewState(_ state: EditToDo.EditToDoRepetitionViewState) {
+    switch state {
+    case .repeatOnlyToday:
+      self.editToDoScheduleView.updateToRepeatOnlyToday()
+    case .repeatEveryday:
+      self.editToDoScheduleView.updateToRepeatEveryday()
+    case .repeatInRange:
+      self.editToDoScheduleView.updateToRepeatInRange()
+    }
   }
 }
 
-// MARK: - Request to interactor
+extension EditToDoViewController {
+  struct EditToDoScenePayload: EditToDoScenePayloadable {
+    var toDoId: Int
+  }
 
-extension EditToDoViewController {}
+  class SomeViewController: UIViewController {
+    override func viewDidAppear(_ animated: Bool) {
+      super.viewDidAppear(animated)
+      let editToDoViewController = EditToDoSceneBuilder(
+        dependency: EditToDoSceneBuilder.Dependency(
+          someWorker: EditToDoWorker(),
+          toDoWorker: ToDoWorker(),
+          groupWorker: GroupWorker()
+        )
+      ).build(with: EditToDoViewController.EditToDoScenePayload(toDoId: 0))
+      self.navigationController?.pushViewController(editToDoViewController, animated: true)
+    }
+  }
+}
 
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  return UINavigationController(rootViewController: EditToDoViewController())
+  return UINavigationController(rootViewController: EditToDoViewController.SomeViewController())
 }
 #endif

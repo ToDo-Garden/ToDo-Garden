@@ -95,7 +95,7 @@ public enum EditToDo {
       public let toDoName: String
       public let displayedGroup: DisplayedGroup
 
-      init(toDoName: String, displayedGroup: DisplayedGroup) {
+      public init(toDoName: String, displayedGroup: DisplayedGroup) {
         self.toDoName = toDoName
         self.displayedGroup = displayedGroup
       }
@@ -292,9 +292,9 @@ extension EditToDo {
 
   public struct ToDoAlarm {
     public var isAlarmOn: Bool
-    public var alarmTime: Int?
+    public var alarmTime: Double?
 
-    public init(isAlarmOn: Bool, alarmTime: Int?) {
+    public init(isAlarmOn: Bool, alarmTime: Double?) {
       self.isAlarmOn = isAlarmOn
       self.alarmTime = alarmTime
     }
@@ -324,24 +324,5 @@ extension EditToDo {
     case repeatOnlyToday
     case repeatEveryday
     case repeatInRange
-  }
-}
-
-extension EditToDo.ToDo {
-
-}
-
-extension EditToDo {
-  /// 컴파일 에러 방지용 코드로, Scene이 완성된 이후에 삭제할 예정입니다.
-  public enum Something {
-    public struct Request {
-      public init() {}
-    }
-    public struct Response {
-      public init() {}
-    }
-    public struct ViewModel {
-      public init() {}
-    }
   }
 }
