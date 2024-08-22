@@ -98,7 +98,7 @@ extension EditToDoViewController: EditToDoScheduleViewDelegate {
   }
 
   func didToggleSwitch() {
-
+    self.interactor?.changeAlarmActivation()
   }
 
   func didSelectAlarmSettingButton() {
