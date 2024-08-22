@@ -36,7 +36,7 @@ let package = Package(
     .target(
       name: "ManageGroupScene",
       dependencies: [
-        // .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI"),
+        .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI"),
         "ManageGroupSceneAPI",
         "ManageGroupSceneEntity"
       ]
