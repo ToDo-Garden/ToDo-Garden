@@ -1,6 +1,6 @@
 //
 //  SettingViewController.swift
-//  
+//
 //
 //  Created by Wood on 8/5/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
@@ -20,13 +20,14 @@ final class SettingViewController: UIViewController, SettingViewControllable {
   private let profileRow: Styled.Row
   private let userGuideButton: UserGuideButton
   private let settingCollectionView: UICollectionView
+  private var settingCollectionViewDataSource: UICollectionViewDiffableDataSource<Section, Item>!
   private let versionInfoView: VersionInfoView
 
   var interactor: SettingBusinessLogic?
   var router: (SettingRoutingLogic & SettingDataPassing)?
-  
+
   // MARK: - Object lifecycle
-  
+
   init() {
     self.settingLabel = UILabel()
     // TODO: 프로필 UI를 확인하기 위해 "울버린" 사용자명을 임시로 추가했으며, VIP 로직 구현 이후에 삭제할 예정입니다.
@@ -46,14 +47,14 @@ final class SettingViewController: UIViewController, SettingViewControllable {
     self.versionInfoView = VersionInfoView()
     super.init(nibName: nil, bundle: nil)
   }
-  
+
   @available(*, unavailable)
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   // MARK: - View lifecycle
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
     self.setupUI()
@@ -83,8 +84,10 @@ extension SettingViewController {
 
 extension SettingViewController {
   private func setupUI() {
+    self.view.backgroundColor = UIColor.toDoGardenWhite
     self.setupSettingLabel()
     self.setupProfileRowUI()
+    self.setupSettingCollectionView()
     self.setupSubviewsLayout()
   }
 
@@ -99,6 +102,56 @@ extension SettingViewController {
     self.profileRow.layer.borderWidth = Constant.ProfileRow.Layer.borderWidth
     self.profileRow.layer.borderColor = UIColor.toDoGardenGreenBackground.cgColor
   }
+
+  private func setupSettingCollectionView() {
+    self.setupSettingCollectionViewRegistration()
+    self.settingCollectionView.isScrollEnabled = false
+    self.settingCollectionViewDataSource = self.makeDiffableDataSource(with: self.settingCollectionView)
+    self.settingCollectionView.dataSource = self.settingCollectionViewDataSource
+    self.loadSettingCollectionViewData()
+  }
+
+  private func setupSettingCollectionViewRegistration() {
+    self.settingCollectionView.register(
+      SettingCollectionViewCell.self,
+      forCellWithReuseIdentifier: SettingCollectionViewCell.identifier
+    )
+    self.settingCollectionView.register(
+      SectionHeaderView.self,
+      forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+      withReuseIdentifier: SectionHeaderView.identifier
+    )
+  }
+
+  private func loadSettingCollectionViewData() {
+    var snapshot = self.settingCollectionViewDataSource.snapshot()
+    snapshot.appendSections([
+      Section(
+        image: UIImage.alarmImage.withTintColor(SettingSceneTheme.mainColor),
+        title: "사용자 설정",
+        items: [
+          Item(title: "알림 설정", isShowingModal: false, position: SettingCollectionViewCell.Position.top),
+          Item(title: "리마인드 설정", isShowingModal: false, position: SettingCollectionViewCell.Position.bottom)
+        ]
+      ),
+      Section(
+        image: UIImage.leafImage,
+        title: "앱 정보 및 지원",
+        items: [
+          Item(title: "공지사항", isShowingModal: false, position: SettingCollectionViewCell.Position.top),
+          Item(title: "개인정보 처리 방침", isShowingModal: true, position: SettingCollectionViewCell.Position.middle),
+          Item(title: "서비스 이용 약관", isShowingModal: true, position: SettingCollectionViewCell.Position.middle),
+          Item(title: "피드백 보내기", isShowingModal: true, position: SettingCollectionViewCell.Position.bottom)
+        ]
+      )
+    ])
+
+    snapshot.sectionIdentifiers.forEach { (section: Section) in
+      snapshot.appendItems(section.items, toSection: section)
+    }
+
+    self.settingCollectionViewDataSource.apply(snapshot)
+  }
 }
 
 // MARK: Auto Layout
@@ -108,7 +161,7 @@ extension SettingViewController {
     self.setupSettingLabelLayout()
     self.setupProfileRowLayout()
     self.setupUserGuideButtonLayout()
-    self.setupSettingButtonTableViewLayout()
+    self.setupSettingCollectionViewLayout()
     self.setupVersionInfoViewLayout()
   }
 
@@ -166,7 +219,7 @@ extension SettingViewController {
     )
   }
 
-  private func setupSettingButtonTableViewLayout() {
+  private func setupSettingCollectionViewLayout() {
     self.view.addSubview(self.settingCollectionView)
     self.settingCollectionView.usingAutolayout()
 
