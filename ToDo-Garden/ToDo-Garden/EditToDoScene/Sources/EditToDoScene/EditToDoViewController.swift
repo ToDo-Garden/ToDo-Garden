@@ -145,7 +145,7 @@ extension EditToDoViewController: EditToDoDisplayLogic {
   }
 
   func displayChangedRepetition(viewModel: EditToDo.ChangeRepetition.ViewModel) {
-    
+    self.updateRepetitionViewState(viewModel.editToDoRepetitionViewState)
   }
 }
 
