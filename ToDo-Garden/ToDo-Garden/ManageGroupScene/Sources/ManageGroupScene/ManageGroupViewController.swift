@@ -115,13 +115,29 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
       footerView: footerView,
       viewController: self
     )
+    
     self.groupListTableView.delegate = self.manageGroupTableViewDelegate
     self.groupListTableView.dataSource = self.manageGroupTableViewDelegate
     self.groupListTableView.dragDelegate = self.manageGroupTableViewDelegate
     self.groupListTableView.dropDelegate = self.manageGroupTableViewDelegate
     
+    self.setupTouchActions()
     self.setupTableViewNoBounce()
     self.setupTableViewLayout()
+  }
+  
+  private func setupTouchActions() {
+    self.manageGroupTableViewDelegate?.setOnPostGroup { [weak self] groupName, color in
+      self?.routeToPostGroupScene(groupName: groupName, color: color)
+    }
+    
+    self.manageGroupTableViewDelegate?.setOnReorderGroups { [weak self] id, sourceIndex, destinationIndex in
+      self?.addReorderedGroups(id: id, sourceIndex: sourceIndex, destinationIndex: destinationIndex)
+    }
+    
+    self.manageGroupTableViewDelegate?.setOnDeleteGroup { [weak self] id, index in
+      self?.deleteGroup(id: id, index: index)
+    }
   }
   
   private func setupTableViewNoBounce() {
@@ -216,7 +232,7 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
   func displayDeletedGroup(viewModel: ManageGroup.DeleteGroup.ViewModel) {
     // TODO: 이후 PR에 포함될 예정
   }
- 
+  
   func displayReorderedGroup(viewModel: ManageGroup.ReorderGroup.ViewModel) {
     // TODO: 이후 PR에 포함될 예정
   }
@@ -232,6 +248,7 @@ extension ManageGroupViewController {
   
   func deleteGroup(id: String, index: Int) {
     // TODO: 이후 PR에 포함될 예정
+    print("deleteGroup, groupID: \(id), groupIndex: \(index)")
   }
   
   func reorderGroup() {
@@ -243,7 +260,8 @@ extension ManageGroupViewController {
     sourceIndex: Int,
     destinationIndex: Int
   ) {
-    // TODO: 이후 PR에 포함될 예정 
+    // TODO: 이후 PR에 포함될 예정
+    print("add to ReorderedGroups, groupID: \(id), sourceIndex: \(sourceIndex), destinationIndex: \(destinationIndex)")
   }
 }
 
