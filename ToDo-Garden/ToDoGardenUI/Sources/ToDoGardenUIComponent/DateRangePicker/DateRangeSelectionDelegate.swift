@@ -24,6 +24,11 @@ final class DateRangeSelectionDelegate: CalendarViewSingleSelectionDelegate {
       collectionViewLayoutModel: collectionViewLayoutModel,
       cellIdentifier: cellIdentifier
     )
+    self.afterReloadSection = { [weak self] in
+      self?.collectionView.layoutIfNeeded()
+      self?.updateVisibleSelection(isAfterReload: true)
+      
+    }
   }
   
   // MARK: - UICollectionViewDelegate Methods
