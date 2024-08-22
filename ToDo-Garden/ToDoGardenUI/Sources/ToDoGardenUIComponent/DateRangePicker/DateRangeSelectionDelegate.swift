@@ -12,6 +12,8 @@ final class DateRangeSelectionDelegate: CalendarViewSingleSelectionDelegate {
   var startDate: CalendarItem?
   var endDate: CalendarItem?
   
+  private var lastScrollTime: TimeInterval = 0
+  
   override init(
     collectionView: UICollectionView,
     collectionViewLayoutModel: CalendarView.Model.CollectionViewLayout,
@@ -86,10 +88,14 @@ final class DateRangeSelectionDelegate: CalendarViewSingleSelectionDelegate {
   
   override func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
     super.scrollViewDidEndScrollingAnimation(scrollView)
-    self.updateVisibleSelection(isAfterReload: true)
   }
   
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    self.updateVisibleSelection()
+    let debounceInterval: TimeInterval = 0.07
+    let currentTime = Date().timeIntervalSince1970
+    if currentTime - lastScrollTime >= debounceInterval {
+      self.updateVisibleSelection()
+      self.lastScrollTime = currentTime
+    }
   }
 }
