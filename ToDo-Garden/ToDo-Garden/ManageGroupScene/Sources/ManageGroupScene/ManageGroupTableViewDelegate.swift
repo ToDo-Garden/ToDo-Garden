@@ -14,22 +14,17 @@ final class ManageGroupTableViewDelegate: NSObject {
   
   // MARK: - Properties
   var displayedGroups: [ManageGroup.ToDoGroup]
-  private let groupListTableView: ManageGroupTableViewAPI
-  private let groupListTableViewCell: ManageGroupTableViewCellAPI
   private let footerView: UIView
   
   weak var viewController: ManageGroupViewController?
   
   init(
     displayedGroups: [ManageGroup.ToDoGroup],
-    tableView: ManageGroupTableViewAPI,
-    cell: ManageGroupTableViewCellAPI,
+    footerView: UIView
     footerView: UIView,
     viewController: ManageGroupViewController?
   ) {
     self.displayedGroups = displayedGroups
-    self.groupListTableView = tableView
-    self.groupListTableViewCell = cell
     self.footerView = footerView
     self.viewController = viewController
   }
@@ -51,9 +46,9 @@ extension ManageGroupTableViewDelegate: UITableViewDataSource {
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     guard let cell = tableView.dequeueReusableCell(
-      withIdentifier: self.groupListTableViewCell.getIdentifier(),
+      withIdentifier: ManageGroupTableViewCell.identifier,
       for: indexPath
-    ) as? ManageGroupTableViewCellAPI else {
+    ) as? ManageGroupTableViewCell else {
       return UITableViewCell()
     }
     
@@ -129,7 +124,11 @@ extension ManageGroupTableViewDelegate: UITableViewDropDelegate {
     guard let destinationIndexPath = coordinator.destinationIndexPath else { return }
     
     if coordinator.proposal.operation == UIDropOperation.move {
-      self.reorderItems(coordinator: coordinator, destinationIndexPath: destinationIndexPath)
+      self.reorderItems(
+        tableView: tableView,
+        coordinator: coordinator,
+        destinationIndexPath: destinationIndexPath
+      )
     }
   }
   
@@ -148,21 +147,21 @@ extension ManageGroupTableViewDelegate: UITableViewDropDelegate {
     }
   }
   
-  private func reorderItems(coordinator: UITableViewDropCoordinator, destinationIndexPath: IndexPath) {
+  private func reorderItems(
+    tableView: UITableView,
+    coordinator: UITableViewDropCoordinator,
+    destinationIndexPath: IndexPath
+  ) {
     if let item = coordinator.items.first, let sourceIndexPath = item.sourceIndexPath {
-      self.groupListTableView.performBatchUpdates({
+      tableView.performBatchUpdates({
         let movedItem = self.displayedGroups.remove(at: sourceIndexPath.row)
         self.displayedGroups.insert(movedItem, at: destinationIndexPath.row)
-        self.groupListTableView.moveRow(at: sourceIndexPath, to: destinationIndexPath)
+        tableView.moveRow(at: sourceIndexPath, to: destinationIndexPath)
       }, completion: nil)
       coordinator.drop(item.dragItem, toRowAt: destinationIndexPath)
       
       let id = self.displayedGroups[sourceIndexPath.row].id
       self.viewController?.addReorderedGroups(
-        id: id,
-        sourceIndex: sourceIndexPath.row,
-        destinationIndex: destinationIndexPath.row
-      )
     }
   }
 }
