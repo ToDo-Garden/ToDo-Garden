@@ -16,22 +16,12 @@ public struct ManageGroupSceneBuilder {
     let manageGroupWorker: ManageGroupWorkable
     let nextSceneBuilder: NextSceneBuildable?
     
-    let manageGroupTableView: ManageGroupTableViewAPI
-    let manageGroupTableViewCell: ManageGroupTableViewCellAPI
-    let footerButton: UIButton
-    
     public init(
       manageGroupWorker: ManageGroupWorkable,
-      nextSceneBuilder: NextSceneBuildable?,
-      tableView: ManageGroupTableViewAPI,
-      cell: ManageGroupTableViewCellAPI,
-      footerButton: UIButton
+      nextSceneBuilder: NextSceneBuildable?
     ) {
       self.manageGroupWorker = manageGroupWorker
       self.nextSceneBuilder = nextSceneBuilder
-      self.manageGroupTableView = tableView
-      self.manageGroupTableViewCell = cell
-      self.footerButton = footerButton
     }
   }
   
@@ -48,11 +38,7 @@ extension ManageGroupSceneBuilder: ManageGroupSceneBuildable {
   /// - Returns: 런타임 의존성, VIP Cycle이 설정된 ViewController를 반환합니다.
   public func build(with payload: ManageGroupScenePayloadable?) -> ManageGroupViewControllable {
     let someViewController = self.configureVIPCycle(
-      for: ManageGroupViewController(
-        tableView: self.dependency.manageGroupTableView,
-        cell: self.dependency.manageGroupTableViewCell,
-        footerButton: self.dependency.footerButton
-      )
+      for: ManageGroupViewController()
     )
     self.setPayload(for: someViewController, with: payload ?? nil )
     

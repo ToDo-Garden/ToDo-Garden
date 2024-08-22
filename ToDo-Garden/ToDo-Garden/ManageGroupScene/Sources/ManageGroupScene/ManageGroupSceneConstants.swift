@@ -12,6 +12,7 @@ enum Constant {
     static let navigationbarTitle: String = "그룹관리"
     static let rightBarButtonTitleEdit: String = "편집"
     static let rightBarButtonTitleCancel: String = "취소"
+    static let addGroupFooterButtonTitle: String = "그룹 추가하기"
   }
   
   enum Layout {

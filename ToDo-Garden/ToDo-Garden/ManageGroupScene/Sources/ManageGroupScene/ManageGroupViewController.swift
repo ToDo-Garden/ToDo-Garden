@@ -10,7 +10,7 @@ import UIKit
 import ManageGroupSceneAPI
 import ManageGroupSceneEntity
 import TDFoundationExtension
-import ToDoGardenUIAPI
+import ToDoGardenUIComponent
 import ToDoGardenUIResource
 
 protocol ManageGroupDisplayLogic: AnyObject {
@@ -26,8 +26,8 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
   var interactor: ManageGroupBusinessLogic?
   var router: (ManageGroupRoutingLogic & ManageGroupDataPassing)?
   
-  private let groupListTableView: ManageGroupTableViewAPI
-  private let groupListTableViewCell: ManageGroupTableViewCellAPI
+  private let groupListTableView: ManageGroupTableView
+  private let groupListTableViewCell: ManageGroupTableViewCell
   
   private var rightBarButton: UIBarButtonItem
   private var addGroupfooterButton: UIButton
@@ -40,15 +40,14 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
   
   // MARK: - Object lifecycle
   
-  init(
-    tableView: ManageGroupTableViewAPI,
-    cell: ManageGroupTableViewCellAPI,
-    footerButton: UIButton
-  ) {
+  init() {
     self.displayedGroups = ManageGroup.FetchGroupList.ViewModel(with: []).list
-    self.groupListTableView = tableView
-    self.groupListTableViewCell = cell
-    self.addGroupfooterButton = footerButton
+    self.groupListTableView = ManageGroupTableView()
+    self.groupListTableViewCell = ManageGroupTableViewCell(
+      style: UITableViewCell.CellStyle.default,
+      reuseIdentifier: ManageGroupTableViewCell.identifier
+    )
+    self.addGroupfooterButton = UIButton(configuration: UIButton.Configuration.filled())
     self.rightBarButton = UIBarButtonItem()
     self.manageGroupTableViewDelegate = nil
     super.init(nibName: nil, bundle: nil)
@@ -131,7 +130,7 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
   
   private func setupTableViewLayout() {
     self.view.addSubview(self.groupListTableView)
-    self.groupListTableView.translatesAutoresizingMaskIntoConstraints = false
+    self.groupListTableView.usingAutolayout()
     
     self.tableViewLeadingConstraint = self.groupListTableView.leadingAnchor.constraint(
       equalTo: self.view.leadingAnchor,
@@ -174,7 +173,10 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
   
   private func configureFooterButton(in footerView: UIView) {
     footerView.addSubview(self.addGroupfooterButton)
-    self.addGroupfooterButton.translatesAutoresizingMaskIntoConstraints = false
+    self.addGroupfooterButton.applyAddUnderlinedTextButtonStyle(
+      with: Constant.StringLiteral.addGroupFooterButtonTitle
+    )
+    self.addGroupfooterButton.usingAutolayout()
     self.footerViewLeadingConstraint = self.addGroupfooterButton.leadingAnchor.constraint(
       equalTo: footerView.leadingAnchor,
       constant: Constant.Layout.FooterView.leadingNormal
