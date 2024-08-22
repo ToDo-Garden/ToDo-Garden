@@ -126,32 +126,41 @@ extension SettingViewController {
 
   private func loadSettingCollectionViewData() {
     var snapshot = self.settingCollectionViewDataSource.snapshot()
-    snapshot.appendSections([
-      Section(
-        image: UIImage.alarmImage.withTintColor(SettingSceneTheme.mainColor),
-        title: "사용자 설정",
-        items: [
-          Item(title: "알림 설정", isShowingModal: false, position: SettingCollectionViewCell.Position.top),
-          Item(title: "리마인드 설정", isShowingModal: false, position: SettingCollectionViewCell.Position.bottom)
-        ]
-      ),
-      Section(
-        image: UIImage.leafImage,
-        title: "앱 정보 및 지원",
-        items: [
-          Item(title: "공지사항", isShowingModal: false, position: SettingCollectionViewCell.Position.top),
-          Item(title: "개인정보 처리 방침", isShowingModal: true, position: SettingCollectionViewCell.Position.middle),
-          Item(title: "서비스 이용 약관", isShowingModal: true, position: SettingCollectionViewCell.Position.middle),
-          Item(title: "피드백 보내기", isShowingModal: true, position: SettingCollectionViewCell.Position.bottom)
-        ]
-      )
-    ])
+
+    snapshot.appendSections(self.makeSections())
 
     snapshot.sectionIdentifiers.forEach { (section: Section) in
       snapshot.appendItems(section.items, toSection: section)
     }
 
     self.settingCollectionViewDataSource.apply(snapshot)
+  }
+
+  private func makeSections() -> [Section] {
+    let sectionTitle = SettingSceneTheme.StringLiteral.SettingCollectionView.Section.self
+    let itemTitle = SettingSceneTheme.StringLiteral.SettingCollectionView.Item.self
+
+    let userSettingSection = Section(
+      image: UIImage.alarmImage.withTintColor(SettingSceneTheme.mainColor),
+      title: sectionTitle.userSetting,
+      items: [
+        Item(title: itemTitle.alarmSetting, isShowingModal: false, position: SettingCollectionViewCell.Position.top),
+        Item(title: itemTitle.remindSetting, isShowingModal: false, position: SettingCollectionViewCell.Position.bottom)
+      ]
+    )
+
+    let appSupportSection = Section(
+      image: UIImage.leafImage,
+      title: sectionTitle.appSupport,
+      items: [
+        Item(title: itemTitle.announcement, isShowingModal: false, position: SettingCollectionViewCell.Position.top),
+        Item(title: itemTitle.privacyPolicy, isShowingModal: true, position: SettingCollectionViewCell.Position.middle),
+        Item(title: itemTitle.termsOfUse, isShowingModal: true, position: SettingCollectionViewCell.Position.middle),
+        Item(title: itemTitle.sendFeedback, isShowingModal: true, position: SettingCollectionViewCell.Position.bottom)
+      ]
+    )
+
+    return [userSettingSection, appSupportSection]
   }
 }
 
