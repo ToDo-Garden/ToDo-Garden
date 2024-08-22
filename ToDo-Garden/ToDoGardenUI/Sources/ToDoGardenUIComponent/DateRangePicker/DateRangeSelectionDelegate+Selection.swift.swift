@@ -47,13 +47,17 @@ extension DateRangeSelectionDelegate {
   
   private func getVisibleCells(isAfterReload: Bool) -> [DateRangeCollectionViewCell] {
     if isAfterReload {
-      let newSection = 3
+      let newSection = self.currentIndexPath.section
       let numberOfItems = self.collectionView.numberOfItems(inSection: newSection)
-      return (0..<numberOfItems).compactMap { index in
+      // let dateString = self.getDateString()
+      // print("currentSection: \(newSection), numberOfItems: \(numberOfItems), date: \(dateString)")
+      let visibleCells = (0..<numberOfItems).compactMap { index in
         self.collectionView.cellForItem(
           at: IndexPath(item: index, section: newSection)
         ) as? DateRangeCollectionViewCell
       }
+      // print("After Reload VisibleCells.count: \(visibleCells.count)")
+      return visibleCells
     } else {
       return self.collectionView.visibleCells.compactMap { $0 as? DateRangeCollectionViewCell }
     }
