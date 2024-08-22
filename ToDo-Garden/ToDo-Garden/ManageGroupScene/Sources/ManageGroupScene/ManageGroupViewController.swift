@@ -275,29 +275,15 @@ extension ManageGroupViewController {
   }
 }
 
-// MARK: Preview : PostGroupScene의 Package.swift에 있는 주석처리를 해제해주세요.
-
-// import ToDoGardenUIComponent
-// #if DEBUG
-// @available(iOS 17.0, *)
-// #Preview {
-//   let worker = ManageGroupWorker()
-//   let tableView = ManageGroupTableView()
-//   let cell = ManageGroupTableViewCell(style: .default, reuseIdentifier: ManageGroupTableViewCell.identifier)
-//   let footerButton = UIButton(configuration: .filled())
-//   footerButton.applyAddUnderlinedTextButtonStyle(with: "그룹 추가하기")
-//   
-//   let sceneBuilder = ManageGroupSceneBuilder(
-//    dependency:
-//        .init(manageGroupWorker: worker,
-//              nextSceneBuilder: nil,
-//              tableView: tableView,
-//              cell: cell,
-//              footerButton: footerButton
-//             )
-//   )
-//   
-//   let vc = sceneBuilder.build(with: nil)
-//   return vc
-// }
-// #endif
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let worker = ManageGroupWorker()
+  let sceneBuilder = ManageGroupSceneBuilder(
+    dependency: .init(manageGroupWorker: worker, nextSceneBuilder: nil)
+  )
+  
+  let vcPreview = sceneBuilder.build(with: nil)
+  return vcPreview
+}
+#endif
