@@ -59,6 +59,7 @@ extension EditToDoViewController {
 
   private func setupSubviewsDelegate() {
     self.editToDoView.delegate = self
+    self.editToDoScheduleView.delegate = self
   }
 }
 

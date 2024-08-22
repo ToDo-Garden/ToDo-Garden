@@ -13,6 +13,8 @@ final class EditToDoScheduleView: UIView {
   private let editToDoAlarmView: EditToDoAlarmView
   private let editToDoRepetitionView: EditToDoRepetitionView
 
+  weak var delegate: EditToDoScheduleViewDelegate?
+
   init() {
     self.editToDoAlarmView = EditToDoAlarmView()
     self.editToDoRepetitionView = EditToDoRepetitionView()
@@ -52,13 +54,30 @@ final class EditToDoScheduleView: UIView {
 
 // MARK: Delegate Functions
 
+protocol EditToDoScheduleViewDelegate: AnyObject {
+  func didSelectOnlyTodayView(isOnlyToday: Bool)
+  func didSelectEverydayButton(isSelected: Bool)
+  func didToggleSwitch()
+  func didSelectAlarmSettingButton()
+}
+
 /// 하위 뷰들에서 이벤트를 입력받았을 때 Delegate로 전달받아 호출되는 메서드들입니다.
 extension EditToDoScheduleView: EditToDoRepetitionViewDelegate, EditToDoAlarmViewDelegate {
-  func didSelectOnlyTodayView(isOnlyToday: Bool) {}
-  func didSelectEverydayButton(isSelected: Bool) {}
+  func didSelectOnlyTodayView(isOnlyToday: Bool) {
+    self.delegate?.didSelectOnlyTodayView(isOnlyToday: isOnlyToday)
+  }
+  
+  func didSelectEverydayButton(isSelected: Bool) {
+    self.delegate?.didSelectEverydayButton(isSelected: isSelected)
+  }
 
-  func didToggleSwitch() {}
-  func didSelectAlarmSettingButton() {}
+  func didToggleSwitch() {
+    self.delegate?.didToggleSwitch()
+  }
+  
+  func didSelectAlarmSettingButton() {
+    self.delegate?.didSelectAlarmSettingButton()
+  }
 }
 
 // MARK: Private Functions

@@ -77,13 +77,29 @@ final class EditToDoViewController: UIViewController, EditToDoViewControllable {
 
 // MARK: - Request to interactor
 
-extension EditToDoViewController {
+extension EditToDoViewController: EditToDoScheduleViewDelegate {
   func editToDo() {
     if let toDoNameForEdit = self.editToDoView.getEditingText(),
       let groupForEdit = self.editToDoView.getCurrentGroup() {
       let request = EditToDo.CompleteEditToDo.Request(toDoName: toDoNameForEdit, displayedGroup: groupForEdit)
       self.interactor?.editToDo(request: request)
     }
+  }
+
+  func didSelectOnlyTodayView(isOnlyToday: Bool) {
+
+  }
+
+  func didSelectEverydayButton(isSelected: Bool) {
+
+  }
+
+  func didToggleSwitch() {
+
+  }
+
+  func didSelectAlarmSettingButton() {
+
   }
 }
 
