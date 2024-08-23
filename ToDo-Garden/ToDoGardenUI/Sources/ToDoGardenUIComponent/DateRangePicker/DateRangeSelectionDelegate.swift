@@ -9,9 +9,17 @@ import UIKit
 
 final class DateRangeSelectionDelegate: CalendarViewSingleSelectionDelegate {
   var currentSelectionState: RangeSelectionState
-  var startDate: CalendarItem?
-  var endDate: CalendarItem?
-  
+  var startDate: CalendarItem? {
+    willSet {
+      self.selectedRangeSendingClosure?(newValue?.date, self.endDate?.date)
+    }
+  }
+  var endDate: CalendarItem? {
+    willSet {
+      self.selectedRangeSendingClosure?(self.startDate?.date, newValue?.date)
+    }
+  }
+
   private var lastScrollTime: TimeInterval = 0
   private var selectedRangeSendingClosure: ((Date?, Date?) -> Void)?
 
