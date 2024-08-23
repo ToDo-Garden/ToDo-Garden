@@ -13,7 +13,8 @@ final class DateRangeSelectionDelegate: CalendarViewSingleSelectionDelegate {
   var endDate: CalendarItem?
   
   private var lastScrollTime: TimeInterval = 0
-  
+  private var selectedRangeSendingClosure: ((Date?, Date?) -> Void)?
+
   override init(
     collectionView: UICollectionView,
     collectionViewLayoutModel: CalendarView.Model.CollectionViewLayout,
@@ -93,5 +94,14 @@ final class DateRangeSelectionDelegate: CalendarViewSingleSelectionDelegate {
       self.updateVisibleSelection()
       self.lastScrollTime = currentTime
     }
+  }
+}
+
+// MARK: Selected Range Sending Closure
+
+extension DateRangeSelectionDelegate {
+  /// 선택된 범위의 시작일과 종료일을 DateRangePickerCalendar에 전달하는 클로저를 등록하는 함수입니다.
+  func registerSelectedRangeSendingClosure(_ closure: @escaping (Date?, Date?) -> Void) {
+    self.selectedRangeSendingClosure = closure
   }
 }
