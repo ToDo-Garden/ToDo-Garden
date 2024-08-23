@@ -17,6 +17,7 @@ protocol EditToDoDataStore {
 protocol EditToDoBusinessLogic {
   func changeReptition(request: EditToDo.ChangeRepetition.Request)
   func changeAlarmActivation()
+  func fetchAlarmTime()
   func fetchToDo()
   func deleteToDo()
   func editToDo(request: EditToDo.CompleteEditToDo.Request)
@@ -55,7 +56,14 @@ extension EditToDoInteractor: EditToDoBusinessLogic {
     let response = EditToDo.ChangeAlarmActivation.Response(isAlarmOn: !isAlarmOn)
     self.presenter?.presentAlarmActivation(response: response)
   }
-  
+
+  /// 사용자가 투두 알림 시간 설정 버튼을 눌렀을 때, 기존에 설정했던 시간을 보여주기 위해 호출되는 메서드입니다.
+  func fetchAlarmTime() {
+    let alarmTime = self.toDo?.alarm.alarmTime
+    let response = EditToDo.FetchAlarmTime.Response(alarmTime: alarmTime)
+    self.presenter?.presentFetchedAlarmTime(response: response)
+  }
+
   /// 사용자가 투두 반복 설정 뷰를 선택했을 때 호출하는 메서드입니다.
   /// ex) 사용자가 화면에서 (오늘만 or 다른날도 or 매일) 할래요 뷰를 눌렀음
   func changeReptition(request: EditToDo.ChangeRepetition.Request) {

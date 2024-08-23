@@ -14,6 +14,7 @@ protocol EditToDoPresentationLogic {
   func presentDeleteResult(response: EditToDo.DeleteToDo.Response)
   func presentEditResult(response: EditToDo.CompleteEditToDo.Response)
   func presentAlarmActivation(response: EditToDo.ChangeAlarmActivation.Response)
+  func presentFetchedAlarmTime(response: EditToDo.FetchAlarmTime.Response)
   func presentChangedRepetition(response: EditToDo.ChangeRepetition.Response)
 }
 
@@ -69,6 +70,12 @@ extension EditToDoPresenter: EditToDoPresentationLogic {
     self.viewController?.displayChangedAlarm(viewModel: viewModel)
   }
 
+  func presentFetchedAlarmTime(response: EditToDo.FetchAlarmTime.Response) {
+    let alarmTime = self.makeAlarmTime(of: response.alarmTime)
+    let viewModel = EditToDo.FetchAlarmTime.ViewModel(hour: alarmTime.hour, minute: alarmTime.minute)
+    self.viewController?.displayFetchedAlarmTime(viewModel: viewModel)
+  }
+
   func presentChangedRepetition(response: EditToDo.ChangeRepetition.Response) {
     let viewState = response.editToDoRepetitionViewState
     let viewModel = EditToDo.ChangeRepetition.ViewModel(editToDoRepetitionViewState: viewState)
@@ -79,10 +86,16 @@ extension EditToDoPresenter: EditToDoPresentationLogic {
 // MARK: Private Functions
 
 extension EditToDoPresenter {
+  struct AlarmTime {
+    let hour: Int
+    let minute: Int
+  }
+
   private func makeDisplayedToDo(
     from fetchedToDo: EditToDo.FetchToDo.Response.FetchedToDo
   ) -> EditToDo.FetchToDo.ViewModel.DisplayedToDo {
-    let alarmTime = self.makeAlarmTimeString(from: fetchedToDo.toDo.alarm.alarmTime)
+    let alarmTime = self.makeAlarmTime(of: fetchedToDo.toDo.alarm.alarmTime)
+    let alarmTimeString = String(format: "%02d:%02d", alarmTime.hour, alarmTime.minute)
     let startDay = self.makeDayString(from: fetchedToDo.toDo.repetition.startDate)
     let endDay = self.makeDayString(from: fetchedToDo.toDo.repetition.endDate)
 
@@ -91,23 +104,23 @@ extension EditToDoPresenter {
       group: fetchedToDo.toDo.groupData,
       groupList: fetchedToDo.groupList,
       isAlarmOn: fetchedToDo.toDo.alarm.isAlarmOn,
-      alarmTime: alarmTime,
+      alarmTime: alarmTimeString,
       repetitionViewState: fetchedToDo.repetitionViewState,
       startDay: startDay,
       endDay: endDay
     )
   }
 
-  private func makeAlarmTimeString(from time: Double?) -> String? {
+  private func makeAlarmTime(of time: Double?) -> AlarmTime {
     if let time {
       let timeIntValue = Int(time)
       let secondsPerHour = 3600
       let secondsPerMinute = 60
       let hour = timeIntValue / secondsPerHour
-      let minute = (timeIntValue - (hour * secondsPerHour)) % secondsPerMinute
-      return String(format: "%02d:%02d", hour, minute)
+      let minute = (timeIntValue - (hour * secondsPerHour)) / secondsPerMinute
+      return AlarmTime(hour: hour, minute: minute)
     } else {
-      return nil
+      return AlarmTime(hour: 0, minute: 0)
     }
   }
 

@@ -20,6 +20,7 @@ protocol EditToDoDisplayLogic: AnyObject {
   func displayEditToDoResult(viewModel: EditToDo.CompleteEditToDo.ViewModel)
   func displayChangedRepetition(viewModel: EditToDo.ChangeRepetition.ViewModel)
   func displayChangedAlarm(viewModel: EditToDo.ChangeAlarmActivation.ViewModel)
+  func displayFetchedAlarmTime(viewModel: EditToDo.FetchAlarmTime.ViewModel)
 }
 
 final class EditToDoViewController: UIViewController, EditToDoViewControllable {
@@ -103,7 +104,7 @@ extension EditToDoViewController: EditToDoScheduleViewDelegate {
   }
 
   func didSelectAlarmSettingButton() {
-
+    self.interactor?.fetchAlarmTime()
   }
 }
 
@@ -151,6 +152,14 @@ extension EditToDoViewController: EditToDoDisplayLogic {
 
   func displayChangedAlarm(viewModel: EditToDo.ChangeAlarmActivation.ViewModel) {
     self.updateAlarmState(isAlarmOn: viewModel.isAlarmOn)
+  }
+
+  func displayFetchedAlarmTime(viewModel: EditToDo.FetchAlarmTime.ViewModel) {
+    let alarmTimeSettingModal = ToDoAlarmTimeSettingModal()
+    let hour = viewModel.hour
+    let minute = viewModel.minute
+    alarmTimeSettingModal.updateInitialAlarmTime(hour: hour, minute: minute)
+    self.present(alarmTimeSettingModal, animated: true)
   }
 }
 
