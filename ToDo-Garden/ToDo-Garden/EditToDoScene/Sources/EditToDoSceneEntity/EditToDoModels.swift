@@ -140,6 +140,26 @@ public enum EditToDo {
     }
   }
 
+  public enum FetchAlarmTime {
+    public struct Response {
+      public let alarmTime: Double?
+
+      public init(alarmTime: Double?) {
+        self.alarmTime = alarmTime
+      }
+    }
+
+    public struct ViewModel {
+      public let hour: Int
+      public let minute: Int
+
+      public init(hour: Int, minute: Int) {
+        self.hour = hour
+        self.minute = minute
+      }
+    }
+  }
+
   public enum ChangeAlarmTime {
     public struct Request {
       public let alarmTime: Double
