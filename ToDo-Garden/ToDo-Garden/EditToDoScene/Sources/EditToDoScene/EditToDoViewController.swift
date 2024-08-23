@@ -21,6 +21,7 @@ protocol EditToDoDisplayLogic: AnyObject {
   func displayChangedRepetition(viewModel: EditToDo.ChangeRepetition.ViewModel)
   func displayChangedAlarm(viewModel: EditToDo.ChangeAlarmActivation.ViewModel)
   func displayFetchedAlarmTime(viewModel: EditToDo.FetchAlarmTime.ViewModel)
+  func displayChangedAlarmTime(viewModel: EditToDo.ChangeAlarmTime.ViewModel)
 }
 
 final class EditToDoViewController: UIViewController, EditToDoViewControllable {
@@ -80,7 +81,7 @@ final class EditToDoViewController: UIViewController, EditToDoViewControllable {
 
 // MARK: - Request to interactor
 
-extension EditToDoViewController: EditToDoScheduleViewDelegate {
+extension EditToDoViewController: EditToDoScheduleViewDelegate, ToDoAlarmTimeSettingModalDelegate {
   func editToDo() {
     if let toDoNameForEdit = self.editToDoView.getEditingText(),
       let groupForEdit = self.editToDoView.getCurrentGroup() {
@@ -105,6 +106,11 @@ extension EditToDoViewController: EditToDoScheduleViewDelegate {
 
   func didSelectAlarmSettingButton() {
     self.interactor?.fetchAlarmTime()
+  }
+
+  func didSelectAlarmTime(_ alarmTime: Double) {
+    let request = EditToDo.ChangeAlarmTime.Request(alarmTime: alarmTime)
+    self.interactor?.changeAlarmTime(request: request)
   }
 }
 
@@ -156,10 +162,16 @@ extension EditToDoViewController: EditToDoDisplayLogic {
 
   func displayFetchedAlarmTime(viewModel: EditToDo.FetchAlarmTime.ViewModel) {
     let alarmTimeSettingModal = ToDoAlarmTimeSettingModal()
+    alarmTimeSettingModal.delegate = self
     let hour = viewModel.hour
     let minute = viewModel.minute
     alarmTimeSettingModal.updateInitialAlarmTime(hour: hour, minute: minute)
     self.present(alarmTimeSettingModal, animated: true)
+  }
+
+  func displayChangedAlarmTime(viewModel: EditToDo.ChangeAlarmTime.ViewModel) {
+    let alarmTimeString = viewModel.alarmTimeString
+    self.editToDoScheduleView.updateAlarmTime(alarmTime: alarmTimeString)
   }
 }
 

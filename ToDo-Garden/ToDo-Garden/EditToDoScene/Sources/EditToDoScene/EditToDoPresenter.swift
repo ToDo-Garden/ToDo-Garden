@@ -15,6 +15,7 @@ protocol EditToDoPresentationLogic {
   func presentEditResult(response: EditToDo.CompleteEditToDo.Response)
   func presentAlarmActivation(response: EditToDo.ChangeAlarmActivation.Response)
   func presentFetchedAlarmTime(response: EditToDo.FetchAlarmTime.Response)
+  func presentChangedAlarmTime(response: EditToDo.ChangeAlarmTime.Response)
   func presentChangedRepetition(response: EditToDo.ChangeRepetition.Response)
 }
 
@@ -74,6 +75,13 @@ extension EditToDoPresenter: EditToDoPresentationLogic {
     let alarmTime = self.makeAlarmTime(of: response.alarmTime)
     let viewModel = EditToDo.FetchAlarmTime.ViewModel(hour: alarmTime.hour, minute: alarmTime.minute)
     self.viewController?.displayFetchedAlarmTime(viewModel: viewModel)
+  }
+
+  func presentChangedAlarmTime(response: EditToDo.ChangeAlarmTime.Response) {
+    let alarmTime = self.makeAlarmTime(of: response.alarmTime)
+    let alarmTimeString = String(format: "%02d:%02d", alarmTime.hour, alarmTime.minute)
+    let viewModel = EditToDo.ChangeAlarmTime.ViewModel(alarmTimeString: alarmTimeString)
+    self.viewController?.displayChangedAlarmTime(viewModel: viewModel)
   }
 
   func presentChangedRepetition(response: EditToDo.ChangeRepetition.Response) {

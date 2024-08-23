@@ -18,6 +18,7 @@ protocol EditToDoBusinessLogic {
   func changeReptition(request: EditToDo.ChangeRepetition.Request)
   func changeAlarmActivation()
   func fetchAlarmTime()
+  func changeAlarmTime(request: EditToDo.ChangeAlarmTime.Request)
   func fetchToDo()
   func deleteToDo()
   func editToDo(request: EditToDo.CompleteEditToDo.Request)
@@ -62,6 +63,13 @@ extension EditToDoInteractor: EditToDoBusinessLogic {
     let alarmTime = self.toDo?.alarm.alarmTime
     let response = EditToDo.FetchAlarmTime.Response(alarmTime: alarmTime)
     self.presenter?.presentFetchedAlarmTime(response: response)
+  }
+
+  func changeAlarmTime(request: EditToDo.ChangeAlarmTime.Request) {
+    let alarmTime = request.alarmTime
+    self.toDo?.alarm.alarmTime = alarmTime
+    let response = EditToDo.ChangeAlarmTime.Response(alarmTime: alarmTime)
+    self.presenter?.presentChangedAlarmTime(response: response)
   }
 
   /// 사용자가 투두 반복 설정 뷰를 선택했을 때 호출하는 메서드입니다.
