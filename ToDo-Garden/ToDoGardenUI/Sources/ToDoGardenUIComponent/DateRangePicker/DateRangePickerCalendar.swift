@@ -30,6 +30,13 @@ public final class DateRangePickerCalendar: CalendarView {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+
+  func getDateRange(_ closure: @escaping (Date?, Date?) -> Void) {
+    guard let dateRangePickerDelegate = self.calendarViewDelegate
+    as? DateRangeSelectionDelegate else { return }
+
+    dateRangePickerDelegate.registerSelectedRangeSendingClosure(closure)
+  }
 }
 
 #if DEBUG
