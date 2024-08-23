@@ -36,6 +36,6 @@ extension ShareGardenSceneViewController.Constant.StringLiteral {
 
 extension ShareGardenSceneViewController.Constant.Layout {
   enum SectionHeaderView {
-    static let spacingRatio: CGFloat = 194 / 323
+    static let spacingRatio: CGFloat = 100 / 323
   }
 }
