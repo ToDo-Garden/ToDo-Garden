@@ -20,9 +20,9 @@ protocol ManageGroupDataPassing {
 class ManageGroupRouter: ManageGroupDataPassing {
   weak var viewController: ManageGroupViewController?
   var dataStore: ManageGroupDataStore?
-  private let nextSceneBuilder: NextSceneBuildable
+  private let nextSceneBuilder: NextSceneBuildable?
   
-  init(nextSceneBuilder: NextSceneBuildable) {
+  init(nextSceneBuilder: NextSceneBuildable?) {
     self.nextSceneBuilder = nextSceneBuilder
   }
 }
@@ -31,7 +31,7 @@ class ManageGroupRouter: ManageGroupDataPassing {
 
 extension ManageGroupRouter: ManageGroupRoutingLogic {
   func routeToSomewhere() {
-    let destinationViewController = self.nextSceneBuilder.build(with: NextScenePayload())
+    guard let destinationViewController = self.nextSceneBuilder?.build(with: NextScenePayload()) else { return }
     
     self.viewController?.present(destinationViewController, animated: true)
   }

@@ -5,8 +5,8 @@
 //  Created by SONG on 6/21/24.
 //
 
-import Foundation
+import UIKit.UITableView
 
-public protocol ManageGroupTableViewAPI {
+public protocol ManageGroupTableViewAPI: UITableView {
   func setEditingMode(_ editing: Bool, animated: Bool)
 }

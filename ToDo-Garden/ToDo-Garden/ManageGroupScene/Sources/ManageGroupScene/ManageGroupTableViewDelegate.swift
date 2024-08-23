@@ -1,5 +1,5 @@
 //
-//  ManageGroupTableViewDelegateHandler.swift
+//  ManageGroupTableViewDelegate.swift
 //
 //
 //  Created by SONG on 7/9/24.
@@ -8,30 +8,36 @@
 import UIKit
 
 import ManageGroupSceneEntity
-import ToDoGardenUIAPI
+import ToDoGardenUIComponent
 
 final class ManageGroupTableViewDelegate: NSObject {
   
   // MARK: - Properties
   var displayedGroups: [ManageGroup.ToDoGroup]
-  private let groupListTableView: ManageGroupTableViewAPI
-  private let groupListTableViewCell: ManageGroupTableViewCellAPI
   private let footerView: UIView
   
-  weak var viewController: ManageGroupViewController?
+  private var onPostGroup: ((String, UIColor) -> Void)?
+  private var onReorderGroups: ((String, Int, Int) -> Void)?
+  private var onDeleteGroup: ((String, Int) -> Void)?
   
   init(
     displayedGroups: [ManageGroup.ToDoGroup],
-    tableView: ManageGroupTableViewAPI,
-    cell: ManageGroupTableViewCellAPI,
-    footerView: UIView,
-    viewController: ManageGroupViewController?
+    footerView: UIView
   ) {
     self.displayedGroups = displayedGroups
-    self.groupListTableView = tableView
-    self.groupListTableViewCell = cell
     self.footerView = footerView
-    self.viewController = viewController
+  }
+  
+  func setOnPostGroup(_ handler: @escaping (String, UIColor) -> Void) {
+    self.onPostGroup = handler
+  }
+  
+  func setOnReorderGroups(_ handler: @escaping (String, Int, Int) -> Void) {
+    self.onReorderGroups = handler
+  }
+  
+  func setOnDeleteGroup(_ handler: @escaping (String, Int) -> Void) {
+    self.onDeleteGroup = handler
   }
 }
 
@@ -51,34 +57,31 @@ extension ManageGroupTableViewDelegate: UITableViewDataSource {
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     guard let cell = tableView.dequeueReusableCell(
-      withIdentifier: self.groupListTableViewCell.getIdentifier(),
+      withIdentifier: ManageGroupTableViewCell.identifier,
       for: indexPath
-    ) as? ManageGroupTableViewCellAPI else {
+    ) as? ManageGroupTableViewCell else {
       return UITableViewCell()
     }
     
-    //    let singleGroup = displayedGroups[indexPath.row]
+    let singleGroup = displayedGroups[indexPath.row]
     
-    //    cell.applyModelPrimary(
-    //      id: singleGroup.id,
-    //      groupName: singleGroup.groupName,
-    //      progressColor: singleGroup.progressColor,
-    //      progressRate: singleGroup.progressRate,
-    //      isEditing: tableView.isEditing
-    //    )
+    cell.applyModelPrimary(
+      id: singleGroup.id,
+      groupName: singleGroup.groupName,
+      progressColor: singleGroup.progressColor,
+      progressRate: singleGroup.progressRate,
+      isEditing: tableView.isEditing
+    )
     
     if tableView.isEditing {
       cell.enterEditingMode()
     } else {
       cell.leaveEditingMode()
     }
-    
-    cell.setupRightButtonAction { color, name in
-      print("routeToPostGroupScene with \(color),\(name) ")
-      //      self.viewController?.routeToPostGroupScene(groupName: name, color: color)
+    cell.setupRightButtonAction { [weak self] color, name in
+      self?.onPostGroup?(name, color)
     }
-    
-    return cell as? UITableViewCell ?? UITableViewCell()
+    return cell
   }
   
   func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
@@ -93,11 +96,11 @@ extension ManageGroupTableViewDelegate: UITableViewDelegate {
     commit editingStyle: UITableViewCell.EditingStyle,
     forRowAt indexPath: IndexPath
   ) {
-    //    let index = indexPath.row
-    //    let id = self.displayedGroups[index].id
+    let index = indexPath.row
+    let id = self.displayedGroups[index].id
     
     if editingStyle == UITableViewCell.EditingStyle.delete {
-      //      self.viewController?.deleteGroup(id: id, index: index)
+      self.onDeleteGroup?(id, index)
     }
   }
   
@@ -129,7 +132,11 @@ extension ManageGroupTableViewDelegate: UITableViewDropDelegate {
     guard let destinationIndexPath = coordinator.destinationIndexPath else { return }
     
     if coordinator.proposal.operation == UIDropOperation.move {
-      self.reorderItems(coordinator: coordinator, destinationIndexPath: destinationIndexPath)
+      self.reorderItems(
+        tableView: tableView,
+        coordinator: coordinator,
+        destinationIndexPath: destinationIndexPath
+      )
     }
   }
   
@@ -148,11 +155,11 @@ extension ManageGroupTableViewDelegate: UITableViewDropDelegate {
     }
   }
   
-  private func reorderItems(coordinator: UITableViewDropCoordinator, destinationIndexPath: IndexPath) {
-    guard let tableView = self.groupListTableView as? UITableView else {
-      return
-    }
-    
+  private func reorderItems(
+    tableView: UITableView,
+    coordinator: UITableViewDropCoordinator,
+    destinationIndexPath: IndexPath
+  ) {
     if let item = coordinator.items.first, let sourceIndexPath = item.sourceIndexPath {
       tableView.performBatchUpdates({
         let movedItem = self.displayedGroups.remove(at: sourceIndexPath.row)
@@ -161,12 +168,8 @@ extension ManageGroupTableViewDelegate: UITableViewDropDelegate {
       }, completion: nil)
       coordinator.drop(item.dragItem, toRowAt: destinationIndexPath)
       
-      //      let id = self.displayedGroups[sourceIndexPath.row].id
-      //      self.viewController?.addReorderedGroups(
-      //        id: id,
-      //        sourceIndex: sourceIndexPath.row,
-      //        destinationIndex: destinationIndexPath.row
-      //      )
+      let id = self.displayedGroups[sourceIndexPath.row].id
+      self.onReorderGroups?(id, sourceIndexPath.row, destinationIndexPath.row)
     }
   }
 }
