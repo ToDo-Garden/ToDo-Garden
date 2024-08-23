@@ -25,9 +25,13 @@ private extension UIView {
     let downSpacing = UIView()
     
     let stack = UIStackView(arrangedSubviews: [upSpacing, self, downSpacing])
-    stack.axis = .vertical
-    stack.distribution = .equalSpacing
+    stack.axis = NSLayoutConstraint.Axis.vertical
+    stack.distribution = UIStackView.Distribution.fill
     upSpacing.heightAnchor.constraint(equalTo: downSpacing.heightAnchor).isActive = true
+    self.setContentHuggingPriority(
+      UILayoutPriority.required,
+      for: NSLayoutConstraint.Axis.vertical
+    )
     
     return stack
   }
