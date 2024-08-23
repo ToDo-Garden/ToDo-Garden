@@ -67,5 +67,5 @@ extension SettingViewController.Constant.ProfileRow {
 
 extension SettingViewController.Constant.SettingCollectionView {
   static let topMargin: CGFloat = 22
-  static let height: CGFloat = 306
+  static let height: CGFloat = 307
 }
