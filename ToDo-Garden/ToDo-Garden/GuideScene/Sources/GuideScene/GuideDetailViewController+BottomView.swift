@@ -26,7 +26,7 @@ extension GuideDetailViewController {
     
     override func layoutSubviews() {
       super.layoutSubviews()
-      self.rounCorners([.topLeft, .topRight], radius: 20)
+      self.roundCorners([.topLeft, .topRight], radius: 20)
     }
     
     override func safeAreaInsetsDidChange() {
