@@ -6,9 +6,9 @@ import UIKit
 final class GuideDetailViewController: UIViewController {
   private var bottomView: BottomView!
   
-  var state: Guide.GuideState
+  private var state: Guide.GuideState
   
-  var contensBuilder: GuideSceneContentsBuilder
+  private var contensBuilder: GuideSceneContentsBuilder
   
   // MARK: - Object lifecycle
   init(

@@ -7,13 +7,13 @@ struct GuideSceneBottomContentsViewBuilder {
   func buildSubviews(_ state: Guide.GuideState) -> [UIView] {
     switch state {
     case .todoCreate:
-      return buildCreateToDo()
+      return self.buildCreateToDo()
     case .groupManagement:
-      return buildGroupManagement()
+      return self.buildGroupManagement()
     case .todoEdit:
-      return buildToDoEdit()
+      return self.buildToDoEdit()
     case .shareTab:
-      return buildShareTab()
+      return self.buildShareTab()
     }
   }
 }
@@ -22,9 +22,9 @@ struct GuideSceneBottomContentsViewBuilder {
 extension GuideSceneBottomContentsViewBuilder {
   private func buildCreateToDo() -> [UIView] {
     return [
-      buildCreateToDo1(),
-      buildCreateToDo2(),
-      buildCreateToDo3()
+      self.buildCreateToDo1(),
+      self.buildCreateToDo2(),
+      self.buildCreateToDo3()
     ]
   }
   
@@ -49,7 +49,7 @@ extension GuideSceneBottomContentsViewBuilder {
   }
   
   private func buildCreateToDo1Button() -> UIButton {
-    let button = UIButton(configuration: .borderedTinted())
+    let button = UIButton(configuration: UIButton.Configuration.borderedTinted())
     button.configuration?.title = "버튼"
     button.configuration?.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { value in
       var copy = value
@@ -62,9 +62,9 @@ extension GuideSceneBottomContentsViewBuilder {
     button.configuration?.image = configuredImage
     button.configuration?.imagePadding = 2
     button.configuration?.contentInsets = .init(top: 2, leading: 2, bottom: 2, trailing: 2)
-    button.configuration?.baseForegroundColor = .toDoGardenGreenDark
-    button.configuration?.baseBackgroundColor = .clear
-    button.backgroundColor = .toDoGardenGreenBackground
+    button.configuration?.baseForegroundColor = UIColor.toDoGardenGreenDark
+    button.configuration?.baseBackgroundColor = UIColor.clear
+    button.backgroundColor = UIColor.toDoGardenGreenBackground
     button.layer.cornerRadius = 4
     button.isUserInteractionEnabled = false
     
@@ -107,9 +107,9 @@ extension GuideSceneBottomContentsViewBuilder {
 extension GuideSceneBottomContentsViewBuilder {
   private func buildGroupManagement() -> [UIView] {
     [
-      buildGroupManagement1(),
-      buildGroupManagement2(),
-      buildGroupManagement3()
+      self.buildGroupManagement1(),
+      self.buildGroupManagement2(),
+      self.buildGroupManagement3()
     ]
   }
   
@@ -188,9 +188,9 @@ extension GuideSceneBottomContentsViewBuilder {
 extension GuideSceneBottomContentsViewBuilder {
   private func buildToDoEdit() -> [UIView] {
     return [
-      buildToDoEdit1(),
-      buildToDoEdit2(),
-      buildToDoEdit3()
+      self.buildToDoEdit1(),
+      self.buildToDoEdit2(),
+      self.buildToDoEdit3()
     ]
   }
   
@@ -233,8 +233,8 @@ extension GuideSceneBottomContentsViewBuilder {
 extension GuideSceneBottomContentsViewBuilder {
   private func buildShareTab() -> [UIView] {
     return [
-      buildShareTab1(),
-      buildShareTab2()
+      self.buildShareTab1(),
+      self.buildShareTab2()
     ]
   }
   
