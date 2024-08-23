@@ -38,4 +38,8 @@ extension EditToDoSceneTheme.StringLiteral {
       static let text = "반복"
     }
   }
+
+  enum ToDoAlarmTimeSettingModal {
+    static let buttonTitle = "완료"
+  }
 }
