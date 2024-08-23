@@ -44,6 +44,9 @@ public final class DateRangePickerCalendar: CalendarView {
 #Preview {
   let calendarView = DateRangePickerCalendar(model: CalendarView.Model.primary)
   calendarView.widthAnchor.constraint(equalToConstant: 323).isActive = true
+  calendarView.getDateRange { startDate, endDate in
+    print(startDate, endDate)
+  }
   return calendarView
 }
 #endif
