@@ -32,6 +32,7 @@ class CalendarViewSingleSelectionDelegate: NSObject {
   let dateFormatter: DateFormatter
   
   weak var scrollDelegate: CalendarScrollSendable?
+  var afterReloadSection: (() -> Void)?
   
   init(
     collectionView: UICollectionView,
@@ -147,6 +148,7 @@ extension CalendarViewSingleSelectionDelegate {
       animatingDifferences: false
     ) {
       self.moveToCurrentMonth()
+      self.afterReloadSection?()
     }
   }
 
