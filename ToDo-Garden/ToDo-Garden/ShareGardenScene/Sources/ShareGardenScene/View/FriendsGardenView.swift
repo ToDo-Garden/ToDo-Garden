@@ -34,6 +34,13 @@ extension ShareGardenSceneViewController {
       return SectionHeaderView(sectionTitle: title, rightActionButton: editButton)
     }()
     
+    private let searchGardenButton: UIButton = {
+      let searchGardenButton = UIButton()
+      searchGardenButton.searchGardenButtonStyle()
+      
+      return searchGardenButton
+    }()
+    
     // MARK: - Properties
     
     @ExecuteOnce private var setupLayoutIfNeeded: (() -> Void)?
@@ -74,6 +81,7 @@ extension ShareGardenSceneViewController.FriendsGardenView {
   
   private func addSubviews() {
     self.addArrangedSubview(self.sectionHeaderView)
+    self.addArrangedSubview(self.searchGardenButton)
   }
 }
 
@@ -102,6 +110,17 @@ extension ShareGardenSceneViewController.FriendsGardenView {
     NSLayoutConstraint.activate([
       self.sectionHeaderView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
       self.sectionHeaderView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+    ])
+  }
+  
+  private func setupSearchGardenButtonLayoutConstraints() {
+    let horizontalInset: CGFloat = self.bounds.width * (19 / 375)
+    
+    self.searchGardenButton.usingAutolayout()
+    
+    NSLayoutConstraint.activate([
+      self.searchGardenButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: horizontalInset),
+      self.searchGardenButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -horizontalInset)
     ])
   }
 }
