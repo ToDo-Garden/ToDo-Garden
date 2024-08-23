@@ -47,6 +47,11 @@ extension UIFont {
 		name: PretendardFont.semibold.name,
 		size: 15
 	) ?? UIFont.systemFont(ofSize: 15, weight: .semibold)
+  
+  public static let pretendardBodySemiBold13: UIFont = UIFont(
+    name: PretendardFont.semibold.name,
+    size: 13
+  ) ?? UIFont.systemFont(ofSize: 13, weight: .semibold)
 	
 	public static let pretendardBodyMedium: UIFont = UIFont(
 		name: PretendardFont.medium.name,
