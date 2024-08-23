@@ -76,7 +76,6 @@ extension GuideDetailViewController {
       )
       self.addSubview(self.rightButton)
       self.layoutContainer(container)
-      self.layoutButtons()
       self.leftButton.isHidden = true
     }
     
@@ -162,7 +161,6 @@ extension GuideDetailViewController {
       let button = UIButton(primaryAction: action)
       button.configuration = .plain()
       button.configuration?.image = image
-      button.layer.zPosition = 1
       
       return button
     }
