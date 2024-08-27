@@ -64,7 +64,7 @@ extension SettingCollectionViewCell {
       case Position.middle:
         self.setupBordersInMiddleCell()
       case Position.bottom:
-        self.layer.addBottomRoundedBorder(
+        self.addBottomRoundedBorder(
           color: UIColor.toDoGardenGreenBackground,
           width: 1.0,
           cornerRadius: 10
@@ -138,7 +138,7 @@ extension SettingCollectionViewCell {
       if subLayer.name == SubLayerName.leading ||
         subLayer.name == SubLayerName.bottom ||
         subLayer.name == SubLayerName.trailing ||
-        subLayer.name == CALayer.SubLayerName.bottomRoundedBorder {
+        subLayer.name == SubLayerName.roundedBottom {
         subLayer.removeFromSuperlayer()
       }
     }
@@ -202,9 +202,10 @@ extension SettingCollectionViewCell {
 }
 
 extension SettingCollectionViewCell {
-  enum SubLayerName: CaseIterable {
+  enum SubLayerName {
     static let leading = "leading"
     static let trailing = "trailing"
     static let bottom = "bottom"
+    static let roundedBottom = "roundedBottom"
   }
 }

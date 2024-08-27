@@ -1,5 +1,5 @@
 //
-//  CALayer+addBottomRoundedBorder.swift
+//  SettingCollectionViewCell+addBottomRoundedBorder.swift
 //
 //
 //  Created by Wood on 8/22/24.
@@ -7,11 +7,11 @@
 
 import UIKit
 
-extension CALayer {
+extension SettingCollectionViewCell {
   /// 하단에 "U" 모양을 가진 둥근 테두리를 그리는 메서드입니다.
   func addBottomRoundedBorder(color: UIColor, width: CGFloat, cornerRadius: CGFloat) {
     let borderLayer = CAShapeLayer()
-    borderLayer.name = SubLayerName.bottomRoundedBorder
+    borderLayer.name = SubLayerName.roundedBottom
     borderLayer.fillColor = UIColor.clear.cgColor
     borderLayer.strokeColor = color.cgColor
     borderLayer.lineWidth = width
@@ -27,7 +27,7 @@ extension CALayer {
     path.close()
     UIColor.toDoGardenGreenBackground.setStroke()
     borderLayer.path = path.cgPath
-    self.addSublayer(borderLayer)
+    self.layer.addSublayer(borderLayer)
   }
 
   private func addLeftLine(to borderPath: UIBezierPath, with cornerRadius: CGFloat) {
@@ -66,11 +66,5 @@ extension CALayer {
   private func addRightLine(to borderPath: UIBezierPath) {
     let endPoint = CGPoint(x: borderPath.currentPoint.x, y: self.bounds.origin.y)
     borderPath.addLine(to: endPoint)
-  }
-}
-
-extension CALayer {
-  enum SubLayerName {
-    static let bottomRoundedBorder = "bottomRoundedBorder"
   }
 }
