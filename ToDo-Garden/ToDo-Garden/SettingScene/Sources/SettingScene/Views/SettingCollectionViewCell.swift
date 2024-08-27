@@ -20,17 +20,11 @@ final class SettingCollectionViewCell: UICollectionViewCell, ReusableIdentifier 
   private var cellPosition: Position
   private let titleLabel: UILabel
   private let rightForwardImageView: UIImageView
-  private let leadingBorderView: UIView
-  private let trailingBorderView: UIView
-  private let bottomBorderView: UIView
 
   @ExecuteOnce private var isSetupLayerCalled: (() -> Void)?
 
   override init(frame: CGRect) {
     self.cellPosition = Position.middle
-    self.leadingBorderView = UIView()
-    self.trailingBorderView = UIView()
-    self.bottomBorderView = UIView()
     self.titleLabel = UILabel()
     self.rightForwardImageView = UIImageView()
     super.init(frame: frame)
@@ -54,22 +48,22 @@ final class SettingCollectionViewCell: UICollectionViewCell, ReusableIdentifier 
   }
 }
 
+// MARK: Draw Borders
+
 extension SettingCollectionViewCell {
   private func setupLayer() {
     self.isSetupLayerCalled = {
       switch self.cellPosition {
       case Position.top:
         self.setupRoundedCornerInFirstCell()
-        self.removeBorderViews()
       case Position.middle:
-        self.setupBorderViewsColor()
+        self.setupBordersInMiddleCell()
       case Position.bottom:
         self.layer.addBottomRoundedBorder(
           color: UIColor.toDoGardenGreenBackground,
           width: 1.0,
           cornerRadius: 10
         )
-        self.removeBorderViews()
       }
     }
   }
@@ -84,11 +78,64 @@ extension SettingCollectionViewCell {
     self.layer.borderWidth = 1.0
   }
 
+  private func setupBordersInMiddleCell() {
+    let layers = [
+      self.addLeadingBorderLayer(),
+      self.addBottomBorderLayer(),
+      self.addTrailingBorderLayer()
+    ]
+
+    layers.forEach { (layer: CALayer) in
+      layer.borderWidth = 1.0
+      layer.borderColor = UIColor.toDoGardenGreenBackground.cgColor
+      self.layer.addSublayer(layer)
+    }
+  }
+
+  private func addLeadingBorderLayer() -> CALayer {
+    let leadingLayer = CALayer()
+    leadingLayer.frame = CGRect(
+      x: self.bounds.minX,
+      y: self.bounds.minY,
+      width: 1.0,
+      height: self.bounds.height
+    )
+    leadingLayer.name = SubLayerName.trailing
+    return leadingLayer
+  }
+
+  private func addBottomBorderLayer() -> CALayer {
+    let bottomLayer = CALayer()
+    bottomLayer.frame = CGRect(
+      x: self.bounds.minX,
+      y: self.bounds.maxY - 1.0,
+      width: self.bounds.width,
+      height: 1.0
+    )
+    bottomLayer.name = SubLayerName.trailing
+    return bottomLayer
+  }
+
+  private func addTrailingBorderLayer() -> CALayer {
+    let trailingLayer = CALayer()
+    trailingLayer.frame = CGRect(
+      x: self.bounds.maxX - 1.0,
+      y: self.bounds.minY,
+      width: 1.0,
+      height: self.bounds.height
+    )
+    trailingLayer.name = SubLayerName.trailing
+    return trailingLayer
+  }
+}
+
+// MARK: Private Functions
+
+extension SettingCollectionViewCell {
   private func setup() {
     self.backgroundColor = UIColor.toDoGardenWhite
     self.setupRightForwardImageView()
     self.setupTitleLabel()
-    self.setupBorderViewsLayout()
   }
 
   private func setupRightForwardImageView() {
@@ -101,69 +148,9 @@ extension SettingCollectionViewCell {
     self.titleLabel.textColor = SettingSceneTheme.mainColor
     self.setupTitleLabelLayout()
   }
-
-  private func setupBorderViewsColor() {
-    self.leadingBorderView.backgroundColor = UIColor.toDoGardenGreenBackground
-    self.trailingBorderView.backgroundColor = UIColor.toDoGardenGreenBackground
-    self.bottomBorderView.backgroundColor = UIColor.toDoGardenGreenBackground
-  }
-
-  private func removeBorderViews() {
-    self.leadingBorderView.removeFromSuperview()
-    self.trailingBorderView.removeFromSuperview()
-    self.bottomBorderView.removeFromSuperview()
-  }
 }
 
 extension SettingCollectionViewCell {
-  private func setupBorderViewsLayout() {
-    self.setupLeadingBorderViewLayout()
-    self.setupTrailingBorderViewLayout()
-    self.setupBottomBorderViewLayout()
-  }
-
-  private func setupLeadingBorderViewLayout() {
-    self.contentView.addSubview(self.leadingBorderView)
-    self.leadingBorderView.usingAutolayout()
-
-    NSLayoutConstraint.activate(
-      [
-        self.leadingBorderView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
-        self.leadingBorderView.widthAnchor.constraint(equalToConstant: 1.0),
-        self.leadingBorderView.heightAnchor.constraint(equalTo: self.contentView.heightAnchor),
-        self.leadingBorderView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor)
-      ]
-    )
-  }
-
-  private func setupTrailingBorderViewLayout() {
-    self.contentView.addSubview(self.trailingBorderView)
-    self.trailingBorderView.usingAutolayout()
-
-    NSLayoutConstraint.activate(
-      [
-        self.trailingBorderView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
-        self.trailingBorderView.widthAnchor.constraint(equalToConstant: 1.0),
-        self.trailingBorderView.heightAnchor.constraint(equalTo: self.contentView.heightAnchor),
-        self.trailingBorderView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor)
-      ]
-    )
-  }
-
-  private func setupBottomBorderViewLayout() {
-    self.contentView.addSubview(self.bottomBorderView)
-    self.bottomBorderView.usingAutolayout()
-
-    NSLayoutConstraint.activate(
-      [
-        self.bottomBorderView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
-        self.bottomBorderView.leadingAnchor.constraint(equalTo: self.leadingBorderView.trailingAnchor),
-        self.bottomBorderView.trailingAnchor.constraint(equalTo: self.trailingBorderView.leadingAnchor),
-        self.bottomBorderView.heightAnchor.constraint(equalToConstant: 1.0)
-      ]
-    )
-  }
-
   private func setupRightForwardImageViewLayout() {
     self.contentView.addSubview(self.rightForwardImageView)
     self.rightForwardImageView.usingAutolayout()
@@ -195,5 +182,13 @@ extension SettingCollectionViewCell {
         self.titleLabel.trailingAnchor.constraint(equalTo: self.rightForwardImageView.leadingAnchor)
       ]
     )
+  }
+}
+
+extension SettingCollectionViewCell {
+  enum SubLayerName: CaseIterable {
+    static let leading = "leading"
+    static let trailing = "leading"
+    static let bottom = "bottom"
   }
 }
