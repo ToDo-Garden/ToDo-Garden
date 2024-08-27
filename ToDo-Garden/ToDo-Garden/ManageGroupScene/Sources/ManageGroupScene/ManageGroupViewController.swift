@@ -27,10 +27,10 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
   var router: (ManageGroupRoutingLogic & ManageGroupDataPassing)?
   
   private let groupListTableView: ManageGroupTableView
+  var footerView: UIView
   private let groupListTableViewCell: ManageGroupTableViewCell
   
   private var rightBarButton: UIBarButtonItem
-  private var addGroupfooterButton: UIButton
   private var displayedGroups: [ManageGroup.ToDoGroup]
   
   private var tableViewLeadingConstraint: NSLayoutConstraint?
@@ -105,12 +105,11 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
     }
   }
   
-  private func setupTableView() {
-    let footerView = self.buildAddGroupFooterButton()
-    
+  func setupTableView() {
+    self.footerView = self.buildAddGroupFooterButton()
     self.manageGroupTableViewDelegate = ManageGroupTableViewDelegate(
       displayedGroups: self.displayedGroups,
-      footerView: footerView
+      footerView: self.footerView
     )
     
     self.groupListTableView.delegate = self.manageGroupTableViewDelegate
@@ -167,9 +166,10 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
   
   private func buildAddGroupFooterButton() -> UIView {
     let footerView = self.createFooterView()
-    self.configureFooterButton(in: footerView)
-    self.setupFooterButtonConstraints(in: footerView)
-    self.setupFooterButtonAction()
+    let addGroupfooterButton = UIButton(configuration: UIButton.Configuration.filled())
+    self.configureFooterButton(addGroupfooterButton, on: footerView)
+    self.setupFooterButtonConstraints(addGroupfooterButton, on: footerView)
+    self.setupFooterButtonAction(addGroupfooterButton)
     return footerView
   }
   
@@ -184,31 +184,28 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
     return footerView
   }
   
-  private func configureFooterButton(in footerView: UIView) {
-    footerView.addSubview(self.addGroupfooterButton)
-    self.addGroupfooterButton.applyAddUnderlinedTextButtonStyle(
+  private func configureFooterButton(_ button: UIButton, on footerView: UIView) {
+    footerView.addSubview(button)
+    button.applyAddUnderlinedTextButtonStyle(
       with: Constant.StringLiteral.addGroupFooterButtonTitle
     )
-    self.addGroupfooterButton.usingAutolayout()
-    self.footerViewLeadingConstraint = self.addGroupfooterButton.leadingAnchor.constraint(
-      equalTo: footerView.leadingAnchor,
-      constant: Constant.Layout.FooterView.leadingNormal
-    )
+    button.usingAutolayout()
   }
   
-  private func setupFooterButtonConstraints(in footerView: UIView) {
-    guard let footerViewLeadingConstraint = self.footerViewLeadingConstraint else {
-      return
-    }
+  private func setupFooterButtonConstraints(_ button: UIButton, on footerView: UIView) {
     
     NSLayoutConstraint.activate([
-      self.addGroupfooterButton.centerYAnchor.constraint(equalTo: footerView.centerYAnchor),
-      footerViewLeadingConstraint
+      button.centerYAnchor.constraint(equalTo: footerView.centerYAnchor),
+      button.leadingAnchor.constraint(
+        equalTo: footerView.leadingAnchor,
+        constant: Constant.Layout.FooterView.leadingNormal
+      ),
+      button.heightAnchor.constraint(equalToConstant: Constant.Layout.FooterView.buttonHeight)
     ])
   }
   
-  private func setupFooterButtonAction() {
-    self.addGroupfooterButton.addAction(
+  private func setupFooterButtonAction(_ button: UIButton) {
+    button.addAction(
       UIAction { _ in
         self.routeToPostGroupScene(groupName: nil, color: nil)
       },
