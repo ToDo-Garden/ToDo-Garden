@@ -36,6 +36,11 @@ final class SettingCollectionViewCell: UICollectionViewCell, ReusableIdentifier 
     fatalError("init(coder:) has not been implemented")
   }
 
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    self.removeSubLayersInMiddle()
+  }
+
   override func draw(_ rect: CGRect) {
     super.draw(rect)
     self.setupLayer()
@@ -126,6 +131,16 @@ extension SettingCollectionViewCell {
     )
     trailingLayer.name = SubLayerName.trailing
     return trailingLayer
+  }
+
+  private func removeSubLayersInMiddle() {
+    self.layer.sublayers?.forEach { (subLayer: CALayer) in
+      if subLayer.name == SubLayerName.leading ||
+        subLayer.name == SubLayerName.bottom ||
+        subLayer.name == SubLayerName.trailing {
+        subLayer.removeFromSuperlayer()
+      }
+    }
   }
 }
 
