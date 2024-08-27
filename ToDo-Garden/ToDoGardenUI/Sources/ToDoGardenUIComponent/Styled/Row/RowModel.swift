@@ -1,5 +1,6 @@
 import UIKit
 
+import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 extension Styled.Row {
@@ -50,12 +51,13 @@ extension Styled.Row.Configuration {
         titleFont: UIFont.pretendardHeadBold,
         description: description,
         descriptionFont: UIFont.pretendardDetailLight,
-        axis: NSLayoutConstraint.Axis.vertical
+        axis: NSLayoutConstraint.Axis.vertical,
+        profileSize: Constant.Styled.Row.Profile.shareProfileSize
       )
     }
     
     public static func gardenInfo(
-      image: UIImage = UIImage.defaultProfileImage,
+      image: UIImage = UIImage.defaultFriendProfileImage,
       title: String,
       description: String
     ) -> Self {
@@ -65,7 +67,8 @@ extension Styled.Row.Configuration {
         titleFont: UIFont.pretendardBodySemiBold,
         description: description,
         descriptionFont: UIFont.pretendardBodyMedium,
-        axis: NSLayoutConstraint.Axis.horizontal
+        axis: NSLayoutConstraint.Axis.horizontal,
+        profileSize: Constant.Styled.Row.Profile.friendListProfileSize
       )
     }
     var image: UIImage = UIImage.defaultFriendProfileImage
@@ -74,6 +77,7 @@ extension Styled.Row.Configuration {
     var description: String
     var descriptionFont: UIFont
     var axis: NSLayoutConstraint.Axis
+    var profileSize: CGSize
   }
   
   public struct ListPrimaryModel: Equatable {

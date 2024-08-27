@@ -10,7 +10,7 @@ extension Styled.Row {
     let imageView = self.buildImageView(
       stack: stack,
       image: model.image,
-      size: Constant.Styled.Row.Profile.profileSize
+      size: model.profileSize
     )
     self.buildInnerStack(stack: stack, model: model)
     if model.axis == NSLayoutConstraint.Axis.vertical {
@@ -25,7 +25,6 @@ extension Styled.Row {
   }
   
   private func buildProfileStyleStack(stack: UIStackView) {
-    stack.isLayoutMarginsRelativeArrangement = true
     stack.spacing = Constant.Styled.Row.Profile.stackSpacing
     self.buildStack(
       stack: stack,
