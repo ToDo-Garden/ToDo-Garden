@@ -33,9 +33,6 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
   private var rightBarButton: UIBarButtonItem
   private var displayedGroups: [ManageGroup.ToDoGroup]
   
-  private var tableViewLeadingConstraint: NSLayoutConstraint?
-  private var footerViewLeadingConstraint: NSLayoutConstraint?
-  
   private var manageGroupTableViewDelegate: ManageGroupTableViewDelegate?
   
   // MARK: - Object lifecycle
@@ -47,9 +44,9 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
       style: UITableViewCell.CellStyle.default,
       reuseIdentifier: ManageGroupTableViewCell.identifier
     )
-    self.addGroupfooterButton = UIButton(configuration: UIButton.Configuration.filled())
     self.rightBarButton = UIBarButtonItem()
     self.manageGroupTableViewDelegate = nil
+    self.footerView = UIView()
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -86,12 +83,8 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
     self.groupListTableView.setEditingMode(!isEditingMode, animated: true)
     
     if isEditingMode {
-      self.tableViewLeadingConstraint?.constant = Constant.Layout.Cell.leadingNormal
-      self.footerViewLeadingConstraint?.constant = Constant.Layout.FooterView.leadingNormal
       self.rightBarButton.title = Constant.StringLiteral.rightBarButtonTitleEdit
     } else {
-      self.tableViewLeadingConstraint?.constant = Constant.Layout.Cell.leadingEdit
-      self.footerViewLeadingConstraint?.constant = Constant.Layout.FooterView.leadingEdit
       self.rightBarButton.title = Constant.StringLiteral.rightBarButtonTitleCancel
     }
     
@@ -120,6 +113,7 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
     self.setupTouchActions()
     self.setupTableViewNoBounce()
     self.setupTableViewLayout()
+    self.groupListTableView.tableFooterView = self.footerView
   }
   
   private func setupTouchActions() {
@@ -144,22 +138,19 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
     self.view.addSubview(self.groupListTableView)
     self.groupListTableView.usingAutolayout()
     
-    self.tableViewLeadingConstraint = self.groupListTableView.leadingAnchor.constraint(
-      equalTo: self.view.leadingAnchor,
-      constant: Constant.Layout.TableView.leading
-    )
-    
-    guard let tableViewLeadingConstraint = self.tableViewLeadingConstraint else {
-      return
-    }
-    
     NSLayoutConstraint.activate(
       [
-        tableViewLeadingConstraint,
+        self.groupListTableView.leadingAnchor.constraint(
+          equalTo: self.view.leadingAnchor,
+          constant: Constant.Layout.TableView.sideMargin
+        ),
         self.groupListTableView.topAnchor.constraint(
           equalTo: self.view.safeAreaLayoutGuide.topAnchor,
           constant: Constant.Layout.TableView.top
-        )
+        ),
+        self.groupListTableView.trailingAnchor.constraint(
+          equalTo: self.view.trailingAnchor,
+          constant: -Constant.Layout.TableView.sideMargin)
       ]
     )
   }
