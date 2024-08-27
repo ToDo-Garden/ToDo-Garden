@@ -20,7 +20,7 @@ final class SettingViewController: UIViewController, SettingViewControllable {
   private let profileRow: Styled.Row
   private let userGuideButton: UserGuideButton
   private let settingCollectionView: UICollectionView
-  private var settingCollectionViewDataSource: UICollectionViewDiffableDataSource<Section, Item>!
+  private var settingCollectionViewDataSource: UICollectionViewDiffableDataSource<Section, Item>?
   private let versionInfoView: VersionInfoView
 
   var interactor: SettingBusinessLogic?
@@ -125,7 +125,8 @@ extension SettingViewController {
   }
 
   private func loadSettingCollectionViewData() {
-    var snapshot = self.settingCollectionViewDataSource.snapshot()
+    guard var snapshot = self.settingCollectionViewDataSource?.snapshot()
+    else { return }
 
     snapshot.appendSections(self.makeSections())
 
@@ -133,7 +134,7 @@ extension SettingViewController {
       snapshot.appendItems(section.items, toSection: section)
     }
 
-    self.settingCollectionViewDataSource.apply(snapshot)
+    self.settingCollectionViewDataSource?.apply(snapshot)
   }
 
   private func makeSections() -> [Section] {
