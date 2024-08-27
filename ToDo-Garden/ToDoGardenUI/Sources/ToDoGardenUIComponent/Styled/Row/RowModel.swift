@@ -57,7 +57,7 @@ extension Styled.Row.Configuration {
     }
     
     public static func gardenInfo(
-      image: UIImage = UIImage.defaultProfileImage,
+      image: UIImage = UIImage.defaultFriendProfileImage,
       title: String,
       description: String
     ) -> Self {
