@@ -204,7 +204,7 @@ extension SettingCollectionViewCell {
 extension SettingCollectionViewCell {
   enum SubLayerName: CaseIterable {
     static let leading = "leading"
-    static let trailing = "leading"
+    static let trailing = "trailing"
     static let bottom = "bottom"
   }
 }
