@@ -19,16 +19,15 @@ enum Constant {
     
     enum Cell {
       static let height: CGFloat = 45.0
-      static let leadingNormal: CGFloat = 20.0
-      static let leadingEdit: CGFloat = -5.0
     }
     enum FooterView {
-      static let height: CGFloat = 60.0
+      static let height: CGFloat = 50.0
       static let leadingNormal: CGFloat = 5.0
       static let leadingEdit: CGFloat = 30.0
+      static let buttonHeight: CGFloat = 44.0
     }
     enum TableView {
-      static let leading: CGFloat = 20.0
+      static let sideMargin: CGFloat = 5.0
       static let top: CGFloat = 25.0
     }
   }
