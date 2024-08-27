@@ -137,7 +137,8 @@ extension SettingCollectionViewCell {
     self.layer.sublayers?.forEach { (subLayer: CALayer) in
       if subLayer.name == SubLayerName.leading ||
         subLayer.name == SubLayerName.bottom ||
-        subLayer.name == SubLayerName.trailing {
+        subLayer.name == SubLayerName.trailing ||
+        subLayer.name == CALayer.SubLayerName.bottomRoundedBorder {
         subLayer.removeFromSuperlayer()
       }
     }

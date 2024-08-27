@@ -11,6 +11,7 @@ extension CALayer {
   /// 하단에 "U" 모양을 가진 둥근 테두리를 그리는 메서드입니다.
   func addBottomRoundedBorder(color: UIColor, width: CGFloat, cornerRadius: CGFloat) {
     let borderLayer = CAShapeLayer()
+    borderLayer.name = SubLayerName.bottomRoundedBorder
     borderLayer.fillColor = UIColor.clear.cgColor
     borderLayer.strokeColor = color.cgColor
     borderLayer.lineWidth = width
@@ -65,5 +66,11 @@ extension CALayer {
   private func addRightLine(to borderPath: UIBezierPath) {
     let endPoint = CGPoint(x: borderPath.currentPoint.x, y: self.bounds.origin.y)
     borderPath.addLine(to: endPoint)
+  }
+}
+
+extension CALayer {
+  enum SubLayerName {
+    static let bottomRoundedBorder = "bottomRoundedBorder"
   }
 }
