@@ -5,16 +5,43 @@ import PackageDescription
 
 let package = Package(
   name: "UserInfoScene",
-  platforms: [.macOS(.v10_15), .iOS(.v13), .tvOS(.v13), .watchOS(.v6), .macCatalyst(.v13)],
+  platforms: [.iOS(.v15)],
   products: [
+    .library(
+      name: "UserInfoSceneAPI",
+      targets: ["UserInfoSceneAPI"]
+    ),
+    .library(
+      name: "UserInfoSceneEntity",
+      targets: ["UserInfoSceneEntity"]
+    ),
     .library(
       name: "UserInfoScene",
       targets: ["UserInfoScene"]
     )
   ],
+  dependencies: [
+    .package(name: "ToDoGardenUI", path: "../ToDoGardenUI")
+  ],
   targets: [
     .target(
-      name: "UserInfoScene"
+      name: "UserInfoSceneAPI",
+      dependencies: [
+        .product(name: "ToDoGardenUIAPI", package: "ToDoGardenUI")
+      ]
+    ),
+    .target(
+      name: "UserInfoSceneEntity"
+    ),
+    .target(
+      name: "UserInfoScene",
+      dependencies: [
+        "UserInfoSceneAPI",
+        "UserInfoSceneEntity",
+        .product(name: "ToDoGardenUIAPI", package: "ToDoGardenUI"),
+        .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI"),
+        .product(name: "ToDoGardenUIResource", package: "ToDoGardenUI")
+      ]
     ),
     .testTarget(
       name: "UserInfoSceneTests",
