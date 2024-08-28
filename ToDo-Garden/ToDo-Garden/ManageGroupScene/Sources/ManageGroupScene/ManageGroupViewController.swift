@@ -113,7 +113,6 @@ public class ManageGroupViewController: UIViewController, ManageGroupViewControl
     self.setupTouchActions()
     self.setupTableViewNoBounce()
     self.setupTableViewLayout()
-    self.groupListTableView.tableFooterView = self.footerView
   }
   
   private func setupTouchActions() {
