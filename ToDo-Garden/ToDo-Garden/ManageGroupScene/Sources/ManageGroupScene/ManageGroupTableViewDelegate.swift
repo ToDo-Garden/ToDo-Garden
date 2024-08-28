@@ -83,10 +83,6 @@ extension ManageGroupTableViewDelegate: UITableViewDataSource {
     }
     return cell
   }
-  
-  func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-    return self.footerView
-  }
 }
 
 // MARK: - UITableViewDelegate
@@ -106,6 +102,10 @@ extension ManageGroupTableViewDelegate: UITableViewDelegate {
   
   func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
     return tableView.isEditing
+  }
+  
+  func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    return self.footerView
   }
 }
 

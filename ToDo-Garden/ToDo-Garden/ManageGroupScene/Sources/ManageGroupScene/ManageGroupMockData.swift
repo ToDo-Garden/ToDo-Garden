@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  ManageGroupMockData.swift
+//
 //
 //  Created by SONG on 8/2/24.
 //
@@ -8,8 +8,16 @@
 import Foundation
 
 import ManageGroupSceneEntity
+import ToDoGardenUIResource
 
 struct ManageGroupMockData {
+  
+  static let guideSceneData: [ManageGroup.ToDoGroup] = [
+    ManageGroup.ToDoGroup(id: "1", groupName: "영어 독해", progressColor: .toDoGardenYellow, progressRate: 0.5),
+    ManageGroup.ToDoGroup(id: "2", groupName: "역사와 문화 이해", progressColor: .toDoGardenRed, progressRate: 0.5),
+    ManageGroup.ToDoGroup(id: "3", groupName: "디자인 창작", progressColor: .toDoGardenOlive, progressRate: 0.5)
+  ]
+  
   static let fetchedData: [ManageGroup.ToDoGroup] = [
     ManageGroup.ToDoGroup(id: "1", groupName: "수학 공부", progressColor: .red, progressRate: 0.5),
     ManageGroup.ToDoGroup(id: "2", groupName: "영어 학습 및 연습", progressColor: .blue, progressRate: 0.3),

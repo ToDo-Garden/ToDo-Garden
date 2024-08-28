@@ -19,24 +19,21 @@ protocol ManageGroupDisplayLogic: AnyObject {
   func displayReorderedGroup(viewModel: ManageGroup.ReorderGroup.ViewModel)
 }
 
-class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
+public class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
   
   // MARK: - VIP Properties
   
   var interactor: ManageGroupBusinessLogic?
   var router: (ManageGroupRoutingLogic & ManageGroupDataPassing)?
+
+  public var rightBarButton: UIBarButtonItem
+  public var footerView: UIView
   
-  private let groupListTableView: ManageGroupTableView
+  var displayedGroups: [ManageGroup.ToDoGroup]
+  var manageGroupTableViewDelegate: ManageGroupTableViewDelegate?
+  let groupListTableView: ManageGroupTableView
+  
   private let groupListTableViewCell: ManageGroupTableViewCell
-  
-  private var rightBarButton: UIBarButtonItem
-  private var addGroupfooterButton: UIButton
-  private var displayedGroups: [ManageGroup.ToDoGroup]
-  
-  private var tableViewLeadingConstraint: NSLayoutConstraint?
-  private var footerViewLeadingConstraint: NSLayoutConstraint?
-  
-  private var manageGroupTableViewDelegate: ManageGroupTableViewDelegate?
   
   // MARK: - Object lifecycle
   
@@ -47,9 +44,9 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
       style: UITableViewCell.CellStyle.default,
       reuseIdentifier: ManageGroupTableViewCell.identifier
     )
-    self.addGroupfooterButton = UIButton(configuration: UIButton.Configuration.filled())
     self.rightBarButton = UIBarButtonItem()
     self.manageGroupTableViewDelegate = nil
+    self.footerView = UIView()
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -60,7 +57,7 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
   
   // MARK: - View lifecycle
   
-  override func viewDidLoad() {
+  public override func viewDidLoad() {
     super.viewDidLoad()
     self.view.backgroundColor = UIColor.white
     self.setupTableView()
@@ -68,7 +65,36 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
     self.fetchGroupList()
   }
   
-  private func setupNavigationBar() {
+  // MARK: - Request to interactor
+  
+  func fetchGroupList() {
+    let request = ManageGroup.FetchGroupList.Request()
+    self.interactor?.fetchGroupList(request: request)
+  }
+  
+  func deleteGroup(id: String, index: Int) {
+    // TODO: 이후 PR에 포함될 예정
+    print("deleteGroup, groupID: \(id), groupIndex: \(index)")
+  }
+  
+  func reorderGroup() {
+    // TODO: 이후 PR에 포함될 예정
+  }
+  
+  func addReorderedGroups(
+    id: String,
+    sourceIndex: Int,
+    destinationIndex: Int
+  ) {
+    // TODO: 이후 PR에 포함될 예정
+    print("add to ReorderedGroups, groupID: \(id), sourceIndex: \(sourceIndex), destinationIndex: \(destinationIndex)")
+  }
+}
+
+// MARK: - Setup
+
+extension ManageGroupViewController {
+  func setupNavigationBar() {
     self.navigationItem.title = Constant.StringLiteral.navigationbarTitle
     self.rightBarButton = UIBarButtonItem(
       title: Constant.StringLiteral.rightBarButtonTitleEdit,
@@ -86,12 +112,8 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
     self.groupListTableView.setEditingMode(!isEditingMode, animated: true)
     
     if isEditingMode {
-      self.tableViewLeadingConstraint?.constant = Constant.Layout.Cell.leadingNormal
-      self.footerViewLeadingConstraint?.constant = Constant.Layout.FooterView.leadingNormal
       self.rightBarButton.title = Constant.StringLiteral.rightBarButtonTitleEdit
     } else {
-      self.tableViewLeadingConstraint?.constant = Constant.Layout.Cell.leadingEdit
-      self.footerViewLeadingConstraint?.constant = Constant.Layout.FooterView.leadingEdit
       self.rightBarButton.title = Constant.StringLiteral.rightBarButtonTitleCancel
     }
     
@@ -105,12 +127,11 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
     }
   }
   
-  private func setupTableView() {
-    let footerView = self.buildAddGroupFooterButton()
-    
+  func setupTableView() {
+    self.footerView = self.buildAddGroupFooterButton()
     self.manageGroupTableViewDelegate = ManageGroupTableViewDelegate(
       displayedGroups: self.displayedGroups,
-      footerView: footerView
+      footerView: self.footerView
     )
     
     self.groupListTableView.delegate = self.manageGroupTableViewDelegate
@@ -145,31 +166,29 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
     self.view.addSubview(self.groupListTableView)
     self.groupListTableView.usingAutolayout()
     
-    self.tableViewLeadingConstraint = self.groupListTableView.leadingAnchor.constraint(
-      equalTo: self.view.leadingAnchor,
-      constant: Constant.Layout.TableView.leading
-    )
-    
-    guard let tableViewLeadingConstraint = self.tableViewLeadingConstraint else {
-      return
-    }
-    
     NSLayoutConstraint.activate(
       [
-        tableViewLeadingConstraint,
+        self.groupListTableView.leadingAnchor.constraint(
+          equalTo: self.view.leadingAnchor,
+          constant: Constant.Layout.TableView.sideMargin
+        ),
         self.groupListTableView.topAnchor.constraint(
           equalTo: self.view.safeAreaLayoutGuide.topAnchor,
           constant: Constant.Layout.TableView.top
-        )
+        ),
+        self.groupListTableView.trailingAnchor.constraint(
+          equalTo: self.view.trailingAnchor,
+          constant: -Constant.Layout.TableView.sideMargin)
       ]
     )
   }
   
   private func buildAddGroupFooterButton() -> UIView {
     let footerView = self.createFooterView()
-    self.configureFooterButton(in: footerView)
-    self.setupFooterButtonConstraints(in: footerView)
-    self.setupFooterButtonAction()
+    let addGroupfooterButton = UIButton(configuration: UIButton.Configuration.filled())
+    self.configureFooterButton(addGroupfooterButton, on: footerView)
+    self.setupFooterButtonConstraints(addGroupfooterButton, on: footerView)
+    self.setupFooterButtonAction(addGroupfooterButton)
     return footerView
   }
   
@@ -184,31 +203,28 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
     return footerView
   }
   
-  private func configureFooterButton(in footerView: UIView) {
-    footerView.addSubview(self.addGroupfooterButton)
-    self.addGroupfooterButton.applyAddUnderlinedTextButtonStyle(
+  private func configureFooterButton(_ button: UIButton, on footerView: UIView) {
+    footerView.addSubview(button)
+    button.applyAddUnderlinedTextButtonStyle(
       with: Constant.StringLiteral.addGroupFooterButtonTitle
     )
-    self.addGroupfooterButton.usingAutolayout()
-    self.footerViewLeadingConstraint = self.addGroupfooterButton.leadingAnchor.constraint(
-      equalTo: footerView.leadingAnchor,
-      constant: Constant.Layout.FooterView.leadingNormal
-    )
+    button.usingAutolayout()
   }
   
-  private func setupFooterButtonConstraints(in footerView: UIView) {
-    guard let footerViewLeadingConstraint = self.footerViewLeadingConstraint else {
-      return
-    }
+  private func setupFooterButtonConstraints(_ button: UIButton, on footerView: UIView) {
     
     NSLayoutConstraint.activate([
-      self.addGroupfooterButton.centerYAnchor.constraint(equalTo: footerView.centerYAnchor),
-      footerViewLeadingConstraint
+      button.centerYAnchor.constraint(equalTo: footerView.centerYAnchor),
+      button.leadingAnchor.constraint(
+        equalTo: footerView.leadingAnchor,
+        constant: Constant.Layout.FooterView.buttonLeading
+      ),
+      button.heightAnchor.constraint(equalToConstant: Constant.Layout.FooterView.buttonHeight)
     ])
   }
   
-  private func setupFooterButtonAction() {
-    self.addGroupfooterButton.addAction(
+  private func setupFooterButtonAction(_ button: UIButton) {
+    button.addAction(
       UIAction { _ in
         self.routeToPostGroupScene(groupName: nil, color: nil)
       },
@@ -232,33 +248,6 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
   
   func displayReorderedGroup(viewModel: ManageGroup.ReorderGroup.ViewModel) {
     // TODO: 이후 PR에 포함될 예정
-  }
-}
-
-// MARK: - Request to interactor
-
-extension ManageGroupViewController {
-  func fetchGroupList() {
-    let request = ManageGroup.FetchGroupList.Request()
-    self.interactor?.fetchGroupList(request: request)
-  }
-  
-  func deleteGroup(id: String, index: Int) {
-    // TODO: 이후 PR에 포함될 예정
-    print("deleteGroup, groupID: \(id), groupIndex: \(index)")
-  }
-  
-  func reorderGroup() {
-    // TODO: 이후 PR에 포함될 예정
-  }
-  
-  func addReorderedGroups(
-    id: String,
-    sourceIndex: Int,
-    destinationIndex: Int
-  ) {
-    // TODO: 이후 PR에 포함될 예정
-    print("add to ReorderedGroups, groupID: \(id), sourceIndex: \(sourceIndex), destinationIndex: \(destinationIndex)")
   }
 }
 
