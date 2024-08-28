@@ -54,6 +54,7 @@
 		4FDA5E382B4FF1E4006506ED /* Asset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Asset.xcassets; sourceTree = "<group>"; };
 		4FEB41402C36864D00E3682A /* ShareGardenScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ShareGardenScene; sourceTree = "<group>"; };
 		631CD21F2C609FAD0000F78E /* SettingScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SettingScene; sourceTree = "<group>"; };
+		638F7F532C7F4AF500338FA3 /* UserInfoScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = UserInfoScene; sourceTree = "<group>"; };
 		639D79502C19A8E300004B26 /* EditToDoScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = EditToDoScene; sourceTree = "<group>"; };
 		AE645FE82C64BD3E001A5612 /* CommonViews */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CommonViews; sourceTree = "<group>"; };
 		AE645FE92C64BE80001A5612 /* GuideScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = GuideScene; sourceTree = "<group>"; };
@@ -119,6 +120,7 @@
 		4F0DF12A2B4EABCE00097B7D /* ToDo-Garden */ = {
 			isa = PBXGroup;
 			children = (
+				638F7F532C7F4AF500338FA3 /* UserInfoScene */,
 				AE645FE92C64BE80001A5612 /* GuideScene */,
 				AE645FE82C64BD3E001A5612 /* CommonViews */,
 				631CD21F2C609FAD0000F78E /* SettingScene */,
