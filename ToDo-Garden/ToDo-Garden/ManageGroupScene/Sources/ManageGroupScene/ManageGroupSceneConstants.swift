@@ -22,8 +22,7 @@ enum Constant {
     }
     enum FooterView {
       static let height: CGFloat = 50.0
-      static let leadingNormal: CGFloat = 5.0
-      static let leadingEdit: CGFloat = 30.0
+      static let buttonLeading: CGFloat = 15.0
       static let buttonHeight: CGFloat = 44.0
     }
     enum TableView {

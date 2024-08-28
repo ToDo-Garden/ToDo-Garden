@@ -189,7 +189,7 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
       button.centerYAnchor.constraint(equalTo: footerView.centerYAnchor),
       button.leadingAnchor.constraint(
         equalTo: footerView.leadingAnchor,
-        constant: Constant.Layout.FooterView.leadingNormal
+        constant: Constant.Layout.FooterView.buttonLeading
       ),
       button.heightAnchor.constraint(equalToConstant: Constant.Layout.FooterView.buttonHeight)
     ])
