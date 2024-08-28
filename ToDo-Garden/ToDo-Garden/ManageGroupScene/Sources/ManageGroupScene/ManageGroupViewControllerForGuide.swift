@@ -27,6 +27,7 @@ public final class ManageGroupViewControllerForGuide: ManageGroupViewController 
     self.setupNavigationBar()
     self.fetchGroupList()
   }
+  
   override func fetchGroupList() {
     let fetchedData = ManageGroupMockData.guideSceneData
     self.displayedGroups = fetchedData
