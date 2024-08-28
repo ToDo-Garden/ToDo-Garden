@@ -42,10 +42,6 @@ let package = Package(
         .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI"),
         .product(name: "ToDoGardenUIResource", package: "ToDoGardenUI")
       ]
-    ),
-    .testTarget(
-      name: "UserInfoSceneTests",
-      dependencies: ["UserInfoScene"]
     )
   ]
 )
