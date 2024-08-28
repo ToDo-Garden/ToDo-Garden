@@ -10,18 +10,18 @@ import Foundation
 import UserInfoSceneEntity
 
 protocol UserInfoScenePresentationLogic {
-	func presentSomething(response: UserInfoScene.Something.Response)
+  func presentSomething(response: UserInfoScene.Something.Response)
 }
 
 class UserInfoScenePresenter {
-	weak var viewController: UserInfoSceneDisplayLogic?
+  weak var viewController: UserInfoSceneDisplayLogic?
 }
 
 // MARK: - Request to ViewController
 
 extension UserInfoScenePresenter: UserInfoScenePresentationLogic {
-	func presentSomething(response: UserInfoScene.Something.Response) {
-		let viewModel = UserInfoScene.Something.ViewModel()
-		self.viewController?.displaySomething(viewModel: viewModel)
-	}
+  func presentSomething(response: UserInfoScene.Something.Response) {
+    let viewModel = UserInfoScene.Something.ViewModel()
+    self.viewController?.displaySomething(viewModel: viewModel)
+  }
 }

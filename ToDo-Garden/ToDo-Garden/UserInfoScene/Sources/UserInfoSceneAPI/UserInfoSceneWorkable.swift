@@ -8,5 +8,5 @@
 import Foundation
 
 public protocol UserInfoSceneWorkable {
-	func doSomeWork()
+  func doSomeWork()
 }
