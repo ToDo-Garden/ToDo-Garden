@@ -19,21 +19,21 @@ protocol ManageGroupDisplayLogic: AnyObject {
   func displayReorderedGroup(viewModel: ManageGroup.ReorderGroup.ViewModel)
 }
 
-class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
+public class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
   
   // MARK: - VIP Properties
   
   var interactor: ManageGroupBusinessLogic?
   var router: (ManageGroupRoutingLogic & ManageGroupDataPassing)?
+
+  public var rightBarButton: UIBarButtonItem
+  public var footerView: UIView
   
-  private let groupListTableView: ManageGroupTableView
-  var footerView: UIView
+  var displayedGroups: [ManageGroup.ToDoGroup]
+  var manageGroupTableViewDelegate: ManageGroupTableViewDelegate?
+  let groupListTableView: ManageGroupTableView
+  
   private let groupListTableViewCell: ManageGroupTableViewCell
-  
-  private var rightBarButton: UIBarButtonItem
-  private var displayedGroups: [ManageGroup.ToDoGroup]
-  
-  private var manageGroupTableViewDelegate: ManageGroupTableViewDelegate?
   
   // MARK: - Object lifecycle
   
@@ -57,7 +57,7 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
   
   // MARK: - View lifecycle
   
-  override func viewDidLoad() {
+  public override func viewDidLoad() {
     super.viewDidLoad()
     self.view.backgroundColor = UIColor.white
     self.setupTableView()
@@ -65,7 +65,7 @@ class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
     self.fetchGroupList()
   }
   
-  private func setupNavigationBar() {
+  func setupNavigationBar() {
     self.navigationItem.title = Constant.StringLiteral.navigationbarTitle
     self.rightBarButton = UIBarButtonItem(
       title: Constant.StringLiteral.rightBarButtonTitleEdit,
@@ -226,7 +226,7 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
 // MARK: - Request to interactor
 
 extension ManageGroupViewController {
-  func fetchGroupList() {
+  @objc func fetchGroupList() {
     let request = ManageGroup.FetchGroupList.Request()
     self.interactor?.fetchGroupList(request: request)
   }
