@@ -19,7 +19,7 @@ protocol EditToDoPresentationLogic {
   func presentChangedRepetition(response: EditToDo.ChangeRepetition.Response)
 }
 
-class EditToDoPresenter {
+final class EditToDoPresenter {
   private let dateFormatter: DateFormatter
 
   weak var viewController: EditToDoDisplayLogic?
@@ -94,7 +94,7 @@ extension EditToDoPresenter: EditToDoPresentationLogic {
 // MARK: Private Functions
 
 extension EditToDoPresenter {
-  struct AlarmTime {
+  private struct AlarmTime {
     let hour: Int
     let minute: Int
   }

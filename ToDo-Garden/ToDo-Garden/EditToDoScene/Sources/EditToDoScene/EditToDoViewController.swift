@@ -183,11 +183,11 @@ extension EditToDoViewController: ToDoGardenAlertControllerDelegate {
   ) {
     self.closeAlert()
     switch buttonType {
-    case .retry:
+    case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.retry:
       self.interactor?.fetchToDo()
-    case .goHome:
+    case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.goHome:
       self.router?.routeToToDoListScene()
-    case .delete:
+    case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.delete:
       self.interactor?.deleteToDo()
     default:
       break
@@ -249,11 +249,11 @@ extension EditToDoViewController {
 
   private func updateRepetitionViewState(_ state: EditToDo.EditToDoRepetitionViewState) {
     switch state {
-    case .repeatOnlyToday:
+    case EditToDo.EditToDoRepetitionViewState.repeatOnlyToday:
       self.editToDoScheduleView.updateToRepeatOnlyToday()
-    case .repeatEveryday:
+    case EditToDo.EditToDoRepetitionViewState.repeatEveryday:
       self.editToDoScheduleView.updateToRepeatEveryday()
-    case .repeatInRange:
+    case EditToDo.EditToDoRepetitionViewState.repeatInRange:
       self.editToDoScheduleView.updateToRepeatInRange()
     }
   }
