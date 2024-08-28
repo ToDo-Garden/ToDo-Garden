@@ -65,6 +65,35 @@ public class ManageGroupViewController: UIViewController, ManageGroupViewControl
     self.fetchGroupList()
   }
   
+  // MARK: - Request to interactor
+  
+  func fetchGroupList() {
+    let request = ManageGroup.FetchGroupList.Request()
+    self.interactor?.fetchGroupList(request: request)
+  }
+  
+  func deleteGroup(id: String, index: Int) {
+    // TODO: 이후 PR에 포함될 예정
+    print("deleteGroup, groupID: \(id), groupIndex: \(index)")
+  }
+  
+  func reorderGroup() {
+    // TODO: 이후 PR에 포함될 예정
+  }
+  
+  func addReorderedGroups(
+    id: String,
+    sourceIndex: Int,
+    destinationIndex: Int
+  ) {
+    // TODO: 이후 PR에 포함될 예정
+    print("add to ReorderedGroups, groupID: \(id), sourceIndex: \(sourceIndex), destinationIndex: \(destinationIndex)")
+  }
+}
+
+// MARK: - Setup
+
+extension ManageGroupViewController {
   func setupNavigationBar() {
     self.navigationItem.title = Constant.StringLiteral.navigationbarTitle
     self.rightBarButton = UIBarButtonItem(
@@ -219,33 +248,6 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
   
   func displayReorderedGroup(viewModel: ManageGroup.ReorderGroup.ViewModel) {
     // TODO: 이후 PR에 포함될 예정
-  }
-}
-
-// MARK: - Request to interactor
-
-extension ManageGroupViewController {
-  @objc func fetchGroupList() {
-    let request = ManageGroup.FetchGroupList.Request()
-    self.interactor?.fetchGroupList(request: request)
-  }
-  
-  func deleteGroup(id: String, index: Int) {
-    // TODO: 이후 PR에 포함될 예정
-    print("deleteGroup, groupID: \(id), groupIndex: \(index)")
-  }
-  
-  func reorderGroup() {
-    // TODO: 이후 PR에 포함될 예정
-  }
-  
-  func addReorderedGroups(
-    id: String,
-    sourceIndex: Int,
-    destinationIndex: Int
-  ) {
-    // TODO: 이후 PR에 포함될 예정
-    print("add to ReorderedGroups, groupID: \(id), sourceIndex: \(sourceIndex), destinationIndex: \(destinationIndex)")
   }
 }
 
