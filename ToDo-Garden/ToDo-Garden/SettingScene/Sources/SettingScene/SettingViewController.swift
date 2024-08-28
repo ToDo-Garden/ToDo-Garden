@@ -12,7 +12,6 @@ import SettingSceneEntity
 import ToDoGardenUIComponent
 
 protocol SettingDisplayLogic: AnyObject {
-  func displaySomething(viewModel: Setting.Something.ViewModel)
 }
 
 final class SettingViewController: UIViewController, SettingViewControllable {
@@ -66,18 +65,11 @@ final class SettingViewController: UIViewController, SettingViewControllable {
 // MARK: - Confirm display logic protocol
 
 extension SettingViewController: SettingDisplayLogic {
-  func displaySomething(viewModel: Setting.Something.ViewModel) {
-    // self.nameTextField.text = viewModel.name
-  }
 }
 
 // MARK: - Request to interactor
 
 extension SettingViewController {
-  func doSomething() {
-    let request = Setting.Something.Request()
-    self.interactor?.doSomething(request: request)
-  }
 }
 
 // MARK: Private Functions

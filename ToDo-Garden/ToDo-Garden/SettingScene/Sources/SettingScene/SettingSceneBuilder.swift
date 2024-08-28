@@ -13,11 +13,9 @@ public struct SettingSceneBuilder {
 	/// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
 	public struct Dependency {
     let settingWorker: SettingWorkable
-		let nextSceneBuilder: NextSceneBuildable
-		
-		public init(settingWorker: SettingWorkable, nextSceneBuilder: NextSceneBuildable) {
+
+		public init(settingWorker: SettingWorkable) {
 			self.settingWorker = settingWorker
-			self.nextSceneBuilder = nextSceneBuilder
 		}
 	}
 	
@@ -47,7 +45,7 @@ extension SettingSceneBuilder {
 	private func configureVIPCycle(for viewController: SettingViewController) -> SettingViewController {
     let interactor = SettingInteractor(someWorker: self.dependency.settingWorker)
 		let presenter = SettingPresenter()
-		let router = SettingRouter(nextSceneBuilder: self.dependency.nextSceneBuilder)
+		let router = SettingRouter()
 		viewController.interactor = interactor
 		viewController.router = router
 		interactor.presenter = presenter

@@ -10,7 +10,6 @@ import Foundation
 import SettingSceneAPI
 
 protocol SettingRoutingLogic {
-	func routeToSomewhere()
 }
 
 protocol SettingDataPassing {
@@ -20,21 +19,11 @@ protocol SettingDataPassing {
 class SettingRouter: SettingDataPassing {
 	weak var viewController: SettingViewController?
 	var dataStore: SettingDataStore?
-	private let nextSceneBuilder: NextSceneBuildable
-	
-	init(nextSceneBuilder: NextSceneBuildable) {
-		self.nextSceneBuilder = nextSceneBuilder
-	}
 }
 
 // MARK: - Routing
 
 extension SettingRouter: SettingRoutingLogic {
-	func routeToSomewhere() {
-		let destinationViewController = self.nextSceneBuilder.build(with: NextScenePayload())
-		
-		self.viewController?.present(destinationViewController, animated: true)
-	}
 }
 
 // MARK: - Declare Payload for scene

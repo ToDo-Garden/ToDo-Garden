@@ -10,6 +10,4 @@ import Foundation
 import SettingSceneAPI
 
 struct SettingWorker: SettingWorkable {
-  func doSomeWork() {
-  }
 }

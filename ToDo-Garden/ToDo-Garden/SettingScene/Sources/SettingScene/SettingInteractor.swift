@@ -15,7 +15,6 @@ protocol SettingDataStore {
 }
 
 protocol SettingBusinessLogic {
-  func doSomething(request: Setting.Something.Request)
 }
 
 class SettingInteractor: SettingDataStore {
@@ -31,10 +30,4 @@ class SettingInteractor: SettingDataStore {
 // MARK: - Request to worker
 
 extension SettingInteractor: SettingBusinessLogic {
-  func doSomething(request: Setting.Something.Request) {
-    self.someWorker.doSomeWork()
-    
-    let response = Setting.Something.Response()
-    self.presenter?.presentSomething(response: response)
-  }
 }

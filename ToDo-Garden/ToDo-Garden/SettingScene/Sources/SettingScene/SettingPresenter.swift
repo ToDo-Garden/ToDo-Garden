@@ -10,7 +10,6 @@ import Foundation
 import SettingSceneEntity
 
 protocol SettingPresentationLogic {
-	func presentSomething(response: Setting.Something.Response)
 }
 
 class SettingPresenter {
@@ -20,8 +19,4 @@ class SettingPresenter {
 // MARK: - Request to ViewController
 
 extension SettingPresenter: SettingPresentationLogic {
-	func presentSomething(response: Setting.Something.Response) {
-		let viewModel = Setting.Something.ViewModel()
-		self.viewController?.displaySomething(viewModel: viewModel)
-	}
 }
