@@ -269,7 +269,6 @@ extension EditToDoViewController {
       super.viewDidAppear(animated)
       let editToDoViewController = EditToDoSceneBuilder(
         dependency: EditToDoSceneBuilder.Dependency(
-          someWorker: EditToDoWorker(),
           toDoWorker: ToDoWorker(),
           groupWorker: GroupWorker()
         )
