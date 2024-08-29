@@ -13,7 +13,6 @@ import XCTest
 class EditToDoSceneBuilderTests: XCTestCase {
   func test_EditToDoSceneBuilder가_투두_아이디를_Interactor에_성공적으로_전달하는가() throws {
     let dependency = EditToDoSceneBuilder.Dependency(
-      someWorker: EditToDoWorker(),
       toDoWorker: MockToDoWorker(),
       groupWorker: MockGroupWorker()
     )
