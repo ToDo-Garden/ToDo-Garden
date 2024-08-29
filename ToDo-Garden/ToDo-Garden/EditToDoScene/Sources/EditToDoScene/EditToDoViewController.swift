@@ -29,7 +29,7 @@ final class EditToDoViewController: UIViewController, EditToDoViewControllable {
   private(set) var editModeScrollView: UIScrollView
   private(set) var editToDoView: EditToDoView
   private(set) var editToDoScheduleView: EditToDoScheduleView
-  private(set) var completeEditButton: UIButton
+  private(set) var completeEditButton: ToDoGardenBoxButton
 
   @ExecuteOnce private var scrollToEditToDoMode: (() -> Void)?
 
@@ -207,6 +207,15 @@ extension EditToDoViewController: ToDoGardenAlertControllerDelegate {
 // MARK: Subviews Delegate Functions
 
 extension EditToDoViewController: EditToDoView.EditToDoViewDelegate {
+  func didEditToDoName(_ name: String?) {
+    let isEditedNameEmpty = name?.isEmpty ?? true
+    if isEditedNameEmpty {
+      self.completeEditButton.disable()
+    } else {
+      self.completeEditButton.enable()
+    }
+  }
+
   func didSelectDeleteToDoButton() {
     let deleteToDoAlert = ToDoGardenAlertController(for: ToDoGardenAlertView.Configuration.askToDeleteToDo)
     deleteToDoAlert.delegate = self
