@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct PomodoroRecord {
+public struct PomodoroRecord: Sendable {
   let date: Date
   let pomodoroCount: Int
   
