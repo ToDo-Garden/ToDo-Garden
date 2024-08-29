@@ -16,7 +16,9 @@ protocol EditToDoDataStore {
 
 protocol EditToDoBusinessLogic {
   func changeReptition(request: EditToDo.ChangeRepetition.Request)
-  func changeAlarmActivation(request: EditToDo.ChangeAlarmActivation.Request)
+  func changeAlarmActivation()
+  func fetchAlarmTime()
+  func changeAlarmTime(request: EditToDo.ChangeAlarmTime.Request)
   func fetchToDo()
   func deleteToDo()
   func editToDo(request: EditToDo.CompleteEditToDo.Request)
@@ -28,16 +30,13 @@ final class EditToDoInteractor: EditToDoDataStore {
 
   // MARK: VIP Objects
   var presenter: EditToDoPresentationLogic?
-  private let someWorker: EditToDoWorkable
   private let toDoWorker: ToDoWorkLogic
   private let groupWorker: GroupWorkLogic
 
   public init(
-    someWorker: EditToDoWorkable = EditToDoWorker(),
     toDoWorker: ToDoWorkLogic,
     groupWorker: GroupWorkLogic
   ) {
-    self.someWorker = someWorker
     self.toDoWorker = toDoWorker
     self.groupWorker = groupWorker
   }
@@ -47,7 +46,7 @@ final class EditToDoInteractor: EditToDoDataStore {
 
 extension EditToDoInteractor: EditToDoBusinessLogic {
   /// 사용자가 투두 알림 스위치를 통해 활성화 여부를 변경했을 때 호출되는 메서드입니다.
-  func changeAlarmActivation(request: EditToDo.ChangeAlarmActivation.Request) {
+  func changeAlarmActivation() {
     guard let isAlarmOn = self.toDo?.alarm.isAlarmOn
     else { return }
 
@@ -55,7 +54,21 @@ extension EditToDoInteractor: EditToDoBusinessLogic {
     let response = EditToDo.ChangeAlarmActivation.Response(isAlarmOn: !isAlarmOn)
     self.presenter?.presentAlarmActivation(response: response)
   }
-  
+
+  /// 사용자가 투두 알림 시간 설정 버튼을 눌렀을 때, 기존에 설정했던 시간을 보여주기 위해 호출되는 메서드입니다.
+  func fetchAlarmTime() {
+    let alarmTime = self.toDo?.alarm.alarmTime
+    let response = EditToDo.FetchAlarmTime.Response(alarmTime: alarmTime)
+    self.presenter?.presentFetchedAlarmTime(response: response)
+  }
+
+  func changeAlarmTime(request: EditToDo.ChangeAlarmTime.Request) {
+    let alarmTime = request.alarmTime
+    self.toDo?.alarm.alarmTime = alarmTime
+    let response = EditToDo.ChangeAlarmTime.Response(alarmTime: alarmTime)
+    self.presenter?.presentChangedAlarmTime(response: response)
+  }
+
   /// 사용자가 투두 반복 설정 뷰를 선택했을 때 호출하는 메서드입니다.
   /// ex) 사용자가 화면에서 (오늘만 or 다른날도 or 매일) 할래요 뷰를 눌렀음
   func changeReptition(request: EditToDo.ChangeRepetition.Request) {

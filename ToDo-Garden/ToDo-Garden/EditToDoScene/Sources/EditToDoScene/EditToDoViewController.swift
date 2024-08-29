@@ -18,6 +18,10 @@ protocol EditToDoDisplayLogic: AnyObject {
   func displayFetchedToDo(viewModel: EditToDo.FetchToDo.ViewModel)
   func displayDeleteToDoResult(viewModel: EditToDo.DeleteToDo.ViewModel)
   func displayEditToDoResult(viewModel: EditToDo.CompleteEditToDo.ViewModel)
+  func displayChangedRepetition(viewModel: EditToDo.ChangeRepetition.ViewModel)
+  func displayChangedAlarm(viewModel: EditToDo.ChangeAlarmActivation.ViewModel)
+  func displayFetchedAlarmTime(viewModel: EditToDo.FetchAlarmTime.ViewModel)
+  func displayChangedAlarmTime(viewModel: EditToDo.ChangeAlarmTime.ViewModel)
 }
 
 final class EditToDoViewController: UIViewController, EditToDoViewControllable {
@@ -25,7 +29,7 @@ final class EditToDoViewController: UIViewController, EditToDoViewControllable {
   private(set) var editModeScrollView: UIScrollView
   private(set) var editToDoView: EditToDoView
   private(set) var editToDoScheduleView: EditToDoScheduleView
-  private(set) var completeEditButton: UIButton
+  private(set) var completeEditButton: ToDoGardenBoxButton
 
   @ExecuteOnce private var scrollToEditToDoMode: (() -> Void)?
 
@@ -77,13 +81,36 @@ final class EditToDoViewController: UIViewController, EditToDoViewControllable {
 
 // MARK: - Request to interactor
 
-extension EditToDoViewController {
+extension EditToDoViewController: EditToDoScheduleViewDelegate, ToDoAlarmTimeSettingModalDelegate {
   func editToDo() {
     if let toDoNameForEdit = self.editToDoView.getEditingText(),
       let groupForEdit = self.editToDoView.getCurrentGroup() {
       let request = EditToDo.CompleteEditToDo.Request(toDoName: toDoNameForEdit, displayedGroup: groupForEdit)
       self.interactor?.editToDo(request: request)
     }
+  }
+
+  func didSelectOnlyTodayView(isOnlyToday: Bool) {
+    let request = EditToDo.ChangeRepetition.Request(isOnlyToday: isOnlyToday, isEveryday: nil)
+    self.interactor?.changeReptition(request: request)
+  }
+
+  func didSelectEverydayButton(isSelected: Bool) {
+    let request = EditToDo.ChangeRepetition.Request(isOnlyToday: false, isEveryday: isSelected)
+    self.interactor?.changeReptition(request: request)
+  }
+
+  func didToggleSwitch() {
+    self.interactor?.changeAlarmActivation()
+  }
+
+  func didSelectAlarmSettingButton() {
+    self.interactor?.fetchAlarmTime()
+  }
+
+  func didSelectAlarmTime(_ alarmTime: Double) {
+    let request = EditToDo.ChangeAlarmTime.Request(alarmTime: alarmTime)
+    self.interactor?.changeAlarmTime(request: request)
   }
 }
 
@@ -124,6 +151,28 @@ extension EditToDoViewController: EditToDoDisplayLogic {
       self.showErrorAlert(error)
     }
   }
+
+  func displayChangedRepetition(viewModel: EditToDo.ChangeRepetition.ViewModel) {
+    self.updateRepetitionViewState(viewModel.editToDoRepetitionViewState)
+  }
+
+  func displayChangedAlarm(viewModel: EditToDo.ChangeAlarmActivation.ViewModel) {
+    self.updateAlarmState(isAlarmOn: viewModel.isAlarmOn)
+  }
+
+  func displayFetchedAlarmTime(viewModel: EditToDo.FetchAlarmTime.ViewModel) {
+    let alarmTimeSettingModal = ToDoAlarmTimeSettingModal()
+    alarmTimeSettingModal.delegate = self
+    let hour = viewModel.hour
+    let minute = viewModel.minute
+    alarmTimeSettingModal.updateInitialAlarmTime(hour: hour, minute: minute)
+    self.present(alarmTimeSettingModal, animated: true)
+  }
+
+  func displayChangedAlarmTime(viewModel: EditToDo.ChangeAlarmTime.ViewModel) {
+    let alarmTimeString = viewModel.alarmTimeString
+    self.editToDoScheduleView.updateAlarmTime(alarmTime: alarmTimeString)
+  }
 }
 
 // MARK: ToDoGardenAlertController Delegate Functions
@@ -134,11 +183,11 @@ extension EditToDoViewController: ToDoGardenAlertControllerDelegate {
   ) {
     self.closeAlert()
     switch buttonType {
-    case .retry:
+    case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.retry:
       self.interactor?.fetchToDo()
-    case .goHome:
+    case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.goHome:
       self.router?.routeToToDoListScene()
-    case .delete:
+    case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.delete:
       self.interactor?.deleteToDo()
     default:
       break
@@ -158,6 +207,15 @@ extension EditToDoViewController: ToDoGardenAlertControllerDelegate {
 // MARK: Subviews Delegate Functions
 
 extension EditToDoViewController: EditToDoView.EditToDoViewDelegate {
+  func didEditToDoName(_ name: String?) {
+    let isEditedNameEmpty = name?.isEmpty ?? true
+    if isEditedNameEmpty {
+      self.completeEditButton.disable()
+    } else {
+      self.completeEditButton.enable()
+    }
+  }
+
   func didSelectDeleteToDoButton() {
     let deleteToDoAlert = ToDoGardenAlertController(for: ToDoGardenAlertView.Configuration.askToDeleteToDo)
     deleteToDoAlert.delegate = self
@@ -200,11 +258,11 @@ extension EditToDoViewController {
 
   private func updateRepetitionViewState(_ state: EditToDo.EditToDoRepetitionViewState) {
     switch state {
-    case .repeatOnlyToday:
+    case EditToDo.EditToDoRepetitionViewState.repeatOnlyToday:
       self.editToDoScheduleView.updateToRepeatOnlyToday()
-    case .repeatEveryday:
+    case EditToDo.EditToDoRepetitionViewState.repeatEveryday:
       self.editToDoScheduleView.updateToRepeatEveryday()
-    case .repeatInRange:
+    case EditToDo.EditToDoRepetitionViewState.repeatInRange:
       self.editToDoScheduleView.updateToRepeatInRange()
     }
   }
@@ -220,7 +278,6 @@ extension EditToDoViewController {
       super.viewDidAppear(animated)
       let editToDoViewController = EditToDoSceneBuilder(
         dependency: EditToDoSceneBuilder.Dependency(
-          someWorker: EditToDoWorker(),
           toDoWorker: ToDoWorker(),
           groupWorker: GroupWorker()
         )

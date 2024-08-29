@@ -8,6 +8,7 @@
 import UIKit
 
 import EditToDoSceneEntity
+import ToDoGardenUIAPI
 import ToDoGardenUIComponent
 
 final class EditToDoView: UIView {
@@ -68,12 +69,18 @@ extension EditToDoView {
   /// EditToDoView의 Subview들에서 발생한 이벤트들을 전달하는 역할을 합니다.
   protocol EditToDoViewDelegate: AnyObject {
     func didSelectDeleteToDoButton()
+    func didEditToDoName(_ name: String?)
   }
 }
 
 // MARK: GroupSelectionView Delegate Functions
 
-extension EditToDoView: GroupSelectionViewDelegate {
+extension EditToDoView: GroupSelectionViewDelegate, TextInputViewDelegate {
+  func textInputViewDidChange() {
+    let editedName = self.toDoNameInputView.getEditingText()
+    self.delegate?.didEditToDoName(editedName)
+  }
+
   func didSelectGroup(color: UIColor) {
     self.toDoNameInputView.changeBottomLine(color: color)
   }
@@ -116,9 +123,14 @@ extension EditToDoView: UIGestureRecognizerDelegate {
 extension EditToDoView {
   private func setup() {
     self.setupDeleteToDoButton()
+    self.setupToDoNameInputViewDelegate()
     self.setupGroupSelectionViewDelegate()
     self.setupTapGestureDelegate()
     self.setupSubviewsLayout()
+  }
+
+  private func setupToDoNameInputViewDelegate() {
+    self.toDoNameInputView.delegate = self
   }
 
   private func makeGroupLabel() -> UILabel {

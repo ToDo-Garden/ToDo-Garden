@@ -140,6 +140,28 @@ public enum EditToDo {
     }
   }
 
+  /// 사용자가 투두 알림 시간을 변경할 때, 기존에 선택했던 투두 알림 시간을 보여주는 유스케이스입니다.
+  public enum FetchAlarmTime {
+    public struct Response {
+      public let alarmTime: Double?
+
+      public init(alarmTime: Double?) {
+        self.alarmTime = alarmTime
+      }
+    }
+
+    public struct ViewModel {
+      public let hour: Int
+      public let minute: Int
+
+      public init(hour: Int, minute: Int) {
+        self.hour = hour
+        self.minute = minute
+      }
+    }
+  }
+
+  /// 사용자가 투두 알림 시간을 변경하는 유스케이스입니다.
   public enum ChangeAlarmTime {
     public struct Request {
       public let alarmTime: Double
@@ -150,9 +172,9 @@ public enum EditToDo {
     }
 
     public struct Response {
-      public let alarmTime: Date?
+      public let alarmTime: Double
 
-      public init(alarmTime: Date?) {
+      public init(alarmTime: Double) {
         self.alarmTime = alarmTime
       }
     }

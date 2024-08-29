@@ -26,9 +26,8 @@ class EditToDoInteractorTests: XCTestCase {
     )
     interactor.presenter = mockPresenter
     interactor.toDoId = EditToDoSceneTestData.Interactor.toDoId
-    let request = EditToDo.FetchToDo.Request()
 
-    interactor.fetchToDo(request: request)
+    interactor.fetchToDo()
 
     let fetchedToDo = try XCTUnwrap(interactor.toDo)
     XCTAssertEqual(fetchedToDo, EditToDoSceneTestData.Interactor.toDo)
@@ -48,9 +47,7 @@ class EditToDoInteractorTests: XCTestCase {
       }
     )
     interactor.presenter = mockPresenter
-    let request = EditToDo.FetchToDo.Request()
-
-    interactor.fetchToDo(request: request)
+    interactor.fetchToDo()
 
     XCTAssertNil(interactor.toDo)
   }
@@ -119,9 +116,8 @@ class EditToDoInteractorTests: XCTestCase {
     )
     interactor.presenter = mockPresenter
     interactor.toDoId = EditToDoSceneTestData.Interactor.toDoId
-    let request = EditToDo.DeleteToDo.Request()
 
-    interactor.deleteToDo(request: request)
+    interactor.deleteToDo()
   }
 
   func test_투두_아이디가_존재하지_않으면_투두_삭제를_실패하는가() throws {
@@ -137,9 +133,8 @@ class EditToDoInteractorTests: XCTestCase {
       }
     )
     interactor.presenter = mockPresenter
-    let request = EditToDo.DeleteToDo.Request()
 
-    interactor.deleteToDo(request: request)
+    interactor.deleteToDo()
   }
 
   func test_투두_알림을_활성화하면_정상적으로_변경되는가() throws {
@@ -158,9 +153,8 @@ class EditToDoInteractorTests: XCTestCase {
     toDo.alarm.isAlarmOn = false
     interactor.toDo = EditToDoSceneTestData.Interactor.toDo
     interactor.presenter = mockPresenter
-    let request = EditToDo.ChangeAlarmActivation.Request()
 
-    interactor.changeAlarmActivation(request: request)
+    interactor.changeAlarmActivation()
 
     let toDoOfInteractor = try XCTUnwrap(interactor.toDo)
     XCTAssert(toDoOfInteractor.alarm.isAlarmOn == true)
@@ -299,6 +293,9 @@ class MockToDoPresenter: EditToDoPresentationLogic {
   func presentChangedRepetition(response: EditToDoSceneEntity.EditToDo.ChangeRepetition.Response) {
     self.presentRepetitionValidationClosure?(response.editToDoRepetitionViewState)
   }
+
+  func presentFetchedAlarmTime(response: EditToDoSceneEntity.EditToDo.FetchAlarmTime.Response) {}
+  func presentChangedAlarmTime(response: EditToDoSceneEntity.EditToDo.ChangeAlarmTime.Response) {}
 }
 
 struct MockToDoWorker: ToDoWorkLogic {

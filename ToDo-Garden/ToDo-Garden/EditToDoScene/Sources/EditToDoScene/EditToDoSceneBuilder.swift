@@ -12,16 +12,13 @@ import EditToDoSceneAPI
 public struct EditToDoSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
   public struct Dependency {
-    let someWorker: EditToDoWorkable
     let toDoWorker: ToDoWorkLogic
     let groupWorker: GroupWorkLogic
 
     public init(
-      someWorker: EditToDoWorkable,
       toDoWorker: ToDoWorkLogic,
       groupWorker: GroupWorkLogic
     ) {
-      self.someWorker = someWorker
       self.toDoWorker = toDoWorker
       self.groupWorker = groupWorker
     }
@@ -52,7 +49,6 @@ extension EditToDoSceneBuilder {
   /// - Returns: VIP Cycle 설정이 완료된 `ViewControllable` 프로토콜을 준수한 `ViewController` 인스턴스를 반환합니다.
   private func configureVIPCycle(for viewController: EditToDoViewController) -> EditToDoViewController {
     let interactor = EditToDoInteractor(
-      someWorker: self.dependency.someWorker,
       toDoWorker: self.dependency.toDoWorker,
       groupWorker: self.dependency.groupWorker
     )
