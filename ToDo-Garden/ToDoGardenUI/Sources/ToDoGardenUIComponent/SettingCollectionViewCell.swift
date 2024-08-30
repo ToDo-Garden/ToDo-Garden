@@ -49,7 +49,7 @@ public final class SettingCollectionViewCell: UICollectionViewCell, ReusableIden
     }
   }
 
-  public func updateUI(
+  public func setupUI(
     title: String,
     titleFont: UIFont,
     isShowingModal: Bool,
