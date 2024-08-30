@@ -16,6 +16,7 @@ protocol FriendsGardenStore {
 extension ShareGardenSceneViewController.FriendsGardenView {
   final class FriendsGardenListView: UICollectionView {
     private let friendsGardenStore: FriendsGardenStore
+    private lazy var friendsGardenListDataSource: DataSource = self.setupDataSource()
     
     init(friendsGardenStore: FriendsGardenStore) {
       self.friendsGardenStore = friendsGardenStore
@@ -29,6 +30,22 @@ extension ShareGardenSceneViewController.FriendsGardenView {
     required init?(coder: NSCoder) {
       fatalError("init(coder:) has not been implemented")
     }
+
+// MARK: - Type info
+
+extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView {
+  private enum Section {
+    case main
+  }
+  
+  private typealias DataSource = UICollectionViewDiffableDataSource<Section, ShareGardenScene.FriendsGarden.ID>
+  private typealias FriendsGardenListViewCell =
+  ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListViewCell
+  private typealias Snapshot =
+  NSDiffableDataSourceSnapshot<
+    ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView.Section,
+    ShareGardenScene.FriendsGarden.ID
+  >
 }
 
 // MARK: - layout
@@ -49,3 +66,24 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
     return UICollectionViewCompositionalLayout(section: section)
   }
 }
+
+// MARK: - Data Source
+
+extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView {
+  private func setupDataSource() -> DataSource {
+    let cellRegistration = UICollectionView.CellRegistration<
+      FriendsGardenListViewCell,
+      ShareGardenScene.FriendsGarden.ID
+    > { [weak self] cell, _, identifier in
+      guard let friendsGarden = self?.friendsGardenStore.fetchBy(identifier)
+      else { return }
+      
+      cell.configure(with: friendsGarden)
+    }
+    
+    return DataSource(collectionView: self) { collectionView, indexPath, identifier in
+      collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: identifier)
+    }
+  }
+}
+
