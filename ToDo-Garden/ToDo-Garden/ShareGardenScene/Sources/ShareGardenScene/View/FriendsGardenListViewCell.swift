@@ -58,6 +58,13 @@ extension ShareGardenSceneViewController.FriendsGardenView {
     required init?(coder: NSCoder) {
       fatalError("init(coder:) has not been implemented")
     }
+    
+    /// [이슈](https://github.com/ToDo-Garden/ToDo-Garden/issues/439) 가 해결되면,
+    /// `profileInfoView`를 설정할 예정입니다.
+    func configure(with friendsGarden: ShareGardenScene.FriendsGarden) {
+      // TODO: - profileInfoView 설정 예정
+      self.gardenView.configure(with: friendsGarden.pomodoroRecords)
+    }
   }
 }
 
