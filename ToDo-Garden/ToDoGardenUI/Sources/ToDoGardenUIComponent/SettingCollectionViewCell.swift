@@ -167,3 +167,37 @@ extension SettingCollectionViewCell {
     static let roundedBottom = "roundedBottom"
   }
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let stackView = UIStackView()
+  stackView.axis = .vertical
+  stackView.spacing = 20
+  stackView.distribution = .equalSpacing
+
+  let settingSceneCell = SettingCollectionViewCell()
+  settingSceneCell.widthAnchor.constraint(equalToConstant: 300).isActive = true
+  settingSceneCell.heightAnchor.constraint(equalToConstant: 40).isActive = true
+  settingSceneCell.updateUI(
+    title: "공지사항",
+    titleFont: UIFont.pretendardBodyRegular,
+    isShowingModal: true,
+    position: SettingCollectionViewCell.Position.top
+  )
+  stackView.addArrangedSubview(settingSceneCell)
+
+  let userInfoSceneCell = SettingCollectionViewCell()
+  userInfoSceneCell.heightAnchor.constraint(equalToConstant: 40).isActive = true
+  userInfoSceneCell.updateUI(
+    title: "이메일",
+    titleFont: UIFont.pretendardBodyMedium,
+    isShowingModal: false,
+    position: SettingCollectionViewCell.Position.bottom
+  )
+  userInfoSceneCell.updateDescription("wood0203@gmail.com")
+  stackView.addArrangedSubview(userInfoSceneCell)
+
+  return stackView
+}
+#endif
