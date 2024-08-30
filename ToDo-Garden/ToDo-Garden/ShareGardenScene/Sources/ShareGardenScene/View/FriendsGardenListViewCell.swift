@@ -37,6 +37,18 @@ extension ShareGardenSceneViewController.FriendsGardenView {
     
     private let gardenView: GardenView = GardenView()
     
+    // MARK: - Constraints
+    
+    private var selectedConstriaints: [NSLayoutConstraint] = []
+    private var deSelectedConstraints: [NSLayoutConstraint] = []
+    
+    override var isSelected: Bool {
+      didSet {
+        self.toggleConstraintsForSelectionState()
+        self.invalidateIntrinsicContentSize()
+      }
+    }
+    
     override init(frame: CGRect) {
       super.init(frame: frame)
       self.setup()
@@ -56,6 +68,8 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
     self.setupAppearance()
     self.addSubviews()
     self.setupLayoutConstraints()
+    self.setupConstraintsForSelectionState()
+    self.toggleConstraintsForSelectionState()
   }
   
   private func setupAppearance() {
@@ -66,6 +80,48 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
   private func addSubviews() {
     self.contentView.addSubview(self.gardenView)
     self.contentView.addSubview(self.profileInfoView)
+  }
+}
+
+// MARK: - Setup layout for selection state
+
+extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListViewCell {
+  private func setupConstraintsForSelectionState() {
+    let contentViewBottomSelected = self.contentView.bottomAnchor.constraint(
+      equalTo: self.gardenView.bottomAnchor,
+      constant: 15
+    )
+    contentViewBottomSelected.priority = UILayoutPriority.defaultLow
+    self.selectedConstriaints.append(contentViewBottomSelected)
+    
+    let contentViewBottomDeselected = self.contentView.bottomAnchor.constraint(
+      equalTo: self.profileInfoView.bottomAnchor
+    )
+    contentViewBottomDeselected.priority = UILayoutPriority.defaultLow
+    self.deSelectedConstraints.append(contentViewBottomDeselected)
+    
+    let gardenViewTopSelected = self.gardenView.topAnchor.constraint(
+      equalTo: self.profileInfoView.bottomAnchor,
+      constant: 9
+    )
+    gardenViewTopSelected.priority = UILayoutPriority.defaultLow
+    self.selectedConstriaints.append(gardenViewTopSelected)
+    
+    let gardenViewTopDeselected = self.gardenView.topAnchor.constraint(
+      equalTo: self.profileInfoView.topAnchor
+    )
+    gardenViewTopDeselected.priority = UILayoutPriority.defaultLow
+    self.deSelectedConstraints.append(gardenViewTopDeselected)
+  }
+  
+  private func toggleConstraintsForSelectionState() {
+    self.selectedConstriaints.forEach {
+      $0.isActive = self.isSelected
+    }
+    
+    self.deSelectedConstraints.forEach {
+      $0.isActive = !self.isSelected
+    }
   }
 }
 
