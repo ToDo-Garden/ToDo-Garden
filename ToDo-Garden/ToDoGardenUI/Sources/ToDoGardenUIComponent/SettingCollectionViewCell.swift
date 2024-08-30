@@ -18,6 +18,7 @@ public final class SettingCollectionViewCell: UICollectionViewCell, ReusableIden
 
   private var cellPosition: Position
   private let titleLabel: UILabel
+  private let descriptionLabel: UILabel
   private let rightForwardImageView: UIImageView
 
   @ExecuteOnce private var isSetupLayerCalled: (() -> Void)?
@@ -25,6 +26,7 @@ public final class SettingCollectionViewCell: UICollectionViewCell, ReusableIden
   public override init(frame: CGRect) {
     self.cellPosition = Position.middle
     self.titleLabel = UILabel()
+    self.descriptionLabel = UILabel()
     self.rightForwardImageView = UIImageView()
     super.init(frame: frame)
     self.setup()
@@ -47,10 +49,20 @@ public final class SettingCollectionViewCell: UICollectionViewCell, ReusableIden
     }
   }
 
-  public func updateUI(title: String, isShowingModal: Bool, position: Position) {
+  public func updateUI(
+    title: String,
+    titleFont: UIFont,
+    isShowingModal: Bool,
+    position: Position
+  ) {
     self.titleLabel.text = title
+    self.titleLabel.font = titleFont
     self.rightForwardImageView.isHidden = !isShowingModal
     self.cellPosition = position
+  }
+
+  public func updateDescription(_ text: String?) {
+    self.descriptionLabel.text = text
   }
 }
 
@@ -76,6 +88,7 @@ extension SettingCollectionViewCell {
     self.backgroundColor = UIColor.toDoGardenWhite
     self.setupRightForwardImageView()
     self.setupTitleLabel()
+    self.setupDescriptionLabel()
   }
 
   private func setupRightForwardImageView() {
@@ -87,6 +100,12 @@ extension SettingCollectionViewCell {
     self.titleLabel.font = UIFont.pretendardBodyRegular
     self.titleLabel.textColor = UIColor.toDoGardenGreenDark
     self.setupTitleLabelLayout()
+  }
+
+  private func setupDescriptionLabel() {
+    self.descriptionLabel.textColor = UIColor.toDoGardenGray3
+    self.descriptionLabel.font = UIFont.pretendardBodyMedium
+    self.setupDescriptionLabelLayout()
   }
 }
 
@@ -118,8 +137,23 @@ extension SettingCollectionViewCell {
         self.titleLabel.leadingAnchor.constraint(
           equalTo: self.contentView.leadingAnchor,
           constant: 8
+        )
+      ]
+    )
+  }
+
+  private func setupDescriptionLabelLayout() {
+    self.contentView.addSubview(self.descriptionLabel)
+    self.descriptionLabel.usingAutolayout()
+
+    NSLayoutConstraint.activate(
+      [
+        self.descriptionLabel.leadingAnchor.constraint(greaterThanOrEqualTo: self.titleLabel.trailingAnchor),
+        self.descriptionLabel.trailingAnchor.constraint(
+          equalTo: self.rightForwardImageView.leadingAnchor,
+          constant: -3
         ),
-        self.titleLabel.trailingAnchor.constraint(equalTo: self.rightForwardImageView.leadingAnchor)
+        self.descriptionLabel.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor)
       ]
     )
   }
