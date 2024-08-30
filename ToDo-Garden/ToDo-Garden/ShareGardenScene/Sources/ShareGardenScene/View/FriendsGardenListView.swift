@@ -24,6 +24,7 @@ extension ShareGardenSceneViewController.FriendsGardenView {
         frame: CGRect.zero,
         collectionViewLayout: Self.makeFreindsGardenListViewLayout()
       )
+      self.delegate = self
     }
     
     @available(*, unavailable)
@@ -104,3 +105,14 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
   }
 }
 
+extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView: UICollectionViewDelegate {
+  func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+    if collectionView.indexPathsForSelectedItems?.contains(indexPath) ?? false {
+      collectionView.deselectItem(at: indexPath, animated: true)
+    } else {
+      collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+    }
+    
+    return false
+  }
+}
