@@ -30,6 +30,23 @@ extension ShareGardenSceneViewController.FriendsGardenView {
     required init?(coder: NSCoder) {
       fatalError("init(coder:) has not been implemented")
     }
+    
+    func append(_ identifiers: [ShareGardenScene.FriendsGarden.ID]) {
+      var snapshot = self.friendsGardenListDataSource.snapshot()
+      self.appendMainSectionIfNeeded(&snapshot)
+      snapshot.appendItems(identifiers, toSection: Section.main)
+      self.friendsGardenListDataSource.apply(snapshot)
+    }
+  }
+}
+
+extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView {
+  private func appendMainSectionIfNeeded(_ snapshot: inout Snapshot) {
+    if snapshot.sectionIdentifiers.contains(Section.main) == false {
+      snapshot.appendSections([Section.main])
+    }
+  }
+}
 
 // MARK: - Type info
 
