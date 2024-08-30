@@ -7,6 +7,8 @@
 
 import UIKit
 
+import ToDoGardenUIComponent
+
 extension SettingViewController {
   typealias DiffableDataSource = UICollectionViewDiffableDataSource<Section, Item>
   typealias HeaderRegistration = UICollectionView.SupplementaryRegistration<SectionHeaderView>
@@ -20,7 +22,13 @@ extension SettingViewController {
         for: indexPath
       ) as? SettingCollectionViewCell else { return UICollectionViewCell() }
 
-      cell.updateUI(title: item.title, isShowingModal: item.isShowingModal, position: item.position)
+      cell.updateUI(
+        title: item.title,
+        titleFont: UIFont.pretendardBodyRegular,
+        isShowingModal: item.isShowingModal,
+        position: item.position
+      )
+
       return cell
     }
 
