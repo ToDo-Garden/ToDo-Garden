@@ -179,7 +179,7 @@ extension SettingCollectionViewCell {
   let settingSceneCell = SettingCollectionViewCell()
   settingSceneCell.widthAnchor.constraint(equalToConstant: 300).isActive = true
   settingSceneCell.heightAnchor.constraint(equalToConstant: 40).isActive = true
-  settingSceneCell.updateUI(
+  settingSceneCell.setupUI(
     title: "공지사항",
     titleFont: UIFont.pretendardBodyRegular,
     isShowingModal: true,
@@ -189,7 +189,7 @@ extension SettingCollectionViewCell {
 
   let userInfoSceneCell = SettingCollectionViewCell()
   userInfoSceneCell.heightAnchor.constraint(equalToConstant: 40).isActive = true
-  userInfoSceneCell.updateUI(
+  userInfoSceneCell.setupUI(
     title: "이메일",
     titleFont: UIFont.pretendardBodyMedium,
     isShowingModal: false,

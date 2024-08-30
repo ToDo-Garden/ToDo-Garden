@@ -22,7 +22,7 @@ extension SettingViewController {
         for: indexPath
       ) as? SettingCollectionViewCell else { return UICollectionViewCell() }
 
-      cell.updateUI(
+      cell.setupUI(
         title: item.title,
         titleFont: UIFont.pretendardBodyRegular,
         isShowingModal: item.isShowingModal,
