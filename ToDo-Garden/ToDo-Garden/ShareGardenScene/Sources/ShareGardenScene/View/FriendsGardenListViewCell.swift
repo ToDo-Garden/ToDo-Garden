@@ -94,9 +94,11 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
 
 extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListViewCell {
   private func setupConstraintsForSelectionState() {
+    let layoutConstant = ShareGardenSceneViewController.Constant.Layout.FriendsGardenListViewCell.self
+    
     let contentViewBottomSelected = self.contentView.bottomAnchor.constraint(
       equalTo: self.gardenView.bottomAnchor,
-      constant: 15
+      constant: layoutConstant.contentViewBottomInsetWhenSelected
     )
     contentViewBottomSelected.priority = UILayoutPriority.defaultLow
     self.selectedConstriaints.append(contentViewBottomSelected)
@@ -109,7 +111,7 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
     
     let gardenViewTopSelected = self.gardenView.topAnchor.constraint(
       equalTo: self.profileInfoView.bottomAnchor,
-      constant: 9
+      constant: layoutConstant.gardenViewTopInsetWhenSelected
     )
     gardenViewTopSelected.priority = UILayoutPriority.defaultLow
     self.selectedConstriaints.append(gardenViewTopSelected)
