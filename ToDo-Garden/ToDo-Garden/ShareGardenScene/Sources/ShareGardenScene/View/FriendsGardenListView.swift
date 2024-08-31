@@ -166,10 +166,32 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
     
     return false
   }
+  
+  func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    if scrollView.contentOffset.y <= 0 {
+      self.hideGradientLayerIfNeeded()
+    } else {
+      self.showGradientLayerOnTopIfNeeded()
+    }
+  }
+}
 
 // MARK: - Gradient layer
 
 extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView {
+  private func showGradientLayerOnTopIfNeeded() {
+    guard self.gradientLayer.isHidden
+    else { return }
+    
+    self.gradientLayer.isHidden = false
+  }
+  
+  private func hideGradientLayerIfNeeded() {
+    guard self.gradientLayer.isHidden == false
+    else { return }
+    
+    self.gradientLayer.isHidden = true
+  }
   
   private func addGradientLayerIfNeeded() {
     guard self.bounds.width != CGFloat.zero,
