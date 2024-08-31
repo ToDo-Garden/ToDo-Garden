@@ -14,17 +14,25 @@ protocol FriendsGardenStore {
 }
 
 extension ShareGardenSceneViewController.FriendsGardenView {
-  final class FriendsGardenListView: UICollectionView {
-    private let friendsGardenStore: FriendsGardenStore
+  final class FriendsGardenListView: UIView {
     private lazy var friendsGardenListDataSource: DataSource = self.setupDataSource()
-    
-    init(friendsGardenStore: FriendsGardenStore) {
-      self.friendsGardenStore = friendsGardenStore
-      super.init(
+    private lazy var friendListView: UICollectionView = {
+      let friendListView = UICollectionView(
         frame: CGRect.zero,
         collectionViewLayout: Self.makeFreindsGardenListViewLayout()
       )
-      self.delegate = self
+      friendListView.delegate = self
+      friendListView.backgroundColor = UIColor.white
+      
+      return friendListView
+    }()
+    
+    private let friendsGardenStore: FriendsGardenStore
+    
+    init(friendsGardenStore: FriendsGardenStore) {
+      self.friendsGardenStore = friendsGardenStore
+      super.init(frame: CGRect.zero)
+      self.setup()
     }
     
     @available(*, unavailable)
@@ -41,11 +49,16 @@ extension ShareGardenSceneViewController.FriendsGardenView {
   }
 }
 
+// MARK: - Setup
+
 extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView {
-  private func appendMainSectionIfNeeded(_ snapshot: inout Snapshot) {
-    if snapshot.sectionIdentifiers.contains(Section.main) == false {
-      snapshot.appendSections([Section.main])
-    }
+  private func setup () {
+    self.addSubviews()
+    self.setupLayoutCosntraints()
+  }
+  
+  private func addSubviews() {
+    self.addSubview(self.friendListView)
   }
 }
 
@@ -83,6 +96,15 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
     
     return UICollectionViewCompositionalLayout(section: section)
   }
+  
+  private func setupLayoutCosntraints() {
+    self.setupFriendListViewLayoutConstraints()
+  }
+  
+  private func setupFriendListViewLayoutConstraints() {
+    self.friendListView.usingAutolayout()
+    self.friendListView.equalToParent()
+  }
 }
 
 // MARK: - Data Source
@@ -99,8 +121,14 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
       cell.configure(with: friendsGarden)
     }
     
-    return DataSource(collectionView: self) { collectionView, indexPath, identifier in
+    return DataSource(collectionView: self.friendListView) { collectionView, indexPath, identifier in
       collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: identifier)
+    }
+  }
+  
+  private func appendMainSectionIfNeeded(_ snapshot: inout Snapshot) {
+    if snapshot.sectionIdentifiers.contains(Section.main) == false {
+      snapshot.appendSections([Section.main])
     }
   }
 }
