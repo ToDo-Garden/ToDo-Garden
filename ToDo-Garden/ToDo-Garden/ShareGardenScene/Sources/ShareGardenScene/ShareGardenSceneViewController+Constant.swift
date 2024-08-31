@@ -49,4 +49,13 @@ extension ShareGardenSceneViewController.Constant.Layout {
     static let estimatedItemHeight: CGFloat = 48.0
     static let gradientLayerHeight: CGFloat = 25.0
   }
+  
+  enum FriendsGardenView {
+    static let editButtonWidth: CGFloat = 35.0
+    static let editButtonHeight: CGFloat = 35.0
+    static let stackViewSpacing = 15.0
+    static let sectionHeaderViewLeftInsetRatio: CGFloat = 28.0 / 375.0
+    static let sectionHeaderViewRightInsetRatio: CGFloat = 22.0 / 375.0
+    static let searchGardenButtonHorizontalInsetRatio: CGFloat = 19.0 / 375.0
+  }
 }

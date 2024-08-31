@@ -28,8 +28,10 @@ extension ShareGardenSceneViewController {
       editButton.setTitleColor(UIColor.toDoGardenGray, for: UIControl.State.highlighted)
       editButton.titleLabel?.font = UIFont.pretendardDetailRegular12
       editButton.usingAutolayout()
-      editButton.widthAnchor.constraint(equalToConstant: 35).isActive = true
-      editButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
+      let editButtonWidth = FriendsGardenView.layoutConstant.editButtonWidth
+      let editButtonHeight = FriendsGardenView.layoutConstant.editButtonHeight
+      editButton.widthAnchor.constraint(equalToConstant: editButtonWidth).isActive = true
+      editButton.heightAnchor.constraint(equalToConstant: editButtonHeight).isActive = true
       
       let title = ShareGardenSceneViewController.Constant
         .StringLiteral.FriendsGardenSectionHeaderView.title
@@ -47,7 +49,7 @@ extension ShareGardenSceneViewController {
     private let friendsGardenListView: FriendsGardenListView
     
     // MARK: - Properties
-    
+    private static let layoutConstant = ShareGardenSceneViewController.Constant.Layout.FriendsGardenView.self
     @ExecuteOnce private var setupLayoutIfNeeded: (() -> Void)?
     
     init(friendsGardenStore: FriendsGardenStore) {
@@ -79,7 +81,7 @@ extension ShareGardenSceneViewController.FriendsGardenView {
   }
   
   private func setupStackView() {
-    self.spacing = 15
+    self.spacing = Self.layoutConstant.stackViewSpacing
     self.distribution = UIStackView.Distribution.fill
     self.axis = NSLayoutConstraint.Axis.vertical
     self.alignment = UIStackView.Alignment.center
@@ -102,8 +104,8 @@ extension ShareGardenSceneViewController.FriendsGardenView {
   }
   
   private func setupSectionHeaderViewLayoutConstraints() {
-    let leftInset: CGFloat = self.bounds.width * (28 / 375)
-    let rightInset: CGFloat = self.bounds.width * (22 / 375)
+    let leftInset: CGFloat = self.bounds.width * Self.layoutConstant.sectionHeaderViewLeftInsetRatio
+    let rightInset: CGFloat = self.bounds.width * Self.layoutConstant.sectionHeaderViewRightInsetRatio
     
     self.sectionHeaderView.layoutMargins = UIEdgeInsets(
       top: CGFloat.zero,
@@ -122,7 +124,7 @@ extension ShareGardenSceneViewController.FriendsGardenView {
   }
   
   private func setupSearchGardenButtonLayoutConstraints() {
-    let horizontalInset: CGFloat = self.bounds.width * (19 / 375)
+    let horizontalInset: CGFloat = self.bounds.width * Self.layoutConstant.searchGardenButtonHorizontalInsetRatio
     
     self.searchGardenButton.usingAutolayout()
     
