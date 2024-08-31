@@ -27,6 +27,29 @@ extension ShareGardenSceneViewController.FriendsGardenView {
       return friendListView
     }()
     
+    private let gradientLayer: CAGradientLayer = {
+      let gradientLayer = CAGradientLayer()
+      gradientLayer.colors = [
+        UIColor.white.withAlphaComponent(1.0).cgColor,
+        UIColor.white.withAlphaComponent(0.8).cgColor,
+        UIColor.white.withAlphaComponent(0.3).cgColor,
+        UIColor.white.withAlphaComponent(0.0).cgColor
+      ]
+      gradientLayer.locations = [0.0, 0.4, 0.8, 1.0]
+      gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
+      gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
+      gradientLayer.isHidden = true
+      
+      return gradientLayer
+    }()
+    
+    override var bounds: CGRect {
+      didSet {
+        self.addGradientLayerIfNeeded()
+      }
+    }
+    
+    private var isGradientLayerAdded: Bool = false
     private let friendsGardenStore: FriendsGardenStore
     
     init(friendsGardenStore: FriendsGardenStore) {
@@ -142,5 +165,23 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
     }
     
     return false
+  }
+
+// MARK: - Gradient layer
+
+extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView {
+  
+  private func addGradientLayerIfNeeded() {
+    guard self.bounds.width != CGFloat.zero,
+      self.isGradientLayerAdded == false
+    else { return }
+    
+    self.gradientLayer.frame = CGRect(
+      x: CGFloat.zero,
+      y: CGFloat.zero,
+      width: self.bounds.width,
+      height: 25
+    )
+    self.layer.addSublayer(self.gradientLayer)
   }
 }
