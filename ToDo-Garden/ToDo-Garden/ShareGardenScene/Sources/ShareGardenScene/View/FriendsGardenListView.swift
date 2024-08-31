@@ -168,7 +168,7 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
   }
   
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    if scrollView.contentOffset.y <= 0 {
+    if scrollView.contentOffset.y <= CGFloat.zero {
       self.hideGradientLayerIfNeeded()
     } else {
       self.showGradientLayerOnTopIfNeeded()
