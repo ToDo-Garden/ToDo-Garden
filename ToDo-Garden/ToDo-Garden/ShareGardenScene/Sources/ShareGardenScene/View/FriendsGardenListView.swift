@@ -49,6 +49,8 @@ extension ShareGardenSceneViewController.FriendsGardenView {
       }
     }
     
+    private static let layoutConstant = ShareGardenSceneViewController.Constant.Layout.FriendsGardenListView.self
+    
     private var isGradientLayerAdded: Bool = false
     private let friendsGardenStore: FriendsGardenStore
     
@@ -107,8 +109,12 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
 extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView {
   private static func makeFreindsGardenListViewLayout() -> UICollectionViewCompositionalLayout {
     let itemSize = NSCollectionLayoutSize(
-      widthDimension: NSCollectionLayoutDimension.fractionalWidth(1.0),
-      heightDimension: NSCollectionLayoutDimension.estimated(48)
+      widthDimension: NSCollectionLayoutDimension.fractionalWidth(
+        Self.layoutConstant.fullWidthRatio
+      ),
+      heightDimension: NSCollectionLayoutDimension.estimated(
+        Self.layoutConstant.estimatedItemHeight
+      )
     )
     let item = NSCollectionLayoutItem(layoutSize: itemSize)
     let group = NSCollectionLayoutGroup.vertical(
@@ -202,7 +208,7 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
       x: CGFloat.zero,
       y: CGFloat.zero,
       width: self.bounds.width,
-      height: 25
+      height: Self.layoutConstant.gradientLayerHeight
     )
     self.layer.addSublayer(self.gradientLayer)
   }
