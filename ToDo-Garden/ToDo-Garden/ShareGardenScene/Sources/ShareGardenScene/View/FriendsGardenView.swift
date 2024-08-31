@@ -8,8 +8,11 @@
 import UIKit
 
 import TDUtility
+
 import ToDoGardenUIConstant
 import ToDoGardenUIResource
+
+import ShareGardenSceneEntity
 
 extension ShareGardenSceneViewController {
   final class FriendsGardenView: UIStackView {
@@ -41,11 +44,14 @@ extension ShareGardenSceneViewController {
       return searchGardenButton
     }()
     
+    private let friendsGardenListView: FriendsGardenListView
+    
     // MARK: - Properties
     
     @ExecuteOnce private var setupLayoutIfNeeded: (() -> Void)?
     
-    init() {
+    init(friendsGardenStore: FriendsGardenStore) {
+      self.friendsGardenListView = FriendsGardenListView(friendsGardenStore: friendsGardenStore)
       super.init(frame: CGRect.zero)
       self.setup()
     }
@@ -82,6 +88,7 @@ extension ShareGardenSceneViewController.FriendsGardenView {
   private func addSubviews() {
     self.addArrangedSubview(self.sectionHeaderView)
     self.addArrangedSubview(self.searchGardenButton)
+    self.addArrangedSubview(self.friendsGardenListView)
   }
 }
 
@@ -91,6 +98,7 @@ extension ShareGardenSceneViewController.FriendsGardenView {
   private func setupLayoutConstraints() {
     self.setupSectionHeaderViewLayoutConstraints()
     self.setupSearchGardenButtonLayoutConstraints()
+    self.setupFriendsGadenListViewLayoutConstraints()
   }
   
   private func setupSectionHeaderViewLayoutConstraints() {
@@ -121,6 +129,15 @@ extension ShareGardenSceneViewController.FriendsGardenView {
     NSLayoutConstraint.activate([
       self.searchGardenButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: horizontalInset),
       self.searchGardenButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -horizontalInset)
+    ])
+  }
+  
+  private func setupFriendsGadenListViewLayoutConstraints() {
+    self.friendsGardenListView.usingAutolayout()
+    
+    NSLayoutConstraint.activate([
+      self.friendsGardenListView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+      self.friendsGardenListView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
     ])
   }
 }
