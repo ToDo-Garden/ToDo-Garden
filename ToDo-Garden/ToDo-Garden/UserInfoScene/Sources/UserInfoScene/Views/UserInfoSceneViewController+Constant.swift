@@ -27,4 +27,8 @@ extension UserInfoSceneViewController.Constant {
     static let trailingMargin: CGFloat = 28
     static let height: CGFloat = 235
   }
+
+  enum SectionHeaderView {
+    static let leadingMargin: CGFloat = 11
+  }
 }
