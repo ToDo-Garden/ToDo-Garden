@@ -20,6 +20,7 @@ protocol UserInfoSceneDisplayLogic: AnyObject {
 final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewControllable {
   private let profileImageView: ProfileImageView
   private let editProfileImageButton: UIButton
+  private let profileInfoCollectionView: UICollectionView
 
   // MARK: - VIP Properties
   
@@ -31,6 +32,10 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
   init() {
     self.profileImageView = ProfileImageView(size: Constant.ProfileImageView.size)
     self.editProfileImageButton = UIButton()
+    self.profileInfoCollectionView = UICollectionView(
+      frame: CGRect.zero,
+      collectionViewLayout: UICollectionViewLayout()
+    )
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -71,6 +76,7 @@ extension UserInfoSceneViewController {
   private func setup() {
     self.setupMainUI()
     self.setupEditProfileImageButton()
+    self.setupProfileInfoCollectionView()
     self.setupSubviewsLayout()
   }
 
@@ -100,6 +106,7 @@ extension UserInfoSceneViewController {
   private func setupSubviewsLayout() {
     self.setupProfileImageViewLayout()
     self.setupEditProfileImageButtonLayout()
+    self.setupProfileInfoCollectionViewLayout()
   }
 
   private func setupProfileImageViewLayout() {
@@ -131,6 +138,32 @@ extension UserInfoSceneViewController {
           constant: Constant.EditProfileImageButton.topMargin
         ),
         self.editProfileImageButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
+      ]
+    )
+  }
+
+  private func setupProfileInfoCollectionViewLayout() {
+    self.view.addSubview(self.profileInfoCollectionView)
+    self.profileInfoCollectionView.usingAutolayout()
+
+    let constant = Constant.ProfileInfoCollectionView.self
+    NSLayoutConstraint.activate(
+      [
+        self.profileInfoCollectionView.topAnchor.constraint(
+          equalTo: self.editProfileImageButton.bottomAnchor,
+          constant: constant.topMargin
+        ),
+        self.profileInfoCollectionView.leadingAnchor.constraint(
+          equalTo: self.view.safeAreaLayoutGuide.leadingAnchor,
+          constant: constant.leadingMargin
+        ),
+        self.profileInfoCollectionView.trailingAnchor.constraint(
+          equalTo: self.view.safeAreaLayoutGuide.trailingAnchor,
+          constant: constant.trailingMargin
+        ),
+        self.profileInfoCollectionView.heightAnchor.constraint(
+          equalToConstant: self.profileInfoCollectionView.contentSize.height
+        )
       ]
     )
   }
