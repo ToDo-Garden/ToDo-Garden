@@ -7,6 +7,7 @@
 
 import UIKit
 
+import ToDoGardenUIResource
 import UserInfoSceneAPI
 import UserInfoSceneEntity
 
@@ -14,8 +15,8 @@ protocol UserInfoSceneDisplayLogic: AnyObject {
   func displaySomething(viewModel: UserInfoScene.Something.ViewModel)
 }
 
-class UserInfoSceneViewController: UIViewController, UserInfoSceneViewControllable {
-  
+final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewControllable {
+
   // MARK: - VIP Properties
   
   var interactor: UserInfoSceneBusinessLogic?
@@ -36,6 +37,7 @@ class UserInfoSceneViewController: UIViewController, UserInfoSceneViewControllab
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    self.setupMainUI()
     self.doSomething()
   }
 }
@@ -54,5 +56,18 @@ extension UserInfoSceneViewController {
   func doSomething() {
     let request = UserInfoScene.Something.Request()
     self.interactor?.doSomething(request: request)
+  }
+}
+
+// MARK: - Private Functions
+
+extension UserInfoSceneViewController {
+  private func setup() {
+    self.setupMainUI()
+  }
+
+  private func setupMainUI() {
+    self.title = UserInfoSceneTheme.StringLiteral.title
+    self.view.backgroundColor = UIColor.toDoGardenWhite
   }
 }
