@@ -7,6 +7,7 @@
 
 import UIKit
 
+import ToDoGardenUIComponent
 import ToDoGardenUIResource
 import UserInfoSceneAPI
 import UserInfoSceneEntity
@@ -16,6 +17,7 @@ protocol UserInfoSceneDisplayLogic: AnyObject {
 }
 
 final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewControllable {
+  private let profileImageView: ProfileImageView
 
   // MARK: - VIP Properties
   
@@ -25,6 +27,7 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
   // MARK: - Object lifecycle
   
   init() {
+    self.profileImageView = ProfileImageView(size: Constant.ProfileImageView.size)
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -64,11 +67,38 @@ extension UserInfoSceneViewController {
 extension UserInfoSceneViewController {
   private func setup() {
     self.setupMainUI()
+    self.setupSubviewsLayout()
   }
 
   private func setupMainUI() {
     self.title = UserInfoSceneTheme.StringLiteral.title
     self.view.backgroundColor = UIColor.toDoGardenWhite
+  }
+}
+
+// MARK: - Set Subviews Layout
+
+extension UserInfoSceneViewController {
+  private func setupSubviewsLayout() {
+    self.setupProfileImageViewLayout()
+  }
+
+  private func setupProfileImageViewLayout() {
+    self.view.addSubview(self.profileImageView)
+    self.profileImageView.usingAutolayout()
+
+    let constant = Constant.ProfileImageView.self
+    NSLayoutConstraint.activate(
+      [
+        self.profileImageView.topAnchor.constraint(
+          equalTo: self.view.safeAreaLayoutGuide.topAnchor,
+          constant: constant.topMargin
+        ),
+        self.profileImageView.widthAnchor.constraint(equalToConstant: constant.size.width),
+        self.profileImageView.heightAnchor.constraint(equalToConstant: constant.size.height),
+        self.profileImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
+      ]
+    )
   }
 }
 

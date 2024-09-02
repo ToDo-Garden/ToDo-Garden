@@ -1,0 +1,19 @@
+//
+//  UserInfoSceneViewController+Constant.swift
+//
+//
+//  Created by Wood on 9/2/24.
+//
+
+import Foundation
+
+extension UserInfoSceneViewController {
+  enum Constant {}
+}
+
+extension UserInfoSceneViewController.Constant {
+  enum ProfileImageView {
+    static let topMargin: CGFloat = 2
+    static let size = CGSize(width: 86, height: 86)
+  }
+}
