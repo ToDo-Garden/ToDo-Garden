@@ -39,51 +39,33 @@ extension Styled.Row {
 }
 
 extension Styled.Row.Configuration {
-  public struct ProfileModel: Equatable {
-    public static func primary(
-      image: UIImage = UIImage.defaultProfileImage,
+  public struct ProfileModel {
+    public var style: Style
+    public var title: String
+    public var description: String
+    public var image: UIImage
+    
+    public init(
+      style: Style,
       title: String,
-      description: String
-    ) -> Self {
-      return Self(
-        image: image,
-        title: title,
-        titleFont: UIFont.pretendardHeadBold,
-        description: description,
-        descriptionFont: UIFont.pretendardDetailLight,
-        axis: NSLayoutConstraint.Axis.vertical,
-        profileSize: Constant.Styled.Row.Profile.shareProfileSize
-      )
+      description: String,
+      image: UIImage? = nil
+    ) {
+      self.style = style
+      self.title = title
+      self.description = description
+      self.image = image ?? style.defaultImage
     }
     
-    public static func gardenInfo(
-      image: UIImage = UIImage.defaultFriendProfileImage,
-      title: String,
-      description: String
-    ) -> Self {
-      return Self(
-        image: image,
-        title: title,
-        titleFont: UIFont.pretendardBodySemiBold,
-        description: description,
-        descriptionFont: UIFont.pretendardBodyMedium,
-        axis: NSLayoutConstraint.Axis.horizontal,
-        profileSize: Constant.Styled.Row.Profile.friendListProfileSize
-      )
+    subscript<T>(style keypath: KeyPath<Style, T>) -> T {
+      style[keyPath: keypath]
     }
-    var image: UIImage = UIImage.defaultFriendProfileImage
-    var title: String
-    var titleFont: UIFont
-    var description: String
-    var descriptionFont: UIFont
-    var axis: NSLayoutConstraint.Axis
-    var profileSize: CGSize
   }
   
   public struct ListPrimaryModel: Equatable {
     let title: String
     let color: UIColor
-
+    
     public init(title: String, color: UIColor) {
       self.title = title
       self.color = color
@@ -113,5 +95,65 @@ extension Styled.Row.Configuration {
       self.isSelected = isSelected
       self.hasAlert = hasAlert
     }
+  }
+}
+
+extension Styled.Row.Configuration.ProfileModel {
+  public enum Style {
+    var axis: NSLayoutConstraint.Axis {
+      self == .shareRow
+      ? NSLayoutConstraint.Axis.horizontal
+      : NSLayoutConstraint.Axis.vertical
+    }
+    
+    var innerPadding: NSDirectionalEdgeInsets {
+      switch self {
+      case Self.setting:
+        return NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
+      case Self.shareProfile:
+        return NSDirectionalEdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 36)
+      case Self.shareRow:
+        return NSDirectionalEdgeInsets(top: 6, leading: 25, bottom: 6, trailing: 25)
+      }
+    }
+    
+    var defaultImage: UIImage {
+      self == Self.shareRow
+      ? UIImage.defaultProfileImage
+      : UIImage.defaultFriendProfileImage
+    }
+    
+    var imageSize: CGSize {
+      self == Self.shareRow
+      ? CGSize(width: 36, height: 36)
+      : CGSize(width: 56, height: 56)
+    }
+    
+    var profileImageTrailingPadding: CGFloat {
+      switch self {
+      case Self.setting:
+        return 8
+      case Self.shareProfile:
+        return 15
+      case Self.shareRow:
+        return 6
+      }
+    }
+    
+    var titleFont: UIFont {
+      self == Self.shareRow
+      ? UIFont.pretendardBodyBold
+      : UIFont.pretendardHeadBold
+    }
+    
+    var descriptionFont: UIFont {
+      self == Self.shareRow
+      ? UIFont.pretendardBodyMedium
+      : UIFont.pretendardDetailLight
+    }
+    
+    case setting
+    case shareProfile
+    case shareRow
   }
 }

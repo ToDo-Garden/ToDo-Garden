@@ -10,10 +10,10 @@ extension Styled.Row {
     let imageView = self.buildImageView(
       stack: stack,
       image: model.image,
-      size: model.profileSize
+      size: model[style: \.imageSize]
     )
     self.buildInnerStack(stack: stack, model: model)
-    if model.axis == NSLayoutConstraint.Axis.vertical {
+    if model[style: \.axis] == NSLayoutConstraint.Axis.vertical {
       stack.addSpacing()
     }
     self.buildImageView(
@@ -34,18 +34,19 @@ extension Styled.Row {
   
   private func buildInnerStack(stack: UIStackView, model: Configuration.ProfileModel) {
     let innerStack = UIStackView()
-    innerStack.axis = model.axis
+    innerStack.axis = model[style: \.axis]
+    
     let titleLabel = self.buildTextLabel(
       stack: innerStack,
       text: model.title,
-      font: model.titleFont,
+      font: model[style: \.titleFont],
       textColor: .toDoGardenGreenDark
     )
-    addConditionalSpacing(innerStack, axis: model.axis)
+    addConditionalSpacing(innerStack, axis: model[style: \.axis])
     let descriptionLabel = self.buildTextLabel(
       stack: innerStack,
       text: model.description,
-      font: model.descriptionFont,
+      font: model[style: \.descriptionFont],
       textColor: .toDoGardenGreenDark
     )
     stack.addArrangedSubview(innerStack)
