@@ -5,66 +5,70 @@ import ToDoGardenUIConstant
 
 // MARK: - ProfileStyle
 extension Styled.Row {
-  func buildProfileStyle(stack: UIStackView, model: Configuration.ProfileModel) {
-    self.buildProfileStyleStack(stack: stack)
-    let imageView = self.buildImageView(
-      stack: stack,
-      image: model.image,
+  func buildProfileStyle(model: Configuration.ProfileModel) -> UIStackView {
+    let stack = UIHStackView(
+      spacing: 0,
+      arrangedSubviews: self.buildProfileSubviews(model: model)
+    )
+    stack.addInnerPadding(model[style: \.innerPadding])
+    
+    return stack
+  }
+  
+  private func buildProfileSubviews(model: Configuration.ProfileModel) -> [UIView] {
+    let profileImageView = self.buildImageView(
+      image: model[style: \.defaultImage],
       size: model[style: \.imageSize]
     )
-    self.buildInnerStack(stack: stack, model: model)
-    if model[style: \.axis] == NSLayoutConstraint.Axis.vertical {
-      stack.addSpacing()
-    }
-    self.buildImageView(
-      stack: stack,
+    self.bindingProfileImageState(imageView: profileImageView)
+    let profileImageTrailingPadding = UIView()
+    
+    let innerStack = self.buildInnerStack(model: model)
+    let forwardImageView = self.buildImageView(
       image: UIImage.forwardButtonImage,
       size: Constant.Styled.Row.Profile.accessorySize
     )
-    self.bindingProfileImageState(imageView: imageView)
-  }
-  
-  private func buildProfileStyleStack(stack: UIStackView) {
-    stack.spacing = Constant.Styled.Row.Profile.stackSpacing
-    self.buildStack(
-      stack: stack,
-      edgeInsets: Constant.Styled.Row.Profile.stackEdgeInsets
-    )
-  }
-  
-  private func buildInnerStack(stack: UIStackView, model: Configuration.ProfileModel) {
-    let innerStack = UIStackView()
-    innerStack.axis = model[style: \.axis]
+    var subviews = [
+      profileImageView,
+      profileImageTrailingPadding,
+      innerStack,
+      forwardImageView
+    ]
+    if model[style: \.axis] == .vertical {
+      subviews.insert(UIView(), at: 3)
+    }
+    profileImageTrailingPadding.widthAnchor
+      .constraint(equalToConstant: model[style: \.profileImageTrailingPadding]).isActive = true
     
+    return subviews
+  }
+  
+  private func buildInnerStack(model: Configuration.ProfileModel) -> UIStackView {
     let titleLabel = self.buildTextLabel(
-      stack: innerStack,
       text: model.title,
       font: model[style: \.titleFont],
-      textColor: .toDoGardenGreenDark
+      textColor: UIColor.toDoGardenGreenDark
     )
-    addConditionalSpacing(innerStack, axis: model[style: \.axis])
     let descriptionLabel = self.buildTextLabel(
-      stack: innerStack,
       text: model.description,
       font: model[style: \.descriptionFont],
-      textColor: .toDoGardenGreenDark
+      textColor: UIColor.toDoGardenGreenDark
     )
-    stack.addArrangedSubview(innerStack)
-    bindingProfileInnerTitleState(
+    self.bindingProfileInnerTitleState(
       titleLabel: titleLabel,
       descriptionLabel: descriptionLabel
     )
-  }
-  
-  private func addConditionalSpacing(_ stack: UIStackView, axis: NSLayoutConstraint.Axis) {
-    switch axis {
-    case NSLayoutConstraint.Axis.vertical:
-      stack.spacing = Constant.Styled.Row.Profile.conditionSpacing
-    case NSLayoutConstraint.Axis.horizontal:
-      stack.addSpacing()
-    @unknown default:
-      break
+    
+    let spacing = UIView()
+    let subviews: [UIView] = [titleLabel, spacing, descriptionLabel]
+    let stack = UIStackView(arrangedSubviews: subviews)
+    stack.axis = model[style: \.axis]
+    
+    if model[style: \.axis] == NSLayoutConstraint.Axis.vertical {
+      spacing.heightAnchor.constraint(equalToConstant: 3).isActive = true
     }
+    
+    return stack
   }
   
   private func bindingProfileImageState(imageView: UIImageView) {
