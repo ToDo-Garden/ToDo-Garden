@@ -1,3 +1,4 @@
+import enum SwiftUICore.Edge
 import UIKit
 
 extension UIStackView {
@@ -22,8 +23,13 @@ extension UIStackView {
   
   // 스택뷰에 뷰를 추가하고 여백을 추가합니다.
   public func addArrangedSubViewWithSpacing(_ view: UIView, spacing: CGFloat? = nil) {
-    addArrangedSubview(view)
-    addSpacing(spacing)
+    self.addArrangedSubview(view)
+    self.addSpacing(spacing)
+  }
+  
+  public func addInnerPadding(_ value: NSDirectionalEdgeInsets) {
+    self.isLayoutMarginsRelativeArrangement = true
+    self.directionalLayoutMargins = value
   }
 }
 
@@ -41,6 +47,8 @@ open class UIHStackView: UIStackView {
     arrangedSubviews subviews: [UIView]
   ) {
     super.init(frame: CGRect.zero)
+    self.alignment = alignment
+    self.spacing = spacing
     subviews.forEach {
       self.addArrangedSubview($0)
     }
@@ -66,6 +74,9 @@ open class UIVStackView: UIStackView {
     arrangedSubviews subviews: [UIView]
   ) {
     super.init(frame: CGRect.zero)
+    self.alignment = alignment
+    self.spacing = spacing
+    super.axis = .vertical
     subviews.forEach {
       self.addArrangedSubview($0)
     }
