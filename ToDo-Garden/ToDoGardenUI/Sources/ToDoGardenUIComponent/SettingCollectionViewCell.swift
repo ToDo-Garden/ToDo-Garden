@@ -2,16 +2,15 @@
 //  SettingCollectionViewCell.swift
 //
 //
-//  Created by Wood on 8/19/24.
+//  Created by Wood on 8/30/24.
 //
 
 import UIKit
 
 import TDUtility
-import ToDoGardenUIComponent
 
-final class SettingCollectionViewCell: UICollectionViewCell, ReusableIdentifier {
-  enum Position {
+public final class SettingCollectionViewCell: UICollectionViewCell, ReusableIdentifier {
+  public enum Position {
     case top
     case middle
     case bottom
@@ -19,13 +18,15 @@ final class SettingCollectionViewCell: UICollectionViewCell, ReusableIdentifier 
 
   private var cellPosition: Position
   private let titleLabel: UILabel
+  private let descriptionLabel: UILabel
   private let rightForwardImageView: UIImageView
 
   @ExecuteOnce private var isSetupLayerCalled: (() -> Void)?
 
-  override init(frame: CGRect) {
+  public override init(frame: CGRect) {
     self.cellPosition = Position.middle
     self.titleLabel = UILabel()
+    self.descriptionLabel = UILabel()
     self.rightForwardImageView = UIImageView()
     super.init(frame: frame)
     self.setup()
@@ -36,103 +37,38 @@ final class SettingCollectionViewCell: UICollectionViewCell, ReusableIdentifier 
     fatalError("init(coder:) has not been implemented")
   }
 
-  override func prepareForReuse() {
+  public override func prepareForReuse() {
     super.prepareForReuse()
     self.removeSubLayersInMiddle()
   }
 
-  override func draw(_ rect: CGRect) {
+  public override func draw(_ rect: CGRect) {
     super.draw(rect)
-    self.setupLayer()
+    self.isSetupLayerCalled = {
+      self.addBorderLayer(for: self.cellPosition)
+    }
   }
 
-  func updateUI(title: String, isShowingModal: Bool, position: Position) {
+  public func setupUI(
+    title: String,
+    titleFont: UIFont,
+    isShowingModal: Bool,
+    position: Position
+  ) {
     self.titleLabel.text = title
+    self.titleLabel.font = titleFont
     self.rightForwardImageView.isHidden = !isShowingModal
     self.cellPosition = position
+  }
+
+  public func updateDescription(_ text: String?) {
+    self.descriptionLabel.text = text
   }
 }
 
 // MARK: Draw Borders
 
 extension SettingCollectionViewCell {
-  private func setupLayer() {
-    self.isSetupLayerCalled = {
-      switch self.cellPosition {
-      case Position.top:
-        self.setupRoundedCornerInFirstCell()
-      case Position.middle:
-        self.setupBordersInMiddleCell()
-      case Position.bottom:
-        self.addBottomRoundedBorder(
-          color: UIColor.toDoGardenGreenBackground,
-          width: 1.0,
-          cornerRadius: 10
-        )
-      }
-    }
-  }
-
-  private func setupRoundedCornerInFirstCell() {
-    self.layer.maskedCorners = [
-      CACornerMask.layerMinXMinYCorner,
-      CACornerMask.layerMaxXMinYCorner
-    ]
-    self.layer.cornerRadius = 10
-    self.layer.borderColor = UIColor.toDoGardenGreenBackground.cgColor
-    self.layer.borderWidth = 1.0
-  }
-
-  private func setupBordersInMiddleCell() {
-    let layers = [
-      self.addLeadingBorderLayer(),
-      self.addBottomBorderLayer(),
-      self.addTrailingBorderLayer()
-    ]
-
-    layers.forEach { (layer: CALayer) in
-      layer.borderWidth = 1.0
-      layer.borderColor = UIColor.toDoGardenGreenBackground.cgColor
-      self.layer.addSublayer(layer)
-    }
-  }
-
-  private func addLeadingBorderLayer() -> CALayer {
-    let leadingLayer = CALayer()
-    leadingLayer.frame = CGRect(
-      x: self.bounds.minX,
-      y: self.bounds.minY,
-      width: 1.0,
-      height: self.bounds.height
-    )
-    leadingLayer.name = SubLayerName.trailing
-    return leadingLayer
-  }
-
-  private func addBottomBorderLayer() -> CALayer {
-    let bottomLayer = CALayer()
-    bottomLayer.frame = CGRect(
-      x: self.bounds.minX,
-      y: self.bounds.maxY - 1.0,
-      width: self.bounds.width,
-      height: 1.0
-    )
-    bottomLayer.name = SubLayerName.trailing
-    return bottomLayer
-  }
-
-  private func addTrailingBorderLayer() -> CALayer {
-    let trailingLayer = CALayer()
-    trailingLayer.frame = CGRect(
-      x: self.bounds.maxX - 1.0,
-      y: self.bounds.minY,
-      width: 1.0,
-      height: self.bounds.height
-    )
-    trailingLayer.name = SubLayerName.trailing
-    return trailingLayer
-  }
-
   private func removeSubLayersInMiddle() {
     self.layer.sublayers?.forEach { (subLayer: CALayer) in
       if subLayer.name == SubLayerName.leading ||
@@ -152,6 +88,7 @@ extension SettingCollectionViewCell {
     self.backgroundColor = UIColor.toDoGardenWhite
     self.setupRightForwardImageView()
     self.setupTitleLabel()
+    self.setupDescriptionLabel()
   }
 
   private func setupRightForwardImageView() {
@@ -161,8 +98,14 @@ extension SettingCollectionViewCell {
 
   private func setupTitleLabel() {
     self.titleLabel.font = UIFont.pretendardBodyRegular
-    self.titleLabel.textColor = SettingSceneTheme.mainColor
+    self.titleLabel.textColor = UIColor.toDoGardenGreenDark
     self.setupTitleLabelLayout()
+  }
+
+  private func setupDescriptionLabel() {
+    self.descriptionLabel.textColor = UIColor.toDoGardenGray3
+    self.descriptionLabel.font = UIFont.pretendardBodyMedium
+    self.setupDescriptionLabelLayout()
   }
 }
 
@@ -194,8 +137,23 @@ extension SettingCollectionViewCell {
         self.titleLabel.leadingAnchor.constraint(
           equalTo: self.contentView.leadingAnchor,
           constant: 8
+        )
+      ]
+    )
+  }
+
+  private func setupDescriptionLabelLayout() {
+    self.contentView.addSubview(self.descriptionLabel)
+    self.descriptionLabel.usingAutolayout()
+
+    NSLayoutConstraint.activate(
+      [
+        self.descriptionLabel.leadingAnchor.constraint(greaterThanOrEqualTo: self.titleLabel.trailingAnchor),
+        self.descriptionLabel.trailingAnchor.constraint(
+          equalTo: self.rightForwardImageView.leadingAnchor,
+          constant: -3
         ),
-        self.titleLabel.trailingAnchor.constraint(equalTo: self.rightForwardImageView.leadingAnchor)
+        self.descriptionLabel.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor)
       ]
     )
   }
@@ -209,3 +167,37 @@ extension SettingCollectionViewCell {
     static let roundedBottom = "roundedBottom"
   }
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let stackView = UIStackView()
+  stackView.axis = .vertical
+  stackView.spacing = 20
+  stackView.distribution = .equalSpacing
+
+  let settingSceneCell = SettingCollectionViewCell()
+  settingSceneCell.widthAnchor.constraint(equalToConstant: 300).isActive = true
+  settingSceneCell.heightAnchor.constraint(equalToConstant: 40).isActive = true
+  settingSceneCell.setupUI(
+    title: "공지사항",
+    titleFont: UIFont.pretendardBodyRegular,
+    isShowingModal: true,
+    position: SettingCollectionViewCell.Position.top
+  )
+  stackView.addArrangedSubview(settingSceneCell)
+
+  let userInfoSceneCell = SettingCollectionViewCell()
+  userInfoSceneCell.heightAnchor.constraint(equalToConstant: 40).isActive = true
+  userInfoSceneCell.setupUI(
+    title: "이메일",
+    titleFont: UIFont.pretendardBodyMedium,
+    isShowingModal: false,
+    position: SettingCollectionViewCell.Position.bottom
+  )
+  userInfoSceneCell.updateDescription("wood0203@gmail.com")
+  stackView.addArrangedSubview(userInfoSceneCell)
+
+  return stackView
+}
+#endif

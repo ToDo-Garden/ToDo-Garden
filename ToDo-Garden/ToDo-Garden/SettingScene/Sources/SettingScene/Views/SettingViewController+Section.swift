@@ -7,6 +7,8 @@
 
 import UIKit
 
+import ToDoGardenUIComponent
+
 extension SettingViewController {
   struct Section: Hashable {
     let image: UIImage
