@@ -25,6 +25,7 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
   private let userInfoCollectionView: UICollectionView
   private var userInfoCollectionViewDataSource: DiffableDataSource?
   private let logOutButton: UIButton
+  private let withdrawMembershipButton: UIButton
 
   // MARK: - VIP Properties
   
@@ -41,6 +42,7 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
       collectionViewLayout: UICollectionViewLayout()
     )
     self.logOutButton = UIButton()
+    self.withdrawMembershipButton = UIButton()
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -84,6 +86,9 @@ extension UserInfoSceneViewController: ToDoGardenAlertControllerDelegate {
     case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.logout:
       // TODO: 로그아웃 Interactor 메서드 호출 예정
       return
+    case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.unsubscribe:
+      // TODO: 회원 탈퇴 Interactor 메서드 호출 예정
+      return
     default:
       break
     }
@@ -99,6 +104,8 @@ extension UserInfoSceneViewController {
     self.setupUserInfoCollectionView()
     self.setupLogOutButtonTitle()
     self.setupLogOutButtonAction()
+    self.setupWithdrawMembershipButton()
+    self.setupWithdrawMembershipButtonAction()
     self.loadUserInfoCollectionViewData()
     self.setupSubviewsLayout()
   }
@@ -167,6 +174,34 @@ extension UserInfoSceneViewController {
     self.logOutButton.addAction(logOutAction, for: UIControl.Event.touchUpInside)
   }
 
+  private func setupWithdrawMembershipButton() {
+    let buttonTitle = UserInfoSceneTheme.StringLiteral.WithdrawMembershipButton.title
+    let attributedTitle = buttonTitle.applyTextAttributes(
+      attributes: [
+        NSAttributedString.Key.font: UIFont.pretendardBodySemiBold15,
+        NSAttributedString.Key.foregroundColor: UIColor.toDoGardenGray2,
+        NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue,
+        NSAttributedString.Key.underlineColor: UIColor.toDoGardenGray2
+      ]
+    )
+
+    self.withdrawMembershipButton.setAttributedTitle(attributedTitle, for: UIControl.State.normal)
+  }
+
+  private func setupWithdrawMembershipButtonAction() {
+    let withdrawMembershipAction = UIAction { [weak self] _ in
+      guard let self else { return }
+
+      let withdrawMembershipAlert = ToDoGardenAlertController(
+        for: ToDoGardenAlertView.Configuration.askToUnsubscribe
+      )
+      withdrawMembershipAlert.delegate = self
+      self.showAlert(withdrawMembershipAlert)
+    }
+
+    self.withdrawMembershipButton.addAction(withdrawMembershipAction, for: UIControl.Event.touchUpInside)
+  }
+
   private func loadUserInfoCollectionViewData() {
     var snapshot = NSDiffableDataSourceSnapshot<UserInfoSection, UserInfoItem>()
     snapshot.appendSections(self.makeSections())
@@ -211,6 +246,7 @@ extension UserInfoSceneViewController {
     self.setupEditProfileImageButtonLayout()
     self.setupUserInfoCollectionViewLayout()
     self.setupLogOutButtonLayout()
+    self.setupWithdrawMembershipButtonLayout()
   }
 
   private func setupProfileImageViewLayout() {
@@ -304,6 +340,21 @@ extension UserInfoSceneViewController {
         ]
       )
     }
+  }
+
+  private func setupWithdrawMembershipButtonLayout() {
+    self.view.addSubview(self.withdrawMembershipButton)
+    self.withdrawMembershipButton.usingAutolayout()
+
+    NSLayoutConstraint.activate(
+      [
+        self.withdrawMembershipButton.topAnchor.constraint(
+          equalTo: self.logOutButton.bottomAnchor,
+          constant: Constant.WithdrawMembershipButton.topMargin
+        ),
+        self.withdrawMembershipButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
+      ]
+    )
   }
 }
 

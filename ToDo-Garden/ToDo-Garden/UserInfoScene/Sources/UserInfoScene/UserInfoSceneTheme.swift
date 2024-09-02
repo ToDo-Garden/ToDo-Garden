@@ -41,5 +41,9 @@ extension UserInfoSceneTheme.StringLiteral {
     static let title = "로그아웃"
   }
 
+  enum WithdrawMembershipButton {
+    static let title = "회원 탈퇴"
+  }
+
   static let title = "프로필"
 }
