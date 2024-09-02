@@ -71,3 +71,10 @@ extension UserInfoSceneViewController {
     self.view.backgroundColor = UIColor.toDoGardenWhite
   }
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  return UINavigationController(rootViewController: UserInfoSceneViewController())
+}
+#endif
