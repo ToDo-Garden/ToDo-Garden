@@ -20,7 +20,7 @@ protocol UserInfoSceneDisplayLogic: AnyObject {
 final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewControllable {
   private let profileImageView: ProfileImageView
   private let editProfileImageButton: UIButton
-  private let profileInfoCollectionView: UICollectionView
+  private let userInfoCollectionView: UICollectionView
 
   // MARK: - VIP Properties
   
@@ -32,7 +32,7 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
   init() {
     self.profileImageView = ProfileImageView(size: Constant.ProfileImageView.size)
     self.editProfileImageButton = UIButton()
-    self.profileInfoCollectionView = UICollectionView(
+    self.userInfoCollectionView = UICollectionView(
       frame: CGRect.zero,
       collectionViewLayout: UICollectionViewLayout()
     )
@@ -76,7 +76,7 @@ extension UserInfoSceneViewController {
   private func setup() {
     self.setupMainUI()
     self.setupEditProfileImageButton()
-    self.setupProfileInfoCollectionView()
+    self.setupUserInfoCollectionView()
     self.setupSubviewsLayout()
   }
 
@@ -97,6 +97,20 @@ extension UserInfoSceneViewController {
     )
 
     self.editProfileImageButton.setAttributedTitle(attributedTitle, for: UIControl.State.normal)
+  }
+
+  private func setupUserInfoCollectionView() {
+    self.userInfoCollectionView.isScrollEnabled = false
+    self.userInfoCollectionView.register(
+      SettingCollectionViewCell.self,
+      forCellWithReuseIdentifier: SettingCollectionViewCell.identifier
+    )
+    self.userInfoCollectionView.register(
+      SectionHeaderView.self,
+      forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+      withReuseIdentifier: SectionHeaderView.identifier
+    )
+    self.userInfoCollectionView.dataSource = self.makeDiffableDataSource(with: self.userInfoCollectionView)
   }
 }
 
@@ -143,26 +157,26 @@ extension UserInfoSceneViewController {
   }
 
   private func setupProfileInfoCollectionViewLayout() {
-    self.view.addSubview(self.profileInfoCollectionView)
-    self.profileInfoCollectionView.usingAutolayout()
+    self.view.addSubview(self.userInfoCollectionView)
+    self.userInfoCollectionView.usingAutolayout()
 
-    let constant = Constant.ProfileInfoCollectionView.self
+    let constant = Constant.UserInfoCollectionView.self
     NSLayoutConstraint.activate(
       [
-        self.profileInfoCollectionView.topAnchor.constraint(
+        self.userInfoCollectionView.topAnchor.constraint(
           equalTo: self.editProfileImageButton.bottomAnchor,
           constant: constant.topMargin
         ),
-        self.profileInfoCollectionView.leadingAnchor.constraint(
+        self.userInfoCollectionView.leadingAnchor.constraint(
           equalTo: self.view.safeAreaLayoutGuide.leadingAnchor,
           constant: constant.leadingMargin
         ),
-        self.profileInfoCollectionView.trailingAnchor.constraint(
+        self.userInfoCollectionView.trailingAnchor.constraint(
           equalTo: self.view.safeAreaLayoutGuide.trailingAnchor,
           constant: constant.trailingMargin
         ),
-        self.profileInfoCollectionView.heightAnchor.constraint(
-          equalToConstant: self.profileInfoCollectionView.contentSize.height
+        self.userInfoCollectionView.heightAnchor.constraint(
+          equalToConstant: self.userInfoCollectionView.contentSize.height
         )
       ]
     )

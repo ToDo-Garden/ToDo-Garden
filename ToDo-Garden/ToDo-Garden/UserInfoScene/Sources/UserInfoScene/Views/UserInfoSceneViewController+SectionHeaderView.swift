@@ -7,8 +7,10 @@
 
 import UIKit
 
+import ToDoGardenUIComponent
+
 extension UserInfoSceneViewController {
-  final class SectionHeaderView: UICollectionReusableView {
+  final class SectionHeaderView: UICollectionReusableView, ReusableIdentifier {
     private let titleLabel: UILabel
 
     override init(frame: CGRect) {
