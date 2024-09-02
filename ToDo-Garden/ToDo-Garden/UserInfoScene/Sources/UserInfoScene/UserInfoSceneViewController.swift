@@ -7,6 +7,7 @@
 
 import UIKit
 
+import TDUtility
 import ToDoGardenUIComponent
 import ToDoGardenUIResource
 import UserInfoSceneAPI
@@ -18,6 +19,7 @@ protocol UserInfoSceneDisplayLogic: AnyObject {
 
 final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewControllable {
   private let profileImageView: ProfileImageView
+  private let editProfileImageButton: UIButton
 
   // MARK: - VIP Properties
   
@@ -28,6 +30,7 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
   
   init() {
     self.profileImageView = ProfileImageView(size: Constant.ProfileImageView.size)
+    self.editProfileImageButton = UIButton()
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -40,7 +43,7 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    self.setupMainUI()
+    self.setup()
     self.doSomething()
   }
 }
@@ -67,12 +70,27 @@ extension UserInfoSceneViewController {
 extension UserInfoSceneViewController {
   private func setup() {
     self.setupMainUI()
+    self.setupEditProfileImageButton()
     self.setupSubviewsLayout()
   }
 
   private func setupMainUI() {
     self.title = UserInfoSceneTheme.StringLiteral.title
     self.view.backgroundColor = UIColor.toDoGardenWhite
+  }
+
+  private func setupEditProfileImageButton() {
+    let buttonTitle = UserInfoSceneTheme.StringLiteral.EditProfileImageButton.title
+    let attributedTitle = buttonTitle.applyTextAttributes(
+      attributes: [
+        NSAttributedString.Key.font: UIFont.pretendardBodyMedium,
+        NSAttributedString.Key.foregroundColor: UserInfoSceneTheme.mainColor,
+        NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue,
+        NSAttributedString.Key.underlineColor: UserInfoSceneTheme.mainColor
+      ]
+    )
+
+    self.editProfileImageButton.setAttributedTitle(attributedTitle, for: UIControl.State.normal)
   }
 }
 
@@ -81,6 +99,7 @@ extension UserInfoSceneViewController {
 extension UserInfoSceneViewController {
   private func setupSubviewsLayout() {
     self.setupProfileImageViewLayout()
+    self.setupEditProfileImageButtonLayout()
   }
 
   private func setupProfileImageViewLayout() {
@@ -97,6 +116,21 @@ extension UserInfoSceneViewController {
         self.profileImageView.widthAnchor.constraint(equalToConstant: constant.size.width),
         self.profileImageView.heightAnchor.constraint(equalToConstant: constant.size.height),
         self.profileImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
+      ]
+    )
+  }
+
+  private func setupEditProfileImageButtonLayout() {
+    self.view.addSubview(self.editProfileImageButton)
+    self.editProfileImageButton.usingAutolayout()
+
+    NSLayoutConstraint.activate(
+      [
+        self.editProfileImageButton.topAnchor.constraint(
+          equalTo: self.profileImageView.bottomAnchor,
+          constant: Constant.EditProfileImageButton.topMargin
+        ),
+        self.editProfileImageButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
       ]
     )
   }

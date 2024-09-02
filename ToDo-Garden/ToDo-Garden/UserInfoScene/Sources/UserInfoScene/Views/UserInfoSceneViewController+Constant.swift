@@ -16,4 +16,8 @@ extension UserInfoSceneViewController.Constant {
     static let topMargin: CGFloat = 2
     static let size = CGSize(width: 86, height: 86)
   }
+
+  enum EditProfileImageButton {
+    static let topMargin: CGFloat = 3
+  }
 }
