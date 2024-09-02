@@ -28,7 +28,6 @@ public extension Constant.Styled.Row.Profile {
   static let friendListProfileSize = CGSize(width: 36, height: 36)
   static let accessorySize = CGSize(width: 24, height: 24)
   static let stackSpacing = CGFloat(15)
-  static let stackEdgeInsets = NSDirectionalEdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 36)
   static let conditionSpacing = CGFloat(3)
 }
 
