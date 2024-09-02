@@ -35,7 +35,7 @@ extension Styled {
       }
     }
 
-    @Published var configuration: Configuration
+    @Published public var configuration: Configuration
     var cancellables: Set<AnyCancellable> = []
     
     public init(configuration: Configuration) {
