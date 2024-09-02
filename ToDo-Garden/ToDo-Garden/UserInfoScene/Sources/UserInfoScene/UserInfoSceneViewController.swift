@@ -111,6 +111,7 @@ extension UserInfoSceneViewController {
       withReuseIdentifier: SectionHeaderView.identifier
     )
     self.userInfoCollectionView.dataSource = self.makeDiffableDataSource(with: self.userInfoCollectionView)
+    self.userInfoCollectionView.collectionViewLayout = self.makeCompositionalLayout()
   }
 }
 
