@@ -24,15 +24,13 @@ extension Styled.Row {
     let profileImageTrailingPadding = UIView()
     
     let innerStack = self.buildInnerStack(model: model)
-    let forwardImageView = self.buildImageView(
-      image: UIImage.forwardButtonImage,
-      size: Constant.Styled.Row.Profile.accessorySize
-    )
+    let forwordButton = self.buildForwordButton(model: model)
+    
     var subviews = [
       profileImageView,
       profileImageTrailingPadding,
       innerStack,
-      forwardImageView
+      forwordButton
     ]
     if model[style: \.axis] == .vertical {
       subviews.insert(UIView(), at: 3)
@@ -69,6 +67,32 @@ extension Styled.Row {
     }
     
     return stack
+  }
+  
+  private func buildForwordButton(model: Configuration.ProfileModel) -> UIButton {
+    let action = UIAction { action in
+      guard
+        model.style == Configuration.ProfileModel.Style.shareRow,
+        let button = action.sender as? UIButton,
+        let imageView = button.imageView
+      else { return }
+      let angle = imageView.transform == CGAffineTransform.identity
+      ? CGFloat.pi / 2
+      : 0
+      UIView.animate(withDuration: 0.2) {
+        imageView.transform = CGAffineTransform(rotationAngle: angle)
+      }
+    }
+    let button = UIButton(
+      configuration: UIButton.Configuration.plain(),
+      primaryAction: action
+    )
+    button.configuration?.image = UIImage.forwardButtonImage
+    let size = Constant.Styled.Row.Profile.accessorySize
+    button.widthAnchor.constraint(equalToConstant: size.width).isActive = true
+    button.heightAnchor.constraint(equalToConstant: size.height).isActive = true
+    
+    return button
   }
   
   private func bindingProfileImageState(imageView: UIImageView) {
