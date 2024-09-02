@@ -13,7 +13,7 @@ extension UserInfoSceneViewController {
 
 extension UserInfoSceneViewController.Constant {
   enum ProfileImageView {
-    static let topMargin: CGFloat = 2
+    static let topMargin: CGFloat = 5
     static let size = CGSize(width: 86, height: 86)
   }
 
@@ -25,10 +25,20 @@ extension UserInfoSceneViewController.Constant {
     static let topMargin: CGFloat = 9
     static let leadingMargin: CGFloat = 28
     static let trailingMargin: CGFloat = 28
-    static let height: CGFloat = 235
+    static let height: CGFloat = 236
   }
 
   enum SectionHeaderView {
     static let leadingMargin: CGFloat = 11
+  }
+
+  enum LogOutButton {
+    enum Layer {
+      static let cornerRadius: CGFloat = 10
+    }
+
+    static let topMargin: CGFloat = 35
+    static let height: CGFloat = 40
+    static let titleLeadingMargin: CGFloat = 21
   }
 }

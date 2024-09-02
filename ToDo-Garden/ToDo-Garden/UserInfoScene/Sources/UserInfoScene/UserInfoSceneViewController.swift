@@ -8,7 +8,9 @@
 import UIKit
 
 import TDUtility
+import ToDoGardenUIAPI
 import ToDoGardenUIComponent
+import ToDoGardenUIConstant
 import ToDoGardenUIResource
 import UserInfoSceneAPI
 import UserInfoSceneEntity
@@ -22,6 +24,7 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
   private let editProfileImageButton: UIButton
   private let userInfoCollectionView: UICollectionView
   private var userInfoCollectionViewDataSource: DiffableDataSource?
+  private let logOutButton: UIButton
 
   // MARK: - VIP Properties
   
@@ -37,6 +40,7 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
       frame: CGRect.zero,
       collectionViewLayout: UICollectionViewLayout()
     )
+    self.logOutButton = UIButton()
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -71,6 +75,21 @@ extension UserInfoSceneViewController {
   }
 }
 
+extension UserInfoSceneViewController: ToDoGardenAlertControllerDelegate {
+  func handleButtonAction(
+    _ buttonType: ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType
+  ) {
+    self.closeAlert()
+    switch buttonType {
+    case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.logout:
+      // TODO: 로그아웃 Interactor 메서드 호출 예정
+      return
+    default:
+      break
+    }
+  }
+}
+
 // MARK: - Private Functions
 
 extension UserInfoSceneViewController {
@@ -78,6 +97,8 @@ extension UserInfoSceneViewController {
     self.setupMainUI()
     self.setupEditProfileImageButton()
     self.setupUserInfoCollectionView()
+    self.setupLogOutButtonTitle()
+    self.setupLogOutButtonAction()
     self.loadUserInfoCollectionViewData()
     self.setupSubviewsLayout()
   }
@@ -115,6 +136,35 @@ extension UserInfoSceneViewController {
     self.userInfoCollectionViewDataSource = self.makeDiffableDataSource(with: self.userInfoCollectionView)
     self.userInfoCollectionView.dataSource = self.userInfoCollectionViewDataSource
     self.userInfoCollectionView.collectionViewLayout = self.makeCompositionalLayout()
+  }
+
+  private func setupLogOutButtonTitle() {
+    self.logOutButton.backgroundColor = UIColor.toDoGardenGreenBackground
+    let cornerRadius = Constant.LogOutButton.Layer.cornerRadius
+    self.logOutButton.layer.cornerRadius = cornerRadius
+    self.logOutButton.setTitleColor(UIColor.toDoGardenEditButtonRed, for: UIControl.State.normal)
+    let title = NSAttributedString(
+      string: UserInfoSceneTheme.StringLiteral.LogOutButton.title,
+      attributes: [
+        NSAttributedString.Key.font: UIFont.pretendardBodyMedium,
+        NSAttributedString.Key.strokeColor: UIColor.toDoGardenEditButtonRed
+      ]
+    )
+    self.logOutButton.setAttributedTitle(title, for: UIControl.State.normal)
+  }
+
+  private func setupLogOutButtonAction() {
+    let logOutAction = UIAction { [weak self] _ in
+      guard let self else { return }
+
+      let logOutAlert = ToDoGardenAlertController(
+        for: ToDoGardenAlertView.Configuration.askToLogout
+      )
+      logOutAlert.delegate = self
+      self.showAlert(logOutAlert)
+    }
+
+    self.logOutButton.addAction(logOutAction, for: UIControl.Event.touchUpInside)
   }
 
   private func loadUserInfoCollectionViewData() {
@@ -160,6 +210,7 @@ extension UserInfoSceneViewController {
     self.setupProfileImageViewLayout()
     self.setupEditProfileImageButtonLayout()
     self.setupUserInfoCollectionViewLayout()
+    self.setupLogOutButtonLayout()
   }
 
   private func setupProfileImageViewLayout() {
@@ -219,6 +270,40 @@ extension UserInfoSceneViewController {
         )
       ]
     )
+  }
+
+  private func setupLogOutButtonLayout() {
+    self.view.addSubview(self.logOutButton)
+    self.setupLogOutButtonTitleLayout()
+    self.logOutButton.usingAutolayout()
+
+    NSLayoutConstraint.activate(
+      [
+        self.logOutButton.topAnchor.constraint(
+          equalTo: self.userInfoCollectionView.bottomAnchor,
+          constant: Constant.LogOutButton.topMargin
+        ),
+        self.logOutButton.leadingAnchor.constraint(equalTo: self.userInfoCollectionView.leadingAnchor),
+        self.logOutButton.trailingAnchor.constraint(equalTo: self.userInfoCollectionView.trailingAnchor),
+        self.logOutButton.heightAnchor.constraint(equalToConstant: Constant.LogOutButton.height)
+      ]
+    )
+  }
+
+  private func setupLogOutButtonTitleLayout() {
+    if let titleLabel = self.logOutButton.titleLabel {
+      titleLabel.usingAutolayout()
+
+      NSLayoutConstraint.activate(
+        [
+          titleLabel.leadingAnchor.constraint(
+            equalTo: self.logOutButton.leadingAnchor,
+            constant: Constant.LogOutButton.titleLeadingMargin
+          ),
+          titleLabel.centerYAnchor.constraint(equalTo: self.logOutButton.centerYAnchor)
+        ]
+      )
+    }
   }
 }
 

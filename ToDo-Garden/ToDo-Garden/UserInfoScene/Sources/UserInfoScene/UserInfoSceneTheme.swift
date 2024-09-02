@@ -37,5 +37,9 @@ extension UserInfoSceneTheme.StringLiteral {
     }
   }
 
+  enum LogOutButton {
+    static let title = "로그아웃"
+  }
+
   static let title = "프로필"
 }
