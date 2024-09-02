@@ -36,6 +36,7 @@ extension Styled {
     }
 
     @Published public var configuration: Configuration
+    public var isSelected: Bool = false
     var cancellables: Set<AnyCancellable> = []
     
     public init(configuration: Configuration) {
@@ -183,8 +184,8 @@ extension Styled.Row {
     configuration: .profile(
       .init(
         style: .setting,
-        title: "ABCD",
-        description:"ER"
+        title: "Setting",
+        description: "안녕하세요"
       )
     )
   )
@@ -194,8 +195,8 @@ extension Styled.Row {
     configuration: .profile(
       .init(
         style: .shareProfile,
-        title: "ABCD",
-        description:"ER"
+        title: "Share Profile",
+        description: "안녕하세요"
       )
     )
   )
@@ -205,8 +206,8 @@ extension Styled.Row {
     configuration: .profile(
       .init(
         style: .shareRow,
-        title: "ABCD",
-        description:"ERasdfasdfadsfas"
+        title: "Share Row",
+        description: "15일째 연속 집중!"
       )
     )
   )
