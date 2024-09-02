@@ -49,11 +49,11 @@ extension UserInfoSceneViewController.SectionHeaderView {
 
     NSLayoutConstraint.activate(
       [
+        self.titleLabel.topAnchor.constraint(equalTo: self.topAnchor),
         self.titleLabel.leadingAnchor.constraint(
           equalTo: self.leadingAnchor,
           constant: UserInfoSceneViewController.Constant.SectionHeaderView.leadingMargin
-        ),
-        self.titleLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+        )
       ]
     )
   }

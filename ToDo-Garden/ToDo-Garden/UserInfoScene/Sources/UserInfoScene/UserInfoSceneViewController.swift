@@ -21,6 +21,7 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
   private let profileImageView: ProfileImageView
   private let editProfileImageButton: UIButton
   private let userInfoCollectionView: UICollectionView
+  private var userInfoCollectionViewDataSource: DiffableDataSource?
 
   // MARK: - VIP Properties
   
@@ -77,6 +78,7 @@ extension UserInfoSceneViewController {
     self.setupMainUI()
     self.setupEditProfileImageButton()
     self.setupUserInfoCollectionView()
+    self.loadUserInfoCollectionViewData()
     self.setupSubviewsLayout()
   }
 
@@ -110,8 +112,44 @@ extension UserInfoSceneViewController {
       forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
       withReuseIdentifier: SectionHeaderView.identifier
     )
-    self.userInfoCollectionView.dataSource = self.makeDiffableDataSource(with: self.userInfoCollectionView)
+    self.userInfoCollectionViewDataSource = self.makeDiffableDataSource(with: self.userInfoCollectionView)
+    self.userInfoCollectionView.dataSource = self.userInfoCollectionViewDataSource
     self.userInfoCollectionView.collectionViewLayout = self.makeCompositionalLayout()
+  }
+
+  private func loadUserInfoCollectionViewData() {
+    var snapshot = NSDiffableDataSourceSnapshot<UserInfoSection, UserInfoItem>()
+    snapshot.appendSections(self.makeSections())
+
+    snapshot.sectionIdentifiers.forEach { (section: UserInfoSection) in
+      snapshot.appendItems(section.items, toSection: section)
+    }
+
+    self.userInfoCollectionViewDataSource?.apply(snapshot)
+  }
+
+  private func makeSections() -> [UserInfoSection] {
+    let sectionTitle = UserInfoSceneTheme.StringLiteral.UserInfoCollectionView.Section.self
+    let itemTitle = UserInfoSceneTheme.StringLiteral.UserInfoCollectionView.Item.self
+    let position = SettingCollectionViewCell.Position.self
+
+    let profileSettingSection = UserInfoSection(
+      title: sectionTitle.profileSetting,
+      items: [
+        UserInfoItem(title: itemTitle.nickName, isRightImageExisted: true, position: position.top),
+        UserInfoItem(title: itemTitle.introduction, isRightImageExisted: true, position: position.bottom)
+      ]
+    )
+
+    let accountSettingSection = UserInfoSection(
+      title: sectionTitle.accountSetting,
+      items: [
+        UserInfoItem(title: itemTitle.id, isRightImageExisted: true, position: position.top),
+        UserInfoItem(title: itemTitle.email, isRightImageExisted: false, position: position.bottom)
+      ]
+    )
+
+    return [profileSettingSection, accountSettingSection]
   }
 }
 
@@ -121,7 +159,7 @@ extension UserInfoSceneViewController {
   private func setupSubviewsLayout() {
     self.setupProfileImageViewLayout()
     self.setupEditProfileImageButtonLayout()
-    self.setupProfileInfoCollectionViewLayout()
+    self.setupUserInfoCollectionViewLayout()
   }
 
   private func setupProfileImageViewLayout() {
@@ -157,7 +195,7 @@ extension UserInfoSceneViewController {
     )
   }
 
-  private func setupProfileInfoCollectionViewLayout() {
+  private func setupUserInfoCollectionViewLayout() {
     self.view.addSubview(self.userInfoCollectionView)
     self.userInfoCollectionView.usingAutolayout()
 
@@ -174,10 +212,10 @@ extension UserInfoSceneViewController {
         ),
         self.userInfoCollectionView.trailingAnchor.constraint(
           equalTo: self.view.safeAreaLayoutGuide.trailingAnchor,
-          constant: constant.trailingMargin
+          constant: -constant.trailingMargin
         ),
         self.userInfoCollectionView.heightAnchor.constraint(
-          equalToConstant: self.userInfoCollectionView.contentSize.height
+          equalToConstant: constant.height
         )
       ]
     )

@@ -23,5 +23,19 @@ extension UserInfoSceneTheme.StringLiteral {
     static let title = "이미지 변경"
   }
 
+  enum UserInfoCollectionView {
+    enum Section {
+      static let profileSetting = "프로필 설정"
+      static let accountSetting = "계정 설정"
+    }
+
+    enum Item {
+      static let nickName = "닉네임"
+      static let introduction = "소개"
+      static let id = "아이디"
+      static let email = "이메일"
+    }
+  }
+
   static let title = "프로필"
 }
