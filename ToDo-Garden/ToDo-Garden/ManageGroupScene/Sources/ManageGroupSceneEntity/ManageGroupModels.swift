@@ -8,7 +8,7 @@
 import UIKit.UIColor
 
 public enum ManageGroup {
-  public struct ToDoGroup {
+  public struct ToDoGroup: Equatable {
     public let id: String
     public let groupName: String
     public let progressColor: UIColor
@@ -20,6 +20,13 @@ public enum ManageGroup {
       self.progressColor = progressColor
       self.progressRate = progressRate
     }
+    
+    public static func == (lhs: ToDoGroup, rhs: ToDoGroup) -> Bool {
+      return lhs.id == rhs.id &&
+      lhs.groupName == rhs.groupName &&
+      lhs.progressColor == rhs.progressColor &&
+      lhs.progressRate == rhs.progressRate
+    }
   }
   // MARK: Use cases
   
@@ -29,8 +36,31 @@ public enum ManageGroup {
     }
     
     public struct Response {
-      let data: String
-      public init(with data: String) {
+      public let data: [ToDoGroup]
+      public init(with data: [ToDoGroup]) {
+        self.data = data
+      }
+    }
+    
+    public struct ViewModel {
+      public let list: [ToDoGroup]
+      public init(with list: [ToDoGroup]) {
+        self.list = list
+      }
+    }
+  }
+  
+  public enum SaveGroupList {
+    public struct Request {
+      public let list: [ToDoGroup]
+      public init(with list: [ToDoGroup]) {
+        self.list = list
+      }
+    }
+    
+    public struct Response {
+      public let data: [ToDoGroup]
+      public init(with data: [ToDoGroup]) {
         self.data = data
       }
     }
@@ -74,30 +104,6 @@ public enum ManageGroup {
       ) {
         self.id = id
         self.index = index
-      }
-    }
-  }
-  
-  public enum ReorderGroup {
-    public struct Request {
-      public var reorderedGroups: [ReorderedGroup]
-      
-      public init() {
-        self.reorderedGroups = []
-      }
-    }
-    
-    public struct Response {
-      public let data: Bool
-      public init(with data: Bool) {
-        self.data = data
-      }
-    }
-    
-    public struct ViewModel {
-      public var data: Bool
-      public init(with data: Bool) {
-        self.data = data
       }
     }
   }
