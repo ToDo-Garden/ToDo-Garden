@@ -20,8 +20,7 @@ protocol UserInfoSceneDisplayLogic: AnyObject {
 }
 
 final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewControllable {
-  private let profileImageView: ProfileImageView
-  private let editProfileImageButton: UIButton
+  private let profileInfoView: ProfileInfoView
   private let userInfoCollectionView: UICollectionView
   private var userInfoCollectionViewDataSource: DiffableDataSource?
   private let manageAccountView: ManageAccountView
@@ -34,8 +33,7 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
   // MARK: - Object lifecycle
   
   init() {
-    self.profileImageView = ProfileImageView(size: Constant.ProfileImageView.size)
-    self.editProfileImageButton = UIButton()
+    self.profileInfoView = ProfileInfoView()
     self.userInfoCollectionView = UICollectionView(
       frame: CGRect.zero,
       collectionViewLayout: UICollectionViewLayout()
@@ -119,7 +117,6 @@ extension UserInfoSceneViewController {
   private func setup() {
     self.setupMainUI()
     self.setupSubviewsDelegate()
-    self.setupEditProfileImageButton()
     self.setupUserInfoCollectionView()
     self.loadUserInfoCollectionViewData()
     self.setupSubviewsLayout()
@@ -132,20 +129,6 @@ extension UserInfoSceneViewController {
 
   private func setupSubviewsDelegate() {
     self.manageAccountView.delegate = self
-  }
-
-  private func setupEditProfileImageButton() {
-    let buttonTitle = UserInfoSceneTheme.StringLiteral.EditProfileImageButton.title
-    let attributedTitle = buttonTitle.applyTextAttributes(
-      attributes: [
-        NSAttributedString.Key.font: UIFont.pretendardBodyMedium,
-        NSAttributedString.Key.foregroundColor: UserInfoSceneTheme.mainColor,
-        NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue,
-        NSAttributedString.Key.underlineColor: UserInfoSceneTheme.mainColor
-      ]
-    )
-
-    self.editProfileImageButton.setAttributedTitle(attributedTitle, for: UIControl.State.normal)
   }
 
   private func setupUserInfoCollectionView() {
@@ -204,41 +187,28 @@ extension UserInfoSceneViewController {
 
 extension UserInfoSceneViewController {
   private func setupSubviewsLayout() {
-    self.setupProfileImageViewLayout()
-    self.setupEditProfileImageButtonLayout()
+    self.setupProfileInfoViewLayout()
     self.setupUserInfoCollectionViewLayout()
     self.setupManageAccountViewLayout()
   }
 
-  private func setupProfileImageViewLayout() {
-    self.view.addSubview(self.profileImageView)
-    self.profileImageView.usingAutolayout()
+  private func setupProfileInfoViewLayout() {
+    self.view.addSubview(self.profileInfoView)
+    self.profileInfoView.usingAutolayout()
 
-    let constant = Constant.ProfileImageView.self
     NSLayoutConstraint.activate(
       [
-        self.profileImageView.topAnchor.constraint(
+        self.profileInfoView.topAnchor.constraint(
           equalTo: self.view.safeAreaLayoutGuide.topAnchor,
-          constant: constant.topMargin
+          constant: Constant.ProfileInfoView.topMargin
         ),
-        self.profileImageView.widthAnchor.constraint(equalToConstant: constant.size.width),
-        self.profileImageView.heightAnchor.constraint(equalToConstant: constant.size.height),
-        self.profileImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
-      ]
-    )
-  }
-
-  private func setupEditProfileImageButtonLayout() {
-    self.view.addSubview(self.editProfileImageButton)
-    self.editProfileImageButton.usingAutolayout()
-
-    NSLayoutConstraint.activate(
-      [
-        self.editProfileImageButton.topAnchor.constraint(
-          equalTo: self.profileImageView.bottomAnchor,
-          constant: Constant.EditProfileImageButton.topMargin
+        self.profileInfoView.widthAnchor.constraint(
+          equalToConstant: Constant.ProfileInfoView.size.width
         ),
-        self.editProfileImageButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
+        self.profileInfoView.heightAnchor.constraint(
+          equalToConstant: Constant.ProfileInfoView.size.height
+        ),
+        self.profileInfoView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
       ]
     )
   }
@@ -251,7 +221,7 @@ extension UserInfoSceneViewController {
     NSLayoutConstraint.activate(
       [
         self.userInfoCollectionView.topAnchor.constraint(
-          equalTo: self.editProfileImageButton.bottomAnchor,
+          equalTo: self.profileInfoView.bottomAnchor,
           constant: constant.topMargin
         ),
         self.userInfoCollectionView.leadingAnchor.constraint(

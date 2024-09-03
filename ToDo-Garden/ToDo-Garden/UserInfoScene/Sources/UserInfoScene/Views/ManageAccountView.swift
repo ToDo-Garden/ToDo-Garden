@@ -92,6 +92,8 @@ extension ManageAccountView {
   }
 }
 
+// MARK: Auto Layout
+
 extension ManageAccountView {
   private func setupSubviewsLayout() {
     self.setupLogOutButtonLayout()
