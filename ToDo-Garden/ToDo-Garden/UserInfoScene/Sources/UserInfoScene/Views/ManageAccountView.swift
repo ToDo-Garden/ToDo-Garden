@@ -11,6 +11,8 @@ final class ManageAccountView: UIView {
   private let logOutButton: UIButton
   private let withdrawMembershipButton: UIButton
 
+  weak var delegate: ManageAccountViewDelegate?
+
   init() {
     self.logOutButton = UIButton()
     self.withdrawMembershipButton = UIButton()
@@ -24,12 +26,21 @@ final class ManageAccountView: UIView {
   }
 }
 
+// MARK: ManageAccountView Delegate
+
+protocol ManageAccountViewDelegate: AnyObject {
+  func didSelectLogOutButton()
+  func didSelectWithdrawMembershipButton()
+}
+
 // MARK: Private Functions
 
 extension ManageAccountView {
   private func setup() {
     self.setupLogOutButtonTitle()
+    self.setupLogOutButtonAction()
     self.setupWithdrawMembershipButton()
+    self.setupWithdrawMembershipButtonAction()
     self.setupSubviewsLayout()
   }
 
@@ -48,6 +59,15 @@ extension ManageAccountView {
     self.logOutButton.setAttributedTitle(title, for: UIControl.State.normal)
   }
 
+  private func setupLogOutButtonAction() {
+    let buttonAction = UIAction { _ in
+      print("called")
+      self.delegate?.didSelectLogOutButton()
+    }
+
+    self.logOutButton.addAction(buttonAction, for: UIControl.Event.touchUpInside)
+  }
+
   private func setupWithdrawMembershipButton() {
     let buttonTitle = UserInfoSceneTheme.StringLiteral.WithdrawMembershipButton.title
     let attributedTitle = buttonTitle.applyTextAttributes(
@@ -60,6 +80,15 @@ extension ManageAccountView {
     )
 
     self.withdrawMembershipButton.setAttributedTitle(attributedTitle, for: UIControl.State.normal)
+  }
+
+  private func setupWithdrawMembershipButtonAction() {
+    let buttonAction = UIAction { _ in
+      print("called")
+      self.delegate?.didSelectWithdrawMembershipButton()
+    }
+
+    self.withdrawMembershipButton.addAction(buttonAction, for: UIControl.Event.touchUpInside)
   }
 }
 

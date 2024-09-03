@@ -34,6 +34,7 @@ extension UserInfoSceneViewController.Constant {
 
   enum ManageAccountView {
     static let topMargin: CGFloat = 35
+    static let height: CGFloat = 65
   }
 
   enum LogOutButton {

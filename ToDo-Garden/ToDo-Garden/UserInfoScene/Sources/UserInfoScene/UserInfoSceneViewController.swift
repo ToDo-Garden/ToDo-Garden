@@ -101,11 +101,24 @@ extension UserInfoSceneViewController: ToDoGardenAlertControllerDelegate {
   }
 }
 
+// MARK: Subviews Delegate Functions
+
+extension UserInfoSceneViewController: ManageAccountViewDelegate {
+  func didSelectLogOutButton() {
+    self.showAlertController(for: ToDoGardenAlertView.Configuration.askToLogout)
+  }
+  
+  func didSelectWithdrawMembershipButton() {
+    self.showAlertController(for: ToDoGardenAlertView.Configuration.askToUnsubscribe)
+  }
+}
+
 // MARK: - Private Functions
 
 extension UserInfoSceneViewController {
   private func setup() {
     self.setupMainUI()
+    self.setupSubviewsDelegate()
     self.setupEditProfileImageButton()
     self.setupUserInfoCollectionView()
     self.loadUserInfoCollectionViewData()
@@ -115,6 +128,10 @@ extension UserInfoSceneViewController {
   private func setupMainUI() {
     self.title = UserInfoSceneTheme.StringLiteral.title
     self.view.backgroundColor = UIColor.toDoGardenWhite
+  }
+
+  private func setupSubviewsDelegate() {
+    self.manageAccountView.delegate = self
   }
 
   private func setupEditProfileImageButton() {
@@ -267,6 +284,9 @@ extension UserInfoSceneViewController {
         ),
         self.manageAccountView.trailingAnchor.constraint(
           equalTo: self.userInfoCollectionView.trailingAnchor
+        ),
+        self.manageAccountView.heightAnchor.constraint(
+          equalToConstant: Constant.ManageAccountView.height
         )
       ]
     )
