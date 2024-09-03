@@ -225,22 +225,131 @@ extension ManageGroupViewController {
 // MARK: - Confirm display logic protocol
 
 extension ManageGroupViewController: ManageGroupDisplayLogic {
+  
   func displayFetchedGroupList(viewModel: ManageGroup.FetchGroupList.ViewModel) {
-    self.displayedGroups = viewModel.list
-    self.manageGroupTableViewDelegate?.displayedGroups = viewModel.list
-    self.groupListTableView.reloadData()
+    let oldGroups = self.manageGroupTableViewDelegate?.displayedGroups
+    let newGroups = viewModel.list
+    self.manageGroupTableViewDelegate?.displayedGroups = newGroups
+    self.updateTableViewWithAnimation(oldGroups: oldGroups ?? [], newGroups: newGroups)
+  }
+  
+  func displaySavedGroupList(viewModel: ManageGroup.SaveGroupList.ViewModel) {
+    let oldGroups = self.manageGroupTableViewDelegate?.displayedGroups
+    let newGroups = viewModel.list
+    self.manageGroupTableViewDelegate?.displayedGroups = newGroups
+    self.updateTableViewWithAnimation(oldGroups: oldGroups ?? [], newGroups: newGroups)
   }
   
   func displayDeletedGroup(viewModel: ManageGroup.DeleteGroup.ViewModel) {
-    // TODO: 이후 PR에 포함될 예정
+    let index = viewModel.index
+    Task { @MainActor in
+      self.manageGroupTableViewDelegate?.displayedGroups.remove(at: index)
+      self.groupListTableView.deleteRows(
+        at: [IndexPath(row: index, section: 0)],
+        with: UITableView.RowAnimation.fade
+      )
+    }
+  }
+
+  private func updateTableViewWithAnimation(
+    oldGroups: [ManageGroup.ToDoGroup],
+    newGroups: [ManageGroup.ToDoGroup]
+  ) {
+    let changes = calculateTableViewChanges(oldGroups: oldGroups, newGroups: newGroups)
+    self.rightBarButton.isEnabled = false
+    Task { @MainActor in
+      self.groupListTableView.performBatchUpdates({
+        self.groupListTableView.insertRows(
+          at: changes.insertions,
+          with: UITableView.RowAnimation.fade
+        )
+        changes.moves.forEach { move in
+          self.groupListTableView.moveRow(at: move.from, to: move.to)
+        }
+      }, completion: { _ in
+        self.groupListTableView.reloadRows(
+          at: changes.updates,
+          with: UITableView.RowAnimation.none
+        )
+        self.rightBarButton.isEnabled = true
+      })
+    }
   }
   
-  func displayReorderedGroup(viewModel: ManageGroup.ReorderGroup.ViewModel) {
-    // TODO: 이후 PR에 포함될 예정
+  // swiftlint:disable large_tuple
+  private func calculateTableViewChanges(
+    oldGroups: [ManageGroup.ToDoGroup],
+    newGroups: [ManageGroup.ToDoGroup]
+  ) -> (
+    insertions: [IndexPath],
+    moves: [(from: IndexPath, to: IndexPath)],
+    updates: [IndexPath]
+  ) {
+    let oldIDs = oldGroups.map { $0.id }
+    let newIDs = newGroups.map { $0.id }
+    
+    let insertions = calculateInsertions(newIDs: newIDs, oldIDs: oldIDs)
+    let oldIndexMap = createOldIndexMap(oldGroups: oldGroups)
+    let (moves, updates) = calculateMovesAndUpdates(
+      newGroups: newGroups,
+      oldGroups: oldGroups,
+      oldIndexMap: oldIndexMap
+    )
+    return (insertions, moves, updates)
+  }
+  // swiftlint:enable large_tuple
+  
+  private func calculateInsertions(newIDs: [String], oldIDs: [String]) -> [IndexPath] {
+    var insertions: [IndexPath] = []
+    for (newIndex, newID) in newIDs.enumerated() where !oldIDs.contains(newID) {
+      insertions.append(IndexPath(row: newIndex, section: 0))
+    }
+    return insertions
+  }
+  
+  private func createOldIndexMap(oldGroups: [ManageGroup.ToDoGroup]) -> [String: Int] {
+    var oldIndexMap = [String: Int]()
+    for (index, group) in oldGroups.enumerated() {
+      oldIndexMap[group.id] = index
+    }
+    return oldIndexMap
+  }
+  
+  private func calculateMovesAndUpdates(
+    newGroups: [ManageGroup.ToDoGroup],
+    oldGroups: [ManageGroup.ToDoGroup],
+    oldIndexMap: [String: Int]
+  ) -> (
+    moves: [(from: IndexPath, to: IndexPath)],
+    updates: [IndexPath]
+  ) {
+    var moves: [(from: IndexPath, to: IndexPath)] = []
+    var updates: [IndexPath] = []
+    for (newIndex, newGroup) in newGroups.enumerated() {
+      if let oldIndex = oldIndexMap[newGroup.id] {
+        if oldIndex != newIndex {
+          moves.append(
+            (from: IndexPath(row: oldIndex, section: 0),
+              to: IndexPath(row: newIndex, section: 0))
+          )
+        } else if oldGroups[oldIndex] != newGroup {
+          updates.append(IndexPath(row: newIndex, section: 0))
+        }
+      }
+    }
+    moves.sort { $0.from.row > $1.from.row }
+    return (moves, updates)
+  }
+  
+  func displayCancelEditingGroup() {
+    let oldGroups = self.manageGroupTableViewDelegate?.displayedGroups
+    let newGroups = self.manageGroupTableViewDelegate?.displayedGroupsBeforeEditing
+    self.manageGroupTableViewDelegate?.displayedGroups =
+    self.manageGroupTableViewDelegate?.displayedGroupsBeforeEditing ?? []
+    self.updateTableViewWithAnimation(oldGroups: oldGroups ?? [], newGroups: newGroups ?? [])
+    self.manageGroupTableViewDelegate?.saveDisplayGroupsBeforeEditing()
   }
 }
-
-// MARK: - Request to interactor
 
 extension ManageGroupViewController {
   func routeToPostGroupScene(groupName: String?, color: UIColor?) {
