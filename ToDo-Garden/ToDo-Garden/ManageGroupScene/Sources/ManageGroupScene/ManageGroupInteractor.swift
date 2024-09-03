@@ -14,7 +14,8 @@ protocol ManageGroupDataStore {
 }
 
 protocol ManageGroupBusinessLogic {
-  func fetchGroupList(request: ManageGroup.FetchGroupList.Request)
+  func fetchGroupList(request: ManageGroup.FetchGroupList.Request) async
+  func saveGroupList(request: ManageGroup.SaveGroupList.Request) async
   func deleteGroup(request: ManageGroup.DeleteGroup.Request)
   func reorderGroup(request: ManageGroup.ReorderGroup.Request)
   func addReorderedGroups(
@@ -41,11 +42,28 @@ class ManageGroupInteractor: ManageGroupDataStore {
 // MARK: - Request to worker
 
 extension ManageGroupInteractor: ManageGroupBusinessLogic {
-  func fetchGroupList(request: ManageGroup.FetchGroupList.Request) {
-    self.manageGroupWorker.fetchGroupList(request: request)
-    
-    let response = ManageGroup.FetchGroupList.Response(with: "SomeResponse")
-    self.presenter?.presentFetchedGroupList(response: response)
+  func fetchGroupList(request: ManageGroup.FetchGroupList.Request) async {
+    let result = await self.manageGroupWorker.fetchGroupList(request: request)
+    switch result {
+    case .success(let groups):
+      self.currentGroups = groups
+      let response = ManageGroup.FetchGroupList.Response(with: groups)
+      self.presenter?.presentFetchedGroupList(response: response)
+    case .failure(let error):
+      print("Error fetching group list: \(error)")
+    }
+  }
+  
+  func saveGroupList(request: ManageGroupSceneEntity.ManageGroup.SaveGroupList.Request) async {
+    let result = await self.manageGroupWorker.saveGroupList(request: request)
+    switch result {
+    case .success(let groups):
+      self.currentGroups = groups
+      let response = ManageGroup.SaveGroupList.Response(with: groups)
+      self.presenter?.presentSaveGroupList(response: response)
+    case .failure(let error):
+      print("Error fetching group list: \(error)")
+    }
   }
   
   func deleteGroup(request: ManageGroup.DeleteGroup.Request) {

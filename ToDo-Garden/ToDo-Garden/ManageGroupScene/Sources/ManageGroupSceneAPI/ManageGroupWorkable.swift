@@ -10,7 +10,6 @@ import Foundation
 import ManageGroupSceneEntity
 
 public protocol ManageGroupWorkable {
-  func fetchGroupList(request: ManageGroup.FetchGroupList.Request)
-  func reorderGroup(request: ManageGroup.ReorderGroup.Request)
-  func deleteGroup(request: ManageGroup.DeleteGroup.Request)
+  func fetchGroupList(request: ManageGroupSceneEntity.ManageGroup.FetchGroupList.Request) async -> Result<[ManageGroup.ToDoGroup], Error>
+  func saveGroupList(request: ManageGroupSceneEntity.ManageGroup.SaveGroupList.Request) async -> Result<[ManageGroup.ToDoGroup], Error>
 }

@@ -15,6 +15,7 @@ import ToDoGardenUIResource
 
 protocol ManageGroupDisplayLogic: AnyObject {
   func displayFetchedGroupList(viewModel: ManageGroup.FetchGroupList.ViewModel)
+  func displaySavedGroupList(viewModel: ManageGroup.SaveGroupList.ViewModel)
   func displayDeletedGroup(viewModel: ManageGroup.DeleteGroup.ViewModel)
   func displayReorderedGroup(viewModel: ManageGroup.ReorderGroup.ViewModel)
 }
@@ -25,7 +26,7 @@ public class ManageGroupViewController: UIViewController, ManageGroupViewControl
   
   var interactor: ManageGroupBusinessLogic?
   var router: (ManageGroupRoutingLogic & ManageGroupDataPassing)?
-
+  
   public var rightBarButton: UIBarButtonItem
   public var footerView: UIView
   
@@ -38,7 +39,6 @@ public class ManageGroupViewController: UIViewController, ManageGroupViewControl
   // MARK: - Object lifecycle
   
   init() {
-    self.displayedGroups = ManageGroup.FetchGroupList.ViewModel(with: []).list
     self.groupListTableView = ManageGroupTableView()
     self.groupListTableViewCell = ManageGroupTableViewCell(
       style: UITableViewCell.CellStyle.default,
@@ -69,7 +69,17 @@ public class ManageGroupViewController: UIViewController, ManageGroupViewControl
   
   func fetchGroupList() {
     let request = ManageGroup.FetchGroupList.Request()
-    self.interactor?.fetchGroupList(request: request)
+    Task {
+      await interactor?.fetchGroupList(request: request)
+    }
+  }
+  
+  func saveGroupList() {
+    let groupList = self.manageGroupTableViewDelegate?.displayedGroups
+    let request = ManageGroup.SaveGroupList.Request(with: groupList ?? [] )
+    Task {
+      await interactor?.saveGroupList(request: request)
+    }
   }
   
   func deleteGroup(id: String, index: Int) {
