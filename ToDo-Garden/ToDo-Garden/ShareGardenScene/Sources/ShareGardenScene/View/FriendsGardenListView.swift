@@ -45,7 +45,9 @@ extension ShareGardenSceneViewController.FriendsGardenView {
     
     override var bounds: CGRect {
       didSet {
-        self.addGradientLayerIfNeeded()
+        if self.bounds.width != CGFloat.zero && self.isGradientLayerAdded == false {
+          self.addGradientLayer()
+        }
       }
     }
     
@@ -177,11 +179,7 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
 // MARK: - Gradient layer
 
 extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView {
-  private func addGradientLayerIfNeeded() {
-    guard self.bounds.width != CGFloat.zero,
-      self.isGradientLayerAdded == false
-    else { return }
-    
+  private func addGradientLayer() {
     self.gradientLayer.frame = CGRect(
       x: CGFloat.zero,
       y: CGFloat.zero,
