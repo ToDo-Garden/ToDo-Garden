@@ -77,6 +77,8 @@ extension UserInfoSceneViewController {
   }
 }
 
+// MARK: Alert Actions
+
 extension UserInfoSceneViewController: ToDoGardenAlertControllerDelegate {
   func handleButtonAction(
     _ buttonType: ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType
@@ -92,6 +94,12 @@ extension UserInfoSceneViewController: ToDoGardenAlertControllerDelegate {
     default:
       break
     }
+  }
+
+  private func showAlertController(for type: ToDoGardenAlertView.Configuration) {
+    let alert = ToDoGardenAlertController(for: type)
+    alert.delegate = self
+    self.showAlert(alert)
   }
 }
 
@@ -164,11 +172,7 @@ extension UserInfoSceneViewController {
     let logOutAction = UIAction { [weak self] _ in
       guard let self else { return }
 
-      let logOutAlert = ToDoGardenAlertController(
-        for: ToDoGardenAlertView.Configuration.askToLogout
-      )
-      logOutAlert.delegate = self
-      self.showAlert(logOutAlert)
+      self.showAlertController(for: ToDoGardenAlertView.Configuration.askToLogout)
     }
 
     self.logOutButton.addAction(logOutAction, for: UIControl.Event.touchUpInside)
@@ -192,11 +196,7 @@ extension UserInfoSceneViewController {
     let withdrawMembershipAction = UIAction { [weak self] _ in
       guard let self else { return }
 
-      let withdrawMembershipAlert = ToDoGardenAlertController(
-        for: ToDoGardenAlertView.Configuration.askToUnsubscribe
-      )
-      withdrawMembershipAlert.delegate = self
-      self.showAlert(withdrawMembershipAlert)
+      self.showAlertController(for: ToDoGardenAlertView.Configuration.askToUnsubscribe)
     }
 
     self.withdrawMembershipButton.addAction(withdrawMembershipAction, for: UIControl.Event.touchUpInside)
