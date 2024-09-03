@@ -13,8 +13,9 @@ import ManageGroupSceneEntity
 public class ManageGroupWorker: ManageGroupWorkable {
   public init() {}
   
-  public func fetchGroupList(request: ManageGroupSceneEntity.ManageGroup.FetchGroupList.Request) async -> Result<[ManageGroup.ToDoGroup], Error> {
-    
+  public func fetchGroupList(
+    request: ManageGroupSceneEntity.ManageGroup.FetchGroupList.Request
+  ) async -> Result<[ManageGroup.ToDoGroup], Error> {
     do {
       let groups = try await fetchGroupsFromDatabase()
       return .success(groups)
@@ -23,7 +24,9 @@ public class ManageGroupWorker: ManageGroupWorkable {
     }
   }
   
-  public func saveGroupList(request: ManageGroupSceneEntity.ManageGroup.SaveGroupList.Request) async -> Result<[ManageGroupSceneEntity.ManageGroup.ToDoGroup], any Error> {
+  public func saveGroupList(
+    request: ManageGroupSceneEntity.ManageGroup.SaveGroupList.Request
+  ) async -> Result<[ManageGroupSceneEntity.ManageGroup.ToDoGroup], any Error> {
     do {
       let groups = try await saveGroupsInDatabase(groupList: request.list)
       return .success(groups)
