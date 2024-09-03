@@ -17,25 +17,19 @@ protocol ManageGroupBusinessLogic {
   func fetchGroupList(request: ManageGroup.FetchGroupList.Request) async
   func saveGroupList(request: ManageGroup.SaveGroupList.Request) async
   func deleteGroup(request: ManageGroup.DeleteGroup.Request)
-  func reorderGroup(request: ManageGroup.ReorderGroup.Request)
-  func addReorderedGroups(
-    id: String,
-    sourceIndex: Int,
-    destinationIndex: Int
-  )
   func cancelEditing()
 }
 
 class ManageGroupInteractor: ManageGroupDataStore {
   var presenter: ManageGroupPresentationLogic?
-  //  private var reorderedGroups: [ManageGroup.ReorderedGroup]
   private let manageGroupWorker: ManageGroupWorkable
+  private var currentGroups: [ManageGroup.ToDoGroup]
   
   init(
     worker: ManageGroupWorkable
   ) {
-    //    self.reorderedGroups = []
     self.manageGroupWorker = worker
+    self.currentGroups = []
   }
 }
 
@@ -67,18 +61,12 @@ extension ManageGroupInteractor: ManageGroupBusinessLogic {
   }
   
   func deleteGroup(request: ManageGroup.DeleteGroup.Request) {
-  }
-  
-  func reorderGroup(request: ManageGroup.ReorderGroup.Request) {
+    self.currentGroups.remove(at: request.index)
+    let response = ManageGroup.DeleteGroup.Response(id: request.id, index: request.index)
+    self.presenter?.presentDeletedGroup(response: response)
   }
   
   func cancelEditing() {
-  }
-  
-  func addReorderedGroups(
-    id: String,
-    sourceIndex: Int,
-    destinationIndex: Int
-  ) {
+    self.presenter?.presentCancelEditingGroup()
   }
 }

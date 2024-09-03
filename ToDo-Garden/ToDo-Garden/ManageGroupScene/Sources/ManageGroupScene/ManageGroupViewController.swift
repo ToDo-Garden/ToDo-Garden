@@ -17,11 +17,10 @@ protocol ManageGroupDisplayLogic: AnyObject {
   func displayFetchedGroupList(viewModel: ManageGroup.FetchGroupList.ViewModel)
   func displaySavedGroupList(viewModel: ManageGroup.SaveGroupList.ViewModel)
   func displayDeletedGroup(viewModel: ManageGroup.DeleteGroup.ViewModel)
-  func displayReorderedGroup(viewModel: ManageGroup.ReorderGroup.ViewModel)
+  func displayCancelEditingGroup()
 }
 
 public class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
-  
   // MARK: - VIP Properties
   
   var interactor: ManageGroupBusinessLogic?
@@ -30,7 +29,6 @@ public class ManageGroupViewController: UIViewController, ManageGroupViewControl
   public var rightBarButton: UIBarButtonItem
   public var footerView: UIView
   
-  var displayedGroups: [ManageGroup.ToDoGroup]
   var manageGroupTableViewDelegate: ManageGroupTableViewDelegate?
   let groupListTableView: ManageGroupTableView
   
@@ -66,7 +64,6 @@ public class ManageGroupViewController: UIViewController, ManageGroupViewControl
   }
   
   // MARK: - Request to interactor
-  
   func fetchGroupList() {
     let request = ManageGroup.FetchGroupList.Request()
     Task {
@@ -83,26 +80,16 @@ public class ManageGroupViewController: UIViewController, ManageGroupViewControl
   }
   
   func deleteGroup(id: String, index: Int) {
-    // TODO: 이후 PR에 포함될 예정
-    print("deleteGroup, groupID: \(id), groupIndex: \(index)")
+    let request = ManageGroup.DeleteGroup.Request(id: id, index: index)
+    self.interactor?.deleteGroup(request: request)
   }
   
-  func reorderGroup() {
-    // TODO: 이후 PR에 포함될 예정
-  }
-  
-  func addReorderedGroups(
-    id: String,
-    sourceIndex: Int,
-    destinationIndex: Int
-  ) {
-    // TODO: 이후 PR에 포함될 예정
-    print("add to ReorderedGroups, groupID: \(id), sourceIndex: \(sourceIndex), destinationIndex: \(destinationIndex)")
+  func cancelEditing() {
+    self.interactor?.cancelEditing()
   }
 }
 
 // MARK: - Setup
-
 extension ManageGroupViewController {
   func setupNavigationBar() {
     self.navigationItem.title = Constant.StringLiteral.navigationbarTitle
@@ -140,15 +127,13 @@ extension ManageGroupViewController {
   func setupTableView() {
     self.footerView = self.buildAddGroupFooterButton()
     self.manageGroupTableViewDelegate = ManageGroupTableViewDelegate(
-      displayedGroups: self.displayedGroups,
+      displayedGroups: [],
       footerView: self.footerView
     )
-    
     self.groupListTableView.delegate = self.manageGroupTableViewDelegate
     self.groupListTableView.dataSource = self.manageGroupTableViewDelegate
     self.groupListTableView.dragDelegate = self.manageGroupTableViewDelegate
     self.groupListTableView.dropDelegate = self.manageGroupTableViewDelegate
-    
     self.setupTouchActions()
     self.setupTableViewNoBounce()
     self.setupTableViewLayout()
@@ -157,10 +142,6 @@ extension ManageGroupViewController {
   private func setupTouchActions() {
     self.manageGroupTableViewDelegate?.setOnPostGroup { [weak self] groupName, color in
       self?.routeToPostGroupScene(groupName: groupName, color: color)
-    }
-    
-    self.manageGroupTableViewDelegate?.setOnReorderGroups { [weak self] id, sourceIndex, destinationIndex in
-      self?.addReorderedGroups(id: id, sourceIndex: sourceIndex, destinationIndex: destinationIndex)
     }
     
     self.manageGroupTableViewDelegate?.setOnDeleteGroup { [weak self] id, index in
@@ -175,7 +156,6 @@ extension ManageGroupViewController {
   private func setupTableViewLayout() {
     self.view.addSubview(self.groupListTableView)
     self.groupListTableView.usingAutolayout()
-    
     NSLayoutConstraint.activate(
       [
         self.groupListTableView.leadingAnchor.constraint(
@@ -222,7 +202,6 @@ extension ManageGroupViewController {
   }
   
   private func setupFooterButtonConstraints(_ button: UIButton, on footerView: UIView) {
-    
     NSLayoutConstraint.activate([
       button.centerYAnchor.constraint(equalTo: footerView.centerYAnchor),
       button.leadingAnchor.constraint(

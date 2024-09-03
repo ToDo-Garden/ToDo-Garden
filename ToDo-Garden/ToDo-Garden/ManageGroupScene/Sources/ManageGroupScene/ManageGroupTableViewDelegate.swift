@@ -14,10 +14,10 @@ final class ManageGroupTableViewDelegate: NSObject {
   
   // MARK: - Properties
   var displayedGroups: [ManageGroup.ToDoGroup]
+  var displayedGroupsBeforeEditing: [ManageGroup.ToDoGroup]
   private let footerView: UIView
   
   private var onPostGroup: ((String, UIColor) -> Void)?
-  private var onReorderGroups: ((String, Int, Int) -> Void)?
   private var onDeleteGroup: ((String, Int) -> Void)?
   
   init(
@@ -25,6 +25,7 @@ final class ManageGroupTableViewDelegate: NSObject {
     footerView: UIView
   ) {
     self.displayedGroups = displayedGroups
+    self.displayedGroupsBeforeEditing = displayedGroups
     self.footerView = footerView
   }
   
@@ -32,12 +33,12 @@ final class ManageGroupTableViewDelegate: NSObject {
     self.onPostGroup = handler
   }
   
-  func setOnReorderGroups(_ handler: @escaping (String, Int, Int) -> Void) {
-    self.onReorderGroups = handler
-  }
-  
   func setOnDeleteGroup(_ handler: @escaping (String, Int) -> Void) {
     self.onDeleteGroup = handler
+  }
+  
+  func saveDisplayGroupsBeforeEditing() {
+    self.displayedGroupsBeforeEditing = self.displayedGroups
   }
 }
 
@@ -63,7 +64,7 @@ extension ManageGroupTableViewDelegate: UITableViewDataSource {
       return UITableViewCell()
     }
     
-    let singleGroup = displayedGroups[indexPath.row]
+    let singleGroup = self.displayedGroups[indexPath.row]
     
     cell.applyModelPrimary(
       id: singleGroup.id,
