@@ -101,7 +101,11 @@ extension UserInfoSceneViewController: ToDoGardenAlertControllerDelegate {
 
 // MARK: Subviews Delegate Functions
 
-extension UserInfoSceneViewController: ManageAccountViewDelegate {
+extension UserInfoSceneViewController: ManageAccountViewDelegate, ProfileInfoViewDelegate {
+  func didSelectEditProfileButton() {
+    // TODO: 이미지 선택 로직 구현 예정
+  }
+
   func didSelectLogOutButton() {
     self.showAlertController(for: ToDoGardenAlertView.Configuration.askToLogout)
   }
@@ -128,6 +132,7 @@ extension UserInfoSceneViewController {
   }
 
   private func setupSubviewsDelegate() {
+    self.profileInfoView.delegate = self
     self.manageAccountView.delegate = self
   }
 

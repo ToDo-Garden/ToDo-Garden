@@ -13,6 +13,8 @@ final class ProfileInfoView: UIView {
   private let profileImageView: ProfileImageView
   private let editProfileImageButton: UIButton
 
+  weak var delegate: ProfileInfoViewDelegate?
+
   init() {
     self.profileImageView = ProfileImageView(
       size: UserInfoSceneViewController.Constant.ProfileImageView.size
@@ -28,11 +30,16 @@ final class ProfileInfoView: UIView {
   }
 }
 
+protocol ProfileInfoViewDelegate: AnyObject {
+  func didSelectEditProfileButton()
+}
+
 // MARK: Private Functions
 
 extension ProfileInfoView {
   private func setup() {
     self.setupEditProfileImageButton()
+    self.setupEditProfileImageButtonAction()
     self.setupSubviewsLayout()
   }
 
@@ -48,6 +55,14 @@ extension ProfileInfoView {
     )
 
     self.editProfileImageButton.setAttributedTitle(attributedTitle, for: UIControl.State.normal)
+  }
+
+  private func setupEditProfileImageButtonAction() {
+    let buttonAction = UIAction { _ in
+      self.delegate?.didSelectEditProfileButton()
+    }
+
+    self.editProfileImageButton.addAction(buttonAction, for: UIControl.Event.touchUpInside)
   }
 }
 
