@@ -19,6 +19,13 @@ final class ManageGroupTableViewDelegate: NSObject {
   
   private var onPostGroup: ((String, UIColor) -> Void)?
   private var onDeleteGroup: ((String, Int) -> Void)?
+  private var onReorderingStateChange: ((Bool) -> Void)?
+  
+  private var isReordering: Bool = false {
+    didSet {
+      self.onReorderingStateChange?(isReordering)
+    }
+  }
   
   init(
     displayedGroups: [ManageGroup.ToDoGroup],
@@ -35,6 +42,10 @@ final class ManageGroupTableViewDelegate: NSObject {
   
   func setOnDeleteGroup(_ handler: @escaping (String, Int) -> Void) {
     self.onDeleteGroup = handler
+  }
+  
+  func setOnReorderingStateChange(_ handler: @escaping (Bool) -> Void) {
+    self.onReorderingStateChange = handler
   }
   
   func saveDisplayGroupsBeforeEditing() {
@@ -93,6 +104,8 @@ extension ManageGroupTableViewDelegate: UITableViewDelegate {
     commit editingStyle: UITableViewCell.EditingStyle,
     forRowAt indexPath: IndexPath
   ) {
+    guard !isReordering else { return }
+    
     let index = indexPath.row
     let id = self.displayedGroups[index].id
     
@@ -112,6 +125,14 @@ extension ManageGroupTableViewDelegate: UITableViewDelegate {
 
 // MARK: - UITableViewDragDelegate
 extension ManageGroupTableViewDelegate: UITableViewDragDelegate {
+  func tableView(_ tableView: UITableView, dragSessionWillBegin session: UIDragSession) {
+    self.isReordering = true
+  }
+  
+  func tableView(_ tableView: UITableView, dragSessionDidEnd session: UIDragSession) {
+    self.isReordering = false
+  }
+  
   func tableView(_ tableView: UITableView, dragSessionAllowsMoveOperation session: UIDragSession) -> Bool {
     return tableView.isEditing
   }
@@ -168,9 +189,6 @@ extension ManageGroupTableViewDelegate: UITableViewDropDelegate {
         tableView.moveRow(at: sourceIndexPath, to: destinationIndexPath)
       }, completion: nil)
       coordinator.drop(item.dragItem, toRowAt: destinationIndexPath)
-      
-      let id = self.displayedGroups[sourceIndexPath.row].id
-      self.onReorderGroups?(id, sourceIndexPath.row, destinationIndexPath.row)
     }
   }
 }

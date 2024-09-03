@@ -33,7 +33,7 @@ public class ManageGroupViewController: UIViewController, ManageGroupViewControl
   let groupListTableView: ManageGroupTableView
   
   private let groupListTableViewCell: ManageGroupTableViewCell
-  
+  private var editModeLeftBarButton: UIBarButtonItem
   // MARK: - Object lifecycle
   
   init() {
@@ -43,6 +43,7 @@ public class ManageGroupViewController: UIViewController, ManageGroupViewControl
       reuseIdentifier: ManageGroupTableViewCell.identifier
     )
     self.rightBarButton = UIBarButtonItem()
+    self.editModeLeftBarButton = UIBarButtonItem()
     self.manageGroupTableViewDelegate = nil
     self.footerView = UIView()
     super.init(nibName: nil, bundle: nil)
@@ -101,26 +102,44 @@ extension ManageGroupViewController {
     )
     self.rightBarButton.tintColor = UIColor.toDoGardenOrange
     self.navigationItem.setRightBarButton(self.rightBarButton, animated: true)
+    self.editModeLeftBarButton = UIBarButtonItem(
+      title: Constant.StringLiteral.leftBarButtonTitleSave,
+      style: UIBarButtonItem.Style.plain,
+      target: self,
+      action: #selector(self.saveAndOutEditingMode)
+    )
+    self.editModeLeftBarButton.tintColor = UIColor.toDoGardenGreenDark
+    self.navigationItem.setLeftBarButton(nil, animated: true)
   }
   
   @objc private func setEditingMode() {
-    self.rightBarButton.isEnabled = false
     let isEditingMode = self.groupListTableView.isEditing
+    self.updateBarButtonItems(isEditingMode: isEditingMode)
+    if isEditingMode {
+      self.cancelEditing()
+    }
+    self.rightBarButton.isEnabled = true
+  }
+  
+  @objc private func saveAndOutEditingMode() {
+    let isEditingMode = self.groupListTableView.isEditing
+    self.updateBarButtonItems(isEditingMode: isEditingMode)
+    if isEditingMode {
+      self.saveGroupList()
+    }
+    self.rightBarButton.isEnabled = true
+  }
+  
+  private func updateBarButtonItems(isEditingMode: Bool) {
     self.groupListTableView.setEditingMode(!isEditingMode, animated: true)
-    
     if isEditingMode {
       self.rightBarButton.title = Constant.StringLiteral.rightBarButtonTitleEdit
+      self.navigationItem.setLeftBarButton(nil, animated: true)
     } else {
+      self.navigationItem.setLeftBarButton(self.editModeLeftBarButton, animated: true)
       self.rightBarButton.title = Constant.StringLiteral.rightBarButtonTitleCancel
-    }
-    
-    UIView.animate(withDuration: Constant.Animation.duration) { [weak self] in
-      self?.view.layoutIfNeeded()
-    } completion: { _ in
-      if isEditingMode {
-        self.interactor?.cancelEditing()
-      }
-      self.rightBarButton.isEnabled = true
+      self.manageGroupTableViewDelegate?.displayedGroupsBeforeEditing =
+      self.manageGroupTableViewDelegate?.displayedGroups ?? []
     }
   }
   
@@ -137,6 +156,9 @@ extension ManageGroupViewController {
     self.setupTouchActions()
     self.setupTableViewNoBounce()
     self.setupTableViewLayout()
+    self.manageGroupTableViewDelegate?.setOnReorderingStateChange { [weak self] isReordering in
+      self?.rightBarButton.isEnabled = !isReordering
+    }
   }
   
   private func setupTouchActions() {
