@@ -7,7 +7,6 @@
 
 import UIKit
 
-import TDUtility
 import ToDoGardenUIAPI
 import ToDoGardenUIComponent
 import ToDoGardenUIConstant
