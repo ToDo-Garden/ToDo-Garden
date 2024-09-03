@@ -100,7 +100,6 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
       equalTo: self.gardenView.bottomAnchor,
       constant: layoutConstant.contentViewBottomInsetWhenSelected
     )
-    contentViewBottomSelected.priority = UILayoutPriority.defaultLow
     self.selectedConstriaints.append(contentViewBottomSelected)
     
     let contentViewBottomDeselected = self.contentView.bottomAnchor.constraint(
@@ -119,7 +118,6 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
     let gardenViewTopDeselected = self.gardenView.topAnchor.constraint(
       equalTo: self.profileInfoView.topAnchor
     )
-    gardenViewTopDeselected.priority = UILayoutPriority.defaultLow
     self.deSelectedConstraints.append(gardenViewTopDeselected)
   }
   
