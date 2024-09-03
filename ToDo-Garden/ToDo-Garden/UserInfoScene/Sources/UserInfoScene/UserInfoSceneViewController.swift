@@ -7,6 +7,11 @@
 
 import UIKit
 
+import TDUtility
+import ToDoGardenUIAPI
+import ToDoGardenUIComponent
+import ToDoGardenUIConstant
+import ToDoGardenUIResource
 import UserInfoSceneAPI
 import UserInfoSceneEntity
 
@@ -14,8 +19,14 @@ protocol UserInfoSceneDisplayLogic: AnyObject {
   func displaySomething(viewModel: UserInfoScene.Something.ViewModel)
 }
 
-class UserInfoSceneViewController: UIViewController, UserInfoSceneViewControllable {
-  
+final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewControllable {
+  private let profileImageView: ProfileImageView
+  private let editProfileImageButton: UIButton
+  private let userInfoCollectionView: UICollectionView
+  private var userInfoCollectionViewDataSource: DiffableDataSource?
+  private let logOutButton: UIButton
+  private let withdrawMembershipButton: UIButton
+
   // MARK: - VIP Properties
   
   var interactor: UserInfoSceneBusinessLogic?
@@ -24,6 +35,14 @@ class UserInfoSceneViewController: UIViewController, UserInfoSceneViewControllab
   // MARK: - Object lifecycle
   
   init() {
+    self.profileImageView = ProfileImageView(size: Constant.ProfileImageView.size)
+    self.editProfileImageButton = UIButton()
+    self.userInfoCollectionView = UICollectionView(
+      frame: CGRect.zero,
+      collectionViewLayout: UICollectionViewLayout()
+    )
+    self.logOutButton = UIButton()
+    self.withdrawMembershipButton = UIButton()
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -36,6 +55,7 @@ class UserInfoSceneViewController: UIViewController, UserInfoSceneViewControllab
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    self.setup()
     self.doSomething()
   }
 }
@@ -56,3 +76,291 @@ extension UserInfoSceneViewController {
     self.interactor?.doSomething(request: request)
   }
 }
+
+// MARK: Alert Actions
+
+extension UserInfoSceneViewController: ToDoGardenAlertControllerDelegate {
+  func handleButtonAction(
+    _ buttonType: ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType
+  ) {
+    self.closeAlert()
+    switch buttonType {
+    case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.logout:
+      // TODO: 로그아웃 Interactor 메서드 호출 예정
+      return
+    case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.unsubscribe:
+      // TODO: 회원 탈퇴 Interactor 메서드 호출 예정
+      return
+    default:
+      break
+    }
+  }
+
+  private func showAlertController(for type: ToDoGardenAlertView.Configuration) {
+    let alert = ToDoGardenAlertController(for: type)
+    alert.delegate = self
+    self.showAlert(alert)
+  }
+}
+
+// MARK: - Private Functions
+
+extension UserInfoSceneViewController {
+  private func setup() {
+    self.setupMainUI()
+    self.setupEditProfileImageButton()
+    self.setupUserInfoCollectionView()
+    self.setupLogOutButtonTitle()
+    self.setupLogOutButtonAction()
+    self.setupWithdrawMembershipButton()
+    self.setupWithdrawMembershipButtonAction()
+    self.loadUserInfoCollectionViewData()
+    self.setupSubviewsLayout()
+  }
+
+  private func setupMainUI() {
+    self.title = UserInfoSceneTheme.StringLiteral.title
+    self.view.backgroundColor = UIColor.toDoGardenWhite
+  }
+
+  private func setupEditProfileImageButton() {
+    let buttonTitle = UserInfoSceneTheme.StringLiteral.EditProfileImageButton.title
+    let attributedTitle = buttonTitle.applyTextAttributes(
+      attributes: [
+        NSAttributedString.Key.font: UIFont.pretendardBodyMedium,
+        NSAttributedString.Key.foregroundColor: UserInfoSceneTheme.mainColor,
+        NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue,
+        NSAttributedString.Key.underlineColor: UserInfoSceneTheme.mainColor
+      ]
+    )
+
+    self.editProfileImageButton.setAttributedTitle(attributedTitle, for: UIControl.State.normal)
+  }
+
+  private func setupUserInfoCollectionView() {
+    self.userInfoCollectionView.isScrollEnabled = false
+    self.userInfoCollectionView.register(
+      SettingCollectionViewCell.self,
+      forCellWithReuseIdentifier: SettingCollectionViewCell.identifier
+    )
+    self.userInfoCollectionView.register(
+      SectionHeaderView.self,
+      forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+      withReuseIdentifier: SectionHeaderView.identifier
+    )
+    self.userInfoCollectionViewDataSource = self.makeDiffableDataSource(with: self.userInfoCollectionView)
+    self.userInfoCollectionView.dataSource = self.userInfoCollectionViewDataSource
+    self.userInfoCollectionView.collectionViewLayout = self.makeCompositionalLayout()
+  }
+
+  private func setupLogOutButtonTitle() {
+    self.logOutButton.backgroundColor = UIColor.toDoGardenGreenBackground
+    let cornerRadius = Constant.LogOutButton.Layer.cornerRadius
+    self.logOutButton.layer.cornerRadius = cornerRadius
+    self.logOutButton.setTitleColor(UIColor.toDoGardenEditButtonRed, for: UIControl.State.normal)
+    let title = NSAttributedString(
+      string: UserInfoSceneTheme.StringLiteral.LogOutButton.title,
+      attributes: [
+        NSAttributedString.Key.font: UIFont.pretendardBodyMedium,
+        NSAttributedString.Key.strokeColor: UIColor.toDoGardenEditButtonRed
+      ]
+    )
+    self.logOutButton.setAttributedTitle(title, for: UIControl.State.normal)
+  }
+
+  private func setupLogOutButtonAction() {
+    let logOutAction = UIAction { [weak self] _ in
+      guard let self else { return }
+
+      self.showAlertController(for: ToDoGardenAlertView.Configuration.askToLogout)
+    }
+
+    self.logOutButton.addAction(logOutAction, for: UIControl.Event.touchUpInside)
+  }
+
+  private func setupWithdrawMembershipButton() {
+    let buttonTitle = UserInfoSceneTheme.StringLiteral.WithdrawMembershipButton.title
+    let attributedTitle = buttonTitle.applyTextAttributes(
+      attributes: [
+        NSAttributedString.Key.font: UIFont.pretendardBodySemiBold15,
+        NSAttributedString.Key.foregroundColor: UIColor.toDoGardenGray2,
+        NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue,
+        NSAttributedString.Key.underlineColor: UIColor.toDoGardenGray2
+      ]
+    )
+
+    self.withdrawMembershipButton.setAttributedTitle(attributedTitle, for: UIControl.State.normal)
+  }
+
+  private func setupWithdrawMembershipButtonAction() {
+    let withdrawMembershipAction = UIAction { [weak self] _ in
+      guard let self else { return }
+
+      self.showAlertController(for: ToDoGardenAlertView.Configuration.askToUnsubscribe)
+    }
+
+    self.withdrawMembershipButton.addAction(withdrawMembershipAction, for: UIControl.Event.touchUpInside)
+  }
+
+  private func loadUserInfoCollectionViewData() {
+    var snapshot = NSDiffableDataSourceSnapshot<UserInfoSection, UserInfoItem>()
+    snapshot.appendSections(self.makeSections())
+
+    snapshot.sectionIdentifiers.forEach { (section: UserInfoSection) in
+      snapshot.appendItems(section.items, toSection: section)
+    }
+
+    self.userInfoCollectionViewDataSource?.apply(snapshot)
+  }
+
+  private func makeSections() -> [UserInfoSection] {
+    let sectionTitle = UserInfoSceneTheme.StringLiteral.UserInfoCollectionView.Section.self
+    let itemTitle = UserInfoSceneTheme.StringLiteral.UserInfoCollectionView.Item.self
+    let position = SettingCollectionViewCell.Position.self
+
+    let profileSettingSection = UserInfoSection(
+      title: sectionTitle.profileSetting,
+      items: [
+        UserInfoItem(title: itemTitle.nickName, isRightImageExisted: true, position: position.top),
+        UserInfoItem(title: itemTitle.introduction, isRightImageExisted: true, position: position.bottom)
+      ]
+    )
+
+    let accountSettingSection = UserInfoSection(
+      title: sectionTitle.accountSetting,
+      items: [
+        UserInfoItem(title: itemTitle.id, isRightImageExisted: true, position: position.top),
+        UserInfoItem(title: itemTitle.email, isRightImageExisted: false, position: position.bottom)
+      ]
+    )
+
+    return [profileSettingSection, accountSettingSection]
+  }
+}
+
+// MARK: - Set Subviews Layout
+
+extension UserInfoSceneViewController {
+  private func setupSubviewsLayout() {
+    self.setupProfileImageViewLayout()
+    self.setupEditProfileImageButtonLayout()
+    self.setupUserInfoCollectionViewLayout()
+    self.setupLogOutButtonLayout()
+    self.setupWithdrawMembershipButtonLayout()
+  }
+
+  private func setupProfileImageViewLayout() {
+    self.view.addSubview(self.profileImageView)
+    self.profileImageView.usingAutolayout()
+
+    let constant = Constant.ProfileImageView.self
+    NSLayoutConstraint.activate(
+      [
+        self.profileImageView.topAnchor.constraint(
+          equalTo: self.view.safeAreaLayoutGuide.topAnchor,
+          constant: constant.topMargin
+        ),
+        self.profileImageView.widthAnchor.constraint(equalToConstant: constant.size.width),
+        self.profileImageView.heightAnchor.constraint(equalToConstant: constant.size.height),
+        self.profileImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
+      ]
+    )
+  }
+
+  private func setupEditProfileImageButtonLayout() {
+    self.view.addSubview(self.editProfileImageButton)
+    self.editProfileImageButton.usingAutolayout()
+
+    NSLayoutConstraint.activate(
+      [
+        self.editProfileImageButton.topAnchor.constraint(
+          equalTo: self.profileImageView.bottomAnchor,
+          constant: Constant.EditProfileImageButton.topMargin
+        ),
+        self.editProfileImageButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
+      ]
+    )
+  }
+
+  private func setupUserInfoCollectionViewLayout() {
+    self.view.addSubview(self.userInfoCollectionView)
+    self.userInfoCollectionView.usingAutolayout()
+
+    let constant = Constant.UserInfoCollectionView.self
+    NSLayoutConstraint.activate(
+      [
+        self.userInfoCollectionView.topAnchor.constraint(
+          equalTo: self.editProfileImageButton.bottomAnchor,
+          constant: constant.topMargin
+        ),
+        self.userInfoCollectionView.leadingAnchor.constraint(
+          equalTo: self.view.safeAreaLayoutGuide.leadingAnchor,
+          constant: constant.leadingMargin
+        ),
+        self.userInfoCollectionView.trailingAnchor.constraint(
+          equalTo: self.view.safeAreaLayoutGuide.trailingAnchor,
+          constant: -constant.trailingMargin
+        ),
+        self.userInfoCollectionView.heightAnchor.constraint(
+          equalToConstant: constant.height
+        )
+      ]
+    )
+  }
+
+  private func setupLogOutButtonLayout() {
+    self.view.addSubview(self.logOutButton)
+    self.setupLogOutButtonTitleLayout()
+    self.logOutButton.usingAutolayout()
+
+    NSLayoutConstraint.activate(
+      [
+        self.logOutButton.topAnchor.constraint(
+          equalTo: self.userInfoCollectionView.bottomAnchor,
+          constant: Constant.LogOutButton.topMargin
+        ),
+        self.logOutButton.leadingAnchor.constraint(equalTo: self.userInfoCollectionView.leadingAnchor),
+        self.logOutButton.trailingAnchor.constraint(equalTo: self.userInfoCollectionView.trailingAnchor),
+        self.logOutButton.heightAnchor.constraint(equalToConstant: Constant.LogOutButton.height)
+      ]
+    )
+  }
+
+  private func setupLogOutButtonTitleLayout() {
+    if let titleLabel = self.logOutButton.titleLabel {
+      titleLabel.usingAutolayout()
+
+      NSLayoutConstraint.activate(
+        [
+          titleLabel.leadingAnchor.constraint(
+            equalTo: self.logOutButton.leadingAnchor,
+            constant: Constant.LogOutButton.titleLeadingMargin
+          ),
+          titleLabel.centerYAnchor.constraint(equalTo: self.logOutButton.centerYAnchor)
+        ]
+      )
+    }
+  }
+
+  private func setupWithdrawMembershipButtonLayout() {
+    self.view.addSubview(self.withdrawMembershipButton)
+    self.withdrawMembershipButton.usingAutolayout()
+
+    NSLayoutConstraint.activate(
+      [
+        self.withdrawMembershipButton.topAnchor.constraint(
+          equalTo: self.logOutButton.bottomAnchor,
+          constant: Constant.WithdrawMembershipButton.topMargin
+        ),
+        self.withdrawMembershipButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
+      ]
+    )
+  }
+}
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  return UINavigationController(rootViewController: UserInfoSceneViewController())
+}
+#endif
