@@ -67,7 +67,9 @@ extension ShareGardenSceneViewController.FriendsGardenView {
     
     func append(_ identifiers: [ShareGardenScene.FriendsGarden.ID]) {
       var snapshot = self.friendsGardenListDataSource.snapshot()
-      self.appendMainSectionIfNeeded(&snapshot)
+      if snapshot.sectionIdentifiers.contains(Section.main) == false {
+        snapshot.appendSections([Section.main])
+      }
       snapshot.appendItems(identifiers, toSection: Section.main)
       self.friendsGardenListDataSource.apply(snapshot)
     }
@@ -151,12 +153,6 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
     
     return DataSource(collectionView: self.friendListView) { collectionView, indexPath, identifier in
       collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: identifier)
-    }
-  }
-  
-  private func appendMainSectionIfNeeded(_ snapshot: inout Snapshot) {
-    if snapshot.sectionIdentifiers.contains(Section.main) == false {
-      snapshot.appendSections([Section.main])
     }
   }
 }
