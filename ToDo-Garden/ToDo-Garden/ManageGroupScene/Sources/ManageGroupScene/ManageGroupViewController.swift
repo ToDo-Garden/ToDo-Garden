@@ -391,8 +391,7 @@ extension ManageGroupViewController {
   let sceneBuilder = ManageGroupSceneBuilder(
     dependency: .init(manageGroupWorker: worker, nextSceneBuilder: nil)
   )
-  
-  let vcPreview = sceneBuilder.build(with: nil)
-  return vcPreview
+  let naviController = UINavigationController(rootViewController: sceneBuilder.build(with: nil))
+  return naviController
 }
 #endif
