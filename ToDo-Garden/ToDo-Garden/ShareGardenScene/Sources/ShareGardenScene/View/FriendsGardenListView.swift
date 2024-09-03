@@ -131,7 +131,6 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
   }
   
   private func setupFriendListViewLayoutConstraints() {
-    self.friendListView.usingAutolayout()
     self.friendListView.equalToParent()
   }
 }
