@@ -101,7 +101,7 @@ extension Styled.Row.Configuration {
 extension Styled.Row.Configuration.ProfileModel {
   public enum Style {
     var axis: NSLayoutConstraint.Axis {
-      self == .shareRow
+      self == Self.shareRow
       ? NSLayoutConstraint.Axis.horizontal
       : NSLayoutConstraint.Axis.vertical
     }
