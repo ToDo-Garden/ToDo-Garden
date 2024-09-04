@@ -11,12 +11,6 @@ import ToDoGardenUIComponent
 
 public final class ManageGroupViewControllerForGuide: ManageGroupViewController {
   
-  public lazy var groupCells: [UITableViewCell] = {
-    self.groupListTableView.layoutIfNeeded()
-    let cells = self.groupListTableView.visibleCells
-    return cells
-  }()
-  
   public override init() {
     super.init()
   }
@@ -31,7 +25,7 @@ public final class ManageGroupViewControllerForGuide: ManageGroupViewController 
   override func fetchGroupList() {
     let fetchedData = ManageGroupMockData.guideSceneData
     self.manageGroupTableViewDelegate?.displayedGroups = fetchedData
-    self.groupListTableView.reloadData()
+  }
   }
 }
 
@@ -39,13 +33,11 @@ public final class ManageGroupViewControllerForGuide: ManageGroupViewController 
 @available(iOS 17.0, *)
 #Preview {
   let viewController = ManageGroupViewControllerForGuide()
-  viewController.loadViewIfNeeded()
-  viewController.footerView.backgroundColor = .red
-  viewController.groupCells.forEach { cell in
-    cell.backgroundColor = .green
-  }
   
-  let naviController = UINavigationController(rootViewController: viewController)
-  return naviController
+  // 실험용 dimmedView 추가
+  let dimmedView = UIView(frame: viewController.view.bounds)
+  dimmedView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+  viewController.view.addSubview(dimmedView)
+  
 }
 #endif
