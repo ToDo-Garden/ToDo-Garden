@@ -61,5 +61,24 @@ public final class ManageGroupViewControllerForGuide: ManageGroupViewController 
   dimmedView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
   viewController.view.addSubview(dimmedView)
   
+  // rightBarButton 특정
+  viewController.rightBarButton.tintColor = .systemBlue
+  
+  // front로 끄집어내기
+  
+  // viewController.view.bringSubviewToFront(viewController.footerView)
+  viewController.view.bringSubviewToFront(viewController.groupListTableView)
+  
+  // 편집모드 진입
+  DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+    viewController.setEditingMode()
+  }
+  // 한번더 하면 편집모드 탈출
+  DispatchQueue.main.asyncAfter(deadline: .now() + 6.0) {
+    viewController.setEditingMode()
+  }
+
+  let navi = UINavigationController(rootViewController: viewController)
+  return navi
 }
 #endif
