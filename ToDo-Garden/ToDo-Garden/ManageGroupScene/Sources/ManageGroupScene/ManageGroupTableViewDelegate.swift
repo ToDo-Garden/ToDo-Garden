@@ -81,6 +81,27 @@ extension ManageGroupTableViewDelegate: UITableViewDataSource {
     cell.setupRightButtonAction { [weak self] color, name in
       self?.onPostGroup?(name, color)
     }
+    return self.applyCornerRadius(to: cell, at: indexPath, in: tableView)
+  }
+  
+  private func applyCornerRadius(
+    to cell: ManageGroupTableViewCell,
+    at indexPath: IndexPath,
+    in tableView: UITableView
+  ) -> UITableViewCell {
+    let isFirstCell = indexPath.row == 0
+    let isLastCell = indexPath.row == tableView.numberOfRows(inSection: 0) - 1
+    
+    cell.backgroundColor = .white
+    if isFirstCell {
+      cell.layer.cornerRadius = Constant.Layout.Cell.cornerRadius
+      cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+      cell.layer.masksToBounds = true
+    } else if isLastCell {
+      cell.layer.cornerRadius = Constant.Layout.Cell.cornerRadius
+      cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+      cell.layer.masksToBounds = true
+    }
     return cell
   }
 }
