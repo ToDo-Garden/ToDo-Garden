@@ -14,10 +14,10 @@ public final class ManageGroupViewControllerForGuide: ManageGroupViewController 
   public override init() {
     super.init()
   }
-
+  
   public override func viewDidLoad() {
     self.view.backgroundColor = UIColor.white
-    self.setupTableView()
+    self.setupTableView(isForGuide: true)
     self.setupNavigationBar()
     self.fetchGroupList()
   }

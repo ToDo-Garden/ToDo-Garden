@@ -127,12 +127,20 @@ extension ManageGroupViewController {
     }
   }
   
-  func setupTableView() {
+  func setupTableView(isForGuide: Bool = false) {
+    self.groupListTableView.backgroundColor = .clear
     self.footerView = self.buildAddGroupFooterButton()
-    self.manageGroupTableViewDelegate = ManageGroupTableViewDelegate(
-      displayedGroups: self.displayedGroups,
-      footerView: self.footerView
-    )
+    if !isForGuide {
+      self.manageGroupTableViewDelegate = ManageGroupTableViewDelegate(
+        displayedGroups: self.displayedGroups,
+        footerView: self.footerView
+      )
+    } else {
+      self.manageGroupTableViewDelegate = ManageGroupTableViewDelegate(
+        displayedGroups: self.displayedGroups,
+        footerView: UIView()
+      )
+    }
     
     self.groupListTableView.delegate = self.manageGroupTableViewDelegate
     self.groupListTableView.dataSource = self.manageGroupTableViewDelegate
