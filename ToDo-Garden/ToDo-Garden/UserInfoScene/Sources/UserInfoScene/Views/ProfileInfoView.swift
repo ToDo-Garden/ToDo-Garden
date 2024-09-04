@@ -7,18 +7,14 @@
 
 import UIKit
 
-import ToDoGardenUIComponent
-
 final class ProfileInfoView: UIView {
-  private let profileImageView: ProfileImageView
+  private let profileImageView: UIImageView
   private let editProfileImageButton: UIButton
 
   weak var delegate: ProfileInfoViewDelegate?
 
   init() {
-    self.profileImageView = ProfileImageView(
-      size: UserInfoSceneViewController.Constant.ProfileImageView.size
-    )
+    self.profileImageView = UIImageView()
     self.editProfileImageButton = UIButton()
     super.init(frame: CGRect.zero)
     self.setup()
@@ -27,6 +23,10 @@ final class ProfileInfoView: UIView {
   @available(*, unavailable)
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+
+  func updateImage(_ image: UIImage) {
+    self.profileImageView.image = image
   }
 }
 
@@ -38,9 +38,17 @@ protocol ProfileInfoViewDelegate: AnyObject {
 
 extension ProfileInfoView {
   private func setup() {
+    self.setupProfileImageView()
     self.setupEditProfileImageButton()
     self.setupEditProfileImageButtonAction()
     self.setupSubviewsLayout()
+  }
+
+  private func setupProfileImageView() {
+    let height = UserInfoSceneViewController.Constant.ProfileImageView.size.height
+    self.profileImageView.layer.cornerRadius = height / 2
+    self.profileImageView.contentMode = UIView.ContentMode.scaleAspectFit
+    self.profileImageView.image = UIImage.defaultProfileImage
   }
 
   private func setupEditProfileImageButton() {
