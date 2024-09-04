@@ -27,7 +27,13 @@ let package = Package(
   ],
   targets: [
     .target(
-      name: "ShareGardenSceneEntity"
+      name: "ShareGardenSceneEntity",
+      dependencies: [
+        Target.Dependency.product(
+          name: "ToDoGardenUIComponent",
+          package: "ToDoGardenUI"
+        )
+      ]
     ),
     .target(
       name: "ShareGardenSceneAPI",

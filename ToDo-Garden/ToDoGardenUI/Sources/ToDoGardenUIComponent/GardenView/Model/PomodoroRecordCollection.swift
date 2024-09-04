@@ -8,7 +8,7 @@
 import Foundation
 
 /// PomodoroRecord 객체를 저장하는 first class collection입니다.
-public struct PomodoroRecordCollection {
+public struct PomodoroRecordCollection: Sendable {
   private var pomodoroRecords: [PomodoroRecord]
   private var maxPomodoroCount: Int?
   

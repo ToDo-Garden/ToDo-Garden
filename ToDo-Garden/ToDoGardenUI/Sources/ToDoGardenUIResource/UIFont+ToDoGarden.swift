@@ -70,6 +70,11 @@ extension UIFont {
 		size: 15
 	) ?? UIFont.systemFont(ofSize: 15, weight: .regular)
 	
+  public static let pretendardDetailRegular12: UIFont = UIFont(
+    name: PretendardFont.regular.name,
+    size: 12
+  ) ?? UIFont.systemFont(ofSize: 12, weight: .regular)
+  
 	public static let pretendardDetailLight: UIFont = UIFont(
 		name: PretendardFont.light.name,
 		size: 12
