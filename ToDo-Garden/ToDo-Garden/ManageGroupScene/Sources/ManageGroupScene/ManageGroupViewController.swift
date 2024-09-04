@@ -27,10 +27,14 @@ public class ManageGroupViewController: UIViewController, ManageGroupViewControl
   
   var interactor: ManageGroupBusinessLogic?
   var router: (ManageGroupRoutingLogic & ManageGroupDataPassing)?
-  var manageGroupTableViewDelegate: ManageGroupTableViewDelegate?
-  let groupListTableView: ManageGroupTableView
+  
   public var rightBarButton: UIBarButtonItem
   public var footerView: UIView
+  
+  var displayedGroups: [ManageGroup.ToDoGroup]
+  var manageGroupTableViewDelegate: ManageGroupTableViewDelegate?
+  public let groupListTableView: ManageGroupTableView
+  
   private let groupListTableViewCell: ManageGroupTableViewCell
   private var editModeLeftBarButton: UIBarButtonItem
   // MARK: - Object lifecycle
@@ -116,7 +120,8 @@ extension ManageGroupViewController {
     self.navigationItem.setLeftBarButton(nil, animated: true)
   }
   
-  @objc private func setEditingMode() {
+  @objc public func setEditingMode() {
+    self.rightBarButton.isEnabled = false
     let isEditingMode = self.groupListTableView.isEditing
     self.updateBarButtonItems(isEditingMode: isEditingMode)
     if isEditingMode {
