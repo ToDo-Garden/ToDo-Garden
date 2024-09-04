@@ -13,7 +13,6 @@ protocol ManageGroupPresentationLogic {
   func presentFetchedGroupList(response: ManageGroup.FetchGroupList.Response)
   func presentSaveGroupList(response: ManageGroup.SaveGroupList.Response)
   func presentDeletedGroup(response: ManageGroup.DeleteGroup.Response)
-  func presentCancelEditingGroup()
 }
 
 class ManageGroupPresenter {
@@ -39,9 +38,5 @@ extension ManageGroupPresenter: ManageGroupPresentationLogic {
       index: response.index
     )
     self.viewController?.displayDeletedGroup(viewModel: viewModel)
-  }
-  
-  func presentCancelEditingGroup() {
-    self.viewController?.displayCancelEditingGroup()
   }
 }

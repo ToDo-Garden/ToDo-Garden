@@ -108,17 +108,3 @@ public enum ManageGroup {
     }
   }
 }
-
-extension ManageGroup {
-  public struct ReorderedGroup {
-    let id: String
-    let sourceIndex: Int
-    let destinationIndex: Int
-    
-    public init(id: String, sourceIndex: Int, destinationIndex: Int) {
-      self.id = id
-      self.sourceIndex = sourceIndex
-      self.destinationIndex = destinationIndex
-    }
-  }
-}

@@ -17,7 +17,6 @@ protocol ManageGroupDisplayLogic: AnyObject {
   func displayFetchedGroupList(viewModel: ManageGroup.FetchGroupList.ViewModel)
   func displaySavedGroupList(viewModel: ManageGroup.SaveGroupList.ViewModel)
   func displayDeletedGroup(viewModel: ManageGroup.DeleteGroup.ViewModel)
-  func displayCancelEditingGroup()
 }
 
 public class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
@@ -86,7 +85,12 @@ public class ManageGroupViewController: UIViewController, ManageGroupViewControl
   }
   
   func cancelEditing() {
-    self.interactor?.cancelEditing()
+    let oldGroups = self.manageGroupTableViewDelegate?.displayedGroups
+    let newGroups = self.manageGroupTableViewDelegate?.displayedGroupsBeforeEditing
+    self.manageGroupTableViewDelegate?.displayedGroups =
+    self.manageGroupTableViewDelegate?.displayedGroupsBeforeEditing ?? []
+    self.updateTableViewWithAnimation(oldGroups: oldGroups ?? [], newGroups: newGroups ?? [])
+    self.manageGroupTableViewDelegate?.saveDisplayGroupsBeforeEditing()
   }
 }
 
@@ -361,15 +365,6 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
     }
     moves.sort { $0.from.row > $1.from.row }
     return (moves, updates)
-  }
-  
-  func displayCancelEditingGroup() {
-    let oldGroups = self.manageGroupTableViewDelegate?.displayedGroups
-    let newGroups = self.manageGroupTableViewDelegate?.displayedGroupsBeforeEditing
-    self.manageGroupTableViewDelegate?.displayedGroups =
-    self.manageGroupTableViewDelegate?.displayedGroupsBeforeEditing ?? []
-    self.updateTableViewWithAnimation(oldGroups: oldGroups ?? [], newGroups: newGroups ?? [])
-    self.manageGroupTableViewDelegate?.saveDisplayGroupsBeforeEditing()
   }
 }
 
