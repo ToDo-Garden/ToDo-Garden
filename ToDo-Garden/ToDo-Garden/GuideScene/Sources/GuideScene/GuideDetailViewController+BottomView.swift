@@ -57,6 +57,7 @@ extension GuideDetailViewController {
     }
     
     private func initialTask() {
+      self.backgroundColor = UIColor.toDoGardenWhite
       let container = self.buildContainer()
       self.addSubview(container)
       let forwardAction = UIAction { [weak self] _ in
