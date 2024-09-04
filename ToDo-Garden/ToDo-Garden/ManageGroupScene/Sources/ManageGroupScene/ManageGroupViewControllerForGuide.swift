@@ -30,7 +30,6 @@ public final class ManageGroupViewControllerForGuide: ManageGroupViewController 
   
   override func fetchGroupList() {
     let fetchedData = ManageGroupMockData.guideSceneData
-    self.displayedGroups = fetchedData
     self.manageGroupTableViewDelegate?.displayedGroups = fetchedData
     self.groupListTableView.reloadData()
   }
@@ -39,13 +38,14 @@ public final class ManageGroupViewControllerForGuide: ManageGroupViewController 
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  
   let viewController = ManageGroupViewControllerForGuide()
   viewController.loadViewIfNeeded()
   viewController.footerView.backgroundColor = .red
   viewController.groupCells.forEach { cell in
     cell.backgroundColor = .green
   }
-  return viewController
+  
+  let naviController = UINavigationController(rootViewController: viewController)
+  return naviController
 }
 #endif

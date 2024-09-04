@@ -14,17 +14,25 @@ final class ManageGroupTableViewDelegate: NSObject {
   
   // MARK: - Properties
   var displayedGroups: [ManageGroup.ToDoGroup]
+  var displayedGroupsBeforeEditing: [ManageGroup.ToDoGroup]
   private let footerView: UIView
   
   private var onPostGroup: ((String, UIColor) -> Void)?
-  private var onReorderGroups: ((String, Int, Int) -> Void)?
   private var onDeleteGroup: ((String, Int) -> Void)?
+  private var onReorderingStateChange: ((Bool) -> Void)?
+  
+  private var isReordering: Bool = false {
+    didSet {
+      self.onReorderingStateChange?(isReordering)
+    }
+  }
   
   init(
     displayedGroups: [ManageGroup.ToDoGroup],
     footerView: UIView
   ) {
     self.displayedGroups = displayedGroups
+    self.displayedGroupsBeforeEditing = displayedGroups
     self.footerView = footerView
   }
   
@@ -32,12 +40,16 @@ final class ManageGroupTableViewDelegate: NSObject {
     self.onPostGroup = handler
   }
   
-  func setOnReorderGroups(_ handler: @escaping (String, Int, Int) -> Void) {
-    self.onReorderGroups = handler
-  }
-  
   func setOnDeleteGroup(_ handler: @escaping (String, Int) -> Void) {
     self.onDeleteGroup = handler
+  }
+  
+  func setOnReorderingStateChange(_ handler: @escaping (Bool) -> Void) {
+    self.onReorderingStateChange = handler
+  }
+  
+  func saveDisplayGroupsBeforeEditing() {
+    self.displayedGroupsBeforeEditing = self.displayedGroups
   }
 }
 
@@ -63,7 +75,7 @@ extension ManageGroupTableViewDelegate: UITableViewDataSource {
       return UITableViewCell()
     }
     
-    let singleGroup = displayedGroups[indexPath.row]
+    let singleGroup = self.displayedGroups[indexPath.row]
     
     cell.applyModelPrimary(
       id: singleGroup.id,
@@ -92,6 +104,8 @@ extension ManageGroupTableViewDelegate: UITableViewDelegate {
     commit editingStyle: UITableViewCell.EditingStyle,
     forRowAt indexPath: IndexPath
   ) {
+    guard !isReordering else { return }
+    
     let index = indexPath.row
     let id = self.displayedGroups[index].id
     
@@ -111,6 +125,14 @@ extension ManageGroupTableViewDelegate: UITableViewDelegate {
 
 // MARK: - UITableViewDragDelegate
 extension ManageGroupTableViewDelegate: UITableViewDragDelegate {
+  func tableView(_ tableView: UITableView, dragSessionWillBegin session: UIDragSession) {
+    self.isReordering = true
+  }
+  
+  func tableView(_ tableView: UITableView, dragSessionDidEnd session: UIDragSession) {
+    self.isReordering = false
+  }
+  
   func tableView(_ tableView: UITableView, dragSessionAllowsMoveOperation session: UIDragSession) -> Bool {
     return tableView.isEditing
   }
@@ -167,9 +189,6 @@ extension ManageGroupTableViewDelegate: UITableViewDropDelegate {
         tableView.moveRow(at: sourceIndexPath, to: destinationIndexPath)
       }, completion: nil)
       coordinator.drop(item.dragItem, toRowAt: destinationIndexPath)
-      
-      let id = self.displayedGroups[sourceIndexPath.row].id
-      self.onReorderGroups?(id, sourceIndexPath.row, destinationIndexPath.row)
     }
   }
 }
