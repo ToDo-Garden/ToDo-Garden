@@ -5,65 +5,70 @@ import ToDoGardenUIConstant
 
 // MARK: - ProfileStyle
 extension Styled.Row {
-  func buildProfileStyle(stack: UIStackView, model: Configuration.ProfileModel) {
-    self.buildProfileStyleStack(stack: stack)
-    let imageView = self.buildImageView(
-      stack: stack,
-      image: model.image,
-      size: model.profileSize
+  func buildProfileStyle(model: Configuration.ProfileModel) -> UIStackView {
+    let stack = UIHStackView(
+      spacing: 0,
+      arrangedSubviews: self.buildProfileSubviews(model: model)
     )
-    self.buildInnerStack(stack: stack, model: model)
-    if model.axis == NSLayoutConstraint.Axis.vertical {
-      stack.addSpacing()
+    stack.addInnerPadding(model[style: \.innerPadding])
+    return stack
+  }
+
+  private func buildProfileSubviews(model: Configuration.ProfileModel) -> [UIView] {
+    let profileImageView = self.buildImageView(
+      image: model[style: \.defaultImage],
+      size: model[style: \.imageSize]
+    )
+    self.bindingProfileImageState(imageView: profileImageView)
+    let profileImageTrailingPadding = UIView()
+    
+    let innerStack = self.buildInnerStack(model: model)
+    let forwardImage = UIImageView(image: UIImage.forwardButtonImage)
+    if model.style == Configuration.ProfileModel.Style.shareRow {
+      self.bindingForwardImage(imageView: forwardImage)
     }
-    self.buildImageView(
-      stack: stack,
-      image: UIImage.forwardButtonImage,
-      size: Constant.Styled.Row.Profile.accessorySize
-    )
-    self.bindingProfileImageState(imageView: imageView)
+    
+    var subviews = [
+      profileImageView,
+      profileImageTrailingPadding,
+      innerStack,
+      forwardImage
+    ]
+    if model[style: \.axis] == .vertical {
+      subviews.insert(UIView(), at: 3)
+    }
+    profileImageTrailingPadding.widthAnchor
+      .constraint(equalToConstant: model[style: \.profileImageTrailingPadding]).isActive = true
+    
+    return subviews
   }
   
-  private func buildProfileStyleStack(stack: UIStackView) {
-    stack.spacing = Constant.Styled.Row.Profile.stackSpacing
-    self.buildStack(
-      stack: stack,
-      edgeInsets: Constant.Styled.Row.Profile.stackEdgeInsets
-    )
-  }
-  
-  private func buildInnerStack(stack: UIStackView, model: Configuration.ProfileModel) {
-    let innerStack = UIStackView()
-    innerStack.axis = model.axis
+  private func buildInnerStack(model: Configuration.ProfileModel) -> UIStackView {
     let titleLabel = self.buildTextLabel(
-      stack: innerStack,
       text: model.title,
-      font: model.titleFont,
-      textColor: .toDoGardenGreenDark
+      font: model[style: \.titleFont],
+      textColor: UIColor.toDoGardenGreenDark
     )
-    addConditionalSpacing(innerStack, axis: model.axis)
     let descriptionLabel = self.buildTextLabel(
-      stack: innerStack,
       text: model.description,
-      font: model.descriptionFont,
-      textColor: .toDoGardenGreenDark
+      font: model[style: \.descriptionFont],
+      textColor: UIColor.toDoGardenGreenDark
     )
-    stack.addArrangedSubview(innerStack)
-    bindingProfileInnerTitleState(
+    self.bindingProfileInnerTitleState(
       titleLabel: titleLabel,
       descriptionLabel: descriptionLabel
     )
-  }
-  
-  private func addConditionalSpacing(_ stack: UIStackView, axis: NSLayoutConstraint.Axis) {
-    switch axis {
-    case NSLayoutConstraint.Axis.vertical:
-      stack.spacing = Constant.Styled.Row.Profile.conditionSpacing
-    case NSLayoutConstraint.Axis.horizontal:
-      stack.addSpacing()
-    @unknown default:
-      break
+    
+    let spacing = UIView()
+    let subviews: [UIView] = [titleLabel, spacing, descriptionLabel]
+    let stack = UIStackView(arrangedSubviews: subviews)
+    stack.axis = model[style: \.axis]
+    
+    if model[style: \.axis] == NSLayoutConstraint.Axis.vertical {
+      spacing.heightAnchor.constraint(equalToConstant: 3).isActive = true
     }
+    
+    return stack
   }
   
   private func bindingProfileImageState(imageView: UIImageView) {
@@ -92,6 +97,17 @@ extension Styled.Row {
       .removeDuplicates()
       .sink { [weak titleLabel] text in
         titleLabel?.text = text
+      }
+      .store(in: &cancellables)
+  }
+  
+  private func bindingForwardImage(imageView: UIImageView) {
+    self.$isSelected
+      .sink { [weak imageView] isSelected in
+        let angle = isSelected ? CGFloat.pi / 2 : 0
+        UIView.animate(withDuration: 0.2) {
+          imageView?.transform = CGAffineTransform(rotationAngle: angle)
+        }
       }
       .store(in: &cancellables)
   }

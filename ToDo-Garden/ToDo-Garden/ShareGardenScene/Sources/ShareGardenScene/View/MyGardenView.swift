@@ -37,7 +37,8 @@ extension ShareGardenSceneViewController {
       
       let profileInfoView = Styled.Row(
         configuration: Styled.Row.Configuration.profile(
-          Styled.Row.Configuration.ProfileModel.primary(
+          Styled.Row.Configuration.ProfileModel(
+            style: Styled.Row.Configuration.ProfileModel.Style.shareProfile,
             title: nicknamePlaceholder,
             description: descriptionPlaceholder
           )

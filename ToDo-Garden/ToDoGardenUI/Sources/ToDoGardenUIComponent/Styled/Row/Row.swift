@@ -35,7 +35,8 @@ extension Styled {
       }
     }
 
-    @Published var configuration: Configuration
+    @Published public var configuration: Configuration
+    @Published public var isSelected: Bool = false
     var cancellables: Set<AnyCancellable> = []
     
     public init(configuration: Configuration) {
@@ -56,10 +57,14 @@ extension Styled {
     }
     
     private func build() {
-      let stack = UIStackView(frame: CGRect.zero)
+      var stack = UIStackView(frame: CGRect.zero)
       switch self.configuration {
       case let Configuration.profile(profileModel):
-        self.buildProfileStyle(stack: stack, model: profileModel)
+        stack = self.buildProfileStyle(model: profileModel)
+        self.layoutContainer(
+          stack,
+          innerPadding: profileModel[style: \.innerPadding]
+        )
       case let Configuration.listPrimary(listPrimaryModel):
         self.buildListPrimaryStyle(stack: stack, model: listPrimaryModel)
       case let Configuration.todoList(todoListModel):
@@ -83,6 +88,44 @@ extension Styled {
 }
 
 // MARK: - Shared View Logic
+// 앞으로의 방향
+extension Styled.Row {
+  func buildImageView(
+    image: UIImage,
+    size: CGSize
+  ) -> UIImageView {
+    let imageView = UIImageView(image: image)
+    imageView.usingAutolayout()
+    NSLayoutConstraint.activate([
+      imageView.widthAnchor.constraint(equalToConstant: size.width),
+      imageView.heightAnchor.constraint(equalToConstant: size.height)
+    ])
+    return imageView
+  }
+  
+  func buildTextLabel(
+    text: String,
+    font: UIFont,
+    textColor: UIColor
+  ) -> UILabel {
+    let label = UILabel()
+    label.text = text
+    label.font = font
+    label.textColor = textColor
+    return label
+  }
+  
+  private func layoutContainer(
+    _ stack: UIStackView,
+    innerPadding: NSDirectionalEdgeInsets
+  ) {
+    stack.isLayoutMarginsRelativeArrangement = true
+    stack.directionalLayoutMargins = innerPadding
+    self.addSubview(stack)
+    stack.equalToParent()
+  }
+}
+
 extension Styled.Row {
   func buildStack(
     stack: UIStackView,
@@ -137,23 +180,53 @@ extension Styled.Row {
 
 @available(iOS 17.0, *)
 #Preview {
-  let stack = UIStackView()
-  stack.axis = .vertical
-  stack.spacing = 20
-
   let row = Styled.Row(
-    configuration: .listPrimary(.init(title: "영어독해", color: .red))
+    configuration: .profile(
+      .init(
+        style: .setting,
+        title: "Setting",
+        description: "안녕하세요"
+      )
+    )
   )
-  stack.addArrangedSubview(row)
-
-  let button = UIButton()
-  button.setImage(UIImage.forwardButtonImage, for: UIControl.State.normal)
-
+  row.backgroundColor = .systemIndigo
+  
   let row2 = Styled.Row(
-    configuration: .listPrimary(.init(title: "영어독해", color: .toDoGardenYellow)),
-    with: [button]
+    configuration: .profile(
+      .init(
+        style: .shareProfile,
+        title: "Share Profile",
+        description: "안녕하세요"
+      )
+    )
   )
-  stack.addArrangedSubview(row2)
+  row2.backgroundColor = .yellow
+  
+  let row3 = Styled.Row(
+    configuration: .profile(
+      .init(
+        style: .shareRow,
+        title: "Share Row",
+        description: "15일째 연속 집중!"
+      )
+    )
+  )
+  row3.backgroundColor = .brown
 
+  let stack = UIVStackView(
+    arrangedSubviews: [
+      row, row2, row3
+    ]
+  )
+  row.widthAnchor.constraint(equalTo: stack.widthAnchor).isActive = true
+  row2.widthAnchor.constraint(equalTo: stack.widthAnchor).isActive = true
+  row3.widthAnchor.constraint(equalTo: stack.widthAnchor).isActive = true
+
+  stack.alignment = .leading
+  stack.backgroundColor = .green
+  
+  stack.translatesAutoresizingMaskIntoConstraints = false
+  stack.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
+  
   return stack
 }
