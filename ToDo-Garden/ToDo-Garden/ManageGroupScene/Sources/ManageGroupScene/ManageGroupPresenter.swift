@@ -11,27 +11,32 @@ import ManageGroupSceneEntity
 
 protocol ManageGroupPresentationLogic {
   func presentFetchedGroupList(response: ManageGroup.FetchGroupList.Response)
+  func presentSavedGroupList(response: ManageGroup.SaveGroupList.Response)
   func presentDeletedGroup(response: ManageGroup.DeleteGroup.Response)
-  func presentReorderedGroup(response: ManageGroup.ReorderGroup.Response)
 }
 
 class ManageGroupPresenter {
   weak var viewController: ManageGroupDisplayLogic?
-  private let fetchedData: [ManageGroup.ToDoGroup] = ManageGroupMockData.fetchedData
 }
 
 // MARK: - Request to ViewController
 
 extension ManageGroupPresenter: ManageGroupPresentationLogic {
   func presentFetchedGroupList(response: ManageGroup.FetchGroupList.Response) {
-    let todoGroup = self.fetchedData
-    let viewModel = ManageGroup.FetchGroupList.ViewModel(with: todoGroup)
+    let viewModel = ManageGroup.FetchGroupList.ViewModel(with: response.data)
     self.viewController?.displayFetchedGroupList(viewModel: viewModel)
   }
   
-  func presentDeletedGroup(response: ManageGroup.DeleteGroup.Response) {
+  func presentSavedGroupList(response: ManageGroup.SaveGroupList.Response) {
+    let viewModel = ManageGroup.SaveGroupList.ViewModel(with: response.data)
+    self.viewController?.displaySavedGroupList(viewModel: viewModel)
   }
   
-  func presentReorderedGroup(response: ManageGroup.ReorderGroup.Response) {
+  func presentDeletedGroup(response: ManageGroup.DeleteGroup.Response) {
+    let viewModel = ManageGroup.DeleteGroup.ViewModel(
+      id: response.id,
+      index: response.index
+    )
+    self.viewController?.displayDeletedGroup(viewModel: viewModel)
   }
 }

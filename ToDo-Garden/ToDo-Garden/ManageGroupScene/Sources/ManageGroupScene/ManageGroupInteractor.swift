@@ -14,53 +14,54 @@ protocol ManageGroupDataStore {
 }
 
 protocol ManageGroupBusinessLogic {
-  func fetchGroupList(request: ManageGroup.FetchGroupList.Request)
+  func fetchGroupList(request: ManageGroup.FetchGroupList.Request) async
+  func saveGroupList(request: ManageGroup.SaveGroupList.Request) async
   func deleteGroup(request: ManageGroup.DeleteGroup.Request)
-  func reorderGroup(request: ManageGroup.ReorderGroup.Request)
-  func addReorderedGroups(
-    id: String,
-    sourceIndex: Int,
-    destinationIndex: Int
-  )
-  func cancelEditing()
 }
 
 class ManageGroupInteractor: ManageGroupDataStore {
   var presenter: ManageGroupPresentationLogic?
-  //  private var reorderedGroups: [ManageGroup.ReorderedGroup]
   private let manageGroupWorker: ManageGroupWorkable
+  private var currentGroups: [ManageGroup.ToDoGroup]
   
   init(
     worker: ManageGroupWorkable
   ) {
-    //    self.reorderedGroups = []
     self.manageGroupWorker = worker
+    self.currentGroups = []
   }
 }
 
 // MARK: - Request to worker
 
 extension ManageGroupInteractor: ManageGroupBusinessLogic {
-  func fetchGroupList(request: ManageGroup.FetchGroupList.Request) {
-    self.manageGroupWorker.fetchGroupList(request: request)
-    
-    let response = ManageGroup.FetchGroupList.Response(with: "SomeResponse")
-    self.presenter?.presentFetchedGroupList(response: response)
+  func fetchGroupList(request: ManageGroup.FetchGroupList.Request) async {
+    let result = await self.manageGroupWorker.fetchGroupList(request: request)
+    switch result {
+    case .success(let groups):
+      self.currentGroups = groups
+      let response = ManageGroup.FetchGroupList.Response(with: groups)
+      self.presenter?.presentFetchedGroupList(response: response)
+    case .failure(let error):
+      print("Error fetching group list: \(error)")
+    }
+  }
+  
+  func saveGroupList(request: ManageGroupSceneEntity.ManageGroup.SaveGroupList.Request) async {
+    let result = await self.manageGroupWorker.saveGroupList(request: request)
+    switch result {
+    case .success(let groups):
+      self.currentGroups = groups
+      let response = ManageGroup.SaveGroupList.Response(with: groups)
+      self.presenter?.presentSavedGroupList(response: response)
+    case .failure(let error):
+      print("Error fetching group list: \(error)")
+    }
   }
   
   func deleteGroup(request: ManageGroup.DeleteGroup.Request) {
-  }
-  
-  func reorderGroup(request: ManageGroup.ReorderGroup.Request) {
-  }
-  
-  func cancelEditing() {
-  }
-  
-  func addReorderedGroups(
-    id: String,
-    sourceIndex: Int,
-    destinationIndex: Int
-  ) {
+    self.currentGroups.remove(at: request.index)
+    let response = ManageGroup.DeleteGroup.Response(id: request.id, index: request.index)
+    self.presenter?.presentDeletedGroup(response: response)
   }
 }
