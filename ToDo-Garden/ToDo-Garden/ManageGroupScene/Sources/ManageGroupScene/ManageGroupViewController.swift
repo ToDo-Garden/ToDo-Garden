@@ -25,13 +25,13 @@ public class ManageGroupViewController: UIViewController, ManageGroupViewControl
   
   var interactor: ManageGroupBusinessLogic?
   var router: (ManageGroupRoutingLogic & ManageGroupDataPassing)?
-
+  
   public var rightBarButton: UIBarButtonItem
   public var footerView: UIView
   
   var displayedGroups: [ManageGroup.ToDoGroup]
   var manageGroupTableViewDelegate: ManageGroupTableViewDelegate?
-  let groupListTableView: ManageGroupTableView
+  public let groupListTableView: ManageGroupTableView
   
   private let groupListTableViewCell: ManageGroupTableViewCell
   
@@ -106,7 +106,7 @@ extension ManageGroupViewController {
     self.navigationItem.setRightBarButton(self.rightBarButton, animated: true)
   }
   
-  @objc private func setEditingMode() {
+  @objc public func setEditingMode() {
     self.rightBarButton.isEnabled = false
     let isEditingMode = self.groupListTableView.isEditing
     self.groupListTableView.setEditingMode(!isEditingMode, animated: true)
