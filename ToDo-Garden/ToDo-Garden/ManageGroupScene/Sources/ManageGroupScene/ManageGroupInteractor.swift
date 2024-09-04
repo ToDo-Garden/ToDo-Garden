@@ -53,7 +53,7 @@ extension ManageGroupInteractor: ManageGroupBusinessLogic {
     case .success(let groups):
       self.currentGroups = groups
       let response = ManageGroup.SaveGroupList.Response(with: groups)
-      self.presenter?.presentSaveGroupList(response: response)
+      self.presenter?.presentSavedGroupList(response: response)
     case .failure(let error):
       print("Error fetching group list: \(error)")
     }

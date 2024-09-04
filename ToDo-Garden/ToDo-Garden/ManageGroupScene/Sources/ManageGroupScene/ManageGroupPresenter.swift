@@ -11,7 +11,7 @@ import ManageGroupSceneEntity
 
 protocol ManageGroupPresentationLogic {
   func presentFetchedGroupList(response: ManageGroup.FetchGroupList.Response)
-  func presentSaveGroupList(response: ManageGroup.SaveGroupList.Response)
+  func presentSavedGroupList(response: ManageGroup.SaveGroupList.Response)
   func presentDeletedGroup(response: ManageGroup.DeleteGroup.Response)
 }
 
@@ -27,7 +27,7 @@ extension ManageGroupPresenter: ManageGroupPresentationLogic {
     self.viewController?.displayFetchedGroupList(viewModel: viewModel)
   }
   
-  func presentSaveGroupList(response: ManageGroup.SaveGroupList.Response) {
+  func presentSavedGroupList(response: ManageGroup.SaveGroupList.Response) {
     let viewModel = ManageGroup.SaveGroupList.ViewModel(with: response.data)
     self.viewController?.displaySavedGroupList(viewModel: viewModel)
   }

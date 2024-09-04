@@ -356,7 +356,7 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
         if oldIndex != newIndex {
           moves.append(
             (from: IndexPath(row: oldIndex, section: 0),
-             to: IndexPath(row: newIndex, section: 0))
+            to: IndexPath(row: newIndex, section: 0))
           )
         } else if oldGroups[oldIndex] != newGroup {
           updates.append(IndexPath(row: newIndex, section: 0))
