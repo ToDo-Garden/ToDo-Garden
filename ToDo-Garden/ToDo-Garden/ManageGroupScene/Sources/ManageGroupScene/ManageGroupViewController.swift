@@ -276,7 +276,7 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
       )
     }
   }
-
+  
   private func updateTableViewWithAnimation(
     oldGroups: [ManageGroup.ToDoGroup],
     newGroups: [ManageGroup.ToDoGroup]
@@ -314,7 +314,7 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
     let oldIDs = oldGroups.map { $0.id }
     let newIDs = newGroups.map { $0.id }
     
-    let insertions = calculateInsertions(newIDs: newIDs, oldIDs: oldIDs)
+    let insertions = calculateInsertions(newIDs: newIDs, oldIDs: Set(oldIDs))
     let oldIndexMap = createOldIndexMap(oldGroups: oldGroups)
     let (moves, updates) = calculateMovesAndUpdates(
       newGroups: newGroups,
@@ -325,7 +325,7 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
   }
   // swiftlint:enable large_tuple
   
-  private func calculateInsertions(newIDs: [String], oldIDs: [String]) -> [IndexPath] {
+  private func calculateInsertions(newIDs: [String], oldIDs: Set<String>) -> [IndexPath] {
     var insertions: [IndexPath] = []
     for (newIndex, newID) in newIDs.enumerated() where !oldIDs.contains(newID) {
       insertions.append(IndexPath(row: newIndex, section: 0))
@@ -356,7 +356,7 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
         if oldIndex != newIndex {
           moves.append(
             (from: IndexPath(row: oldIndex, section: 0),
-              to: IndexPath(row: newIndex, section: 0))
+             to: IndexPath(row: newIndex, section: 0))
           )
         } else if oldGroups[oldIndex] != newGroup {
           updates.append(IndexPath(row: newIndex, section: 0))
