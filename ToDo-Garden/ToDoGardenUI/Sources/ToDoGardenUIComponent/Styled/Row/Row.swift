@@ -36,7 +36,7 @@ extension Styled {
     }
 
     @Published public var configuration: Configuration
-    public var isSelected: Bool = false
+    @Published public var isSelected: Bool = false
     var cancellables: Set<AnyCancellable> = []
     
     public init(configuration: Configuration) {
