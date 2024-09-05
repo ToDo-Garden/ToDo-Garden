@@ -187,5 +187,6 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
       height: Self.layoutConstant.gradientLayerHeight
     )
     self.layer.addSublayer(self.gradientLayer)
+    self.isGradientLayerAdded = true
   }
 }
