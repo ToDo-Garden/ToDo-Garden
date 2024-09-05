@@ -15,14 +15,11 @@ public struct PostGroupSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
   public struct Dependency {
     let postGroupWorker: PostGroupWorkable
-    let nextSceneBuilder: NextSceneBuildable?
     
     public init(
-      postGroupWorker: PostGroupWorkable,
-      nextSceneBuilder: NextSceneBuildable?
+      postGroupWorker: PostGroupWorkable
     ) {
       self.postGroupWorker = postGroupWorker
-      self.nextSceneBuilder = nextSceneBuilder
     }
   }
   
@@ -54,7 +51,7 @@ extension PostGroupSceneBuilder {
   private func configureVIPCycle(for viewController: PostGroupViewController) -> PostGroupViewController {
     let interactor = PostGroupInteractor(postGroupWorker: self.dependency.postGroupWorker)
     let presenter = PostGroupPresenter()
-    let router = PostGroupRouter(nextSceneBuilder: nil)
+    let router = PostGroupRouter()
     viewController.interactor = interactor
     viewController.router = router
     interactor.presenter = presenter

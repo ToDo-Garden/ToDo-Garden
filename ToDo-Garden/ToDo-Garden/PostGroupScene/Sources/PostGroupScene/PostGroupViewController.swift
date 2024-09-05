@@ -25,7 +25,7 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
   // MARK: - VIP Properties
   
   var interactor: PostGroupBusinessLogic?
-  var router: (PostGroupRoutingLogic & PostGroupDataPassing)?
+  var router: PostGroupDataPassing?
   
   private let textInputView: TextInputView
   private let postGroupColorPickerRow: PostGroupColorPickerRow
