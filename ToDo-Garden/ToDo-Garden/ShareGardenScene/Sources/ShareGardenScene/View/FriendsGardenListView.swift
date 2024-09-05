@@ -164,7 +164,7 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
     if collectionView.indexPathsForSelectedItems?.contains(indexPath) ?? false {
       collectionView.deselectItem(at: indexPath, animated: true)
     } else {
-      collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+      collectionView.selectItem(at: indexPath, animated: true, scrollPosition: [])
     }
     
     return false

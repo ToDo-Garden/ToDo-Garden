@@ -21,10 +21,11 @@ extension ShareGardenSceneViewController.FriendsGardenView {
     ///
     /// [이슈 링크](https://github.com/ToDo-Garden/ToDo-Garden/issues/439)
     private let profileInfoView: Styled.Row = {
+      let profileInfoViewConfiguration = Styled.Row.Configuration.self
       let profileInfoView = Styled.Row(
-        configuration: Styled.Row.Configuration.profile(
-          Styled.Row.Configuration.ProfileModel.gardenInfo(
-            image: UIImage.defaultFriendProfileImage,
+        configuration: profileInfoViewConfiguration.profile(
+          profileInfoViewConfiguration.ProfileModel(
+            style: profileInfoViewConfiguration.ProfileModel.Style.shareRow,
             title: "이인우",
             description: "연속 19일 집중!"
           )
@@ -45,6 +46,9 @@ extension ShareGardenSceneViewController.FriendsGardenView {
     override var isSelected: Bool {
       didSet {
         self.toggleConstraintsForSelectionState()
+        if let collectionView = self.superview as? UICollectionView {
+          collectionView.layoutIfNeeded()
+        }
         self.invalidateIntrinsicContentSize()
       }
     }
@@ -129,6 +133,8 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
     self.deSelectedConstraints.forEach {
       $0.isActive = !self.isSelected
     }
+    
+    self.profileInfoView.isSelected = self.isSelected
   }
 }
 
