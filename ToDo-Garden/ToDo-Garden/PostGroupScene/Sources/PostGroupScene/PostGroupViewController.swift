@@ -55,10 +55,6 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
   
   // MARK: - View lifecycle
   
-  override func viewDidLoad() {
-    super.viewDidLoad()
-  }
-  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     self.loadGroupData()
