@@ -17,6 +17,7 @@ enum Constant {
     static let height: CGFloat = 40.0
     static let leadingMargin: CGFloat = 15.0
     static let trailingMargin: CGFloat = -30.0
+    static let itemsPerRow: Int = 6
   }
   
   enum ColorPickButton {

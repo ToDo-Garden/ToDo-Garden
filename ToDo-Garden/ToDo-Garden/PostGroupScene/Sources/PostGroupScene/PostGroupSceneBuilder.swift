@@ -15,33 +15,11 @@ public struct PostGroupSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
   public struct Dependency {
     let postGroupWorker: PostGroupWorkable
-    let nextSceneBuilder: NextSceneBuildable?
-    
-    let textInputView: TextInputViewAPI
-    let colorRow: PostGroupColorPickerRowAPI
-    let colorPickerList: ColorPickerListAPI
-    let colorPickButton: UIButton
-    let bottomButton: UIButton
-    let modalBottomButton: UIButton
     
     public init(
-      postGroupWorker: PostGroupWorkable,
-      nextSceneBuilder: NextSceneBuildable?,
-      textInputView: TextInputViewAPI,
-      colorRow: PostGroupColorPickerRowAPI,
-      colorPickerList: ColorPickerListAPI,
-      colorPickButton: UIButton,
-      bottomButton: UIButton,
-      modalBottomButton: UIButton
+      postGroupWorker: PostGroupWorkable
     ) {
       self.postGroupWorker = postGroupWorker
-      self.nextSceneBuilder = nextSceneBuilder
-      self.textInputView = textInputView
-      self.colorRow = colorRow
-      self.colorPickerList = colorPickerList
-      self.colorPickButton = colorPickButton
-      self.bottomButton = bottomButton
-      self.modalBottomButton = modalBottomButton
     }
   }
   
@@ -58,14 +36,7 @@ extension PostGroupSceneBuilder: PostGroupSceneBuildable {
   /// - Returns: 런타임 의존성, VIP Cycle이 설정된 ViewController를 반환합니다.
   public func build(with payload: PostGroupScenePayloadable?) -> PostGroupViewControllable {
     let postGroupViewController = self.configureVIPCycle(
-      for: PostGroupViewController(
-        textInputView: self.dependency.textInputView,
-        postGroupColorPickerRow: self.dependency.colorRow,
-        colorPickerList: self.dependency.colorPickerList,
-        colorPickButton: self.dependency.colorPickButton,
-        bottomButton: self.dependency.bottomButton,
-        modalBottomButton: self.dependency.modalBottomButton
-      )
+      for: PostGroupViewController()
     )
     self.loadGroupData(for: postGroupViewController, with: payload)
     
@@ -80,7 +51,7 @@ extension PostGroupSceneBuilder {
   private func configureVIPCycle(for viewController: PostGroupViewController) -> PostGroupViewController {
     let interactor = PostGroupInteractor(postGroupWorker: self.dependency.postGroupWorker)
     let presenter = PostGroupPresenter()
-    let router = PostGroupRouter(nextSceneBuilder: nil)
+    let router = PostGroupRouter()
     viewController.interactor = interactor
     viewController.router = router
     interactor.presenter = presenter
