@@ -142,7 +142,7 @@ extension Styled.Row.Configuration.ProfileModel {
     
     var titleFont: UIFont {
       self == Self.shareRow
-      ? UIFont.pretendardBodyBold
+      ? UIFont.pretendardBodySemiBold15
       : UIFont.pretendardHeadBold
     }
     
