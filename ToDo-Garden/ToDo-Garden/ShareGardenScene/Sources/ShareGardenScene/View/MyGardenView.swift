@@ -20,6 +20,9 @@ extension ShareGardenSceneViewController {
       let shareButton = UIButton()
       shareButton.setImage(UIImage.shareIconImage, for: UIControl.State.normal)
       let title = ShareGardenSceneViewController.Constant.StringLiteral.MyGardenSectionHeaderView.title
+      shareButton.usingAutolayout()
+      shareButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
+      shareButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
       
       let sectionHeaderView = SectionHeaderView(
         sectionTitle: title,
