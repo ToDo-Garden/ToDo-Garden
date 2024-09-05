@@ -127,7 +127,7 @@ extension UserInfoSceneViewController: PHPickerViewControllerDelegate {
       let status = await PHPhotoLibrary.requestAuthorization(for: PHAccessLevel.readWrite)
       switch status {
       case .notDetermined, .denied, .restricted:
-        break
+        self.showMovingToSettingAppAlert()
       case .authorized, .limited:
         self.showPhotoPicker()
       @unknown default:
@@ -142,6 +142,43 @@ extension UserInfoSceneViewController: PHPickerViewControllerDelegate {
     let phpickerViewController = PHPickerViewController(configuration: configuration)
     phpickerViewController.delegate = self
     self.present(phpickerViewController, animated: true)
+  }
+
+  private func showMovingToSettingAppAlert() {
+    let stringLiteral = UserInfoSceneTheme.StringLiteral.SettingAppAlert.self
+    let alert = UIAlertController(
+      title: nil,
+      message: stringLiteral.message,
+      preferredStyle: UIAlertController.Style.alert
+    )
+
+    alert.addAction(self.makeCancelAction())
+    alert.addAction(self.makeMovingToSettingAppAction())
+
+    self.present(alert, animated: true)
+  }
+
+  private func makeCancelAction() -> UIAlertAction {
+    return UIAlertAction(
+      title: UserInfoSceneTheme.StringLiteral.SettingAppAlert.leftActionTitle,
+      style: UIAlertAction.Style.cancel
+    ) { _ in
+      self.closeAlert()
+    }
+  }
+
+  private func makeMovingToSettingAppAction() -> UIAlertAction {
+    return UIAlertAction(
+      title: UserInfoSceneTheme.StringLiteral.SettingAppAlert.rightActionTitle,
+      style: UIAlertAction.Style.default
+    ) { _ in
+      let settingAppURL = URL(string: UIApplication.openSettingsURLString)
+      if let settingAppURL, UIApplication.shared.canOpenURL(settingAppURL) {
+        UIApplication.shared.open(settingAppURL)
+      } else {
+        self.closeAlert()
+      }
+    }
   }
 }
 
