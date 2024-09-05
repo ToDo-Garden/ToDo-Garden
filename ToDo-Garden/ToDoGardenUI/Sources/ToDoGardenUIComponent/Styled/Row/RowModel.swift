@@ -119,8 +119,8 @@ extension Styled.Row.Configuration.ProfileModel {
     
     var defaultImage: UIImage {
       self == Self.shareRow
-      ? UIImage.defaultProfileImage
-      : UIImage.defaultFriendProfileImage
+      ? UIImage.defaultFriendProfileImage
+      : UIImage.defaultProfileImage
     }
     
     var imageSize: CGSize {
@@ -142,7 +142,7 @@ extension Styled.Row.Configuration.ProfileModel {
     
     var titleFont: UIFont {
       self == Self.shareRow
-      ? UIFont.pretendardBodyBold
+      ? UIFont.pretendardBodySemiBold15
       : UIFont.pretendardHeadBold
     }
     

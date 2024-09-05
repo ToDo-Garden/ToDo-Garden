@@ -29,3 +29,9 @@ final class ShareGardenSceneInteractor: ShareGardenSceneDataStore {
 
 extension ShareGardenSceneInteractor: ShareGardenSceneBusinessLogic {
 }
+
+extension ShareGardenSceneInteractor: FriendsGardenStore {
+  func fetchBy(_ id: ShareGardenSceneEntity.ShareGardenScene.FriendsGarden.ID) -> ShareGardenScene.FriendsGarden? {
+    return nil
+  }
+}

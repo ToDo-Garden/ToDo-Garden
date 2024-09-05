@@ -20,6 +20,10 @@ extension ShareGardenSceneViewController {
       let shareButton = UIButton()
       shareButton.setImage(UIImage.shareIconImage, for: UIControl.State.normal)
       let title = ShareGardenSceneViewController.Constant.StringLiteral.MyGardenSectionHeaderView.title
+      shareButton.usingAutolayout()
+      shareButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
+      shareButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
+      shareButton.setTitleColor(UIColor.darkGray, for: UIControl.State.highlighted)
       
       let sectionHeaderView = SectionHeaderView(
         sectionTitle: title,
@@ -84,7 +88,7 @@ extension ShareGardenSceneViewController.MyGardenView {
   
   private func setupStackView() {
     self.spacing = 14
-    self.distribution = UIStackView.Distribution.fillProportionally
+    self.distribution = UIStackView.Distribution.fill
     self.axis = NSLayoutConstraint.Axis.vertical
     self.alignment = UIStackView.Alignment.center
   }
