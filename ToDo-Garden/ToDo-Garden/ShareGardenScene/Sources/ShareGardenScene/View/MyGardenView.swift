@@ -88,7 +88,7 @@ extension ShareGardenSceneViewController.MyGardenView {
   
   private func setupStackView() {
     self.spacing = 14
-    self.distribution = UIStackView.Distribution.fillProportionally
+    self.distribution = UIStackView.Distribution.fill
     self.axis = NSLayoutConstraint.Axis.vertical
     self.alignment = UIStackView.Alignment.center
   }
