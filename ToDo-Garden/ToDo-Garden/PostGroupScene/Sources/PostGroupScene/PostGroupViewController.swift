@@ -12,6 +12,7 @@ import PostGroupSceneAPI
 import PostGroupSceneEntity
 import ToDoGardenUIAPI
 import ToDoGardenUIComponent
+import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 protocol PostGroupDisplayLogic: AnyObject {
@@ -85,7 +86,7 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
         UIColor.toDoGardenBlack,
         UIColor.toDoGardenGray
       ],
-      itemsPerRow: 6,
+      itemsPerRow: Constant.ColorPickerRow.itemsPerRow,
       selected: subject
     )
     
