@@ -119,7 +119,18 @@ extension UserInfoSceneViewController: ManageAccountViewDelegate, ProfileInfoVie
 
 extension UserInfoSceneViewController: PHPickerViewControllerDelegate {
   func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-    
+    picker.dismiss(animated: true)
+
+    if let itemProvider = results.first?.itemProvider, itemProvider.canLoadObject(ofClass: UIImage.self) {
+      itemProvider.loadObject(ofClass: UIImage.self) { (loadedObject, error) in
+        if let newProfileImage = loadedObject as? UIImage {
+          // TODO: Change Profile Image Request - VIP Cycle
+          print(newProfileImage)
+        } else {
+          print("\(error.debugDescription) ocurred")
+        }
+      }
+    }
   }
 
   private func handlePhotoAuthorizationStatus() {
