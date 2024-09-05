@@ -78,6 +78,7 @@ extension ShareGardenSceneViewController.FriendsGardenView {
   private func setup() {
     self.setupStackView()
     self.addSubviews()
+    self.setCustomSpacing()
   }
   
   private func setupStackView() {
@@ -141,5 +142,10 @@ extension ShareGardenSceneViewController.FriendsGardenView {
       self.friendsGardenListView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
       self.friendsGardenListView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
     ])
+  }
+  
+  private func setCustomSpacing() {
+    let searchGardenButtonTopInset = Self.layoutConstant.searchGardenButtonTopInset
+    self.setCustomSpacing(searchGardenButtonTopInset, after: self.sectionHeaderView)
   }
 }
