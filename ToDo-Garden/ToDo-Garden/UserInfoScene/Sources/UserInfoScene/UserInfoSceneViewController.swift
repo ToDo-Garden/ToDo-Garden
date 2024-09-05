@@ -117,7 +117,11 @@ extension UserInfoSceneViewController: ManageAccountViewDelegate, ProfileInfoVie
 
 // MARK: User Image Handling Functions
 
-extension UserInfoSceneViewController {
+extension UserInfoSceneViewController: PHPickerViewControllerDelegate {
+  func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+    
+  }
+
   private func handlePhotoAuthorizationStatus() {
     Task {
       let status = await PHPhotoLibrary.requestAuthorization(for: PHAccessLevel.readWrite)
@@ -125,11 +129,19 @@ extension UserInfoSceneViewController {
       case .notDetermined, .denied, .restricted:
         break
       case .authorized, .limited:
-        break
+        self.showPhotoPicker()
       @unknown default:
         break
       }
     }
+  }
+
+  private func showPhotoPicker() {
+    var configuration = PHPickerConfiguration()
+    configuration.filter = PHPickerFilter.images
+    let phpickerViewController = PHPickerViewController(configuration: configuration)
+    phpickerViewController.delegate = self
+    self.present(phpickerViewController, animated: true)
   }
 }
 
