@@ -23,6 +23,7 @@ extension ShareGardenSceneViewController {
       shareButton.usingAutolayout()
       shareButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
       shareButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
+      shareButton.setTitleColor(UIColor.darkGray, for: UIControl.State.highlighted)
       
       let sectionHeaderView = SectionHeaderView(
         sectionTitle: title,
