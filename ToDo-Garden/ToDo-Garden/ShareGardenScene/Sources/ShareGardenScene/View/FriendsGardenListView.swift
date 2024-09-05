@@ -81,7 +81,7 @@ extension ShareGardenSceneViewController.FriendsGardenView {
 // MARK: - Setup
 
 extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView {
-  private func setup () {
+  private func setup() {
     self.addSubviews()
     self.setupLayoutCosntraints()
   }
