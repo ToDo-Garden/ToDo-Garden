@@ -5,6 +5,7 @@
 //  Created by SONG on 7/8/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
+import Combine
 import UIKit
 
 import PostGroupSceneAPI
@@ -26,33 +27,25 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
   var interactor: PostGroupBusinessLogic?
   var router: (PostGroupRoutingLogic & PostGroupDataPassing)?
   
-  private let textInputView: TextInputViewAPI
-  private let postGroupColorPickerRow: PostGroupColorPickerRowAPI
-  private let postGroupBottomSheet: PostGroupBottomSheet
+  private let textInputView: TextInputView
+  private let postGroupColorPickerRow: PostGroupColorPickerRow
+  private var postGroupBottomSheet: PostGroupBottomSheet?
   private let colorPickButton: UIButton
-  private let doneBottomButton: UIButton
+  private let doneBottomButton: ToDoGardenBoxButton
   
   // MARK: - Object lifecycle
   
-  init(
-    textInputView: TextInputViewAPI,
-    postGroupColorPickerRow: PostGroupColorPickerRowAPI,
-    colorPickerList: ColorPickerListAPI,
-    colorPickButton: UIButton,
-    bottomButton: UIButton,
-    modalBottomButton: UIButton
-  ) {
-    self.textInputView = textInputView
-    self.postGroupColorPickerRow = postGroupColorPickerRow
-    self.postGroupBottomSheet = PostGroupBottomSheet(
-      colorPickerList: colorPickerList,
-      bottomButton: modalBottomButton
+  init() {
+    self.textInputView = TextInputView(model: TextInputView.Model.groupName)
+    self.postGroupColorPickerRow = PostGroupColorPickerRow()
+    self.colorPickButton = UIButton()
+    self.doneBottomButton = ToDoGardenBoxButton(
+      title: "완료",
+      buttonType: ToDoGardenBoxButton.Configuration.primaryRoundRectButton
     )
-    self.colorPickButton = colorPickButton
-    self.doneBottomButton = bottomButton
     super.init(nibName: nil, bundle: nil)
     self.view.backgroundColor = UIColor.white
-    self.postGroupBottomSheet.delegate = self
+    self.setupUI()
   }
   
   @available(*, unavailable)
@@ -64,17 +57,50 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    // TODO: NavigationBar setup
-    self.setupTextInputView()
-    self.setupPostGroupColorPickerRow()
-    self.setupColorPickButton()
-    self.setupDoneBottomButton()
   }
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     self.loadGroupData()
   }
+  
+  private func setupUI() {
+    self.setupBottomSheet()
+    self.setupTextInputView()
+    self.setupPostGroupColorPickerRow()
+    self.setupColorPickButton()
+    self.setupDoneBottomButton()
+  }
+  
+  private func setupBottomSheet() {
+    let subject = CurrentValueSubject<Int?, Never>(nil)
+    let colorPickerList = ColorPickerList(
+      colors: [
+        UIColor.toDoGardenRed,
+        UIColor.toDoGardenOrange,
+        UIColor.toDoGardenYellow,
+        UIColor.toDoGardenLeaf,
+        UIColor.toDoGardenOlive,
+        UIColor.toDoGardenMint,
+        UIColor.toDoGardenBlue,
+        UIColor.toDoGardenPink,
+        UIColor.toDoGardenPurple,
+        UIColor.toDoGardenBrown,
+        UIColor.toDoGardenBlack,
+        UIColor.toDoGardenGray
+      ],
+      itemsPerRow: 6,
+      selected: subject
+    )
+    
+    self.postGroupBottomSheet = PostGroupBottomSheet(
+      colorPickerList: colorPickerList,
+      bottomButton: ToDoGardenBoxButton(title: "완료", buttonType: .primaryRoundRectButton)
+    )
+    
+    self.postGroupBottomSheet?.delegate = self
+  }
+  
   private func setupTextInputView() {
     self.textInputView.delegate = self
     self.textInputView.usingAutolayout()
@@ -127,6 +153,8 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
     guard let postGroupBottomSheet = postGroupBottomSheet else {
       return
     }
+    
+    self.colorPickButton.setImage(UIImage.forwardButtonImage, for: UIButton.State.normal)
     self.colorPickButton.usingAutolayout()
     self.view.addSubview(self.colorPickButton)
     
@@ -140,8 +168,8 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
     )
     
     self.colorPickButton.addAction( UIAction { _ in
-      self.postGroupBottomSheet.setupCurrentColor(color: self.postGroupColorPickerRow.getColor())
-      self.present(self.postGroupBottomSheet, animated: true)
+      postGroupBottomSheet.setupCurrentColor(color: self.postGroupColorPickerRow.getColor())
+      self.present(postGroupBottomSheet, animated: true)
     }, for: UIControl.Event.touchUpInside)
   }
   
@@ -240,38 +268,6 @@ extension PostGroupViewController: PostGroupBottomSheetDelegate {
 @available(iOS 17.0, *)
 #Preview {
   let viewController = PostGroupViewController()
-// #if DEBUG
-// @available(iOS 17.0, *)
-// #Preview {
-//  let textInputView = TextInputView(model: .groupName)
-//  let colorPickerRow = PostGroupColorPickerRow()
-//  let subject =  CurrentValueSubject<Int?, Never>(nil)
-//  let colorPickerList = ColorPickerList(colors: [
-//    .toDoGardenBlack,
-//    .toDoGardenBlue,
-//    .toDoGardenBrown,
-//    .toDoGardenEditButtonBlue,
-//    .toDoGardenEditButtonRed,
-//    .toDoGardenEditButtonYellow,
-//    .toDoGardenGrassHigh,
-//    .toDoGardenGrassLow,
-//    .toDoGardenGrassMiddle,
-//    .toDoGardenGray2,
-//    .toDoGardenOlive,
-//    .toDoGardenPink
-//  ], itemsPerRow: 6, selected: subject)
-//  let colorPickButton = UIButton()
-//  colorPickButton.setImage(UIImage.forwardButtonImage, for: .normal)
-//
-//  let vc = PostGroupViewController(
-//    textInputView: textInputView,
-//    postGroupColorPickerRow: colorPickerRow,
-//    colorPickerList: colorPickerList,
-//    colorPickButton: colorPickButton,
-//    bottomButton: ToDoGardenBoxButton(title: "확인", buttonType: .primaryRoundRectButton),
-//    modalBottomButton: ToDoGardenBoxButton(title: "확인", buttonType: .primaryRoundRectButton)
-//  )
-//
-//  return vc
-// }
-// #endif
+  return viewController
+}
+#endif
