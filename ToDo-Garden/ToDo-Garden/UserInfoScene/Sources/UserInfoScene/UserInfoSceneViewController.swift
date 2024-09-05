@@ -5,6 +5,7 @@
 //  Created by Wood on 8/28/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
+import PhotosUI
 import UIKit
 
 import ToDoGardenUIAPI
@@ -102,7 +103,7 @@ extension UserInfoSceneViewController: ToDoGardenAlertControllerDelegate {
 
 extension UserInfoSceneViewController: ManageAccountViewDelegate, ProfileInfoViewDelegate {
   func didSelectEditProfileButton() {
-    // TODO: 이미지 선택 로직 구현 예정
+    self.handlePhotoAuthorizationStatus()
   }
 
   func didSelectLogOutButton() {
@@ -111,6 +112,24 @@ extension UserInfoSceneViewController: ManageAccountViewDelegate, ProfileInfoVie
   
   func didSelectWithdrawMembershipButton() {
     self.showAlertController(for: ToDoGardenAlertView.Configuration.askToUnsubscribe)
+  }
+}
+
+// MARK: User Image Handling Functions
+
+extension UserInfoSceneViewController {
+  private func handlePhotoAuthorizationStatus() {
+    Task {
+      let status = await PHPhotoLibrary.requestAuthorization(for: PHAccessLevel.readWrite)
+      switch status {
+      case .notDetermined, .denied, .restricted:
+        break
+      case .authorized, .limited:
+        break
+      @unknown default:
+        break
+      }
+    }
   }
 }
 
