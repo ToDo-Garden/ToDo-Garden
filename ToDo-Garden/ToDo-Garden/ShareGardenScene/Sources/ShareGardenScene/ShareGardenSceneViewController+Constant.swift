@@ -60,6 +60,7 @@ extension ShareGardenSceneViewController.Constant.Layout {
     static let sectionHeaderViewLeftInsetRatio: CGFloat = 28.0 / 375.0
     static let sectionHeaderViewRightInsetRatio: CGFloat = 15.0 / 375.0
     static let searchGardenButtonTopInset: CGFloat = 8
+    static let searchGardenButtonHeight: CGFloat = 24.0
     static let searchGardenButtonHorizontalInsetRatio: CGFloat = 19.0 / 375.0
   }
 }
