@@ -17,12 +17,19 @@ final class ShareGardenSceneViewController: UIViewController, ShareGardenSceneVi
   
   // MARK: - VIP Properties
   
-  var interactor: ShareGardenSceneBusinessLogic?
+  var interactor: (ShareGardenSceneBusinessLogic & FriendsGardenStore)?
   var router: (ShareGardenSceneRoutingLogic & ShareGardenSceneDataPassing)?
+  
+  // MARK: - UI Properties
+  
+  private let myGardenView: MyGardenView
+  private let friendsGardenView: FriendsGardenView
   
   // MARK: - Object lifecycle
   
-  init() {
+  init(friendsGardenStore: FriendsGardenStore) {
+    self.myGardenView = MyGardenView()
+    self.friendsGardenView = FriendsGardenView(friendsGardenStore: friendsGardenStore)
     super.init(nibName: nil, bundle: nil)
   }
   
