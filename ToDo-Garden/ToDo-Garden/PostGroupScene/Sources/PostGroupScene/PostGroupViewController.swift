@@ -10,6 +10,7 @@ import UIKit
 import PostGroupSceneAPI
 import PostGroupSceneEntity
 import ToDoGardenUIAPI
+import ToDoGardenUIComponent
 import ToDoGardenUIResource
 
 protocol PostGroupDisplayLogic: AnyObject {
@@ -76,7 +77,7 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
   }
   private func setupTextInputView() {
     self.textInputView.delegate = self
-    self.textInputView.translatesAutoresizingMaskIntoConstraints = false
+    self.textInputView.usingAutolayout()
     self.view.addSubview(self.textInputView)
     
     NSLayoutConstraint.activate(
@@ -99,7 +100,7 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
   
   private func setupPostGroupColorPickerRow() {
     self.view.addSubview(self.postGroupColorPickerRow)
-    self.postGroupColorPickerRow.translatesAutoresizingMaskIntoConstraints = false
+    self.postGroupColorPickerRow.usingAutolayout()
     
     NSLayoutConstraint.activate(
       [
@@ -123,7 +124,10 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
   }
   
   private func setupColorPickButton() {
-    self.colorPickButton.translatesAutoresizingMaskIntoConstraints = false
+    guard let postGroupBottomSheet = postGroupBottomSheet else {
+      return
+    }
+    self.colorPickButton.usingAutolayout()
     self.view.addSubview(self.colorPickButton)
     
     NSLayoutConstraint.activate(
@@ -142,9 +146,8 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
   }
   
   private func setupDoneBottomButton() {
-    self.doneBottomButton.translatesAutoresizingMaskIntoConstraints = false
+    self.doneBottomButton.usingAutolayout()
     self.view.addSubview(self.doneBottomButton)
-    
     self.doneBottomButton.isEnabled = self.isDoneBottomButtonEnabled()
     
     NSLayoutConstraint.activate(
@@ -233,10 +236,10 @@ extension PostGroupViewController: PostGroupBottomSheetDelegate {
   }
 }
 
-// MARK: Preview : PostGroupScene의 Package.swift에 있는 주석처리를 해제해주세요.
-//
-// import Combine
-// import ToDoGardenUIComponent
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let viewController = PostGroupViewController()
 // #if DEBUG
 // @available(iOS 17.0, *)
 // #Preview {
