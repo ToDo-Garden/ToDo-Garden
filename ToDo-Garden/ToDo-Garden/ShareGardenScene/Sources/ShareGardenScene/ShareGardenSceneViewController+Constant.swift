@@ -51,6 +51,8 @@ extension ShareGardenSceneViewController.Constant.Layout {
     static let profilePlaceholderWidth: CGFloat = 36.0
     static let profilePlaceholderHeight: CGFloat = 36.0
     static let profilePlaceholderCornerRadius: CGFloat = 18.0
+    static let nicknamePlaceholderHeight: CGFloat = 16.0
+    static let nicknamePlaceholderCornerRadius: CGFloat = 8.0
   }
   
   enum FriendsGardenListView {

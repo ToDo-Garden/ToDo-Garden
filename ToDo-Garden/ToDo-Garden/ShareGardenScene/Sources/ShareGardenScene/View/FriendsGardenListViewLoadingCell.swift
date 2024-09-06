@@ -34,9 +34,13 @@ extension ShareGardenSceneViewController.FriendsGardenView {
     private let nicknamePlaceholder: UIView = {
       let nicknamePlaceholder = UIView()
       nicknamePlaceholder.usingAutolayout()
-      nicknamePlaceholder.heightAnchor.constraint(equalToConstant: 16).isActive = true
+      
+      let height = FriendsGardenListViewLoadingCell.LayoutConstant.nicknamePlaceholderHeight
+      let cornerRadius = FriendsGardenListViewLoadingCell.LayoutConstant.nicknamePlaceholderCornerRadius
+      
+      nicknamePlaceholder.heightAnchor.constraint(equalToConstant: height).isActive = true
       nicknamePlaceholder.isShimmering = true
-      nicknamePlaceholder.layer.cornerRadius = 8
+      nicknamePlaceholder.layer.cornerRadius = cornerRadius
       
       return nicknamePlaceholder
     }()
