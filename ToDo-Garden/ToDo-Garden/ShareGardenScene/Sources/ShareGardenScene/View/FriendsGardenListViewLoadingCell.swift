@@ -11,12 +11,21 @@ import ToDoGardenUIComponent
 
 extension ShareGardenSceneViewController.FriendsGardenView {
   final class FriendsGardenListViewLoadingCell: UICollectionViewCell {
+    
+    private static let LayoutConstant = ShareGardenSceneViewController
+      .Constant.Layout.FriendsGardenListViewLoadingCell.self
+    
     private let profilePlaceholder: UIView = {
       let profilePlaceholder = UIView()
       profilePlaceholder.usingAutolayout()
-      profilePlaceholder.widthAnchor.constraint(equalToConstant: 36).isActive = true
-      profilePlaceholder.heightAnchor.constraint(equalToConstant: 36).isActive = true
-      profilePlaceholder.layer.cornerRadius = 18
+      
+      let width = FriendsGardenListViewLoadingCell.LayoutConstant.profilePlaceholderWidth
+      let height = FriendsGardenListViewLoadingCell.LayoutConstant.profilePlaceholderHeight
+      let cornerRadius = FriendsGardenListViewLoadingCell.LayoutConstant.profilePlaceholderCornerRadius
+      
+      profilePlaceholder.widthAnchor.constraint(equalToConstant: width).isActive = true
+      profilePlaceholder.heightAnchor.constraint(equalToConstant: height).isActive = true
+      profilePlaceholder.layer.cornerRadius = cornerRadius
       profilePlaceholder.isShimmering = true
       
       return profilePlaceholder

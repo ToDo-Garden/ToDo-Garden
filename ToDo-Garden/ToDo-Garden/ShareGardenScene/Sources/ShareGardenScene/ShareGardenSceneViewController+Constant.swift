@@ -47,6 +47,12 @@ extension ShareGardenSceneViewController.Constant.Layout {
     static let gardenViewTopInsetWhenSelected: CGFloat = 9
   }
   
+  enum FriendsGardenListViewLoadingCell {
+    static let profilePlaceholderWidth: CGFloat = 36.0
+    static let profilePlaceholderHeight: CGFloat = 36.0
+    static let profilePlaceholderCornerRadius: CGFloat = 18.0
+  }
+  
   enum FriendsGardenListView {
     static let fullWidthRatio: CGFloat = 1.0
     static let estimatedItemHeight: CGFloat = 48.0
