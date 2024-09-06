@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import struct UIKit.NSDirectionalEdgeInsets
 
 extension ShareGardenSceneViewController {
   enum Constant {
@@ -53,6 +54,12 @@ extension ShareGardenSceneViewController.Constant.Layout {
     static let profilePlaceholderCornerRadius: CGFloat = 18.0
     static let nicknamePlaceholderHeight: CGFloat = 16.0
     static let nicknamePlaceholderCornerRadius: CGFloat = 8.0
+    static let placeholderContainerDirectionalMargins: NSDirectionalEdgeInsets = NSDirectionalEdgeInsets(
+      top: 6,
+      leading: 25,
+      bottom: 6,
+      trailing: 25
+    )
   }
   
   enum FriendsGardenListView {

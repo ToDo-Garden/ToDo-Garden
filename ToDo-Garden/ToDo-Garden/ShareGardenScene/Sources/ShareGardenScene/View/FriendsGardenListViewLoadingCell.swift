@@ -50,12 +50,8 @@ extension ShareGardenSceneViewController.FriendsGardenView {
         arrangedSubviews: [self.profilePlaceholder, self.nicknamePlaceholder]
       )
       placeHolderContainer.isLayoutMarginsRelativeArrangement = true
-      placeHolderContainer.directionalLayoutMargins = NSDirectionalEdgeInsets(
-        top: 6,
-        leading: 25,
-        bottom: 6,
-        trailing: 25
-      )
+      placeHolderContainer.directionalLayoutMargins = FriendsGardenListViewLoadingCell.LayoutConstant
+        .placeholderContainerDirectionalMargins
       placeHolderContainer.isShimmering = true
       
       return placeHolderContainer
