@@ -1,6 +1,7 @@
 import UIKit
 
 struct GuideSceneContentsBuilder: Sendable {
+  var baseContents: @MainActor @Sendable (Guide.GuideState) -> [UIView]
   var bottomContents: @MainActor @Sendable (Guide.GuideState) -> [UIView]
 }
 
@@ -9,8 +10,18 @@ extension GuideSceneContentsBuilder {
     let bottomBuilder = GuideSceneBottomContentsViewBuilder()
     
     return GuideSceneContentsBuilder(
+      baseContents: { _ in
+        let view1 = UIView()
+        view1.backgroundColor = .systemIndigo
+        let view2 = UIView()
+        view2.backgroundColor = .purple
+        let view3 = UIView()
+        view3.backgroundColor = .orange
+        
+        return [view1, view2, view3]
+      },
       bottomContents: { state in
-        return bottomBuilder
+        bottomBuilder
           .buildSubviews(state)
           .map { $0.wrapVerticallyCentered() }
       }
