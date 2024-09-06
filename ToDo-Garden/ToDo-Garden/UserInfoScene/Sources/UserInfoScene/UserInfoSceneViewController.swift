@@ -25,6 +25,11 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
   private var userInfoCollectionViewDataSource: DiffableDataSource?
   private let manageAccountView: ManageAccountView
 
+  // MARK: Dependency
+  
+  private let application: UIApplication
+  private let openSettingsURLString: String
+
   // MARK: - VIP Properties
   
   var interactor: UserInfoSceneBusinessLogic?
@@ -32,13 +37,15 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
   
   // MARK: - Object lifecycle
   
-  init() {
+  init(application: UIApplication, openSettingsURLString: String) {
     self.profileInfoView = ProfileInfoView()
     self.userInfoCollectionView = UICollectionView(
       frame: CGRect.zero,
       collectionViewLayout: UICollectionViewLayout()
     )
     self.manageAccountView = ManageAccountView()
+    self.application = application
+    self.openSettingsURLString = openSettingsURLString
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -183,9 +190,9 @@ extension UserInfoSceneViewController: PHPickerViewControllerDelegate {
       title: UserInfoSceneTheme.StringLiteral.SettingAppAlert.rightActionTitle,
       style: UIAlertAction.Style.default
     ) { _ in
-      let settingAppURL = URL(string: UIApplication.openSettingsURLString)
-      if let settingAppURL, UIApplication.shared.canOpenURL(settingAppURL) {
-        UIApplication.shared.open(settingAppURL)
+      let settingAppURL = URL(string: self.openSettingsURLString)
+      if let settingAppURL, self.application.canOpenURL(settingAppURL) {
+        self.application.open(settingAppURL)
       } else {
         self.closeAlert()
       }

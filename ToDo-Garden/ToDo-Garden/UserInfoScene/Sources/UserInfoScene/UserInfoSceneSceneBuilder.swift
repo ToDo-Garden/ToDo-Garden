@@ -5,7 +5,7 @@
 //  Created by Wood on 8/28/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
-import Foundation
+import UIKit.UIApplication
 
 import UserInfoSceneAPI
 import UserInfoSceneEntity
@@ -13,15 +13,24 @@ import UserInfoSceneEntity
 public struct UserInfoSceneSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
   public struct Dependency {
+    let application: UIApplication
+    let openSettingsURLString: String
     let userInfoWorker: UserInfoSceneWorkable
     let nextSceneBuilder: NextSceneBuildable
-    
-    public init(userInfoWorker: UserInfoSceneWorkable, nextSceneBuilder: NextSceneBuildable) {
+
+    public init(
+      application: UIApplication,
+      openSettingsURLString: String,
+      userInfoWorker: UserInfoSceneWorkable,
+      nextSceneBuilder: NextSceneBuildable
+    ) {
+      self.application = application
+      self.openSettingsURLString = openSettingsURLString
       self.userInfoWorker = userInfoWorker
       self.nextSceneBuilder = nextSceneBuilder
     }
   }
-  
+
   private let dependency: Dependency
   
   public init(dependency: Dependency) {
@@ -34,10 +43,14 @@ extension UserInfoSceneSceneBuilder: UserInfoSceneSceneBuildable {
   /// - Parameter payload: 런타임에 전달받아야 하는 의존성입니다.
   /// - Returns: 런타임 의존성, VIP Cycle이 설정된 ViewController를 반환합니다.
   public func build(with payload: UserInfoSceneScenePayloadable) -> UserInfoSceneViewControllable {
-    let someViewController = self.configureVIPCycle(for: UserInfoSceneViewController())
-    self.setPayload(for: someViewController, with: payload)
-    
-    return someViewController
+    let userInfoSceneViewController = UserInfoSceneViewController(
+      application: self.dependency.application,
+      openSettingsURLString: self.dependency.openSettingsURLString
+    )
+    let configuredVIPCycleViewController = self.configureVIPCycle(for: userInfoSceneViewController)
+    self.setPayload(for: configuredVIPCycleViewController, with: payload)
+
+    return configuredVIPCycleViewController
   }
 }
 
