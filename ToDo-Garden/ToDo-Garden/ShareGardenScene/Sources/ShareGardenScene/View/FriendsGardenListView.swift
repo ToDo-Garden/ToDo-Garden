@@ -98,17 +98,29 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
     case main
   }
   
-  private typealias DataSource = UICollectionViewDiffableDataSource<Section, ShareGardenScene.FriendsGarden.ID>
   private enum Item: Hashable {
     case friendsGarden(ShareGardenScene.FriendsGarden.ID)
     case loading(UUID)
   }
+  
+  private typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
   private typealias FriendsGardenListViewCell =
   ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListViewCell
+  private typealias FriendsGardenListViewLoadingCell =
+  ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListViewLoadingCell
   private typealias Snapshot =
   NSDiffableDataSourceSnapshot<
     ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView.Section,
-    ShareGardenScene.FriendsGarden.ID
+    Item
+  >
+  private typealias FriendsGardenListViewCellRegistration = UICollectionView.CellRegistration<
+    FriendsGardenListViewCell,
+    Item
+  >
+  
+  private typealias LoadingCellRegistration = UICollectionView.CellRegistration<
+    FriendsGardenListViewLoadingCell,
+    Item
   >
 }
 
@@ -147,18 +159,33 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
 
 extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView {
   private func setupDataSource() -> DataSource {
-    let cellRegistration = UICollectionView.CellRegistration<
-      FriendsGardenListViewCell,
-      ShareGardenScene.FriendsGarden.ID
-    > { [weak self] cell, _, identifier in
-      guard let friendsGarden = self?.friendsGardenStore.fetchBy(identifier)
+    let friendsGardenListViewCellRegistration = FriendsGardenListViewCellRegistration { [weak self] cell, _, item in
+      guard case let Item.friendsGarden(identifier) = item,
+        let friendsGarden = self?.friendsGardenStore.fetchBy(identifier)
       else { return }
       
       cell.configure(with: friendsGarden)
     }
     
-    return DataSource(collectionView: self.friendListView) { collectionView, indexPath, identifier in
-      collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: identifier)
+    let loadingCellRegistration = LoadingCellRegistration { cell, _, _ in
+      cell.configure()
+    }
+    
+    return DataSource(collectionView: self.friendListView) { collectionView, indexPath, item in
+      switch item {
+      case Item.loading:
+        return collectionView.dequeueConfiguredReusableCell(
+          using: loadingCellRegistration,
+          for: indexPath,
+          item: item
+        )
+      case Item.friendsGarden(_):
+        return collectionView.dequeueConfiguredReusableCell(
+          using: friendsGardenListViewCellRegistration,
+          for: indexPath,
+          item: item
+        )
+      }
     }
   }
 }
