@@ -72,7 +72,8 @@ extension ShareGardenSceneViewController.FriendsGardenView {
       if snapshot.sectionIdentifiers.contains(Section.main) == false {
         snapshot.appendSections([Section.main])
       }
-      snapshot.appendItems(identifiers, toSection: Section.main)
+      let items = identifiers.map { Item.friendsGarden($0) }
+      snapshot.appendItems(items, toSection: Section.main)
       self.friendsGardenListDataSource.apply(snapshot)
     }
   }
