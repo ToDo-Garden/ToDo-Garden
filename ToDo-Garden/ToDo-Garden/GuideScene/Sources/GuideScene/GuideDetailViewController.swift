@@ -102,7 +102,11 @@ final class GuideDetailViewController: UIViewController {
 }
 
 extension GuideDetailViewController: UIScrollViewDelegate {
-  func scrollViewDidScroll(_ scrollView: UIScrollView) {
+  func scrollViewWillEndDragging(
+    _ scrollView: UIScrollView,
+    withVelocity velocity: CGPoint,
+    targetContentOffset: UnsafeMutablePointer<CGPoint>
+  ) {
     let viewSize = scrollView.bounds.width
     let index = Int(round(scrollView.contentOffset.x / viewSize))
     self.bottomView.currentIndex = index
@@ -111,5 +115,5 @@ extension GuideDetailViewController: UIScrollViewDelegate {
 
 @available(iOS 17.0, *)
 #Preview {
-  GuideDetailViewController(.todoCreate)
+  GuideDetailViewController(.todoEdit)
 }
