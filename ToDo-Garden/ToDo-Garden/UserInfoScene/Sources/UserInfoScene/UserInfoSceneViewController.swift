@@ -26,9 +26,10 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
   private let manageAccountView: ManageAccountView
 
   // MARK: Dependency
-  
-  private let application: UIApplication
-  private let openSettingsURLString: String
+
+  let photoPickerViewController: PHPickerViewController
+  let application: UIApplication
+  let openSettingsURLString: String
 
   // MARK: - VIP Properties
   
@@ -37,13 +38,18 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
   
   // MARK: - Object lifecycle
   
-  init(application: UIApplication, openSettingsURLString: String) {
+  init(
+    photoPickerViewController: PHPickerViewController,
+    application: UIApplication,
+    openSettingsURLString: String
+  ) {
     self.profileInfoView = ProfileInfoView()
     self.userInfoCollectionView = UICollectionView(
       frame: CGRect.zero,
       collectionViewLayout: UICollectionViewLayout()
     )
     self.manageAccountView = ManageAccountView()
+    self.photoPickerViewController = photoPickerViewController
     self.application = application
     self.openSettingsURLString = openSettingsURLString
     super.init(nibName: nil, bundle: nil)
@@ -147,19 +153,11 @@ extension UserInfoSceneViewController: PHPickerViewControllerDelegate {
       case .notDetermined, .denied, .restricted:
         self.showMovingToSettingAppAlert()
       case .authorized, .limited:
-        self.showPhotoPicker()
+        self.present(self.photoPickerViewController, animated: true)
       @unknown default:
         break
       }
     }
-  }
-
-  private func showPhotoPicker() {
-    var configuration = PHPickerConfiguration()
-    configuration.filter = PHPickerFilter.images
-    let phpickerViewController = PHPickerViewController(configuration: configuration)
-    phpickerViewController.delegate = self
-    self.present(phpickerViewController, animated: true)
   }
 
   private func showMovingToSettingAppAlert() {

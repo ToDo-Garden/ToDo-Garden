@@ -5,6 +5,7 @@
 //  Created by Wood on 8/28/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
+import PhotosUI
 import UIKit.UIApplication
 
 import UserInfoSceneAPI
@@ -13,17 +14,20 @@ import UserInfoSceneEntity
 public struct UserInfoSceneSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
   public struct Dependency {
+    let photoPickerViewController: PHPickerViewController
     let application: UIApplication
     let openSettingsURLString: String
     let userInfoWorker: UserInfoSceneWorkable
     let nextSceneBuilder: NextSceneBuildable
 
     public init(
+      photoPickerViewController: PHPickerViewController,
       application: UIApplication,
       openSettingsURLString: String,
       userInfoWorker: UserInfoSceneWorkable,
       nextSceneBuilder: NextSceneBuildable
     ) {
+      self.photoPickerViewController = photoPickerViewController
       self.application = application
       self.openSettingsURLString = openSettingsURLString
       self.userInfoWorker = userInfoWorker
@@ -44,6 +48,7 @@ extension UserInfoSceneSceneBuilder: UserInfoSceneSceneBuildable {
   /// - Returns: 런타임 의존성, VIP Cycle이 설정된 ViewController를 반환합니다.
   public func build(with payload: UserInfoSceneScenePayloadable) -> UserInfoSceneViewControllable {
     let userInfoSceneViewController = UserInfoSceneViewController(
+      photoPickerViewController: self.dependency.photoPickerViewController,
       application: self.dependency.application,
       openSettingsURLString: self.dependency.openSettingsURLString
     )
