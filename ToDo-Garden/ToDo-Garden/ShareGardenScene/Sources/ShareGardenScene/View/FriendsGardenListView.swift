@@ -67,6 +67,27 @@ extension ShareGardenSceneViewController.FriendsGardenView {
       fatalError("init(coder:) has not been implemented")
     }
     
+    
+    /// FriendsGardenListView에 로딩 상태를 설정합니다.
+    /// - Parameter numberOfCells: 표시될 placeholder cell의 숫자입니다.
+    func setLoadingState(numberOfCells: Int) {
+      self.isUserInteractionEnabled = false
+      var snapshot = self.friendsGardenListDataSource.snapshot()
+      
+      if snapshot.sectionIdentifiers.contains(Section.main) == false {
+        snapshot.appendSections([Section.main])
+      }
+      
+      var items = [Item]()
+      
+      for _ in 0 ..< numberOfCells {
+        let uuid = UUID()
+        items.append(Item.loading(uuid))
+      }
+      
+      snapshot.appendItems(items)
+      self.friendsGardenListDataSource.apply(snapshot)
+    }
     func append(_ identifiers: [ShareGardenScene.FriendsGarden.ID]) {
       var snapshot = self.friendsGardenListDataSource.snapshot()
       if snapshot.sectionIdentifiers.contains(Section.main) == false {
