@@ -81,7 +81,7 @@ extension ShareGardenSceneViewController.FriendsGardenView {
 // MARK: - Setup
 
 extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView {
-  private func setup () {
+  private func setup() {
     self.addSubviews()
     self.setupLayoutCosntraints()
   }
@@ -164,7 +164,7 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
     if collectionView.indexPathsForSelectedItems?.contains(indexPath) ?? false {
       collectionView.deselectItem(at: indexPath, animated: true)
     } else {
-      collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+      collectionView.selectItem(at: indexPath, animated: true, scrollPosition: [])
     }
     
     return false
@@ -187,5 +187,6 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
       height: Self.layoutConstant.gradientLayerHeight
     )
     self.layer.addSublayer(self.gradientLayer)
+    self.isGradientLayerAdded = true
   }
 }

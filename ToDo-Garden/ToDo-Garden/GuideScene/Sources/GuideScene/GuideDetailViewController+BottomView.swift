@@ -12,6 +12,7 @@ extension GuideDetailViewController {
     private var rightButton: UIButton!
     
     @Published var currentIndex: Int = 0
+    private var subscription: AnyCancellable?
     private var subviewCount: Int = 0
     
     override init(frame: CGRect) {
@@ -57,6 +58,7 @@ extension GuideDetailViewController {
     }
     
     private func initialTask() {
+      self.backgroundColor = UIColor.toDoGardenWhite
       let container = self.buildContainer()
       self.addSubview(container)
       let forwardAction = UIAction { [weak self] _ in
@@ -77,16 +79,16 @@ extension GuideDetailViewController {
       self.addSubview(self.rightButton)
       self.layoutContainer(container)
       self.leftButton.isHidden = true
+      self.bindingCurrentIndex()
     }
     
     private func moveTo(forward: Bool) {
-      let count = forward ? 1 : -1
-      let rowWidth = self.scrollView.bounds.width * CGFloat(count)
+      let count = !forward ? 1 : -1
+      guard
+        0..<3 ~= self.currentIndex + count
+      else { return }
       self.currentIndex += count
-      self.scrollView.setContentOffset(
-        .init(x: self.scrollView.contentOffset.x - rowWidth, y: 0),
-        animated: true
-      )
+      self.scrollView.moveTo(index: self.currentIndex)
     }
     
     private func buildContainer() -> UIView {
@@ -187,7 +189,15 @@ extension GuideDetailViewController {
         self.rightButton.widthAnchor.constraint(equalToConstant: 24),
         self.rightButton.heightAnchor.constraint(equalToConstant: 24)
       ])
-      
+    }
+    
+    private func bindingCurrentIndex() {
+      self.subscription = self.$currentIndex
+        .debounce(for: 0.3, scheduler: DispatchQueue.main)
+        .removeDuplicates()
+        .sink { [weak scrollView] index in
+          scrollView?.moveTo(index: index)
+        }
     }
   }
 }
@@ -196,6 +206,7 @@ extension GuideDetailViewController.BottomView: UIScrollViewDelegate {
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
     let viewSize = scrollView.bounds.width
     let index = Int(round(scrollView.contentOffset.x / viewSize))
+    guard self.currentIndex != index else { return }
     self.currentIndex = index
     self.updateStepLabel(currentIndex)
     self.updateButtons()
@@ -216,5 +227,16 @@ extension GuideDetailViewController.BottomView: UIScrollViewDelegate {
       self.leftButton.isHidden = false
       self.rightButton.isHidden = false
     }
+  }
+}
+
+// GuideScene에서만 사용가능한 메소드이기에 공용 컴포넌트로 분리시키지 않겠습니다.
+extension UIScrollView {
+  func moveTo(index: Int) {
+    let offset: CGFloat = CGFloat(index) * (self.bounds.width)
+    self.setContentOffset(
+      .init(x: offset, y: 0),
+      animated: true
+    )
   }
 }
