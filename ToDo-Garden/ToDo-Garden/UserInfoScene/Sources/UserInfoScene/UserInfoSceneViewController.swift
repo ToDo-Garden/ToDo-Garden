@@ -147,15 +147,16 @@ extension UserInfoSceneViewController: PHPickerViewControllerDelegate {
   }
 
   private func handlePhotoAuthorizationStatus() {
-    Task {
-      let status = await PHPhotoLibrary.requestAuthorization(for: PHAccessLevel.readWrite)
-      switch status {
-      case .notDetermined, .denied, .restricted:
-        self.showMovingToSettingAppAlert()
-      case .authorized, .limited:
-        self.present(self.photoPickerViewController, animated: true)
-      @unknown default:
-        break
+    PHPhotoLibrary.requestAuthorization(for: PHAccessLevel.readWrite) { status in
+      DispatchQueue.main.async {
+        switch status {
+        case .notDetermined, .denied, .restricted:
+          self.showMovingToSettingAppAlert()
+        case .authorized, .limited:
+          self.present(self.photoPickerViewController, animated: true)
+        @unknown default:
+          break
+        }
       }
     }
   }
