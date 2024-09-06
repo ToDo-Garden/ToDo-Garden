@@ -88,6 +88,12 @@ extension ShareGardenSceneViewController.FriendsGardenView {
       snapshot.appendItems(items)
       self.friendsGardenListDataSource.apply(snapshot)
     }
+    
+    func endLoading() {
+      self.isUserInteractionEnabled = true
+      self.friendsGardenListDataSource.apply(Snapshot())
+    }
+    
     func append(_ identifiers: [ShareGardenScene.FriendsGarden.ID]) {
       var snapshot = self.friendsGardenListDataSource.snapshot()
       if snapshot.sectionIdentifiers.contains(Section.main) == false {
