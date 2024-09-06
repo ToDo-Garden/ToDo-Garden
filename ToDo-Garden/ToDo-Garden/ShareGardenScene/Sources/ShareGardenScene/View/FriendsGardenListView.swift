@@ -99,6 +99,10 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
   }
   
   private typealias DataSource = UICollectionViewDiffableDataSource<Section, ShareGardenScene.FriendsGarden.ID>
+  private enum Item: Hashable {
+    case friendsGarden(ShareGardenScene.FriendsGarden.ID)
+    case loading(UUID)
+  }
   private typealias FriendsGardenListViewCell =
   ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListViewCell
   private typealias Snapshot =
