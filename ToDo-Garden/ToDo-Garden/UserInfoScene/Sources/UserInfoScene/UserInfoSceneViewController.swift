@@ -355,6 +355,12 @@ extension UserInfoSceneViewController {
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  return UINavigationController(rootViewController: UserInfoSceneViewController())
+  return UINavigationController(
+    rootViewController: UserInfoSceneViewController(
+      photoPickerViewController: PHPickerViewController(configuration: PHPickerConfiguration()),
+      application: UIApplication.shared,
+      openSettingsURLString: UIApplication.openSettingsURLString
+    )
+  )
 }
 #endif
