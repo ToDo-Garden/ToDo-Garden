@@ -28,8 +28,6 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
   // MARK: Dependency
 
   let photoPickerViewController: PHPickerViewController
-  let application: UIApplication
-  let openSettingsURLString: String
 
   // MARK: - VIP Properties
   
@@ -38,11 +36,7 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
   
   // MARK: - Object lifecycle
   
-  init(
-    photoPickerViewController: PHPickerViewController,
-    application: UIApplication,
-    openSettingsURLString: String
-  ) {
+  init(photoPickerViewController: PHPickerViewController) {
     self.profileInfoView = ProfileInfoView()
     self.userInfoCollectionView = UICollectionView(
       frame: CGRect.zero,
@@ -50,8 +44,6 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
     )
     self.manageAccountView = ManageAccountView()
     self.photoPickerViewController = photoPickerViewController
-    self.application = application
-    self.openSettingsURLString = openSettingsURLString
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -189,12 +181,7 @@ extension UserInfoSceneViewController: PHPickerViewControllerDelegate {
       title: UserInfoSceneTheme.StringLiteral.SettingAppAlert.rightActionTitle,
       style: UIAlertAction.Style.default
     ) { _ in
-      let settingAppURL = URL(string: self.openSettingsURLString)
-      if let settingAppURL, self.application.canOpenURL(settingAppURL) {
-        self.application.open(settingAppURL)
-      } else {
-        self.closeAlert()
-      }
+      self.interactor?.moveToSettingApp()
     }
   }
 }
@@ -352,15 +339,15 @@ extension UserInfoSceneViewController {
   }
 }
 
-#if DEBUG
-@available(iOS 17.0, *)
-#Preview {
-  return UINavigationController(
-    rootViewController: UserInfoSceneViewController(
-      photoPickerViewController: PHPickerViewController(configuration: PHPickerConfiguration()),
-      application: UIApplication.shared,
-      openSettingsURLString: UIApplication.openSettingsURLString
-    )
-  )
-}
-#endif
+//  #if DEBUG
+//  @available(iOS 17.0, *)
+//  #Preview {
+//    return UINavigationController(
+//      rootViewController: UserInfoSceneViewController(
+//        photoPickerViewController: PHPickerViewController(configuration: PHPickerConfiguration()),
+//        application: UIApplication.shared,
+//        openSettingsURLString: UIApplication.openSettingsURLString
+//      )
+//    )
+//  }
+//  #endif

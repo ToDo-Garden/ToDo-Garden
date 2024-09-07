@@ -15,6 +15,7 @@ protocol UserInfoSceneDataStore {
 }
 
 protocol UserInfoSceneBusinessLogic {
+  func moveToSettingApp()
   func doSomething(request: UserInfoScene.Something.Request)
 }
 
@@ -22,15 +23,24 @@ class UserInfoSceneInteractor: UserInfoSceneDataStore {
   // var name: String = ""
   var presenter: UserInfoScenePresentationLogic?
   private let userInfoWorker: UserInfoSceneWorkable
-  
-  init(userInfoWorker: UserInfoSceneWorkable) {
+  private let appServiceWorker: AppServiceWorkable
+
+  init(
+    userInfoWorker: UserInfoSceneWorkable,
+    appServiceWorker: AppServiceWorkable
+  ) {
     self.userInfoWorker = userInfoWorker
+    self.appServiceWorker = appServiceWorker
   }
 }
 
 // MARK: - Request to worker
 
 extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
+  func moveToSettingApp() {
+    let isSettingAppOpened = self.appServiceWorker.openSettingApp()
+  }
+
   func doSomething(request: UserInfoScene.Something.Request) {
     self.userInfoWorker.doSomeWork()
     
