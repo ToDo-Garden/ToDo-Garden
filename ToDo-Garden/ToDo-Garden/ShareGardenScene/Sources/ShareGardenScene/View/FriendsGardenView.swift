@@ -69,6 +69,11 @@ extension ShareGardenSceneViewController {
         self.setupLayoutConstraints()
       }
     }
+    
+    func setLoadingState() {
+      let numberOfPlaceholderCells = Self.layoutConstant.numberOfPlaceholderCells
+      self.friendsGardenListView.setLoadingState(numberOfCells: numberOfPlaceholderCells)
+    }
   }
 }
 
