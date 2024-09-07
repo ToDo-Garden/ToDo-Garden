@@ -67,7 +67,6 @@ extension ShareGardenSceneViewController.FriendsGardenView {
       fatalError("init(coder:) has not been implemented")
     }
     
-    
     /// FriendsGardenListView에 로딩 상태를 설정합니다.
     /// - Parameter numberOfCells: 표시될 placeholder cell의 숫자입니다.
     func setLoadingState(numberOfCells: Int) {
