@@ -70,6 +70,10 @@ extension ShareGardenSceneViewController {
       }
     }
     
+    func append(_ identifiers: [ShareGardenScene.FriendsGarden.ID]) {
+      self.friendsGardenListView.append(identifiers)
+    }
+    
     func setLoadingState() {
       let numberOfPlaceholderCells = Self.layoutConstant.numberOfPlaceholderCells
       self.friendsGardenListView.setLoadingState(numberOfCells: numberOfPlaceholderCells)
