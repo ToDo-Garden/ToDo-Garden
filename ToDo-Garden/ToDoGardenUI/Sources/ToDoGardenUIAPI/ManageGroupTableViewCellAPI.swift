@@ -29,7 +29,7 @@ public protocol ManageGroupTableViewCellAPI: UITableViewCell {
   
   func update(color: UIColor?, progressRate: Float?, groupName: String?)
 
-  func setupRightButtonAction(handler: @escaping (UIColor, String) -> Void)
+  func setupRightButtonAction(handler: @escaping (String, String, UIColor) -> Void)
   
   func setupGroupNameButtonAction(handler: @escaping (String) -> Void)
   

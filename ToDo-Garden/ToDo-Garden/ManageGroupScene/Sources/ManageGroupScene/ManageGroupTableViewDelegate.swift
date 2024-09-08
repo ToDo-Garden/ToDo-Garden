@@ -17,7 +17,7 @@ final class ManageGroupTableViewDelegate: NSObject {
   var displayedGroupsBeforeEditing: [ManageGroup.ToDoGroup]
   private let footerView: UIView
   
-  private var onPostGroup: ((String, UIColor) -> Void)?
+  private var onPostGroup: ((String, String, UIColor) -> Void)?
   private var onDeleteGroup: ((String, Int) -> Void)?
   private var onReorderingStateChange: ((Bool) -> Void)?
   
@@ -36,7 +36,7 @@ final class ManageGroupTableViewDelegate: NSObject {
     self.footerView = footerView
   }
   
-  func setOnPostGroup(_ handler: @escaping (String, UIColor) -> Void) {
+  func setOnPostGroup(_ handler: @escaping (String, String, UIColor) -> Void) {
     self.onPostGroup = handler
   }
   
@@ -90,8 +90,8 @@ extension ManageGroupTableViewDelegate: UITableViewDataSource {
     } else {
       cell.leaveEditingMode()
     }
-    cell.setupRightButtonAction { [weak self] color, name in
-      self?.onPostGroup?(name, color)
+    cell.setupRightButtonAction { [weak self] groupId, groupName, groupColor in
+      self?.onPostGroup?(groupId, groupName, groupColor)
     }
     return cell
   }

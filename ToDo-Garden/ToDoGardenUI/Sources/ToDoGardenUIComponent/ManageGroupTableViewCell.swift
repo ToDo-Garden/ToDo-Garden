@@ -17,7 +17,7 @@ public final class ManageGroupTableViewCell: UITableViewCell, ManageGroupTableVi
   private var groupNameButton: UIButton?
   private var rightImageButton: UIButton?
   
-  private var rightButtonActionHandler: ((UIColor, String) -> Void)?
+  private var rightButtonActionHandler: ((String, String, UIColor) -> Void)?
   private var groupNameButtonActionHandler: ((String) -> Void)?
   
   public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -120,7 +120,7 @@ public final class ManageGroupTableViewCell: UITableViewCell, ManageGroupTableVi
     self.startAnimation()
   }
   
-  public func setupRightButtonAction(handler: @escaping (UIColor, String) -> Void) {
+  public func setupRightButtonAction(handler: @escaping (String, String, UIColor) -> Void) {
     self.rightButtonActionHandler = handler
     self.rightImageButton?.addAction(UIAction { [weak self] _ in
       self?.handleRightButtonAction()
@@ -138,9 +138,10 @@ public final class ManageGroupTableViewCell: UITableViewCell, ManageGroupTableVi
   }
   
   private func handleRightButtonAction() {
-    if let color = self.configuration?.model?.progressCircle.progressColor.value,
+    if let groupId = self.configuration?.model?.id,
+    let groupColor = self.configuration?.model?.progressCircle.progressColor.value,
     let groupName = self.configuration?.model?.groupNameButton.groupName.value {
-      self.rightButtonActionHandler?(color, groupName)
+      self.rightButtonActionHandler?(groupId, groupName, groupColor)
     }
   }
   
