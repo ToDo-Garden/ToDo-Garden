@@ -20,9 +20,9 @@ protocol UserInfoSceneDataPassing {
 class UserInfoSceneRouter: UserInfoSceneDataPassing {
   weak var viewController: UserInfoSceneViewController?
   var dataStore: UserInfoSceneDataStore?
-  private let nextSceneBuilder: NextSceneBuildable
-  
-  init(nextSceneBuilder: NextSceneBuildable) {
+  private let nextSceneBuilder: NextSceneBuildable?
+
+  init(nextSceneBuilder: NextSceneBuildable?) {
     self.nextSceneBuilder = nextSceneBuilder
   }
 }
@@ -31,9 +31,9 @@ class UserInfoSceneRouter: UserInfoSceneDataPassing {
 
 extension UserInfoSceneRouter: UserInfoSceneRoutingLogic {
   func routeToSomewhere() {
-    let destinationViewController = self.nextSceneBuilder.build(with: NextScenePayload())
-    
-    self.viewController?.present(destinationViewController, animated: true)
+//    let destinationViewController = self.nextSceneBuilder.build(with: NextScenePayload())
+//    
+//    self.viewController?.present(destinationViewController, animated: true)
   }
 }
 

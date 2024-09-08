@@ -5,7 +5,6 @@
 //  Created by Wood on 8/28/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
-import PhotosUI
 import UIKit
 
 import ToDoGardenUIAPI
@@ -17,6 +16,7 @@ import UserInfoSceneEntity
 
 protocol UserInfoSceneDisplayLogic: AnyObject {
   func displaySomething(viewModel: UserInfoScene.Something.ViewModel)
+  func displaySettingAppAlert()
 }
 
 final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewControllable {
@@ -25,10 +25,6 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
   private var userInfoCollectionViewDataSource: DiffableDataSource?
   private let manageAccountView: ManageAccountView
 
-  // MARK: Dependency
-
-  let photoPickerViewController: PHPickerViewController
-
   // MARK: - VIP Properties
   
   var interactor: UserInfoSceneBusinessLogic?
@@ -36,14 +32,13 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
   
   // MARK: - Object lifecycle
   
-  init(photoPickerViewController: PHPickerViewController) {
+  init() {
     self.profileInfoView = ProfileInfoView()
     self.userInfoCollectionView = UICollectionView(
       frame: CGRect.zero,
       collectionViewLayout: UICollectionViewLayout()
     )
     self.manageAccountView = ManageAccountView()
-    self.photoPickerViewController = photoPickerViewController
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -64,6 +59,10 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
 // MARK: - Confirm display logic protocol
 
 extension UserInfoSceneViewController: UserInfoSceneDisplayLogic {
+  func displaySettingAppAlert() {
+    self.showMovingToSettingAppAlert()
+  }
+
   func displaySomething(viewModel: UserInfoScene.Something.ViewModel) {
     // self.nameTextField.text = viewModel.name
   }
@@ -108,7 +107,7 @@ extension UserInfoSceneViewController: ToDoGardenAlertControllerDelegate {
 
 extension UserInfoSceneViewController: ManageAccountViewDelegate, ProfileInfoViewDelegate {
   func didSelectEditProfileButton() {
-    self.handlePhotoAuthorizationStatus()
+    self.interactor?.fetchUserPhotoToChange()
   }
 
   func didSelectLogOutButton() {
@@ -122,38 +121,10 @@ extension UserInfoSceneViewController: ManageAccountViewDelegate, ProfileInfoVie
 
 // MARK: User Image Handling Functions
 
-extension UserInfoSceneViewController: PHPickerViewControllerDelegate {
-  func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-    picker.dismiss(animated: true)
-
-    if let itemProvider = results.first?.itemProvider, itemProvider.canLoadObject(ofClass: UIImage.self) {
-      itemProvider.loadObject(ofClass: UIImage.self) { (loadedObject, error) in
-        if let newProfileImage = loadedObject as? UIImage {
-          // TODO: Change Profile Image Request - VIP Cycle
-          print(newProfileImage)
-        } else {
-          print("\(error.debugDescription) ocurred")
-        }
-      }
-    }
-  }
-
-  private func handlePhotoAuthorizationStatus() {
-    PHPhotoLibrary.requestAuthorization(for: PHAccessLevel.readWrite) { status in
-      DispatchQueue.main.async {
-        switch status {
-        case .notDetermined, .denied, .restricted:
-          self.showMovingToSettingAppAlert()
-        case .authorized, .limited:
-          self.present(self.photoPickerViewController, animated: true)
-        @unknown default:
-          break
-        }
-      }
-    }
-  }
-
+extension UserInfoSceneViewController {
+  @MainActor
   private func showMovingToSettingAppAlert() {
+    print(Thread.isMainThread)
     let stringLiteral = UserInfoSceneTheme.StringLiteral.SettingAppAlert.self
     let alert = UIAlertController(
       title: nil,

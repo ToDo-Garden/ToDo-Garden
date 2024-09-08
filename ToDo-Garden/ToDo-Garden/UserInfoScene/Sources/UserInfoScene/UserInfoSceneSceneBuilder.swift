@@ -14,19 +14,19 @@ import UserInfoSceneEntity
 public struct UserInfoSceneSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
   public struct Dependency {
-    let photoPickerViewController: PHPickerViewController
     let appServiceWorker: AppServiceWorkable
+    let userPhotoWorker: UserPhotoWorker
     let userInfoWorker: UserInfoSceneWorkable
-    let nextSceneBuilder: NextSceneBuildable
+    let nextSceneBuilder: NextSceneBuildable?
 
     public init(
-      photoPickerViewController: PHPickerViewController,
       appServiceWorker: AppServiceWorkable,
+      userPhotoWorker: UserPhotoWorker,
       userInfoWorker: UserInfoSceneWorkable,
-      nextSceneBuilder: NextSceneBuildable
+      nextSceneBuilder: NextSceneBuildable?
     ) {
-      self.photoPickerViewController = photoPickerViewController
       self.appServiceWorker = appServiceWorker
+      self.userPhotoWorker = userPhotoWorker
       self.userInfoWorker = userInfoWorker
       self.nextSceneBuilder = nextSceneBuilder
     }
@@ -44,9 +44,7 @@ extension UserInfoSceneSceneBuilder: UserInfoSceneSceneBuildable {
   /// - Parameter payload: 런타임에 전달받아야 하는 의존성입니다.
   /// - Returns: 런타임 의존성, VIP Cycle이 설정된 ViewController를 반환합니다.
   public func build(with payload: UserInfoSceneScenePayloadable) -> UserInfoSceneViewControllable {
-    let userInfoSceneViewController = UserInfoSceneViewController(
-      photoPickerViewController: self.dependency.photoPickerViewController
-    )
+    let userInfoSceneViewController = UserInfoSceneViewController()
     let configuredVIPCycleViewController = self.configureVIPCycle(for: userInfoSceneViewController)
     self.setPayload(for: configuredVIPCycleViewController, with: payload)
 
@@ -59,9 +57,11 @@ extension UserInfoSceneSceneBuilder {
   /// - Parameter viewController: VIPCycle을 설정할 viewController입니다.
   /// - Returns: VIP Cycle 설정이 완료된 `ViewControllable` 프로토콜을 준수한 `ViewController` 인스턴스를 반환합니다.
   private func configureVIPCycle(for viewController: UserInfoSceneViewController) -> UserInfoSceneViewController {
+    self.dependency.userPhotoWorker.baseViewController = viewController
     let interactor = UserInfoSceneInteractor(
       userInfoWorker: self.dependency.userInfoWorker,
-      appServiceWorker: self.dependency.appServiceWorker
+      appServiceWorker: self.dependency.appServiceWorker,
+      userPhotoWorker: self.dependency.userPhotoWorker
     )
     let presenter = UserInfoScenePresenter()
     let router = UserInfoSceneRouter(nextSceneBuilder: self.dependency.nextSceneBuilder)

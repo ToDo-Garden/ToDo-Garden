@@ -11,6 +11,7 @@ import UserInfoSceneEntity
 
 protocol UserInfoScenePresentationLogic {
   func presentSomething(response: UserInfoScene.Something.Response)
+  func presentSettingAppAlsert()
 }
 
 class UserInfoScenePresenter {
@@ -20,6 +21,10 @@ class UserInfoScenePresenter {
 // MARK: - Request to ViewController
 
 extension UserInfoScenePresenter: UserInfoScenePresentationLogic {
+  func presentSettingAppAlsert() {
+    self.viewController?.displaySettingAppAlert()
+  }
+  
   func presentSomething(response: UserInfoScene.Something.Response) {
     let viewModel = UserInfoScene.Something.ViewModel()
     self.viewController?.displaySomething(viewModel: viewModel)
