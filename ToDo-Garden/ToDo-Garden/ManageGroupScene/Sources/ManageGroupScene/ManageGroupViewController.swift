@@ -166,8 +166,8 @@ extension ManageGroupViewController {
   }
   
   private func setupTouchActions() {
-    self.manageGroupTableViewDelegate?.setOnPostGroup { [weak self] groupName, color in
-      self?.routeToPostGroupScene(groupName: groupName, color: color)
+    self.manageGroupTableViewDelegate?.setOnPostGroup { [weak self] _, groupName, groupColor in
+      self?.routeToPostGroupScene(groupName: groupName, color: groupColor)
     }
     
     self.manageGroupTableViewDelegate?.setOnDeleteGroup { [weak self] id, index in
