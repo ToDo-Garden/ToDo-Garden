@@ -41,7 +41,7 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
     self.postGroupColorPickerRow = PostGroupColorPickerRow()
     self.colorPickButton = UIButton()
     self.doneBottomButton = ToDoGardenBoxButton(
-      title: "완료",
+      title: Constant.StringLiteral.done,
       buttonType: ToDoGardenBoxButton.Configuration.primaryRoundRectButton
     )
     super.init(nibName: nil, bundle: nil)
@@ -92,7 +92,7 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
     
     self.postGroupBottomSheet = PostGroupBottomSheet(
       colorPickerList: colorPickerList,
-      bottomButton: ToDoGardenBoxButton(title: "완료", buttonType: .primaryRoundRectButton)
+      bottomButton: ToDoGardenBoxButton(title: Constant.StringLiteral.done, buttonType: .primaryRoundRectButton)
     )
     
     self.postGroupBottomSheet?.delegate = self
@@ -230,6 +230,7 @@ extension PostGroupViewController: PostGroupDisplayLogic {
   }
   
   func displayPayload(viewModel: PostGroupSceneEntity.PostGroup.LoadGroupData.ViewModel) {
+    self.title = viewModel.sceneTitle
     self.textInputView.setBeginEditing(with: viewModel.groupName)
     self.postGroupColorPickerRow.updateColor(with: viewModel.groupColor ?? UIColor.toDoGardenGrassNone)
     self.doneBottomButton.isEnabled = viewModel.isDoneBottomButtonEnable
