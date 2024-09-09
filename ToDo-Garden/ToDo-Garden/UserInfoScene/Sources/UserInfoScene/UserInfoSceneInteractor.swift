@@ -5,7 +5,7 @@
 //  Created by Wood on 8/28/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
-import Foundation
+import UIKit.UIImage
 
 import UserInfoSceneAPI
 import UserInfoSceneEntity
@@ -15,13 +15,15 @@ protocol UserInfoSceneDataStore {
 }
 
 protocol UserInfoSceneBusinessLogic {
-  func fetchUserPhotoToChange()
-  func moveToSettingApp()
+  func fetchUserPhotoAccess()
+  func changeUserProfileImage()
+  func openSettingApp()
   func doSomething(request: UserInfoScene.Something.Request)
 }
 
 class UserInfoSceneInteractor: UserInfoSceneDataStore {
-  private var profileImageLoadTask: Task<Void, Error>?
+  private var requestPhotoAccessTask: Task<Void, Error>?
+  private var requestUserPhotoTask: Task<Void, Error>?
 
   // var name: String = ""
   var presenter: UserInfoScenePresentationLogic?
@@ -43,23 +45,26 @@ class UserInfoSceneInteractor: UserInfoSceneDataStore {
 // MARK: - Request to worker
 
 extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
-  func fetchUserPhotoToChange() {
-    self.profileImageLoadTask = Task {
-      let isPhotoAccessEnabled = await self.userPhotoWorker.fetchPhotoAcess()
-      if isPhotoAccessEnabled {
-        let selectedImage = try await self.userPhotoWorker.requestImage()
-        print(selectedImage)
-      } else {
-        await MainActor.run {
-          self.presenter?.presentSettingAppAlsert()
-        }
+  func fetchUserPhotoAccess() {
+    self.requestPhotoAccessTask = Task {
+      let isPhotoAccessible = await self.userPhotoWorker.requestPhotoAccess()
+      let response = UserInfoScene.FetchUserPhotoAccess.Response(isPhotoAccessible: isPhotoAccessible)
+
+      await MainActor.run {
+        self.presenter?.presentUserPhotoAccess(response: response)
       }
     }
   }
 
-  func moveToSettingApp() {
-    let isSettingAppOpened = self.appServiceWorker.openSettingApp()
-    print(isSettingAppOpened)
+  func changeUserProfileImage() {
+    self.requestUserPhotoTask = Task {
+      let photoForEdit = try await self.userPhotoWorker.requestPhoto()
+      // TODO: 서버에 프로필 이미지 변경 요청
+    }
+  }
+
+  func openSettingApp() {
+    self.appServiceWorker.openSettingApp()
   }
 
   func doSomething(request: UserInfoScene.Something.Request) {

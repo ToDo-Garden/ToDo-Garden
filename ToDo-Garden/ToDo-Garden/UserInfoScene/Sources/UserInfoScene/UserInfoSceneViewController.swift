@@ -5,6 +5,7 @@
 //  Created by Wood on 8/28/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
+import PhotosUI
 import UIKit
 
 import ToDoGardenUIAPI
@@ -16,7 +17,7 @@ import UserInfoSceneEntity
 
 protocol UserInfoSceneDisplayLogic: AnyObject {
   func displaySomething(viewModel: UserInfoScene.Something.ViewModel)
-  func displaySettingAppAlert()
+  func displayUserPhotoAccess(viewModel: UserInfoScene.FetchUserPhotoAccess.ViewModel)
 }
 
 final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewControllable {
@@ -24,6 +25,7 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
   private let userInfoCollectionView: UICollectionView
   private var userInfoCollectionViewDataSource: DiffableDataSource?
   private let manageAccountView: ManageAccountView
+  private let photoPicker: PHPickerViewController
 
   // MARK: - VIP Properties
   
@@ -32,13 +34,14 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
   
   // MARK: - Object lifecycle
   
-  init() {
+  init(photoPicker: PHPickerViewController) {
     self.profileInfoView = ProfileInfoView()
     self.userInfoCollectionView = UICollectionView(
       frame: CGRect.zero,
       collectionViewLayout: UICollectionViewLayout()
     )
     self.manageAccountView = ManageAccountView()
+    self.photoPicker = photoPicker
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -59,8 +62,13 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
 // MARK: - Confirm display logic protocol
 
 extension UserInfoSceneViewController: UserInfoSceneDisplayLogic {
-  func displaySettingAppAlert() {
-    self.showMovingToSettingAppAlert()
+  func displayUserPhotoAccess(viewModel: UserInfoScene.FetchUserPhotoAccess.ViewModel) {
+    if viewModel.isPhotoAccessible {
+      self.present(self.photoPicker, animated: true)
+      self.interactor?.changeUserProfileImage()
+    } else {
+      self.showMovingToSettingAppAlert()
+    }
   }
 
   func displaySomething(viewModel: UserInfoScene.Something.ViewModel) {
@@ -71,6 +79,10 @@ extension UserInfoSceneViewController: UserInfoSceneDisplayLogic {
 // MARK: - Request to interactor
 
 extension UserInfoSceneViewController {
+  func didSelectEditProfileButton() {
+    self.interactor?.fetchUserPhotoAccess()
+  }
+
   func doSomething() {
     let request = UserInfoScene.Something.Request()
     self.interactor?.doSomething(request: request)
@@ -106,10 +118,6 @@ extension UserInfoSceneViewController: ToDoGardenAlertControllerDelegate {
 // MARK: Subviews Delegate Functions
 
 extension UserInfoSceneViewController: ManageAccountViewDelegate, ProfileInfoViewDelegate {
-  func didSelectEditProfileButton() {
-    self.interactor?.fetchUserPhotoToChange()
-  }
-
   func didSelectLogOutButton() {
     self.showAlertController(for: ToDoGardenAlertView.Configuration.askToLogout)
   }
@@ -124,7 +132,6 @@ extension UserInfoSceneViewController: ManageAccountViewDelegate, ProfileInfoVie
 extension UserInfoSceneViewController {
   @MainActor
   private func showMovingToSettingAppAlert() {
-    print(Thread.isMainThread)
     let stringLiteral = UserInfoSceneTheme.StringLiteral.SettingAppAlert.self
     let alert = UIAlertController(
       title: nil,
@@ -152,7 +159,7 @@ extension UserInfoSceneViewController {
       title: UserInfoSceneTheme.StringLiteral.SettingAppAlert.rightActionTitle,
       style: UIAlertAction.Style.default
     ) { _ in
-      self.interactor?.moveToSettingApp()
+      self.interactor?.openSettingApp()
     }
   }
 }

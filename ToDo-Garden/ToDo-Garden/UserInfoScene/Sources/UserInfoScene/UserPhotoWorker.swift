@@ -8,14 +8,9 @@
 import PhotosUI
 
 public final class UserPhotoWorker: PHPickerViewControllerDelegate {
-  private let photoPicker: PHPickerViewController
   private var selectedImagesHandler: ((UIImage?, Error?) -> Void)?
-  weak var baseViewController: UIViewController?
 
-  public init(photoPicker: PHPickerViewController) {
-    self.photoPicker = photoPicker
-    self.photoPicker.delegate = self
-  }
+  public init() {}
 
   public func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
     picker.dismiss(animated: true)
@@ -28,7 +23,7 @@ public final class UserPhotoWorker: PHPickerViewControllerDelegate {
     }
   }
 
-  func fetchPhotoAcess() async -> Bool {
+  func requestPhotoAccess() async -> Bool {
     let status = await PHPhotoLibrary.requestAuthorization(for: PHAccessLevel.readWrite)
     if status == PHAuthorizationStatus.authorized || status == PHAuthorizationStatus.limited {
       return true
@@ -37,7 +32,7 @@ public final class UserPhotoWorker: PHPickerViewControllerDelegate {
     }
   }
 
-  func requestImage() async throws -> UIImage {
+  func requestPhoto() async throws -> UIImage {
     try await withCheckedThrowingContinuation { continuation in
       self.selectedImagesHandler = { image, error in
         if let image {
@@ -47,7 +42,6 @@ public final class UserPhotoWorker: PHPickerViewControllerDelegate {
           continuation.resume(throwing: error)
         }
       }
-      self.baseViewController?.present(self.photoPicker, animated: true)
     }
   }
 }

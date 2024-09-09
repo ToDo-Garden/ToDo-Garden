@@ -11,7 +11,7 @@ import UserInfoSceneEntity
 
 protocol UserInfoScenePresentationLogic {
   func presentSomething(response: UserInfoScene.Something.Response)
-  func presentSettingAppAlsert()
+  func presentUserPhotoAccess(response: UserInfoScene.FetchUserPhotoAccess.Response)
 }
 
 class UserInfoScenePresenter {
@@ -21,10 +21,12 @@ class UserInfoScenePresenter {
 // MARK: - Request to ViewController
 
 extension UserInfoScenePresenter: UserInfoScenePresentationLogic {
-  func presentSettingAppAlsert() {
-    self.viewController?.displaySettingAppAlert()
+  func presentUserPhotoAccess(response: UserInfoScene.FetchUserPhotoAccess.Response) {
+    let isPhotoAccessible = response.isPhotoAccessible
+    let viewModel = UserInfoScene.FetchUserPhotoAccess.ViewModel(isPhotoAccessible: isPhotoAccessible)
+    self.viewController?.displayUserPhotoAccess(viewModel: viewModel)
   }
-  
+
   func presentSomething(response: UserInfoScene.Something.Response) {
     let viewModel = UserInfoScene.Something.ViewModel()
     self.viewController?.displaySomething(viewModel: viewModel)

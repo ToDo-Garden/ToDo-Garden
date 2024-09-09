@@ -8,5 +8,5 @@
 import Foundation
 
 public protocol AppServiceWorkable {
-  func openSettingApp() -> Bool
+  func openSettingApp()
 }

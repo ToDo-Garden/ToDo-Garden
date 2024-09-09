@@ -12,13 +12,10 @@ import UserInfoSceneAPI
 public struct AppServiceWorker: AppServiceWorkable {
   public init() {}
 
-  public func openSettingApp() -> Bool {
+  public func openSettingApp() {
     let settingAppURL = URL(string: UIApplication.openSettingsURLString)
     if let settingAppURL, UIApplication.shared.canOpenURL(settingAppURL) {
       UIApplication.shared.open(settingAppURL)
-      return true
-    } else {
-      return false
     }
   }
 }
