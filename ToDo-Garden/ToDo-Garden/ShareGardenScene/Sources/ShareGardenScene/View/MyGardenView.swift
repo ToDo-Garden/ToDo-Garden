@@ -75,6 +75,10 @@ extension ShareGardenSceneViewController {
       }
     }
     
+    func configure(with pomodoroRecordCollection: PomodoroRecordCollection) {
+      self.gardenView.configure(with: pomodoroRecordCollection)
+    }
+    
     func startShimmeringAnimation() {
       self.layoutIfNeeded()
       self.profileInfoView.startShimmering()
