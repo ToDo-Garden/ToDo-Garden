@@ -8,20 +8,21 @@
 import UIKit
 
 import ManageGroupSceneAPI
+import PostGroupSceneAPI
 import ToDoGardenUIAPI
 
 public struct ManageGroupSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
   public struct Dependency {
     let manageGroupWorker: ManageGroupWorkable
-    let nextSceneBuilder: NextSceneBuildable?
+    let postSceneBuilder: PostGroupSceneBuildable?
     
     public init(
       manageGroupWorker: ManageGroupWorkable,
-      nextSceneBuilder: NextSceneBuildable?
+      postSceneBuilder: PostGroupSceneBuildable?
     ) {
       self.manageGroupWorker = manageGroupWorker
-      self.nextSceneBuilder = nextSceneBuilder
+      self.postSceneBuilder = postSceneBuilder
     }
   }
   
@@ -37,12 +38,12 @@ extension ManageGroupSceneBuilder: ManageGroupSceneBuildable {
   /// - Parameter payload: 런타임에 전달받아야 하는 의존성입니다.
   /// - Returns: 런타임 의존성, VIP Cycle이 설정된 ViewController를 반환합니다.
   public func build(with payload: ManageGroupScenePayloadable?) -> ManageGroupViewControllable {
-    let someViewController = self.configureVIPCycle(
+    let manageGroupSceneViewController = self.configureVIPCycle(
       for: ManageGroupViewController()
     )
-    self.setPayload(for: someViewController, with: payload ?? nil )
+    self.setPayload(for: manageGroupSceneViewController, with: payload ?? nil )
     
-    return someViewController
+    return manageGroupSceneViewController
   }
 }
 
@@ -56,7 +57,7 @@ extension ManageGroupSceneBuilder {
     )
     
     let presenter = ManageGroupPresenter()
-    let router = ManageGroupRouter(nextSceneBuilder: nil)
+    let router = ManageGroupRouter(postSceneBuilder: self.dependency.postSceneBuilder)
     viewController.interactor = interactor
     viewController.router = router
     interactor.presenter = presenter
