@@ -19,7 +19,7 @@ extension ShareGardenSceneViewController.FriendsGardenView {
     private lazy var friendListView: UICollectionView = {
       let friendListView = UICollectionView(
         frame: CGRect.zero,
-        collectionViewLayout: Self.makeFreindsGardenListViewLayout()
+        collectionViewLayout: Self.makeFriendsGardenListViewLayout()
       )
       friendListView.delegate = self
       friendListView.backgroundColor = UIColor.white
@@ -67,12 +67,39 @@ extension ShareGardenSceneViewController.FriendsGardenView {
       fatalError("init(coder:) has not been implemented")
     }
     
+    /// FriendsGardenListView에 Shimmering Animation을 적용합니다.
+    /// - Parameter numberOfCells: 표시될 placeholder cell의 숫자입니다.
+    func startShimmeringAnimation(numberOfCells: Int) {
+      self.isUserInteractionEnabled = false
+      var snapshot = self.friendsGardenListDataSource.snapshot()
+      
+      if snapshot.sectionIdentifiers.contains(Section.main) == false {
+        snapshot.appendSections([Section.main])
+      }
+      
+      var items = [Item]()
+      
+      for _ in 0 ..< numberOfCells {
+        let uuid = UUID()
+        items.append(Item.loading(uuid))
+      }
+      
+      snapshot.appendItems(items)
+      self.friendsGardenListDataSource.apply(snapshot)
+    }
+    
+    func stopShimmeringAnimation() {
+      self.isUserInteractionEnabled = true
+      self.friendsGardenListDataSource.apply(Snapshot())
+    }
+    
     func append(_ identifiers: [ShareGardenScene.FriendsGarden.ID]) {
       var snapshot = self.friendsGardenListDataSource.snapshot()
       if snapshot.sectionIdentifiers.contains(Section.main) == false {
         snapshot.appendSections([Section.main])
       }
-      snapshot.appendItems(identifiers, toSection: Section.main)
+      let items = identifiers.map { Item.friendsGarden($0) }
+      snapshot.appendItems(items, toSection: Section.main)
       self.friendsGardenListDataSource.apply(snapshot)
     }
   }
@@ -98,20 +125,36 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
     case main
   }
   
-  private typealias DataSource = UICollectionViewDiffableDataSource<Section, ShareGardenScene.FriendsGarden.ID>
+  private enum Item: Hashable {
+    case friendsGarden(ShareGardenScene.FriendsGarden.ID)
+    case loading(UUID)
+  }
+  
+  private typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
   private typealias FriendsGardenListViewCell =
   ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListViewCell
+  private typealias FriendsGardenListViewLoadingCell =
+  ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListViewLoadingCell
   private typealias Snapshot =
   NSDiffableDataSourceSnapshot<
     ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView.Section,
-    ShareGardenScene.FriendsGarden.ID
+    Item
+  >
+  private typealias FriendsGardenListViewCellRegistration = UICollectionView.CellRegistration<
+    FriendsGardenListViewCell,
+    Item
+  >
+  
+  private typealias LoadingCellRegistration = UICollectionView.CellRegistration<
+    FriendsGardenListViewLoadingCell,
+    Item
   >
 }
 
 // MARK: - layout
 
 extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView {
-  private static func makeFreindsGardenListViewLayout() -> UICollectionViewCompositionalLayout {
+  private static func makeFriendsGardenListViewLayout() -> UICollectionViewCompositionalLayout {
     let itemSize = NSCollectionLayoutSize(
       widthDimension: NSCollectionLayoutDimension.fractionalWidth(
         Self.layoutConstant.fullWidthRatio
@@ -143,18 +186,33 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
 
 extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView {
   private func setupDataSource() -> DataSource {
-    let cellRegistration = UICollectionView.CellRegistration<
-      FriendsGardenListViewCell,
-      ShareGardenScene.FriendsGarden.ID
-    > { [weak self] cell, _, identifier in
-      guard let friendsGarden = self?.friendsGardenStore.fetchBy(identifier)
+    let friendsGardenListViewCellRegistration = FriendsGardenListViewCellRegistration { [weak self] cell, _, item in
+      guard case let Item.friendsGarden(identifier) = item,
+        let friendsGarden = self?.friendsGardenStore.fetchBy(identifier)
       else { return }
       
       cell.configure(with: friendsGarden)
     }
     
-    return DataSource(collectionView: self.friendListView) { collectionView, indexPath, identifier in
-      collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: identifier)
+    let loadingCellRegistration = LoadingCellRegistration { cell, _, _ in
+      cell.configure()
+    }
+    
+    return DataSource(collectionView: self.friendListView) { collectionView, indexPath, item in
+      switch item {
+      case Item.loading:
+        return collectionView.dequeueConfiguredReusableCell(
+          using: loadingCellRegistration,
+          for: indexPath,
+          item: item
+        )
+      case Item.friendsGarden(_):
+        return collectionView.dequeueConfiguredReusableCell(
+          using: friendsGardenListViewCellRegistration,
+          for: indexPath,
+          item: item
+        )
+      }
     }
   }
 }

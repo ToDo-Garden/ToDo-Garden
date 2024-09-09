@@ -69,6 +69,19 @@ extension ShareGardenSceneViewController {
         self.setupLayoutConstraints()
       }
     }
+    
+    func append(_ identifiers: [ShareGardenScene.FriendsGarden.ID]) {
+      self.friendsGardenListView.append(identifiers)
+    }
+    
+    func startShimmeringAnimation() {
+      let numberOfPlaceholderCells = Self.layoutConstant.numberOfPlaceholderCells
+      self.friendsGardenListView.startShimmeringAnimation(numberOfCells: numberOfPlaceholderCells)
+    }
+    
+    func stopShimmeringAnimation() {
+      self.friendsGardenListView.stopShimmeringAnimation()
+    }
   }
 }
 

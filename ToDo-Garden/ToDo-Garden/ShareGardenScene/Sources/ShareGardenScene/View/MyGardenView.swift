@@ -72,8 +72,20 @@ extension ShareGardenSceneViewController {
       super.layoutSubviews()
       self.setupLayoutIfNeeded = {
         self.setupLayoutConstraints()
-        self.setupShimmering()
       }
+    }
+    
+    func configure(with pomodoroRecordCollection: PomodoroRecordCollection) {
+      self.gardenView.configure(with: pomodoroRecordCollection)
+    }
+    
+    func startShimmeringAnimation() {
+      self.layoutIfNeeded()
+      self.profileInfoView.startShimmering()
+    }
+    
+    func stopShimmeringAnimation() {
+      self.profileInfoView.stopShimmering()
     }
   }
 }
@@ -134,24 +146,5 @@ extension ShareGardenSceneViewController.MyGardenView {
       self.profileInfoView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
       self.profileInfoView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
     ])
-  }
-}
-
-// MARK: - Setup shimmer
-
-extension ShareGardenSceneViewController.MyGardenView {
-  private func setupShimmering() {
-    self.setupProfileInfoViewShimmering()
-  }
-  
-  private func setupProfileInfoViewShimmering() {
-    var stack = profileInfoView.subviews
-    
-    while stack.isEmpty == false {
-      let currentView = stack.removeLast()
-      currentView.isShimmering = true
-      
-      stack.append(contentsOf: currentView.subviews)
-    }
   }
 }
