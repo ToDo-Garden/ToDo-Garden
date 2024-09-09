@@ -37,9 +37,9 @@ class ManageGroupRouter: ManageGroupDataPassing {
 
 extension ManageGroupRouter: ManageGroupRoutingLogic {
   func routeToPostGroupScene(
-    groupId: String? = nil,
-    groupName: String? = nil,
-    groupColor: UIColor? = nil
+    groupId: String?,
+    groupName: String?,
+    groupColor: UIColor?
   ) {
     let payload = PostGroupScenePayload(
       groupID: groupId,
