@@ -191,7 +191,9 @@ extension ManageGroupViewController {
         ),
         self.groupListTableView.trailingAnchor.constraint(
           equalTo: self.view.trailingAnchor,
-          constant: -Constant.Layout.TableView.sideMargin)
+          constant: -Constant.Layout.TableView.sideMargin
+        ),
+        self.groupListTableView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
       ]
     )
   }
