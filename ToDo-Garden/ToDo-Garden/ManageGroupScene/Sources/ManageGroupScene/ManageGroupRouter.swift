@@ -8,6 +8,7 @@
 import Foundation
 
 import ManageGroupSceneAPI
+import PostGroupSceneAPI
 
 protocol ManageGroupRoutingLogic {
   func routeToSomewhere()
@@ -40,7 +41,9 @@ extension ManageGroupRouter: ManageGroupRoutingLogic {
 // MARK: - Declare Payload for scene
 
 extension ManageGroupRouter {
-  struct NextScenePayload: NextScenePayloadable {
-    // var name: String
+  struct PostGroupScenePayload: PostGroupScenePayloadable {
+    var groupID: String?
+    var groupName: String?
+    var groupColor: UIColor?
   }
 }
