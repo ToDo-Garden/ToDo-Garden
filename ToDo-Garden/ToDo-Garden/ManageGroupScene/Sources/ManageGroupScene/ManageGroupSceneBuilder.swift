@@ -56,7 +56,7 @@ extension ManageGroupSceneBuilder {
     )
     
     let presenter = ManageGroupPresenter()
-    let router = ManageGroupRouter(nextSceneBuilder: self.dependency.nextSceneBuilder)
+    let router = ManageGroupRouter(nextSceneBuilder: nil)
     viewController.interactor = interactor
     viewController.router = router
     interactor.presenter = presenter

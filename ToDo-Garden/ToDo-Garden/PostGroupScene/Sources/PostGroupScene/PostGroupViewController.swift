@@ -41,7 +41,7 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
     self.postGroupColorPickerRow = PostGroupColorPickerRow()
     self.colorPickButton = UIButton()
     self.doneBottomButton = ToDoGardenBoxButton(
-      title: "완료",
+      title: Constant.StringLiteral.titleBottomButtonDone,
       buttonType: ToDoGardenBoxButton.Configuration.primaryRoundRectButton
     )
     super.init(nibName: nil, bundle: nil)
@@ -72,27 +72,17 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
   private func setupBottomSheet() {
     let subject = CurrentValueSubject<Int?, Never>(nil)
     let colorPickerList = ColorPickerList(
-      colors: [
-        UIColor.toDoGardenRed,
-        UIColor.toDoGardenOrange,
-        UIColor.toDoGardenYellow,
-        UIColor.toDoGardenLeaf,
-        UIColor.toDoGardenOlive,
-        UIColor.toDoGardenMint,
-        UIColor.toDoGardenBlue,
-        UIColor.toDoGardenPink,
-        UIColor.toDoGardenPurple,
-        UIColor.toDoGardenBrown,
-        UIColor.toDoGardenBlack,
-        UIColor.toDoGardenGray
-      ],
+      colors: ColorPickerList.primaryColorList,
       itemsPerRow: Constant.ColorPickerRow.itemsPerRow,
       selected: subject
     )
     
     self.postGroupBottomSheet = PostGroupBottomSheet(
       colorPickerList: colorPickerList,
-      bottomButton: ToDoGardenBoxButton(title: "완료", buttonType: .primaryRoundRectButton)
+      bottomButton: ToDoGardenBoxButton(
+        title: Constant.StringLiteral.titleBottomButtonDone,
+        buttonType: .primaryRoundRectButton
+      )
     )
     
     self.postGroupBottomSheet?.delegate = self
@@ -230,6 +220,7 @@ extension PostGroupViewController: PostGroupDisplayLogic {
   }
   
   func displayPayload(viewModel: PostGroupSceneEntity.PostGroup.LoadGroupData.ViewModel) {
+    self.title = viewModel.sceneTitle
     self.textInputView.setBeginEditing(with: viewModel.groupName)
     self.postGroupColorPickerRow.updateColor(with: viewModel.groupColor ?? UIColor.toDoGardenGrassNone)
     self.doneBottomButton.isEnabled = viewModel.isDoneBottomButtonEnable

@@ -28,7 +28,16 @@ extension PostGroupPresenter: PostGroupPresentationLogic {
   }
   
   func presentLoadGroupData(response: PostGroup.LoadGroupData.Response) {
+    var sceneTitle: String
+    let isEditGroupMode = response.isDoneBottomButtonEnable
+    if isEditGroupMode {
+      sceneTitle = Constant.StringLiteral.titleEditGroup
+    } else {
+      sceneTitle = Constant.StringLiteral.titleAddGroup
+    }
+    
     let viewModel = PostGroup.LoadGroupData.ViewModel(
+      sceneTitle: sceneTitle,
       groupName: response.groupName,
       groupColor: response.groupColor,
       isDoneBottomButtonEnable: response.isDoneBottomButtonEnable

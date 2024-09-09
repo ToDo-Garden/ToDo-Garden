@@ -61,12 +61,14 @@ extension PostGroupInteractor: PostGroupBusinessLogic {
   }
   
   func loadGroupData() {
-    let isButtonEnable: Bool = self.isButtonEnable(groupName: payload?.groupName, groupColor: payload?.groupColor)
-    
+    let isDoneBottomButtonEnable: Bool = self.isDoneBottomButtonEnable(
+      groupName: payload?.groupName,
+      groupColor: payload?.groupColor
+    )
     let response = PostGroup.LoadGroupData.Response(
       groupName: payload?.groupName ?? "",
       groupColor: payload?.groupColor,
-      isDoneBottomButtonEnable: isButtonEnable
+      isDoneBottomButtonEnable: isDoneBottomButtonEnable
     )
     self.presenter?.presentLoadGroupData(response: response)
   }
@@ -74,7 +76,7 @@ extension PostGroupInteractor: PostGroupBusinessLogic {
 
 extension PostGroupInteractor {
   
-  private func isButtonEnable(groupName: String?, groupColor: UIColor?) -> Bool {
+  private func isDoneBottomButtonEnable(groupName: String?, groupColor: UIColor?) -> Bool {
     var isButtonEnable: Bool
     if (groupName == nil) || (groupColor == nil) {
       isButtonEnable = false

@@ -56,15 +56,18 @@ public enum PostGroup {
     }
     
     public struct ViewModel {
+      public let sceneTitle: String
       public let groupName: String
       public let groupColor: UIColor?
       public let isDoneBottomButtonEnable: Bool
       
       public init(
+        sceneTitle: String,
         groupName: String,
         groupColor: UIColor?,
         isDoneBottomButtonEnable: Bool
       ) {
+        self.sceneTitle = sceneTitle
         self.groupName = groupName
         self.groupColor = groupColor
         self.isDoneBottomButtonEnable = isDoneBottomButtonEnable
