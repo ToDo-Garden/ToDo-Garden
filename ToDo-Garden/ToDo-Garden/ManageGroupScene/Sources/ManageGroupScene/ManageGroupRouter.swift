@@ -5,13 +5,17 @@
 //  Created by SONG on 6/26/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
-import Foundation
+import UIKit.UIColor
 
 import ManageGroupSceneAPI
 import PostGroupSceneAPI
 
 protocol ManageGroupRoutingLogic {
-  func routeToSomewhere()
+  func routeToPostGroupScene(
+    groupId: String?,
+    groupName: String?,
+    groupColor: UIColor?
+  )
 }
 
 protocol ManageGroupDataPassing {
@@ -21,20 +25,32 @@ protocol ManageGroupDataPassing {
 class ManageGroupRouter: ManageGroupDataPassing {
   weak var viewController: ManageGroupViewController?
   var dataStore: ManageGroupDataStore?
-  private let nextSceneBuilder: NextSceneBuildable?
+  private let postSceneBuilder: PostGroupSceneBuildable?
   
-  init(nextSceneBuilder: NextSceneBuildable?) {
-    self.nextSceneBuilder = nextSceneBuilder
+  init(postSceneBuilder: PostGroupSceneBuildable?) {
+    self.postSceneBuilder = postSceneBuilder
+  
   }
 }
 
 // MARK: - Routing
 
 extension ManageGroupRouter: ManageGroupRoutingLogic {
-  func routeToSomewhere() {
-    guard let destinationViewController = self.nextSceneBuilder?.build(with: NextScenePayload()) else { return }
+  func routeToPostGroupScene(
+    groupId: String? = nil,
+    groupName: String? = nil,
+    groupColor: UIColor? = nil
+  ) {
+    let payload = PostGroupScenePayload(
+      groupID: groupId,
+      groupName: groupName,
+      groupColor: groupColor
+    )
+    guard let destinationViewController = self.postSceneBuilder?.build(with: payload) else {
+      return
+    }
     
-    self.viewController?.present(destinationViewController, animated: true)
+    self.viewController?.navigationController?.pushViewController(destinationViewController, animated: true)
   }
 }
 
