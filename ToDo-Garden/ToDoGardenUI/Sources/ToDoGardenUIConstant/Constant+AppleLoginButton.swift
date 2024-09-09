@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  Constant+AppleLoginButton.swift
+//
 //
 //  Created by SONG on 9/9/24.
 //
