@@ -174,6 +174,23 @@ private extension Array {
   }
 }
 
+public extension ColorPickerList {
+  static let primaryColorList = [
+    UIColor.toDoGardenRed,
+    UIColor.toDoGardenOrange,
+    UIColor.toDoGardenYellow,
+    UIColor.toDoGardenLeaf,
+    UIColor.toDoGardenOlive,
+    UIColor.toDoGardenMint,
+    UIColor.toDoGardenBlue,
+    UIColor.toDoGardenPink,
+    UIColor.toDoGardenPurple,
+    UIColor.toDoGardenBrown,
+    UIColor.toDoGardenBlack,
+    UIColor.toDoGardenGray
+  ]
+}
+
 @available(iOS 17.0, *)
 #Preview {
   let subject =  CurrentValueSubject<Int?, Never>(nil)

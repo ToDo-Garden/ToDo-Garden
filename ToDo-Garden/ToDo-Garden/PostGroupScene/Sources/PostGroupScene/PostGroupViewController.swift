@@ -72,20 +72,7 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
   private func setupBottomSheet() {
     let subject = CurrentValueSubject<Int?, Never>(nil)
     let colorPickerList = ColorPickerList(
-      colors: [
-        UIColor.toDoGardenRed,
-        UIColor.toDoGardenOrange,
-        UIColor.toDoGardenYellow,
-        UIColor.toDoGardenLeaf,
-        UIColor.toDoGardenOlive,
-        UIColor.toDoGardenMint,
-        UIColor.toDoGardenBlue,
-        UIColor.toDoGardenPink,
-        UIColor.toDoGardenPurple,
-        UIColor.toDoGardenBrown,
-        UIColor.toDoGardenBlack,
-        UIColor.toDoGardenGray
-      ],
+      colors: ColorPickerList.primaryColorList,
       itemsPerRow: Constant.ColorPickerRow.itemsPerRow,
       selected: subject
     )
