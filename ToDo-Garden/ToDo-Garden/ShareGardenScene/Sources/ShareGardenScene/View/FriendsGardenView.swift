@@ -74,13 +74,13 @@ extension ShareGardenSceneViewController {
       self.friendsGardenListView.append(identifiers)
     }
     
-    func setLoadingState() {
+    func startShimmeringAnimation() {
       let numberOfPlaceholderCells = Self.layoutConstant.numberOfPlaceholderCells
-      self.friendsGardenListView.setLoadingState(numberOfCells: numberOfPlaceholderCells)
+      self.friendsGardenListView.startShimmeringAnimation(numberOfCells: numberOfPlaceholderCells)
     }
     
-    func endLoading() {
-      self.friendsGardenListView.endLoading()
+    func stopShimmeringAnimation() {
+      self.friendsGardenListView.stopShimmeringAnimation()
     }
   }
 }

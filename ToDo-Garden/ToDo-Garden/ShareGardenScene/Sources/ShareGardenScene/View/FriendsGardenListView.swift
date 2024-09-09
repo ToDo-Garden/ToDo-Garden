@@ -67,9 +67,9 @@ extension ShareGardenSceneViewController.FriendsGardenView {
       fatalError("init(coder:) has not been implemented")
     }
     
-    /// FriendsGardenListView에 로딩 상태를 설정합니다.
+    /// FriendsGardenListView에 Shimmering Animation을 적용합니다.
     /// - Parameter numberOfCells: 표시될 placeholder cell의 숫자입니다.
-    func setLoadingState(numberOfCells: Int) {
+    func startShimmeringAnimation(numberOfCells: Int) {
       self.isUserInteractionEnabled = false
       var snapshot = self.friendsGardenListDataSource.snapshot()
       
@@ -88,7 +88,7 @@ extension ShareGardenSceneViewController.FriendsGardenView {
       self.friendsGardenListDataSource.apply(snapshot)
     }
     
-    func endLoading() {
+    func stopShimmeringAnimation() {
       self.isUserInteractionEnabled = true
       self.friendsGardenListDataSource.apply(Snapshot())
     }
