@@ -15,6 +15,13 @@ public final class AppleLoginButton: UIButton {
     fatalError()
   }
   
+  public override var intrinsicContentSize: CGSize {
+    return CGSize(
+      width: Constant.AppleLoginButton.width,
+      height: Constant.AppleLoginButton.height
+    )
+  }
+  
   private func setupButton() {
   }
 }
