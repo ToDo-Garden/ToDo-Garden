@@ -32,7 +32,7 @@ public final class AppleLoginButton: UIButton {
     self.layer.cornerRadius = Constant.AppleLoginButton.cornerRadius
     self.clipsToBounds = true
     
-    let attributedTitle = createAttributedButtonTitle(with: Constant.AppleLoginButton.StringLiteral.title)
+    let attributedTitle = self.createAttributedButtonTitle(with: Constant.AppleLoginButton.StringLiteral.title)
     self.setAttributedTitle(attributedTitle, for: UIControl.State.normal)
   }
   
