@@ -24,13 +24,10 @@ public class ManageGroupViewController: UIViewController, ManageGroupViewControl
   
   var interactor: ManageGroupBusinessLogic?
   var router: (ManageGroupRoutingLogic & ManageGroupDataPassing)?
-  
-  public var rightBarButton: UIBarButtonItem
-  public var footerView: UIView
-  
   var manageGroupTableViewDelegate: ManageGroupTableViewDelegate?
   let groupListTableView: ManageGroupTableView
-  
+  public var rightBarButton: UIBarButtonItem
+  public var footerView: UIView
   private let groupListTableViewCell: ManageGroupTableViewCell
   private var editModeLeftBarButton: UIBarButtonItem
   // MARK: - Object lifecycle
@@ -324,7 +321,6 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
     return (insertions, moves, updates)
   }
   // swiftlint:enable large_tuple
-  
   private func calculateInsertions(newIDs: [String], oldIDs: Set<String>) -> [IndexPath] {
     var insertions: [IndexPath] = []
     for (newIndex, newID) in newIDs.enumerated() where !oldIDs.contains(newID) {
@@ -384,7 +380,7 @@ extension ManageGroupViewController {
 #Preview {
   let worker = ManageGroupWorker()
   let sceneBuilder = ManageGroupSceneBuilder(
-    dependency: .init(manageGroupWorker: worker, nextSceneBuilder: nil)
+    dependency: .init(manageGroupWorker: worker, postSceneBuilder: nil)
   )
   let naviController = UINavigationController(rootViewController: sceneBuilder.build(with: nil))
   return naviController
