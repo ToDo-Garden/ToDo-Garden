@@ -74,6 +74,15 @@ extension ShareGardenSceneViewController {
         self.setupLayoutConstraints()
       }
     }
+    
+    func startShimmeringAnimation() {
+      self.layoutIfNeeded()
+      self.profileInfoView.startShimmering()
+    }
+    
+    func stopShimmeringAnimation() {
+      self.profileInfoView.stopShimmering()
+    }
   }
 }
 
