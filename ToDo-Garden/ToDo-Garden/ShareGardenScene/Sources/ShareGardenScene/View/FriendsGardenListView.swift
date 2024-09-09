@@ -19,7 +19,7 @@ extension ShareGardenSceneViewController.FriendsGardenView {
     private lazy var friendListView: UICollectionView = {
       let friendListView = UICollectionView(
         frame: CGRect.zero,
-        collectionViewLayout: Self.makeFreindsGardenListViewLayout()
+        collectionViewLayout: Self.makeFriendsGardenListViewLayout()
       )
       friendListView.delegate = self
       friendListView.backgroundColor = UIColor.white
@@ -154,7 +154,7 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
 // MARK: - layout
 
 extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView {
-  private static func makeFreindsGardenListViewLayout() -> UICollectionViewCompositionalLayout {
+  private static func makeFriendsGardenListViewLayout() -> UICollectionViewCompositionalLayout {
     let itemSize = NSCollectionLayoutSize(
       widthDimension: NSCollectionLayoutDimension.fractionalWidth(
         Self.layoutConstant.fullWidthRatio
