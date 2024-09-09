@@ -41,7 +41,7 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
     self.postGroupColorPickerRow = PostGroupColorPickerRow()
     self.colorPickButton = UIButton()
     self.doneBottomButton = ToDoGardenBoxButton(
-      title: Constant.StringLiteral.done,
+      title: Constant.StringLiteral.titleBottomButtonDone,
       buttonType: ToDoGardenBoxButton.Configuration.primaryRoundRectButton
     )
     super.init(nibName: nil, bundle: nil)
@@ -92,7 +92,10 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
     
     self.postGroupBottomSheet = PostGroupBottomSheet(
       colorPickerList: colorPickerList,
-      bottomButton: ToDoGardenBoxButton(title: Constant.StringLiteral.done, buttonType: .primaryRoundRectButton)
+      bottomButton: ToDoGardenBoxButton(
+        title: Constant.StringLiteral.titleBottomButtonDone,
+        buttonType: .primaryRoundRectButton
+      )
     )
     
     self.postGroupBottomSheet?.delegate = self

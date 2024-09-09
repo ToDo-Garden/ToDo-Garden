@@ -11,8 +11,8 @@ enum Constant {
   enum StringLiteral {
     static let titleAddGroup: String = "그룹추가"
     static let titleEditGroup: String = "그룹편집"
-    static let done: String = "완료"
-    static let cancel: String = "취소"
+    static let titleBottomButtonDone: String = "완료"
+    static let titleBottomButtonCancel: String = "취소"
   }
   
   enum TextInputView {
