@@ -1,3 +1,4 @@
+import CommonViews
 import ToDoGardenUIComponent
 
 import Combine
@@ -10,16 +11,12 @@ final class GuideDetailViewController: UIViewController {
   
   private var state: Guide.GuideState
   
-  private var contensBuilder: GuideSceneContentsBuilder
+  private var contensBuilder = GuideSceneContentsBuilder.live
   private var subscription: AnyCancellable?
   
   // MARK: - Object lifecycle
-  init(
-    _ state: Guide.GuideState,
-    contensBuilder: GuideSceneContentsBuilder = .live
-  ) {
+  init(_ state: Guide.GuideState) {
     self.state = state
-    self.contensBuilder = contensBuilder
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -45,11 +42,22 @@ final class GuideDetailViewController: UIViewController {
     )
   }
   
-  private func updateContents(_ contents: [UIView]) {
+  private func updateContents(_ contents: [BaseContent]) {
     for content in contents {
-      self.scrollViewContentsView.addArrangedSubview(content)
-      content.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
-      content.heightAnchor.constraint(equalTo: self.view.heightAnchor).isActive = true
+      guard let view = content.viewController.view else { return }
+      let dimmingView = DimmingView()
+      view.addSubview(dimmingView)
+      dimmingView.equalToParent()
+      Task {
+        let transparentRegions = content
+          .transparentRegionsTask
+          .map { $0() }
+        dimmingView.transparentRegions = transparentRegions
+      }
+      
+      self.scrollViewContentsView.addArrangedSubview(view)
+      view.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
+      view.heightAnchor.constraint(equalTo: self.view.heightAnchor).isActive = true
     }
   }
   
