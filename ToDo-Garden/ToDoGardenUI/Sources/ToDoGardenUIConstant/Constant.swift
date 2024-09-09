@@ -36,4 +36,5 @@ public enum Constant {
   public enum GardenView { }
   public enum GroupSelectionView { }
   public enum PostGroupColorPickerRow { }
+  public enum AppleLoginButton { }
 }
