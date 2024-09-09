@@ -42,28 +42,3 @@ extension UIView {
     }
   }
 }
-//let viewController = TimerSceneSceneBuilder(dependency: .live).build()
-//let navi = UINavigationController(rootViewController: viewController)
-//viewController.title = "Navigation Title"
-//
-//return [
-//  .init(
-//    viewController: navi,
-//    transparentRegionsTask: [
-//      {
-//        TransparentRegion(
-//          rect: viewController.timerProgressView
-//            ._frame(in: viewController.view),
-//          cornerRadius: 10
-//        )
-//      },
-//      {
-//        TransparentRegion(
-//          rect: viewController.timeLabel
-//            ._frame(in: viewController.view),
-//          cornerRadius: 0
-//        )
-//      }
-//    ]
-//  )
-//]
