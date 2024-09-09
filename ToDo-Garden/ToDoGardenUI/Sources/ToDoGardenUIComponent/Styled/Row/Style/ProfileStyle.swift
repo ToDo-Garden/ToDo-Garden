@@ -11,6 +11,11 @@ extension Styled.Row {
       arrangedSubviews: self.buildProfileSubviews(model: model)
     )
     stack.addInnerPadding(model[style: \.innerPadding])
+    
+    if model.style == Configuration.ProfileModel.Style.shareProfile {
+      stack.isShimmering = true
+    }
+    
     return stack
   }
 
@@ -24,9 +29,8 @@ extension Styled.Row {
     
     let innerStack = self.buildInnerStack(model: model)
     let forwardImage = UIImageView(image: UIImage.forwardButtonImage)
-    if model.style == Configuration.ProfileModel.Style.shareRow {
-      self.bindingForwardImage(imageView: forwardImage)
-    }
+    
+    self.setupViewsBasedOnStyle(style: model.style, profileImageView: profileImageView, forwardImage: forwardImage)
     
     var subviews = [
       profileImageView,
@@ -68,7 +72,43 @@ extension Styled.Row {
       spacing.heightAnchor.constraint(equalToConstant: 3).isActive = true
     }
     
+    if model.style == Configuration.ProfileModel.Style.shareProfile {
+      self.setupShimmeringInnerStack(titleLabel, descriptionLabel, stack)
+    }
+    
     return stack
+  }
+  
+  private func setupViewsBasedOnStyle(
+    style: Configuration.ProfileModel.Style,
+    profileImageView: UIImageView,
+    forwardImage: UIImageView
+  ) {
+    if style == Configuration.ProfileModel.Style.shareRow {
+      self.bindingForwardImage(imageView: forwardImage)
+    }
+    
+    if style == Configuration.ProfileModel.Style.shareProfile {
+      self.setupShimmeringProfileImageView(profileImageView)
+    }
+  }
+  
+  private func setupShimmeringProfileImageView(_ profileImageView: UIImageView) {
+    profileImageView.layer.cornerRadius = profileImageView.bounds.height / 2
+    profileImageView.isShimmering = true
+  }
+  
+  private func setupShimmeringInnerStack(
+    _ titleLabel: UILabel,
+    _ descriptionLabel: UILabel,
+    _ innerStack: UIStackView
+  ) {
+    titleLabel.layer.cornerRadius = 9.0
+    titleLabel.isShimmering = true
+    
+    descriptionLabel.layer.cornerRadius = 7.0
+    descriptionLabel.isShimmering = true
+    innerStack.isShimmering = true
   }
   
   private func bindingProfileImageState(imageView: UIImageView) {
