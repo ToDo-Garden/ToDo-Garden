@@ -104,6 +104,16 @@ public enum UserInfoScene {
       }
     }
   }
+
+  public enum SignOut {
+    public struct Response {
+      public let signOutError: Error?
+
+      public init(signOutError: Error?) {
+        self.signOutError = signOutError
+      }
+    }
+  }
 }
 
 // MARK: - Data Objects

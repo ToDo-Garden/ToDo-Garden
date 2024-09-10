@@ -15,6 +15,7 @@ protocol UserInfoScenePresentationLogic {
   func presentUserPhotoAccess(response: UserInfoScene.FetchUserPhotoAccess.Response)
   func presentChangedProfileImage(response: UserInfoScene.ChangeProfileImage.Response)
   func presentWithdrawResult(response: UserInfoScene.WithdrawMembership.Response)
+  func presentSignOutResult(response: UserInfoScene.SignOut.Response)
 }
 
 final class UserInfoScenePresenter {
@@ -53,5 +54,9 @@ extension UserInfoScenePresenter: UserInfoScenePresentationLogic {
     let withdrawError = response.withdrawError
     let viewModel = UserInfoScene.WithdrawMembership.ViewModel(withdrawError: withdrawError)
     self.viewController?.displayWithdrawResult(viewModel: viewModel)
+  }
+
+  func presentSignOutResult(response: UserInfoScene.SignOut.Response) {
+    
   }
 }

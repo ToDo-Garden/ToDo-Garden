@@ -138,8 +138,7 @@ extension UserInfoSceneViewController: ToDoGardenAlertControllerDelegate {
     self.closeAlert()
     switch buttonType {
     case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.logout:
-      // TODO: 로그아웃 Interactor 메서드 호출 예정
-      return
+      self.interactor?.signOut()
     case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.unsubscribe:
       self.interactor?.withdrawMembership()
     default:

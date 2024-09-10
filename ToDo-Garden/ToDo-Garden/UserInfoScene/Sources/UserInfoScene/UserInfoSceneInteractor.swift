@@ -21,6 +21,7 @@ protocol UserInfoSceneBusinessLogic {
   func changeUserProfileImage()
   func openSettingApp()
   func withdrawMembership()
+  func signOut()
 }
 
 final class UserInfoSceneInteractor: UserInfoSceneDataStore {
@@ -29,6 +30,7 @@ final class UserInfoSceneInteractor: UserInfoSceneDataStore {
   private var requestPhotoAccessTask: Task<Void, Error>?
   private var requestUserPhotoTask: Task<Void, Error>?
   private var requestWithdrawTask: Task<Void, Error>?
+  private var requestSignOutTask: Task<Void, Error>?
 
   // var name: String = ""
   var presenter: UserInfoScenePresentationLogic?
@@ -124,6 +126,23 @@ extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
       await MainActor.run {
         let response = UserInfoScene.WithdrawMembership.Response(withdrawError: withdrawError)
         self.presenter?.presentWithdrawResult(response: response)
+      }
+    }
+  }
+
+  func signOut() {
+    self.requestSignOutTask = Task {
+      let signOutError: Error?
+      do {
+        try await self.userInfoWorker.requestSignOut()
+        signOutError = nil
+      } catch let error {
+        signOutError = error
+      }
+
+      await MainActor.run {
+        let response = UserInfoScene.SignOut.Response(signOutError: signOutError)
+        self.presenter?.presentSignOutResult(response: response)
       }
     }
   }
