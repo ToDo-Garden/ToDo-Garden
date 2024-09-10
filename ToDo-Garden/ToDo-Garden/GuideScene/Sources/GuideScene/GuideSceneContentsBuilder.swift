@@ -1,24 +1,30 @@
+import CommonViews
+
 import UIKit
 
 struct GuideSceneContentsBuilder: Sendable {
-  var baseContents: @MainActor @Sendable (Guide.GuideState) -> [UIView]
+  var baseContents: @MainActor @Sendable (Guide.GuideState) -> [BaseContent]
   var bottomContents: @MainActor @Sendable (Guide.GuideState) -> [UIView]
 }
 
 extension GuideSceneContentsBuilder {
+  @MainActor
   static let live: GuideSceneContentsBuilder = {
+    let baseBuilder = BaseContentsBuilder.live
     let bottomBuilder = GuideSceneBottomContentsViewBuilder()
     
     return GuideSceneContentsBuilder(
-      baseContents: { _ in
-        let view1 = UIView()
-        view1.backgroundColor = .systemIndigo
-        let view2 = UIView()
-        view2.backgroundColor = .purple
-        let view3 = UIView()
-        view3.backgroundColor = .orange
-        
-        return [view1, view2, view3]
+      baseContents: { state in
+        switch state {
+        case .todoCreate:
+          return baseBuilder.todoCreate()
+        case .groupManagement:
+          return baseBuilder.groupManagement()
+        case .todoEdit:
+          return baseBuilder.todoEdit()
+        case .shareTab:
+          return baseBuilder.shareTab()
+        }
       },
       bottomContents: { state in
         bottomBuilder
