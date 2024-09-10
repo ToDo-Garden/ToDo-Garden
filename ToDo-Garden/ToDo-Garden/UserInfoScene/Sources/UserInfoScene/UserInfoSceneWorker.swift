@@ -9,7 +9,13 @@ import Foundation
 
 import UserInfoSceneAPI
 
-struct UserInfoSceneWorker: UserInfoSceneWorkable {
-  func doSomeWork() {
+public struct UserInfoSceneWorker: UserInfoSceneWorkable {
+  public init() {}
+
+  public func doSomeWork() {
+  }
+
+  public func requestChangeProfileImage(with data: Data) throws {
+    return
   }
 }

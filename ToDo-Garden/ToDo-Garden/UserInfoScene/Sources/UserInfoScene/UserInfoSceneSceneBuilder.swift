@@ -5,7 +5,8 @@
 //  Created by Wood on 8/28/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
-import Foundation
+import PhotosUI
+import UIKit.UIApplication
 
 import UserInfoSceneAPI
 import UserInfoSceneEntity
@@ -13,15 +14,27 @@ import UserInfoSceneEntity
 public struct UserInfoSceneSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
   public struct Dependency {
+    let photoPicker: PHPickerViewController
+    let appServiceWorker: AppServiceWorkable
+    let userPhotoWorker: UserPhotoWorker
     let userInfoWorker: UserInfoSceneWorkable
-    let nextSceneBuilder: NextSceneBuildable
-    
-    public init(userInfoWorker: UserInfoSceneWorkable, nextSceneBuilder: NextSceneBuildable) {
+    let nextSceneBuilder: NextSceneBuildable?
+
+    public init(
+      photoPicker: PHPickerViewController,
+      appServiceWorker: AppServiceWorkable,
+      userPhotoWorker: UserPhotoWorker,
+      userInfoWorker: UserInfoSceneWorkable,
+      nextSceneBuilder: NextSceneBuildable?
+    ) {
+      self.photoPicker = photoPicker
+      self.appServiceWorker = appServiceWorker
+      self.userPhotoWorker = userPhotoWorker
       self.userInfoWorker = userInfoWorker
       self.nextSceneBuilder = nextSceneBuilder
     }
   }
-  
+
   private let dependency: Dependency
   
   public init(dependency: Dependency) {
@@ -34,10 +47,14 @@ extension UserInfoSceneSceneBuilder: UserInfoSceneSceneBuildable {
   /// - Parameter payload: 런타임에 전달받아야 하는 의존성입니다.
   /// - Returns: 런타임 의존성, VIP Cycle이 설정된 ViewController를 반환합니다.
   public func build(with payload: UserInfoSceneScenePayloadable) -> UserInfoSceneViewControllable {
-    let someViewController = self.configureVIPCycle(for: UserInfoSceneViewController())
-    self.setPayload(for: someViewController, with: payload)
-    
-    return someViewController
+    self.dependency.photoPicker.delegate = self.dependency.userPhotoWorker
+    let userInfoSceneViewController = UserInfoSceneViewController(
+      photoPicker: self.dependency.photoPicker
+    )
+    let configuredVIPCycleViewController = self.configureVIPCycle(for: userInfoSceneViewController)
+    self.setPayload(for: configuredVIPCycleViewController, with: payload)
+
+    return configuredVIPCycleViewController
   }
 }
 
@@ -46,7 +63,11 @@ extension UserInfoSceneSceneBuilder {
   /// - Parameter viewController: VIPCycle을 설정할 viewController입니다.
   /// - Returns: VIP Cycle 설정이 완료된 `ViewControllable` 프로토콜을 준수한 `ViewController` 인스턴스를 반환합니다.
   private func configureVIPCycle(for viewController: UserInfoSceneViewController) -> UserInfoSceneViewController {
-    let interactor = UserInfoSceneInteractor(userInfoWorker: self.dependency.userInfoWorker)
+    let interactor = UserInfoSceneInteractor(
+      userInfoWorker: self.dependency.userInfoWorker,
+      appServiceWorker: self.dependency.appServiceWorker,
+      userPhotoWorker: self.dependency.userPhotoWorker
+    )
     let presenter = UserInfoScenePresenter()
     let router = UserInfoSceneRouter(nextSceneBuilder: self.dependency.nextSceneBuilder)
     viewController.interactor = interactor

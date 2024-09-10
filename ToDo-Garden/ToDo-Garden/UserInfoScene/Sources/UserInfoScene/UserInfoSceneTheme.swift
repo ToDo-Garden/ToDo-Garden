@@ -45,5 +45,11 @@ extension UserInfoSceneTheme.StringLiteral {
     static let title = "회원 탈퇴"
   }
 
+  enum SettingAppAlert {
+    static let message = "프로필 이미지를 변경하려면\n사진 접근 권한을 허용해야 합니다."
+    static let leftActionTitle = "취소"
+    static let rightActionTitle = "설정으로 이동"
+  }
+
   static let title = "프로필"
 }

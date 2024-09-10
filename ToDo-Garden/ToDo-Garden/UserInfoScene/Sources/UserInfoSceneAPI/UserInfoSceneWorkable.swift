@@ -9,4 +9,5 @@ import Foundation
 
 public protocol UserInfoSceneWorkable {
   func doSomeWork()
+  func requestChangeProfileImage(with data: Data) throws
 }
