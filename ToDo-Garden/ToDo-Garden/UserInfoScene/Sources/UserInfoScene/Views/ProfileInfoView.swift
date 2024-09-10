@@ -47,7 +47,8 @@ extension ProfileInfoView {
   private func setupProfileImageView() {
     let height = UserInfoSceneViewController.Constant.ProfileImageView.size.height
     self.profileImageView.layer.cornerRadius = height / 2
-    self.profileImageView.contentMode = UIView.ContentMode.scaleAspectFit
+    self.profileImageView.contentMode = UIView.ContentMode.scaleAspectFill
+    self.profileImageView.clipsToBounds = true
     self.profileImageView.image = UIImage.defaultProfileImage
   }
 

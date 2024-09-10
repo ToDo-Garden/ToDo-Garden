@@ -58,8 +58,24 @@ extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
 
   func changeUserProfileImage() {
     self.requestUserPhotoTask = Task {
-      let photoForEdit = try await self.userPhotoWorker.requestPhoto()
-      // TODO: 서버에 프로필 이미지 변경 요청
+      do {
+        let profileImageToChange = try await self.userPhotoWorker.requestPhoto()
+        if let imageData = profileImageToChange.pngData() {
+          try self.userInfoWorker.requestChangeProfileImage(with: imageData)
+          let response = UserInfoScene.ChangeProfileImage.Response(
+            changeResult: Result.success(profileImageToChange)
+          )
+
+          await MainActor.run {
+            self.presenter?.presentChangedProfileImage(response: response)
+          }
+        }
+      } catch let error {
+        let response = UserInfoScene.ChangeProfileImage.Response(
+          changeResult: Result.failure(error)
+        )
+        self.presenter?.presentChangedProfileImage(response: response)
+      }
     }
   }
 

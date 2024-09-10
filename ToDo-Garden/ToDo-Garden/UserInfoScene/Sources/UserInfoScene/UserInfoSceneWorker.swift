@@ -14,4 +14,8 @@ public struct UserInfoSceneWorker: UserInfoSceneWorkable {
 
   public func doSomeWork() {
   }
+
+  public func requestChangeProfileImage(with data: Data) throws {
+    return
+  }
 }

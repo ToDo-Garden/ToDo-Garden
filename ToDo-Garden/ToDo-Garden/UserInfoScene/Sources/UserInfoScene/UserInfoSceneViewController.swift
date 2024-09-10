@@ -18,6 +18,7 @@ import UserInfoSceneEntity
 protocol UserInfoSceneDisplayLogic: AnyObject {
   func displaySomething(viewModel: UserInfoScene.Something.ViewModel)
   func displayUserPhotoAccess(viewModel: UserInfoScene.FetchUserPhotoAccess.ViewModel)
+  func displayChangedProfileImage(viewModel: UserInfoScene.ChangeProfileImage.ViewModel)
 }
 
 final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewControllable {
@@ -68,6 +69,16 @@ extension UserInfoSceneViewController: UserInfoSceneDisplayLogic {
       self.interactor?.changeUserProfileImage()
     } else {
       self.showMovingToSettingAppAlert()
+    }
+  }
+
+  func displayChangedProfileImage(viewModel: UserInfoScene.ChangeProfileImage.ViewModel) {
+    switch viewModel.changeResult {
+    case .success(let changedProfileImage):
+      self.profileInfoView.updateImage(changedProfileImage)
+    case .failure(let error):
+      // TODO: - 에러 내용이 명시된 ToDoGardenAlert을 띄울 예정이며, 해당 알럿 컴포넌트 제작 후에 반영할 예정입니다.
+      return
     }
   }
 
