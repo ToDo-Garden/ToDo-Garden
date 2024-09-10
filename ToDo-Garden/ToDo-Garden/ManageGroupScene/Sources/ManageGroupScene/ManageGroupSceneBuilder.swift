@@ -15,14 +15,14 @@ public struct ManageGroupSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
   public struct Dependency {
     let manageGroupWorker: ManageGroupWorkable
-    let postSceneBuilder: PostGroupSceneBuildable?
+    let postGroupSceneBuilder: PostGroupSceneBuildable?
     
     public init(
       manageGroupWorker: ManageGroupWorkable,
-      postSceneBuilder: PostGroupSceneBuildable?
+      postGroupSceneBuilder: PostGroupSceneBuildable?
     ) {
       self.manageGroupWorker = manageGroupWorker
-      self.postSceneBuilder = postSceneBuilder
+      self.postGroupSceneBuilder = postGroupSceneBuilder
     }
   }
   
@@ -57,7 +57,7 @@ extension ManageGroupSceneBuilder {
     )
     
     let presenter = ManageGroupPresenter()
-    let router = ManageGroupRouter(postSceneBuilder: self.dependency.postSceneBuilder)
+    let router = ManageGroupRouter(postSceneBuilder: self.dependency.postGroupSceneBuilder)
     viewController.interactor = interactor
     viewController.router = router
     interactor.presenter = presenter
