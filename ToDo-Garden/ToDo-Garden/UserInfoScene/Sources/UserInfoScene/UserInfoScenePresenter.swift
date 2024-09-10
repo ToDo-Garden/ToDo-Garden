@@ -15,7 +15,7 @@ protocol UserInfoScenePresentationLogic {
   func presentChangedProfileImage(response: UserInfoScene.ChangeProfileImage.Response)
 }
 
-class UserInfoScenePresenter {
+final class UserInfoScenePresenter {
   weak var viewController: UserInfoSceneDisplayLogic?
 }
 
@@ -23,7 +23,9 @@ class UserInfoScenePresenter {
 
 extension UserInfoScenePresenter: UserInfoScenePresentationLogic {
   func presentCollectionViewSections(response: UserInfoScene.ConfigureCollectionView.Response) {
-    
+    let userInfoSections = response.userInfoSections
+    let viewModel = UserInfoScene.ConfigureCollectionView.ViewModel(userInfoSections: userInfoSections)
+    self.viewController?.displayCollectionViewSections(viewModel: viewModel)
   }
 
   func presentUserPhotoAccess(response: UserInfoScene.FetchUserPhotoAccess.Response) {

@@ -16,6 +16,7 @@ import UserInfoSceneAPI
 import UserInfoSceneEntity
 
 protocol UserInfoSceneDisplayLogic: AnyObject {
+  func displayCollectionViewSections(viewModel: UserInfoScene.ConfigureCollectionView.ViewModel)
   func displayUserPhotoAccess(viewModel: UserInfoScene.FetchUserPhotoAccess.ViewModel)
   func displayChangedProfileImage(viewModel: UserInfoScene.ChangeProfileImage.ViewModel)
 }
@@ -62,6 +63,20 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
 // MARK: - Confirm display logic protocol
 
 extension UserInfoSceneViewController: UserInfoSceneDisplayLogic {
+  typealias UserInfoSection = UserInfoScene.UserInfoSection
+  typealias UserInfoItem = UserInfoScene.UserInfoItem
+
+  func displayCollectionViewSections(viewModel: UserInfoScene.ConfigureCollectionView.ViewModel) {
+    var snapshot = NSDiffableDataSourceSnapshot<UserInfoSection, UserInfoItem>()
+    snapshot.appendSections(viewModel.userInfoSections)
+
+    snapshot.sectionIdentifiers.forEach { (section: UserInfoSection) in
+      snapshot.appendItems(section.items, toSection: section)
+    }
+
+    self.userInfoCollectionViewDataSource?.apply(snapshot)
+  }
+
   func displayUserPhotoAccess(viewModel: UserInfoScene.FetchUserPhotoAccess.ViewModel) {
     if viewModel.isPhotoAccessible {
       self.present(self.photoPicker, animated: true)
@@ -172,7 +187,6 @@ extension UserInfoSceneViewController {
     self.setupMainUI()
     self.setupSubviewsDelegate()
     self.setupUserInfoCollectionView()
-    self.loadUserInfoCollectionViewData()
     self.setupSubviewsLayout()
   }
 
@@ -200,41 +214,6 @@ extension UserInfoSceneViewController {
     self.userInfoCollectionViewDataSource = self.makeDiffableDataSource(with: self.userInfoCollectionView)
     self.userInfoCollectionView.dataSource = self.userInfoCollectionViewDataSource
     self.userInfoCollectionView.collectionViewLayout = self.makeCompositionalLayout()
-  }
-
-  private func loadUserInfoCollectionViewData() {
-    var snapshot = NSDiffableDataSourceSnapshot<UserInfoSection, UserInfoItem>()
-    snapshot.appendSections(self.makeSections())
-
-    snapshot.sectionIdentifiers.forEach { (section: UserInfoSection) in
-      snapshot.appendItems(section.items, toSection: section)
-    }
-
-    self.userInfoCollectionViewDataSource?.apply(snapshot)
-  }
-
-  private func makeSections() -> [UserInfoSection] {
-    let sectionTitle = UserInfoSceneTheme.StringLiteral.UserInfoCollectionView.Section.self
-    let itemTitle = UserInfoSceneTheme.StringLiteral.UserInfoCollectionView.Item.self
-    let position = SettingCollectionViewCell.Position.self
-
-    let profileSettingSection = UserInfoSection(
-      title: sectionTitle.profileSetting,
-      items: [
-        UserInfoItem(title: itemTitle.nickName, isRightImageExisted: true, position: position.top),
-        UserInfoItem(title: itemTitle.introduction, isRightImageExisted: true, position: position.bottom)
-      ]
-    )
-
-    let accountSettingSection = UserInfoSection(
-      title: sectionTitle.accountSetting,
-      items: [
-        UserInfoItem(title: itemTitle.id, isRightImageExisted: true, position: position.top),
-        UserInfoItem(title: itemTitle.email, isRightImageExisted: false, position: position.bottom)
-      ]
-    )
-
-    return [profileSettingSection, accountSettingSection]
   }
 }
 

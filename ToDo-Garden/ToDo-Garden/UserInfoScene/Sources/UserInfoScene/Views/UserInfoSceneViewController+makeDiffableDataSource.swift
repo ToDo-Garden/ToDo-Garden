@@ -11,19 +11,6 @@ import ToDoGardenUIComponent
 import ToDoGardenUIResource
 
 extension UserInfoSceneViewController {
-  struct UserInfoSection: Hashable {
-    let title: String
-    let items: [UserInfoItem]
-  }
-
-  struct UserInfoItem: Hashable {
-    let title: String
-    let isRightImageExisted: Bool
-    let position: SettingCollectionViewCell.Position
-  }
-}
-
-extension UserInfoSceneViewController {
   typealias DiffableDataSource = UICollectionViewDiffableDataSource<UserInfoSection, UserInfoItem>
   typealias HeaderRegistration = UICollectionView.SupplementaryRegistration<SectionHeaderView>
 
@@ -34,11 +21,12 @@ extension UserInfoSceneViewController {
         for: indexPath
       ) as? SettingCollectionViewCell else { return UICollectionViewCell() }
 
+      let cellPosition = self.getCellPosition(of: itemIdentifier.position)
       cell.setupUI(
-        title: itemIdentifier.title,
+        title: itemIdentifier.title.rawValue,
         titleFont: UIFont.pretendardBodyMedium,
         isShowingModal: itemIdentifier.isRightImageExisted,
-        position: itemIdentifier.position
+        position: cellPosition
       )
 
       return cell
@@ -46,6 +34,17 @@ extension UserInfoSceneViewController {
 
     dataSource.supplementaryViewProvider = self.makeSupplementaryViewProvider(with: dataSource)
     return dataSource
+  }
+
+  private func getCellPosition(of position: UserInfoItem.Position) -> SettingCollectionViewCell.Position {
+    switch position {
+    case UserInfoItem.Position.top:
+      return SettingCollectionViewCell.Position.top
+    case UserInfoItem.Position.middle:
+      return SettingCollectionViewCell.Position.middle
+    case UserInfoItem.Position.bottom:
+      return SettingCollectionViewCell.Position.bottom
+    }
   }
 
   private func makeSupplementaryViewProvider(
@@ -63,7 +62,7 @@ extension UserInfoSceneViewController {
     ) { supplementaryView, _, indexPath in
       let snapshot = dataSource.snapshot()
       let section = snapshot.sectionIdentifiers[indexPath.section]
-      supplementaryView.updateUI(title: section.title)
+      supplementaryView.updateUI(title: section.title.rawValue)
     }
   }
 }

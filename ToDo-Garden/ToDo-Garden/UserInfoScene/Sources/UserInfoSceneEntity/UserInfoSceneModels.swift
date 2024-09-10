@@ -55,6 +55,14 @@ public enum UserInfoScene {
         self.userInfoSections = userInfoSections
       }
     }
+
+    public struct ViewModel {
+      public let userInfoSections: [UserInfoSection]
+
+      public init(userInfoSections: [UserInfoSection]) {
+        self.userInfoSections = userInfoSections
+      }
+    }
   }
 }
 

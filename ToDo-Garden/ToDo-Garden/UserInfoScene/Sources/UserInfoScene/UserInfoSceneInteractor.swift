@@ -21,7 +21,7 @@ protocol UserInfoSceneBusinessLogic {
   func openSettingApp()
 }
 
-class UserInfoSceneInteractor: UserInfoSceneDataStore {
+final class UserInfoSceneInteractor: UserInfoSceneDataStore {
   private var requestPhotoAccessTask: Task<Void, Error>?
   private var requestUserPhotoTask: Task<Void, Error>?
 
