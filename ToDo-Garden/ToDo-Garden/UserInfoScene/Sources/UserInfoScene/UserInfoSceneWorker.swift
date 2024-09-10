@@ -19,4 +19,6 @@ public struct UserInfoSceneWorker: UserInfoSceneWorkable {
   public func requestUserProfile(urlString: String) async -> String {
     return ""
   }
+
+  public func requestWithdraw() async throws {}
 }
