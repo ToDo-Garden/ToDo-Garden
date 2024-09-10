@@ -75,6 +75,16 @@ public enum UserInfoScene {
         self.item = item
       }
     }
+
+    public struct ViewModel {
+      public let description: String
+      public let item: UserInfoItem
+
+      public init(description: String, item: UserInfoItem) {
+        self.description = description
+        self.item = item
+      }
+    }
   }
 }
 

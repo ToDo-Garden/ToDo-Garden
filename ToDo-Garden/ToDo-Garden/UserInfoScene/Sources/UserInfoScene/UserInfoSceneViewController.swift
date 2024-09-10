@@ -17,6 +17,7 @@ import UserInfoSceneEntity
 
 protocol UserInfoSceneDisplayLogic: AnyObject {
   func displayCollectionViewSections(viewModel: UserInfoScene.ConfigureCollectionView.ViewModel)
+  func displayFetchedProfile(viewModel: UserInfoScene.FetchProfile.ViewModel)
   func displayUserPhotoAccess(viewModel: UserInfoScene.FetchUserPhotoAccess.ViewModel)
   func displayChangedProfileImage(viewModel: UserInfoScene.ChangeProfileImage.ViewModel)
 }
@@ -75,6 +76,15 @@ extension UserInfoSceneViewController: UserInfoSceneDisplayLogic {
     }
 
     self.userInfoCollectionViewDataSource?.apply(snapshot)
+  }
+
+  func displayFetchedProfile(viewModel: UserInfoScene.FetchProfile.ViewModel) {
+    guard let indexPath = self.userInfoCollectionViewDataSource?.indexPath(for: viewModel.item)
+    else { return }
+
+    let cell = self.userInfoCollectionView.cellForItem(at: indexPath) as? SettingCollectionViewCell
+    let description = viewModel.description
+    cell?.updateDescription(description)
   }
 
   func displayUserPhotoAccess(viewModel: UserInfoScene.FetchUserPhotoAccess.ViewModel) {

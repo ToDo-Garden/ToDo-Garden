@@ -30,7 +30,10 @@ extension UserInfoScenePresenter: UserInfoScenePresentationLogic {
   }
 
   func presentUserProfile(response: UserInfoScene.FetchProfile.Response) {
-
+    let description = response.description
+    let item = response.item
+    let viewModel = UserInfoScene.FetchProfile.ViewModel(description: description, item: item)
+    self.viewController?.displayFetchedProfile(viewModel: viewModel)
   }
 
   func presentUserPhotoAccess(response: UserInfoScene.FetchUserPhotoAccess.Response) {
