@@ -164,7 +164,13 @@ extension ManageGroupViewController {
   
   private func setupTouchActions() {
     self.manageGroupTableViewDelegate?.setOnPostGroup { [weak self] groupId, groupName, groupColor in
-      self?.routeToPostGroupScene(groupId: groupId, groupName: groupName, groupColor: groupColor)
+      let groupInfo = ManageGroup.ToDoGroup(
+        id: groupId,
+        groupName: groupName,
+        progressColor: groupColor,
+        progressRate: Float.zero
+      )
+      self?.routeToPostGroupScene(groupInfo: groupInfo)
     }
     
     self.manageGroupTableViewDelegate?.setOnDeleteGroup { [weak self] id, index in
@@ -240,7 +246,7 @@ extension ManageGroupViewController {
   private func setupFooterButtonAction(_ button: UIButton) {
     button.addAction(
       UIAction { _ in
-        self.routeToPostGroupScene(groupId: nil, groupName: nil, groupColor: nil)
+        self.routeToPostGroupScene(groupInfo: nil)
       },
       for: UIControl.Event.touchUpInside
     )
@@ -367,15 +373,13 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
 }
 
 extension ManageGroupViewController {
-  func routeToPostGroupScene(groupId: String?, groupName: String?, groupColor: UIColor?) {
-    guard let groupId = groupId,
-    let groupName = groupName,
-    let groupColor = groupColor else {
-      self.router?.routeToPostGroupScene(groupId: nil, groupName: nil, groupColor: nil)
+  func routeToPostGroupScene(groupInfo: ManageGroup.ToDoGroup?) {
+    guard let groupInfo = groupInfo else {
+      self.router?.routeToPostGroupScene(groupInfo: nil)
       return
     }
     
-    self.router?.routeToPostGroupScene(groupId: groupId, groupName: groupName, groupColor: groupColor)
+    self.router?.routeToPostGroupScene(groupInfo: groupInfo)
   }
 }
 

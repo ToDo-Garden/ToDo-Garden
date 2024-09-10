@@ -8,14 +8,11 @@
 import UIKit.UIColor
 
 import ManageGroupSceneAPI
+import ManageGroupSceneEntity
 import PostGroupSceneAPI
 
 protocol ManageGroupRoutingLogic {
-  func routeToPostGroupScene(
-    groupId: String?,
-    groupName: String?,
-    groupColor: UIColor?
-  )
+  func routeToPostGroupScene(groupInfo: ManageGroup.ToDoGroup?)
 }
 
 protocol ManageGroupDataPassing {
@@ -36,15 +33,11 @@ class ManageGroupRouter: ManageGroupDataPassing {
 // MARK: - Routing
 
 extension ManageGroupRouter: ManageGroupRoutingLogic {
-  func routeToPostGroupScene(
-    groupId: String?,
-    groupName: String?,
-    groupColor: UIColor?
-  ) {
+  func routeToPostGroupScene(groupInfo: ManageGroup.ToDoGroup?) {
     let payload = PostGroupScenePayload(
-      groupID: groupId,
-      groupName: groupName,
-      groupColor: groupColor
+      groupID: groupInfo?.id,
+      groupName: groupInfo?.groupName,
+      groupColor: groupInfo?.progressColor
     )
     guard let destinationViewController = self.postSceneBuilder?.build(with: payload) else {
       return
