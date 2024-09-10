@@ -50,5 +50,8 @@ extension UserInfoScenePresenter: UserInfoScenePresentationLogic {
   }
 
   func presentWithdrawResult(response: UserInfoScene.WithdrawMembership.Response) {
+    let withdrawError = response.withdrawError
+    let viewModel = UserInfoScene.WithdrawMembership.ViewModel(withdrawError: withdrawError)
+    self.viewController?.displayWithdrawResult(viewModel: viewModel)
   }
 }

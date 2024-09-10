@@ -95,6 +95,14 @@ public enum UserInfoScene {
         self.withdrawError = withdrawError
       }
     }
+
+    public struct ViewModel {
+      public let withdrawError: Error?
+
+      public init(withdrawError: Error?) {
+        self.withdrawError = withdrawError
+      }
+    }
   }
 }
 

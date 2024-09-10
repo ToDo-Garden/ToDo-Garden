@@ -20,6 +20,7 @@ protocol UserInfoSceneDisplayLogic: AnyObject {
   func displayFetchedProfile(viewModel: UserInfoScene.FetchProfile.ViewModel)
   func displayUserPhotoAccess(viewModel: UserInfoScene.FetchUserPhotoAccess.ViewModel)
   func displayChangedProfileImage(viewModel: UserInfoScene.ChangeProfileImage.ViewModel)
+  func displayWithdrawResult(viewModel: UserInfoScene.WithdrawMembership.ViewModel)
 }
 
 final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewControllable {
@@ -110,6 +111,12 @@ extension UserInfoSceneViewController: UserInfoSceneDisplayLogic {
     case .failure:
       // TODO: - 에러 내용이 명시된 ToDoGardenAlert을 띄울 예정이며, 해당 알럿 컴포넌트 제작 후에 반영할 예정입니다.
       return
+    }
+  }
+
+  func displayWithdrawResult(viewModel: UserInfoScene.WithdrawMembership.ViewModel) {
+    if viewModel.withdrawError == nil {
+      self.router?.routeToSettingScene()
     }
   }
 }
