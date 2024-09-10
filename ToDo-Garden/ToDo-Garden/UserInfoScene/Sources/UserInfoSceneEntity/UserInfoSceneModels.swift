@@ -113,6 +113,14 @@ public enum UserInfoScene {
         self.signOutError = signOutError
       }
     }
+
+    public struct ViewModel {
+      public let signOutError: Error?
+
+      public init(signOutError: Error?) {
+        self.signOutError = signOutError
+      }
+    }
   }
 }
 

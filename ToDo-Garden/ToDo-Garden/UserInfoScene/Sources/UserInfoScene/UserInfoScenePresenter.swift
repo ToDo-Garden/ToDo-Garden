@@ -57,6 +57,8 @@ extension UserInfoScenePresenter: UserInfoScenePresentationLogic {
   }
 
   func presentSignOutResult(response: UserInfoScene.SignOut.Response) {
-    
+    let signOutError = response.signOutError
+    let viewModel = UserInfoScene.SignOut.ViewModel(signOutError: signOutError)
+    self.viewController?.displaySignOutResult(viewModel: viewModel)
   }
 }

@@ -21,6 +21,7 @@ protocol UserInfoSceneDisplayLogic: AnyObject {
   func displayUserPhotoAccess(viewModel: UserInfoScene.FetchUserPhotoAccess.ViewModel)
   func displayChangedProfileImage(viewModel: UserInfoScene.ChangeProfileImage.ViewModel)
   func displayWithdrawResult(viewModel: UserInfoScene.WithdrawMembership.ViewModel)
+  func displaySignOutResult(viewModel: UserInfoScene.SignOut.ViewModel)
 }
 
 final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewControllable {
@@ -116,7 +117,13 @@ extension UserInfoSceneViewController: UserInfoSceneDisplayLogic {
 
   func displayWithdrawResult(viewModel: UserInfoScene.WithdrawMembership.ViewModel) {
     if viewModel.withdrawError == nil {
-      self.router?.routeToSettingScene()
+      self.router?.routeToLoginScene()
+    }
+  }
+
+  func displaySignOutResult(viewModel: UserInfoScene.SignOut.ViewModel) {
+    if viewModel.signOutError == nil {
+      self.router?.routeToLoginScene()
     }
   }
 }
