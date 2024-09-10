@@ -10,6 +10,7 @@ import Foundation
 import UserInfoSceneEntity
 
 protocol UserInfoScenePresentationLogic {
+  func presentCollectionViewSections(response: UserInfoScene.ConfigureCollectionView.Response)
   func presentUserPhotoAccess(response: UserInfoScene.FetchUserPhotoAccess.Response)
   func presentChangedProfileImage(response: UserInfoScene.ChangeProfileImage.Response)
 }
@@ -21,6 +22,10 @@ class UserInfoScenePresenter {
 // MARK: - Request to ViewController
 
 extension UserInfoScenePresenter: UserInfoScenePresentationLogic {
+  func presentCollectionViewSections(response: UserInfoScene.ConfigureCollectionView.Response) {
+    
+  }
+
   func presentUserPhotoAccess(response: UserInfoScene.FetchUserPhotoAccess.Response) {
     let isPhotoAccessible = response.isPhotoAccessible
     let viewModel = UserInfoScene.FetchUserPhotoAccess.ViewModel(isPhotoAccessible: isPhotoAccessible)

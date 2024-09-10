@@ -15,6 +15,7 @@ protocol UserInfoSceneDataStore {
 }
 
 protocol UserInfoSceneBusinessLogic {
+  func configureCollectionView()
   func fetchUserPhotoAccess()
   func changeUserProfileImage()
   func openSettingApp()
@@ -44,6 +45,12 @@ class UserInfoSceneInteractor: UserInfoSceneDataStore {
 // MARK: - Request to worker
 
 extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
+  func configureCollectionView() {
+    let userInfoSections = [UserInfoScene.profileSection, UserInfoScene.accountSection]
+    let response = UserInfoScene.ConfigureCollectionView.Response(userInfoSections: userInfoSections)
+    self.presenter?.presentCollectionViewSections(response: response)
+  }
+
   func fetchUserPhotoAccess() {
     self.requestPhotoAccessTask = Task {
       let isPhotoAccessible = await self.userPhotoWorker.requestPhotoAccess()

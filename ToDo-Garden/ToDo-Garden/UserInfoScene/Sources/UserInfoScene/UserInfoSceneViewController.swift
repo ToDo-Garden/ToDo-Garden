@@ -55,6 +55,7 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
   override func viewDidLoad() {
     super.viewDidLoad()
     self.setup()
+    self.interactor?.configureCollectionView()
   }
 }
 
@@ -74,7 +75,7 @@ extension UserInfoSceneViewController: UserInfoSceneDisplayLogic {
     switch viewModel.changeResult {
     case .success(let changedProfileImage):
       self.profileInfoView.updateImage(changedProfileImage)
-    case .failure(let error):
+    case .failure:
       // TODO: - 에러 내용이 명시된 ToDoGardenAlert을 띄울 예정이며, 해당 알럿 컴포넌트 제작 후에 반영할 예정입니다.
       return
     }
