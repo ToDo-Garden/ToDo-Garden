@@ -5,12 +5,14 @@
 //  Created by SONG on 6/26/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
-import Foundation
+import UIKit.UIColor
 
 import ManageGroupSceneAPI
+import ManageGroupSceneEntity
+import PostGroupSceneAPI
 
 protocol ManageGroupRoutingLogic {
-  func routeToSomewhere()
+  func routeToPostGroupScene(groupInfo: ManageGroup.ToDoGroup?)
 }
 
 protocol ManageGroupDataPassing {
@@ -20,27 +22,37 @@ protocol ManageGroupDataPassing {
 class ManageGroupRouter: ManageGroupDataPassing {
   weak var viewController: ManageGroupViewController?
   var dataStore: ManageGroupDataStore?
-  private let nextSceneBuilder: NextSceneBuildable?
+  private let postSceneBuilder: PostGroupSceneBuildable?
   
-  init(nextSceneBuilder: NextSceneBuildable?) {
-    self.nextSceneBuilder = nextSceneBuilder
+  init(postSceneBuilder: PostGroupSceneBuildable?) {
+    self.postSceneBuilder = postSceneBuilder
+  
   }
 }
 
 // MARK: - Routing
 
 extension ManageGroupRouter: ManageGroupRoutingLogic {
-  func routeToSomewhere() {
-    guard let destinationViewController = self.nextSceneBuilder?.build(with: NextScenePayload()) else { return }
+  func routeToPostGroupScene(groupInfo: ManageGroup.ToDoGroup?) {
+    let payload = PostGroupScenePayload(
+      groupID: groupInfo?.id,
+      groupName: groupInfo?.groupName,
+      groupColor: groupInfo?.progressColor
+    )
+    guard let destinationViewController = self.postSceneBuilder?.build(with: payload) else {
+      return
+    }
     
-    self.viewController?.present(destinationViewController, animated: true)
+    self.viewController?.navigationController?.pushViewController(destinationViewController, animated: true)
   }
 }
 
 // MARK: - Declare Payload for scene
 
 extension ManageGroupRouter {
-  struct NextScenePayload: NextScenePayloadable {
-    // var name: String
+  struct PostGroupScenePayload: PostGroupScenePayloadable {
+    var groupID: String?
+    var groupName: String?
+    var groupColor: UIColor?
   }
 }

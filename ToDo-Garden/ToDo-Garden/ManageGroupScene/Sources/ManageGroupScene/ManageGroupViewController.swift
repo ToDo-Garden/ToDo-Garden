@@ -24,13 +24,10 @@ public class ManageGroupViewController: UIViewController, ManageGroupViewControl
   
   var interactor: ManageGroupBusinessLogic?
   var router: (ManageGroupRoutingLogic & ManageGroupDataPassing)?
-  
-  public var rightBarButton: UIBarButtonItem
-  public var footerView: UIView
-  
   var manageGroupTableViewDelegate: ManageGroupTableViewDelegate?
   let groupListTableView: ManageGroupTableView
-  
+  public var rightBarButton: UIBarButtonItem
+  public var footerView: UIView
   private let groupListTableViewCell: ManageGroupTableViewCell
   private var editModeLeftBarButton: UIBarButtonItem
   // MARK: - Object lifecycle
@@ -166,8 +163,14 @@ extension ManageGroupViewController {
   }
   
   private func setupTouchActions() {
-    self.manageGroupTableViewDelegate?.setOnPostGroup { [weak self] _, groupName, groupColor in
-      self?.routeToPostGroupScene(groupName: groupName, color: groupColor)
+    self.manageGroupTableViewDelegate?.setOnPostGroup { [weak self] groupId, groupName, groupColor in
+      let groupInfo = ManageGroup.ToDoGroup(
+        id: groupId,
+        groupName: groupName,
+        progressColor: groupColor,
+        progressRate: Float.zero
+      )
+      self?.routeToPostGroupScene(groupInfo: groupInfo)
     }
     
     self.manageGroupTableViewDelegate?.setOnDeleteGroup { [weak self] id, index in
@@ -194,7 +197,9 @@ extension ManageGroupViewController {
         ),
         self.groupListTableView.trailingAnchor.constraint(
           equalTo: self.view.trailingAnchor,
-          constant: -Constant.Layout.TableView.sideMargin)
+          constant: -Constant.Layout.TableView.sideMargin
+        ),
+        self.groupListTableView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
       ]
     )
   }
@@ -241,7 +246,7 @@ extension ManageGroupViewController {
   private func setupFooterButtonAction(_ button: UIButton) {
     button.addAction(
       UIAction { _ in
-        self.routeToPostGroupScene(groupName: nil, color: nil)
+        self.routeToPostGroupScene(groupInfo: nil)
       },
       for: UIControl.Event.touchUpInside
     )
@@ -324,7 +329,6 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
     return (insertions, moves, updates)
   }
   // swiftlint:enable large_tuple
-  
   private func calculateInsertions(newIDs: [String], oldIDs: Set<String>) -> [IndexPath] {
     var insertions: [IndexPath] = []
     for (newIndex, newID) in newIDs.enumerated() where !oldIDs.contains(newID) {
@@ -369,13 +373,13 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
 }
 
 extension ManageGroupViewController {
-  func routeToPostGroupScene(groupName: String?, color: UIColor?) {
-    guard let groupName = groupName, let color = color else {
-      print("route To AddGroup")
+  func routeToPostGroupScene(groupInfo: ManageGroup.ToDoGroup?) {
+    guard let groupInfo = groupInfo else {
+      self.router?.routeToPostGroupScene(groupInfo: nil)
       return
     }
     
-    print("route To EditGroup with \(groupName), \(color)")
+    self.router?.routeToPostGroupScene(groupInfo: groupInfo)
   }
 }
 
@@ -384,7 +388,7 @@ extension ManageGroupViewController {
 #Preview {
   let worker = ManageGroupWorker()
   let sceneBuilder = ManageGroupSceneBuilder(
-    dependency: .init(manageGroupWorker: worker, nextSceneBuilder: nil)
+    dependency: .init(manageGroupWorker: worker, postGroupSceneBuilder: nil)
   )
   let naviController = UINavigationController(rootViewController: sceneBuilder.build(with: nil))
   return naviController
