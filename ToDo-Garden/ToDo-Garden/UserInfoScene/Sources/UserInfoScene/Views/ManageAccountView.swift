@@ -61,7 +61,6 @@ extension ManageAccountView {
 
   private func setupLogOutButtonAction() {
     let buttonAction = UIAction { _ in
-      print("called")
       self.delegate?.didSelectLogOutButton()
     }
 
@@ -84,7 +83,6 @@ extension ManageAccountView {
 
   private func setupWithdrawMembershipButtonAction() {
     let buttonAction = UIAction { _ in
-      print("called")
       self.delegate?.didSelectWithdrawMembershipButton()
     }
 

@@ -326,15 +326,20 @@ extension UserInfoSceneViewController {
   }
 }
 
-//  #if DEBUG
-//  @available(iOS 17.0, *)
-//  #Preview {
-//    return UINavigationController(
-//      rootViewController: UserInfoSceneViewController(
-//        photoPickerViewController: PHPickerViewController(configuration: PHPickerConfiguration()),
-//        application: UIApplication.shared,
-//        openSettingsURLString: UIApplication.openSettingsURLString
-//      )
-//    )
-//  }
-//  #endif
+struct SomePayload: UserInfoSceneScenePayloadable {}
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let userInfoScene = UserInfoSceneSceneBuilder(
+    dependency: UserInfoSceneSceneBuilder.Dependency(
+      photoPicker: PHPickerViewController(configuration: PHPickerConfiguration()),
+      appServiceWorker: AppServiceWorker(),
+      userPhotoWorker: UserPhotoWorker(),
+      userInfoWorker: UserInfoSceneWorker(),
+      nextSceneBuilder: nil
+    )
+  ).build(with: SomePayload())
+  return userInfoScene
+}
+#endif
