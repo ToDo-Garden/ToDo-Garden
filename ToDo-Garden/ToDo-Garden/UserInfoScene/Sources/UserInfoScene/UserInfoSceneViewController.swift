@@ -59,6 +59,13 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
     self.setup()
     self.interactor?.configureCollectionView()
   }
+
+  override func viewIsAppearing(_ animated: Bool) {
+    super.viewIsAppearing(animated)
+    Task {
+      await self.interactor?.fetchUserProfile()
+    }
+  }
 }
 
 // MARK: - Confirm display logic protocol
@@ -127,8 +134,7 @@ extension UserInfoSceneViewController: ToDoGardenAlertControllerDelegate {
       // TODO: 로그아웃 Interactor 메서드 호출 예정
       return
     case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.unsubscribe:
-      // TODO: 회원 탈퇴 Interactor 메서드 호출 예정
-      return
+      self.interactor?.withdrawMembership()
     default:
       break
     }

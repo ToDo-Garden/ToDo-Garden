@@ -20,6 +20,7 @@ protocol UserInfoSceneBusinessLogic {
   func fetchUserPhotoAccess()
   func changeUserProfileImage()
   func openSettingApp()
+  func withdrawMembership()
 }
 
 final class UserInfoSceneInteractor: UserInfoSceneDataStore {
@@ -27,6 +28,7 @@ final class UserInfoSceneInteractor: UserInfoSceneDataStore {
 
   private var requestPhotoAccessTask: Task<Void, Error>?
   private var requestUserPhotoTask: Task<Void, Error>?
+  private var requestWithdrawTask: Task<Void, Error>?
 
   // var name: String = ""
   var presenter: UserInfoScenePresentationLogic?
@@ -107,6 +109,23 @@ extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
 
   func openSettingApp() {
     self.appServiceWorker.openSettingApp()
+  }
+
+  func withdrawMembership() {
+    self.requestWithdrawTask = Task {
+      let withdrawError: Error?
+      do {
+        try await self.userInfoWorker.requestWithdraw()
+        withdrawError = nil
+      } catch let error {
+        withdrawError = error
+      }
+
+      await MainActor.run {
+        let response = UserInfoScene.WithdrawMembership.Response(withdrawError: withdrawError)
+        self.presenter?.presentWithdrawResult(response: response)
+      }
+    }
   }
 }
 

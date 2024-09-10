@@ -86,6 +86,16 @@ public enum UserInfoScene {
       }
     }
   }
+
+  public enum WithdrawMembership {
+    public struct Response {
+      public let withdrawError: Error?
+
+      public init(withdrawError: Error?) {
+        self.withdrawError = withdrawError
+      }
+    }
+  }
 }
 
 // MARK: - Data Objects

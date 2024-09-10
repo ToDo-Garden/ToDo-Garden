@@ -14,6 +14,7 @@ protocol UserInfoScenePresentationLogic {
   func presentUserProfile(response: UserInfoScene.FetchProfile.Response)
   func presentUserPhotoAccess(response: UserInfoScene.FetchUserPhotoAccess.Response)
   func presentChangedProfileImage(response: UserInfoScene.ChangeProfileImage.Response)
+  func presentWithdrawResult(response: UserInfoScene.WithdrawMembership.Response)
 }
 
 final class UserInfoScenePresenter {
@@ -46,5 +47,8 @@ extension UserInfoScenePresenter: UserInfoScenePresentationLogic {
     let changeResult = response.changeResult
     let viewModel = UserInfoScene.ChangeProfileImage.ViewModel(changeResult: changeResult)
     self.viewController?.displayChangedProfileImage(viewModel: viewModel)
+  }
+
+  func presentWithdrawResult(response: UserInfoScene.WithdrawMembership.Response) {
   }
 }
