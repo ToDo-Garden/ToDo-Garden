@@ -48,12 +48,11 @@ final class GuideDetailViewController: UIViewController {
       let dimmingView = DimmingView()
       view.addSubview(dimmingView)
       dimmingView.equalToParent()
-      Task {
-        let transparentRegions = content
-          .transparentRegionsTask
-          .map { $0() }
-        dimmingView.transparentRegions = transparentRegions
-      }
+      view.layoutIfNeeded()
+      let transparentRegions = content
+        .transparentRegionsTask
+        .map { $0() }
+      dimmingView.transparentRegions = transparentRegions
       
       self.scrollViewContentsView.addArrangedSubview(view)
       view.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
