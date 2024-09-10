@@ -1,15 +1,5 @@
 import UIKit
 
-public struct TransparentRegion {
-  public var rect: CGRect
-  public var corerRadius: CGFloat
-  
-  public init(rect: CGRect, corerRadius: CGFloat) {
-    self.rect = rect
-    self.corerRadius = corerRadius
-  }
-}
-
 public class DimmingView: UIView {
   public var transparentRegions: [TransparentRegion] = [] {
     didSet { self.setNeedsDisplay() }
