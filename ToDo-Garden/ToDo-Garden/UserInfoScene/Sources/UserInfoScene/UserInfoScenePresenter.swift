@@ -11,6 +11,7 @@ import UserInfoSceneEntity
 
 protocol UserInfoScenePresentationLogic {
   func presentCollectionViewSections(response: UserInfoScene.ConfigureCollectionView.Response)
+  func presentUserProfile(response: UserInfoScene.FetchProfile.Response)
   func presentUserPhotoAccess(response: UserInfoScene.FetchUserPhotoAccess.Response)
   func presentChangedProfileImage(response: UserInfoScene.ChangeProfileImage.Response)
 }
@@ -26,6 +27,10 @@ extension UserInfoScenePresenter: UserInfoScenePresentationLogic {
     let userInfoSections = response.userInfoSections
     let viewModel = UserInfoScene.ConfigureCollectionView.ViewModel(userInfoSections: userInfoSections)
     self.viewController?.displayCollectionViewSections(viewModel: viewModel)
+  }
+
+  func presentUserProfile(response: UserInfoScene.FetchProfile.Response) {
+
   }
 
   func presentUserPhotoAccess(response: UserInfoScene.FetchUserPhotoAccess.Response) {

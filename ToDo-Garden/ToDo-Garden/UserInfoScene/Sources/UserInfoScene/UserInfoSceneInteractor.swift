@@ -16,12 +16,15 @@ protocol UserInfoSceneDataStore {
 
 protocol UserInfoSceneBusinessLogic {
   func configureCollectionView()
+  func fetchUserProfile() async
   func fetchUserPhotoAccess()
   func changeUserProfileImage()
   func openSettingApp()
 }
 
 final class UserInfoSceneInteractor: UserInfoSceneDataStore {
+  private var userProfile: UserInfoScene.UserProfile?
+
   private var requestPhotoAccessTask: Task<Void, Error>?
   private var requestUserPhotoTask: Task<Void, Error>?
 
@@ -49,6 +52,23 @@ extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
     let userInfoSections = [UserInfoScene.profileSection, UserInfoScene.accountSection]
     let response = UserInfoScene.ConfigureCollectionView.Response(userInfoSections: userInfoSections)
     self.presenter?.presentCollectionViewSections(response: response)
+  }
+
+  func fetchUserProfile() async {
+    self.userProfile = await withTaskGroup(
+      of: (UserInfoScene.UserInfoItem.Title, String).self,
+      returning: UserInfoScene.UserProfile.self
+    ) { taskGroup in
+      for section in [UserInfoScene.profileSection, UserInfoScene.accountSection] {
+        for item in section.items {
+          taskGroup.addTask {
+            await self.callPresenterWhenRequestArrived(for: item)
+          }
+        }
+      }
+
+      return await self.makeUserProfile(with: taskGroup)
+    }
   }
 
   func fetchUserPhotoAccess() {
@@ -87,5 +107,40 @@ extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
 
   func openSettingApp() {
     self.appServiceWorker.openSettingApp()
+  }
+}
+
+// MARK: - Private Functions
+
+extension UserInfoSceneInteractor {
+  private func callPresenterWhenRequestArrived(
+    for item: UserInfoScene.UserInfoItem
+  ) async -> (UserInfoScene.UserInfoItem.Title, String) {
+    let urlParameter = item.title.rawValue
+    let value = await self.userInfoWorker.requestUserProfile(urlString: urlParameter)
+
+    await MainActor.run {
+      let response = UserInfoScene.FetchProfile.Response(description: value, item: item)
+      self.presenter?.presentUserProfile(response: response)
+    }
+
+    return (item.title, value)
+  }
+
+  private func makeUserProfile(
+    with taskGroup: TaskGroup<(UserInfoScene.UserInfoItem.Title, String)>
+  ) async -> UserInfoScene.UserProfile {
+    var profileData = [UserInfoScene.UserInfoItem.Title: String]()
+
+    for await (itemTitle, value) in taskGroup {
+      profileData[itemTitle] = value
+    }
+
+    return UserInfoScene.UserProfile(
+      nickName: profileData[UserInfoScene.UserInfoItem.Title.nickName] ?? "",
+      introduction: profileData[UserInfoScene.UserInfoItem.Title.introduction] ?? "",
+      id: profileData[UserInfoScene.UserInfoItem.Title.id] ?? "",
+      email: profileData[UserInfoScene.UserInfoItem.Title.email] ?? ""
+    )
   }
 }

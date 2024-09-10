@@ -64,6 +64,36 @@ public enum UserInfoScene {
       }
     }
   }
+
+  public enum FetchProfile {
+    public struct Response {
+      public let description: String
+      public let item: UserInfoItem
+
+      public init(description: String, item: UserInfoItem) {
+        self.description = description
+        self.item = item
+      }
+    }
+  }
+}
+
+// MARK: - Data Objects
+
+public extension UserInfoScene {
+  struct UserProfile {
+    public let nickName: String
+    public let introduction: String
+    public let id: String
+    public let email: String
+
+    public init(nickName: String, introduction: String, id: String, email: String) {
+      self.nickName = nickName
+      self.introduction = introduction
+      self.id = id
+      self.email = email
+    }
+  }
 }
 
 // MARK: - Configure CollectionView
