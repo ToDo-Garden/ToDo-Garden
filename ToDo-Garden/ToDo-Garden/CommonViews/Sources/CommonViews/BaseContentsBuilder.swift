@@ -34,7 +34,7 @@ extension BaseContentsBuilder {
 
 // MARK: - Backport: 필요하면 공용 파일로 옮기겠습니다.
 extension UIView {
-  func _frame(in coordinateSpace: UIView) -> CGRect {
+  func frame(in coordinateSpace: UIView) -> CGRect {
     if #available(iOS 17.0, *) {
       self.frame(in: coordinateSpace) ?? CGRect.zero
     } else {
