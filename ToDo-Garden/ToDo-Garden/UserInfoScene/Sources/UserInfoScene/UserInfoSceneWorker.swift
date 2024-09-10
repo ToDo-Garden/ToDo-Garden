@@ -21,4 +21,6 @@ public struct UserInfoSceneWorker: UserInfoSceneWorkable {
   }
 
   public func requestWithdraw() async throws {}
+
+  public func requestSignOut() async throws {}
 }
