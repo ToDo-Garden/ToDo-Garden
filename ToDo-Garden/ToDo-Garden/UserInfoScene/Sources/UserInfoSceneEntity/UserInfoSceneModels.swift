@@ -46,16 +46,4 @@ public enum UserInfoScene {
       }
     }
   }
-
-  public enum Something {
-    public struct Request {
-      public init() { }
-    }
-    public struct Response {
-      public init() { }
-    }
-    public struct ViewModel {
-      public init() { }
-    }
-  }
 }

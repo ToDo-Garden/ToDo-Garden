@@ -10,7 +10,6 @@ import Foundation
 import UserInfoSceneEntity
 
 protocol UserInfoScenePresentationLogic {
-  func presentSomething(response: UserInfoScene.Something.Response)
   func presentUserPhotoAccess(response: UserInfoScene.FetchUserPhotoAccess.Response)
   func presentChangedProfileImage(response: UserInfoScene.ChangeProfileImage.Response)
 }
@@ -32,10 +31,5 @@ extension UserInfoScenePresenter: UserInfoScenePresentationLogic {
     let changeResult = response.changeResult
     let viewModel = UserInfoScene.ChangeProfileImage.ViewModel(changeResult: changeResult)
     self.viewController?.displayChangedProfileImage(viewModel: viewModel)
-  }
-
-  func presentSomething(response: UserInfoScene.Something.Response) {
-    let viewModel = UserInfoScene.Something.ViewModel()
-    self.viewController?.displaySomething(viewModel: viewModel)
   }
 }

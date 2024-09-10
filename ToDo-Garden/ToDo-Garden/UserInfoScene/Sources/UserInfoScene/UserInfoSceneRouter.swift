@@ -10,7 +10,6 @@ import Foundation
 import UserInfoSceneAPI
 
 protocol UserInfoSceneRoutingLogic {
-  func routeToSomewhere()
 }
 
 protocol UserInfoSceneDataPassing {
@@ -30,11 +29,6 @@ class UserInfoSceneRouter: UserInfoSceneDataPassing {
 // MARK: - Routing
 
 extension UserInfoSceneRouter: UserInfoSceneRoutingLogic {
-  func routeToSomewhere() {
-//    let destinationViewController = self.nextSceneBuilder.build(with: NextScenePayload())
-//    
-//    self.viewController?.present(destinationViewController, animated: true)
-  }
 }
 
 // MARK: - Declare Payload for scene

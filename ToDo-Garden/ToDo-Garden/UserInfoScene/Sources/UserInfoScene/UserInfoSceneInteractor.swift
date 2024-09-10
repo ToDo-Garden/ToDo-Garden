@@ -18,7 +18,6 @@ protocol UserInfoSceneBusinessLogic {
   func fetchUserPhotoAccess()
   func changeUserProfileImage()
   func openSettingApp()
-  func doSomething(request: UserInfoScene.Something.Request)
 }
 
 class UserInfoSceneInteractor: UserInfoSceneDataStore {
@@ -81,12 +80,5 @@ extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
 
   func openSettingApp() {
     self.appServiceWorker.openSettingApp()
-  }
-
-  func doSomething(request: UserInfoScene.Something.Request) {
-    self.userInfoWorker.doSomeWork()
-
-    let response = UserInfoScene.Something.Response()
-    self.presenter?.presentSomething(response: response)
   }
 }

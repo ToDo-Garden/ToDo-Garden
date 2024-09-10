@@ -16,7 +16,6 @@ import UserInfoSceneAPI
 import UserInfoSceneEntity
 
 protocol UserInfoSceneDisplayLogic: AnyObject {
-  func displaySomething(viewModel: UserInfoScene.Something.ViewModel)
   func displayUserPhotoAccess(viewModel: UserInfoScene.FetchUserPhotoAccess.ViewModel)
   func displayChangedProfileImage(viewModel: UserInfoScene.ChangeProfileImage.ViewModel)
 }
@@ -56,7 +55,6 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
   override func viewDidLoad() {
     super.viewDidLoad()
     self.setup()
-    self.doSomething()
   }
 }
 
@@ -81,10 +79,6 @@ extension UserInfoSceneViewController: UserInfoSceneDisplayLogic {
       return
     }
   }
-
-  func displaySomething(viewModel: UserInfoScene.Something.ViewModel) {
-    // self.nameTextField.text = viewModel.name
-  }
 }
 
 // MARK: - Request to interactor
@@ -92,11 +86,6 @@ extension UserInfoSceneViewController: UserInfoSceneDisplayLogic {
 extension UserInfoSceneViewController {
   func didSelectEditProfileButton() {
     self.interactor?.fetchUserPhotoAccess()
-  }
-
-  func doSomething() {
-    let request = UserInfoScene.Something.Request()
-    self.interactor?.doSomething(request: request)
   }
 }
 
