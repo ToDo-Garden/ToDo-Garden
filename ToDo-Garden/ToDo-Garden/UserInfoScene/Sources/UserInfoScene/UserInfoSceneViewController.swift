@@ -231,15 +231,6 @@ extension UserInfoSceneViewController {
 
   private func setupUserInfoCollectionView() {
     self.userInfoCollectionView.isScrollEnabled = false
-    self.userInfoCollectionView.register(
-      SettingCollectionViewCell.self,
-      forCellWithReuseIdentifier: SettingCollectionViewCell.identifier
-    )
-    self.userInfoCollectionView.register(
-      SectionHeaderView.self,
-      forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-      withReuseIdentifier: SectionHeaderView.identifier
-    )
     self.userInfoCollectionViewDataSource = self.makeDiffableDataSource(with: self.userInfoCollectionView)
     self.userInfoCollectionView.dataSource = self.userInfoCollectionViewDataSource
     self.userInfoCollectionView.collectionViewLayout = self.makeCompositionalLayout()

@@ -12,28 +12,33 @@ import ToDoGardenUIResource
 
 extension UserInfoSceneViewController {
   typealias DiffableDataSource = UICollectionViewDiffableDataSource<UserInfoSection, UserInfoItem>
+  typealias CellRegistration = UICollectionView.CellRegistration<SettingCollectionViewCell, UserInfoItem>
   typealias HeaderRegistration = UICollectionView.SupplementaryRegistration<SectionHeaderView>
 
   func makeDiffableDataSource(with collectionView: UICollectionView) -> DiffableDataSource {
+    let cellRegistration = self.makeCellRegistration()
     let dataSource = DiffableDataSource(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
-      guard let cell = collectionView.dequeueReusableCell(
-        withReuseIdentifier: SettingCollectionViewCell.identifier,
-        for: indexPath
-      ) as? SettingCollectionViewCell else { return UICollectionViewCell() }
-
-      let cellPosition = self.getCellPosition(of: itemIdentifier.position)
-      cell.setupUI(
-        title: itemIdentifier.title.rawValue,
-        titleFont: UIFont.pretendardBodyMedium,
-        isShowingModal: itemIdentifier.isRightImageExisted,
-        position: cellPosition
+      return collectionView.dequeueConfiguredReusableCell(
+        using: cellRegistration,
+        for: indexPath,
+        item: itemIdentifier
       )
-
-      return cell
     }
 
     dataSource.supplementaryViewProvider = self.makeSupplementaryViewProvider(with: dataSource)
     return dataSource
+  }
+
+  private func makeCellRegistration() -> CellRegistration {
+    return CellRegistration { cell, _, item in
+      let cellPosition = self.getCellPosition(of: item.position)
+      cell.setupUI(
+        title: item.title.rawValue,
+        titleFont: UIFont.pretendardBodyMedium,
+        isShowingModal: item.isRightImageExisted,
+        position: cellPosition
+      )
+    }
   }
 
   private func getCellPosition(of position: UserInfoItem.Position) -> SettingCollectionViewCell.Position {
