@@ -16,7 +16,7 @@ extension UserInfoSceneViewController {
   typealias HeaderRegistration = UICollectionView.SupplementaryRegistration<SectionHeaderView>
 
   func makeDiffableDataSource(with collectionView: UICollectionView) -> DiffableDataSource {
-    let cellRegistration = self.makeCellRegistration()
+    let cellRegistration = self.makeCellRegistration(with: collectionView)
     let dataSource = DiffableDataSource(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
       return collectionView.dequeueConfiguredReusableCell(
         using: cellRegistration,
@@ -29,9 +29,10 @@ extension UserInfoSceneViewController {
     return dataSource
   }
 
-  private func makeCellRegistration() -> CellRegistration {
-    return CellRegistration { cell, _, item in
-      let cellPosition = self.getCellPosition(of: item.position)
+  private func makeCellRegistration(with collectionView: UICollectionView) -> CellRegistration {
+    return CellRegistration { cell, indexPath, item in
+
+      let cellPosition = self.getCellPosition(of: indexPath, collectionView: collectionView)
       cell.setupUI(
         title: item.title.rawValue,
         titleFont: UIFont.pretendardBodyMedium,
@@ -41,14 +42,17 @@ extension UserInfoSceneViewController {
     }
   }
 
-  private func getCellPosition(of position: UserInfoItem.Position) -> SettingCollectionViewCell.Position {
-    switch position {
-    case UserInfoItem.Position.top:
+  private func getCellPosition(
+    of indexPath: IndexPath,
+    collectionView: UICollectionView
+  ) -> SettingCollectionViewCell.Position {
+    let rowCount = collectionView.numberOfItems(inSection: indexPath.section)
+    if indexPath.item == 0 {
       return SettingCollectionViewCell.Position.top
-    case UserInfoItem.Position.middle:
-      return SettingCollectionViewCell.Position.middle
-    case UserInfoItem.Position.bottom:
+    } else if indexPath.item == rowCount - 1 {
       return SettingCollectionViewCell.Position.bottom
+    } else {
+      return SettingCollectionViewCell.Position.middle
     }
   }
 

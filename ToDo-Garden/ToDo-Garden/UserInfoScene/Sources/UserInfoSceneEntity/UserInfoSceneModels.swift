@@ -48,14 +48,6 @@ public enum UserInfoScene {
   }
 
   public enum ConfigureCollectionView {
-    public struct Response {
-      public let userInfoSections: [UserInfoSection]
-
-      public init(userInfoSections: [UserInfoSection]) {
-        self.userInfoSections = userInfoSections
-      }
-    }
-
     public struct ViewModel {
       public let userInfoSections: [UserInfoSection]
 
@@ -163,46 +155,23 @@ public extension UserInfoScene {
       case email = "이메일"
     }
 
-    public enum Position {
-      case top
-      case middle
-      case bottom
-    }
-
     public let title: Title
     public let isRightImageExisted: Bool
-    public let position: UserInfoItem.Position
   }
 
   static let profileSection = UserInfoSection(
     title: UserInfoSection.Title.profileSetting,
     items: [
-      UserInfoItem(
-        title: UserInfoItem.Title.nickName,
-        isRightImageExisted: true,
-        position: UserInfoItem.Position.top
-      ),
-      UserInfoItem(
-        title: UserInfoItem.Title.introduction,
-        isRightImageExisted: true,
-        position: UserInfoItem.Position.bottom
-      )
+      UserInfoItem(title: UserInfoItem.Title.nickName, isRightImageExisted: true),
+      UserInfoItem(title: UserInfoItem.Title.introduction, isRightImageExisted: true)
     ]
   )
 
   static let accountSection = UserInfoSection(
     title: UserInfoSection.Title.accountSetting,
     items: [
-      UserInfoItem(
-        title: UserInfoItem.Title.id,
-        isRightImageExisted: true,
-        position: UserInfoItem.Position.top
-      ),
-      UserInfoItem(
-        title: UserInfoItem.Title.email,
-        isRightImageExisted: false,
-        position: UserInfoItem.Position.bottom
-      )
+      UserInfoItem(title: UserInfoItem.Title.id, isRightImageExisted: true),
+      UserInfoItem(title: UserInfoItem.Title.email, isRightImageExisted: false)
     ]
   )
 }

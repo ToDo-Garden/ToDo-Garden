@@ -53,11 +53,10 @@ final class UserInfoSceneInteractor: UserInfoSceneDataStore {
 
 extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
   func configureCollectionView() {
-    let userInfoSections = [UserInfoScene.profileSection, UserInfoScene.accountSection]
-    let response = UserInfoScene.ConfigureCollectionView.Response(userInfoSections: userInfoSections)
-    self.presenter?.presentCollectionViewSections(response: response)
+    self.presenter?.presentCollectionViewSections()
   }
 
+  // TODO: - TaskGroup > async-let
   func fetchUserProfile() async {
     self.userProfile = await withTaskGroup(
       of: (UserInfoScene.UserInfoItem.Title, String).self,
@@ -157,6 +156,8 @@ extension UserInfoSceneInteractor {
     return (item.title, value)
   }
 
+  // TODO: TaskGroup을 전달하고 있는 행위 자체가 금기됨
+  // childTask를 추가하고 있지 않지만, 그럴 우려가 높아짐.
   private func makeUserProfile(
     with taskGroup: TaskGroup<(UserInfoScene.UserInfoItem.Title, String)>
   ) async -> UserInfoScene.UserProfile {
