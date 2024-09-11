@@ -9,8 +9,9 @@ import Foundation
 
 import UserInfoSceneEntity
 
+@MainActor
 protocol UserInfoScenePresentationLogic {
-  func presentCollectionViewSections(response: UserInfoScene.ConfigureCollectionView.Response)
+  nonisolated func presentCollectionViewSections(response: UserInfoScene.ConfigureCollectionView.Response)
   func presentUserProfile(response: UserInfoScene.FetchProfile.Response)
   func presentUserPhotoAccess(response: UserInfoScene.FetchUserPhotoAccess.Response)
   func presentChangedProfileImage(response: UserInfoScene.ChangeProfileImage.Response)
@@ -25,7 +26,9 @@ final class UserInfoScenePresenter {
 // MARK: - Request to ViewController
 
 extension UserInfoScenePresenter: UserInfoScenePresentationLogic {
-  func presentCollectionViewSections(response: UserInfoScene.ConfigureCollectionView.Response) {
+  nonisolated func presentCollectionViewSections(
+    response: UserInfoScene.ConfigureCollectionView.Response
+  ) {
     let userInfoSections = response.userInfoSections
     let viewModel = UserInfoScene.ConfigureCollectionView.ViewModel(userInfoSections: userInfoSections)
     self.viewController?.displayCollectionViewSections(viewModel: viewModel)

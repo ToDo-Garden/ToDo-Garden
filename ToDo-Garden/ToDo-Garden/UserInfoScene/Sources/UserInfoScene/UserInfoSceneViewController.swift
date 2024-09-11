@@ -175,7 +175,6 @@ extension UserInfoSceneViewController: ManageAccountViewDelegate, ProfileInfoVie
 // MARK: User Image Handling Functions
 
 extension UserInfoSceneViewController {
-  @MainActor
   private func showMovingToSettingAppAlert() {
     let stringLiteral = UserInfoSceneTheme.StringLiteral.SettingAppAlert.self
     let alert = UIAlertController(

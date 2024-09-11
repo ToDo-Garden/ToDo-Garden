@@ -80,9 +80,7 @@ extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
       let isPhotoAccessible = await self.userPhotoWorker.requestPhotoAccess()
       let response = UserInfoScene.FetchUserPhotoAccess.Response(isPhotoAccessible: isPhotoAccessible)
 
-      await MainActor.run {
-        self.presenter?.presentUserPhotoAccess(response: response)
-      }
+      await self.presenter?.presentUserPhotoAccess(response: response)
     }
   }
 
@@ -96,15 +94,13 @@ extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
             changeResult: Result.success(profileImageToChange)
           )
 
-          await MainActor.run {
-            self.presenter?.presentChangedProfileImage(response: response)
-          }
+          await self.presenter?.presentChangedProfileImage(response: response)
         }
       } catch let error {
         let response = UserInfoScene.ChangeProfileImage.Response(
           changeResult: Result.failure(error)
         )
-        self.presenter?.presentChangedProfileImage(response: response)
+        await self.presenter?.presentChangedProfileImage(response: response)
       }
     }
   }
@@ -123,10 +119,8 @@ extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
         withdrawError = error
       }
 
-      await MainActor.run {
-        let response = UserInfoScene.WithdrawMembership.Response(withdrawError: withdrawError)
-        self.presenter?.presentWithdrawResult(response: response)
-      }
+      let response = UserInfoScene.WithdrawMembership.Response(withdrawError: withdrawError)
+      await self.presenter?.presentWithdrawResult(response: response)
     }
   }
 
@@ -140,10 +134,8 @@ extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
         signOutError = error
       }
 
-      await MainActor.run {
-        let response = UserInfoScene.SignOut.Response(signOutError: signOutError)
-        self.presenter?.presentSignOutResult(response: response)
-      }
+      let response = UserInfoScene.SignOut.Response(signOutError: signOutError)
+      await self.presenter?.presentSignOutResult(response: response)
     }
   }
 }
@@ -176,7 +168,7 @@ extension UserInfoSceneInteractor {
 
     return UserInfoScene.UserProfile(
       nickName: profileData[UserInfoScene.UserInfoItem.Title.nickName] ?? "",
-      introduction: profileData[UserInfoScene.UserInfoItem.Title.introduction] 
+      introduction: profileData[UserInfoScene.UserInfoItem.Title.introduction]
       ?? UserInfoSceneTheme.StringLiteral.UserInfoCollectionView.introductionNotExisted,
       id: profileData[UserInfoScene.UserInfoItem.Title.id] ?? "",
       email: profileData[UserInfoScene.UserInfoItem.Title.email] ?? ""
