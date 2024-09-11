@@ -176,7 +176,8 @@ extension UserInfoSceneInteractor {
 
     return UserInfoScene.UserProfile(
       nickName: profileData[UserInfoScene.UserInfoItem.Title.nickName] ?? "",
-      introduction: profileData[UserInfoScene.UserInfoItem.Title.introduction] ?? "",
+      introduction: profileData[UserInfoScene.UserInfoItem.Title.introduction] 
+      ?? UserInfoSceneTheme.StringLiteral.UserInfoCollectionView.introductionNotExisted,
       id: profileData[UserInfoScene.UserInfoItem.Title.id] ?? "",
       email: profileData[UserInfoScene.UserInfoItem.Title.email] ?? ""
     )

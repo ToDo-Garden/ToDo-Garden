@@ -8,6 +8,7 @@
 import Foundation
 
 import UserInfoSceneAPI
+import UserInfoSceneEntity
 
 public struct UserInfoSceneWorker: UserInfoSceneWorkable {
   public init() {}
@@ -17,10 +18,32 @@ public struct UserInfoSceneWorker: UserInfoSceneWorkable {
   }
 
   public func requestUserProfile(urlString: String) async -> String {
-    return ""
+    let data = UserInfoScene.UserInfoItem.Title.self
+    if urlString == data.nickName.rawValue {
+      try? await Task.sleep(nanoseconds: 1_000_000_000)
+      return MockData.nickName
+    } else if urlString == data.introduction.rawValue {
+      try? await Task.sleep(nanoseconds: 1_000_000_000)
+      return MockData.introduction
+    } else if urlString == data.id.rawValue {
+      try? await Task.sleep(nanoseconds: 2_000_000_000)
+      return MockData.id
+    } else {
+      try? await Task.sleep(nanoseconds: 3_000_000_000)
+      return MockData.email
+    }
   }
 
   public func requestWithdraw() async throws {}
 
   public func requestSignOut() async throws {}
+}
+
+extension UserInfoSceneWorker {
+  private enum MockData {
+    static let nickName = "울버린"
+    static let introduction = "나는 나뭇잎 마을의"
+    static let id = "@noah0316"
+    static let email = "dev.noah0316@gmail.com"
+  }
 }
