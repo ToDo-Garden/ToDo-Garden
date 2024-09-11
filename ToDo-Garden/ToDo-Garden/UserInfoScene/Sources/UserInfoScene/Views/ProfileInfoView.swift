@@ -102,13 +102,9 @@ extension ProfileInfoView {
     self.addSubview(self.editProfileImageButton)
     self.editProfileImageButton.usingAutolayout()
 
-    let constant = UserInfoSceneViewController.Constant.EditProfileImageButton.self
     NSLayoutConstraint.activate(
       [
-        self.editProfileImageButton.topAnchor.constraint(
-          equalTo: self.profileImageView.bottomAnchor,
-          constant: constant.topMargin
-        ),
+        self.editProfileImageButton.topAnchor.constraint(equalTo: self.profileImageView.bottomAnchor),
         self.editProfileImageButton.centerXAnchor.constraint(equalTo: self.centerXAnchor)
       ]
     )

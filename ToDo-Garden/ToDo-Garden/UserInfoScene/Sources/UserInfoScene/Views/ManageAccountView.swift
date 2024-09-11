@@ -137,10 +137,7 @@ extension ManageAccountView {
 
     NSLayoutConstraint.activate(
       [
-        self.withdrawMembershipButton.topAnchor.constraint(
-          equalTo: self.logOutButton.bottomAnchor,
-          constant: UserInfoSceneViewController.Constant.WithdrawMembershipButton.topMargin
-        ),
+        self.withdrawMembershipButton.topAnchor.constraint(equalTo: self.logOutButton.bottomAnchor),
         self.withdrawMembershipButton.centerXAnchor.constraint(equalTo: self.centerXAnchor)
       ]
     )
