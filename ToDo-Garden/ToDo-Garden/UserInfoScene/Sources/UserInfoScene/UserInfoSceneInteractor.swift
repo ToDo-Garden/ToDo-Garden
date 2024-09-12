@@ -16,7 +16,6 @@ protocol UserInfoSceneDataStore {
 
 protocol UserInfoSceneBusinessLogic {
   func configureCollectionView()
-  func fetchUserProfile() async
   func fetchUserPhotoAccess()
   func changeUserProfileImage()
   func openSettingApp()
@@ -24,8 +23,20 @@ protocol UserInfoSceneBusinessLogic {
   func signOut()
 }
 
+actor UserInfoDataManager {
+  private var userInfoData: [UserInfoScene.UserInfo: String]
+
+  init() {
+    self.userInfoData = [:]
+  }
+
+  func updateUserInfoData(for userInfo: UserInfoScene.UserInfo, with value: String) {
+    self.userInfoData[userInfo] = value
+  }
+}
+
 final class UserInfoSceneInteractor: UserInfoSceneDataStore {
-  private var userProfile: UserInfoScene.UserProfile?
+  private var userInfoDataManager: UserInfoDataManager
 
   private var requestPhotoAccessTask: Task<Void, Error>?
   private var requestUserPhotoTask: Task<Void, Error>?
@@ -43,6 +54,7 @@ final class UserInfoSceneInteractor: UserInfoSceneDataStore {
     appServiceWorker: AppServiceWorkable,
     userPhotoWorker: UserPhotoWorker
   ) {
+    self.userInfoDataManager = UserInfoDataManager()
     self.userInfoWorker = userInfoWorker
     self.appServiceWorker = appServiceWorker
     self.userPhotoWorker = userPhotoWorker
@@ -54,24 +66,6 @@ final class UserInfoSceneInteractor: UserInfoSceneDataStore {
 extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
   func configureCollectionView() {
     self.presenter?.presentCollectionViewSections()
-  }
-
-  // TODO: - TaskGroup > async-let
-  func fetchUserProfile() async {
-    self.userProfile = await withTaskGroup(
-      of: (UserInfoScene.UserInfoItem.Title, String).self,
-      returning: UserInfoScene.UserProfile.self
-    ) { taskGroup in
-      for section in [UserInfoScene.profileSection, UserInfoScene.accountSection] {
-        for item in section.items {
-          taskGroup.addTask {
-            await self.callPresenterWhenRequestArrived(for: item)
-          }
-        }
-      }
-
-      return await self.makeUserProfile(with: taskGroup)
-    }
   }
 
   func fetchUserPhotoAccess() {
@@ -139,40 +133,10 @@ extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
   }
 }
 
-// MARK: - Private Functions
-
-extension UserInfoSceneInteractor {
-  private func callPresenterWhenRequestArrived(
-    for item: UserInfoScene.UserInfoItem
-  ) async -> (UserInfoScene.UserInfoItem.Title, String) {
-    let urlParameter = item.title.rawValue
-    let value = await self.userInfoWorker.requestUserProfile(urlString: urlParameter)
-
-    await MainActor.run {
-      let response = UserInfoScene.FetchProfile.Response(description: value, item: item)
-      self.presenter?.presentUserProfile(response: response)
-    }
-
-    return (item.title, value)
-  }
-
-  // TODO: TaskGroup을 전달하고 있는 행위 자체가 금기됨
-  // childTask를 추가하고 있지 않지만, 그럴 우려가 높아짐.
-  private func makeUserProfile(
-    with taskGroup: TaskGroup<(UserInfoScene.UserInfoItem.Title, String)>
-  ) async -> UserInfoScene.UserProfile {
-    var profileData = [UserInfoScene.UserInfoItem.Title: String]()
-
-    for await (itemTitle, value) in taskGroup {
-      profileData[itemTitle] = value
-    }
-
-    return UserInfoScene.UserProfile(
-      nickName: profileData[UserInfoScene.UserInfoItem.Title.nickName] ?? "",
-      introduction: profileData[UserInfoScene.UserInfoItem.Title.introduction]
-      ?? UserInfoSceneTheme.StringLiteral.UserInfoCollectionView.introductionNotExisted,
-      id: profileData[UserInfoScene.UserInfoItem.Title.id] ?? "",
-      email: profileData[UserInfoScene.UserInfoItem.Title.email] ?? ""
-    )
+extension UserInfoSceneInteractor: UserInfoLoadable {
+  func requestDescription(for userInfo: UserInfoScene.UserInfo) async -> String {
+    let description = await self.userInfoWorker.requestUserProfile(urlString: userInfo.rawValue)
+    await self.userInfoDataManager.updateUserInfoData(for: userInfo, with: description)
+    return description
   }
 }

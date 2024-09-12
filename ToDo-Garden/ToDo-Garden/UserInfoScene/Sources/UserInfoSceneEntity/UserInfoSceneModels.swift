@@ -119,18 +119,11 @@ public enum UserInfoScene {
 // MARK: - Data Objects
 
 public extension UserInfoScene {
-  struct UserProfile {
-    public let nickName: String
-    public let introduction: String
-    public let id: String
-    public let email: String
-
-    public init(nickName: String, introduction: String, id: String, email: String) {
-      self.nickName = nickName
-      self.introduction = introduction
-      self.id = id
-      self.email = email
-    }
+  enum UserInfo: String {
+    case nickName
+    case introduction
+    case id
+    case email
   }
 }
 
@@ -155,6 +148,7 @@ public extension UserInfoScene {
       case email = "이메일"
     }
 
+    public let userInfo: UserInfo
     public let title: Title
     public let isRightImageExisted: Bool
   }
@@ -162,16 +156,16 @@ public extension UserInfoScene {
   static let profileSection = UserInfoSection(
     title: UserInfoSection.Title.profileSetting,
     items: [
-      UserInfoItem(title: UserInfoItem.Title.nickName, isRightImageExisted: true),
-      UserInfoItem(title: UserInfoItem.Title.introduction, isRightImageExisted: true)
+      UserInfoItem(userInfo: .nickName, title: UserInfoItem.Title.nickName, isRightImageExisted: true),
+      UserInfoItem(userInfo: .introduction, title: UserInfoItem.Title.introduction, isRightImageExisted: true)
     ]
   )
 
   static let accountSection = UserInfoSection(
     title: UserInfoSection.Title.accountSetting,
     items: [
-      UserInfoItem(title: UserInfoItem.Title.id, isRightImageExisted: true),
-      UserInfoItem(title: UserInfoItem.Title.email, isRightImageExisted: false)
+      UserInfoItem(userInfo: .id, title: UserInfoItem.Title.id, isRightImageExisted: true),
+      UserInfoItem(userInfo: .email, title: UserInfoItem.Title.email, isRightImageExisted: false)
     ]
   )
 }

@@ -33,7 +33,7 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
 
   // MARK: - VIP Properties
   
-  var interactor: UserInfoSceneBusinessLogic?
+  var interactor: (UserInfoSceneBusinessLogic & UserInfoLoadable)?
   var router: (UserInfoSceneRoutingLogic & UserInfoSceneDataPassing)?
   
   // MARK: - Object lifecycle
@@ -60,13 +60,6 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
     super.viewDidLoad()
     self.setup()
     self.interactor?.configureCollectionView()
-  }
-
-  override func viewIsAppearing(_ animated: Bool) {
-    super.viewIsAppearing(animated)
-    Task {
-      await self.interactor?.fetchUserProfile()
-    }
   }
 }
 

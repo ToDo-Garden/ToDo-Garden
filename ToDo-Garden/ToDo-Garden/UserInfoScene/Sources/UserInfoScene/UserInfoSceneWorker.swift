@@ -18,7 +18,7 @@ public struct UserInfoSceneWorker: UserInfoSceneWorkable {
   }
 
   public func requestUserProfile(urlString: String) async -> String {
-    let data = UserInfoScene.UserInfoItem.Title.self
+    let data = UserInfoScene.UserInfo.self
     if urlString == data.nickName.rawValue {
       try? await Task.sleep(nanoseconds: 1_000_000_000)
       return MockData.nickName

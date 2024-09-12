@@ -12,7 +12,7 @@ import ToDoGardenUIResource
 
 extension UserInfoSceneViewController {
   typealias DiffableDataSource = UICollectionViewDiffableDataSource<UserInfoSection, UserInfoItem>
-  typealias CellRegistration = UICollectionView.CellRegistration<SettingCollectionViewCell, UserInfoItem>
+  typealias CellRegistration = UICollectionView.CellRegistration<UserInfoCollectionViewCell, UserInfoItem>
   typealias HeaderRegistration = UICollectionView.SupplementaryRegistration<SectionHeaderView>
 
   func makeDiffableDataSource(with collectionView: UICollectionView) -> DiffableDataSource {
@@ -31,7 +31,6 @@ extension UserInfoSceneViewController {
 
   private func makeCellRegistration(with collectionView: UICollectionView) -> CellRegistration {
     return CellRegistration { cell, indexPath, item in
-
       let cellPosition = self.getCellPosition(of: indexPath, collectionView: collectionView)
       cell.setupUI(
         title: item.title.rawValue,
@@ -39,6 +38,7 @@ extension UserInfoSceneViewController {
         isShowingModal: item.isRightImageExisted,
         position: cellPosition
       )
+      cell.updateUserInfo(item.userInfo, with: self.interactor)
     }
   }
 
