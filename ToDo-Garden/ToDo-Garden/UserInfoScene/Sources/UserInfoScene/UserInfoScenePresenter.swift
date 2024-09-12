@@ -1,6 +1,6 @@
 //
 //  UserInfoScenePresenter.swift
-//  
+//
 //
 //  Created by Wood on 8/28/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
@@ -27,8 +27,8 @@ final class UserInfoScenePresenter {
 
 extension UserInfoScenePresenter: UserInfoScenePresentationLogic {
   nonisolated func presentCollectionViewSections() {
-    let userInfoSections = [UserInfoScene.profileSection, UserInfoScene.accountSection]
-    let viewModel = UserInfoScene.ConfigureCollectionView.ViewModel(userInfoSections: userInfoSections)
+    let collectionViewSections = self.makeCollectionViewSections()
+    let viewModel = UserInfoScene.ConfigureCollectionView.ViewModel(userInfoSections: collectionViewSections)
     self.viewController?.displayCollectionViewSections(viewModel: viewModel)
   }
 
@@ -61,5 +61,29 @@ extension UserInfoScenePresenter: UserInfoScenePresentationLogic {
     let signOutError = response.signOutError
     let viewModel = UserInfoScene.SignOut.ViewModel(signOutError: signOutError)
     self.viewController?.displaySignOutResult(viewModel: viewModel)
+  }
+}
+
+extension UserInfoScenePresenter {
+  private func makeCollectionViewSections() -> [UserInfoScene.UserInfoSection] {
+    let sectionTitle = UserInfoSceneTheme.StringLiteral.UserInfoCollectionView.Section.self
+    let itemTitle = UserInfoSceneTheme.StringLiteral.UserInfoCollectionView.Item.self
+    let profileSection = UserInfoScene.UserInfoSection(
+      title: sectionTitle.profileSetting,
+      items: [
+        UserInfoScene.UserInfoItem(userInfo: .nickName, title: itemTitle.nickName, isRightImageExisted: true),
+        UserInfoScene.UserInfoItem(userInfo: .introduction, title: itemTitle.introduction, isRightImageExisted: true)
+      ]
+    )
+
+    let accountSection = UserInfoScene.UserInfoSection(
+      title: sectionTitle.accountSetting,
+      items: [
+        UserInfoScene.UserInfoItem(userInfo: .id, title: itemTitle.id, isRightImageExisted: true),
+        UserInfoScene.UserInfoItem(userInfo: .email, title: itemTitle.email, isRightImageExisted: false)
+      ]
+    )
+
+    return [profileSection, accountSection]
   }
 }

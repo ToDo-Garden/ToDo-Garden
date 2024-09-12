@@ -131,41 +131,24 @@ public extension UserInfoScene {
 
 public extension UserInfoScene {
   struct UserInfoSection: Hashable {
-    public enum Title: String {
-      case profileSetting = "프로필 설정"
-      case accountSetting = "계정 설정"
-    }
-
-    public let title: Title
+    public let title: String
     public let items: [UserInfoItem]
+
+    public init(title: String, items: [UserInfoItem]) {
+      self.title = title
+      self.items = items
+    }
   }
 
   struct UserInfoItem: Hashable {
-    public enum Title: String {
-      case nickName = "닉네임"
-      case introduction = "소개"
-      case id = "아이디"
-      case email = "이메일"
-    }
-
     public let userInfo: UserInfo
-    public let title: Title
+    public let title: String
     public let isRightImageExisted: Bool
+
+    public init(userInfo: UserInfo, title: String, isRightImageExisted: Bool) {
+      self.userInfo = userInfo
+      self.title = title
+      self.isRightImageExisted = isRightImageExisted
+    }
   }
-
-  static let profileSection = UserInfoSection(
-    title: UserInfoSection.Title.profileSetting,
-    items: [
-      UserInfoItem(userInfo: .nickName, title: UserInfoItem.Title.nickName, isRightImageExisted: true),
-      UserInfoItem(userInfo: .introduction, title: UserInfoItem.Title.introduction, isRightImageExisted: true)
-    ]
-  )
-
-  static let accountSection = UserInfoSection(
-    title: UserInfoSection.Title.accountSetting,
-    items: [
-      UserInfoItem(userInfo: .id, title: UserInfoItem.Title.id, isRightImageExisted: true),
-      UserInfoItem(userInfo: .email, title: UserInfoItem.Title.email, isRightImageExisted: false)
-    ]
-  )
 }

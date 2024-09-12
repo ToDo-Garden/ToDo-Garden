@@ -33,7 +33,7 @@ extension UserInfoSceneViewController {
     return CellRegistration { cell, indexPath, item in
       let cellPosition = self.getCellPosition(of: indexPath, collectionView: collectionView)
       cell.setupUI(
-        title: item.title.rawValue,
+        title: item.title,
         titleFont: UIFont.pretendardBodyMedium,
         isShowingModal: item.isRightImageExisted,
         position: cellPosition
@@ -71,7 +71,7 @@ extension UserInfoSceneViewController {
     ) { supplementaryView, _, indexPath in
       let snapshot = dataSource.snapshot()
       let section = snapshot.sectionIdentifiers[indexPath.section]
-      supplementaryView.updateUI(title: section.title.rawValue)
+      supplementaryView.updateUI(title: section.title)
     }
   }
 }
