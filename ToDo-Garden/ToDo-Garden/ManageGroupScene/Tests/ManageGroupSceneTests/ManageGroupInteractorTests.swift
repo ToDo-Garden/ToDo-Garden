@@ -116,8 +116,16 @@ extension ManageGroupInteractorTests {
   }
   
   class MockWorker: ManageGroupWorkable {
-    var fetchGroupListResult: Result<[ManageGroup.ToDoGroup], Error>?
-    var saveGroupListResult: Result<[ManageGroup.ToDoGroup], Error>?
+    private var fetchGroupListResult: Result<[ManageGroup.ToDoGroup], Error>?
+    private var saveGroupListResult: Result<[ManageGroup.ToDoGroup], Error>?
+    
+    func setFetchGroupListResultSuccess(groups: [ManageGroup.ToDoGroup]) {
+      self.fetchGroupListResult = .success(groups)
+    }
+    
+    func setSaveGroupListResultSuccess(groups: [ManageGroup.ToDoGroup]) {
+      self.saveGroupListResult = .success(groups)
+    }
     
     func fetchGroupList(request: ManageGroup.FetchGroupList.Request) async -> Result<[ManageGroup.ToDoGroup], Error> {
       return self.fetchGroupListResult ?? .failure(NSError(domain: "Test", code: 0, userInfo: nil))
