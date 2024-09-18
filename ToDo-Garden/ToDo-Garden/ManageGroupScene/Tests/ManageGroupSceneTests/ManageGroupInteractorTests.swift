@@ -50,8 +50,7 @@ final class ManageGroupInteractorTests: XCTestCase {
     
     // Then
     XCTAssertEqual(self.interactor.currentGroups, expectedGroups)
-    XCTAssertTrue(self.mockPresenter.presentFetchedGroupListCalled)
-    XCTAssertEqual(self.mockPresenter.fetchedGroupListResponse?.data, expectedGroups)
+    XCTAssertEqual(self.mockPresenter.presentedGroups, expectedGroups)
   }
   
   func testSaveGroupList() async {
@@ -67,8 +66,7 @@ final class ManageGroupInteractorTests: XCTestCase {
     
     // Then
     XCTAssertEqual(self.interactor.currentGroups, groupsToSave)
-    XCTAssertTrue(self.mockPresenter.presentSavedGroupListCalled)
-    XCTAssertEqual(self.mockPresenter.savedGroupListResponse?.data, groupsToSave)
+    XCTAssertEqual(self.mockPresenter.presentedGroups, groupsToSave)
   }
   
   func testDeleteGroup() {
@@ -82,36 +80,29 @@ final class ManageGroupInteractorTests: XCTestCase {
     
     // Then
     XCTAssertTrue(self.interactor.currentGroups.isEmpty)
-    XCTAssertTrue(self.mockPresenter.presentDeletedGroupCalled)
-    XCTAssertEqual(self.mockPresenter.deletedGroupResponse?.id, "1")
-    XCTAssertEqual(self.mockPresenter.deletedGroupResponse?.index, 0)
+    XCTAssertEqual(self.mockPresenter.deletedGroupId, "1")
+    XCTAssertEqual(self.mockPresenter.deletedGroupIndex, 0)
   }
 }
 
 // MARK: - Mock
 extension ManageGroupInteractorTests {
   class MockManageGroupPresenter: ManageGroupPresentationLogic {
-    var presentFetchedGroupListCalled = false
-    var presentSavedGroupListCalled = false
-    var presentDeletedGroupCalled = false
-    
-    var fetchedGroupListResponse: ManageGroup.FetchGroupList.Response?
-    var savedGroupListResponse: ManageGroup.SaveGroupList.Response?
-    var deletedGroupResponse: ManageGroup.DeleteGroup.Response?
+    private(set) var presentedGroups: [ManageGroup.ToDoGroup]?
+    private(set) var deletedGroupId: String?
+    private(set) var deletedGroupIndex: Int?
     
     func presentFetchedGroupList(response: ManageGroup.FetchGroupList.Response) {
-      self.presentFetchedGroupListCalled = true
-      self.fetchedGroupListResponse = response
+      self.presentedGroups = response.data
     }
     
     func presentSavedGroupList(response: ManageGroup.SaveGroupList.Response) {
-      self.presentSavedGroupListCalled = true
-      self.savedGroupListResponse = response
+      self.presentedGroups = response.data
     }
     
     func presentDeletedGroup(response: ManageGroup.DeleteGroup.Response) {
-      self.presentDeletedGroupCalled = true
-      self.deletedGroupResponse = response
+      self.deletedGroupId = response.id
+      self.deletedGroupIndex = response.index
     }
   }
   
