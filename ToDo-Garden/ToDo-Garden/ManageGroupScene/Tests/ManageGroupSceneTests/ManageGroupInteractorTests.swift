@@ -34,7 +34,7 @@ final class ManageGroupInteractorTests: XCTestCase {
   // MARK: Test setup
   func setupManageGroupInteractor() {
     self.mockWorker = MockWorker()
-    self.interactor = ManageGroupInteractor(worker: mockWorker)
+    self.interactor = ManageGroupInteractor(worker: self.mockWorker)
     self.mockPresenter = MockManageGroupPresenter()
     self.interactor.presenter = self.mockPresenter
   }
@@ -43,7 +43,7 @@ final class ManageGroupInteractorTests: XCTestCase {
   func testFetchGroupList() async {
     // Given
     let expectedGroups = ManageGroupMockData.fetchedData
-    self.mockWorker.fetchGroupListResult = .success(expectedGroups)
+    self.mockWorker.setFetchGroupListResultSuccess(groups: expectedGroups)
     
     // When
     await self.interactor.fetchGroupList(request: ManageGroup.FetchGroupList.Request())
@@ -60,7 +60,7 @@ final class ManageGroupInteractorTests: XCTestCase {
       ManageGroup.ToDoGroup(id: "1", groupName: "Group1", progressColor: .red, progressRate: 0.5)
     ]
     let request = ManageGroup.SaveGroupList.Request(with: groupsToSave)
-    self.mockWorker.saveGroupListResult = .success(groupsToSave)
+    self.mockWorker.setSaveGroupListResultSuccess(groups: groupsToSave)
     
     // When
     await self.interactor.saveGroupList(request: request)
