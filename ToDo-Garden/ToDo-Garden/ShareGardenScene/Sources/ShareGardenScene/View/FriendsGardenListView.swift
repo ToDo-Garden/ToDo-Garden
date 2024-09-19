@@ -15,6 +15,14 @@ protocol FriendsGardenStore {
 
 extension ShareGardenSceneViewController.FriendsGardenView {
   final class FriendsGardenListView: UIView {
+    var isEditing: Bool {
+      get {
+        return self.friendListView.isEditing
+      } set {
+        self.friendListView.isEditing = newValue
+      }
+    }
+    
     private lazy var friendsGardenListDataSource: DataSource = self.setupDataSource()
     private lazy var friendListView: UICollectionView = {
       let friendListView = UICollectionView(
