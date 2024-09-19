@@ -12,6 +12,50 @@ import ToDoGardenUIComponent
 import ShareGardenSceneEntity
 
 extension ShareGardenSceneViewController {
+  struct FriendsProfileContentConfiguration: UIContentConfiguration, Identifiable {
+    let id: UUID
+    let friendsGarden: ShareGardenScene.FriendsGarden
+    
+    init(
+      id: UUID,
+      friendsGarden: ShareGardenScene.FriendsGarden
+    ) {
+      self.id = id
+      self.friendsGarden = friendsGarden
+    }
+    
+    var state: UICellConfigurationState?
+    
+    func updated(for state: UIConfigurationState) -> FriendsProfileContentConfiguration {
+      var mutableCopyOfSelf = self
+      
+      if let cellState = state as? UICellConfigurationState {
+        mutableCopyOfSelf.state = cellState
+      }
+      
+      return mutableCopyOfSelf
+    }
+    
+    func makeContentView() -> UIView & UIContentView {
+      return FriendsGardenProfileInfoView(configuration: self)
+    }
+  }
+}
+
+extension ShareGardenSceneViewController.FriendsProfileContentConfiguration: Hashable {
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(self.id)
+  }
+  
+  static func == (
+    lhs: ShareGardenSceneViewController.FriendsProfileContentConfiguration,
+    rhs: ShareGardenSceneViewController.FriendsProfileContentConfiguration
+  ) -> Bool {
+    return lhs.id == rhs.id && lhs.state == rhs.state
+  }
+}
+
+extension ShareGardenSceneViewController {
   final class FriendsGardenProfileInfoView: UIView & UIContentView {
     
     // MARK: - UI Properties
