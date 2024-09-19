@@ -47,9 +47,10 @@ extension ShareGardenSceneViewController {
     var configuration: UIContentConfiguration
     
     private let gardenView = GardenView()
+    private static let layoutConstant = ShareGardenSceneViewController.Constant.Layout.FriendsGardenInfoView.self
     
     override var intrinsicContentSize: CGSize {
-      return CGSize(width: 375, height: 137)
+      return Self.layoutConstant.contentSize
     }
     
     @available(*, unavailable)
@@ -80,7 +81,10 @@ extension ShareGardenSceneViewController.FriendsGardenInfoView {
   private func setupLayoutConstraints() {
     self.gardenView.usingAutolayout()
     self.gardenView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-    self.gardenView.topAnchor.constraint(equalTo: self.topAnchor, constant: 3).isActive = true
+    self.gardenView.topAnchor.constraint(
+      equalTo: self.topAnchor,
+      constant: Self.layoutConstant.gardenViewtopInset
+    ).isActive = true
   }
   
   private func setupAppearance() {
