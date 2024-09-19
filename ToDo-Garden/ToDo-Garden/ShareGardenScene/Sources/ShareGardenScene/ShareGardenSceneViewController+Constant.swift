@@ -63,8 +63,6 @@ extension ShareGardenSceneViewController.Constant.Layout {
   }
   
   enum FriendsGardenListView {
-    static let fullWidthRatio: CGFloat = 1.0
-    static let estimatedItemHeight: CGFloat = 48.0
     static let gradientLayerHeight: CGFloat = 25.0
   }
   
