@@ -57,6 +57,11 @@ extension ShareGardenSceneViewController.FriendsGardenView {
       return placeHolderContainer
     }()
     
+    override func draw(_ rect: CGRect) {
+      super.draw(rect)
+      self.startShimmering()
+    }
+    
     override init(frame: CGRect) {
       super.init(frame: frame)
       self.setup()
@@ -70,10 +75,6 @@ extension ShareGardenSceneViewController.FriendsGardenView {
     override func prepareForReuse() {
       super.prepareForReuse()
       self.stopShimmering()
-    }
-    
-    func configure() {
-      self.startShimmering()
     }
   }
 }
