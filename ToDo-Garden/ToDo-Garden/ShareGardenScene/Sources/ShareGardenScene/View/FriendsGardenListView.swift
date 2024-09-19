@@ -292,6 +292,16 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
       }
     }
   }
+  
+  func collapseAll() {
+    var sectionSnapshot = self.friendsGardenListDataSource.snapshot(for: Section.main)
+    sectionSnapshot.items.forEach { item in
+      if sectionSnapshot.isExpanded(item) {
+        sectionSnapshot.collapse([item])
+      }
+    }
+    self.friendsGardenListDataSource.apply(sectionSnapshot, to: Section.main)
+  }
 }
 
 extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView: UICollectionViewDelegate {
