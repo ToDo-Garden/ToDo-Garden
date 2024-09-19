@@ -154,23 +154,15 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
 // MARK: - layout
 
 extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView {
-  private static func makeFriendsGardenListViewLayout() -> UICollectionViewCompositionalLayout {
-    let itemSize = NSCollectionLayoutSize(
-      widthDimension: NSCollectionLayoutDimension.fractionalWidth(
-        Self.layoutConstant.fullWidthRatio
-      ),
-      heightDimension: NSCollectionLayoutDimension.estimated(
-        Self.layoutConstant.estimatedItemHeight
-      )
+  private func makeFriendsGardenListViewLayout() -> UICollectionViewCompositionalLayout {
+    var listConfiguration = UICollectionLayoutListConfiguration(
+      appearance: UICollectionLayoutListConfiguration.Appearance.plain
     )
-    let item = NSCollectionLayoutItem(layoutSize: itemSize)
-    let group = NSCollectionLayoutGroup.vertical(
-      layoutSize: itemSize,
-      subitems: [item]
-    )
-    let section = NSCollectionLayoutSection(group: group)
+    listConfiguration.showsSeparators = false
     
-    return UICollectionViewCompositionalLayout(section: section)
+    listConfiguration.backgroundColor = UIColor.white
+    
+    return UICollectionViewCompositionalLayout.list(using: listConfiguration)
   }
   
   private func setupLayoutCosntraints() {
