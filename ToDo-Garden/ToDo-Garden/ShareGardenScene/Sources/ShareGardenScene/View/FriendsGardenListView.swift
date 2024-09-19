@@ -98,10 +98,48 @@ extension ShareGardenSceneViewController.FriendsGardenView {
       if snapshot.sectionIdentifiers.contains(Section.main) == false {
         snapshot.appendSections([Section.main])
       }
-      let items = identifiers.map { Item.friendsGarden($0) }
-      snapshot.appendItems(items, toSection: Section.main)
-      self.friendsGardenListDataSource.apply(snapshot)
+      
+      let firendsGardens: [ShareGardenScene.FriendsGarden] = identifiers.compactMap {
+        return self.friendsGardenStore.fetchBy($0)
+      }
+      let sectionSnapshot = self.makeSectionSnapshot(for: firendsGardens)
+      
+      self.friendsGardenListDataSource.apply(sectionSnapshot, to: Section.main)
     }
+  }
+}
+
+extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView {
+  private func makeSectionSnapshot(
+    for friendsGardens: [ShareGardenScene.FriendsGarden]
+  ) -> NSDiffableDataSourceSectionSnapshot<Item> {
+    var sectionSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
+    
+    let friendsGardenItems: [Item] = friendsGardens.map { friendsGarden in
+      let item = Item.friendsGarden(
+        ShareGardenSceneViewController.FriendsGardenContentConfiguration(
+          id: friendsGarden.id,
+          pomodoroRecords: friendsGarden.pomodoroRecords
+        )
+      )
+      
+      return item
+    }
+    
+    let combined = zip(friendsGardens, friendsGardenItems)
+    
+    for (friendsGarden, friendsGardenItem) in combined {
+      let friendsProfileItem = Item.friendsProfile(
+        ShareGardenSceneViewController.FriendsProfileContentConfiguration(
+          id: friendsGarden.id,
+          friendsGarden: friendsGarden
+        )
+      )
+      sectionSnapshot.append([friendsProfileItem])
+      sectionSnapshot.append([friendsGardenItem], to: friendsProfileItem)
+    }
+    
+    return sectionSnapshot
   }
 }
 
