@@ -58,6 +58,18 @@ extension ShareGardenSceneViewController.FriendsProfileContentConfiguration: Has
 extension ShareGardenSceneViewController {
   final class FriendsGardenProfileInfoView: UIView & UIContentView {
     
+    var configuration: UIContentConfiguration {
+      didSet {
+        guard let oldConfiguration = oldValue as? FriendsProfileContentConfiguration,
+          let configuration = self.configuration as? FriendsProfileContentConfiguration
+        else { return }
+        
+        if oldConfiguration != configuration {
+          self.configure(for: configuration)
+        }
+      }
+    }
+    
     // MARK: - UI Properties
     
     /// 링크의 issue가 close되면, 구현이 바뀌게 될 예정입니다.
@@ -81,6 +93,25 @@ extension ShareGardenSceneViewController {
     
     private let containerView = UIView()
     
+    var isExpanded: Bool {
+      didSet {
+        self.profileInfoView.isSelected = self.isExpanded
+      }
+    }
+    
+    private var isEditing: Bool {
+      didSet {
+        if let profileInfoStackView = self.profileInfoView.subviews.first as? UIStackView {
+          let whenNotEditingInset = NSDirectionalEdgeInsets(top: 6, leading: 25, bottom: 6, trailing: 25)
+          let whenEditingInset = NSDirectionalEdgeInsets(top: 6, leading: 11, bottom: 6, trailing: 25)
+          var stackViewEdgeInset: NSDirectionalEdgeInsets
+          
+          stackViewEdgeInset = self.isEditing ? whenEditingInset : whenNotEditingInset
+          profileInfoStackView.addInnerPadding(stackViewEdgeInset)
+        }
+      }
+    }
+    
     init(configuration: FriendsProfileContentConfiguration) {
       self.configuration = configuration
       self.isExpanded = false
@@ -98,6 +129,16 @@ extension ShareGardenSceneViewController {
 }
 
 extension ShareGardenSceneViewController.FriendsGardenProfileInfoView {
+  private func configure(
+    for configuration: ShareGardenSceneViewController.FriendsProfileContentConfiguration
+  ) {
+    guard let state = configuration.state
+    else { return }
+    
+    self.isExpanded = state.isExpanded
+    self.isEditing = state.isEditing
+  }
+  
   private func setup() {
     self.setupAppearance()
     self.addSubviews()
