@@ -257,19 +257,22 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
 }
 
 extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView: UICollectionViewDelegate {
-  func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-    if collectionView.indexPathsForSelectedItems?.contains(indexPath) ?? false {
-      collectionView.deselectItem(at: indexPath, animated: true)
-    } else {
-      collectionView.selectItem(at: indexPath, animated: true, scrollPosition: [])
-    }
-    
-    return false
-  }
-  
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
     let isStartPointReached = scrollView.contentOffset.y <= CGFloat.zero
     self.gradientLayer.isHidden = isStartPointReached
+  }
+  
+  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    guard let selectedItem = self.friendsGardenListDataSource.itemIdentifier(for: indexPath) else { return }
+    var sectionSnapshot = self.friendsGardenListDataSource.snapshot(for: Section.main)
+    
+    if sectionSnapshot.isExpanded(selectedItem) {
+      sectionSnapshot.collapse([selectedItem])
+    } else {
+      sectionSnapshot.expand([selectedItem])
+    }
+    
+    self.friendsGardenListDataSource.apply(sectionSnapshot, to: Section.main, animatingDifferences: true)
   }
 }
 
