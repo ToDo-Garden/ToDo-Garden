@@ -10,6 +10,39 @@ import UIKit
 import ToDoGardenUIComponent
 
 extension ShareGardenSceneViewController {
+  struct FriendsGardenContentConfiguration: UIContentConfiguration, Identifiable {
+    let id: UUID
+    let pomodoroRecords: PomodoroRecordCollection
+    
+    init(id: UUID, pomodoroRecords: PomodoroRecordCollection) {
+      self.id = id
+      self.pomodoroRecords = pomodoroRecords
+    }
+    
+    func updated(for state: UIConfigurationState) -> FriendsGardenContentConfiguration {
+      return self
+    }
+    
+    func makeContentView() -> UIView & UIContentView {
+      return FriendsGardenInfoView(configuration: self)
+    }
+  }
+}
+
+extension ShareGardenSceneViewController.FriendsGardenContentConfiguration: Hashable {
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(self.id)
+  }
+  
+  static func == (
+    lhs: ShareGardenSceneViewController.FriendsGardenContentConfiguration,
+    rhs: ShareGardenSceneViewController.FriendsGardenContentConfiguration
+  ) -> Bool {
+    return lhs.id == rhs.id
+  }
+}
+
+extension ShareGardenSceneViewController {
   final class FriendsGardenInfoView: UIView & UIContentView {
     var configuration: UIContentConfiguration
     
