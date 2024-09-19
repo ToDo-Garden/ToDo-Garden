@@ -154,12 +154,33 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
 // MARK: - layout
 
 extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView {
+  private func makeSwipeAction(for indexPath: IndexPath?) -> UISwipeActionsConfiguration? {
+    guard let indexPath = indexPath,
+      let cell = self.friendListView.cellForItem(at: indexPath)?.contentView as? ShareGardenSceneViewController
+      .FriendsGardenProfileInfoView,
+      cell.isExpanded == false
+    else {
+      return nil
+    }
+        
+    let deleteAction = UIContextualAction(
+      style: UIContextualAction.Style.destructive,
+      title: nil
+    ) { _, _, _ in
+    }
+    deleteAction.accessibilityLabel = "Delete"
+    deleteAction.image = UIImage(systemName: "trash")
+    deleteAction.backgroundColor = UIColor.toDoGardenEditButtonRed
+    return UISwipeActionsConfiguration(actions: [deleteAction])
+  }
+  
   private func makeFriendsGardenListViewLayout() -> UICollectionViewCompositionalLayout {
     var listConfiguration = UICollectionLayoutListConfiguration(
       appearance: UICollectionLayoutListConfiguration.Appearance.plain
     )
     listConfiguration.showsSeparators = false
     
+    listConfiguration.trailingSwipeActionsConfigurationProvider = self.makeSwipeAction
     listConfiguration.backgroundColor = UIColor.white
     
     return UICollectionViewCompositionalLayout.list(using: listConfiguration)
