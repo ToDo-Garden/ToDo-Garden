@@ -19,7 +19,7 @@ extension ShareGardenSceneViewController.FriendsGardenView {
     private lazy var friendListView: UICollectionView = {
       let friendListView = UICollectionView(
         frame: CGRect.zero,
-        collectionViewLayout: Self.makeFriendsGardenListViewLayout()
+        collectionViewLayout: self.makeFriendsGardenListViewLayout()
       )
       friendListView.delegate = self
       friendListView.backgroundColor = UIColor.white
@@ -126,13 +126,12 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
   }
   
   private enum Item: Hashable {
-    case friendsGarden(ShareGardenScene.FriendsGarden.ID)
+    case friendsProfile(ShareGardenSceneViewController.FriendsProfileContentConfiguration)
+    case friendsGarden(ShareGardenSceneViewController.FriendsGardenContentConfiguration)
     case loading(UUID)
   }
   
   private typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
-  private typealias FriendsGardenListViewCell =
-  ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListViewCell
   private typealias FriendsGardenListViewLoadingCell =
   ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListViewLoadingCell
   private typealias Snapshot =
@@ -140,11 +139,10 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
     ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView.Section,
     Item
   >
-  private typealias FriendsGardenListViewCellRegistration = UICollectionView.CellRegistration<
-    FriendsGardenListViewCell,
+  private typealias FriendsGardenCellRegistration = UICollectionView.CellRegistration<
+    UICollectionViewListCell,
     Item
   >
-  
   private typealias LoadingCellRegistration = UICollectionView.CellRegistration<
     FriendsGardenListViewLoadingCell,
     Item
@@ -198,18 +196,40 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
 // MARK: - Data Source
 
 extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView {
-  private func setupDataSource() -> DataSource {
-    let friendsGardenListViewCellRegistration = FriendsGardenListViewCellRegistration { [weak self] cell, _, item in
-      guard case let Item.friendsGarden(identifier) = item,
-        let friendsGarden = self?.friendsGardenStore.fetchBy(identifier)
+  private func makeFriendsGardenProfileCellRegistration() -> FriendsGardenCellRegistration {
+    return FriendsGardenCellRegistration { cell, _, item in
+      guard case let Item.friendsProfile(configuration) = item
       else { return }
       
-      cell.configure(with: friendsGarden)
+      cell.contentConfiguration = configuration
+      cell.accessories = [
+        UICellAccessory.delete(
+          displayed: UICellAccessory.DisplayedState.whenEditing,
+          options: UICellAccessory.DeleteOptions(tintColor: UIColor.toDoGardenEditButtonRed)
+        )
+      ]
+     
+      cell.backgroundColor = UIColor.white
+      let cellBackgroundView = UIView()
+      cellBackgroundView.backgroundColor = UIColor.white
+      cell.backgroundView = cellBackgroundView
     }
-    
-    let loadingCellRegistration = LoadingCellRegistration { cell, _, _ in
-      cell.configure()
+  }
+  
+  private func makeFriendsGardenCellRegistration() -> FriendsGardenCellRegistration {
+    return FriendsGardenCellRegistration { cell, _, item in
+      guard case let Item.friendsGarden(configuration) = item
+      else { return }
+      
+      cell.contentConfiguration = configuration
+      cell.indentationLevel = Int.zero
     }
+  }
+  
+  private func setupDataSource() -> DataSource {
+    let friendsGardenProfileCellRegistration = self.makeFriendsGardenProfileCellRegistration()
+    let loadingCellRegistration = LoadingCellRegistration { _, _, _ in }
+    let friendsGardenCellRegistration = self.makeFriendsGardenCellRegistration()
     
     return DataSource(collectionView: self.friendListView) { collectionView, indexPath, item in
       switch item {
@@ -219,9 +239,15 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
           for: indexPath,
           item: item
         )
+      case Item.friendsProfile(_):
+        return collectionView.dequeueConfiguredReusableCell(
+          using: friendsGardenProfileCellRegistration,
+          for: indexPath,
+          item: item
+        )
       case Item.friendsGarden(_):
         return collectionView.dequeueConfiguredReusableCell(
-          using: friendsGardenListViewCellRegistration,
+          using: friendsGardenCellRegistration,
           for: indexPath,
           item: item
         )
