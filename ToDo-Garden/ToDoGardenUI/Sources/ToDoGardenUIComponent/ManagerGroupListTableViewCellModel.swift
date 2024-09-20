@@ -13,14 +13,14 @@ extension ManageGroupTableViewCell {
   public struct Configuration {
     public enum Style {
       case primary(
-        id: String,
+        id: UUID,
         groupName: String,
         progressColor: UIColor,
         progressRate: Float,
         isEditing: Bool
       )
       case secondary(
-        id: String,
+        id: UUID,
         groupName: String,
         progressColor: UIColor,
         progressRate: Float
@@ -137,13 +137,13 @@ extension ManageGroupTableViewCell {
     }
     
     struct Model {
-      let id: String
+      let id: UUID
       var progressCircle: ProgressCircle
       var groupNameButton: GroupNameButton
       var rightImageButton: RightImageView
       
       init(
-        id: String,
+        id: UUID,
         progressCircle: ProgressCircle,
         groupNameButton: GroupNameButton,
         rightImageButton: RightImageView
@@ -157,7 +157,7 @@ extension ManageGroupTableViewCell {
   }
   
   struct ModelParameters {
-    let id: String
+    let id: UUID
     let groupName: String
     let progressColor: UIColor
     let progressRate: Float

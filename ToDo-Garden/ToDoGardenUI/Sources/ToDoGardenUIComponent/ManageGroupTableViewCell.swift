@@ -17,8 +17,8 @@ public final class ManageGroupTableViewCell: UITableViewCell, ManageGroupTableVi
   private var groupNameButton: UIButton?
   private var rightImageButton: UIButton?
   
-  private var rightButtonActionHandler: ((String, String, UIColor) -> Void)?
-  private var groupNameButtonActionHandler: ((String) -> Void)?
+  private var rightButtonActionHandler: ((UUID, String, UIColor) -> Void)?
+  private var groupNameButtonActionHandler: ((UUID) -> Void)?
   
   public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     self.configuration = nil
@@ -65,7 +65,7 @@ public final class ManageGroupTableViewCell: UITableViewCell, ManageGroupTableVi
   }
   
   public func applyModelPrimary(
-    id: String,
+    id: UUID,
     groupName: String,
     progressColor: UIColor,
     progressRate: Float,
@@ -86,7 +86,7 @@ public final class ManageGroupTableViewCell: UITableViewCell, ManageGroupTableVi
   }
   
   public func applyModelSecondary(
-    id: String,
+    id: UUID,
     groupName: String,
     progressColor: UIColor,
     progressRate: Float
@@ -120,13 +120,13 @@ public final class ManageGroupTableViewCell: UITableViewCell, ManageGroupTableVi
     self.startAnimation()
   }
   
-  public func setupRightButtonAction(handler: @escaping (String, String, UIColor) -> Void) {
+  public func setupRightButtonAction(handler: @escaping (UUID, String, UIColor) -> Void) {
     self.rightButtonActionHandler = handler
     self.rightImageButton?.addAction(UIAction { [weak self] _ in
       self?.handleRightButtonAction()
     }, for: UIControl.Event.touchUpInside)
   }
-  public func setupGroupNameButtonAction(handler: @escaping (String) -> Void) {
+  public func setupGroupNameButtonAction(handler: @escaping (UUID) -> Void) {
     self.groupNameButtonActionHandler = handler
     self.groupNameButton?.addAction(UIAction { [weak self] _ in
       self?.handleGroupNameButtonAction()
