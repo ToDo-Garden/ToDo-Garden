@@ -59,7 +59,7 @@ extension PostGroupInteractor: PostGroupBusinessLogic {
     
     let response = PostGroup.TouchDoneButton.Response(group: result)
     self.currentGroup = response.group
-    self.presenter?.presentTouchedDoneButton(response: response)
+    self.presenter?.presentAfterTouchingDoneButton(response: response)
   }
   
   func changeColor(request: PostGroup.ChangeColor.Request) {

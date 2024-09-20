@@ -18,7 +18,7 @@ import ToDoGardenUIResource
 protocol PostGroupDisplayLogic: AnyObject {
   func displayChangedColor(viewModel: PostGroup.ChangeColor.ViewModel)
   func displayPayload(viewModel: PostGroup.LoadGroupData.ViewModel)
-  func displayTouchedDondButton(viewModel: PostGroup.TouchDoneButton.ViewModel)
+  func displayAfterTouchingDoneButton(viewModel: PostGroup.TouchDoneButton.ViewModel)
 }
 
 final class PostGroupViewController: UIViewController, PostGroupViewControllable {
@@ -226,8 +226,8 @@ extension PostGroupViewController: PostGroupDisplayLogic {
     self.doneBottomButton.isEnabled = viewModel.isDoneBottomButtonEnable
   }
   
-  func displayTouchedDondButton(viewModel: PostGroup.TouchDoneButton.ViewModel) {
-    print("Route to ManageGroupScene")
+  func displayAfterTouchingDoneButton(viewModel: PostGroup.TouchDoneButton.ViewModel) {
+    self.navigationController?.popViewController(animated: true)
   }
 }
 
