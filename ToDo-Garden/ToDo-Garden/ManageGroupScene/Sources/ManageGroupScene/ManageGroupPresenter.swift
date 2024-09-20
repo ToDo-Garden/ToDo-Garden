@@ -34,7 +34,7 @@ extension ManageGroupPresenter: ManageGroupPresentationLogic {
   
   func presentDeletedGroup(response: ManageGroup.DeleteGroup.Response) {
     let viewModel = ManageGroup.DeleteGroup.ViewModel(
-      id: response.id,
+      groupID: response.groupID,
       index: response.index
     )
     self.viewController?.displayDeletedGroup(viewModel: viewModel)

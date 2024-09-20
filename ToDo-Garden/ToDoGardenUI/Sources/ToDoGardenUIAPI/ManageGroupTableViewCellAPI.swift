@@ -13,7 +13,7 @@ public protocol ManageGroupTableViewCellAPI: UITableViewCell {
   func leaveEditingMode()
   
   func applyModelPrimary(
-    id: String,
+    id: UUID,
     groupName: String,
     progressColor: UIColor,
     progressRate: Float,
@@ -21,7 +21,7 @@ public protocol ManageGroupTableViewCellAPI: UITableViewCell {
   )
   
   func applyModelSecondary(
-    id: String,
+    id: UUID,
     groupName: String,
     progressColor: UIColor,
     progressRate: Float
@@ -29,9 +29,9 @@ public protocol ManageGroupTableViewCellAPI: UITableViewCell {
   
   func update(color: UIColor?, progressRate: Float?, groupName: String?)
 
-  func setupRightButtonAction(handler: @escaping (String, String, UIColor) -> Void)
+  func setupRightButtonAction(handler: @escaping (UUID, String, UIColor) -> Void)
   
-  func setupGroupNameButtonAction(handler: @escaping (String) -> Void)
+  func setupGroupNameButtonAction(handler: @escaping (UUID) -> Void)
   
   func getIdentifier() -> String
 }
