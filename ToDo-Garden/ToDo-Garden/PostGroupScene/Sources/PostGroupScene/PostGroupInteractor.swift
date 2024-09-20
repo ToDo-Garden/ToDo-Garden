@@ -25,7 +25,12 @@ class PostGroupInteractor: PostGroupDataStore {
   var delegate: PostGroupSceneDelegate?
   var presenter: PostGroupPresentationLogic?
   private let postGroupWorker: PostGroupWorkable
-  var payload: PostGroupScenePayloadable?
+  var payload: PostGroupScenePayloadable? {
+    didSet {
+      self.setCurrentGroup()
+    }
+  }
+  var currentGroup: PostGroup.ToDoGroup?
   
   init(postGroupWorker: PostGroupWorkable) {
     self.postGroupWorker = postGroupWorker
@@ -78,6 +83,22 @@ extension PostGroupInteractor: PostGroupBusinessLogic {
 }
 
 extension PostGroupInteractor {
+  private func setCurrentGroup() {
+    guard let payload = self.payload else {
+      self.currentGroup = PostGroup.ToDoGroup(
+        groupID: nil,
+        groupName: nil,
+        groupColor: nil
+      )
+      return
+    }
+    
+    self.currentGroup = PostGroup.ToDoGroup(
+      groupID: payload.groupID,
+      groupName: payload.groupName,
+      groupColor: payload.groupColor
+    )
+  }
   
   private func isDoneBottomButtonEnable(groupName: String?, groupColor: UIColor?) -> Bool {
     var isButtonEnable: Bool
