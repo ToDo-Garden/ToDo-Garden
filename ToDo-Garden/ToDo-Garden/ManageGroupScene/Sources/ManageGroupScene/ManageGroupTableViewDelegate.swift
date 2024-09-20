@@ -17,8 +17,8 @@ final class ManageGroupTableViewDelegate: NSObject {
   var displayedGroupsBeforeEditing: [ManageGroup.ToDoGroup]
   private let footerView: UIView
   
-  private var onPostGroup: ((String, String, UIColor) -> Void)?
-  private var onDeleteGroup: ((String, Int) -> Void)?
+  private var onPostGroup: ((UUID, String, UIColor) -> Void)?
+  private var onDeleteGroup: ((UUID, Int) -> Void)?
   private var onReorderingStateChange: ((Bool) -> Void)?
   
   private var isReordering: Bool = false {
@@ -36,11 +36,11 @@ final class ManageGroupTableViewDelegate: NSObject {
     self.footerView = footerView
   }
   
-  func setOnPostGroup(_ handler: @escaping (String, String, UIColor) -> Void) {
+  func setOnPostGroup(_ handler: @escaping (UUID, String, UIColor) -> Void) {
     self.onPostGroup = handler
   }
   
-  func setOnDeleteGroup(_ handler: @escaping (String, Int) -> Void) {
+  func setOnDeleteGroup(_ handler: @escaping (UUID, Int) -> Void) {
     self.onDeleteGroup = handler
   }
   
@@ -78,7 +78,7 @@ extension ManageGroupTableViewDelegate: UITableViewDataSource {
     let singleGroup = self.displayedGroups[indexPath.row]
     
     cell.applyModelPrimary(
-      id: singleGroup.id,
+      id: singleGroup.groupID,
       groupName: singleGroup.groupName,
       progressColor: singleGroup.progressColor,
       progressRate: singleGroup.progressRate,
@@ -90,8 +90,8 @@ extension ManageGroupTableViewDelegate: UITableViewDataSource {
     } else {
       cell.leaveEditingMode()
     }
-    cell.setupRightButtonAction { [weak self] groupId, groupName, groupColor in
-      self?.onPostGroup?(groupId, groupName, groupColor)
+    cell.setupRightButtonAction { [weak self] groupID, groupName, groupColor in
+      self?.onPostGroup?(groupID, groupName, groupColor)
     }
     return cell
   }
@@ -107,10 +107,10 @@ extension ManageGroupTableViewDelegate: UITableViewDelegate {
     guard !isReordering else { return }
     
     let index = indexPath.row
-    let id = self.displayedGroups[index].id
+    let groupID = self.displayedGroups[index].groupID
     
     if editingStyle == UITableViewCell.EditingStyle.delete {
-      self.onDeleteGroup?(id, index)
+      self.onDeleteGroup?(groupID, index)
     }
   }
   
@@ -143,7 +143,7 @@ extension ManageGroupTableViewDelegate: UITableViewDragDelegate {
     at indexPath: IndexPath
   ) -> [UIDragItem] {
     let item = displayedGroups[indexPath.row]
-    let itemProvider = NSItemProvider(object: item.id as NSString)
+    let itemProvider = NSItemProvider(object: item.groupID.uuidString as NSString)
     return [UIDragItem(itemProvider: itemProvider)]
   }
 }
