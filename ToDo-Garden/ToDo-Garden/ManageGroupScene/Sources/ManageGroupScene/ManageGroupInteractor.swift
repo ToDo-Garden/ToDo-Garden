@@ -68,8 +68,10 @@ extension ManageGroupInteractor: ManageGroupBusinessLogic {
   }
   
   func addGroup(request: ManageGroup.AddGroup.Request) {
+    // 다음 PR에 포함예정
   }
   
   func editGroup(request: ManageGroup.EditGroup.Request) {
+    // 다음 PR에 포함예정
   }
 }
