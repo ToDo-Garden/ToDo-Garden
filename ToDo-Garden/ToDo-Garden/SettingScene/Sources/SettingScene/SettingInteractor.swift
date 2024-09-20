@@ -15,19 +15,27 @@ protocol SettingDataStore {
 }
 
 protocol SettingBusinessLogic {
+  func fetchAppVersion()
 }
 
 class SettingInteractor: SettingDataStore {
   // var name: String = ""
   var presenter: SettingPresentationLogic?
-  private let someWorker: SettingWorkable
-  
-  init(someWorker: SettingWorkable) {
-    self.someWorker = someWorker
+  private let settingWorker: SettingWorkable
+
+  // MARK: Dependency
+  private let appServiceWorker: ApplicationServiceWorker
+
+  init(settingWorker: SettingWorkable, appServiceWorker: ApplicationServiceWorker) {
+    self.settingWorker = settingWorker
+    self.appServiceWorker = appServiceWorker
   }
 }
 
 // MARK: - Request to worker
 
 extension SettingInteractor: SettingBusinessLogic {
+  func fetchAppVersion() {
+    
+  }
 }
