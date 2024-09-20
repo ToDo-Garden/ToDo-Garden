@@ -35,7 +35,7 @@ class ManageGroupRouter: ManageGroupDataPassing {
 extension ManageGroupRouter: ManageGroupRoutingLogic {
   func routeToPostGroupScene(groupInfo: ManageGroup.ToDoGroup?) {
     var payload: PostGroupScenePayload?
-    if let groupInfo = groupInfo {
+    if let groupInfo {
       payload = PostGroupScenePayload(
         groupID: groupInfo.groupID,
         groupName: groupInfo.groupName,
