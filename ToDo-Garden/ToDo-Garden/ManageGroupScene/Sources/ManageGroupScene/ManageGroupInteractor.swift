@@ -22,7 +22,7 @@ protocol ManageGroupBusinessLogic {
 class ManageGroupInteractor: ManageGroupDataStore {
   var presenter: ManageGroupPresentationLogic?
   private let manageGroupWorker: ManageGroupWorkable
-  private var currentGroups: [ManageGroup.ToDoGroup]
+  var currentGroups: [ManageGroup.ToDoGroup]
   
   init(
     worker: ManageGroupWorkable
