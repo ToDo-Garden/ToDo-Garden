@@ -14,7 +14,7 @@ public enum ManageGroup {
     public let progressColor: UIColor
     public let progressRate: Float
     
-    public init(groupID: UUID, groupName: String, progressColor: UIColor, progressRate: Float) {
+    public init(groupID: UUID = UUID(), groupName: String, progressColor: UIColor, progressRate: Float) {
       self.groupID = groupID
       self.groupName = groupName
       self.progressColor = progressColor
