@@ -64,12 +64,13 @@ extension PostGroupInteractor: PostGroupBusinessLogic {
   
   func loadGroupData() {
     let isDoneBottomButtonEnable: Bool = self.isDoneBottomButtonEnable(
-      groupName: payload?.groupName,
-      groupColor: payload?.groupColor
+      groupName: self.payload?.groupName,
+      groupColor: self.payload?.groupColor
     )
+    
     let response = PostGroup.LoadGroupData.Response(
-      groupName: payload?.groupName ?? "",
-      groupColor: payload?.groupColor,
+      groupName: self.payload?.groupName ?? "",
+      groupColor: self.payload?.groupColor,
       isDoneBottomButtonEnable: isDoneBottomButtonEnable
     )
     self.presenter?.presentLoadGroupData(response: response)
