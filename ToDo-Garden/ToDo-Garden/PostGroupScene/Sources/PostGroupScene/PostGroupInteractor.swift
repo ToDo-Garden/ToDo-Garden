@@ -41,29 +41,30 @@ class PostGroupInteractor: PostGroupDataStore {
 
 extension PostGroupInteractor: PostGroupBusinessLogic {
   func touchDoneButton(request: PostGroupSceneEntity.PostGroup.TouchDoneButton.Request) {
-    guard let groupID = payload?.groupID else {
-      return
+    let groupID: UUID? = self.currentGroup?.groupID
+    
+    let result = self.postGroupWorker.touchDoneButton(
+      groupID: groupID,
+      groupName: request.groupName,
+      groupColor: request.groupColor
+    )
+    
+    let isAddGroup = result.groupID == nil
+    
+    if isAddGroup {
+      self.delegate?.addGroup(group: result)
+    } else {
+      self.delegate?.editGroup(group: result)
     }
     
-    self.postGroupWorker.touchDoneButton(
-      groupID: groupID,
-      groupName: request.groupName,
-      groupColor: request.groupColor
-    )
-    
-    let response = PostGroup.TouchDoneButton.Response(
-      groupID: groupID,
-      groupName: request.groupName,
-      groupColor: request.groupColor
-    )
-    
+    let response = PostGroup.TouchDoneButton.Response(group: result)
+    self.currentGroup = response.group
     self.presenter?.presentTouchedDoneButton(response: response)
   }
   
   func changeColor(request: PostGroup.ChangeColor.Request) {
-    self.postGroupWorker.changeColor(groupColor: request.groupColor)
-    // 성공했다고 가정
-    let response = PostGroup.ChangeColor.Response(groupID: "ID", groupColor: request.groupColor)
+    self.currentGroup?.groupColor = request.groupColor
+    let response = PostGroup.ChangeColor.Response(groupColor: request.groupColor)
     self.presenter?.presentChangedColor(response: response)
   }
   
