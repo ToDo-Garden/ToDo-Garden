@@ -76,8 +76,8 @@ public class ManageGroupViewController: UIViewController, ManageGroupViewControl
     }
   }
   
-  func deleteGroup(id: String, index: Int) {
-    let request = ManageGroup.DeleteGroup.Request(id: id, index: index)
+  func deleteGroup(groupID: UUID, index: Int) {
+    let request = ManageGroup.DeleteGroup.Request(groupID: groupID, index: index)
     self.interactor?.deleteGroup(request: request)
   }
   
@@ -163,9 +163,9 @@ extension ManageGroupViewController {
   }
   
   private func setupTouchActions() {
-    self.manageGroupTableViewDelegate?.setOnPostGroup { [weak self] groupId, groupName, groupColor in
+    self.manageGroupTableViewDelegate?.setOnPostGroup { [weak self] groupID, groupName, groupColor in
       let groupInfo = ManageGroup.ToDoGroup(
-        id: groupId,
+        groupID: groupID,
         groupName: groupName,
         progressColor: groupColor,
         progressRate: Float.zero
@@ -173,8 +173,8 @@ extension ManageGroupViewController {
       self?.routeToPostGroupScene(groupInfo: groupInfo)
     }
     
-    self.manageGroupTableViewDelegate?.setOnDeleteGroup { [weak self] id, index in
-      self?.deleteGroup(id: id, index: index)
+    self.manageGroupTableViewDelegate?.setOnDeleteGroup { [weak self] groupID, index in
+      self?.deleteGroup(groupID: groupID, index: index)
     }
   }
   
@@ -316,8 +316,8 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
     moves: [(from: IndexPath, to: IndexPath)],
     updates: [IndexPath]
   ) {
-    let oldIDs = oldGroups.map { $0.id }
-    let newIDs = newGroups.map { $0.id }
+    let oldIDs = oldGroups.map { $0.groupID }
+    let newIDs = newGroups.map { $0.groupID }
     
     let insertions = calculateInsertions(newIDs: newIDs, oldIDs: Set(oldIDs))
     let oldIndexMap = createOldIndexMap(oldGroups: oldGroups)
@@ -329,7 +329,8 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
     return (insertions, moves, updates)
   }
   // swiftlint:enable large_tuple
-  private func calculateInsertions(newIDs: [String], oldIDs: Set<String>) -> [IndexPath] {
+  
+  private func calculateInsertions(newIDs: [UUID], oldIDs: Set<UUID>) -> [IndexPath] {
     var insertions: [IndexPath] = []
     for (newIndex, newID) in newIDs.enumerated() where !oldIDs.contains(newID) {
       insertions.append(IndexPath(row: newIndex, section: 0))
@@ -337,10 +338,10 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
     return insertions
   }
   
-  private func createOldIndexMap(oldGroups: [ManageGroup.ToDoGroup]) -> [String: Int] {
-    var oldIndexMap = [String: Int]()
+  private func createOldIndexMap(oldGroups: [ManageGroup.ToDoGroup]) -> [UUID: Int] {
+    var oldIndexMap = [UUID: Int]()
     for (index, group) in oldGroups.enumerated() {
-      oldIndexMap[group.id] = index
+      oldIndexMap[group.groupID] = index
     }
     return oldIndexMap
   }
@@ -348,7 +349,7 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
   private func calculateMovesAndUpdates(
     newGroups: [ManageGroup.ToDoGroup],
     oldGroups: [ManageGroup.ToDoGroup],
-    oldIndexMap: [String: Int]
+    oldIndexMap: [UUID: Int]
   ) -> (
     moves: [(from: IndexPath, to: IndexPath)],
     updates: [IndexPath]
@@ -356,7 +357,7 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
     var moves: [(from: IndexPath, to: IndexPath)] = []
     var updates: [IndexPath] = []
     for (newIndex, newGroup) in newGroups.enumerated() {
-      if let oldIndex = oldIndexMap[newGroup.id] {
+      if let oldIndex = oldIndexMap[newGroup.groupID] {
         if oldIndex != newIndex {
           moves.append(
             (from: IndexPath(row: oldIndex, section: 0),

@@ -61,7 +61,7 @@ extension ManageGroupInteractor: ManageGroupBusinessLogic {
   
   func deleteGroup(request: ManageGroup.DeleteGroup.Request) {
     self.currentGroups.remove(at: request.index)
-    let response = ManageGroup.DeleteGroup.Response(id: request.id, index: request.index)
+    let response = ManageGroup.DeleteGroup.Response(groupID: request.groupID, index: request.index)
     self.presenter?.presentDeletedGroup(response: response)
   }
 }
