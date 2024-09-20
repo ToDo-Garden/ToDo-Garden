@@ -12,6 +12,7 @@ import PostGroupSceneEntity
 
 protocol PostGroupDataStore {
   var payload: PostGroupScenePayloadable? { get set }
+  var delegate: PostGroupSceneDelegate? { get set }
 }
 
 protocol PostGroupBusinessLogic {
@@ -21,6 +22,7 @@ protocol PostGroupBusinessLogic {
 }
 
 class PostGroupInteractor: PostGroupDataStore {
+  var delegate: PostGroupSceneDelegate?
   var presenter: PostGroupPresentationLogic?
   private let postGroupWorker: PostGroupWorkable
   var payload: PostGroupScenePayloadable?
