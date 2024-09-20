@@ -17,6 +17,8 @@ protocol ManageGroupBusinessLogic {
   func fetchGroupList(request: ManageGroup.FetchGroupList.Request) async
   func saveGroupList(request: ManageGroup.SaveGroupList.Request) async
   func deleteGroup(request: ManageGroup.DeleteGroup.Request)
+  func addGroup(request: ManageGroup.AddGroup.Request)
+  func editGroup(request: ManageGroup.EditGroup.Request)
 }
 
 class ManageGroupInteractor: ManageGroupDataStore {
@@ -63,5 +65,11 @@ extension ManageGroupInteractor: ManageGroupBusinessLogic {
     self.currentGroups.remove(at: request.index)
     let response = ManageGroup.DeleteGroup.Response(groupID: request.groupID, index: request.index)
     self.presenter?.presentDeletedGroup(response: response)
+  }
+  
+  func addGroup(request: ManageGroup.AddGroup.Request) {
+  }
+  
+  func editGroup(request: ManageGroup.EditGroup.Request) {
   }
 }
