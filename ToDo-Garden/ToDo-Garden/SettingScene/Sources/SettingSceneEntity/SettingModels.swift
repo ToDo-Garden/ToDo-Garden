@@ -27,7 +27,13 @@ public enum Setting {
     }
 
     public struct ViewModel {
-      public init() { }
+      public let appVersion: String
+      public let isLatestVersion: Bool
+
+      public init(appVersion: String, isLatestVersion: Bool) {
+        self.appVersion = appVersion
+        self.isLatestVersion = isLatestVersion
+      }
     }
   }
 }

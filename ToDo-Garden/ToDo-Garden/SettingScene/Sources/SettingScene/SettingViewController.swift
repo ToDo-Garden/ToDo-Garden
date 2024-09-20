@@ -12,6 +12,7 @@ import SettingSceneEntity
 import ToDoGardenUIComponent
 
 protocol SettingDisplayLogic: AnyObject {
+  func displayFetchedAppVersion(viewModel: Setting.FetchAppVersion.ViewModel)
 }
 
 final class SettingViewController: UIViewController, SettingViewControllable {
@@ -69,6 +70,7 @@ final class SettingViewController: UIViewController, SettingViewControllable {
 // MARK: - Confirm display logic protocol
 
 extension SettingViewController: SettingDisplayLogic {
+  func displayFetchedAppVersion(viewModel: Setting.FetchAppVersion.ViewModel) {}
 }
 
 // MARK: - Request to interactor
