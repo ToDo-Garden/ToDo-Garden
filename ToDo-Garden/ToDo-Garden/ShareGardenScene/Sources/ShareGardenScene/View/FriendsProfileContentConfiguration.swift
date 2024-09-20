@@ -29,9 +29,7 @@ extension ShareGardenSceneViewController {
     func updated(for state: UIConfigurationState) -> FriendsProfileContentConfiguration {
       var mutableCopyOfSelf = self
       
-      if let cellState = state as? UICellConfigurationState {
-        mutableCopyOfSelf.state = cellState
-      }
+      mutableCopyOfSelf.state = state as? UICellConfigurationState
       
       return mutableCopyOfSelf
     }
