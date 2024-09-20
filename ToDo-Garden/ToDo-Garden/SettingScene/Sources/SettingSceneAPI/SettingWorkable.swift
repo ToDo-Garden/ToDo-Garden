@@ -8,4 +8,5 @@
 import Foundation
 
 public protocol SettingWorkable {
+  func requestLatestAppVersion() async -> String
 }

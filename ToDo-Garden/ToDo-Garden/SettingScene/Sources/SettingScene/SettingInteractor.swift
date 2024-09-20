@@ -20,6 +20,8 @@ protocol SettingBusinessLogic {
 
 class SettingInteractor: SettingDataStore {
   // var name: String = ""
+  private var fetchAppVersionTask: Task<Void, Never>?
+
   var presenter: SettingPresentationLogic?
   private let settingWorker: SettingWorkable
 
@@ -36,6 +38,15 @@ class SettingInteractor: SettingDataStore {
 
 extension SettingInteractor: SettingBusinessLogic {
   func fetchAppVersion() {
-    
+    self.fetchAppVersionTask = Task {
+      let currentAppVersion = self.appServiceWorker.fetchAppVersion()
+      let latestVersion = await self.settingWorker.requestLatestAppVersion()
+      let isLatestVersion = latestVersion == currentAppVersion
+      let response = Setting.FetchAppVersion.Response(
+        currentAppVersion: currentAppVersion,
+        isLatestVersion: isLatestVersion
+      )
+      await self.presenter?.presentAppVersion(response: response)
+    }
   }
 }

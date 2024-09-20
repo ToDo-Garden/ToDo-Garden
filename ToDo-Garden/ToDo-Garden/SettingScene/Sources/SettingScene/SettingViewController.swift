@@ -29,11 +29,12 @@ final class SettingViewController: UIViewController, SettingViewControllable {
 
   init() {
     self.settingLabel = UILabel()
-    // TODO: 프로필 UI를 확인하기 위해 "울버린" 사용자명을 임시로 추가했으며, VIP 로직 구현 이후에 삭제할 예정입니다.
+    let rowConfiguration = Styled.Row.Configuration.self
     self.profileRow = Styled.Row(
-      configuration: Styled.Row.Configuration.profile(
-        Styled.Row.Configuration.ProfileModel.primary(
-          title: "울버린",
+      configuration: rowConfiguration.profile(
+        rowConfiguration.ProfileModel(
+          style: rowConfiguration.ProfileModel.Style.setting,
+          title: " ",
           description: SettingSceneTheme.StringLiteral.ProfileRow.description
         )
       )
@@ -57,8 +58,11 @@ final class SettingViewController: UIViewController, SettingViewControllable {
   override func viewDidLoad() {
     super.viewDidLoad()
     self.setupUI()
-    // TODO: VersionInfoView의 UI를 확인하기 위해 임시로 추가한 로직으로, VIP 로직 구현 이후에 삭제할 예정입니다.
-    self.versionInfoView.updateToPriorVersion("v 0.1.2")
+  }
+
+  override func viewIsAppearing(_ animated: Bool) {
+    super.viewIsAppearing(animated)
+    self.fetchAppVersion()
   }
 }
 
@@ -70,6 +74,9 @@ extension SettingViewController: SettingDisplayLogic {
 // MARK: - Request to interactor
 
 extension SettingViewController {
+  private func fetchAppVersion() {
+    self.interactor?.fetchAppVersion()
+  }
 }
 
 // MARK: Private Functions

@@ -9,7 +9,9 @@ import Foundation
 
 import SettingSceneEntity
 
+@MainActor
 protocol SettingPresentationLogic {
+  func presentAppVersion(response: Setting.FetchAppVersion.Response)
 }
 
 class SettingPresenter {
@@ -19,4 +21,5 @@ class SettingPresenter {
 // MARK: - Request to ViewController
 
 extension SettingPresenter: SettingPresentationLogic {
+  func presentAppVersion(response: Setting.FetchAppVersion.Response) {}
 }

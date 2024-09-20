@@ -11,13 +11,21 @@ public enum Setting {
   
   // MARK: Use cases
   
-  public enum Something {
+  public enum FetchAppVersion {
     public struct Request {
       public init() { }
     }
+
     public struct Response {
-      public init() { }
+      public let currentAppVersion: String?
+      public let isLatestVersion: Bool
+
+      public init(currentAppVersion: String?, isLatestVersion: Bool) {
+        self.currentAppVersion = currentAppVersion
+        self.isLatestVersion = isLatestVersion
+      }
     }
+
     public struct ViewModel {
       public init() { }
     }
