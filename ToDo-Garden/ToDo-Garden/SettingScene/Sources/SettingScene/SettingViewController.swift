@@ -70,7 +70,14 @@ final class SettingViewController: UIViewController, SettingViewControllable {
 // MARK: - Confirm display logic protocol
 
 extension SettingViewController: SettingDisplayLogic {
-  func displayFetchedAppVersion(viewModel: Setting.FetchAppVersion.ViewModel) {}
+  func displayFetchedAppVersion(viewModel: Setting.FetchAppVersion.ViewModel) {
+    let appVersion = viewModel.appVersion
+    if viewModel.isLatestVersion {
+      self.versionInfoView.updateToLatestVersion(appVersion)
+    } else {
+      self.versionInfoView.updateToPriorVersion(appVersion)
+    }
+  }
 }
 
 // MARK: - Request to interactor
