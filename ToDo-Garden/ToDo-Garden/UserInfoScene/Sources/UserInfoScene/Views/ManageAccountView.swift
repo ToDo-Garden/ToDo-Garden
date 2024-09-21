@@ -61,7 +61,6 @@ extension ManageAccountView {
 
   private func setupLogOutButtonAction() {
     let buttonAction = UIAction { _ in
-      print("called")
       self.delegate?.didSelectLogOutButton()
     }
 
@@ -84,7 +83,6 @@ extension ManageAccountView {
 
   private func setupWithdrawMembershipButtonAction() {
     let buttonAction = UIAction { _ in
-      print("called")
       self.delegate?.didSelectWithdrawMembershipButton()
     }
 
@@ -139,10 +137,7 @@ extension ManageAccountView {
 
     NSLayoutConstraint.activate(
       [
-        self.withdrawMembershipButton.topAnchor.constraint(
-          equalTo: self.logOutButton.bottomAnchor,
-          constant: UserInfoSceneViewController.Constant.WithdrawMembershipButton.topMargin
-        ),
+        self.withdrawMembershipButton.topAnchor.constraint(equalTo: self.logOutButton.bottomAnchor),
         self.withdrawMembershipButton.centerXAnchor.constraint(equalTo: self.centerXAnchor)
       ]
     )

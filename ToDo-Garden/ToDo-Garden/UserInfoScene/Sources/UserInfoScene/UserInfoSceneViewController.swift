@@ -16,9 +16,12 @@ import UserInfoSceneAPI
 import UserInfoSceneEntity
 
 protocol UserInfoSceneDisplayLogic: AnyObject {
-  func displaySomething(viewModel: UserInfoScene.Something.ViewModel)
+  func displayCollectionViewSections(viewModel: UserInfoScene.ConfigureCollectionView.ViewModel)
+  func displayFetchedProfile(viewModel: UserInfoScene.FetchProfile.ViewModel)
   func displayUserPhotoAccess(viewModel: UserInfoScene.FetchUserPhotoAccess.ViewModel)
   func displayChangedProfileImage(viewModel: UserInfoScene.ChangeProfileImage.ViewModel)
+  func displayWithdrawResult(viewModel: UserInfoScene.WithdrawMembership.ViewModel)
+  func displaySignOutResult(viewModel: UserInfoScene.SignOut.ViewModel)
 }
 
 final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewControllable {
@@ -30,7 +33,7 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
 
   // MARK: - VIP Properties
   
-  var interactor: UserInfoSceneBusinessLogic?
+  var interactor: (UserInfoSceneBusinessLogic & UserInfoLoadable)?
   var router: (UserInfoSceneRoutingLogic & UserInfoSceneDataPassing)?
   
   // MARK: - Object lifecycle
@@ -56,13 +59,36 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
   override func viewDidLoad() {
     super.viewDidLoad()
     self.setup()
-    self.doSomething()
+    self.interactor?.configureCollectionView()
   }
 }
 
 // MARK: - Confirm display logic protocol
 
 extension UserInfoSceneViewController: UserInfoSceneDisplayLogic {
+  typealias UserInfoSection = UserInfoScene.UserInfoSection
+  typealias UserInfoItem = UserInfoScene.UserInfoItem
+
+  func displayCollectionViewSections(viewModel: UserInfoScene.ConfigureCollectionView.ViewModel) {
+    var snapshot = NSDiffableDataSourceSnapshot<UserInfoSection, UserInfoItem>()
+    snapshot.appendSections(viewModel.userInfoSections)
+
+    snapshot.sectionIdentifiers.forEach { (section: UserInfoSection) in
+      snapshot.appendItems(section.items, toSection: section)
+    }
+
+    self.userInfoCollectionViewDataSource?.apply(snapshot)
+  }
+
+  func displayFetchedProfile(viewModel: UserInfoScene.FetchProfile.ViewModel) {
+    guard let indexPath = self.userInfoCollectionViewDataSource?.indexPath(for: viewModel.item)
+    else { return }
+
+    let cell = self.userInfoCollectionView.cellForItem(at: indexPath) as? SettingCollectionViewCell
+    let description = viewModel.description
+    cell?.updateDescription(description)
+  }
+
   func displayUserPhotoAccess(viewModel: UserInfoScene.FetchUserPhotoAccess.ViewModel) {
     if viewModel.isPhotoAccessible {
       self.present(self.photoPicker, animated: true)
@@ -76,14 +102,22 @@ extension UserInfoSceneViewController: UserInfoSceneDisplayLogic {
     switch viewModel.changeResult {
     case .success(let changedProfileImage):
       self.profileInfoView.updateImage(changedProfileImage)
-    case .failure(let error):
+    case .failure:
       // TODO: - 에러 내용이 명시된 ToDoGardenAlert을 띄울 예정이며, 해당 알럿 컴포넌트 제작 후에 반영할 예정입니다.
       return
     }
   }
 
-  func displaySomething(viewModel: UserInfoScene.Something.ViewModel) {
-    // self.nameTextField.text = viewModel.name
+  func displayWithdrawResult(viewModel: UserInfoScene.WithdrawMembership.ViewModel) {
+    if viewModel.withdrawError == nil {
+      self.router?.routeToLoginScene()
+    }
+  }
+
+  func displaySignOutResult(viewModel: UserInfoScene.SignOut.ViewModel) {
+    if viewModel.signOutError == nil {
+      self.router?.routeToLoginScene()
+    }
   }
 }
 
@@ -92,11 +126,6 @@ extension UserInfoSceneViewController: UserInfoSceneDisplayLogic {
 extension UserInfoSceneViewController {
   func didSelectEditProfileButton() {
     self.interactor?.fetchUserPhotoAccess()
-  }
-
-  func doSomething() {
-    let request = UserInfoScene.Something.Request()
-    self.interactor?.doSomething(request: request)
   }
 }
 
@@ -109,11 +138,9 @@ extension UserInfoSceneViewController: ToDoGardenAlertControllerDelegate {
     self.closeAlert()
     switch buttonType {
     case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.logout:
-      // TODO: 로그아웃 Interactor 메서드 호출 예정
-      return
+      self.interactor?.signOut()
     case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.unsubscribe:
-      // TODO: 회원 탈퇴 Interactor 메서드 호출 예정
-      return
+      self.interactor?.withdrawMembership()
     default:
       break
     }
@@ -141,7 +168,6 @@ extension UserInfoSceneViewController: ManageAccountViewDelegate, ProfileInfoVie
 // MARK: User Image Handling Functions
 
 extension UserInfoSceneViewController {
-  @MainActor
   private func showMovingToSettingAppAlert() {
     let stringLiteral = UserInfoSceneTheme.StringLiteral.SettingAppAlert.self
     let alert = UIAlertController(
@@ -182,7 +208,6 @@ extension UserInfoSceneViewController {
     self.setupMainUI()
     self.setupSubviewsDelegate()
     self.setupUserInfoCollectionView()
-    self.loadUserInfoCollectionViewData()
     self.setupSubviewsLayout()
   }
 
@@ -198,53 +223,9 @@ extension UserInfoSceneViewController {
 
   private func setupUserInfoCollectionView() {
     self.userInfoCollectionView.isScrollEnabled = false
-    self.userInfoCollectionView.register(
-      SettingCollectionViewCell.self,
-      forCellWithReuseIdentifier: SettingCollectionViewCell.identifier
-    )
-    self.userInfoCollectionView.register(
-      SectionHeaderView.self,
-      forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-      withReuseIdentifier: SectionHeaderView.identifier
-    )
     self.userInfoCollectionViewDataSource = self.makeDiffableDataSource(with: self.userInfoCollectionView)
     self.userInfoCollectionView.dataSource = self.userInfoCollectionViewDataSource
     self.userInfoCollectionView.collectionViewLayout = self.makeCompositionalLayout()
-  }
-
-  private func loadUserInfoCollectionViewData() {
-    var snapshot = NSDiffableDataSourceSnapshot<UserInfoSection, UserInfoItem>()
-    snapshot.appendSections(self.makeSections())
-
-    snapshot.sectionIdentifiers.forEach { (section: UserInfoSection) in
-      snapshot.appendItems(section.items, toSection: section)
-    }
-
-    self.userInfoCollectionViewDataSource?.apply(snapshot)
-  }
-
-  private func makeSections() -> [UserInfoSection] {
-    let sectionTitle = UserInfoSceneTheme.StringLiteral.UserInfoCollectionView.Section.self
-    let itemTitle = UserInfoSceneTheme.StringLiteral.UserInfoCollectionView.Item.self
-    let position = SettingCollectionViewCell.Position.self
-
-    let profileSettingSection = UserInfoSection(
-      title: sectionTitle.profileSetting,
-      items: [
-        UserInfoItem(title: itemTitle.nickName, isRightImageExisted: true, position: position.top),
-        UserInfoItem(title: itemTitle.introduction, isRightImageExisted: true, position: position.bottom)
-      ]
-    )
-
-    let accountSettingSection = UserInfoSection(
-      title: sectionTitle.accountSetting,
-      items: [
-        UserInfoItem(title: itemTitle.id, isRightImageExisted: true, position: position.top),
-        UserInfoItem(title: itemTitle.email, isRightImageExisted: false, position: position.bottom)
-      ]
-    )
-
-    return [profileSettingSection, accountSettingSection]
   }
 }
 
@@ -328,15 +309,20 @@ extension UserInfoSceneViewController {
   }
 }
 
-//  #if DEBUG
-//  @available(iOS 17.0, *)
-//  #Preview {
-//    return UINavigationController(
-//      rootViewController: UserInfoSceneViewController(
-//        photoPickerViewController: PHPickerViewController(configuration: PHPickerConfiguration()),
-//        application: UIApplication.shared,
-//        openSettingsURLString: UIApplication.openSettingsURLString
-//      )
-//    )
-//  }
-//  #endif
+struct SomePayload: UserInfoSceneScenePayloadable {}
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let userInfoScene = UserInfoSceneSceneBuilder(
+    dependency: UserInfoSceneSceneBuilder.Dependency(
+      photoPicker: PHPickerViewController(configuration: PHPickerConfiguration()),
+      appServiceWorker: AppServiceWorker(),
+      userPhotoWorker: UserPhotoWorker(),
+      userInfoWorker: UserInfoSceneWorker(),
+      nextSceneBuilder: nil
+    )
+  ).build(with: SomePayload())
+  return userInfoScene
+}
+#endif

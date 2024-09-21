@@ -10,7 +10,7 @@ import Foundation
 import UserInfoSceneAPI
 
 protocol UserInfoSceneRoutingLogic {
-  func routeToSomewhere()
+  func routeToLoginScene()
 }
 
 protocol UserInfoSceneDataPassing {
@@ -30,10 +30,8 @@ class UserInfoSceneRouter: UserInfoSceneDataPassing {
 // MARK: - Routing
 
 extension UserInfoSceneRouter: UserInfoSceneRoutingLogic {
-  func routeToSomewhere() {
-//    let destinationViewController = self.nextSceneBuilder.build(with: NextScenePayload())
-//    
-//    self.viewController?.present(destinationViewController, animated: true)
+  func routeToLoginScene() {
+    // TODO: LoginSceneBuilder가 구현되면 해당 화면으로 라우팅할 예정입니다.
   }
 }
 

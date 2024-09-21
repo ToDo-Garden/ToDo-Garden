@@ -24,6 +24,8 @@ extension UserInfoSceneTheme.StringLiteral {
   }
 
   enum UserInfoCollectionView {
+    static let introductionNotExisted = "소개글을 입력해주세요"
+
     enum Section {
       static let profileSetting = "프로필 설정"
       static let accountSetting = "계정 설정"

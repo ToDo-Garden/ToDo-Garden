@@ -8,6 +8,8 @@
 import Foundation
 
 public protocol UserInfoSceneWorkable {
-  func doSomeWork()
   func requestChangeProfileImage(with data: Data) throws
+  func requestUserProfile(urlString: String) async -> String
+  func requestWithdraw() async throws
+  func requestSignOut() async throws
 }

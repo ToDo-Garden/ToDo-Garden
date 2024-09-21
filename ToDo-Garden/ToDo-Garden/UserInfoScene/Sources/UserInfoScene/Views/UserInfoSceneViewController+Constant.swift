@@ -14,7 +14,7 @@ extension UserInfoSceneViewController {
 extension UserInfoSceneViewController.Constant {
   enum ProfileInfoView {
     static let topMargin: CGFloat = 10
-    static let size = CGSize(width: 86, height: 106)
+    static let size = CGSize(width: 86, height: 114)
   }
 
   enum ProfileImageView {
@@ -38,7 +38,7 @@ extension UserInfoSceneViewController.Constant {
 
   enum ManageAccountView {
     static let topMargin: CGFloat = 35
-    static let height: CGFloat = 65
+    static let height: CGFloat = 70
   }
 
   enum LogOutButton {

@@ -15,15 +15,33 @@ protocol UserInfoSceneDataStore {
 }
 
 protocol UserInfoSceneBusinessLogic {
+  func configureCollectionView()
   func fetchUserPhotoAccess()
   func changeUserProfileImage()
   func openSettingApp()
-  func doSomething(request: UserInfoScene.Something.Request)
+  func withdrawMembership()
+  func signOut()
 }
 
-class UserInfoSceneInteractor: UserInfoSceneDataStore {
+actor UserInfoDataManager {
+  private var userInfoData: [UserInfoScene.UserInfo: String]
+
+  init() {
+    self.userInfoData = [:]
+  }
+
+  func updateUserInfoData(for userInfo: UserInfoScene.UserInfo, with value: String) {
+    self.userInfoData[userInfo] = value
+  }
+}
+
+final class UserInfoSceneInteractor: UserInfoSceneDataStore {
+  private var userInfoDataManager: UserInfoDataManager
+
   private var requestPhotoAccessTask: Task<Void, Error>?
   private var requestUserPhotoTask: Task<Void, Error>?
+  private var requestWithdrawTask: Task<Void, Error>?
+  private var requestSignOutTask: Task<Void, Error>?
 
   // var name: String = ""
   var presenter: UserInfoScenePresentationLogic?
@@ -36,6 +54,7 @@ class UserInfoSceneInteractor: UserInfoSceneDataStore {
     appServiceWorker: AppServiceWorkable,
     userPhotoWorker: UserPhotoWorker
   ) {
+    self.userInfoDataManager = UserInfoDataManager()
     self.userInfoWorker = userInfoWorker
     self.appServiceWorker = appServiceWorker
     self.userPhotoWorker = userPhotoWorker
@@ -45,14 +64,16 @@ class UserInfoSceneInteractor: UserInfoSceneDataStore {
 // MARK: - Request to worker
 
 extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
+  func configureCollectionView() {
+    self.presenter?.presentCollectionViewSections()
+  }
+
   func fetchUserPhotoAccess() {
     self.requestPhotoAccessTask = Task {
       let isPhotoAccessible = await self.userPhotoWorker.requestPhotoAccess()
       let response = UserInfoScene.FetchUserPhotoAccess.Response(isPhotoAccessible: isPhotoAccessible)
 
-      await MainActor.run {
-        self.presenter?.presentUserPhotoAccess(response: response)
-      }
+      await self.presenter?.presentUserPhotoAccess(response: response)
     }
   }
 
@@ -66,15 +87,13 @@ extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
             changeResult: Result.success(profileImageToChange)
           )
 
-          await MainActor.run {
-            self.presenter?.presentChangedProfileImage(response: response)
-          }
+          await self.presenter?.presentChangedProfileImage(response: response)
         }
       } catch let error {
         let response = UserInfoScene.ChangeProfileImage.Response(
           changeResult: Result.failure(error)
         )
-        self.presenter?.presentChangedProfileImage(response: response)
+        await self.presenter?.presentChangedProfileImage(response: response)
       }
     }
   }
@@ -83,10 +102,41 @@ extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
     self.appServiceWorker.openSettingApp()
   }
 
-  func doSomething(request: UserInfoScene.Something.Request) {
-    self.userInfoWorker.doSomeWork()
+  func withdrawMembership() {
+    self.requestWithdrawTask = Task {
+      let withdrawError: Error?
+      do {
+        try await self.userInfoWorker.requestWithdraw()
+        withdrawError = nil
+      } catch let error {
+        withdrawError = error
+      }
 
-    let response = UserInfoScene.Something.Response()
-    self.presenter?.presentSomething(response: response)
+      let response = UserInfoScene.WithdrawMembership.Response(withdrawError: withdrawError)
+      await self.presenter?.presentWithdrawResult(response: response)
+    }
+  }
+
+  func signOut() {
+    self.requestSignOutTask = Task {
+      let signOutError: Error?
+      do {
+        try await self.userInfoWorker.requestSignOut()
+        signOutError = nil
+      } catch let error {
+        signOutError = error
+      }
+
+      let response = UserInfoScene.SignOut.Response(signOutError: signOutError)
+      await self.presenter?.presentSignOutResult(response: response)
+    }
+  }
+}
+
+extension UserInfoSceneInteractor: UserInfoLoadable {
+  func requestDescription(for userInfo: UserInfoScene.UserInfo) async -> String {
+    let description = await self.userInfoWorker.requestUserProfile(urlString: userInfo.rawValue)
+    await self.userInfoDataManager.updateUserInfoData(for: userInfo, with: description)
+    return description
   }
 }

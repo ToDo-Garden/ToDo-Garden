@@ -9,7 +9,7 @@ import UIKit
 
 import TDUtility
 
-public final class SettingCollectionViewCell: UICollectionViewCell, ReusableIdentifier {
+open class SettingCollectionViewCell: UICollectionViewCell, ReusableIdentifier {
   public enum Position {
     case top
     case middle
@@ -33,7 +33,7 @@ public final class SettingCollectionViewCell: UICollectionViewCell, ReusableIden
   }
 
   @available(*, unavailable)
-  required init?(coder: NSCoder) {
+  required public init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
