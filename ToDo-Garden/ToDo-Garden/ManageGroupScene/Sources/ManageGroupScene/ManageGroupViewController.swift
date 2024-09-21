@@ -291,18 +291,13 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
     self.rightBarButton.isEnabled = false
     Task { @MainActor in
       self.groupListTableView.performBatchUpdates({
-        self.groupListTableView.insertRows(
-          at: changes.insertions,
-          with: UITableView.RowAnimation.fade
-        )
+        self.groupListTableView.deleteRows(at: changes.deletions, with: UITableView.RowAnimation.fade)
+        self.groupListTableView.insertRows(at: changes.insertions, with: UITableView.RowAnimation.fade)
         changes.moves.forEach { move in
           self.groupListTableView.moveRow(at: move.from, to: move.to)
         }
       }, completion: { _ in
-        self.groupListTableView.reloadRows(
-          at: changes.updates,
-          with: UITableView.RowAnimation.none
-        )
+        self.groupListTableView.reloadRows(at: changes.updates, with: UITableView.RowAnimation.fade)
         self.rightBarButton.isEnabled = true
       })
     }
@@ -313,6 +308,7 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
     oldGroups: [ManageGroup.ToDoGroup],
     newGroups: [ManageGroup.ToDoGroup]
   ) -> (
+    deletions: [IndexPath],
     insertions: [IndexPath],
     moves: [(from: IndexPath, to: IndexPath)],
     updates: [IndexPath]
@@ -320,6 +316,7 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
     let oldIDs = oldGroups.map { $0.groupID }
     let newIDs = newGroups.map { $0.groupID }
     
+    let deletions = calculateDeletions(oldIDs: oldIDs, newIDs: Set(newIDs))
     let insertions = calculateInsertions(newIDs: newIDs, oldIDs: Set(oldIDs))
     let oldIndexMap = createOldIndexMap(oldGroups: oldGroups)
     let (moves, updates) = calculateMovesAndUpdates(
@@ -327,9 +324,15 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
       oldGroups: oldGroups,
       oldIndexMap: oldIndexMap
     )
-    return (insertions, moves, updates)
+    return (deletions, insertions, moves, updates)
   }
   // swiftlint:enable large_tuple
+  
+  private func calculateDeletions(oldIDs: [UUID], newIDs: Set<UUID>) -> [IndexPath] {
+    return oldIDs.enumerated().compactMap { index, groupID in
+      newIDs.contains(groupID) ? nil : IndexPath(row: index, section: 0)
+    }
+  }
   
   private func calculateInsertions(newIDs: [UUID], oldIDs: Set<UUID>) -> [IndexPath] {
     var insertions: [IndexPath] = []
