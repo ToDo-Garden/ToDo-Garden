@@ -68,10 +68,23 @@ extension ManageGroupInteractor: ManageGroupBusinessLogic {
   }
   
   func addGroup(request: ManageGroup.AddGroup.Request) {
-    // 다음 PR에 포함예정
+    let group = self.manageGroupWorker.addGroup(request: request)
+    self.currentGroups.append(group)
+    
+    let response = ManageGroup.AddGroup.Response(group: group)
+    self.presenter?.presentAddedGroup(response: response)
   }
   
   func editGroup(request: ManageGroup.EditGroup.Request) {
-    // 다음 PR에 포함예정
+    if let index = self.currentGroups.firstIndex(where: { $0.groupID == request.groupID }) {
+      let progressRate = self.currentGroups[index].progressRate
+      let group = self.manageGroupWorker.editGroup(request: request, progressRate: progressRate)
+      self.currentGroups[index] = group
+      
+      let response = ManageGroup.EditGroup.Response(group: group, editedIndex: index)
+      self.presenter?.presentEditedGroup(response: response)
+    } else {
+      return
+    }
   }
 }
