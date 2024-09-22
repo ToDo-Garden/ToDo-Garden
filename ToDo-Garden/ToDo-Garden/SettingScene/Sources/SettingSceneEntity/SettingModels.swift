@@ -19,6 +19,14 @@ public enum Setting {
         self.nickName = nickName
       }
     }
+
+    public struct ViewModel {
+      public let nickName: String
+
+      public init(nickName: String) {
+        self.nickName = nickName
+      }
+    }
   }
 
   public enum FetchAppVersion {

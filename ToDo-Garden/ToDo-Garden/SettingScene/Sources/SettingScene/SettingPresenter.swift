@@ -22,7 +22,11 @@ final class SettingPresenter {
 // MARK: - Request to ViewController
 
 extension SettingPresenter: SettingPresentationLogic {
-  func presentUserNickName(response: Setting.FetchUserNickName.Response) {}
+  func presentUserNickName(response: Setting.FetchUserNickName.Response) {
+    let nickName = response.nickName
+    let viewModel = Setting.FetchUserNickName.ViewModel(nickName: nickName)
+    self.viewController?.displayFetchedUserNickname(viewModel: viewModel)
+  }
 
   func presentAppVersion(response: Setting.FetchAppVersion.Response) {
     let appVersion = self.formatVersionString(response.currentAppVersion)

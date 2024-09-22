@@ -12,6 +12,7 @@ import SettingSceneEntity
 import ToDoGardenUIComponent
 
 protocol SettingDisplayLogic: AnyObject {
+  func displayFetchedUserNickname(viewModel: Setting.FetchUserNickName.ViewModel)
   func displayFetchedAppVersion(viewModel: Setting.FetchAppVersion.ViewModel)
 }
 
@@ -63,6 +64,7 @@ final class SettingViewController: UIViewController, SettingViewControllable {
 
   override func viewIsAppearing(_ animated: Bool) {
     super.viewIsAppearing(animated)
+    self.interactor?.fetchUserNickname()
     self.fetchAppVersion()
   }
 }
@@ -70,6 +72,17 @@ final class SettingViewController: UIViewController, SettingViewControllable {
 // MARK: - Confirm display logic protocol
 
 extension SettingViewController: SettingDisplayLogic {
+  func displayFetchedUserNickname(viewModel: Setting.FetchUserNickName.ViewModel) {
+    let rowConfiguration = Styled.Row.Configuration.self
+    self.profileRow.configuration = rowConfiguration.profile(
+      rowConfiguration.ProfileModel(
+        style: rowConfiguration.ProfileModel.Style.setting,
+        title: viewModel.nickName,
+        description: SettingSceneTheme.StringLiteral.ProfileRow.description
+      )
+    )
+  }
+
   func displayFetchedAppVersion(viewModel: Setting.FetchAppVersion.ViewModel) {
     let appVersion = viewModel.appVersion
     if viewModel.isLatestVersion {
