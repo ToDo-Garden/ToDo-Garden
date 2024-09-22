@@ -10,7 +10,17 @@ import Foundation
 public enum Setting {
   
   // MARK: Use cases
-  
+
+  public enum FetchUserNickName {
+    public struct Response {
+      public let nickName: String
+
+      public init(nickName: String) {
+        self.nickName = nickName
+      }
+    }
+  }
+
   public enum FetchAppVersion {
     public struct Request {
       public init() { }

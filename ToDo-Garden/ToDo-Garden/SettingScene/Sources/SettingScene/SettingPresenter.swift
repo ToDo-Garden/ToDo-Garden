@@ -11,6 +11,7 @@ import SettingSceneEntity
 
 @MainActor
 protocol SettingPresentationLogic {
+  func presentUserNickName(response: Setting.FetchUserNickName.Response)
   func presentAppVersion(response: Setting.FetchAppVersion.Response)
 }
 
@@ -21,6 +22,8 @@ final class SettingPresenter {
 // MARK: - Request to ViewController
 
 extension SettingPresenter: SettingPresentationLogic {
+  func presentUserNickName(response: Setting.FetchUserNickName.Response) {}
+
   func presentAppVersion(response: Setting.FetchAppVersion.Response) {
     let appVersion = self.formatVersionString(response.currentAppVersion)
     let isLatestVersion = response.isLatestVersion

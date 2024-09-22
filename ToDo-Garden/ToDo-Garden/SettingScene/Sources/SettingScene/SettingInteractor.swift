@@ -11,15 +11,20 @@ import SettingSceneAPI
 import SettingSceneEntity
 
 protocol SettingDataStore {
-  // var name: String { get set }
+  var nickName: String? { get }
+  var profileImageData: Data? { get }
 }
 
 protocol SettingBusinessLogic {
+  func fetchUserNickname()
   func fetchAppVersion()
 }
 
 class SettingInteractor: SettingDataStore {
-  // var name: String = ""
+  var nickName: String?
+  var profileImageData: Data?
+  
+  private var fetchUserNicknameTask: Task<Void, Never>?
   private var fetchAppVersionTask: Task<Void, Never>?
 
   var presenter: SettingPresentationLogic?
@@ -37,6 +42,15 @@ class SettingInteractor: SettingDataStore {
 // MARK: - Request to worker
 
 extension SettingInteractor: SettingBusinessLogic {
+  func fetchUserNickname() {
+    self.fetchUserNicknameTask = Task {
+      let nickName = await self.settingWorker.requestUserNickName()
+      self.nickName = nickName
+      let response = Setting.FetchUserNickName.Response(nickName: nickName)
+      await self.presenter?.presentUserNickName(response: response)
+    }
+  }
+
   func fetchAppVersion() {
     self.fetchAppVersionTask = Task {
       let currentAppVersion = self.appServiceWorker.fetchAppVersion()
