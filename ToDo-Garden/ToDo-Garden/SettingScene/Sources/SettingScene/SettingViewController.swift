@@ -65,6 +65,7 @@ final class SettingViewController: UIViewController, SettingViewControllable {
   override func viewIsAppearing(_ animated: Bool) {
     super.viewIsAppearing(animated)
     self.interactor?.fetchUserNickname()
+    self.interactor?.fetchUserProfileImage()
     self.fetchAppVersion()
   }
 }

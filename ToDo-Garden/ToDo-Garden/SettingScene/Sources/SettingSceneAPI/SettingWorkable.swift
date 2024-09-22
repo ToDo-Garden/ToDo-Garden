@@ -9,5 +9,6 @@ import Foundation
 
 public protocol SettingWorkable {
   func requestUserNickName() async -> String
+  func requestUserProfileImage() async -> Data
   func requestLatestAppVersion() async -> String
 }

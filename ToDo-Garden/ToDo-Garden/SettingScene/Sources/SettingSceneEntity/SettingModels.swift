@@ -29,6 +29,16 @@ public enum Setting {
     }
   }
 
+  public enum FetchUserProfileImage {
+    public struct Response {
+      public let imageData: Data
+
+      public init(imageData: Data) {
+        self.imageData = imageData
+      }
+    }
+  }
+
   public enum FetchAppVersion {
     public struct Request {
       public init() { }

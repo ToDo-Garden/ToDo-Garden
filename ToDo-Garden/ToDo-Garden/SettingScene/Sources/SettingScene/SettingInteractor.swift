@@ -17,6 +17,7 @@ protocol SettingDataStore {
 
 protocol SettingBusinessLogic {
   func fetchUserNickname()
+  func fetchUserProfileImage()
   func fetchAppVersion()
 }
 
@@ -25,6 +26,7 @@ class SettingInteractor: SettingDataStore {
   var profileImageData: Data?
   
   private var fetchUserNicknameTask: Task<Void, Never>?
+  private var fetchUserProfileImageTask: Task<Void, Never>?
   private var fetchAppVersionTask: Task<Void, Never>?
 
   var presenter: SettingPresentationLogic?
@@ -48,6 +50,15 @@ extension SettingInteractor: SettingBusinessLogic {
       self.nickName = nickName
       let response = Setting.FetchUserNickName.Response(nickName: nickName)
       await self.presenter?.presentUserNickName(response: response)
+    }
+  }
+
+  func fetchUserProfileImage() {
+    self.fetchUserProfileImageTask = Task {
+      let profileImageData = await self.settingWorker.requestUserProfileImage()
+      self.profileImageData = profileImageData
+      let response = Setting.FetchUserProfileImage.Response(imageData: profileImageData)
+      await self.presenter?.presentUserProfileImage(response: response)
     }
   }
 

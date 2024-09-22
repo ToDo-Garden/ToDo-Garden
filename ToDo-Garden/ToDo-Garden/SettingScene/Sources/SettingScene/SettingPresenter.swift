@@ -12,6 +12,7 @@ import SettingSceneEntity
 @MainActor
 protocol SettingPresentationLogic {
   func presentUserNickName(response: Setting.FetchUserNickName.Response)
+  func presentUserProfileImage(response: Setting.FetchUserProfileImage.Response)
   func presentAppVersion(response: Setting.FetchAppVersion.Response)
 }
 
@@ -27,6 +28,8 @@ extension SettingPresenter: SettingPresentationLogic {
     let viewModel = Setting.FetchUserNickName.ViewModel(nickName: nickName)
     self.viewController?.displayFetchedUserNickname(viewModel: viewModel)
   }
+
+  func presentUserProfileImage(response: Setting.FetchUserProfileImage.Response) {}
 
   func presentAppVersion(response: Setting.FetchAppVersion.Response) {
     let appVersion = self.formatVersionString(response.currentAppVersion)
