@@ -290,9 +290,18 @@ extension SettingViewController {
   }
 }
 
+extension SettingViewController {
+  struct SomePayload: SettingScenePayloadable {}
+}
+
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  return SettingViewController()
+  return SettingSceneBuilder(
+    dependency: SettingSceneBuilder.Dependency(
+      settingWorker: SettingWorker(),
+      appServiceWorker: ApplicationServiceWorker()
+    )
+  ).build(with: SettingViewController.SomePayload())
 }
 #endif
