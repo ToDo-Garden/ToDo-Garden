@@ -45,7 +45,7 @@ extension EditUserNameSceneBuilder {
   private func configureVIPCycle(
     for viewController: EditUserNameSceneViewController
   ) -> EditUserNameSceneViewController {
-    let interactor = EditUserNameSceneInteractor(someWorker: self.dependency.editUserNameWorker)
+    let interactor = EditUserNameSceneInteractor(editUserNameWorker: self.dependency.editUserNameWorker)
     let presenter = EditUserNameScenePresenter()
     let router = EditUserNameSceneRouter()
     viewController.interactor = interactor

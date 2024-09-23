@@ -21,10 +21,10 @@ protocol EditUserNameSceneBusinessLogic {
 class EditUserNameSceneInteractor: EditUserNameSceneDataStore {
   // var name: String = ""
   var presenter: EditUserNameScenePresentationLogic?
-  private let someWorker: EditUserNameSceneWorkable
-  
-  init(someWorker: EditUserNameSceneWorkable) {
-    self.someWorker = someWorker
+  private let editUserNameWorker: EditUserNameSceneWorkable
+
+  init(editUserNameWorker: EditUserNameSceneWorkable) {
+    self.editUserNameWorker = editUserNameWorker
   }
 }
 
@@ -32,7 +32,7 @@ class EditUserNameSceneInteractor: EditUserNameSceneDataStore {
 
 extension EditUserNameSceneInteractor: EditUserNameSceneBusinessLogic {
   func doSomething(request: EditUserNameScene.Something.Request) {
-    self.someWorker.doSomeWork()
+    self.editUserNameWorker.doSomeWork()
     
     let response = EditUserNameScene.Something.Response()
     self.presenter?.presentSomething(response: response)
