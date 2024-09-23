@@ -17,17 +17,11 @@ struct SettingWorker: SettingWorkable {
   func requestUserProfileImage() async -> Data {
     return MockData.imageData
   }
-
-  /// 서버로부터 앱의 최신버전을 받아오는 메서드입니다.
-  func requestLatestAppVersion() -> String {
-    return MockData.latestVersion
-  }
 }
 
 extension SettingWorker {
   private enum MockData {
     static let nickName = "울버린"
     static let imageData = Data()
-    static let latestVersion = "0.1.2"
   }
 }

@@ -67,7 +67,7 @@ final class SettingViewController: UIViewController, SettingViewControllable {
     super.viewIsAppearing(animated)
     self.interactor?.fetchUserNickname()
     self.interactor?.fetchUserProfileImage()
-    self.fetchAppVersion()
+    self.interactor?.fetchAppVersion()
   }
 }
 
@@ -100,11 +100,11 @@ extension SettingViewController: SettingDisplayLogic {
   }
 }
 
-// MARK: - Request to interactor
+// MARK: Subviews Delegate Functions
 
-extension SettingViewController {
-  private func fetchAppVersion() {
-    self.interactor?.fetchAppVersion()
+extension SettingViewController: VersionInfoViewDelegate {
+  func didSelectUpdateButton() {
+    self.interactor?.openAppStore()
   }
 }
 
@@ -115,6 +115,7 @@ extension SettingViewController {
     self.view.backgroundColor = UIColor.toDoGardenWhite
     self.setupSettingLabel()
     self.setupProfileRowUI()
+    self.setupSubviewDeleagte()
     self.setupSettingCollectionView()
     self.setupSubviewsLayout()
   }
@@ -129,6 +130,10 @@ extension SettingViewController {
     self.profileRow.layer.cornerRadius = Constant.ProfileRow.Layer.cornerRadius
     self.profileRow.layer.borderWidth = Constant.ProfileRow.Layer.borderWidth
     self.profileRow.layer.borderColor = UIColor.toDoGardenGreenBackground.cgColor
+  }
+
+  private func setupSubviewDeleagte() {
+    self.versionInfoView.delegate = self
   }
 
   private func setupSettingCollectionView() {

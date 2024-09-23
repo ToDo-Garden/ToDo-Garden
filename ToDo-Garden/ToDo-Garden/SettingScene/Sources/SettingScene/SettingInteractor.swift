@@ -19,6 +19,7 @@ protocol SettingBusinessLogic {
   func fetchUserNickname()
   func fetchUserProfileImage()
   func fetchAppVersion()
+  func openAppStore()
 }
 
 final class SettingInteractor: SettingDataStore {
@@ -64,14 +65,17 @@ extension SettingInteractor: SettingBusinessLogic {
 
   func fetchAppVersion() {
     self.fetchAppVersionTask = Task {
-      let currentAppVersion = self.appServiceWorker.fetchAppVersion()
-      let latestVersion = await self.settingWorker.requestLatestAppVersion()
-      let isLatestVersion = latestVersion == currentAppVersion
+      let currentAppVersion = self.appServiceWorker.fetchCurrentAppVersion()
+      let isLatestVersion = await self.appServiceWorker.isUpdateAvailable()
       let response = Setting.FetchAppVersion.Response(
         currentAppVersion: currentAppVersion,
         isLatestVersion: isLatestVersion
       )
       await self.presenter?.presentAppVersion(response: response)
     }
+  }
+
+  func openAppStore() {
+    self.appServiceWorker.openAppStore()
   }
 }
