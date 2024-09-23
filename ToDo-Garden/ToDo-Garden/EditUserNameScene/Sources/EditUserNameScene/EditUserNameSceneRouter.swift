@@ -10,37 +10,37 @@ import Foundation
 import EditUserNameSceneAPI
 
 protocol EditUserNameSceneRoutingLogic {
-	func routeToSomewhere()
+  func routeToSomewhere()
 }
 
 protocol EditUserNameSceneDataPassing {
-	var dataStore: EditUserNameSceneDataStore? { get }
+  var dataStore: EditUserNameSceneDataStore? { get }
 }
 
 class EditUserNameSceneRouter: EditUserNameSceneDataPassing {
-	weak var viewController: EditUserNameSceneViewController?
-	var dataStore: EditUserNameSceneDataStore?
-	private let nextSceneBuilder: NextSceneBuildable
-	
-	init(nextSceneBuilder: NextSceneBuildable) {
-		self.nextSceneBuilder = nextSceneBuilder
-	}
+  weak var viewController: EditUserNameSceneViewController?
+  var dataStore: EditUserNameSceneDataStore?
+  private let nextSceneBuilder: NextSceneBuildable
+  
+  init(nextSceneBuilder: NextSceneBuildable) {
+    self.nextSceneBuilder = nextSceneBuilder
+  }
 }
 
 // MARK: - Routing
 
 extension EditUserNameSceneRouter: EditUserNameSceneRoutingLogic {
-	func routeToSomewhere() {
-		let destinationViewController = self.nextSceneBuilder.build(with: NextScenePayload())
-		
-		self.viewController?.present(destinationViewController, animated: true)
-	}
+  func routeToSomewhere() {
+    let destinationViewController = self.nextSceneBuilder.build(with: NextScenePayload())
+    
+    self.viewController?.present(destinationViewController, animated: true)
+  }
 }
 
 // MARK: - Declare Payload for scene
 
 extension EditUserNameSceneRouter {
-	struct NextScenePayload: NextScenePayloadable {
-		// var name: String
-	}
+  struct NextScenePayload: NextScenePayloadable {
+    // var name: String
+  }
 }

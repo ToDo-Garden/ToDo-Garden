@@ -8,5 +8,5 @@
 import Foundation
 
 public protocol EditUserNameSceneWorkable {
-	func doSomeWork()
+  func doSomeWork()
 }
