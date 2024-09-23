@@ -17,6 +17,9 @@
 		4FC8C1512B8C575A00BA223E /* ToDoGardenUIAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 4FC8C1502B8C575A00BA223E /* ToDoGardenUIAPI */; };
 		4FDA5E392B4FF1E4006506ED /* Asset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FDA5E382B4FF1E4006506ED /* Asset.xcassets */; };
 		4FEB41422C3686DB00E3682A /* ShareGardenScene in Frameworks */ = {isa = PBXBuildFile; productRef = 4FEB41412C3686DB00E3682A /* ShareGardenScene */; };
+		634BD1782CA1755B00396CAB /* EditUserNameScene in Frameworks */ = {isa = PBXBuildFile; productRef = 634BD1772CA1755B00396CAB /* EditUserNameScene */; };
+		634BD17A2CA1755B00396CAB /* EditUserNameSceneAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 634BD1792CA1755B00396CAB /* EditUserNameSceneAPI */; };
+		634BD17C2CA1755B00396CAB /* EditUserNameSceneEntity in Frameworks */ = {isa = PBXBuildFile; productRef = 634BD17B2CA1755B00396CAB /* EditUserNameSceneEntity */; };
 		638F7F552C7F4E0900338FA3 /* UserInfoScene in Frameworks */ = {isa = PBXBuildFile; productRef = 638F7F542C7F4E0900338FA3 /* UserInfoScene */; };
 		638F7F572C7F4E0900338FA3 /* UserInfoSceneAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 638F7F562C7F4E0900338FA3 /* UserInfoSceneAPI */; };
 		638F7F592C7F4E0900338FA3 /* UserInfoSceneEntity in Frameworks */ = {isa = PBXBuildFile; productRef = 638F7F582C7F4E0900338FA3 /* UserInfoSceneEntity */; };
@@ -78,8 +81,11 @@
 				4FEB41422C3686DB00E3682A /* ShareGardenScene in Frameworks */,
 				4FC8C1512B8C575A00BA223E /* ToDoGardenUIAPI in Frameworks */,
 				638F7F592C7F4E0900338FA3 /* UserInfoSceneEntity in Frameworks */,
+				634BD17A2CA1755B00396CAB /* EditUserNameSceneAPI in Frameworks */,
 				638F7F572C7F4E0900338FA3 /* UserInfoSceneAPI in Frameworks */,
+				634BD17C2CA1755B00396CAB /* EditUserNameSceneEntity in Frameworks */,
 				E4DEA1762C2BED0700E3CE3C /* ManageGroupSceneAPI in Frameworks */,
+				634BD1782CA1755B00396CAB /* EditUserNameScene in Frameworks */,
 				638F7F552C7F4E0900338FA3 /* UserInfoScene in Frameworks */,
 				4F3D03862B8EF89800C495E5 /* ToDoGardenUIResource in Frameworks */,
 				E4DEA1742C2BED0700E3CE3C /* ManageGroupScene in Frameworks */,
@@ -221,6 +227,9 @@
 				638F7F542C7F4E0900338FA3 /* UserInfoScene */,
 				638F7F562C7F4E0900338FA3 /* UserInfoSceneAPI */,
 				638F7F582C7F4E0900338FA3 /* UserInfoSceneEntity */,
+				634BD1772CA1755B00396CAB /* EditUserNameScene */,
+				634BD1792CA1755B00396CAB /* EditUserNameSceneAPI */,
+				634BD17B2CA1755B00396CAB /* EditUserNameSceneEntity */,
 			);
 			productName = "ToDo-Garden";
 			productReference = 4F0DF1282B4EABCE00097B7D /* ToDo-Garden.app */;
@@ -605,6 +614,18 @@
 		4FEB41412C3686DB00E3682A /* ShareGardenScene */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ShareGardenScene;
+		};
+		634BD1772CA1755B00396CAB /* EditUserNameScene */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = EditUserNameScene;
+		};
+		634BD1792CA1755B00396CAB /* EditUserNameSceneAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = EditUserNameSceneAPI;
+		};
+		634BD17B2CA1755B00396CAB /* EditUserNameSceneEntity */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = EditUserNameSceneEntity;
 		};
 		638F7F542C7F4E0900338FA3 /* UserInfoScene */ = {
 			isa = XCSwiftPackageProductDependency;
