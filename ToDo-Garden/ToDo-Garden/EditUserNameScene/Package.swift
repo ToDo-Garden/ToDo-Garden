@@ -5,18 +5,43 @@ import PackageDescription
 
 let package = Package(
   name: "EditUserNameScene",
+  platforms: [.iOS(.v15)],
   products: [
-    // Products define the executables and libraries a package produces, making them visible to other packages.
+    .library(
+      name: "EditUserNameSceneAPI",
+      targets: ["EditUserNameSceneAPI"]
+    ),
+    .library(
+      name: "EditUserNameSceneEntity",
+      targets: ["EditUserNameSceneEntity"]
+    ),
     .library(
       name: "EditUserNameScene",
       targets: ["EditUserNameScene"]
     )
   ],
+  dependencies: [
+    .package(name: "ToDoGardenUI", path: "../ToDoGardenUI")
+  ],
   targets: [
-    // Targets are the basic building blocks of a package, defining a module or a test suite.
-    // Targets can depend on other targets in this package and products from dependencies.
     .target(
-      name: "EditUserNameScene"
+      name: "EditUserNameSceneAPI",
+      dependencies: [
+        .product(name: "ToDoGardenUIAPI", package: "ToDoGardenUI")
+      ]
+    ),
+    .target(
+      name: "EditUserNameSceneEntity"
+    ),
+    .target(
+      name: "EditUserNameScene",
+      dependencies: [
+        "EditUserNameSceneAPI",
+        "EditUserNameSceneEntity",
+        .product(name: "ToDoGardenUIAPI", package: "ToDoGardenUI"),
+        .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI"),
+        .product(name: "ToDoGardenUIResource", package: "ToDoGardenUI")
+      ]
     )
   ]
 )
