@@ -13,14 +13,9 @@ public struct EditUserNameSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
   public struct Dependency {
     let editUserNameWorker: EditUserNameSceneWorkable
-    let nextSceneBuilder: NextSceneBuildable
 
-    public init(
-      editUserNameWorker: EditUserNameSceneWorkable,
-      nextSceneBuilder: NextSceneBuildable
-    ) {
+    public init(editUserNameWorker: EditUserNameSceneWorkable) {
       self.editUserNameWorker = editUserNameWorker
-      self.nextSceneBuilder = nextSceneBuilder
     }
   }
 
@@ -52,7 +47,7 @@ extension EditUserNameSceneBuilder {
   ) -> EditUserNameSceneViewController {
     let interactor = EditUserNameSceneInteractor(someWorker: self.dependency.editUserNameWorker)
     let presenter = EditUserNameScenePresenter()
-    let router = EditUserNameSceneRouter(nextSceneBuilder: self.dependency.nextSceneBuilder)
+    let router = EditUserNameSceneRouter()
     viewController.interactor = interactor
     viewController.router = router
     interactor.presenter = presenter

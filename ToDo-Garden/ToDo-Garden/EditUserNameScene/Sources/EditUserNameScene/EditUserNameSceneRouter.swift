@@ -20,20 +20,12 @@ protocol EditUserNameSceneDataPassing {
 class EditUserNameSceneRouter: EditUserNameSceneDataPassing {
   weak var viewController: EditUserNameSceneViewController?
   var dataStore: EditUserNameSceneDataStore?
-  private let nextSceneBuilder: NextSceneBuildable
-  
-  init(nextSceneBuilder: NextSceneBuildable) {
-    self.nextSceneBuilder = nextSceneBuilder
-  }
 }
 
 // MARK: - Routing
 
 extension EditUserNameSceneRouter: EditUserNameSceneRoutingLogic {
   func routeToSomewhere() {
-    let destinationViewController = self.nextSceneBuilder.build(with: NextScenePayload())
-    
-    self.viewController?.present(destinationViewController, animated: true)
   }
 }
 
