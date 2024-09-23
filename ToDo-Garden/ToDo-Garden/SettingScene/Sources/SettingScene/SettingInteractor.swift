@@ -21,7 +21,7 @@ protocol SettingBusinessLogic {
   func fetchAppVersion()
 }
 
-class SettingInteractor: SettingDataStore {
+final class SettingInteractor: SettingDataStore {
   var nickName: String?
   var profileImageData: Data?
   

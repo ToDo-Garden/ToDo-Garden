@@ -37,6 +37,14 @@ public enum Setting {
         self.imageData = imageData
       }
     }
+
+    public struct ViewModel {
+      public let imageData: Data
+
+      public init(imageData: Data) {
+        self.imageData = imageData
+      }
+    }
   }
 
   public enum FetchAppVersion {

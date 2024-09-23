@@ -13,6 +13,7 @@ import ToDoGardenUIComponent
 
 protocol SettingDisplayLogic: AnyObject {
   func displayFetchedUserNickname(viewModel: Setting.FetchUserNickName.ViewModel)
+  func displayFetchedUserProfileImage(viewModel: Setting.FetchUserProfileImage.ViewModel)
   func displayFetchedAppVersion(viewModel: Setting.FetchAppVersion.ViewModel)
 }
 
@@ -82,6 +83,11 @@ extension SettingViewController: SettingDisplayLogic {
         description: SettingSceneTheme.StringLiteral.ProfileRow.description
       )
     )
+  }
+
+  func displayFetchedUserProfileImage(viewModel: Setting.FetchUserProfileImage.ViewModel) {
+    let imageData = viewModel.imageData
+    self.profileRow.iconImage = UIImage(data: imageData)
   }
 
   func displayFetchedAppVersion(viewModel: Setting.FetchAppVersion.ViewModel) {

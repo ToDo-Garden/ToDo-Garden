@@ -29,7 +29,11 @@ extension SettingPresenter: SettingPresentationLogic {
     self.viewController?.displayFetchedUserNickname(viewModel: viewModel)
   }
 
-  func presentUserProfileImage(response: Setting.FetchUserProfileImage.Response) {}
+  func presentUserProfileImage(response: Setting.FetchUserProfileImage.Response) {
+    let imageData = response.imageData
+    let viewModel = Setting.FetchUserProfileImage.ViewModel(imageData: imageData)
+    self.viewController?.displayFetchedUserProfileImage(viewModel: viewModel)
+  }
 
   func presentAppVersion(response: Setting.FetchAppVersion.Response) {
     let appVersion = self.formatVersionString(response.currentAppVersion)
