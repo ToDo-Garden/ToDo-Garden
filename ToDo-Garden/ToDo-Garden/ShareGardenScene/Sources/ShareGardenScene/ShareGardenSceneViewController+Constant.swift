@@ -63,9 +63,28 @@ extension ShareGardenSceneViewController.Constant.Layout {
   }
   
   enum FriendsGardenListView {
-    static let fullWidthRatio: CGFloat = 1.0
-    static let estimatedItemHeight: CGFloat = 48.0
     static let gradientLayerHeight: CGFloat = 25.0
+  }
+  
+  enum FriendsGardenInfoView {
+    static let contentSize: CGSize = CGSize(width: 375, height: 137)
+    static let gardenViewtopInset: CGFloat = 3.0
+  }
+  
+  enum FriendsGardenProfileInfoView {
+    static let defaultInset: NSDirectionalEdgeInsets = NSDirectionalEdgeInsets(
+      top: 6,
+      leading: 25,
+      bottom: 6,
+      trailing: 25
+    )
+    
+    static let editingInset: NSDirectionalEdgeInsets = NSDirectionalEdgeInsets(
+      top: 6,
+      leading: 11,
+      bottom: 6,
+      trailing: 25
+    )
   }
   
   enum FriendsGardenView {
