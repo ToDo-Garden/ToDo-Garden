@@ -12,8 +12,8 @@ import SettingSceneEntity
 import ToDoGardenUIComponent
 
 protocol SettingDisplayLogic: AnyObject {
-  func displayFetchedUserNickname(viewModel: Setting.FetchUserNickName.ViewModel)
-  func displayFetchedUserProfileImage(viewModel: Setting.FetchUserProfileImage.ViewModel)
+  func displayFetchedUserNickname(_ nickName: String)
+  func displayFetchedUserProfileImage(_ profileImageData: Data)
   func displayFetchedAppVersion(viewModel: Setting.FetchAppVersion.ViewModel)
 }
 
@@ -82,20 +82,19 @@ extension SettingViewController {
 // MARK: - Confirm display logic protocol
 
 extension SettingViewController: SettingDisplayLogic {
-  func displayFetchedUserNickname(viewModel: Setting.FetchUserNickName.ViewModel) {
+  func displayFetchedUserNickname(_ nickName: String) {
     let rowConfiguration = Styled.Row.Configuration.self
     self.profileRow.configuration = rowConfiguration.profile(
       rowConfiguration.ProfileModel(
         style: rowConfiguration.ProfileModel.Style.setting,
-        title: viewModel.nickName,
+        title: nickName,
         description: SettingSceneTheme.StringLiteral.ProfileRow.description
       )
     )
   }
 
-  func displayFetchedUserProfileImage(viewModel: Setting.FetchUserProfileImage.ViewModel) {
-    let imageData = viewModel.imageData
-    self.profileRow.iconImage = UIImage(data: imageData)
+  func displayFetchedUserProfileImage(_ profileImageData: Data) {
+    self.profileRow.iconImage = UIImage(data: profileImageData)
   }
 
   func displayFetchedAppVersion(viewModel: Setting.FetchAppVersion.ViewModel) {

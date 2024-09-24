@@ -49,8 +49,7 @@ extension SettingInteractor: SettingBusinessLogic {
     self.fetchUserNicknameTask = Task {
       let nickName = await self.settingWorker.requestUserNickName()
       self.nickName = nickName
-      let response = Setting.FetchUserNickName.Response(nickName: nickName)
-      await self.presenter?.presentUserNickName(response: response)
+      await self.presenter?.presentUserNickName(nickName)
     }
   }
 
@@ -58,8 +57,7 @@ extension SettingInteractor: SettingBusinessLogic {
     self.fetchUserProfileImageTask = Task {
       let profileImageData = await self.settingWorker.requestUserProfileImage()
       self.profileImageData = profileImageData
-      let response = Setting.FetchUserProfileImage.Response(imageData: profileImageData)
-      await self.presenter?.presentUserProfileImage(response: response)
+      await self.presenter?.presentUserProfileImage(profileImageData)
     }
   }
 
