@@ -154,7 +154,11 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
       ]
     )
     
-    self.colorPickButton.addAction( UIAction { _ in
+    self.colorPickButton.addAction( UIAction { [weak self] _ in
+      guard let self = self else {
+        return
+      }
+      
       postGroupBottomSheet.setupCurrentColor(color: self.postGroupColorPickerRow.getColor())
       self.present(postGroupBottomSheet, animated: true)
     }, for: UIControl.Event.touchUpInside)
@@ -177,13 +181,14 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
     
     self.doneBottomButton.addAction(
       UIAction { [weak self] _ in
-        guard let groupName = self?.textInputView.getEditingText(),
-          let groupColor = self?.postGroupColorPickerRow.getColor() else {
+        guard let self = self,
+          let groupName = self.textInputView.getEditingText(),
+          let groupColor = self.postGroupColorPickerRow.getColor() else {
           return
         }
         
         let request = PostGroup.TouchDoneButton.Request(groupName: groupName, groupColor: groupColor)
-        self?.interactor?.touchDoneButton(request: request)
+        self.interactor?.touchDoneButton(request: request)
       },
       for: UIControl.Event.touchUpInside
     )
