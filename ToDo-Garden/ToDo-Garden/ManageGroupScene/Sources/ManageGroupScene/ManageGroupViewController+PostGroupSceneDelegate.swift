@@ -15,8 +15,8 @@ extension ManageGroupViewController: PostGroupSceneDelegate {
   public func addGroup(group: PostGroup.ToDoGroup) {
     let request = ManageGroup.AddGroup.Request(
       groupID: group.groupID ?? UUID(),
-      groupName: group.groupName ?? "",
-      groupColor: group.groupColor ?? UIColor.toDoGardenGrassNone
+      groupName: group.groupName,
+      groupColor: group.groupColor
     )
     
     self.interactor?.addGroup(request: request)
@@ -29,8 +29,8 @@ extension ManageGroupViewController: PostGroupSceneDelegate {
     
     let request = ManageGroup.EditGroup.Request(
       groupID: groupID,
-      groupName: group.groupName ?? "",
-      groupColor: group.groupColor ?? UIColor.toDoGardenGrassNone
+      groupName: group.groupName,
+      groupColor: group.groupColor
     )
     
     self.interactor?.editGroup(request: request)
