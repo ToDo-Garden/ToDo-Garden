@@ -16,9 +16,7 @@ protocol SettingDataStore {
 }
 
 protocol SettingBusinessLogic {
-  func fetchUserNickname()
-  func fetchUserProfileImage()
-  func fetchAppVersion()
+  func prepareSettingSceneData()
   func openAppStore()
 }
 
@@ -45,7 +43,21 @@ final class SettingInteractor: SettingDataStore {
 // MARK: - Request to worker
 
 extension SettingInteractor: SettingBusinessLogic {
-  func fetchUserNickname() {
+  func prepareSettingSceneData() {
+    self.fetchUserNickname()
+    self.fetchUserProfileImage()
+    self.fetchAppVersion()
+  }
+
+  func openAppStore() {
+    self.appServiceWorker.openAppStore()
+  }
+}
+
+// MARK: - Private Functions
+
+extension SettingInteractor {
+  private func fetchUserNickname() {
     self.fetchUserNicknameTask = Task {
       let nickName = await self.settingWorker.requestUserNickName()
       self.nickName = nickName
@@ -53,7 +65,7 @@ extension SettingInteractor: SettingBusinessLogic {
     }
   }
 
-  func fetchUserProfileImage() {
+  private func fetchUserProfileImage() {
     self.fetchUserProfileImageTask = Task {
       let profileImageData = await self.settingWorker.requestUserProfileImage()
       self.profileImageData = profileImageData
@@ -61,7 +73,7 @@ extension SettingInteractor: SettingBusinessLogic {
     }
   }
 
-  func fetchAppVersion() {
+  private func fetchAppVersion() {
     self.fetchAppVersionTask = Task {
       let versionNumber = self.appServiceWorker.fetchCurrentAppVersion()
       let isUpdateAvailable = await self.appServiceWorker.isUpdateAvailable()
@@ -71,9 +83,5 @@ extension SettingInteractor: SettingBusinessLogic {
       )
       await self.presenter?.presentAppVersion(response: response)
     }
-  }
-
-  func openAppStore() {
-    self.appServiceWorker.openAppStore()
   }
 }

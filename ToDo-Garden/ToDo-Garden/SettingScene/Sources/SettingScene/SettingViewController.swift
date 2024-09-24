@@ -66,17 +66,7 @@ final class SettingViewController: UIViewController, SettingViewControllable {
 
   override func viewIsAppearing(_ animated: Bool) {
     super.viewIsAppearing(animated)
-    self.prepareSettingSceneData()
-  }
-}
-
-// MARK: - Request to Interactor
-
-extension SettingViewController {
-  private func prepareSettingSceneData() {
-    self.interactor?.fetchUserNickname()
-    self.interactor?.fetchUserProfileImage()
-    self.interactor?.fetchAppVersion()
+    self.interactor?.prepareSettingSceneData()
   }
 }
 
