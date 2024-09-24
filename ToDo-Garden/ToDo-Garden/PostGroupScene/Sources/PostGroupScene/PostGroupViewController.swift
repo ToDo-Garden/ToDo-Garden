@@ -227,7 +227,7 @@ extension PostGroupViewController: PostGroupDisplayLogic {
   }
   
   func displayAfterTouchingDoneButton(viewModel: PostGroup.TouchDoneButton.ViewModel) {
-    self.navigationController?.popViewController(animated: true)
+    self.router?.routeToManageGroupScene()
   }
 }
 
