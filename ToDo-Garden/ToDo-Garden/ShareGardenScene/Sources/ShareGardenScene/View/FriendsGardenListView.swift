@@ -156,7 +156,7 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
 extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView {
   private func setup() {
     self.addSubviews()
-    self.setupLayoutCosntraints()
+    self.setupLayoutConstraints()
   }
   
   private func addSubviews() {
@@ -230,7 +230,7 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
     return UICollectionViewCompositionalLayout.list(using: listConfiguration)
   }
   
-  private func setupLayoutCosntraints() {
+  private func setupLayoutConstraints() {
     self.setupFriendListViewLayoutConstraints()
   }
   
