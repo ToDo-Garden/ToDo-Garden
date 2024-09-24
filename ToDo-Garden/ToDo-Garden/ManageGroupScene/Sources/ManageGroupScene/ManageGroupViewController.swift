@@ -277,12 +277,10 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
   func displayDeletedGroup(viewModel: ManageGroup.DeleteGroup.ViewModel) {
     let index = viewModel.index
     self.manageGroupTableViewDelegate?.displayedGroups.remove(at: index)
-    Task { @MainActor in
-      self.groupListTableView.deleteRows(
-        at: [IndexPath(row: index, section: 0)],
-        with: UITableView.RowAnimation.fade
-      )
-    }
+    self.groupListTableView.deleteRows(
+      at: [IndexPath(row: index, section: 0)],
+      with: UITableView.RowAnimation.fade
+    )
   }
   
   func displayAddedGroup(viewModel: ManageGroup.AddGroup.ViewModel) {
@@ -291,22 +289,18 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
       section: 0
     )
     self.manageGroupTableViewDelegate?.displayedGroups.append(viewModel.group)
-    Task { @MainActor in
-      self.groupListTableView.insertRows(
-        at: [indexPath],
-        with: UITableView.RowAnimation.fade
-      )
-      self.groupListTableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
-    }
+    self.groupListTableView.insertRows(
+      at: [indexPath],
+      with: UITableView.RowAnimation.fade
+    )
+    self.groupListTableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
   }
   
   func displayEditedGroup(viewModel: ManageGroup.EditGroup.ViewModel) {
     self.manageGroupTableViewDelegate?.displayedGroups[viewModel.editedIndex] = viewModel.group
-    Task { @MainActor in
-      self.groupListTableView.reloadRows(
-        at: [IndexPath(row: viewModel.editedIndex, section: Int.zero)],
-        with: UITableView.RowAnimation.fade)
-    }
+    self.groupListTableView.reloadRows(
+      at: [IndexPath(row: viewModel.editedIndex, section: Int.zero)],
+      with: UITableView.RowAnimation.fade)
   }
   
   private func updateTableViewWithAnimation(
