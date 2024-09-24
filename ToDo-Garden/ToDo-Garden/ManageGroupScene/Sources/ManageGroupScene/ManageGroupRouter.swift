@@ -10,6 +10,7 @@ import UIKit.UIColor
 import ManageGroupSceneAPI
 import ManageGroupSceneEntity
 import PostGroupSceneAPI
+import PostGroupSceneEntity
 
 protocol ManageGroupRoutingLogic {
   func routeToPostGroupScene(groupInfo: ManageGroup.ToDoGroup?)
@@ -37,9 +38,11 @@ extension ManageGroupRouter: ManageGroupRoutingLogic {
     var payload: PostGroupScenePayload?
     if let groupInfo {
       payload = PostGroupScenePayload(
-        groupID: groupInfo.groupID,
-        groupName: groupInfo.groupName,
-        groupColor: groupInfo.progressColor
+        group: PostGroup.ToDoGroup(
+          groupID: groupInfo.groupID,
+          groupName: groupInfo.groupName,
+          groupColor: groupInfo.progressColor
+        )
       )
     } else {
       payload = nil
@@ -60,8 +63,6 @@ extension ManageGroupRouter: ManageGroupRoutingLogic {
 
 extension ManageGroupRouter {
   struct PostGroupScenePayload: PostGroupScenePayloadable {
-    var groupID: UUID
-    var groupName: String
-    var groupColor: UIColor
+    var group: PostGroup.ToDoGroup
   }
 }

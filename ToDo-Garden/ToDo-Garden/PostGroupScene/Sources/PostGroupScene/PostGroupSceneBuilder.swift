@@ -74,7 +74,7 @@ extension PostGroupSceneBuilder {
     with payload: PostGroupScenePayloadable?,
     delegate: PostGroupSceneDelegate?
   ) {
-    viewController.router?.dataStore?.payload = payload
+    viewController.router?.dataStore?.currentGroup = payload?.group
     viewController.router?.dataStore?.delegate = delegate
   }
 }
