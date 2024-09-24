@@ -36,12 +36,9 @@ extension SettingPresenter: SettingPresentationLogic {
   }
 
   func presentAppVersion(response: Setting.FetchAppVersion.Response) {
-    let appVersion = self.formatVersionString(response.currentAppVersion)
-    let isLatestVersion = response.isLatestVersion
-    let viewModel = Setting.FetchAppVersion.ViewModel(
-      appVersion: appVersion,
-      isLatestVersion: isLatestVersion
-    )
+    let versionNumber = self.formatVersionString(response.versionNumber)
+    let appVersionStatus = response.appVersionStatus
+    let viewModel = Setting.FetchAppVersion.ViewModel(versionNumber: versionNumber, appVersionStatus: appVersionStatus)
     self.viewController?.displayFetchedAppVersion(viewModel: viewModel)
   }
 }

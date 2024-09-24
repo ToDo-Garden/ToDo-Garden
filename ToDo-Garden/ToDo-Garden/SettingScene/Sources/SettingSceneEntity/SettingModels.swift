@@ -53,23 +53,30 @@ public enum Setting {
     }
 
     public struct Response {
-      public let currentAppVersion: String?
-      public let isLatestVersion: Bool
+      public let versionNumber: String?
+      public let appVersionStatus: AppVersionStatus
 
-      public init(currentAppVersion: String?, isLatestVersion: Bool) {
-        self.currentAppVersion = currentAppVersion
-        self.isLatestVersion = isLatestVersion
+      public init(versionNumber: String?, appVersionStatus: AppVersionStatus) {
+        self.versionNumber = versionNumber
+        self.appVersionStatus = appVersionStatus
       }
     }
 
     public struct ViewModel {
-      public let appVersion: String
-      public let isLatestVersion: Bool
+      public let versionNumber: String
+      public let appVersionStatus: AppVersionStatus
 
-      public init(appVersion: String, isLatestVersion: Bool) {
-        self.appVersion = appVersion
-        self.isLatestVersion = isLatestVersion
+      public init(versionNumber: String, appVersionStatus: AppVersionStatus) {
+        self.versionNumber = versionNumber
+        self.appVersionStatus = appVersionStatus
       }
     }
+  }
+}
+
+public extension Setting {
+  enum AppVersionStatus {
+    case outdated
+    case latest
   }
 }

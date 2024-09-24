@@ -99,11 +99,11 @@ extension SettingViewController: SettingDisplayLogic {
   }
 
   func displayFetchedAppVersion(viewModel: Setting.FetchAppVersion.ViewModel) {
-    let appVersion = viewModel.appVersion
-    if viewModel.isLatestVersion {
-      self.versionInfoView.updateToLatestVersion(appVersion)
-    } else {
-      self.versionInfoView.updateToPriorVersion(appVersion)
+    switch viewModel.appVersionStatus {
+    case Setting.AppVersionStatus.outdated:
+      self.versionInfoView.updateToPriorVersion(viewModel.versionNumber)
+    case Setting.AppVersionStatus.latest:
+      self.versionInfoView.updateToLatestVersion(viewModel.versionNumber)
     }
   }
 }
