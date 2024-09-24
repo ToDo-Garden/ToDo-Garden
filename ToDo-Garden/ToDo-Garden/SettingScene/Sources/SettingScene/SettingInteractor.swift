@@ -65,8 +65,10 @@ extension SettingInteractor: SettingBusinessLogic {
     self.fetchAppVersionTask = Task {
       let versionNumber = self.appServiceWorker.fetchCurrentAppVersion()
       let isUpdateAvailable = await self.appServiceWorker.isUpdateAvailable()
-      let appVersionStatus: Setting.AppVersionStatus = isUpdateAvailable ? .outdated : .latest
-      let response = Setting.FetchAppVersion.Response(versionNumber: versionNumber, appVersionStatus: appVersionStatus)
+      let response = Setting.FetchAppVersion.Response(
+        versionNumber: versionNumber,
+        isLatestVersion: !isUpdateAvailable
+      )
       await self.presenter?.presentAppVersion(response: response)
     }
   }

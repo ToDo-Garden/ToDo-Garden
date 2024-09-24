@@ -23,7 +23,6 @@ final class SettingPresenter {
 // MARK: - Request to ViewController
 
 extension SettingPresenter: SettingPresentationLogic {
-  
   func presentUserNickName(_ nickName: String) {
     self.viewController?.displayFetchedUserNickname(nickName)
   }
@@ -33,10 +32,12 @@ extension SettingPresenter: SettingPresentationLogic {
   }
 
   func presentAppVersion(response: Setting.FetchAppVersion.Response) {
-    let versionNumber = self.formatVersionString(response.versionNumber)
-    let appVersionStatus = response.appVersionStatus
-    let viewModel = Setting.FetchAppVersion.ViewModel(versionNumber: versionNumber, appVersionStatus: appVersionStatus)
-    self.viewController?.displayFetchedAppVersion(viewModel: viewModel)
+    let formattedVersionNumber = self.formatVersionString(response.versionNumber)
+    if response.isLatestVersion {
+      self.viewController?.displayLatestAppVersion(formattedVersionNumber)
+    } else {
+      self.viewController?.displayOutdatedAppVersion(formattedVersionNumber)
+    }
   }
 }
 

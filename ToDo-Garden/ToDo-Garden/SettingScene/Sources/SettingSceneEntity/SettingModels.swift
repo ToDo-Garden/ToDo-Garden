@@ -14,29 +14,12 @@ public enum Setting {
   public enum FetchAppVersion {
     public struct Response {
       public let versionNumber: String?
-      public let appVersionStatus: AppVersionStatus
+      public let isLatestVersion: Bool
 
-      public init(versionNumber: String?, appVersionStatus: AppVersionStatus) {
+      public init(versionNumber: String?, isLatestVersion: Bool) {
         self.versionNumber = versionNumber
-        self.appVersionStatus = appVersionStatus
+        self.isLatestVersion = isLatestVersion
       }
     }
-
-    public struct ViewModel {
-      public let versionNumber: String
-      public let appVersionStatus: AppVersionStatus
-
-      public init(versionNumber: String, appVersionStatus: AppVersionStatus) {
-        self.versionNumber = versionNumber
-        self.appVersionStatus = appVersionStatus
-      }
-    }
-  }
-}
-
-public extension Setting {
-  enum AppVersionStatus {
-    case outdated
-    case latest
   }
 }

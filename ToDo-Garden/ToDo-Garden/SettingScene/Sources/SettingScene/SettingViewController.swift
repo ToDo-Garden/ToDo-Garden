@@ -14,7 +14,8 @@ import ToDoGardenUIComponent
 protocol SettingDisplayLogic: AnyObject {
   func displayFetchedUserNickname(_ nickName: String)
   func displayFetchedUserProfileImage(_ profileImageData: Data)
-  func displayFetchedAppVersion(viewModel: Setting.FetchAppVersion.ViewModel)
+  func displayOutdatedAppVersion(_ versionNumber: String)
+  func displayLatestAppVersion(_ versionNumber: String)
 }
 
 final class SettingViewController: UIViewController, SettingViewControllable {
@@ -97,13 +98,12 @@ extension SettingViewController: SettingDisplayLogic {
     self.profileRow.iconImage = UIImage(data: profileImageData)
   }
 
-  func displayFetchedAppVersion(viewModel: Setting.FetchAppVersion.ViewModel) {
-    switch viewModel.appVersionStatus {
-    case Setting.AppVersionStatus.outdated:
-      self.versionInfoView.updateToPriorVersion(viewModel.versionNumber)
-    case Setting.AppVersionStatus.latest:
-      self.versionInfoView.updateToLatestVersion(viewModel.versionNumber)
-    }
+  func displayOutdatedAppVersion(_ versionNumber: String) {
+    self.versionInfoView.updateToPriorVersion(versionNumber)
+  }
+
+  func displayLatestAppVersion(_ versionNumber: String) {
+    self.versionInfoView.updateToLatestVersion(versionNumber)
   }
 }
 
