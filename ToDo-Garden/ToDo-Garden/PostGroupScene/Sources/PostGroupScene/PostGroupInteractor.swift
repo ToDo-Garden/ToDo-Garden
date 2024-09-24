@@ -11,7 +11,7 @@ import PostGroupSceneAPI
 import PostGroupSceneEntity
 
 protocol PostGroupDataStore {
-  var payload: PostGroupScenePayloadable? { get set }
+  var currentGroup: PostGroup.ToDoGroup? { get set }
   var delegate: PostGroupSceneDelegate? { get set }
 }
 
@@ -25,11 +25,7 @@ class PostGroupInteractor: PostGroupDataStore {
   var delegate: PostGroupSceneDelegate?
   var presenter: PostGroupPresentationLogic?
   private let postGroupWorker: PostGroupWorkable
-  var payload: PostGroupScenePayloadable? {
-    didSet {
-      self.setCurrentGroup()
-    }
-  }
+  
   var currentGroup: PostGroup.ToDoGroup?
   
   init(postGroupWorker: PostGroupWorkable) {
@@ -69,14 +65,11 @@ extension PostGroupInteractor: PostGroupBusinessLogic {
   }
   
   func loadGroupData() {
-    let isDoneBottomButtonEnable: Bool = self.isDoneBottomButtonEnable(
-      groupName: self.payload?.groupName,
-      groupColor: self.payload?.groupColor
-    )
+    let isDoneBottomButtonEnable: Bool = self.isDoneBottomButtonEnable(with: self.currentGroup)
     
     let response = PostGroup.LoadGroupData.Response(
-      groupName: self.payload?.groupName ?? "",
-      groupColor: self.payload?.groupColor,
+      groupName: self.currentGroup?.groupName ?? "",
+      groupColor: self.currentGroup?.groupColor,
       isDoneBottomButtonEnable: isDoneBottomButtonEnable
     )
     self.presenter?.presentLoadGroupData(response: response)
@@ -84,26 +77,9 @@ extension PostGroupInteractor: PostGroupBusinessLogic {
 }
 
 extension PostGroupInteractor {
-  private func setCurrentGroup() {
-    guard let payload = self.payload else {
-      self.currentGroup = PostGroup.ToDoGroup(
-        groupID: nil,
-        groupName: nil,
-        groupColor: nil
-      )
-      return
-    }
-    
-    self.currentGroup = PostGroup.ToDoGroup(
-      groupID: payload.groupID,
-      groupName: payload.groupName,
-      groupColor: payload.groupColor
-    )
-  }
-  
-  private func isDoneBottomButtonEnable(groupName: String?, groupColor: UIColor?) -> Bool {
+  private func isDoneBottomButtonEnable(with currentGroup: PostGroup.ToDoGroup?) -> Bool {
     var isButtonEnable: Bool
-    if (groupName == nil) || (groupColor == nil) {
+    if currentGroup == nil {
       isButtonEnable = false
     } else {
       isButtonEnable = true
