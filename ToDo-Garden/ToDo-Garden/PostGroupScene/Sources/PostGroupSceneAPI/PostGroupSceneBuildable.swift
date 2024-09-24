@@ -7,11 +7,11 @@
 
 import UIKit.UIColor
 
+import PostGroupSceneEntity
+
 /// 런타임에 전달받을 의존성을 선언한 구조체입니다.
 public protocol PostGroupScenePayloadable {
-  var groupID: UUID { get }
-  var groupName: String { get }
-  var groupColor: UIColor { get }
+  var group: PostGroup.ToDoGroup { get }
 }
 
 public protocol PostGroupSceneBuildable {
