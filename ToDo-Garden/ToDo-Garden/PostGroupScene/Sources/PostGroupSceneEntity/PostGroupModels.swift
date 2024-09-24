@@ -10,10 +10,10 @@ import UIKit.UIColor
 public enum PostGroup {
   public struct ToDoGroup: Sendable {
     public let groupID: UUID?
-    public var groupName: String?
-    public var groupColor: UIColor?
+    public var groupName: String
+    public var groupColor: UIColor
     
-    public init(groupID: UUID?, groupName: String?, groupColor: UIColor?) {
+    public init(groupID: UUID?, groupName: String, groupColor: UIColor) {
       self.groupID = groupID
       self.groupName = groupName
       self.groupColor = groupColor
