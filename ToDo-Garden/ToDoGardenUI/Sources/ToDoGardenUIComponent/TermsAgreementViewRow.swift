@@ -155,3 +155,18 @@ final class TermsAgreementViewRow: UIView {
   }
 }
 
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let view1 = TermsAgreementViewRow(chevronButtonIsHidden: false)
+  view1.configureTitle(with: "Hello World !!!", isBold: true)
+  let view2 = TermsAgreementViewRow(chevronButtonIsHidden: false)
+  view2.configureTitle(with: "chevronButtonIsHidden")
+  let view3 = TermsAgreementViewRow(chevronButtonIsHidden: false)
+  view3.configureTitle(with: "arrangedSubviews")
+  
+  let stack = UIStackView(arrangedSubviews: [view1, view2, view3])
+  stack.axis = .vertical
+  return stack
+}
+#endif

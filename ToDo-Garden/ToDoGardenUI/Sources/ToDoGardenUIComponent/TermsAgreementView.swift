@@ -228,3 +228,28 @@ extension TermsAgreementView {
     self.doneButtonCompletion?(result)
   }
 }
+
+// MARK: - Preview
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let view = UIView(frame: .infinite)
+  view.backgroundColor = .gray
+  
+  let termsAgreementView = TermsAgreementView()
+  view.addSubview(termsAgreementView)
+  termsAgreementView.usingAutolayout()
+  
+  NSLayoutConstraint.activate([
+    termsAgreementView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+    termsAgreementView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+  ])
+  
+  termsAgreementView.afterDoneBottonTouched { isOptionalConditionSelected in
+    // 이벤트 광고성 정보 row가 선택된 채로 완료가 눌렸는지, 아닌지 외부에서 분기가능
+  }
+  
+  return view
+}
+#endif
