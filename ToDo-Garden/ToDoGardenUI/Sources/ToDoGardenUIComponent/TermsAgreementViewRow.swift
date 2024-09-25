@@ -126,3 +126,22 @@ final class TermsAgreementViewRow: UIView {
       self.chevronButton.trailingAnchor.constraint(equalTo: trailingAnchor)
     ])
   }
+  }
+  
+  // MARK: - NonPrivate Methods
+  func configureTitle(with text: String, isBold: Bool = false) {
+    var font: UIFont
+    if isBold {
+      font = UIFont.pretendardHeadSemiBold
+    } else {
+      font = UIFont.pretendardBodyMedium
+    }
+    
+    self.textLabel.attributedText = text.applyTextAttributes(
+      attributes: [
+        NSAttributedString.Key.font: font,
+        NSAttributedString.Key.foregroundColor:
+          UIColor.toDoGardenGreenDark
+      ]
+    )
+  }
