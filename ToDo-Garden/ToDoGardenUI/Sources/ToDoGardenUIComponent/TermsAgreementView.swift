@@ -169,3 +169,62 @@ extension TermsAgreementView {
     ])
   }
 }
+
+// MARK: - Checkbox Logic
+
+extension TermsAgreementView {
+  
+  private func setupCheckBoxCondition() {
+    self.agreeToAllRow.checkButton.addAction(
+      UIAction { [weak self] _ in self?.agreeToAllTapped() },
+      for: UIControl.Event.touchUpInside
+    )
+    self.termsAndPoliciesAgreementRow.checkButton.addAction(
+      UIAction { [weak self] _ in self?.rowTapped() },
+      for: UIControl.Event.touchUpInside
+    )
+    self.privacyPolicyRow.checkButton.addAction(
+      UIAction { [weak self] _ in self?.rowTapped() },
+      for: UIControl.Event.touchUpInside
+    )
+    self.eventAndPromotionalInformationRow.checkButton.addAction(
+      UIAction { [weak self] _ in self?.rowTapped() },
+      for: UIControl.Event.touchUpInside
+    )
+    
+    self.doneButton.addAction(
+      UIAction { [weak self] _ in self?.doneButtonTapped() },
+      for: UIControl.Event.touchUpInside
+    )
+  }
+  
+  private func agreeToAllTapped() {
+    let isSelected = self.agreeToAllRow.isSelected
+    self.termsAndPoliciesAgreementRow.isSelected = isSelected
+    self.privacyPolicyRow.isSelected = isSelected
+    self.eventAndPromotionalInformationRow.isSelected = isSelected
+    self.updateDoneButtonState()
+  }
+  
+  private func rowTapped() {
+    self.updateAgreeToAllState()
+    self.updateDoneButtonState()
+  }
+  
+  private func updateAgreeToAllState() {
+    let allSelected = self.termsAndPoliciesAgreementRow.isSelected &&
+    self.privacyPolicyRow.isSelected &&
+    self.eventAndPromotionalInformationRow.isSelected
+    self.agreeToAllRow.isSelected = allSelected
+  }
+  
+  private func updateDoneButtonState() {
+    let mandatorySelected = self.termsAndPoliciesAgreementRow.isSelected && self.privacyPolicyRow.isSelected
+    self.doneButton.isEnabled = mandatorySelected
+  }
+  
+  private func doneButtonTapped() {
+    let result = self.eventAndPromotionalInformationRow.isSelected
+    self.doneButtonCompletion?(result)
+  }
+}
