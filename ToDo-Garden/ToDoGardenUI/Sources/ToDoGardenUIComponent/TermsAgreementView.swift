@@ -37,10 +37,31 @@ public final class TermsAgreementView: UIView {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+  
+  // MARK: - Public Methods
+  
   override public var intrinsicContentSize: CGSize {
     return Constant.TermsAgreementView.Layout.size
   }
+  
+  public func setOnTermsAndPoliciesAgreementAction(handler: (() -> Void)?) {
+    self.termsAndPoliciesAgreementRow.chevronAction = handler
+  }
+  
+  public func setOnPrivacyPolicyAction(handler: (() -> Void)?) {
+    self.privacyPolicyRow.chevronAction = handler
+  }
+  
+  public func setOnEventAndPromotinalInformationAction(handler: (() -> Void)?) {
+    self.eventAndPromotionalInformationRow.chevronAction = handler
+  }
+  
+  public func afterDoneBottonTouched(_ handler: @escaping (Bool) -> Void) {
+    self.doneButtonCompletion = handler
+  }
 }
+
+// MARK: - UI Setup
 extension TermsAgreementView {
   
   private func setupViews() {

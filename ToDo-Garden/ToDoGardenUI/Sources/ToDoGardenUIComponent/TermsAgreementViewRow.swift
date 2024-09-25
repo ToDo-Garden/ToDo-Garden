@@ -126,7 +126,6 @@ final class TermsAgreementViewRow: UIView {
       self.chevronButton.trailingAnchor.constraint(equalTo: trailingAnchor)
     ])
   }
-  }
   
   // MARK: - NonPrivate Methods
   func configureTitle(with text: String, isBold: Bool = false) {
@@ -145,3 +144,14 @@ final class TermsAgreementViewRow: UIView {
       ]
     )
   }
+  
+  // MARK: - Actions
+  private func checkButtonTapped() {
+    self.isSelected.toggle()
+  }
+  
+  private func chevronButtonTapped() {
+    self.chevronAction?()
+  }
+}
+
