@@ -11,12 +11,14 @@ public final class TextInputView: UIView, TextInputViewAPI {
   private var placeholderText: String
 
   private var height: CGFloat {
-    let textFieldDefatulLineHeight = Constant.TextInputView.Layout.InputTextField.defaultHeight
+    let layout = Constant.TextInputView.Layout.self
+    let textFieldDefatulLineHeight = layout.InputTextField.defaultHeight
     let textFieldHeight = self.inputTextField.font?.lineHeight ?? textFieldDefatulLineHeight
 
-    let labelDefatulLineHeight = Constant.TextInputView.Layout.PlaceholderLabel.defaultHeight
+    let labelDefatulLineHeight = layout.PlaceholderLabel.defaultHeight
     let labelHeight = self.placeholderLabel.font?.lineHeight ?? labelDefatulLineHeight
-    return textFieldHeight + labelHeight + 1
+    let bottomLineTopMargin = layout.InputTextField.bottomLineTopMargin
+    return textFieldHeight + labelHeight + bottomLineTopMargin
   }
 
   public override var intrinsicContentSize: CGSize {
@@ -202,7 +204,10 @@ extension TextInputView {
       [
         self.inputTextField.leadingAnchor.constraint(equalTo: self.leadingAnchor),
         self.inputTextField.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-        self.inputTextField.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+        self.inputTextField.bottomAnchor.constraint(
+          equalTo: self.bottomAnchor,
+          constant: -Constant.TextInputView.Layout.InputTextField.bottomLineTopMargin
+        )
       ]
     )
   }
