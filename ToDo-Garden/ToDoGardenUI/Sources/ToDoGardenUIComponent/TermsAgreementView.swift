@@ -248,6 +248,11 @@ extension TermsAgreementView {
   
   termsAgreementView.afterDoneBottonTouched { isOptionalConditionSelected in
     // 이벤트 광고성 정보 row가 선택된 채로 완료가 눌렸는지, 아닌지 외부에서 분기가능
+    if isOptionalConditionSelected {
+      return
+    } else {
+      return
+    }
   }
   
   return view
