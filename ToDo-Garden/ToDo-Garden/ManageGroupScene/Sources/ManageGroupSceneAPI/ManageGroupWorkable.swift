@@ -16,4 +16,6 @@ public protocol ManageGroupWorkable {
   func saveGroupList(
     request: ManageGroupSceneEntity.ManageGroup.SaveGroupList.Request
   ) async -> Result<[ManageGroup.ToDoGroup], Error>
+  func addGroup(request: ManageGroup.AddGroup.Request) -> ManageGroup.ToDoGroup
+  func editGroup(request: ManageGroup.EditGroup.Request, progressRate: Float) -> ManageGroup.ToDoGroup
 }

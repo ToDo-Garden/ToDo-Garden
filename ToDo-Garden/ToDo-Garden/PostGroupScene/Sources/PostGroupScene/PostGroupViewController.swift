@@ -18,7 +18,7 @@ import ToDoGardenUIResource
 protocol PostGroupDisplayLogic: AnyObject {
   func displayChangedColor(viewModel: PostGroup.ChangeColor.ViewModel)
   func displayPayload(viewModel: PostGroup.LoadGroupData.ViewModel)
-  func displayTouchedDondButton(viewModel: PostGroup.TouchDoneButton.ViewModel)
+  func displayAfterTouchingDoneButton(viewModel: PostGroup.TouchDoneButton.ViewModel)
 }
 
 final class PostGroupViewController: UIViewController, PostGroupViewControllable {
@@ -154,7 +154,11 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
       ]
     )
     
-    self.colorPickButton.addAction( UIAction { _ in
+    self.colorPickButton.addAction( UIAction { [weak self] _ in
+      guard let self = self else {
+        return
+      }
+      
       postGroupBottomSheet.setupCurrentColor(color: self.postGroupColorPickerRow.getColor())
       self.present(postGroupBottomSheet, animated: true)
     }, for: UIControl.Event.touchUpInside)
@@ -177,13 +181,14 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
     
     self.doneBottomButton.addAction(
       UIAction { [weak self] _ in
-        guard let groupName = self?.textInputView.getEditingText(),
-          let groupColor = self?.postGroupColorPickerRow.getColor() else {
+        guard let self = self,
+          let groupName = self.textInputView.getEditingText(),
+          let groupColor = self.postGroupColorPickerRow.getColor() else {
           return
         }
         
         let request = PostGroup.TouchDoneButton.Request(groupName: groupName, groupColor: groupColor)
-        self?.interactor?.touchDoneButton(request: request)
+        self.interactor?.touchDoneButton(request: request)
       },
       for: UIControl.Event.touchUpInside
     )
@@ -226,8 +231,8 @@ extension PostGroupViewController: PostGroupDisplayLogic {
     self.doneBottomButton.isEnabled = viewModel.isDoneBottomButtonEnable
   }
   
-  func displayTouchedDondButton(viewModel: PostGroup.TouchDoneButton.ViewModel) {
-    print("Route to ManageGroupScene")
+  func displayAfterTouchingDoneButton(viewModel: PostGroup.TouchDoneButton.ViewModel) {
+    self.router?.routeToManageGroupScene()
   }
 }
 

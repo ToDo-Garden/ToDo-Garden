@@ -107,4 +107,68 @@ public enum ManageGroup {
       }
     }
   }
+  
+  public enum AddGroup {
+    public struct Request {
+      public let groupID: UUID
+      public let groupName: String
+      public let groupColor: UIColor
+      
+      public init(groupID: UUID, groupName: String, groupColor: UIColor) {
+        self.groupID = groupID
+        self.groupName = groupName
+        self.groupColor = groupColor
+      }
+    }
+    
+    public struct Response {
+      public let group: ToDoGroup
+      
+      public init(group: ToDoGroup) {
+        self.group = group
+      }
+    }
+    
+    public struct ViewModel {
+      public let group: ToDoGroup
+      
+      public init(group: ToDoGroup) {
+        self.group = group
+      }
+    }
+  }
+  
+  public enum EditGroup {
+    public struct Request {
+      public let groupID: UUID
+      public let groupName: String
+      public let groupColor: UIColor
+      
+      public init(groupID: UUID, groupName: String, groupColor: UIColor) {
+        self.groupID = groupID
+        self.groupName = groupName
+        self.groupColor = groupColor
+      }
+    }
+    
+    public struct Response {
+      public let group: ToDoGroup
+      public let editedIndex: Int
+      
+      public init(group: ToDoGroup, editedIndex: Int) {
+        self.group = group
+        self.editedIndex = editedIndex
+      }
+    }
+    
+    public struct ViewModel {
+      public let group: ToDoGroup
+      public let editedIndex: Int
+      
+      public init(group: ToDoGroup, editedIndex: Int) {
+        self.group = group
+        self.editedIndex = editedIndex
+      }
+    }
+  }
 }
