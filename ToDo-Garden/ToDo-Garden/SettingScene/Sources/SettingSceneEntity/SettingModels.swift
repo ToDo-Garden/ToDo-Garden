@@ -10,16 +10,16 @@ import Foundation
 public enum Setting {
   
   // MARK: Use cases
-  
-  public enum Something {
-    public struct Request {
-      public init() { }
-    }
+
+  public enum FetchAppVersion {
     public struct Response {
-      public init() { }
-    }
-    public struct ViewModel {
-      public init() { }
+      public let versionNumber: String?
+      public let isLatestVersion: Bool
+
+      public init(versionNumber: String?, isLatestVersion: Bool) {
+        self.versionNumber = versionNumber
+        self.isLatestVersion = isLatestVersion
+      }
     }
   }
 }

@@ -10,6 +10,18 @@ import Foundation
 import SettingSceneAPI
 
 struct SettingWorker: SettingWorkable {
-  func doSomeWork() {
+  func requestUserNickName() async -> String {
+    return MockData.nickName
+  }
+
+  func requestUserProfileImage() async -> Data {
+    return MockData.imageData
+  }
+}
+
+extension SettingWorker {
+  private enum MockData {
+    static let nickName = "울버린"
+    static let imageData = Data()
   }
 }

@@ -13,11 +13,11 @@ public struct SettingSceneBuilder {
 	/// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
 	public struct Dependency {
     let settingWorker: SettingWorkable
-		let nextSceneBuilder: NextSceneBuildable
-		
-		public init(settingWorker: SettingWorkable, nextSceneBuilder: NextSceneBuildable) {
+    let appServiceWorker: ApplicationServiceWorker
+
+    public init(settingWorker: SettingWorkable, appServiceWorker: ApplicationServiceWorker) {
 			self.settingWorker = settingWorker
-			self.nextSceneBuilder = nextSceneBuilder
+      self.appServiceWorker = appServiceWorker
 		}
 	}
 	
@@ -45,9 +45,12 @@ extension SettingSceneBuilder {
 	/// - Parameter viewController: VIPCycle을 설정할 viewController입니다.
 	/// - Returns: VIP Cycle 설정이 완료된 `ViewControllable` 프로토콜을 준수한 `ViewController` 인스턴스를 반환합니다.
 	private func configureVIPCycle(for viewController: SettingViewController) -> SettingViewController {
-    let interactor = SettingInteractor(someWorker: self.dependency.settingWorker)
+    let interactor = SettingInteractor(
+      settingWorker: self.dependency.settingWorker,
+      appServiceWorker: self.dependency.appServiceWorker
+    )
 		let presenter = SettingPresenter()
-		let router = SettingRouter(nextSceneBuilder: self.dependency.nextSceneBuilder)
+		let router = SettingRouter()
 		viewController.interactor = interactor
 		viewController.router = router
 		interactor.presenter = presenter
