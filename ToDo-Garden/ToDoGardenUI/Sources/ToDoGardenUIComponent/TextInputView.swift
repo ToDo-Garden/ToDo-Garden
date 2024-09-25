@@ -71,6 +71,7 @@ public final class TextInputView: UIView, TextInputViewAPI {
 
 extension TextInputView {
   private func setup() {
+    self.setClipsToBoundsTrue()
     self.setupInputTextUI()
     self.setupReturnButtonType()
     self.setupPlaceholderText()
@@ -78,6 +79,10 @@ extension TextInputView {
     self.setupInputTextFieldDelegate()
     self.addSubviews()
     self.setupSubviewsLayout()
+  }
+
+  private func setClipsToBoundsTrue() {
+    self.clipsToBounds = true
   }
 
   private func setupInputTextUI() {
