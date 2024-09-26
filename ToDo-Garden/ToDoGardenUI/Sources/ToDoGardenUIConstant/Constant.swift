@@ -37,4 +37,5 @@ public enum Constant {
   public enum GroupSelectionView { }
   public enum PostGroupColorPickerRow { }
   public enum AppleLoginButton { }
+  public enum InputTextValidationView {}
 }
