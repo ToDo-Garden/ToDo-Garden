@@ -17,6 +17,10 @@ public final class InputTextValidationView: UIView {
 
   private var validationTextLabelTopConstraint: NSLayoutConstraint?
 
+  public override var intrinsicContentSize: CGSize {
+    return self.caluclateIntrinsicContentSize()
+  }
+
   public init(model: Model) {
     self.model = model
     self.textInputView = TextInputView(model: model.inputText)
@@ -81,6 +85,14 @@ extension InputTextValidationView {
 
     let constant = Constant.InputTextValidationView.StringLiteral.ValidationText.self
     self.validationTextLabel.text = isExisted ? constant.existedID : constant.invalidID
+  }
+
+  private func caluclateIntrinsicContentSize() -> CGSize {
+    var contentSize = CGSize()
+    contentSize.width = Constant.InputTextValidationView.Layout.width
+    contentSize.height += self.textInputView.intrinsicContentSize.height
+    contentSize.height += Constant.InputTextValidationView.Layout.validationTextHeight
+    return contentSize
   }
 }
 
@@ -162,10 +174,9 @@ extension InputTextValidationView.Model {
 #Preview {
   let stackView = UIStackView()
   stackView.axis = .vertical
-  stackView.spacing = 150
+  stackView.spacing = 50
   stackView.distribution = .equalSpacing
   stackView.usingAutolayout()
-  stackView.widthAnchor.constraint(equalToConstant: 300).isActive = true
 
   let idView = InputTextValidationView(model: InputTextValidationView.Model.id)
   stackView.addArrangedSubview(idView)
