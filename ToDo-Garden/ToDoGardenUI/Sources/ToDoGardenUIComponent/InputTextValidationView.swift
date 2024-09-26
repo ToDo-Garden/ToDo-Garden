@@ -11,10 +11,13 @@ import ToDoGardenUIConstant
 
 public final class InputTextValidationView: UIView {
   private let model: Model
+  private let textInputView: TextInputView
 
   public init(model: Model) {
     self.model = model
+    self.textInputView = TextInputView(model: model.inputText)
     super.init(frame: CGRect.zero)
+    self.setupUI()
   }
 
   @available(*, unavailable)
@@ -22,6 +25,37 @@ public final class InputTextValidationView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
 }
+
+// MARK: - Set up UI
+
+extension InputTextValidationView {
+  private func setupUI() {
+    self.setupSubviewsLayout()
+  }
+}
+
+// MARK: - Set up Layout
+
+extension InputTextValidationView {
+  private func setupSubviewsLayout() {
+    self.setupTextInputViewLayout()
+  }
+
+  private func setupTextInputViewLayout() {
+    self.addSubview(self.textInputView)
+    self.textInputView.usingAutolayout()
+
+    NSLayoutConstraint.activate(
+      [
+        self.textInputView.topAnchor.constraint(equalTo: self.topAnchor),
+        self.textInputView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+        self.textInputView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+      ]
+    )
+  }
+}
+
+// MARK: - Model
 
 public extension InputTextValidationView {
   struct Model {
