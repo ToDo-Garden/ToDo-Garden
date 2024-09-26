@@ -12,7 +12,7 @@ import PostGroupSceneEntity
 protocol PostGroupPresentationLogic {
   func presentChangedColor(response: PostGroup.ChangeColor.Response)
   func presentLoadGroupData(response: PostGroup.LoadGroupData.Response)
-  func presentTouchedDoneButton(response: PostGroup.TouchDoneButton.Response)
+  func presentAfterTouchingDoneButton(response: PostGroup.TouchDoneButton.Response)
 }
 
 class PostGroupPresenter {
@@ -45,8 +45,8 @@ extension PostGroupPresenter: PostGroupPresentationLogic {
     self.viewController?.displayPayload(viewModel: viewModel)
   }
   
-  func presentTouchedDoneButton(response: PostGroup.TouchDoneButton.Response) {
+  func presentAfterTouchingDoneButton(response: PostGroup.TouchDoneButton.Response) {
     let viewModel = PostGroup.TouchDoneButton.ViewModel()
-    self.viewController?.displayTouchedDondButton(viewModel: viewModel)
+    self.viewController?.displayAfterTouchingDoneButton(viewModel: viewModel)
   }
 }

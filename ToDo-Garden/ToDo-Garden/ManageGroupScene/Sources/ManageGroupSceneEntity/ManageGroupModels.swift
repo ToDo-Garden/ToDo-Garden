@@ -9,20 +9,20 @@ import UIKit.UIColor
 
 public enum ManageGroup {
   public struct ToDoGroup: Equatable {
-    public let id: String
+    public let groupID: UUID
     public let groupName: String
     public let progressColor: UIColor
     public let progressRate: Float
     
-    public init(id: String, groupName: String, progressColor: UIColor, progressRate: Float) {
-      self.id = id
+    public init(groupID: UUID = UUID(), groupName: String, progressColor: UIColor, progressRate: Float) {
+      self.groupID = groupID
       self.groupName = groupName
       self.progressColor = progressColor
       self.progressRate = progressRate
     }
     
     public static func == (lhs: ToDoGroup, rhs: ToDoGroup) -> Bool {
-      return lhs.id == rhs.id &&
+      return lhs.groupID == rhs.groupID &&
       lhs.groupName == rhs.groupName &&
       lhs.progressColor == rhs.progressColor &&
       lhs.progressRate == rhs.progressRate
@@ -75,35 +75,99 @@ public enum ManageGroup {
   
   public enum DeleteGroup {
     public struct Request {
-      public let id: String
+      public let groupID: UUID
       public let index: Int
       
-      public init(id: String, index: Int) {
-        self.id = id
+      public init(groupID: UUID, index: Int) {
+        self.groupID = groupID
         self.index = index
       }
     }
     
     public struct Response {
-      public let id: String
+      public let groupID: UUID
       public let index: Int
       
-      public init(id: String, index: Int) {
-        self.id = id
+      public init(groupID: UUID, index: Int) {
+        self.groupID = groupID
         self.index = index
       }
     }
     
     public struct ViewModel {
-      public let id: String
+      public let groupID: UUID
       public let index: Int
       
       public init(
-        id: String,
+        groupID: UUID,
         index: Int
       ) {
-        self.id = id
+        self.groupID = groupID
         self.index = index
+      }
+    }
+  }
+  
+  public enum AddGroup {
+    public struct Request {
+      public let groupID: UUID
+      public let groupName: String
+      public let groupColor: UIColor
+      
+      public init(groupID: UUID, groupName: String, groupColor: UIColor) {
+        self.groupID = groupID
+        self.groupName = groupName
+        self.groupColor = groupColor
+      }
+    }
+    
+    public struct Response {
+      public let group: ToDoGroup
+      
+      public init(group: ToDoGroup) {
+        self.group = group
+      }
+    }
+    
+    public struct ViewModel {
+      public let group: ToDoGroup
+      
+      public init(group: ToDoGroup) {
+        self.group = group
+      }
+    }
+  }
+  
+  public enum EditGroup {
+    public struct Request {
+      public let groupID: UUID
+      public let groupName: String
+      public let groupColor: UIColor
+      
+      public init(groupID: UUID, groupName: String, groupColor: UIColor) {
+        self.groupID = groupID
+        self.groupName = groupName
+        self.groupColor = groupColor
+      }
+    }
+    
+    public struct Response {
+      public let group: ToDoGroup
+      public let editedIndex: Int
+      
+      public init(group: ToDoGroup, editedIndex: Int) {
+        self.group = group
+        self.editedIndex = editedIndex
+      }
+    }
+    
+    public struct ViewModel {
+      public let group: ToDoGroup
+      public let editedIndex: Int
+      
+      public init(group: ToDoGroup, editedIndex: Int) {
+        self.group = group
+        self.editedIndex = editedIndex
       }
     }
   }

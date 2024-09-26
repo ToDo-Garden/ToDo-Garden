@@ -34,11 +34,14 @@ extension PostGroupSceneBuilder: PostGroupSceneBuildable {
   ///  VIP Cycle, 런타임 의존성이 설정된 ViewController 인스턴스를 반환하는 함수입니다.
   /// - Parameter payload: 런타임에 전달받아야 하는 의존성입니다.
   /// - Returns: 런타임 의존성, VIP Cycle이 설정된 ViewController를 반환합니다.
-  public func build(with payload: PostGroupScenePayloadable?) -> PostGroupViewControllable {
+  public func build(
+    with payload: PostGroupScenePayloadable?,
+    delegate: PostGroupSceneDelegate?
+  ) -> PostGroupViewControllable {
     let postGroupViewController = self.configureVIPCycle(
       for: PostGroupViewController()
     )
-    self.loadGroupData(for: postGroupViewController, with: payload)
+    self.setPayload(for: postGroupViewController, with: payload, delegate: delegate)
     
     return postGroupViewController
   }
@@ -66,7 +69,12 @@ extension PostGroupSceneBuilder {
   /// - Parameters:
   ///   - viewController: 런타임 의존성을 설정할 ViewController 객체입니다.
   ///   - payload: 런타임에 전달할 의존성입니다.
-  private func loadGroupData(for viewController: PostGroupViewController, with payload: PostGroupScenePayloadable?) {
-    viewController.router?.dataStore?.payload = payload
+  private func setPayload(
+    for viewController: PostGroupViewController,
+    with payload: PostGroupScenePayloadable?,
+    delegate: PostGroupSceneDelegate?
+  ) {
+    viewController.router?.dataStore?.currentGroup = payload?.group
+    viewController.router?.dataStore?.delegate = delegate
   }
 }

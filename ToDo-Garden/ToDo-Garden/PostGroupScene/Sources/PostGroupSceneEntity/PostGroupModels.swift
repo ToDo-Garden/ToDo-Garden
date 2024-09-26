@@ -8,6 +8,17 @@
 import UIKit.UIColor
 
 public enum PostGroup {
+  public struct ToDoGroup: Sendable {
+    public let groupID: UUID?
+    public var groupName: String
+    public var groupColor: UIColor
+    
+    public init(groupID: UUID?, groupName: String, groupColor: UIColor) {
+      self.groupID = groupID
+      self.groupName = groupName
+      self.groupColor = groupColor
+    }
+  }
   
   // MARK: Use cases
   public enum ChangeColor {
@@ -20,11 +31,9 @@ public enum PostGroup {
     }
     
     public struct Response {
-      public let groupID: String
       public let groupColor: UIColor
       
-      public init(groupID: String, groupColor: UIColor) {
-        self.groupID = groupID
+      public init(groupColor: UIColor) {
         self.groupColor = groupColor
       }
     }
@@ -87,18 +96,10 @@ public enum PostGroup {
     }
     
     public struct Response {
-      public let groupID: String
-      public let groupName: String
-      public let groupColor: UIColor
+      public let group: ToDoGroup
       
-      public init(
-        groupID: String,
-        groupName: String,
-        groupColor: UIColor
-      ) {
-        self.groupID = groupID
-        self.groupName = groupName
-        self.groupColor = groupColor
+      public init(group: ToDoGroup) {
+        self.group = group
       }
     }
     

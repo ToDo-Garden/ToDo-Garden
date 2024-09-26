@@ -8,17 +8,17 @@
 import UIKit.UIColor
 
 import PostGroupSceneAPI
+import PostGroupSceneEntity
 
 public struct PostGroupWorker: PostGroupWorkable {
   public init() {}
   
-  public func changeColor(groupColor: UIColor) {
-    // 서버에 hex를 요청 파이어베이스 명세에 따라 로직 변경 가능성 농후
-    // self.hexStringFromColor(color)
-  }
-  
-  public func touchDoneButton(groupID: String, groupName: String, groupColor: UIColor) {
+  public func touchDoneButton(groupID: UUID?, groupName: String, groupColor: UIColor) -> PostGroup.ToDoGroup {
     // 서버에 그룹 변경을 요청
+    // groupID가 nil 경우, 그룹추가하기
+    // groupID가 not nil 경우, 그룹편집하기
+    let group = PostGroup.ToDoGroup(groupID: groupID, groupName: groupName, groupColor: groupColor)
+    return group
   }
 }
 

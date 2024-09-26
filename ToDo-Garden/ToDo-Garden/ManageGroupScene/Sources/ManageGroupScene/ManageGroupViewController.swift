@@ -5,6 +5,7 @@
 //  Created by SONG on 6/26/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
+// swiftlint:disable file_length
 import UIKit
 
 import ManageGroupSceneAPI
@@ -17,6 +18,8 @@ protocol ManageGroupDisplayLogic: AnyObject {
   func displayFetchedGroupList(viewModel: ManageGroup.FetchGroupList.ViewModel)
   func displaySavedGroupList(viewModel: ManageGroup.SaveGroupList.ViewModel)
   func displayDeletedGroup(viewModel: ManageGroup.DeleteGroup.ViewModel)
+  func displayAddedGroup(viewModel: ManageGroup.AddGroup.ViewModel)
+  func displayEditedGroup(viewModel: ManageGroup.EditGroup.ViewModel)
 }
 
 public class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
@@ -76,8 +79,8 @@ public class ManageGroupViewController: UIViewController, ManageGroupViewControl
     }
   }
   
-  func deleteGroup(id: String, index: Int) {
-    let request = ManageGroup.DeleteGroup.Request(id: id, index: index)
+  func deleteGroup(groupID: UUID, index: Int) {
+    let request = ManageGroup.DeleteGroup.Request(groupID: groupID, index: index)
     self.interactor?.deleteGroup(request: request)
   }
   
@@ -163,9 +166,9 @@ extension ManageGroupViewController {
   }
   
   private func setupTouchActions() {
-    self.manageGroupTableViewDelegate?.setOnPostGroup { [weak self] groupId, groupName, groupColor in
+    self.manageGroupTableViewDelegate?.setOnPostGroup { [weak self] groupID, groupName, groupColor in
       let groupInfo = ManageGroup.ToDoGroup(
-        id: groupId,
+        groupID: groupID,
         groupName: groupName,
         progressColor: groupColor,
         progressRate: Float.zero
@@ -173,8 +176,8 @@ extension ManageGroupViewController {
       self?.routeToPostGroupScene(groupInfo: groupInfo)
     }
     
-    self.manageGroupTableViewDelegate?.setOnDeleteGroup { [weak self] id, index in
-      self?.deleteGroup(id: id, index: index)
+    self.manageGroupTableViewDelegate?.setOnDeleteGroup { [weak self] groupID, index in
+      self?.deleteGroup(groupID: groupID, index: index)
     }
   }
   
@@ -273,13 +276,31 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
   
   func displayDeletedGroup(viewModel: ManageGroup.DeleteGroup.ViewModel) {
     let index = viewModel.index
-    Task { @MainActor in
-      self.manageGroupTableViewDelegate?.displayedGroups.remove(at: index)
-      self.groupListTableView.deleteRows(
-        at: [IndexPath(row: index, section: 0)],
-        with: UITableView.RowAnimation.fade
-      )
-    }
+    self.manageGroupTableViewDelegate?.displayedGroups.remove(at: index)
+    self.groupListTableView.deleteRows(
+      at: [IndexPath(row: index, section: 0)],
+      with: UITableView.RowAnimation.fade
+    )
+  }
+  
+  func displayAddedGroup(viewModel: ManageGroup.AddGroup.ViewModel) {
+    let indexPath = IndexPath(
+      row: self.groupListTableView.numberOfRows(inSection: 0),
+      section: 0
+    )
+    self.manageGroupTableViewDelegate?.displayedGroups.append(viewModel.group)
+    self.groupListTableView.insertRows(
+      at: [indexPath],
+      with: UITableView.RowAnimation.fade
+    )
+    self.groupListTableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+  }
+  
+  func displayEditedGroup(viewModel: ManageGroup.EditGroup.ViewModel) {
+    self.manageGroupTableViewDelegate?.displayedGroups[viewModel.editedIndex] = viewModel.group
+    self.groupListTableView.reloadRows(
+      at: [IndexPath(row: viewModel.editedIndex, section: Int.zero)],
+      with: UITableView.RowAnimation.fade)
   }
   
   private func updateTableViewWithAnimation(
@@ -290,18 +311,13 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
     self.rightBarButton.isEnabled = false
     Task { @MainActor in
       self.groupListTableView.performBatchUpdates({
-        self.groupListTableView.insertRows(
-          at: changes.insertions,
-          with: UITableView.RowAnimation.fade
-        )
+        self.groupListTableView.deleteRows(at: changes.deletions, with: UITableView.RowAnimation.fade)
+        self.groupListTableView.insertRows(at: changes.insertions, with: UITableView.RowAnimation.fade)
         changes.moves.forEach { move in
           self.groupListTableView.moveRow(at: move.from, to: move.to)
         }
       }, completion: { _ in
-        self.groupListTableView.reloadRows(
-          at: changes.updates,
-          with: UITableView.RowAnimation.none
-        )
+        self.groupListTableView.reloadRows(at: changes.updates, with: UITableView.RowAnimation.fade)
         self.rightBarButton.isEnabled = true
       })
     }
@@ -312,13 +328,15 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
     oldGroups: [ManageGroup.ToDoGroup],
     newGroups: [ManageGroup.ToDoGroup]
   ) -> (
+    deletions: [IndexPath],
     insertions: [IndexPath],
     moves: [(from: IndexPath, to: IndexPath)],
     updates: [IndexPath]
   ) {
-    let oldIDs = oldGroups.map { $0.id }
-    let newIDs = newGroups.map { $0.id }
+    let oldIDs = oldGroups.map { $0.groupID }
+    let newIDs = newGroups.map { $0.groupID }
     
+    let deletions = calculateDeletions(oldIDs: oldIDs, newIDs: Set(newIDs))
     let insertions = calculateInsertions(newIDs: newIDs, oldIDs: Set(oldIDs))
     let oldIndexMap = createOldIndexMap(oldGroups: oldGroups)
     let (moves, updates) = calculateMovesAndUpdates(
@@ -326,10 +344,17 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
       oldGroups: oldGroups,
       oldIndexMap: oldIndexMap
     )
-    return (insertions, moves, updates)
+    return (deletions, insertions, moves, updates)
   }
   // swiftlint:enable large_tuple
-  private func calculateInsertions(newIDs: [String], oldIDs: Set<String>) -> [IndexPath] {
+  
+  private func calculateDeletions(oldIDs: [UUID], newIDs: Set<UUID>) -> [IndexPath] {
+    return oldIDs.enumerated().compactMap { index, groupID in
+      newIDs.contains(groupID) ? nil : IndexPath(row: index, section: 0)
+    }
+  }
+  
+  private func calculateInsertions(newIDs: [UUID], oldIDs: Set<UUID>) -> [IndexPath] {
     var insertions: [IndexPath] = []
     for (newIndex, newID) in newIDs.enumerated() where !oldIDs.contains(newID) {
       insertions.append(IndexPath(row: newIndex, section: 0))
@@ -337,10 +362,10 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
     return insertions
   }
   
-  private func createOldIndexMap(oldGroups: [ManageGroup.ToDoGroup]) -> [String: Int] {
-    var oldIndexMap = [String: Int]()
+  private func createOldIndexMap(oldGroups: [ManageGroup.ToDoGroup]) -> [UUID: Int] {
+    var oldIndexMap = [UUID: Int]()
     for (index, group) in oldGroups.enumerated() {
-      oldIndexMap[group.id] = index
+      oldIndexMap[group.groupID] = index
     }
     return oldIndexMap
   }
@@ -348,7 +373,7 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
   private func calculateMovesAndUpdates(
     newGroups: [ManageGroup.ToDoGroup],
     oldGroups: [ManageGroup.ToDoGroup],
-    oldIndexMap: [String: Int]
+    oldIndexMap: [UUID: Int]
   ) -> (
     moves: [(from: IndexPath, to: IndexPath)],
     updates: [IndexPath]
@@ -356,7 +381,7 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
     var moves: [(from: IndexPath, to: IndexPath)] = []
     var updates: [IndexPath] = []
     for (newIndex, newGroup) in newGroups.enumerated() {
-      if let oldIndex = oldIndexMap[newGroup.id] {
+      if let oldIndex = oldIndexMap[newGroup.groupID] {
         if oldIndex != newIndex {
           moves.append(
             (from: IndexPath(row: oldIndex, section: 0),
