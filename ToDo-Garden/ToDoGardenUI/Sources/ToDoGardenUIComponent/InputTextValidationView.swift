@@ -7,15 +7,18 @@
 
 import UIKit
 
+import ToDoGardenUIAPI
 import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
-public final class InputTextValidationView: UIView {
+public final class InputTextValidationView: UIView, TextInputViewDelegate {
   private let model: Model
   private let textInputView: TextInputView
   private let validationTextLabel: UILabel
 
   private var validationTextLabelTopConstraint: NSLayoutConstraint?
+
+  public weak var delegate: InputTextValidationViewDelegate?
 
   public override var intrinsicContentSize: CGSize {
     return self.caluclateIntrinsicContentSize()
@@ -69,6 +72,7 @@ extension InputTextValidationView {
 extension InputTextValidationView {
   private func setupUI() {
     self.setupValidationTextLabel()
+    self.setupTextInputViewDelegate()
     self.setupSubviewsLayout()
   }
 
@@ -93,6 +97,23 @@ extension InputTextValidationView {
     contentSize.height += self.textInputView.intrinsicContentSize.height
     contentSize.height += Constant.InputTextValidationView.Layout.validationTextHeight
     return contentSize
+  }
+}
+
+// MARK: - Delegate Functions
+
+public protocol InputTextValidationViewDelegate: AnyObject {
+  func inputTextDidChanged(_ text: String?)
+}
+
+extension InputTextValidationView {
+  public func textInputViewDidChange() {
+    let text = self.textInputView.getEditingText()
+    self.delegate?.inputTextDidChanged(text)
+  }
+
+  private func setupTextInputViewDelegate() {
+    self.textInputView.delegate = self
   }
 }
 
