@@ -8,24 +8,45 @@
 import UIKit
 
 import ToDoGardenUIComponent
+import ToDoGardenUIConstant
 
 public final class ManageGroupViewControllerForGuide: ManageGroupViewController {
   
   public override init() {
     super.init()
   }
-
+  
   public override func viewDidLoad() {
     self.view.backgroundColor = UIColor.white
-    self.setupTableView()
+    self.setupTableView(isForGuide: true)
     self.setupNavigationBar()
     self.fetchGroupList()
+    self.setFooterViewForGuide()
+    self.view.isUserInteractionEnabled = false
   }
   
   override func fetchGroupList() {
     let fetchedData = ManageGroupMockData.guideSceneData
     self.manageGroupTableViewDelegate?.displayedGroups = fetchedData
   }
+  
+  private func setFooterViewForGuide() {
+    self.footerView.layer.cornerRadius = Constant.Layout.Cell.cornerRadius
+    self.footerView.layer.masksToBounds = true
+    self.footerView.usingAutolayout()
+    self.view.addSubview(self.footerView)
+    
+    NSLayoutConstraint.activate(
+      [
+        self.footerView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+        self.footerView.topAnchor.constraint(
+          equalTo: self.groupListTableView.topAnchor,
+          constant: Constant.Layout.Cell.height * 3
+        ),
+        self.footerView.leadingAnchor.constraint(equalTo: self.groupListTableView.leadingAnchor),
+        self.footerView.heightAnchor.constraint(equalToConstant: Constant.Layout.FooterView.height)
+      ]
+    )
   }
 }
 
