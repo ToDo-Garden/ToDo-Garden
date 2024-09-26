@@ -8,7 +8,14 @@
 import Foundation
 
 public extension Constant.InputTextValidationView {
+  enum Animation {}
   enum StringLiteral {}
+}
+
+public extension Constant.InputTextValidationView.Animation {
+  static let duration: CGFloat = 0.2
+  static let hideTopMargin: CGFloat = 0
+  static let showTopMargin: CGFloat = 50
 }
 
 public extension Constant.InputTextValidationView.StringLiteral {

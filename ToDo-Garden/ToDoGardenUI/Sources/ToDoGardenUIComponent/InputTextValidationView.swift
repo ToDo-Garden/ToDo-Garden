@@ -15,6 +15,8 @@ public final class InputTextValidationView: UIView {
   private let textInputView: TextInputView
   private let validationTextLabel: UILabel
 
+  private var validationTextLabelTopConstraint: NSLayoutConstraint?
+
   public init(model: Model) {
     self.model = model
     self.textInputView = TextInputView(model: model.inputText)
@@ -26,6 +28,27 @@ public final class InputTextValidationView: UIView {
   @available(*, unavailable)
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+
+  public func showValidationText() {
+    self.moveValidationTextLabel(isShowing: true)
+  }
+
+  public func hideValidationText() {
+    self.moveValidationTextLabel(isShowing: false)
+  }
+}
+
+// MARK: - Validation Text Moving Animation
+
+extension InputTextValidationView {
+  private func moveValidationTextLabel(isShowing: Bool) {
+    let constant = Constant.InputTextValidationView.Animation.self
+    let asdf = isShowing == false ? constant.hideTopMargin : constant.showTopMargin
+    UIView.animate(withDuration: constant.duration) {
+      self.validationTextLabelTopConstraint?.constant = asdf
+      self.superview?.layoutIfNeeded()
+    }
   }
 }
 
@@ -72,11 +95,15 @@ extension InputTextValidationView {
     self.sendSubviewToBack(self.validationTextLabel)
     self.validationTextLabel.usingAutolayout()
 
+    self.validationTextLabelTopConstraint = self.validationTextLabel.topAnchor.constraint(
+      equalTo: self.textInputView.topAnchor
+    )
+    self.validationTextLabelTopConstraint?.isActive = true
+    
     NSLayoutConstraint.activate(
       [
         self.validationTextLabel.leadingAnchor.constraint(lessThanOrEqualTo: self.textInputView.leadingAnchor),
-        self.validationTextLabel.trailingAnchor.constraint(equalTo: self.textInputView.trailingAnchor),
-        self.validationTextLabel.bottomAnchor.constraint(equalTo: self.textInputView.bottomAnchor)
+        self.validationTextLabel.trailingAnchor.constraint(equalTo: self.textInputView.trailingAnchor)
       ]
     )
   }
@@ -127,6 +154,16 @@ public extension InputTextValidationView {
 
   let introductionView = InputTextValidationView(model: InputTextValidationView.Model.introduction)
   stackView.addArrangedSubview(introductionView)
+
+  introductionView.showValidationText()
+
+  Task {
+    try? await Task.sleep(2_000_000_000)
+    idView.showValidationText()
+
+    try? await Task.sleep(2_000_000_000)
+    idView.hideValidationText()
+  }
 
   return stackView
 }
