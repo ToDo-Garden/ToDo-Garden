@@ -47,3 +47,26 @@ public extension InputTextValidationView {
     )
   }
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let stackView = UIStackView()
+  stackView.axis = .vertical
+  stackView.spacing = 150
+  stackView.distribution = .equalSpacing
+  stackView.usingAutolayout()
+  stackView.widthAnchor.constraint(equalToConstant: 300).isActive = true
+
+  let idView = InputTextValidationView(model: InputTextValidationView.Model.id)
+  stackView.addArrangedSubview(idView)
+
+  let nickNameView = InputTextValidationView(model: InputTextValidationView.Model.nickname)
+  stackView.addArrangedSubview(nickNameView)
+
+  let introductionView = InputTextValidationView(model: InputTextValidationView.Model.introduction)
+  stackView.addArrangedSubview(introductionView)
+
+  return stackView
+}
+#endif
