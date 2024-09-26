@@ -233,7 +233,7 @@ extension TextInputView {
 // MARK: Model
 
 extension TextInputView {
-  public struct Model {
+  public struct Model: Equatable {
     let inputText: String
     let shrinkScale: CGFloat
 

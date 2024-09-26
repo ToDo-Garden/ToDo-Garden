@@ -37,6 +37,14 @@ public final class InputTextValidationView: UIView {
   public func hideValidationText() {
     self.moveValidationTextLabel(isShowing: false)
   }
+
+  public func changeValidationTextToInvalidID() {
+    self.changeIDValidationText(isExisted: false)
+  }
+
+  public func changeValidationTextToExistedID() {
+    self.changeIDValidationText(isExisted: true)
+  }
 }
 
 // MARK: - Validation Text Moving Animation
@@ -66,6 +74,13 @@ extension InputTextValidationView {
     self.validationTextLabel.textAlignment = NSTextAlignment.right
     self.validationTextLabel.numberOfLines = 2
     self.validationTextLabel.text = self.model.validationText
+  }
+
+  private func changeIDValidationText(isExisted: Bool) {
+    guard self.model == Model.id else { return }
+
+    let constant = Constant.InputTextValidationView.StringLiteral.ValidationText.self
+    self.validationTextLabel.text = isExisted ? constant.existedID : constant.invalidID
   }
 }
 
@@ -112,7 +127,7 @@ extension InputTextValidationView {
 // MARK: - Model
 
 public extension InputTextValidationView {
-  struct Model {
+  struct Model: Equatable {
     public let inputText: TextInputView.Model
     public let validationText: String
 
@@ -136,6 +151,12 @@ public extension InputTextValidationView {
   }
 }
 
+extension InputTextValidationView.Model {
+  public static func == (lhs: InputTextValidationView.Model, rhs: InputTextValidationView.Model) -> Bool {
+    lhs.inputText == rhs.inputText && lhs.validationText == rhs.validationText
+  }
+}
+
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
@@ -148,22 +169,19 @@ public extension InputTextValidationView {
 
   let idView = InputTextValidationView(model: InputTextValidationView.Model.id)
   stackView.addArrangedSubview(idView)
+  idView.showValidationText()
+
+  let existedIdView = InputTextValidationView(model: InputTextValidationView.Model.id)
+  stackView.addArrangedSubview(existedIdView)
+  existedIdView.changeValidationTextToExistedID()
+  existedIdView.showValidationText()
 
   let nickNameView = InputTextValidationView(model: InputTextValidationView.Model.nickname)
   stackView.addArrangedSubview(nickNameView)
 
   let introductionView = InputTextValidationView(model: InputTextValidationView.Model.introduction)
   stackView.addArrangedSubview(introductionView)
-
   introductionView.showValidationText()
-
-  Task {
-    try? await Task.sleep(2_000_000_000)
-    idView.showValidationText()
-
-    try? await Task.sleep(2_000_000_000)
-    idView.hideValidationText()
-  }
 
   return stackView
 }
