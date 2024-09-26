@@ -73,7 +73,7 @@ public final class TextInputView: UIView, TextInputViewAPI {
 
 extension TextInputView {
   private func setup() {
-    self.setClipsToBoundsTrue()
+    self.setupMainUI()
     self.setupInputTextUI()
     self.setupReturnButtonType()
     self.setupPlaceholderText()
@@ -83,7 +83,8 @@ extension TextInputView {
     self.setupSubviewsLayout()
   }
 
-  private func setClipsToBoundsTrue() {
+  private func setupMainUI() {
+    self.backgroundColor = UIColor.toDoGardenWhite
     self.clipsToBounds = true
   }
 

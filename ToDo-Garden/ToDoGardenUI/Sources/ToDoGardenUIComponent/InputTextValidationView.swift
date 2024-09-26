@@ -8,14 +8,17 @@
 import UIKit
 
 import ToDoGardenUIConstant
+import ToDoGardenUIResource
 
 public final class InputTextValidationView: UIView {
   private let model: Model
   private let textInputView: TextInputView
+  private let validationTextLabel: UILabel
 
   public init(model: Model) {
     self.model = model
     self.textInputView = TextInputView(model: model.inputText)
+    self.validationTextLabel = UILabel()
     super.init(frame: CGRect.zero)
     self.setupUI()
   }
@@ -30,7 +33,16 @@ public final class InputTextValidationView: UIView {
 
 extension InputTextValidationView {
   private func setupUI() {
+    self.setupValidationTextLabel()
     self.setupSubviewsLayout()
+  }
+
+  private func setupValidationTextLabel() {
+    self.validationTextLabel.textColor = UIColor.toDoGardenEditButtonRed
+    self.validationTextLabel.font = UIFont.pretendardDetailRegular12
+    self.validationTextLabel.textAlignment = NSTextAlignment.right
+    self.validationTextLabel.numberOfLines = 2
+    self.validationTextLabel.text = self.model.validationText
   }
 }
 
@@ -39,6 +51,7 @@ extension InputTextValidationView {
 extension InputTextValidationView {
   private func setupSubviewsLayout() {
     self.setupTextInputViewLayout()
+    self.setupValidationTextLabelLayout()
   }
 
   private func setupTextInputViewLayout() {
@@ -50,6 +63,20 @@ extension InputTextValidationView {
         self.textInputView.topAnchor.constraint(equalTo: self.topAnchor),
         self.textInputView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
         self.textInputView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+      ]
+    )
+  }
+
+  private func setupValidationTextLabelLayout() {
+    self.addSubview(self.validationTextLabel)
+    self.sendSubviewToBack(self.validationTextLabel)
+    self.validationTextLabel.usingAutolayout()
+
+    NSLayoutConstraint.activate(
+      [
+        self.validationTextLabel.leadingAnchor.constraint(lessThanOrEqualTo: self.textInputView.leadingAnchor),
+        self.validationTextLabel.trailingAnchor.constraint(equalTo: self.textInputView.trailingAnchor),
+        self.validationTextLabel.bottomAnchor.constraint(equalTo: self.textInputView.bottomAnchor)
       ]
     )
   }
