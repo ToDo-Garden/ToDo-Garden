@@ -9,6 +9,8 @@ import UIKit
 
 import EditUserNameSceneAPI
 import EditUserNameSceneEntity
+import ToDoGardenUIComponent
+import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 protocol EditUserNameSceneDisplayLogic: AnyObject {
@@ -17,6 +19,7 @@ protocol EditUserNameSceneDisplayLogic: AnyObject {
 
 final class EditUserNameSceneViewController: UIViewController, EditUserNameSceneViewControllable {
   private let editUserNameButton: UIBarButtonItem
+  private let inputUserNameView: InputTextValidationView
 
   var interactor: EditUserNameSceneBusinessLogic?
   var router: (EditUserNameSceneRoutingLogic & EditUserNameSceneDataPassing)?
@@ -25,6 +28,11 @@ final class EditUserNameSceneViewController: UIViewController, EditUserNameScene
   
   init() {
     self.editUserNameButton = UIBarButtonItem()
+    let constant = ToDoGardenUIConstant.Constant.self
+    self.inputUserNameView = InputTextValidationView(
+      inputText: constant.TextInputView.StringLiteral.Model.userNickname,
+      validationText: constant.InputTextValidationView.StringLiteral.ValidationText.invalidNickname
+    )
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -65,6 +73,7 @@ extension EditUserNameSceneViewController {
   private func setupUI() {
     self.setupMainView()
     self.setupEditUserNameButton()
+    self.setupInputNameViewLayout()
   }
 
   private func setupMainView() {
@@ -87,6 +96,24 @@ extension EditUserNameSceneViewController {
     )
     self.editUserNameButton.title = Constant.StringLiteral.EditUserNameButton.title
     self.navigationItem.rightBarButtonItem = self.editUserNameButton
+  }
+
+  private func setupInputNameViewLayout() {
+    self.view.addSubview(self.inputUserNameView)
+    self.inputUserNameView.usingAutolayout()
+
+    let constant = Constant.Layout.InputUserNameView.self
+    let screenSize = self.view.bounds
+    NSLayoutConstraint.activate(
+      [
+        self.inputUserNameView.topAnchor.constraint(
+          equalTo: self.view.safeAreaLayoutGuide.topAnchor,
+          constant: screenSize.height * constant.topMargin
+        ),
+        self.inputUserNameView.widthAnchor.constraint(equalToConstant: screenSize.width * constant.widthRatio),
+        self.inputUserNameView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
+      ]
+    )
   }
 }
 

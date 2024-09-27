@@ -20,6 +20,11 @@ extension EditUserNameSceneViewController.Constant.Layout {
   enum EditUserNameButton {
     static let titleHorizontalOffset: CGFloat = 10
   }
+
+  enum InputUserNameView {
+    static let topMargin: CGFloat = 50 / 812
+    static let widthRatio: CGFloat = 275 / 375
+  }
 }
 
 extension EditUserNameSceneViewController.Constant.StringLiteral {
