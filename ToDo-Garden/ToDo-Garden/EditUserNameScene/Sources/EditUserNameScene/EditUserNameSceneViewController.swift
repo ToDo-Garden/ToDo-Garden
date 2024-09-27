@@ -9,6 +9,7 @@ import UIKit
 
 import EditUserNameSceneAPI
 import EditUserNameSceneEntity
+import ToDoGardenUIResource
 
 protocol EditUserNameSceneDisplayLogic: AnyObject {
   func displaySomething(viewModel: EditUserNameScene.Something.ViewModel)
@@ -36,6 +37,7 @@ class EditUserNameSceneViewController: UIViewController, EditUserNameSceneViewCo
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    self.setupUI()
     self.doSomething()
   }
 }
@@ -57,9 +59,22 @@ extension EditUserNameSceneViewController {
   }
 }
 
+// MARK: - Set up UI
+
+extension EditUserNameSceneViewController {
+  private func setupUI() {
+    setupMainView()
+  }
+
+  private func setupMainView() {
+    self.title = Constant.StringLiteral.title
+    self.view.backgroundColor = UIColor.toDoGardenWhite
+  }
+}
+
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  return EditUserNameSceneBuilder.previewScene
+  return UINavigationController(rootViewController: EditUserNameSceneBuilder.previewScene)
 }
 #endif
