@@ -26,6 +26,16 @@ public struct EditUserNameSceneBuilder {
   }
 }
 
+extension EditUserNameSceneBuilder {
+  private struct SomePayload: EditUserNameScenePayloadable {}
+
+  public static let previewScene = Self(
+    dependency: Dependency(
+      editUserNameWorker: EditUserNameSceneWorker()
+    )
+  ).build(with: SomePayload())
+}
+
 extension EditUserNameSceneBuilder: EditUserNameSceneSceneBuildable {
   ///  VIP Cycle, 런타임 의존성이 설정된 ViewController 인스턴스를 반환하는 함수입니다.
   /// - Parameter payload: 런타임에 전달받아야 하는 의존성입니다.

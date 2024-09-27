@@ -56,3 +56,10 @@ extension EditUserNameSceneViewController {
     self.interactor?.doSomething(request: request)
   }
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  return EditUserNameSceneBuilder.previewScene
+}
+#endif
