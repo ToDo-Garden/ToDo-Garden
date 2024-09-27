@@ -12,7 +12,6 @@ import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 public final class InputTextValidationView: UIView {
-  private let model: Model
   private let textInputView: TextInputView
   private let validationTextLabel: UILabel
 
@@ -24,12 +23,11 @@ public final class InputTextValidationView: UIView {
     return self.caluclateIntrinsicContentSize()
   }
 
-  public init(model: Model) {
-    self.model = model
-    self.textInputView = TextInputView(model: model.inputText)
+  public init(inputText: String, validationText: String) {
+    self.textInputView = TextInputView(model: TextInputView.Model(inputText: inputText))
     self.validationTextLabel = UILabel()
     super.init(frame: CGRect.zero)
-    self.setupUI()
+    self.setupUI(with: validationText)
   }
 
   @available(*, unavailable)
@@ -45,12 +43,8 @@ public final class InputTextValidationView: UIView {
     self.moveValidationTextLabel(isShowing: false)
   }
 
-  public func changeValidationTextToInvalidID() {
-    self.changeIDValidationText(isExistedID: false)
-  }
-
-  public func changeValidationTextToExistedID() {
-    self.changeIDValidationText(isExistedID: true)
+  public func changeValidationText(_ text: String) {
+    self.validationTextLabel.text = text
   }
 }
 
@@ -70,25 +64,18 @@ extension InputTextValidationView {
 // MARK: - Set up UI
 
 extension InputTextValidationView {
-  private func setupUI() {
-    self.setupValidationTextLabel()
+  private func setupUI(with validationText: String) {
+    self.setupValidationTextLabel(with: validationText)
     self.setupTextInputViewDelegate()
     self.setupSubviewsLayout()
   }
 
-  private func setupValidationTextLabel() {
+  private func setupValidationTextLabel(with validationText: String) {
     self.validationTextLabel.textColor = UIColor.toDoGardenEditButtonRed
     self.validationTextLabel.font = UIFont.pretendardDetailRegular12
     self.validationTextLabel.textAlignment = NSTextAlignment.right
     self.validationTextLabel.numberOfLines = 2
-    self.validationTextLabel.text = self.model.validationText
-  }
-
-  private func changeIDValidationText(isExistedID: Bool) {
-    guard self.model == Model.id else { return }
-
-    let constant = Constant.InputTextValidationView.StringLiteral.ValidationText.self
-    self.validationTextLabel.text = isExistedID ? constant.existedID : constant.invalidID
+    self.validationTextLabel.text = validationText
   }
 
   private func caluclateIntrinsicContentSize() -> CGSize {
@@ -154,39 +141,6 @@ extension InputTextValidationView {
         self.validationTextLabel.trailingAnchor.constraint(equalTo: self.textInputView.trailingAnchor)
       ]
     )
-  }
-}
-
-// MARK: - Model
-
-public extension InputTextValidationView {
-  struct Model: Equatable {
-    public let inputText: TextInputView.Model
-    public let validationText: String
-
-    public init(inputText: String, validationText: String) {
-      self.inputText = TextInputView.Model(inputText: inputText)
-      self.validationText = validationText
-    }
-
-    public static let id = Self(
-      inputText: TextInputView.Model.userId.inputText,
-      validationText: Constant.InputTextValidationView.StringLiteral.ValidationText.invalidID
-    )
-    public static let nickname = Self(
-      inputText: TextInputView.Model.userNickname.inputText,
-      validationText: Constant.InputTextValidationView.StringLiteral.ValidationText.invalidNickname
-    )
-    public static let introduction = Self(
-      inputText: TextInputView.Model.userDescription.inputText,
-      validationText: Constant.InputTextValidationView.StringLiteral.ValidationText.invalidIntroduction
-    )
-  }
-}
-
-extension InputTextValidationView.Model {
-  public static func == (lhs: InputTextValidationView.Model, rhs: InputTextValidationView.Model) -> Bool {
-    lhs.inputText == rhs.inputText && lhs.validationText == rhs.validationText
   }
 }
 
