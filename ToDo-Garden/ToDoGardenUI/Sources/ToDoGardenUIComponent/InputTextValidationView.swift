@@ -11,7 +11,7 @@ import ToDoGardenUIAPI
 import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
-public final class InputTextValidationView: UIView, TextInputViewDelegate {
+public final class InputTextValidationView: UIView {
   private let model: Model
   private let textInputView: TextInputView
   private let validationTextLabel: UILabel
@@ -46,11 +46,11 @@ public final class InputTextValidationView: UIView, TextInputViewDelegate {
   }
 
   public func changeValidationTextToInvalidID() {
-    self.changeIDValidationText(isExisted: false)
+    self.changeIDValidationText(isExistedID: false)
   }
 
   public func changeValidationTextToExistedID() {
-    self.changeIDValidationText(isExisted: true)
+    self.changeIDValidationText(isExistedID: true)
   }
 }
 
@@ -59,9 +59,9 @@ public final class InputTextValidationView: UIView, TextInputViewDelegate {
 extension InputTextValidationView {
   private func moveValidationTextLabel(isShowing: Bool) {
     let constant = Constant.InputTextValidationView.Animation.self
-    let asdf = isShowing == false ? constant.hideTopMargin : constant.showTopMargin
+    let topMargin = isShowing == false ? constant.hideTopMargin : constant.showTopMargin
     UIView.animate(withDuration: constant.duration) {
-      self.validationTextLabelTopConstraint?.constant = asdf
+      self.validationTextLabelTopConstraint?.constant = topMargin
       self.superview?.layoutIfNeeded()
     }
   }
@@ -84,11 +84,11 @@ extension InputTextValidationView {
     self.validationTextLabel.text = self.model.validationText
   }
 
-  private func changeIDValidationText(isExisted: Bool) {
+  private func changeIDValidationText(isExistedID: Bool) {
     guard self.model == Model.id else { return }
 
     let constant = Constant.InputTextValidationView.StringLiteral.ValidationText.self
-    self.validationTextLabel.text = isExisted ? constant.existedID : constant.invalidID
+    self.validationTextLabel.text = isExistedID ? constant.existedID : constant.invalidID
   }
 
   private func caluclateIntrinsicContentSize() -> CGSize {
@@ -106,7 +106,7 @@ public protocol InputTextValidationViewDelegate: AnyObject {
   func inputTextDidChanged(_ text: String?)
 }
 
-extension InputTextValidationView {
+extension InputTextValidationView: TextInputViewDelegate {
   public func textInputViewDidChange() {
     let text = self.textInputView.getEditingText()
     self.delegate?.inputTextDidChanged(text)
@@ -210,6 +210,7 @@ extension InputTextValidationView.Model {
 
   let nickNameView = InputTextValidationView(model: InputTextValidationView.Model.nickname)
   stackView.addArrangedSubview(nickNameView)
+  nickNameView.showValidationText()
 
   let introductionView = InputTextValidationView(model: InputTextValidationView.Model.introduction)
   stackView.addArrangedSubview(introductionView)
