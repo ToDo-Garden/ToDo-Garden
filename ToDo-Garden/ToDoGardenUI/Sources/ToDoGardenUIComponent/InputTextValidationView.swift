@@ -153,20 +153,32 @@ extension InputTextValidationView {
   stackView.distribution = .equalSpacing
   stackView.usingAutolayout()
 
-  let idView = InputTextValidationView(model: InputTextValidationView.Model.id)
+  let idView = InputTextValidationView(
+    inputText: "아이디",
+    validationText: "아이디는 5~12자 내외 띄어쓰기 없이\n영문, 숫자만 사용 가능합니다"
+  )
   stackView.addArrangedSubview(idView)
   idView.showValidationText()
 
-  let existedIdView = InputTextValidationView(model: InputTextValidationView.Model.id)
+  let existedIdView = InputTextValidationView(
+    inputText: "아이디",
+    validationText: "아이디는 5~12자 내외 띄어쓰기 없이\n영문, 숫자만 사용 가능합니다"
+  )
   stackView.addArrangedSubview(existedIdView)
-  existedIdView.changeValidationTextToExistedID()
+  existedIdView.changeValidationText("이미 사용중인 아이디입니다")
   existedIdView.showValidationText()
 
-  let nickNameView = InputTextValidationView(model: InputTextValidationView.Model.nickname)
+  let nickNameView = InputTextValidationView(
+    inputText: "닉네임",
+    validationText: "닉네임은 5~12자 내외\n띄어쓰기, 특수기호 없이 사용 가능합니다"
+  )
   stackView.addArrangedSubview(nickNameView)
   nickNameView.showValidationText()
 
-  let introductionView = InputTextValidationView(model: InputTextValidationView.Model.introduction)
+  let introductionView = InputTextValidationView(
+    inputText: "소개",
+    validationText: "한줄소개는 최대 15글자까지 사용 가능합니다"
+  )
   stackView.addArrangedSubview(introductionView)
   introductionView.showValidationText()
 
