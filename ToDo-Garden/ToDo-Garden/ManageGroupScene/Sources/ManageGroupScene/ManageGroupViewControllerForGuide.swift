@@ -47,16 +47,3 @@ public final class ManageGroupViewControllerForGuide: ManageGroupViewController 
     )
   }
 }
-
-#if DEBUG
-@available(iOS 17.0, *)
-#Preview {
-  let viewController = ManageGroupViewControllerForGuide()
-  
-  // 실험용 dimmedView 추가
-  let dimmedView = UIView(frame: viewController.view.bounds)
-  dimmedView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
-  viewController.view.addSubview(dimmedView)
-  
-}
-#endif
