@@ -14,6 +14,7 @@ protocol ShareGardenSceneDataStore {
 }
 
 protocol ShareGardenSceneBusinessLogic {
+  func cancelEntireTask()
 }
 
 final class ShareGardenSceneInteractor: ShareGardenSceneDataStore {
@@ -37,6 +38,10 @@ final class ShareGardenSceneInteractor: ShareGardenSceneDataStore {
 // MARK: - Request to worker
 
 extension ShareGardenSceneInteractor: ShareGardenSceneBusinessLogic {
+
+  func cancelEntireTask() {
+    self.tasks.keys.forEach { self.cancel(to: $0) }
+  }
 }
 
 extension ShareGardenSceneInteractor: FriendsGardenStore {
@@ -55,5 +60,10 @@ extension ShareGardenSceneInteractor {
         // await self?.presenter?.presentFriendsGardens(response: response)
       }
     }
+  }
+
+  private func cancel(to key: TaskKey) {
+    self.tasks[key]?.cancel()
+    self.tasks[key] = nil
   }
 }
