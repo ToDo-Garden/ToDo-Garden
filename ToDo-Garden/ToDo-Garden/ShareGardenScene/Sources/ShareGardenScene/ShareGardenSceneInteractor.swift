@@ -66,6 +66,8 @@ extension ShareGardenSceneInteractor: ShareGardenSceneBusinessLogic {
 
 extension ShareGardenSceneInteractor: FriendsGardenStore {
   func fetch(by id: ShareGardenSceneEntity.ShareGardenScene.FriendsGarden.ID) -> ShareGardenScene.FriendsGarden? {
+    return self.friendsGardenStore.fetch(by: id)
+  }
 
   func delete(by id: ShareGardenScene.FriendsGarden.ID) {
     let rollback = self.friendsGardenStore.fetchAll()
