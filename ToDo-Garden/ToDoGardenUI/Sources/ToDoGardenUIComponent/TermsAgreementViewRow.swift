@@ -27,15 +27,47 @@ final class TermsAgreementViewRow: UIView {
     return Constant.TermsAgreementViewRow.Layout.size
   }
   
+  // MARK: - Configuration
+  enum Configuration {
+    case headRow(title: String)
+    case childRow(title: String)
+    
+    var font: UIFont {
+      switch self {
+      case .headRow:
+        return UIFont.pretendardHeadSemiBold
+      case .childRow:
+        return UIFont.pretendardBodyMedium
+      }
+    }
+    
+    var title: String {
+      switch self {
+      case .headRow(let title), .childRow(let title):
+        return title
+      }
+    }
+    
+    var chevronButtonIsHidden: Bool {
+      switch self {
+      case .headRow:
+        return true
+      case .childRow:
+        return false
+      }
+    }
+  }
+  
   // MARK: - Initialization
-  init(chevronButtonIsHidden: Bool) {
+  init(configuration: Configuration) {
     self.checkButton = UIButton(type: UIButton.ButtonType.custom)
     self.textLabel = UILabel()
     self.chevronButton = UIButton(type: UIButton.ButtonType.system)
     
     super.init(frame: CGRect.zero)
     self.setupViews()
-    self.chevronButton.isHidden = chevronButtonIsHidden
+    self.chevronButton.isHidden = configuration.chevronButtonIsHidden
+    self.configureTitle(with: configuration)
   }
   
   @available(*, unavailable)
@@ -61,9 +93,6 @@ final class TermsAgreementViewRow: UIView {
   }
   
   private func setupTextLabel() {
-    self.textLabel.font = UIFont.systemFont(
-      ofSize: Constant.TermsAgreementViewRow.TextLabel.fontSize
-    )
     self.textLabel.textColor = UIColor.toDoGardenGreenDark
   }
   
@@ -127,20 +156,12 @@ final class TermsAgreementViewRow: UIView {
     ])
   }
   
-  // MARK: - NonPrivate Methods
-  func configureTitle(with text: String, isBold: Bool = false) {
-    var font: UIFont
-    if isBold {
-      font = UIFont.pretendardHeadSemiBold
-    } else {
-      font = UIFont.pretendardBodyMedium
-    }
-    
-    self.textLabel.attributedText = text.applyTextAttributes(
+  // MARK: - Configuration
+  private func configureTitle(with configuration: Configuration) {
+    self.textLabel.attributedText = configuration.title.applyTextAttributes(
       attributes: [
-        NSAttributedString.Key.font: font,
-        NSAttributedString.Key.foregroundColor:
-          UIColor.toDoGardenGreenDark
+        NSAttributedString.Key.font: configuration.font,
+        NSAttributedString.Key.foregroundColor: UIColor.toDoGardenGreenDark
       ]
     )
   }
@@ -158,12 +179,9 @@ final class TermsAgreementViewRow: UIView {
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  let view1 = TermsAgreementViewRow(chevronButtonIsHidden: false)
-  view1.configureTitle(with: "Hello World !!!", isBold: true)
-  let view2 = TermsAgreementViewRow(chevronButtonIsHidden: false)
-  view2.configureTitle(with: "chevronButtonIsHidden")
-  let view3 = TermsAgreementViewRow(chevronButtonIsHidden: false)
-  view3.configureTitle(with: "arrangedSubviews")
+  let view1 = TermsAgreementViewRow(configuration: .headRow(title: "제목"))
+  let view2 = TermsAgreementViewRow(configuration: .childRow(title: "111111"))
+  let view3 = TermsAgreementViewRow(configuration: .childRow(title: "222222"))
   
   let stack = UIStackView(arrangedSubviews: [view1, view2, view3])
   stack.axis = .vertical

@@ -19,11 +19,28 @@ public final class TermsAgreementView: UIView {
   private var doneButtonCompletion: ((Bool) -> Void)?
   
   // MARK: - Initialization
+  // swiftlint:disable function_body_length
   public init() {
-    self.agreeToAllRow = TermsAgreementViewRow(chevronButtonIsHidden: true)
-    self.termsAndPoliciesAgreementRow = TermsAgreementViewRow(chevronButtonIsHidden: false)
-    self.privacyPolicyRow = TermsAgreementViewRow(chevronButtonIsHidden: false)
-    self.eventAndPromotionalInformationRow = TermsAgreementViewRow(chevronButtonIsHidden: false)
+    self.agreeToAllRow = TermsAgreementViewRow(
+      configuration: TermsAgreementViewRow.Configuration.headRow(
+        title: Constant.TermsAgreementView.StringLiteral.agreeAll
+      )
+    )
+    self.termsAndPoliciesAgreementRow = TermsAgreementViewRow(
+      configuration: TermsAgreementViewRow.Configuration.childRow(
+        title: Constant.TermsAgreementView.StringLiteral.agreeTermsAndPolicies
+      )
+    )
+    self.privacyPolicyRow = TermsAgreementViewRow(
+      configuration: TermsAgreementViewRow.Configuration.childRow(
+        title: Constant.TermsAgreementView.StringLiteral.agreePrivacyPolicy
+      )
+    )
+    self.eventAndPromotionalInformationRow = TermsAgreementViewRow(
+      configuration: TermsAgreementViewRow.Configuration.childRow(
+        title: Constant.TermsAgreementView.StringLiteral.agreeEventAndPromotionalInformation
+      )
+    )
     self.doneButton = ToDoGardenBoxButton(
       title: Constant.TermsAgreementView.StringLiteral.done,
       buttonType: ToDoGardenBoxButton.Configuration.tertiaryRoundRectButton
@@ -31,6 +48,7 @@ public final class TermsAgreementView: UIView {
     super.init(frame: CGRect.zero)
     self.setupViews()
   }
+  // swiftlint:enable function_body_length
   
   @available(*, unavailable)
   required init?(coder: NSCoder) {
@@ -67,7 +85,6 @@ extension TermsAgreementView {
     self.setupCornerRadius()
     self.setupTitle()
     self.setupHeadRow()
-    self.setupBodyRows()
     self.setupBodyRowsInStackView()
     self.setupDoneButton()
     self.setupCheckBoxCondition()
@@ -100,10 +117,6 @@ extension TermsAgreementView {
   }
   
   private func setupHeadRow() {
-    self.agreeToAllRow.configureTitle(
-      with: Constant.TermsAgreementView.StringLiteral.agreeAll,
-      isBold: true
-    )
     self.addSubview(self.agreeToAllRow)
     self.agreeToAllRow.usingAutolayout()
     NSLayoutConstraint.activate([
@@ -116,19 +129,6 @@ extension TermsAgreementView {
         constant: Constant.TermsAgreementView.Rows.Layout.headTopMargin
       )
     ])
-  }
-  
-  private func setupBodyRows() {
-    let constant = Constant.TermsAgreementView.StringLiteral.self
-    self.termsAndPoliciesAgreementRow.configureTitle(
-      with: constant.agreeTermsAndPolicies
-    )
-    self.privacyPolicyRow.configureTitle(
-      with: constant.agreePrivacyPolicy
-    )
-    self.eventAndPromotionalInformationRow.configureTitle(
-      with: constant.agreeEventAndPromotionalInformation
-    )
   }
   
   private func setupBodyRowsInStackView() {
