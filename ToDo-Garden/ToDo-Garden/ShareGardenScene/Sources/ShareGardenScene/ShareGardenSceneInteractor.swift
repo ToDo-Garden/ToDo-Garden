@@ -44,8 +44,7 @@ final class ShareGardenSceneInteractor: ShareGardenSceneDataStore {
 
 extension ShareGardenSceneInteractor: ShareGardenSceneBusinessLogic {
   func requestFriendsGardenList() {
-    self.tasks[TaskKey.requestFriendsGardenList ] = Task { [weak self] in
-      guard let self else { return }
+    self.tasks[TaskKey.requestFriendsGardenList] = Task {
       defer { self.tasks[TaskKey.requestFriendsGardenList] = nil }
       do {
         // TODO: - worker에 FriendsGardenList 비동기 요청
@@ -73,8 +72,7 @@ extension ShareGardenSceneInteractor: FriendsGardenStore {
     let rollback = self.friendsGardenDataStore.fetchAll()
     self.friendsGardenDataStore.delete(by: id)
     
-    self.tasks[TaskKey.deleteFriendsGarden] = Task { [weak self] in
-      guard let self else { return }
+    self.tasks[TaskKey.deleteFriendsGarden] = Task {
       defer { self.tasks[TaskKey.deleteFriendsGarden] = nil }
 
       do {
