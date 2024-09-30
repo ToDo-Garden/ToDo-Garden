@@ -12,4 +12,5 @@ import ShareGardenSceneEntity
 @MainActor
 protocol FriendsGardenStore: AnyObject {
   func fetch(by id: ShareGardenScene.FriendsGarden.ID) -> ShareGardenScene.FriendsGarden?
+  func delete(by id: ShareGardenScene.FriendsGarden.ID)
 }

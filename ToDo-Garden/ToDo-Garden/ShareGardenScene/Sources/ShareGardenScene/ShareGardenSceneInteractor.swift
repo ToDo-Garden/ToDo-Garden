@@ -28,6 +28,7 @@ final class ShareGardenSceneInteractor: ShareGardenSceneDataStore {
   enum TaskKey {
     case requestFriendsGardenList
     case observeFriendsGardenStoreStream
+    case deleteFriendsGarden
   }
 
   init(shareGardenSceneWorker: ShareGardenSceneWorkable) {
@@ -63,6 +64,28 @@ extension ShareGardenSceneInteractor: ShareGardenSceneBusinessLogic {
 
 extension ShareGardenSceneInteractor: FriendsGardenStore {
   func fetch(by id: ShareGardenSceneEntity.ShareGardenScene.FriendsGarden.ID) -> ShareGardenScene.FriendsGarden? {
+
+  func delete(by id: ShareGardenScene.FriendsGarden.ID) {
+    let rollback = self.friendsGardenStore.fetchAll()
+    self.friendsGardenStore.delete(by: id)
+    
+    self.tasks[TaskKey.deleteFriendsGarden] = Task { [weak self] in
+      guard let self else { return }
+      defer { self.tasks[TaskKey.deleteFriendsGarden] = nil }
+
+      do {
+        // TODO: - worker에 삭제 요청
+        // try await self.shareGardenSceneWorker.delete(by: id)
+        if Task.isCancelled {
+          self.friendsGardenStore.update(to: rollback)
+          return
+        }
+      } catch {
+        self.friendsGardenStore.update(to: rollback)
+      }
+    }
+  }
+}
 
 extension ShareGardenSceneInteractor {
   private func observeFriendsGardenStoreStream() {
