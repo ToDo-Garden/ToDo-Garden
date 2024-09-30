@@ -9,10 +9,6 @@ import UIKit
 
 import ShareGardenSceneEntity
 
-protocol FriendsGardenStore {
-  func fetchBy(_ id: ShareGardenScene.FriendsGarden.ID) -> ShareGardenScene.FriendsGarden?
-}
-
 extension ShareGardenSceneViewController.FriendsGardenView {
   final class FriendsGardenListView: UIView {
     var isEditing: Bool {
