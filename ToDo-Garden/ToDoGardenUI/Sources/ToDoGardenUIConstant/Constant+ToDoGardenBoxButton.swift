@@ -29,6 +29,7 @@ extension Constant.ToDoGardenBoxButton {
     static let primary: CGSize = CGSize(width: 302.0, height: 49.0)
     static let secondary: CGSize = CGSize(width: 287.0, height: 55.0)
     static let tertiary: CGSize = CGSize(width: 288.0, height: 49.0)
+    static let small: CGSize = CGSize(width: 230, height: 37.0)
     static let filledHorizontal: CGSize = CGSize(
       width: UIScreen.main.bounds.width,
       height: 49.0
@@ -37,7 +38,7 @@ extension Constant.ToDoGardenBoxButton {
 }
 
 extension Constant.ToDoGardenBoxButton {
-  public struct DataStore {
+  public struct DataStore: Equatable {
     public let size: CGSize
     public let mode: Mode
   }
@@ -54,6 +55,11 @@ extension Constant.ToDoGardenBoxButton {
   
   public static let tertiaryRoundRectButton = DataStore(
     size: Size.tertiary,
+    mode: Mode.roundRectangle
+  )
+  
+  public static let smallRoundRectButton = DataStore(
+    size: Size.small,
     mode: Mode.roundRectangle
   )
   
