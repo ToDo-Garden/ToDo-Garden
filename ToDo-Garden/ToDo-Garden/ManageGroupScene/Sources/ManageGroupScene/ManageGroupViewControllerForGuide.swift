@@ -31,8 +31,6 @@ public final class ManageGroupViewControllerForGuide: ManageGroupViewController 
   }
   
   private func setFooterViewForGuide() {
-    self.footerView.layer.cornerRadius = Constant.Layout.Cell.cornerRadius
-    self.footerView.layer.masksToBounds = true
     self.footerView.usingAutolayout()
     self.view.addSubview(self.footerView)
     

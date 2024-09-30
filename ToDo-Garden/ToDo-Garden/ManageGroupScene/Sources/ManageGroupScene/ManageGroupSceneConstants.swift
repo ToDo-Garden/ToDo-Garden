@@ -20,7 +20,6 @@ enum Constant {
     
     enum Cell {
       static let height: CGFloat = 45.0
-      static let cornerRadius: CGFloat = 18.0
     }
     enum FooterView {
       static let height: CGFloat = 50.0
