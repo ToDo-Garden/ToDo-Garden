@@ -13,11 +13,13 @@ import ShareGardenSceneEntity
 protocol ShareGardenSceneDataStore {
 }
 
+@MainActor
 protocol ShareGardenSceneBusinessLogic {
   func requestFriendsGardenList()
   func cancelEntireTask()
 }
 
+@MainActor
 final class ShareGardenSceneInteractor: ShareGardenSceneDataStore {
   var presenter: ShareGardenScenePresentationLogic?
   private let shareGardenSceneWorker: ShareGardenSceneWorkable
@@ -90,7 +92,7 @@ extension ShareGardenSceneInteractor: FriendsGardenStore {
 extension ShareGardenSceneInteractor {
   private func observeFriendsGardenStoreStream() {
     self.tasks[TaskKey.observeFriendsGardenStoreStream] = Task { [weak self] in
-      guard let stream = await self?.friendsGardenStore.stream
+      guard let stream = self?.friendsGardenStore.stream
       else { return }
       defer { self?.tasks[TaskKey.observeFriendsGardenStoreStream] = nil }
 

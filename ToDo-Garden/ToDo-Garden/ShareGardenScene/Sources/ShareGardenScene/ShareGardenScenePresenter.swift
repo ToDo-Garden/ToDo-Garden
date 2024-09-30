@@ -9,6 +9,7 @@ import Foundation
 
 import ShareGardenSceneEntity
 
+@MainActor
 protocol ShareGardenScenePresentationLogic {
 }
 
