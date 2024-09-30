@@ -21,8 +21,8 @@ final class FriendsGardenDataStore {
   lazy var stream: AsyncStream<[ShareGardenScene.FriendsGarden]> = {
     return AsyncStream(
       bufferingPolicy: AsyncStream.Continuation.BufferingPolicy.bufferingNewest(1)
-    ) { continuation in
-      self.continuation = continuation
+    ) { [weak self] continuation in
+      self?.continuation = continuation
     }
   }()
 
