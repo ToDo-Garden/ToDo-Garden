@@ -22,24 +22,23 @@ protocol ManageGroupDisplayLogic: AnyObject {
   func displayEditedGroup(viewModel: ManageGroup.EditGroup.ViewModel)
 }
 
-public class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
+open class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
   // MARK: - VIP Properties
   
   var interactor: ManageGroupBusinessLogic?
   var router: (ManageGroupRoutingLogic & ManageGroupDataPassing)?
-  
+  public let groupListTableView: ManageGroupTableView
+  public var manageGroupTableViewDelegate: ManageGroupTableViewDelegate?
   public var rightBarButton: UIBarButtonItem
   public var footerView: UIView
   
   var displayedGroups: [ManageGroup.ToDoGroup]
-  var manageGroupTableViewDelegate: ManageGroupTableViewDelegate?
-  public let groupListTableView: ManageGroupTableView
   
   private let groupListTableViewCell: ManageGroupTableViewCell
   private var editModeLeftBarButton: UIBarButtonItem
   // MARK: - Object lifecycle
   
-  init() {
+  public init() {
     self.groupListTableView = ManageGroupTableView()
     self.groupListTableViewCell = ManageGroupTableViewCell(
       style: UITableViewCell.CellStyle.default,
@@ -53,13 +52,13 @@ public class ManageGroupViewController: UIViewController, ManageGroupViewControl
   }
   
   @available(*, unavailable)
-  required init?(coder: NSCoder) {
+  required public init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
   
   // MARK: - View lifecycle
   
-  public override func viewDidLoad() {
+  open override func viewDidLoad() {
     super.viewDidLoad()
     self.view.backgroundColor = UIColor.white
     self.setupTableView()
@@ -100,7 +99,7 @@ public class ManageGroupViewController: UIViewController, ManageGroupViewControl
 
 // MARK: - Setup
 extension ManageGroupViewController {
-  func setupNavigationBar() {
+  public func setupNavigationBar() {
     self.navigationItem.title = Constant.StringLiteral.navigationbarTitle
     self.rightBarButton = UIBarButtonItem(
       title: Constant.StringLiteral.rightBarButtonTitleEdit,
@@ -152,7 +151,7 @@ extension ManageGroupViewController {
     }
   }
   
-  func setupTableView(isForGuide: Bool = false) {
+  public func setupTableView(isForGuide: Bool = false) {
     self.groupListTableView.backgroundColor = .clear
     self.footerView = self.buildAddGroupFooterButton()
     if !isForGuide {
