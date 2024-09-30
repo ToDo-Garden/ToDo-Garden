@@ -11,7 +11,8 @@ import PostGroupSceneAPI
 import PostGroupSceneEntity
 
 protocol PostGroupDataStore {
-  var payload: PostGroupScenePayloadable? { get set }
+  var currentGroup: PostGroup.ToDoGroup? { get set }
+  var delegate: PostGroupSceneDelegate? { get set }
 }
 
 protocol PostGroupBusinessLogic {
@@ -21,9 +22,11 @@ protocol PostGroupBusinessLogic {
 }
 
 class PostGroupInteractor: PostGroupDataStore {
+  var delegate: PostGroupSceneDelegate?
   var presenter: PostGroupPresentationLogic?
   private let postGroupWorker: PostGroupWorkable
-  var payload: PostGroupScenePayloadable?
+  
+  var currentGroup: PostGroup.ToDoGroup?
   
   init(postGroupWorker: PostGroupWorkable) {
     self.postGroupWorker = postGroupWorker
@@ -34,40 +37,39 @@ class PostGroupInteractor: PostGroupDataStore {
 
 extension PostGroupInteractor: PostGroupBusinessLogic {
   func touchDoneButton(request: PostGroupSceneEntity.PostGroup.TouchDoneButton.Request) {
-    guard let groupID = payload?.groupID else {
-      return
+    let groupID: UUID? = self.currentGroup?.groupID
+    
+    let result = self.postGroupWorker.touchDoneButton(
+      groupID: groupID,
+      groupName: request.groupName,
+      groupColor: request.groupColor
+    )
+    
+    let isAddGroup = result.groupID == nil
+    
+    if isAddGroup {
+      self.delegate?.addGroup(group: result)
+    } else {
+      self.delegate?.editGroup(group: result)
     }
     
-    self.postGroupWorker.touchDoneButton(
-      groupID: groupID,
-      groupName: request.groupName,
-      groupColor: request.groupColor
-    )
-    
-    let response = PostGroup.TouchDoneButton.Response(
-      groupID: groupID,
-      groupName: request.groupName,
-      groupColor: request.groupColor
-    )
-    
-    self.presenter?.presentTouchedDoneButton(response: response)
+    let response = PostGroup.TouchDoneButton.Response(group: result)
+    self.currentGroup = response.group
+    self.presenter?.presentAfterTouchingDoneButton(response: response)
   }
   
   func changeColor(request: PostGroup.ChangeColor.Request) {
-    self.postGroupWorker.changeColor(groupColor: request.groupColor)
-    // 성공했다고 가정
-    let response = PostGroup.ChangeColor.Response(groupID: "ID", groupColor: request.groupColor)
+    self.currentGroup?.groupColor = request.groupColor
+    let response = PostGroup.ChangeColor.Response(groupColor: request.groupColor)
     self.presenter?.presentChangedColor(response: response)
   }
   
   func loadGroupData() {
-    let isDoneBottomButtonEnable: Bool = self.isDoneBottomButtonEnable(
-      groupName: payload?.groupName,
-      groupColor: payload?.groupColor
-    )
+    let isDoneBottomButtonEnable: Bool = self.isDoneBottomButtonEnable(with: self.currentGroup)
+    
     let response = PostGroup.LoadGroupData.Response(
-      groupName: payload?.groupName ?? "",
-      groupColor: payload?.groupColor,
+      groupName: self.currentGroup?.groupName ?? "",
+      groupColor: self.currentGroup?.groupColor,
       isDoneBottomButtonEnable: isDoneBottomButtonEnable
     )
     self.presenter?.presentLoadGroupData(response: response)
@@ -75,10 +77,9 @@ extension PostGroupInteractor: PostGroupBusinessLogic {
 }
 
 extension PostGroupInteractor {
-  
-  private func isDoneBottomButtonEnable(groupName: String?, groupColor: UIColor?) -> Bool {
+  private func isDoneBottomButtonEnable(with currentGroup: PostGroup.ToDoGroup?) -> Bool {
     var isButtonEnable: Bool
-    if (groupName == nil) || (groupColor == nil) {
+    if currentGroup == nil {
       isButtonEnable = false
     } else {
       isButtonEnable = true

@@ -7,11 +7,12 @@
 
 import UIKit.UIColor
 
+import PostGroupSceneEntity
+
 public protocol PostGroupWorkable {
-  func changeColor(groupColor: UIColor)
   func touchDoneButton(
-    groupID: String,
+    groupID: UUID?,
     groupName: String,
     groupColor: UIColor
-  )
+  ) -> PostGroup.ToDoGroup
 }

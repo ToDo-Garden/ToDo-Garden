@@ -39,4 +39,5 @@ public enum Constant {
   public enum AppleLoginButton { }
   public enum TermsAgreementView { }
   public enum TermsAgreementViewRow { }
+  public enum InputTextValidationView {}
 }

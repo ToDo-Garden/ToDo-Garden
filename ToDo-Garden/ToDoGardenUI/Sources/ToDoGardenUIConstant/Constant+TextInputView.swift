@@ -29,6 +29,7 @@ extension Constant.TextInputView.Layout.PlaceholderLabel {
 
 extension Constant.TextInputView.Layout.InputTextField {
   public static let defaultHeight: CGFloat = 20
+  public static let bottomLineTopMargin: CGFloat = 5
 }
 
 extension Constant.TextInputView.StringLiteral {

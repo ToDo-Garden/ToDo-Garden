@@ -11,30 +11,77 @@ import SettingSceneAPI
 import SettingSceneEntity
 
 protocol SettingDataStore {
-  // var name: String { get set }
+  var nickName: String? { get }
+  var profileImageData: Data? { get }
 }
 
 protocol SettingBusinessLogic {
-  func doSomething(request: Setting.Something.Request)
+  func prepareSettingSceneData()
+  func openAppStore()
 }
 
-class SettingInteractor: SettingDataStore {
-  // var name: String = ""
-  var presenter: SettingPresentationLogic?
-  private let someWorker: SettingWorkable
+final class SettingInteractor: SettingDataStore {
+  var nickName: String?
+  var profileImageData: Data?
   
-  init(someWorker: SettingWorkable) {
-    self.someWorker = someWorker
+  private var fetchUserNicknameTask: Task<Void, Never>?
+  private var fetchUserProfileImageTask: Task<Void, Never>?
+  private var fetchAppVersionTask: Task<Void, Never>?
+
+  var presenter: SettingPresentationLogic?
+  private let settingWorker: SettingWorkable
+
+  // MARK: Dependency
+  private let appServiceWorker: ApplicationServiceWorker
+
+  init(settingWorker: SettingWorkable, appServiceWorker: ApplicationServiceWorker) {
+    self.settingWorker = settingWorker
+    self.appServiceWorker = appServiceWorker
   }
 }
 
 // MARK: - Request to worker
 
 extension SettingInteractor: SettingBusinessLogic {
-  func doSomething(request: Setting.Something.Request) {
-    self.someWorker.doSomeWork()
-    
-    let response = Setting.Something.Response()
-    self.presenter?.presentSomething(response: response)
+  func prepareSettingSceneData() {
+    self.fetchUserNickname()
+    self.fetchUserProfileImage()
+    self.fetchAppVersion()
+  }
+
+  func openAppStore() {
+    self.appServiceWorker.openAppStore()
+  }
+}
+
+// MARK: - Private Functions
+
+extension SettingInteractor {
+  private func fetchUserNickname() {
+    self.fetchUserNicknameTask = Task {
+      let nickName = await self.settingWorker.requestUserNickName()
+      self.nickName = nickName
+      await self.presenter?.presentUserNickName(nickName)
+    }
+  }
+
+  private func fetchUserProfileImage() {
+    self.fetchUserProfileImageTask = Task {
+      let profileImageData = await self.settingWorker.requestUserProfileImage()
+      self.profileImageData = profileImageData
+      await self.presenter?.presentUserProfileImage(profileImageData)
+    }
+  }
+
+  private func fetchAppVersion() {
+    self.fetchAppVersionTask = Task {
+      let versionNumber = self.appServiceWorker.fetchCurrentAppVersion()
+      let isUpdateAvailable = await self.appServiceWorker.isUpdateAvailable()
+      let response = Setting.FetchAppVersion.Response(
+        versionNumber: versionNumber,
+        isLatestVersion: !isUpdateAvailable
+      )
+      await self.presenter?.presentAppVersion(response: response)
+    }
   }
 }

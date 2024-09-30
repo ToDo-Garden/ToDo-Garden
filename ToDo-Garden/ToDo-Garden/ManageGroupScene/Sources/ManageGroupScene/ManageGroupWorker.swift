@@ -34,6 +34,26 @@ public class ManageGroupWorker: ManageGroupWorkable {
       return .failure(error)
     }
   }
+  
+  public func addGroup(request: ManageGroup.AddGroup.Request) -> ManageGroup.ToDoGroup {
+    let group = ManageGroup.ToDoGroup(
+      groupID: request.groupID,
+      groupName: request.groupName,
+      progressColor: request.groupColor,
+      progressRate: Float.zero
+    )
+    return group
+  }
+  
+  public func editGroup(request: ManageGroup.EditGroup.Request, progressRate: Float) -> ManageGroup.ToDoGroup {
+    let group = ManageGroup.ToDoGroup(
+      groupID: request.groupID,
+      groupName: request.groupName,
+      progressColor: request.groupColor,
+      progressRate: progressRate
+    )
+    return group
+  }
 
   private func fetchGroupsFromDatabase() async throws -> [ManageGroup.ToDoGroup] {
     let fetchedData: [ManageGroup.ToDoGroup] = ManageGroupMockData.fetchedData

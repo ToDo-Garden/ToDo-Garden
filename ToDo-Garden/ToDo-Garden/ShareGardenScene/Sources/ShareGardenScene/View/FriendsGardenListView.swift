@@ -15,11 +15,19 @@ protocol FriendsGardenStore {
 
 extension ShareGardenSceneViewController.FriendsGardenView {
   final class FriendsGardenListView: UIView {
+    var isEditing: Bool {
+      get {
+        return self.friendListView.isEditing
+      } set {
+        self.friendListView.isEditing = newValue
+      }
+    }
+    
     private lazy var friendsGardenListDataSource: DataSource = self.setupDataSource()
     private lazy var friendListView: UICollectionView = {
       let friendListView = UICollectionView(
         frame: CGRect.zero,
-        collectionViewLayout: Self.makeFriendsGardenListViewLayout()
+        collectionViewLayout: self.makeFriendsGardenListViewLayout()
       )
       friendListView.delegate = self
       friendListView.backgroundColor = UIColor.white
@@ -98,10 +106,48 @@ extension ShareGardenSceneViewController.FriendsGardenView {
       if snapshot.sectionIdentifiers.contains(Section.main) == false {
         snapshot.appendSections([Section.main])
       }
-      let items = identifiers.map { Item.friendsGarden($0) }
-      snapshot.appendItems(items, toSection: Section.main)
-      self.friendsGardenListDataSource.apply(snapshot)
+      
+      let firendsGardens: [ShareGardenScene.FriendsGarden] = identifiers.compactMap {
+        return self.friendsGardenStore.fetchBy($0)
+      }
+      let sectionSnapshot = self.makeSectionSnapshot(for: firendsGardens)
+      
+      self.friendsGardenListDataSource.apply(sectionSnapshot, to: Section.main)
     }
+  }
+}
+
+extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView {
+  private func makeSectionSnapshot(
+    for friendsGardens: [ShareGardenScene.FriendsGarden]
+  ) -> NSDiffableDataSourceSectionSnapshot<Item> {
+    var sectionSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
+    
+    let friendsGardenItems: [Item] = friendsGardens.map { friendsGarden in
+      let item = Item.friendsGarden(
+        ShareGardenSceneViewController.FriendsGardenContentConfiguration(
+          id: friendsGarden.id,
+          pomodoroRecords: friendsGarden.pomodoroRecords
+        )
+      )
+      
+      return item
+    }
+    
+    let combined = zip(friendsGardens, friendsGardenItems)
+    
+    for (friendsGarden, friendsGardenItem) in combined {
+      let friendsProfileItem = Item.friendsProfile(
+        ShareGardenSceneViewController.FriendsProfileContentConfiguration(
+          id: friendsGarden.id,
+          friendsGarden: friendsGarden
+        )
+      )
+      sectionSnapshot.append([friendsProfileItem])
+      sectionSnapshot.append([friendsGardenItem], to: friendsProfileItem)
+    }
+    
+    return sectionSnapshot
   }
 }
 
@@ -110,7 +156,7 @@ extension ShareGardenSceneViewController.FriendsGardenView {
 extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView {
   private func setup() {
     self.addSubviews()
-    self.setupLayoutCosntraints()
+    self.setupLayoutConstraints()
   }
   
   private func addSubviews() {
@@ -126,13 +172,12 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
   }
   
   private enum Item: Hashable {
-    case friendsGarden(ShareGardenScene.FriendsGarden.ID)
+    case friendsProfile(ShareGardenSceneViewController.FriendsProfileContentConfiguration)
+    case friendsGarden(ShareGardenSceneViewController.FriendsGardenContentConfiguration)
     case loading(UUID)
   }
   
   private typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
-  private typealias FriendsGardenListViewCell =
-  ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListViewCell
   private typealias FriendsGardenListViewLoadingCell =
   ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListViewLoadingCell
   private typealias Snapshot =
@@ -140,11 +185,10 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
     ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView.Section,
     Item
   >
-  private typealias FriendsGardenListViewCellRegistration = UICollectionView.CellRegistration<
-    FriendsGardenListViewCell,
+  private typealias FriendsGardenCellRegistration = UICollectionView.CellRegistration<
+    UICollectionViewListCell,
     Item
   >
-  
   private typealias LoadingCellRegistration = UICollectionView.CellRegistration<
     FriendsGardenListViewLoadingCell,
     Item
@@ -154,26 +198,39 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
 // MARK: - layout
 
 extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView {
-  private static func makeFriendsGardenListViewLayout() -> UICollectionViewCompositionalLayout {
-    let itemSize = NSCollectionLayoutSize(
-      widthDimension: NSCollectionLayoutDimension.fractionalWidth(
-        Self.layoutConstant.fullWidthRatio
-      ),
-      heightDimension: NSCollectionLayoutDimension.estimated(
-        Self.layoutConstant.estimatedItemHeight
-      )
-    )
-    let item = NSCollectionLayoutItem(layoutSize: itemSize)
-    let group = NSCollectionLayoutGroup.vertical(
-      layoutSize: itemSize,
-      subitems: [item]
-    )
-    let section = NSCollectionLayoutSection(group: group)
-    
-    return UICollectionViewCompositionalLayout(section: section)
+  private func makeSwipeAction(for indexPath: IndexPath?) -> UISwipeActionsConfiguration? {
+    guard let indexPath = indexPath,
+      let cell = self.friendListView.cellForItem(at: indexPath)?.contentView as? ShareGardenSceneViewController
+      .FriendsGardenProfileInfoView,
+      cell.isExpanded == false
+    else {
+      return nil
+    }
+        
+    let deleteAction = UIContextualAction(
+      style: UIContextualAction.Style.destructive,
+      title: nil
+    ) { _, _, _ in
+    }
+    deleteAction.accessibilityLabel = "Delete"
+    deleteAction.image = UIImage(systemName: "trash")
+    deleteAction.backgroundColor = UIColor.toDoGardenEditButtonRed
+    return UISwipeActionsConfiguration(actions: [deleteAction])
   }
   
-  private func setupLayoutCosntraints() {
+  private func makeFriendsGardenListViewLayout() -> UICollectionViewCompositionalLayout {
+    var listConfiguration = UICollectionLayoutListConfiguration(
+      appearance: UICollectionLayoutListConfiguration.Appearance.plain
+    )
+    listConfiguration.showsSeparators = false
+    
+    listConfiguration.trailingSwipeActionsConfigurationProvider = self.makeSwipeAction
+    listConfiguration.backgroundColor = UIColor.white
+    
+    return UICollectionViewCompositionalLayout.list(using: listConfiguration)
+  }
+  
+  private func setupLayoutConstraints() {
     self.setupFriendListViewLayoutConstraints()
   }
   
@@ -185,18 +242,40 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
 // MARK: - Data Source
 
 extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView {
-  private func setupDataSource() -> DataSource {
-    let friendsGardenListViewCellRegistration = FriendsGardenListViewCellRegistration { [weak self] cell, _, item in
-      guard case let Item.friendsGarden(identifier) = item,
-        let friendsGarden = self?.friendsGardenStore.fetchBy(identifier)
+  private func makeFriendsGardenProfileCellRegistration() -> FriendsGardenCellRegistration {
+    return FriendsGardenCellRegistration { cell, _, item in
+      guard case let Item.friendsProfile(configuration) = item
       else { return }
       
-      cell.configure(with: friendsGarden)
+      cell.contentConfiguration = configuration
+      cell.accessories = [
+        UICellAccessory.delete(
+          displayed: UICellAccessory.DisplayedState.whenEditing,
+          options: UICellAccessory.DeleteOptions(tintColor: UIColor.toDoGardenEditButtonRed)
+        )
+      ]
+     
+      cell.backgroundColor = UIColor.white
+      let cellBackgroundView = UIView()
+      cellBackgroundView.backgroundColor = UIColor.white
+      cell.backgroundView = cellBackgroundView
     }
-    
-    let loadingCellRegistration = LoadingCellRegistration { cell, _, _ in
-      cell.configure()
+  }
+  
+  private func makeFriendsGardenCellRegistration() -> FriendsGardenCellRegistration {
+    return FriendsGardenCellRegistration { cell, _, item in
+      guard case let Item.friendsGarden(configuration) = item
+      else { return }
+      
+      cell.contentConfiguration = configuration
+      cell.indentationLevel = Int.zero
     }
+  }
+  
+  private func setupDataSource() -> DataSource {
+    let friendsGardenProfileCellRegistration = self.makeFriendsGardenProfileCellRegistration()
+    let loadingCellRegistration = LoadingCellRegistration { _, _, _ in }
+    let friendsGardenCellRegistration = self.makeFriendsGardenCellRegistration()
     
     return DataSource(collectionView: self.friendListView) { collectionView, indexPath, item in
       switch item {
@@ -206,31 +285,50 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
           for: indexPath,
           item: item
         )
+      case Item.friendsProfile(_):
+        return collectionView.dequeueConfiguredReusableCell(
+          using: friendsGardenProfileCellRegistration,
+          for: indexPath,
+          item: item
+        )
       case Item.friendsGarden(_):
         return collectionView.dequeueConfiguredReusableCell(
-          using: friendsGardenListViewCellRegistration,
+          using: friendsGardenCellRegistration,
           for: indexPath,
           item: item
         )
       }
     }
   }
+  
+  func collapseAll() {
+    var sectionSnapshot = self.friendsGardenListDataSource.snapshot(for: Section.main)
+    sectionSnapshot.items.forEach { item in
+      if sectionSnapshot.isExpanded(item) {
+        sectionSnapshot.collapse([item])
+      }
+    }
+    self.friendsGardenListDataSource.apply(sectionSnapshot, to: Section.main)
+  }
 }
 
 extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView: UICollectionViewDelegate {
-  func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-    if collectionView.indexPathsForSelectedItems?.contains(indexPath) ?? false {
-      collectionView.deselectItem(at: indexPath, animated: true)
-    } else {
-      collectionView.selectItem(at: indexPath, animated: true, scrollPosition: [])
-    }
-    
-    return false
-  }
-  
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
     let isStartPointReached = scrollView.contentOffset.y <= CGFloat.zero
     self.gradientLayer.isHidden = isStartPointReached
+  }
+  
+  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    guard let selectedItem = self.friendsGardenListDataSource.itemIdentifier(for: indexPath) else { return }
+    var sectionSnapshot = self.friendsGardenListDataSource.snapshot(for: Section.main)
+    
+    if sectionSnapshot.isExpanded(selectedItem) {
+      sectionSnapshot.collapse([selectedItem])
+    } else {
+      sectionSnapshot.expand([selectedItem])
+    }
+    
+    self.friendsGardenListDataSource.apply(sectionSnapshot, to: Section.main, animatingDifferences: true)
   }
 }
 
