@@ -23,7 +23,7 @@ protocol ShareGardenSceneBusinessLogic {
 final class ShareGardenSceneInteractor: ShareGardenSceneDataStore {
   var presenter: ShareGardenScenePresentationLogic?
   private let shareGardenSceneWorker: ShareGardenSceneWorkable
-  private let friendsGardenStore: FriendsGardenDataStore
+  private let friendsGardenDataStore: FriendsGardenDataStore
 
   private var tasks: [TaskKey: Task<Void, Never>] = [:]
 
@@ -35,7 +35,7 @@ final class ShareGardenSceneInteractor: ShareGardenSceneDataStore {
 
   init(shareGardenSceneWorker: ShareGardenSceneWorkable) {
     self.shareGardenSceneWorker = shareGardenSceneWorker
-    self.friendsGardenStore = FriendsGardenDataStore()
+    self.friendsGardenDataStore = FriendsGardenDataStore()
     self.observeFriendsGardenStoreStream()
   }
 }
@@ -66,12 +66,12 @@ extension ShareGardenSceneInteractor: ShareGardenSceneBusinessLogic {
 
 extension ShareGardenSceneInteractor: FriendsGardenStore {
   func fetch(by id: ShareGardenSceneEntity.ShareGardenScene.FriendsGarden.ID) -> ShareGardenScene.FriendsGarden? {
-    return self.friendsGardenStore.fetch(by: id)
+    return self.friendsGardenDataStore.fetch(by: id)
   }
 
   func delete(by id: ShareGardenScene.FriendsGarden.ID) {
-    let rollback = self.friendsGardenStore.fetchAll()
-    self.friendsGardenStore.delete(by: id)
+    let rollback = self.friendsGardenDataStore.fetchAll()
+    self.friendsGardenDataStore.delete(by: id)
     
     self.tasks[TaskKey.deleteFriendsGarden] = Task { [weak self] in
       guard let self else { return }
@@ -81,11 +81,11 @@ extension ShareGardenSceneInteractor: FriendsGardenStore {
         // TODO: - worker에 삭제 요청
         // try await self.shareGardenSceneWorker.delete(by: id)
         if Task.isCancelled {
-          self.friendsGardenStore.update(to: rollback)
+          self.friendsGardenDataStore.update(to: rollback)
           return
         }
       } catch {
-        self.friendsGardenStore.update(to: rollback)
+        self.friendsGardenDataStore.update(to: rollback)
       }
     }
   }
@@ -94,7 +94,7 @@ extension ShareGardenSceneInteractor: FriendsGardenStore {
 extension ShareGardenSceneInteractor {
   private func observeFriendsGardenStoreStream() {
     self.tasks[TaskKey.observeFriendsGardenStoreStream] = Task { [weak self] in
-      guard let stream = self?.friendsGardenStore.stream
+      guard let stream = self?.friendsGardenDataStore.stream
       else { return }
       defer { self?.tasks[TaskKey.observeFriendsGardenStoreStream] = nil }
 
