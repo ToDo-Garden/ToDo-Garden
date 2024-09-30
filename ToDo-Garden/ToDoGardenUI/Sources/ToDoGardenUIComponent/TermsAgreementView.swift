@@ -7,6 +7,7 @@
 import UIKit
 
 import ToDoGardenUIConstant
+import ToDoGardenUIResource
 
 public protocol TermsAgreementViewDelegate: AnyObject {
   func termsAgreementView(_ view: TermsAgreementView, didTapTermsAndPoliciesAgreement: Void)
@@ -30,24 +31,24 @@ public final class TermsAgreementView: UIView {
   // swiftlint:disable function_body_length
   public init() {
     self.agreeToAllRow = TermsAgreementViewRow(
-      configuration: TermsAgreementViewRow.Configuration.parentRow(
-        title: Constant.TermsAgreementView.StringLiteral.agreeAll
-      )
+      title: Constant.TermsAgreementView.StringLiteral.agreeAll,
+      font: UIFont.pretendardBodySemiBold15,
+      chevronIsHidden: true
     )
     self.termsAndPoliciesAgreementRow = TermsAgreementViewRow(
-      configuration: TermsAgreementViewRow.Configuration.childRow(
-        title: Constant.TermsAgreementView.StringLiteral.agreeTermsAndPolicies
-      )
+      title: Constant.TermsAgreementView.StringLiteral.agreeTermsAndPolicies,
+      font: UIFont.pretendardBodyMedium,
+      chevronIsHidden: false
     )
     self.privacyPolicyRow = TermsAgreementViewRow(
-      configuration: TermsAgreementViewRow.Configuration.childRow(
-        title: Constant.TermsAgreementView.StringLiteral.agreePrivacyPolicy
-      )
+      title: Constant.TermsAgreementView.StringLiteral.agreePrivacyPolicy,
+      font: UIFont.pretendardBodyMedium,
+      chevronIsHidden: false
     )
     self.eventAndPromotionalInformationRow = TermsAgreementViewRow(
-      configuration: TermsAgreementViewRow.Configuration.childRow(
-        title: Constant.TermsAgreementView.StringLiteral.agreeEventAndPromotionalInformation
-      )
+      title: Constant.TermsAgreementView.StringLiteral.agreeEventAndPromotionalInformation,
+      font: UIFont.pretendardBodyMedium,
+      chevronIsHidden: false
     )
     self.doneButton = ToDoGardenBoxButton(
       title: Constant.TermsAgreementView.StringLiteral.done,
