@@ -8,6 +8,13 @@ import UIKit
 
 import ToDoGardenUIConstant
 
+public protocol TermsAgreementViewDelegate: AnyObject {
+  func termsAgreementView(_ view: TermsAgreementView, didTapTermsAndPoliciesAgreement: Void)
+  func termsAgreementView(_ view: TermsAgreementView, didTapPrivacyPolicy: Void)
+  func termsAgreementView(_ view: TermsAgreementView, didTapEventAndPromotionalInformation: Void)
+  func termsAgreementView(_ view: TermsAgreementView, didTapDoneButton isEventAndPromotionalInformationAgreed: Bool)
+}
+
 public final class TermsAgreementView: UIView {
   // MARK: - Properties
   private let agreeToAllRow: TermsAgreementViewRow
@@ -16,7 +23,8 @@ public final class TermsAgreementView: UIView {
   private let eventAndPromotionalInformationRow: TermsAgreementViewRow
   
   private let doneButton: ToDoGardenBoxButton
-  private var doneButtonCompletion: ((Bool) -> Void)?
+  
+  public weak var delegate: TermsAgreementViewDelegate?
   
   // MARK: - Initialization
   // swiftlint:disable function_body_length
@@ -47,6 +55,7 @@ public final class TermsAgreementView: UIView {
     )
     super.init(frame: CGRect.zero)
     self.setupViews()
+    self.setupDelegateActions()
   }
   // swiftlint:enable function_body_length
   
@@ -61,20 +70,27 @@ public final class TermsAgreementView: UIView {
     return Constant.TermsAgreementView.Layout.size
   }
   
-  public func setOnTermsAndPoliciesAgreementAction(handler: (() -> Void)?) {
-    self.termsAndPoliciesAgreementRow.chevronAction = handler
-  }
-  
-  public func setOnPrivacyPolicyAction(handler: (() -> Void)?) {
-    self.privacyPolicyRow.chevronAction = handler
-  }
-  
-  public func setOnEventAndPromotinalInformationAction(handler: (() -> Void)?) {
-    self.eventAndPromotionalInformationRow.chevronAction = handler
-  }
-  
-  public func afterDoneBottonTouched(_ handler: @escaping (Bool) -> Void) {
-    self.doneButtonCompletion = handler
+  private func setupDelegateActions() {
+    self.termsAndPoliciesAgreementRow.chevronAction = { [weak self] in
+      guard let self = self else { return }
+      self.delegate?.termsAgreementView(self, didTapTermsAndPoliciesAgreement: ())
+    }
+    
+    self.privacyPolicyRow.chevronAction = { [weak self] in
+      guard let self = self else { return }
+      self.delegate?.termsAgreementView(self, didTapPrivacyPolicy: ())
+    }
+    
+    self.eventAndPromotionalInformationRow.chevronAction = { [weak self] in
+      guard let self = self else { return }
+      self.delegate?.termsAgreementView(self, didTapEventAndPromotionalInformation: ())
+    }
+    
+    self.doneButton.addAction(UIAction { [weak self] _ in
+      guard let self = self else { return }
+      let isEventAndPromotionalInformationAgreed = self.eventAndPromotionalInformationRow.isSelected
+      self.delegate?.termsAgreementView(self, didTapDoneButton: isEventAndPromotionalInformationAgreed)
+    }, for: .touchUpInside)
   }
 }
 
@@ -189,11 +205,6 @@ extension TermsAgreementView {
       UIAction { [weak self] _ in self?.rowTapped() },
       for: UIControl.Event.touchUpInside
     )
-    
-    self.doneButton.addAction(
-      UIAction { [weak self] _ in self?.doneButtonTapped() },
-      for: UIControl.Event.touchUpInside
-    )
   }
   
   private func agreeToAllTapped() {
@@ -220,11 +231,6 @@ extension TermsAgreementView {
     let mandatorySelected = self.termsAndPoliciesAgreementRow.isSelected && self.privacyPolicyRow.isSelected
     self.doneButton.isEnabled = mandatorySelected
   }
-  
-  private func doneButtonTapped() {
-    let result = self.eventAndPromotionalInformationRow.isSelected
-    self.doneButtonCompletion?(result)
-  }
 }
 
 // MARK: - Preview
@@ -243,15 +249,6 @@ extension TermsAgreementView {
     termsAgreementView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
     termsAgreementView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
   ])
-  
-  termsAgreementView.afterDoneBottonTouched { isOptionalConditionSelected in
-    // 이벤트 광고성 정보 row가 선택된 채로 완료가 눌렸는지, 아닌지 외부에서 분기가능
-    if isOptionalConditionSelected {
-      return
-    } else {
-      return
-    }
-  }
   
   return view
 }
