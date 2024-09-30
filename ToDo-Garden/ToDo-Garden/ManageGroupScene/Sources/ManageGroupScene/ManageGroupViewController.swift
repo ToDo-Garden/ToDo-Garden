@@ -45,7 +45,7 @@ open class ManageGroupViewController: UIViewController, ManageGroupViewControlla
       style: UITableViewCell.CellStyle.default,
       reuseIdentifier: ManageGroupTableViewCell.identifier
     )
-    self.rightBarButtonCustomView = UIButton(type: .system)
+    self.rightBarButtonCustomView = UIButton(type: UIButton.ButtonType.system)
     self.rightBarButton = UIBarButtonItem(customView: self.rightBarButtonCustomView)
     self.editModeLeftBarButton = UIBarButtonItem()
     self.manageGroupTableViewDelegate = nil
@@ -116,9 +116,13 @@ extension ManageGroupViewController {
   }
   
   private func setupRightBarButton() {
-    self.rightBarButtonCustomView.setTitle(Constant.StringLiteral.rightBarButtonTitleEdit, for: .normal)
-    self.rightBarButtonCustomView.setTitleColor(UIColor.toDoGardenOrange, for: .normal)
-    self.rightBarButtonCustomView.addTarget(self, action: #selector(self.setEditingMode), for: .touchUpInside)
+    self.rightBarButtonCustomView.setTitle(Constant.StringLiteral.rightBarButtonTitleEdit, for: UIButton.State.normal)
+    self.rightBarButtonCustomView.setTitleColor(UIColor.toDoGardenOrange, for: UIButton.State.normal)
+    self.rightBarButtonCustomView.addTarget(
+      self,
+      action: #selector(self.setEditingMode),
+      for: UIControl.Event.touchUpInside
+    )
     
     self.rightBarButtonCustomView.usingAutolayout()
     
@@ -155,11 +159,14 @@ extension ManageGroupViewController {
   private func updateBarButtonItems(isEditingMode: Bool) {
     self.groupListTableView.setEditingMode(!isEditingMode, animated: true)
     if isEditingMode {
-      self.rightBarButtonCustomView.setTitle(Constant.StringLiteral.rightBarButtonTitleEdit, for: .normal)
+      self.rightBarButtonCustomView.setTitle(Constant.StringLiteral.rightBarButtonTitleEdit, for: UIButton.State.normal)
       self.navigationItem.setLeftBarButton(nil, animated: true)
     } else {
       self.navigationItem.setLeftBarButton(self.editModeLeftBarButton, animated: true)
-      self.rightBarButtonCustomView.setTitle(Constant.StringLiteral.rightBarButtonTitleCancel, for: .normal)
+      self.rightBarButtonCustomView.setTitle(
+        Constant.StringLiteral.rightBarButtonTitleCancel,
+        for: UIButton.State.normal
+      )
       
       self.manageGroupTableViewDelegate?.displayedGroupsBeforeEditing =
       self.manageGroupTableViewDelegate?.displayedGroups ?? []
