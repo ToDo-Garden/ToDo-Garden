@@ -5,7 +5,7 @@
 //  Created by Noah on 9/12/24.
 //
 
-import UIKit
+@preconcurrency import UIKit
 
 import ToDoGardenUIComponent
 
