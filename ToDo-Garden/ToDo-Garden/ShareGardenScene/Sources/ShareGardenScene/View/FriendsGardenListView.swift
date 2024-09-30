@@ -104,7 +104,7 @@ extension ShareGardenSceneViewController.FriendsGardenView {
       }
       
       let firendsGardens: [ShareGardenScene.FriendsGarden] = identifiers.compactMap {
-        return self.friendsGardenStore?.fetchBy($0)
+        return self.friendsGardenStore?.fetch(by: $0)
       }
       let sectionSnapshot = self.makeSectionSnapshot(for: firendsGardens)
       
