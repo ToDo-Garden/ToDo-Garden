@@ -9,6 +9,6 @@ import Foundation
 
 import ShareGardenSceneEntity
 
-protocol FriendsGardenStore {
+protocol FriendsGardenStore: AnyObject {
   func fetchBy(_ id: ShareGardenScene.FriendsGarden.ID) -> ShareGardenScene.FriendsGarden?
 }
