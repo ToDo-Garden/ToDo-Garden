@@ -30,7 +30,7 @@ public final class TermsAgreementView: UIView {
   // swiftlint:disable function_body_length
   public init() {
     self.agreeToAllRow = TermsAgreementViewRow(
-      configuration: TermsAgreementViewRow.Configuration.headRow(
+      configuration: TermsAgreementViewRow.Configuration.parentRow(
         title: Constant.TermsAgreementView.StringLiteral.agreeAll
       )
     )
@@ -100,8 +100,8 @@ extension TermsAgreementView {
     self.backgroundColor = .white
     self.setupCornerRadius()
     self.setupTitle()
-    self.setupHeadRow()
-    self.setupBodyRowsInStackView()
+    self.setupParentRowRow()
+    self.setupChildRowsInStackView()
     self.setupDoneButton()
     self.setupCheckBoxCondition()
   }
@@ -132,7 +132,7 @@ extension TermsAgreementView {
     ])
   }
   
-  private func setupHeadRow() {
+  private func setupParentRowRow() {
     self.addSubview(self.agreeToAllRow)
     self.agreeToAllRow.usingAutolayout()
     NSLayoutConstraint.activate([
@@ -147,7 +147,7 @@ extension TermsAgreementView {
     ])
   }
   
-  private func setupBodyRowsInStackView() {
+  private func setupChildRowsInStackView() {
     let arrangedRows = [
       self.termsAndPoliciesAgreementRow,
       self.privacyPolicyRow,

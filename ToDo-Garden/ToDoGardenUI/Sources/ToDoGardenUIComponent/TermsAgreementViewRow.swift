@@ -29,12 +29,12 @@ final class TermsAgreementViewRow: UIView {
   
   // MARK: - Configuration
   enum Configuration {
-    case headRow(title: String)
+    case parentRow(title: String)
     case childRow(title: String)
     
     var font: UIFont {
       switch self {
-      case .headRow:
+      case .parentRow:
         return UIFont.pretendardHeadSemiBold
       case .childRow:
         return UIFont.pretendardBodyMedium
@@ -43,14 +43,14 @@ final class TermsAgreementViewRow: UIView {
     
     var title: String {
       switch self {
-      case .headRow(let title), .childRow(let title):
+      case .parentRow(let title), .childRow(let title):
         return title
       }
     }
     
     var chevronButtonIsHidden: Bool {
       switch self {
-      case .headRow:
+      case .parentRow:
         return true
       case .childRow:
         return false
@@ -179,7 +179,7 @@ final class TermsAgreementViewRow: UIView {
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  let view1 = TermsAgreementViewRow(configuration: .headRow(title: "제목"))
+  let view1 = TermsAgreementViewRow(configuration: .parentRow(title: "제목"))
   let view2 = TermsAgreementViewRow(configuration: .childRow(title: "111111"))
   let view3 = TermsAgreementViewRow(configuration: .childRow(title: "222222"))
   
