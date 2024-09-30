@@ -37,9 +37,6 @@ extension Constant.TermsAgreementView.Rows {
 
 extension Constant.TermsAgreementView.DoneButton {
   public enum Layout {
-    public static let cornerRadius: CGFloat = 18.66
     public static let bottomMargin: CGFloat = -21.0
-    public static let width: CGFloat = 230.0
-    public static let height: CGFloat = 37.0
   }
 }

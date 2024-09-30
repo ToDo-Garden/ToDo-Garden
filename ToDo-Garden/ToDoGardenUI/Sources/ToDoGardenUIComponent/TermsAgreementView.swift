@@ -51,7 +51,7 @@ public final class TermsAgreementView: UIView {
     )
     self.doneButton = ToDoGardenBoxButton(
       title: Constant.TermsAgreementView.StringLiteral.done,
-      buttonType: ToDoGardenBoxButton.Configuration.tertiaryRoundRectButton
+      buttonType: ToDoGardenBoxButton.Configuration.smallRoundRectButton
     )
     super.init(frame: CGRect.zero)
     self.setupViews()
@@ -174,12 +174,9 @@ extension TermsAgreementView {
     self.doneButton.disable()
     self.doneButton.usingAutolayout()
     
-    self.doneButton.layer.cornerRadius = constant.cornerRadius
     NSLayoutConstraint.activate([
       self.doneButton.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-      self.doneButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: constant.bottomMargin),
-      self.doneButton.widthAnchor.constraint(equalToConstant: constant.width),
-      self.doneButton.heightAnchor.constraint(equalToConstant: constant.height)
+      self.doneButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: constant.bottomMargin)
     ])
   }
 }
