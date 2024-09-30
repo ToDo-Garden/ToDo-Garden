@@ -14,6 +14,7 @@ protocol ShareGardenSceneDataStore {
 }
 
 protocol ShareGardenSceneBusinessLogic {
+  func requestFriendsGardenList()
   func cancelEntireTask()
 }
 
@@ -25,6 +26,7 @@ final class ShareGardenSceneInteractor: ShareGardenSceneDataStore {
   private var tasks: [TaskKey: Task<Void, Never>] = [:]
 
   enum TaskKey {
+    case requestFriendsGardenList
     case observeFriendsGardenStoreStream
   }
 
@@ -35,9 +37,24 @@ final class ShareGardenSceneInteractor: ShareGardenSceneDataStore {
   }
 }
 
-// MARK: - Request to worker
+// MARK: - Conform ShareGardenSceneBusinessLogic protocol
 
 extension ShareGardenSceneInteractor: ShareGardenSceneBusinessLogic {
+  func requestFriendsGardenList() {
+    self.tasks[TaskKey.requestFriendsGardenList ] = Task { [weak self] in
+      guard let self else { return }
+      defer { self.tasks[TaskKey.requestFriendsGardenList] = nil }
+      do {
+        // TODO: - worker에 FriendsGardenList 비동기 요청
+        // let friendsGardenList = try await self.shareGardenSceneWorker.requestFriendsGardenList()
+        if Task.isCancelled { return }
+        // TODO: - friends Garden data store 업데이트
+        // self.friendsGardenStore.update(to: friendsGardenList)
+      } catch {
+        // TODO: - error handling (error view 표시 예정)
+      }
+    }
+  }
 
   func cancelEntireTask() {
     self.tasks.keys.forEach { self.cancel(to: $0) }
