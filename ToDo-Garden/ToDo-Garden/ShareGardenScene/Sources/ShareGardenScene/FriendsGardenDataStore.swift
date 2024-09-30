@@ -11,6 +11,11 @@ import ShareGardenSceneEntity
 
 @MainActor
 final class FriendsGardenDataStore {
+  private var friendsGardens: [ShareGardenScene.FriendsGarden] {
+    didSet {
+      self.continuation?.yield(self.friendsGardens)
+    }
+  }
 
   private var continuation: AsyncStream<[ShareGardenScene.FriendsGarden]>.Continuation?
   lazy var stream: AsyncStream<[ShareGardenScene.FriendsGarden]> = {
@@ -22,6 +27,7 @@ final class FriendsGardenDataStore {
   }()
 
   nonisolated init() {
+    self.friendsGardens = []
   }
 
   deinit {
