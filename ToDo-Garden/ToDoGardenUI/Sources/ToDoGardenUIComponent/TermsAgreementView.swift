@@ -28,7 +28,6 @@ public final class TermsAgreementView: UIView {
       title: Constant.TermsAgreementView.StringLiteral.done,
       buttonType: ToDoGardenBoxButton.Configuration.tertiaryRoundRectButton
     )
-    
     super.init(frame: CGRect.zero)
     self.setupViews()
   }
@@ -63,7 +62,6 @@ public final class TermsAgreementView: UIView {
 
 // MARK: - UI Setup
 extension TermsAgreementView {
-  
   private func setupViews() {
     self.backgroundColor = .white
     self.setupCornerRadius()
