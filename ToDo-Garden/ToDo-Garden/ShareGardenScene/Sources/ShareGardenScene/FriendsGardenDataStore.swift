@@ -13,25 +13,21 @@ import ShareGardenSceneEntity
 final class FriendsGardenDataStore {
   private var friendsGardens: [ShareGardenScene.FriendsGarden] {
     didSet {
-      self.continuation?.yield(self.friendsGardens)
+      self.continuation.yield(self.friendsGardens)
     }
   }
-
-  private var continuation: AsyncStream<[ShareGardenScene.FriendsGarden]>.Continuation?
-  lazy var stream: AsyncStream<[ShareGardenScene.FriendsGarden]> = {
-    return AsyncStream(
-      bufferingPolicy: AsyncStream.Continuation.BufferingPolicy.bufferingNewest(1)
-    ) { [weak self] continuation in
-      self?.continuation = continuation
-    }
-  }()
+  
+  let (stream, continuation) = AsyncStream.makeStream(
+    of: [ShareGardenScene.FriendsGarden].self,
+    bufferingPolicy: AsyncStream.Continuation.BufferingPolicy.bufferingNewest(1)
+  )
 
   nonisolated init() {
     self.friendsGardens = []
   }
 
   deinit {
-    self.continuation?.finish()
+    self.continuation.finish()
   }
 
   func append(_ newFriendsGarden: ShareGardenScene.FriendsGarden) {
