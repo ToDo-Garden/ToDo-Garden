@@ -80,10 +80,7 @@ extension ShareGardenSceneInteractor: FriendsGardenStore {
       do {
         // TODO: - worker에 삭제 요청
         // try await self.shareGardenSceneWorker.delete(by: id)
-        if Task.isCancelled {
-          self.friendsGardenDataStore.update(to: rollback)
-          return
-        }
+        try Task.checkCancellation()
       } catch {
         self.friendsGardenDataStore.update(to: rollback)
       }
