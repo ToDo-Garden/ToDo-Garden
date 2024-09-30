@@ -10,6 +10,4 @@ import Foundation
 import EditUserNameSceneAPI
 
 struct EditUserNameSceneWorker: EditUserNameSceneWorkable {
-  func doSomeWork() {
-  }
 }

@@ -15,7 +15,6 @@ protocol EditUserNameSceneDataStore {
 }
 
 protocol EditUserNameSceneBusinessLogic {
-  func doSomething(request: EditUserNameScene.Something.Request)
 }
 
 class EditUserNameSceneInteractor: EditUserNameSceneDataStore {
@@ -30,11 +29,4 @@ class EditUserNameSceneInteractor: EditUserNameSceneDataStore {
 
 // MARK: - Request to worker
 
-extension EditUserNameSceneInteractor: EditUserNameSceneBusinessLogic {
-  func doSomething(request: EditUserNameScene.Something.Request) {
-    self.editUserNameWorker.doSomeWork()
-    
-    let response = EditUserNameScene.Something.Response()
-    self.presenter?.presentSomething(response: response)
-  }
-}
+extension EditUserNameSceneInteractor: EditUserNameSceneBusinessLogic {}

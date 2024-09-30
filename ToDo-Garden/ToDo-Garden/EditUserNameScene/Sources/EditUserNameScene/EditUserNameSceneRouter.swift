@@ -10,7 +10,6 @@ import Foundation
 import EditUserNameSceneAPI
 
 protocol EditUserNameSceneRoutingLogic {
-  func routeToSomewhere()
 }
 
 protocol EditUserNameSceneDataPassing {
@@ -25,8 +24,6 @@ class EditUserNameSceneRouter: EditUserNameSceneDataPassing {
 // MARK: - Routing
 
 extension EditUserNameSceneRouter: EditUserNameSceneRoutingLogic {
-  func routeToSomewhere() {
-  }
 }
 
 // MARK: - Declare Payload for scene

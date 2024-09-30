@@ -14,7 +14,6 @@ import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 protocol EditUserNameSceneDisplayLogic: AnyObject {
-  func displaySomething(viewModel: EditUserNameScene.Something.ViewModel)
 }
 
 final class EditUserNameSceneViewController: UIViewController, EditUserNameSceneViewControllable {
@@ -46,25 +45,17 @@ final class EditUserNameSceneViewController: UIViewController, EditUserNameScene
   override func viewDidLoad() {
     super.viewDidLoad()
     self.setupUI()
-    self.doSomething()
   }
 }
 
 // MARK: - Confirm display logic protocol
 
 extension EditUserNameSceneViewController: EditUserNameSceneDisplayLogic {
-  func displaySomething(viewModel: EditUserNameScene.Something.ViewModel) {
-    // self.nameTextField.text = viewModel.name
-  }
 }
 
 // MARK: - Request to interactor
 
 extension EditUserNameSceneViewController {
-  func doSomething() {
-    let request = EditUserNameScene.Something.Request()
-    self.interactor?.doSomething(request: request)
-  }
 }
 
 // MARK: - Set up UI
