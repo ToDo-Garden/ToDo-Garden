@@ -20,6 +20,12 @@ final class ShareGardenSceneInteractor: ShareGardenSceneDataStore {
   var presenter: ShareGardenScenePresentationLogic?
   private let shareGardenSceneWorker: ShareGardenSceneWorkable
   
+
+  private var tasks: [TaskKey: Task<Void, Never>] = [:]
+
+  enum TaskKey {
+  }
+
   init(shareGardenSceneWorker: ShareGardenSceneWorkable) {
     self.shareGardenSceneWorker = shareGardenSceneWorker
   }
