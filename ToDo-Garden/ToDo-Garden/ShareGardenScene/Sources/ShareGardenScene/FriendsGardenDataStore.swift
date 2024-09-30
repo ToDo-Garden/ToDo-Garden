@@ -33,4 +33,26 @@ final class FriendsGardenDataStore {
   deinit {
     self.continuation?.finish()
   }
+
+  func append(_ newFriendsGarden: ShareGardenScene.FriendsGarden) {
+    self.friendsGardens.append(newFriendsGarden)
+  }
+
+  func fetch(by id: ShareGardenScene.FriendsGarden.ID) -> ShareGardenScene.FriendsGarden? {
+    return self.friendsGardens.first { $0.id == id }
+  }
+
+  func fetchAll() -> [ShareGardenScene.FriendsGarden] {
+    return self.friendsGardens
+  }
+
+  func update(to friendsGardens: [ShareGardenScene.FriendsGarden]) {
+    self.friendsGardens = friendsGardens
+  }
+
+  func delete(by id: ShareGardenScene.FriendsGarden.ID) {
+    if let index = self.friendsGardens.firstIndex(where: { $0.id == id }) {
+      self.friendsGardens.remove(at: index)
+    }
+  }
 }
