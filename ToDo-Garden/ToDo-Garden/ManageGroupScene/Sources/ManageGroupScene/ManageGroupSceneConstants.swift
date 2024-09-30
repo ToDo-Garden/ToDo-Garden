@@ -17,7 +17,10 @@ enum Constant {
   }
   
   enum Layout {
-    
+    enum BarButton {
+      static let width: CGFloat = 30.0
+      static let height: CGFloat = 20.0
+    }
     enum Cell {
       static let height: CGFloat = 45.0
     }

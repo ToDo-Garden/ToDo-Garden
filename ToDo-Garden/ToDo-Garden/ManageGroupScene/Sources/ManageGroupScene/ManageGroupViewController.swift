@@ -124,8 +124,8 @@ extension ManageGroupViewController {
     
     NSLayoutConstraint.activate(
       [
-        self.rightBarButtonCustomView.widthAnchor.constraint(equalToConstant: 30.0),
-        self.rightBarButtonCustomView.heightAnchor.constraint(equalToConstant: 20.0)
+        self.rightBarButtonCustomView.widthAnchor.constraint(equalToConstant: Constant.Layout.BarButton.width),
+        self.rightBarButtonCustomView.heightAnchor.constraint(equalToConstant: Constant.Layout.BarButton.height)
       ]
     )
     self.rightBarButton = UIBarButtonItem(customView: self.rightBarButtonCustomView)
