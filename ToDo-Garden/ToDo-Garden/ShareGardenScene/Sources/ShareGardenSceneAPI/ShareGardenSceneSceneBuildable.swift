@@ -12,6 +12,7 @@ public protocol ShareGardenSceneScenePayloadable {
   // var name: String { get }
 }
 
+@MainActor
 public protocol ShareGardenSceneSceneBuildable {
   ///  VIP Cycle, 런타임 파라미터가 설정된 ViewController 인스턴스를 반환하는 함수입니다.
   /// - Parameter payload: 런타임에 전달받아야 하는 파라미터입니다.
