@@ -52,8 +52,19 @@ final class ShareGardenSceneViewController: UIViewController, ShareGardenSceneVi
     super.viewDidLoad()
     self.setup()
   }
+ 
+  override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    self.cleanUpViewResources()
+  }
   
-  // MARK: - View lifecycle
+  deinit {
+    // TODO: - Swift6.x `isolated deinit` 구현에 따라 바뀔 예정입니다.
+    // https://github.com/swiftlang/swift-evolution/blob/main/proposals/0371-isolated-synchronous-deinit.md
+    Task { @MainActor [weak self] in
+      self?.cleanUpViewResources()
+    }
+  }
 }
 
 // MARK: - Conform to display logic protocol
@@ -74,6 +85,10 @@ extension ShareGardenSceneViewController {
   private func updateViewContents() {
     self.friendsGardenView.startShimmeringAnimation()
     self.interactor?.requestFriendsGardenList()
+  }
+  
+  private func cleanUpViewResources() {
+    self.interactor?.cancelEntireTask()
   }
 }
 
