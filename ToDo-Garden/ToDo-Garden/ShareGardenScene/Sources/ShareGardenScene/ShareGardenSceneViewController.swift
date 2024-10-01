@@ -10,6 +10,7 @@ import UIKit
 import ShareGardenSceneAPI
 import ShareGardenSceneEntity
 
+@MainActor
 protocol ShareGardenSceneDisplayLogic: AnyObject {
 }
 

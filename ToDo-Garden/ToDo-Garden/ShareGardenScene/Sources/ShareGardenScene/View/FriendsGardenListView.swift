@@ -9,10 +9,6 @@ import UIKit
 
 import ShareGardenSceneEntity
 
-protocol FriendsGardenStore {
-  func fetchBy(_ id: ShareGardenScene.FriendsGarden.ID) -> ShareGardenScene.FriendsGarden?
-}
-
 extension ShareGardenSceneViewController.FriendsGardenView {
   final class FriendsGardenListView: UIView {
     var isEditing: Bool {
@@ -62,7 +58,7 @@ extension ShareGardenSceneViewController.FriendsGardenView {
     private static let layoutConstant = ShareGardenSceneViewController.Constant.Layout.FriendsGardenListView.self
     
     private var isGradientLayerAdded: Bool = false
-    private let friendsGardenStore: FriendsGardenStore
+    private weak var friendsGardenStore: FriendsGardenStore?
     
     init(friendsGardenStore: FriendsGardenStore) {
       self.friendsGardenStore = friendsGardenStore
@@ -108,7 +104,7 @@ extension ShareGardenSceneViewController.FriendsGardenView {
       }
       
       let firendsGardens: [ShareGardenScene.FriendsGarden] = identifiers.compactMap {
-        return self.friendsGardenStore.fetchBy($0)
+        return self.friendsGardenStore?.fetch(by: $0)
       }
       let sectionSnapshot = self.makeSectionSnapshot(for: firendsGardens)
       
