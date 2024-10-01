@@ -73,3 +73,39 @@ final class ManageGroupViewControllerForGuide: ManageGroupViewController {
     self.editModeTask = nil
   }
 }
+
+// MARK: - Regions with Offset
+extension ManageGroupViewControllerForGuide {
+  func getTableViewTransparentRegion() -> DimmingView.TransparentRegion {
+    let yOffset = self.calculateYOffset()
+    let rect = self.groupListTableView.rect(forSection: .zero)
+      .offsetBy(dx: 5.0, dy: yOffset)
+      .insetBy(dx: 0, dy: 25.0)
+    
+    return DimmingView.TransparentRegion(rect: rect, cornerRadius: 18.0)
+  }
+  
+  func getFooterViewTransparentRegion() -> DimmingView.TransparentRegion {
+    let yOffset = self.calculateYOffset()
+    let rect = self.footerView.frame(in: self.view).offsetBy(dx: 0.0, dy: yOffset)
+    return DimmingView.TransparentRegion(rect: rect, cornerRadius: 15.0)
+  }
+  
+  func getRightBarButtonTransparentRegion() -> DimmingView.TransparentRegion {
+    let navigationBarHeight = self.navigationController?.navigationBar.frame(in: self.view).height ?? 0
+    let yOffset = self.calculateYOffset() - navigationBarHeight
+    let rect = self.rightBarButton.customView?
+      .frame(in: self.view)
+      .offsetBy(dx: -16.5, dy: yOffset)
+      .insetBy(dx: -10, dy: -5)
+    
+    return DimmingView.TransparentRegion(rect: rect ?? CGRect.zero, cornerRadius: 10.0)
+  }
+  
+  private func calculateYOffset() -> CGFloat {
+    let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+    let statusBarHeight = scene?.statusBarManager?.statusBarFrame.height ?? 0
+    let navigationBarHeight = self.navigationController?.navigationBar.frame(in: self.view).height ?? 0
+    return statusBarHeight + navigationBarHeight
+  }
+}
