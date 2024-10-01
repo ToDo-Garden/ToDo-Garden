@@ -12,6 +12,7 @@ import ShareGardenSceneEntity
 
 @MainActor
 protocol ShareGardenSceneDisplayLogic: AnyObject {
+  func displayFriendsGardenList(_ viewModel: ShareGardenScene.RequestFriendsGardenList.ViewModel)
 }
 
 final class ShareGardenSceneViewController: UIViewController, ShareGardenSceneViewControllable {
@@ -52,6 +53,9 @@ final class ShareGardenSceneViewController: UIViewController, ShareGardenSceneVi
 // MARK: - Conform to display logic protocol
 
 extension ShareGardenSceneViewController: ShareGardenSceneDisplayLogic {
+  func displayFriendsGardenList(_ viewModel: ShareGardenScene.RequestFriendsGardenList.ViewModel) {
+    // TODO: - view update
+  }
 }
 
 // MARK: - Request to interactor
