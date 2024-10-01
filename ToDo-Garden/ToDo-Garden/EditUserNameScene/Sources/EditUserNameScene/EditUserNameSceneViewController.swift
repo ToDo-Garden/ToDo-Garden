@@ -46,6 +46,11 @@ final class EditUserNameSceneViewController: UIViewController, EditUserNameScene
     super.viewDidLoad()
     self.setupUI()
   }
+
+  override func viewIsAppearing(_ animated: Bool) {
+    super.viewIsAppearing(animated)
+    self.interactor?.setUserName()
+  }
 }
 
 // MARK: - Confirm display logic protocol

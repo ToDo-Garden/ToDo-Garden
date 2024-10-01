@@ -15,9 +15,10 @@ protocol EditUserNameSceneDataStore {
 }
 
 protocol EditUserNameSceneBusinessLogic {
+  func setUserName()
 }
 
-class EditUserNameSceneInteractor: EditUserNameSceneDataStore {
+final class EditUserNameSceneInteractor: EditUserNameSceneDataStore {
   var userName: String?
 
   var presenter: EditUserNameScenePresentationLogic?
@@ -31,4 +32,7 @@ class EditUserNameSceneInteractor: EditUserNameSceneDataStore {
 // MARK: - Request to worker
 
 extension EditUserNameSceneInteractor: EditUserNameSceneBusinessLogic {
+  func setUserName() {
+    self.presenter?.presentUserName(self.userName)
+  }
 }

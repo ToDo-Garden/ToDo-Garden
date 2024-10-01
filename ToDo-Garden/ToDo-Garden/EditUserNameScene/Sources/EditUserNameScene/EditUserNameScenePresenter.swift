@@ -10,6 +10,7 @@ import Foundation
 import EditUserNameSceneEntity
 
 protocol EditUserNameScenePresentationLogic {
+  func presentUserName(_ userName: String?)
 }
 
 class EditUserNameScenePresenter {
@@ -19,4 +20,5 @@ class EditUserNameScenePresenter {
 // MARK: - Request to ViewController
 
 extension EditUserNameScenePresenter: EditUserNameScenePresentationLogic {
+  func presentUserName(_ userName: String?) {}
 }
