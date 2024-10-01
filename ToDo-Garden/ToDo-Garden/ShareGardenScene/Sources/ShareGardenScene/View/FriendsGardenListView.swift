@@ -76,6 +76,7 @@ extension ShareGardenSceneViewController.FriendsGardenView {
     func startShimmeringAnimation(numberOfCells: Int) {
       self.isUserInteractionEnabled = false
       var snapshot = self.friendsGardenListDataSource.snapshot()
+      snapshot.deleteAllItems()
       
       if snapshot.sectionIdentifiers.contains(Section.main) == false {
         snapshot.appendSections([Section.main])
