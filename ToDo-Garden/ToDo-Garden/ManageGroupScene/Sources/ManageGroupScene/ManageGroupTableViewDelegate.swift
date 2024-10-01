@@ -10,10 +10,10 @@ import UIKit
 import ManageGroupSceneEntity
 import ToDoGardenUIComponent
 
-final class ManageGroupTableViewDelegate: NSObject {
+public final class ManageGroupTableViewDelegate: NSObject {
   
   // MARK: - Properties
-  var displayedGroups: [ManageGroup.ToDoGroup]
+  public var displayedGroups: [ManageGroup.ToDoGroup]
   var displayedGroupsBeforeEditing: [ManageGroup.ToDoGroup]
   private let footerView: UIView
   
@@ -55,19 +55,19 @@ final class ManageGroupTableViewDelegate: NSObject {
 
 // MARK: - UITableViewDataSource
 extension ManageGroupTableViewDelegate: UITableViewDataSource {
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+  public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return self.displayedGroups.count
   }
   
-  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+  public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return Constant.Layout.Cell.height
   }
   
-  func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+  public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
     return Constant.Layout.FooterView.height
   }
   
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+  public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     guard let cell = tableView.dequeueReusableCell(
       withIdentifier: ManageGroupTableViewCell.identifier,
       for: indexPath
@@ -99,7 +99,7 @@ extension ManageGroupTableViewDelegate: UITableViewDataSource {
 
 // MARK: - UITableViewDelegate
 extension ManageGroupTableViewDelegate: UITableViewDelegate {
-  func tableView(
+  public func tableView(
     _ tableView: UITableView,
     commit editingStyle: UITableViewCell.EditingStyle,
     forRowAt indexPath: IndexPath
@@ -114,30 +114,30 @@ extension ManageGroupTableViewDelegate: UITableViewDelegate {
     }
   }
   
-  func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+  public func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
     return tableView.isEditing
   }
   
-  func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+  public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
     return self.footerView
   }
 }
 
 // MARK: - UITableViewDragDelegate
 extension ManageGroupTableViewDelegate: UITableViewDragDelegate {
-  func tableView(_ tableView: UITableView, dragSessionWillBegin session: UIDragSession) {
+  public func tableView(_ tableView: UITableView, dragSessionWillBegin session: UIDragSession) {
     self.isReordering = true
   }
   
-  func tableView(_ tableView: UITableView, dragSessionDidEnd session: UIDragSession) {
+  public func tableView(_ tableView: UITableView, dragSessionDidEnd session: UIDragSession) {
     self.isReordering = false
   }
   
-  func tableView(_ tableView: UITableView, dragSessionAllowsMoveOperation session: UIDragSession) -> Bool {
+  public func tableView(_ tableView: UITableView, dragSessionAllowsMoveOperation session: UIDragSession) -> Bool {
     return tableView.isEditing
   }
   
-  func tableView(
+  public func tableView(
     _ tableView: UITableView,
     itemsForBeginning session: UIDragSession,
     at indexPath: IndexPath
@@ -150,7 +150,7 @@ extension ManageGroupTableViewDelegate: UITableViewDragDelegate {
 
 // MARK: - UITableViewDropDelegate
 extension ManageGroupTableViewDelegate: UITableViewDropDelegate {
-  func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
+  public func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
     guard let destinationIndexPath = coordinator.destinationIndexPath else { return }
     
     if coordinator.proposal.operation == UIDropOperation.move {
@@ -162,7 +162,7 @@ extension ManageGroupTableViewDelegate: UITableViewDropDelegate {
     }
   }
   
-  func tableView(
+  public func tableView(
     _ tableView: UITableView,
     dropSessionDidUpdate session: UIDropSession,
     withDestinationIndexPath destinationIndexPath: IndexPath?
