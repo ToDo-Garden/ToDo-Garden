@@ -72,17 +72,14 @@ extension ShareGardenSceneViewController {
     
     // MARK: - UI Properties
     
-    /// 링크의 issue가 close되면, 구현이 바뀌게 될 예정입니다.
-    ///
-    /// [이슈 링크](https://github.com/ToDo-Garden/ToDo-Garden/issues/439)
     private let profileInfoView: Styled.Row = {
       let profileInfoViewConfiguration = Styled.Row.Configuration.self
       let profileInfoView = Styled.Row(
         configuration: profileInfoViewConfiguration.profile(
           profileInfoViewConfiguration.ProfileModel(
             style: profileInfoViewConfiguration.ProfileModel.Style.shareRow,
-            title: "이인우",
-            description: "연속 19일 집중!"
+            title: "",
+            description: ""
           )
         )
       )
@@ -137,6 +134,7 @@ extension ShareGardenSceneViewController.FriendsGardenProfileInfoView {
     
     self.isExpanded = state.isExpanded
     self.isEditing = state.isEditing
+    self.updateProfileInfoView(using: configuration.friendsGarden)
   }
   
   private func setup() {
@@ -152,6 +150,17 @@ extension ShareGardenSceneViewController.FriendsGardenProfileInfoView {
   
   private func addSubviews() {
     self.addSubview(self.profileInfoView)
+  }
+  
+  private func updateProfileInfoView(using friendsGarden: ShareGardenScene.FriendsGarden) {
+    let configuration = Styled.Row.Configuration.self
+    self.profileInfoView.configuration = configuration.profile(
+      configuration.ProfileModel.init(
+        style: configuration.ProfileModel.Style.shareRow,
+        title: friendsGarden.nickname,
+        description: "연속 \(friendsGarden.focusStreakDays)일 집중"
+      )
+    )
   }
 }
 
