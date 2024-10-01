@@ -72,6 +72,7 @@ extension ShareGardenSceneViewController: ShareGardenSceneDisplayLogic {
 
 extension ShareGardenSceneViewController {
   private func updateViewContents() {
+    self.friendsGardenView.startShimmeringAnimation()
     self.interactor?.requestFriendsGardenList()
   }
 }
