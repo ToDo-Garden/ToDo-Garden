@@ -192,15 +192,20 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
     guard let indexPath = indexPath,
       let cell = self.friendListView.cellForItem(at: indexPath)?.contentView as? ShareGardenSceneViewController
       .FriendsGardenProfileInfoView,
-      cell.isExpanded == false
+      cell.isExpanded == false,
+      let item = self.friendsGardenListDataSource.itemIdentifier(for: indexPath),
+      case let Item.friendsProfile(configuration) = item
     else {
       return nil
     }
+    
+    let identifier = configuration.id
         
     let deleteAction = UIContextualAction(
       style: UIContextualAction.Style.destructive,
       title: nil
     ) { _, _, _ in
+      self.friendsGardenStore?.delete(by: identifier)
     }
     deleteAction.accessibilityLabel = "Delete"
     deleteAction.image = UIImage(systemName: "trash")
