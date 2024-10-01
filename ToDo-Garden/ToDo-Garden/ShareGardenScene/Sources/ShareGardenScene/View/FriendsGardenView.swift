@@ -71,7 +71,7 @@ extension ShareGardenSceneViewController {
     }
     
     func displayFriendsGardenList(_ identifiers: [UUID]) {
-      
+      self.friendsGardenListView.displayFriendsGardenList(identifiers)
     }
     
     func startShimmeringAnimation() {
