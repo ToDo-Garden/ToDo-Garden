@@ -12,6 +12,7 @@ import ShareGardenSceneEntity
 @MainActor
 protocol ShareGardenScenePresentationLogic {
   func presentFriendsGardens(response: ShareGardenScene.RequestFriendsGardenList.Response)
+  func stopShimmeringFriendsGardenList()
 }
 
 final class ShareGardenScenePresenter {
@@ -27,5 +28,9 @@ extension ShareGardenScenePresenter: ShareGardenScenePresentationLogic {
     self.viewController?.displayFriendsGardenList(
       ShareGardenScene.RequestFriendsGardenList.ViewModel(identifiers: identifiers)
     )
+  }
+  
+  func stopShimmeringFriendsGardenList() {
+    self.viewController?.stopShimmeringFriendsGardenList()
   }
 }
