@@ -21,7 +21,31 @@ extension BaseContentsBuilder {
       []
     },
     groupManagement: {
-      []
+      let viewControllers = [
+        ManageGroupViewControllerForGuide(),
+        ManageGroupViewControllerForGuide(),
+        ManageGroupViewControllerForGuide(isEditMode: true)
+      ]
+      
+      let navigationControllers = viewControllers.map { UINavigationController(rootViewController: $0) }
+      
+      return [
+        BaseContent(
+          viewController: navigationControllers[0], 
+          transparentRegionsTask: [viewControllers[0].getTableViewTransparentRegion]
+        ),
+        BaseContent(
+          viewController: navigationControllers[1], 
+          transparentRegionsTask: [viewControllers[1].getFooterViewTransparentRegion]
+        ),
+        BaseContent(
+          viewController: navigationControllers[2], 
+          transparentRegionsTask: [
+            viewControllers[2].getTableViewTransparentRegion,
+            viewControllers[1].getRightBarButtonTransparentRegion
+          ]
+        )
+      ]
     },
     todoEdit: {
       []
