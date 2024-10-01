@@ -11,4 +11,5 @@ import ShareGardenSceneEntity
 
 public protocol ShareGardenSceneWorkable {
   func requestFriendsGardenList() async throws -> [ShareGardenScene.FriendsGarden]
+  func delete(by id: ShareGardenScene.FriendsGarden.ID) async throws
 }
