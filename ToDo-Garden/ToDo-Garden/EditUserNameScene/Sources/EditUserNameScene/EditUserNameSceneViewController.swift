@@ -1,6 +1,6 @@
 //
 //  EditUserNameSceneViewController.swift
-//  
+//
 //
 //  Created by Wood on 9/23/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
@@ -22,9 +22,9 @@ final class EditUserNameSceneViewController: UIViewController, EditUserNameScene
 
   var interactor: EditUserNameSceneBusinessLogic?
   var router: (EditUserNameSceneRoutingLogic & EditUserNameSceneDataPassing)?
-  
+
   // MARK: - Object lifecycle
-  
+
   init() {
     self.editUserNameButton = UIBarButtonItem()
     let constant = ToDoGardenUIConstant.Constant.self
@@ -34,14 +34,14 @@ final class EditUserNameSceneViewController: UIViewController, EditUserNameScene
     )
     super.init(nibName: nil, bundle: nil)
   }
-  
+
   @available(*, unavailable)
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   // MARK: - View lifecycle
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
     self.setupUI()

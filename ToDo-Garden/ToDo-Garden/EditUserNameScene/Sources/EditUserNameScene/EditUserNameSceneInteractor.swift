@@ -1,6 +1,6 @@
 //
 //  EditUserNameSceneInteractor.swift
-//  
+//
 //
 //  Created by Wood on 9/23/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
@@ -11,14 +11,15 @@ import EditUserNameSceneAPI
 import EditUserNameSceneEntity
 
 protocol EditUserNameSceneDataStore {
-  // var name: String { get set }
+  var userName: String? { get }
 }
 
 protocol EditUserNameSceneBusinessLogic {
 }
 
 class EditUserNameSceneInteractor: EditUserNameSceneDataStore {
-  // var name: String = ""
+  var userName: String?
+
   var presenter: EditUserNameScenePresentationLogic?
   private let editUserNameWorker: EditUserNameSceneWorkable
 
@@ -29,4 +30,5 @@ class EditUserNameSceneInteractor: EditUserNameSceneDataStore {
 
 // MARK: - Request to worker
 
-extension EditUserNameSceneInteractor: EditUserNameSceneBusinessLogic {}
+extension EditUserNameSceneInteractor: EditUserNameSceneBusinessLogic {
+}
