@@ -70,8 +70,8 @@ extension ShareGardenSceneViewController {
       }
     }
     
-    func append(_ identifiers: [ShareGardenScene.FriendsGarden.ID]) {
-      self.friendsGardenListView.append(identifiers)
+    func displayFriendsGardenList(_ identifiers: [UUID]) {
+      
     }
     
     func startShimmeringAnimation() {
