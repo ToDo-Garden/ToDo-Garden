@@ -50,6 +50,8 @@ extension ShareGardenSceneInteractor: ShareGardenSceneBusinessLogic {
         // TODO: - worker에 FriendsGardenList 비동기 요청
         // let friendsGardenList = try await self.shareGardenSceneWorker.requestFriendsGardenList()
         if Task.isCancelled { return }
+        
+        self.presenter?.stopShimmeringFriendsGardenList()
         // TODO: - friends Garden data store 업데이트
         // self.friendsGardenStore.update(to: friendsGardenList)
       } catch {
@@ -92,11 +94,10 @@ extension ShareGardenSceneInteractor {
       guard let stream = self?.friendsGardenDataStore.stream
       else { return }
       defer { self?.tasks[TaskKey.observeFriendsGardenStoreStream] = nil }
-
+      
       for await friendsGardens in stream {
-        // stream에서 받은 값을 기반으로 뷰 업데이트
-        // let response = ShareGardenScene.RequestFriendsGardenList.Response(friendsGardenList: friendsGardens)
-        // await self?.presenter?.presentFriendsGardens(response: response)
+        let response = ShareGardenScene.RequestFriendsGardenList.Response(friendsGardenList: friendsGardens)
+        self?.presenter?.presentFriendsGardens(response: response)
       }
     }
   }

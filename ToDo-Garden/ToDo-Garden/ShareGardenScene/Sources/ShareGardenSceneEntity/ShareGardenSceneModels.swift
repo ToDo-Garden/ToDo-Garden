@@ -10,8 +10,6 @@ import Foundation
 import ToDoGardenUIComponent
 
 public enum ShareGardenScene {
-  // MARK: Use cases
-  
   public struct FriendsGarden: Identifiable, Sendable {
     public let id: UUID
     public let nickname: String
@@ -28,6 +26,26 @@ public enum ShareGardenScene {
       self.nickname = nickname
       self.focusStreakDays = focusStreakDays
       self.pomodoroRecords = pomodoroRecords
+    }
+  }
+  
+  // MARK: Use cases
+  
+  public enum RequestFriendsGardenList {
+    public struct Response: Sendable {
+      public let friendsGardenList: [FriendsGarden]
+      
+      public init(friendsGardenList: [FriendsGarden]) {
+        self.friendsGardenList = friendsGardenList
+      }
+    }
+    
+    public struct ViewModel: Sendable {
+      public let identifiers: [UUID]
+      
+      public init(identifiers: [UUID]) {
+        self.identifiers = identifiers
+      }
     }
   }
 }

@@ -12,6 +12,8 @@ import ShareGardenSceneEntity
 
 @MainActor
 protocol ShareGardenSceneDisplayLogic: AnyObject {
+  func displayFriendsGardenList(_ viewModel: ShareGardenScene.RequestFriendsGardenList.ViewModel)
+  func stopShimmeringFriendsGardenList()
 }
 
 final class ShareGardenSceneViewController: UIViewController, ShareGardenSceneViewControllable {
@@ -41,22 +43,53 @@ final class ShareGardenSceneViewController: UIViewController, ShareGardenSceneVi
  
   // MARK: - View life cycle
 
+  override func viewIsAppearing(_ animated: Bool) {
+    super.viewIsAppearing(animated)
+    self.updateViewContents()
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     self.setup()
   }
+ 
+  override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    self.cleanUpViewResources()
+  }
   
-  // MARK: - View lifecycle
+  deinit {
+    // TODO: - Swift6.x `isolated deinit` 구현에 따라 바뀔 예정입니다.
+    // https://github.com/swiftlang/swift-evolution/blob/main/proposals/0371-isolated-synchronous-deinit.md
+    Task { @MainActor [weak self] in
+      self?.cleanUpViewResources()
+    }
+  }
 }
 
 // MARK: - Conform to display logic protocol
 
 extension ShareGardenSceneViewController: ShareGardenSceneDisplayLogic {
+  func displayFriendsGardenList(_ viewModel: ShareGardenScene.RequestFriendsGardenList.ViewModel) {
+    // TODO: - view update
+  }
+  
+  func stopShimmeringFriendsGardenList() {
+    // TODO: - view update
+  }
 }
 
 // MARK: - Request to interactor
 
 extension ShareGardenSceneViewController {
+  private func updateViewContents() {
+    self.friendsGardenView.startShimmeringAnimation()
+    self.interactor?.requestFriendsGardenList()
+  }
+  
+  private func cleanUpViewResources() {
+    self.interactor?.cancelEntireTask()
+  }
 }
 
 // MARK: - Setup
