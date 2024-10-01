@@ -14,6 +14,8 @@ import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 protocol EditUserNameSceneDisplayLogic: AnyObject {
+  func displayUserName(_ userName: String)
+  func displayEmptyUserName()
 }
 
 final class EditUserNameSceneViewController: UIViewController, EditUserNameSceneViewControllable {
@@ -56,6 +58,13 @@ final class EditUserNameSceneViewController: UIViewController, EditUserNameScene
 // MARK: - Confirm display logic protocol
 
 extension EditUserNameSceneViewController: EditUserNameSceneDisplayLogic {
+  func displayUserName(_ userName: String) {
+    
+  }
+  
+  func displayEmptyUserName() {
+
+  }
 }
 
 // MARK: - Request to interactor

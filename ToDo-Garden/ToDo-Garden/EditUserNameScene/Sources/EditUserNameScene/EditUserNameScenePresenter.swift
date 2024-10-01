@@ -20,5 +20,11 @@ class EditUserNameScenePresenter {
 // MARK: - Request to ViewController
 
 extension EditUserNameScenePresenter: EditUserNameScenePresentationLogic {
-  func presentUserName(_ userName: String?) {}
+  func presentUserName(_ userName: String?) {
+    if let userName {
+      self.viewController?.displayUserName(userName)
+    } else {
+      self.viewController?.displayEmptyUserName()
+    }
+  }
 }
