@@ -7,5 +7,8 @@
 
 import Foundation
 
+import ShareGardenSceneEntity
+
 public protocol ShareGardenSceneWorkable {
+  func requestFriendsGardenList() async throws -> [ShareGardenScene.FriendsGarden]
 }
