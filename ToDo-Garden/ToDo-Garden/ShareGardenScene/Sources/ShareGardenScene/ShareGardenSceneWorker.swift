@@ -8,6 +8,15 @@
 import Foundation
 
 import ShareGardenSceneAPI
+import ShareGardenSceneEntity
 
+// TODO: - ShareGardenSceneWorker 빈 구현 대체
 struct ShareGardenSceneWorker: ShareGardenSceneWorkable {
+  func requestFriendsGardenList() async throws -> [ShareGardenScene.FriendsGarden] {
+    return []
+  }
+  
+  func delete(by id: ShareGardenScene.FriendsGarden.ID) async throws {
+    return
+  }
 }
