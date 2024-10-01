@@ -58,6 +58,18 @@ final class ShareGardenSceneWorkerStub: ShareGardenSceneWorkable {
 
     return friendsGardens
   }
+  
+  var isThrowErrorForDelete: Bool = false
+
+  func delete(by id: ShareGardenScene.FriendsGarden.ID) async throws {
+    defer { self.isThrowErrorForDelete.toggle() }
+
+    try await Task.sleep(nanoseconds: 1_000_000_000 )
+
+    if self.isThrowErrorForDelete {
+      throw NSError(domain: "", code: 99999)
+    }
+  }
 }
 #endif
 
