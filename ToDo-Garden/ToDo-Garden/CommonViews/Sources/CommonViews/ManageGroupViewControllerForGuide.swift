@@ -8,28 +8,28 @@ import UIKit
 
 import ManageGroupScene
 
-public final class ManageGroupViewControllerForGuide: ManageGroupViewController {
+final class ManageGroupViewControllerForGuide: ManageGroupViewController {
   private let isEditMode: Bool
   private var editModeTask: Task<Void, Never>?
   
-  public init(isEditMode: Bool = false) {
+  init(isEditMode: Bool = false) {
     self.isEditMode = isEditMode
     super.init()
   }
   
-  public override func viewDidLoad() {
+  override func viewDidLoad() {
     super.viewDidLoad()
     self.setupUI()
   }
   
-  override public func viewDidAppear(_ animated: Bool) {
+  override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     if self.isEditMode {
       self.startEditModeTask()
     }
   }
   
-  override public func viewDidDisappear(_ animated: Bool) {
+  override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
     self.stopEditModeTask()
   }
