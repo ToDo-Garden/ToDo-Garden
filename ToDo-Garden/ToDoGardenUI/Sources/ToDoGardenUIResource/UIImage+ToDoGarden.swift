@@ -98,4 +98,12 @@ extension UIImage {
   public static let appleLogo = UIImage(
     resource: .appleLogo
   )
+  
+  public static let circledCheckMarkFill = UIImage(
+    systemName: "checkmark.circle.fill"
+  )
+  
+  public static let circledCheckMarkEmpty = UIImage(
+    systemName: "circle"
+  )
 }

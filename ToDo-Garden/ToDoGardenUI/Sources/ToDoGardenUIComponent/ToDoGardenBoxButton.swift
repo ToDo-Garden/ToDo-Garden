@@ -48,19 +48,24 @@ public final class ToDoGardenBoxButton: UIButton {
 // MARK: - private functions
 
 extension ToDoGardenBoxButton {
-  private func setup(title: String, configuration: Configuration) {
+  private func setup(title: String, configuration: ToDoGardenBoxButton.Configuration) {
     if configuration.dataStore.mode == Constant.ToDoGardenBoxButton.Mode.roundRectangle {
       self.setupCornerRadius(with: configuration.dataStore.size.height / 2)
     }
     
     self.updateBackgroundColor()
     self.setTitle(title, for: UIControl.State.normal)
-    self.setupTitleFont()
+    self.setupTitleFont(configuration: configuration)
     self.setupActionToChangeAlpha()
   }
   
-  private func setupTitleFont() {
-    self.titleLabel?.font = UIFont.pretendardHeadBold
+  private func setupTitleFont(configuration: ToDoGardenBoxButton.Configuration) {
+    switch configuration {
+    case .smallRoundRectButton:
+      self.titleLabel?.font = UIFont.pretendardBodySemiBold15
+    default:
+      self.titleLabel?.font = UIFont.pretendardHeadBold
+    }
   }
   
   private func setupCornerRadius(with value: CGFloat) {
@@ -108,7 +113,11 @@ extension ToDoGardenBoxButton {
 }
 
 extension ToDoGardenBoxButton {
-  public struct Configuration {
+  public struct Configuration: Equatable {
+    public static func == (lhs: ToDoGardenBoxButton.Configuration, rhs: ToDoGardenBoxButton.Configuration) -> Bool {
+      return lhs.dataStore == rhs.dataStore
+    }
+    
     let dataStore: Constant.ToDoGardenBoxButton.DataStore
     
     init(dataStore: Constant.ToDoGardenBoxButton.DataStore) {
@@ -126,6 +135,9 @@ extension ToDoGardenBoxButton.Configuration {
   
   public static let tertiaryRoundRectButton: Self = 
   ToDoGardenBoxButton.Configuration.init(dataStore: Constant.ToDoGardenBoxButton.tertiaryRoundRectButton)
+  
+  public static let smallRoundRectButton: Self =
+  ToDoGardenBoxButton.Configuration.init(dataStore: Constant.ToDoGardenBoxButton.smallRoundRectButton)
   
   public static let rectangleButton: Self = 
   ToDoGardenBoxButton.Configuration.init(dataStore: Constant.ToDoGardenBoxButton.rectangleButton)
