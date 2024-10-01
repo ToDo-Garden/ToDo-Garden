@@ -43,6 +43,11 @@ final class ShareGardenSceneViewController: UIViewController, ShareGardenSceneVi
  
   // MARK: - View life cycle
 
+  override func viewIsAppearing(_ animated: Bool) {
+    super.viewIsAppearing(animated)
+    self.updateViewContents()
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     self.setup()
@@ -66,6 +71,9 @@ extension ShareGardenSceneViewController: ShareGardenSceneDisplayLogic {
 // MARK: - Request to interactor
 
 extension ShareGardenSceneViewController {
+  private func updateViewContents() {
+    self.interactor?.requestFriendsGardenList()
+  }
 }
 
 // MARK: - Setup
