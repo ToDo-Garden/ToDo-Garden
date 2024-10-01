@@ -75,7 +75,7 @@ extension ShareGardenSceneViewController: ShareGardenSceneDisplayLogic {
   }
   
   func stopShimmeringFriendsGardenList() {
-    // TODO: - view update
+    self.friendsGardenView.stopShimmeringAnimation()
   }
 }
 
