@@ -97,17 +97,8 @@ extension ShareGardenSceneViewController.FriendsGardenView {
       self.friendsGardenListDataSource.apply(Snapshot())
     }
     
-    func append(_ identifiers: [ShareGardenScene.FriendsGarden.ID]) {
-      var snapshot = self.friendsGardenListDataSource.snapshot()
-      if snapshot.sectionIdentifiers.contains(Section.main) == false {
-        snapshot.appendSections([Section.main])
-      }
-      
-      let firendsGardens: [ShareGardenScene.FriendsGarden] = identifiers.compactMap {
-        return self.friendsGardenStore?.fetch(by: $0)
-      }
-      let sectionSnapshot = self.makeSectionSnapshot(for: firendsGardens)
-      
+    func displayFriendsGardenList(_ identifiers: [ShareGardenScene.FriendsGarden.ID]) {
+      let sectionSnapshot = self.makeSectionSnapshot(using: identifiers)
       self.friendsGardenListDataSource.apply(sectionSnapshot, to: Section.main)
     }
   }
@@ -115,19 +106,21 @@ extension ShareGardenSceneViewController.FriendsGardenView {
 
 extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView {
   private func makeSectionSnapshot(
-    for friendsGardens: [ShareGardenScene.FriendsGarden]
+    using identifiers: [ShareGardenScene.FriendsGarden.ID]
   ) -> NSDiffableDataSourceSectionSnapshot<Item> {
     var sectionSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
     
+    let friendsGardens: [ShareGardenScene.FriendsGarden] = identifiers.compactMap { identifier in
+      return self.friendsGardenStore?.fetch(by: identifier)
+    }
+    
     let friendsGardenItems: [Item] = friendsGardens.map { friendsGarden in
-      let item = Item.friendsGarden(
+      return Item.friendsGarden(
         ShareGardenSceneViewController.FriendsGardenContentConfiguration(
           id: friendsGarden.id,
           pomodoroRecords: friendsGarden.pomodoroRecords
         )
       )
-      
-      return item
     }
     
     let combined = zip(friendsGardens, friendsGardenItems)
