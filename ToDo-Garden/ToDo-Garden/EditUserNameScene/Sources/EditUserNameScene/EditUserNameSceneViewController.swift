@@ -5,10 +5,12 @@
 //  Created by Wood on 9/23/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
+import Combine
 import UIKit
 
 import EditUserNameSceneAPI
 import EditUserNameSceneEntity
+import ToDoGardenUIAPI
 import ToDoGardenUIComponent
 import ToDoGardenUIConstant
 import ToDoGardenUIResource
@@ -22,6 +24,9 @@ final class EditUserNameSceneViewController: UIViewController, EditUserNameScene
   private let editUserNameButton: UIBarButtonItem
   private let inputUserNameView: InputTextValidationView
 
+  private var inputUserNameSubject: PassthroughSubject<String, Never>
+  private var cancellables: Set<AnyCancellable>
+
   var interactor: EditUserNameSceneBusinessLogic?
   var router: (EditUserNameSceneRoutingLogic & EditUserNameSceneDataPassing)?
 
@@ -34,6 +39,8 @@ final class EditUserNameSceneViewController: UIViewController, EditUserNameScene
       inputText: constant.TextInputView.StringLiteral.Model.userNickname,
       validationText: constant.InputTextValidationView.StringLiteral.ValidationText.invalidNickname
     )
+    self.inputUserNameSubject = PassthroughSubject<String, Never>()
+    self.cancellables = Set<AnyCancellable>()
     super.init(nibName: nil, bundle: nil)
   }
 
@@ -72,6 +79,25 @@ extension EditUserNameSceneViewController: EditUserNameSceneDisplayLogic {
 // MARK: - Request to interactor
 
 extension EditUserNameSceneViewController {
+  private func bindInputTextChanged() {
+    self.inputUserNameView.delegate = self
+    self.inputUserNameSubject
+      .debounce(for: .seconds(0.7), scheduler: RunLoop.main)
+      .sink { [weak self] inputUserName in
+        self?.interactor?.verifyUserName(inputUserName)
+      }
+      .store(in: &self.cancellables)
+  }
+}
+
+// MARK: - Subview Delegate Functions
+
+extension EditUserNameSceneViewController: InputTextValidationViewDelegate {
+  func inputTextDidChanged(_ text: String?) {
+    if let inputUserName = self.inputUserNameView.getEditingText() {
+      self.inputUserNameSubject.send(inputUserName)
+    }
+  }
 }
 
 // MARK: - Set up UI
@@ -80,6 +106,7 @@ extension EditUserNameSceneViewController {
   private func setupUI() {
     self.setupMainView()
     self.setupEditUserNameButton()
+    self.bindInputTextChanged()
     self.setupInputNameViewLayout()
   }
 
