@@ -47,13 +47,11 @@ extension ShareGardenSceneInteractor: ShareGardenSceneBusinessLogic {
     self.tasks[TaskKey.requestFriendsGardenList] = Task {
       defer { self.tasks[TaskKey.requestFriendsGardenList] = nil }
       do {
-        // TODO: - worker에 FriendsGardenList 비동기 요청
-        // let friendsGardenList = try await self.shareGardenSceneWorker.requestFriendsGardenList()
+        let friendsGardenList = try await self.shareGardenSceneWorker.requestFriendsGardenList()
         if Task.isCancelled { return }
         
         self.presenter?.stopShimmeringFriendsGardenList()
-        // TODO: - friends Garden data store 업데이트
-        // self.friendsGardenStore.update(to: friendsGardenList)
+        self.friendsGardenDataStore.update(to: friendsGardenList)
       } catch {
         // TODO: - error handling (error view 표시 예정)
       }
