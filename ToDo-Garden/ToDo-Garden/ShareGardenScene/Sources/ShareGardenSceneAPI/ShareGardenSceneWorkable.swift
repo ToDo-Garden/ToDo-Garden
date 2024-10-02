@@ -9,7 +9,7 @@ import Foundation
 
 import ShareGardenSceneEntity
 
-public protocol ShareGardenSceneWorkable {
+public protocol ShareGardenSceneWorkable: Sendable {
   func requestFriendsGardenList() async throws -> [ShareGardenScene.FriendsGarden]
   func delete(by id: ShareGardenScene.FriendsGarden.ID) async throws
 }

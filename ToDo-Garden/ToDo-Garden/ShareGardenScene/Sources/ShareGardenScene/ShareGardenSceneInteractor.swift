@@ -1,6 +1,6 @@
 //
 //  ShareGardenSceneInteractor.swift
-//  
+//
 //
 //  Created by Noah on 7/4/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
@@ -24,15 +24,15 @@ final class ShareGardenSceneInteractor: ShareGardenSceneDataStore {
   var presenter: ShareGardenScenePresentationLogic?
   private let shareGardenSceneWorker: ShareGardenSceneWorkable
   private let friendsGardenDataStore: FriendsGardenDataStore
-
+  
   private var tasks: [TaskKey: Task<Void, Never>] = [:]
-
+  
   enum TaskKey {
     case requestFriendsGardenList
     case observeFriendsGardenStoreStream
     case deleteFriendsGarden
   }
-
+  
   init(shareGardenSceneWorker: ShareGardenSceneWorkable) {
     self.shareGardenSceneWorker = shareGardenSceneWorker
     self.friendsGardenDataStore = FriendsGardenDataStore()
@@ -47,19 +47,17 @@ extension ShareGardenSceneInteractor: ShareGardenSceneBusinessLogic {
     self.tasks[TaskKey.requestFriendsGardenList] = Task {
       defer { self.tasks[TaskKey.requestFriendsGardenList] = nil }
       do {
-        // TODO: - worker에 FriendsGardenList 비동기 요청
-        // let friendsGardenList = try await self.shareGardenSceneWorker.requestFriendsGardenList()
+        let friendsGardenList = try await self.shareGardenSceneWorker.requestFriendsGardenList()
         if Task.isCancelled { return }
         
         self.presenter?.stopShimmeringFriendsGardenList()
-        // TODO: - friends Garden data store 업데이트
-        // self.friendsGardenStore.update(to: friendsGardenList)
+        self.friendsGardenDataStore.update(to: friendsGardenList)
       } catch {
         // TODO: - error handling (error view 표시 예정)
       }
     }
   }
-
+  
   func cancelEntireTask() {
     self.tasks.keys.forEach { self.cancel(to: $0) }
   }
@@ -69,17 +67,16 @@ extension ShareGardenSceneInteractor: FriendsGardenStore {
   func fetch(by id: ShareGardenSceneEntity.ShareGardenScene.FriendsGarden.ID) -> ShareGardenScene.FriendsGarden? {
     return self.friendsGardenDataStore.fetch(by: id)
   }
-
+  
   func delete(by id: ShareGardenScene.FriendsGarden.ID) {
     let rollback = self.friendsGardenDataStore.fetchAll()
     self.friendsGardenDataStore.delete(by: id)
     
-    self.tasks[TaskKey.deleteFriendsGarden] = Task {
+    self.tasks[TaskKey.deleteFriendsGarden] = Task(priority: TaskPriority.background) {
       defer { self.tasks[TaskKey.deleteFriendsGarden] = nil }
-
+      
       do {
-        // TODO: - worker에 삭제 요청
-        // try await self.shareGardenSceneWorker.delete(by: id)
+        try await self.shareGardenSceneWorker.delete(by: id)
         try Task.checkCancellation()
       } catch {
         self.friendsGardenDataStore.update(to: rollback)
@@ -101,7 +98,7 @@ extension ShareGardenSceneInteractor {
       }
     }
   }
-
+  
   private func cancel(to key: TaskKey) {
     self.tasks[key]?.cancel()
     self.tasks[key] = nil
