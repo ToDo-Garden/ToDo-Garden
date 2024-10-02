@@ -146,3 +146,11 @@ extension ShareGardenSceneViewController {
     ])
   }
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let viewController = ShareGardenSceneSceneBuilder(dependency: .preview).build()
+  return viewController
+}
+#endif
