@@ -72,7 +72,7 @@ extension ShareGardenSceneInteractor: FriendsGardenStore {
     let rollback = self.friendsGardenDataStore.fetchAll()
     self.friendsGardenDataStore.delete(by: id)
     
-    self.tasks[TaskKey.deleteFriendsGarden] = Task {
+    self.tasks[TaskKey.deleteFriendsGarden] = Task(priority: TaskPriority.background) {
       defer { self.tasks[TaskKey.deleteFriendsGarden] = nil }
       
       do {
