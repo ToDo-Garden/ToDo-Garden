@@ -15,7 +15,7 @@ import ShareGardenSceneAPI
 import ShareGardenSceneEntity
 
 
-final class ShareGardenSceneWorkerStub: ShareGardenSceneWorkable {
+actor ShareGardenSceneWorkerStub: ShareGardenSceneWorkable {
   func requestFriendsGardenList() async throws -> [ShareGardenScene.FriendsGarden] {
     var pomodoroRecords = [PomodoroRecord]()
     
