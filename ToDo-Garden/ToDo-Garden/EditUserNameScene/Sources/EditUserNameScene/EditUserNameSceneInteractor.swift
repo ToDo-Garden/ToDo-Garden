@@ -38,6 +38,15 @@ extension EditUserNameSceneInteractor: EditUserNameSceneBusinessLogic {
   }
 
   func verifyUserName(_ userName: String) {
-    print(userName)
+    let isValid = self.isValidNickname(userName)
+    self.presenter?.presentUserNameVerification(isValid: isValid)
+  }
+}
+
+extension EditUserNameSceneInteractor {
+  private func isValidNickname(_ nickName: String) -> Bool {
+    let regexPattern = "^[\\p{L}\\p{N}]{5,12}$"
+    let result = nickName.range(of: regexPattern, options: String.CompareOptions.regularExpression)
+    return result != nil
   }
 }

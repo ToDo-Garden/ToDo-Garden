@@ -11,6 +11,7 @@ import EditUserNameSceneEntity
 
 protocol EditUserNameScenePresentationLogic {
   func presentUserName(_ userName: String?)
+  func presentUserNameVerification(isValid: Bool)
 }
 
 class EditUserNameScenePresenter {
@@ -26,5 +27,9 @@ extension EditUserNameScenePresenter: EditUserNameScenePresentationLogic {
     } else {
       self.viewController?.displayEmptyUserName()
     }
+  }
+
+  func presentUserNameVerification(isValid: Bool) {
+    
   }
 }
