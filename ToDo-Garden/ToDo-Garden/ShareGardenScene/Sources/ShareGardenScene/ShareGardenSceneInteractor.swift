@@ -76,8 +76,7 @@ extension ShareGardenSceneInteractor: FriendsGardenStore {
       defer { self.tasks[TaskKey.deleteFriendsGarden] = nil }
       
       do {
-        // TODO: - worker에 삭제 요청
-        // try await self.shareGardenSceneWorker.delete(by: id)
+        try await self.shareGardenSceneWorker.delete(by: id)
         try Task.checkCancellation()
       } catch {
         self.friendsGardenDataStore.update(to: rollback)
