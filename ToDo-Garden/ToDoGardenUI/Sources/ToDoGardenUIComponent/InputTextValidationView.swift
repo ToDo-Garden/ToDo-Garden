@@ -39,6 +39,10 @@ public final class InputTextValidationView: UIView {
     self.textInputView.setBeginEditing(with: text)
   }
 
+  public func getEditingText() -> String? {
+    return textInputView.getEditingText()
+  }
+
   public func showValidationText() {
     self.moveValidationTextLabel(isShowing: true)
   }
