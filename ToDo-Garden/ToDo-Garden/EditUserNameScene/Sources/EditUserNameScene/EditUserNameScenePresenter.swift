@@ -15,7 +15,7 @@ protocol EditUserNameScenePresentationLogic {
   @MainActor func presentEditUserNameResult(_ error: Error?)
 }
 
-class EditUserNameScenePresenter {
+final class EditUserNameScenePresenter {
   weak var viewController: EditUserNameSceneDisplayLogic?
 }
 
