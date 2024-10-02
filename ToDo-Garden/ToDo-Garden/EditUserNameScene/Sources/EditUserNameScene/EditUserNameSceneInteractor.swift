@@ -17,6 +17,7 @@ protocol EditUserNameSceneDataStore {
 protocol EditUserNameSceneBusinessLogic {
   func setUserName()
   func verifyUserName(_ userName: String)
+  func requestEditUserName(_ userName: String)
 }
 
 final class EditUserNameSceneInteractor: EditUserNameSceneDataStore {
@@ -40,6 +41,9 @@ extension EditUserNameSceneInteractor: EditUserNameSceneBusinessLogic {
   func verifyUserName(_ userName: String) {
     let isValid = self.isValidNickname(userName)
     self.presenter?.presentUserNameVerification(isValid: isValid)
+  }
+
+  func requestEditUserName(_ userName: String) {
   }
 }
 

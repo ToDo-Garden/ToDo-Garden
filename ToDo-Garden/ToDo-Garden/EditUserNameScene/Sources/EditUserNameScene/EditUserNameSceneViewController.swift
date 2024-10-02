@@ -100,6 +100,16 @@ extension EditUserNameSceneViewController {
       }
       .store(in: &self.cancellables)
   }
+
+  private func setupEditUserNameButtonAction() {
+    self.editUserNameButton.primaryAction = UIAction { [weak self] _ in
+      guard let self else { return }
+
+      if let userName = self.inputUserNameView.getEditingText() {
+        self.interactor?.requestEditUserName(userName)
+      }
+    }
+  }
 }
 
 // MARK: - Subview Delegate Functions
@@ -128,6 +138,7 @@ extension EditUserNameSceneViewController {
   }
 
   private func setupEditUserNameButton() {
+    self.setupEditUserNameButtonAction()
     let horizontalOffset = Constant.Layout.EditUserNameButton.titleHorizontalOffset
     self.editUserNameButton.setTitlePositionAdjustment(
       UIOffset(horizontal: -horizontalOffset, vertical: 0),
