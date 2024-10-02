@@ -35,6 +35,14 @@ public final class InputTextValidationView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
 
+  public func setBeginEditing(with text: String) {
+    self.textInputView.setBeginEditing(with: text)
+  }
+
+  public func getEditingText() -> String? {
+    return textInputView.getEditingText()
+  }
+
   public func showValidationText() {
     self.moveValidationTextLabel(isShowing: true)
   }
