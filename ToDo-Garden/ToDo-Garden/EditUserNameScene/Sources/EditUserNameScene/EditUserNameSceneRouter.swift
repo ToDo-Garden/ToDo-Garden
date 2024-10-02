@@ -10,6 +10,7 @@ import Foundation
 import EditUserNameSceneAPI
 
 protocol EditUserNameSceneRoutingLogic {
+  func routeToUserInfoScene()
 }
 
 protocol EditUserNameSceneDataPassing {
@@ -24,6 +25,9 @@ class EditUserNameSceneRouter: EditUserNameSceneDataPassing {
 // MARK: - Routing
 
 extension EditUserNameSceneRouter: EditUserNameSceneRoutingLogic {
+  func routeToUserInfoScene() {
+    self.viewController?.navigationController?.popViewController(animated: true)
+  }
 }
 
 // MARK: - Declare Payload for scene

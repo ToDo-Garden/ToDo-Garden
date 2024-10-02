@@ -23,6 +23,9 @@ class EditUserNameScenePresenter {
 
 extension EditUserNameScenePresenter: EditUserNameScenePresentationLogic {
   func presentEditUserNameResult(_ error: Error?) {
+    if error != nil {
+      self.viewController?.displayEditUserNameSuccess()
+    }
   }
   
   func presentUserName(_ userName: String?) {

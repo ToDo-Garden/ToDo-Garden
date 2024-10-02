@@ -20,6 +20,7 @@ protocol EditUserNameSceneDisplayLogic: AnyObject {
   func displayEmptyUserName()
   func displayUserNameValid()
   func displayUserNameInvalid()
+  func displayEditUserNameSuccess()
 }
 
 final class EditUserNameSceneViewController: UIViewController, EditUserNameSceneViewControllable {
@@ -85,6 +86,10 @@ extension EditUserNameSceneViewController: EditUserNameSceneDisplayLogic {
   func displayUserNameValid() {
     self.inputUserNameView.hideValidationText()
     self.editUserNameButton.isEnabled = true
+  }
+
+  func displayEditUserNameSuccess() {
+    self.router?.routeToUserInfoScene()
   }
 }
 
