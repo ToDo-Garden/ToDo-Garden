@@ -11,13 +11,15 @@ let package = Package(
     )
   ],
   dependencies: [
-    .package(path: "../ToDoGardenUI")
+    .package(path: "../ToDoGardenUI"),
+    .package(name: "ManageGroupScene", path: "./ManageGroupScene")
   ],
   targets: [
     .target(
       name: "CommonViews",
       dependencies: [
-        .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI")
+        .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI"),
+        .product(name: "ManageGroupScene", package: "ManageGroupScene")
       ]
     )
   ]
