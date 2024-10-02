@@ -8,4 +8,5 @@
 import Foundation
 
 public protocol EditUserNameSceneWorkable {
+  func requestEditUserName(_ userName: String) async throws
 }

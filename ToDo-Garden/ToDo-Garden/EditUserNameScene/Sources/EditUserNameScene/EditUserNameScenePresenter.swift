@@ -12,6 +12,7 @@ import EditUserNameSceneEntity
 protocol EditUserNameScenePresentationLogic {
   func presentUserName(_ userName: String?)
   func presentUserNameVerification(isValid: Bool)
+  @MainActor func presentEditUserNameResult(_ error: Error?)
 }
 
 class EditUserNameScenePresenter {
@@ -21,6 +22,9 @@ class EditUserNameScenePresenter {
 // MARK: - Request to ViewController
 
 extension EditUserNameScenePresenter: EditUserNameScenePresentationLogic {
+  func presentEditUserNameResult(_ error: Error?) {
+  }
+  
   func presentUserName(_ userName: String?) {
     if let userName {
       self.viewController?.displayUserName(userName)

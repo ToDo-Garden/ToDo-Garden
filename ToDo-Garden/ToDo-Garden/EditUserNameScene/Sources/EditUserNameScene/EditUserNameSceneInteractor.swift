@@ -23,6 +23,8 @@ protocol EditUserNameSceneBusinessLogic {
 final class EditUserNameSceneInteractor: EditUserNameSceneDataStore {
   var userName: String?
 
+  private var editUserNameTask: Task<Void, Never>?
+
   var presenter: EditUserNameScenePresentationLogic?
   private let editUserNameWorker: EditUserNameSceneWorkable
 
@@ -44,6 +46,22 @@ extension EditUserNameSceneInteractor: EditUserNameSceneBusinessLogic {
   }
 
   func requestEditUserName(_ userName: String) {
+    guard self.isValidNickname(userName)
+    else { return }
+
+    self.editUserNameTask = Task { [weak self] in
+      guard let self else { return }
+
+      defer { self.editUserNameTask = nil }
+      if Task.isCancelled { return }
+
+      do {
+        try await self.editUserNameWorker.requestEditUserName(userName)
+        await self.presenter?.presentEditUserNameResult(nil)
+      } catch let error {
+        await self.presenter?.presentEditUserNameResult(error)
+      }
+    }
   }
 }
 

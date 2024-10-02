@@ -10,4 +10,7 @@ import Foundation
 import EditUserNameSceneAPI
 
 struct EditUserNameSceneWorker: EditUserNameSceneWorkable {
+  func requestEditUserName(_ userName: String) async throws {
+    
+  }
 }

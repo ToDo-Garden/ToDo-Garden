@@ -94,7 +94,7 @@ extension EditUserNameSceneViewController {
   private func bindInputTextChanged() {
     self.inputUserNameView.delegate = self
     self.inputUserNameSubject
-      .debounce(for: .seconds(0.7), scheduler: RunLoop.main)
+      .debounce(for: .seconds(0.5), scheduler: RunLoop.main)
       .sink { [weak self] inputUserName in
         self?.interactor?.verifyUserName(inputUserName)
       }
