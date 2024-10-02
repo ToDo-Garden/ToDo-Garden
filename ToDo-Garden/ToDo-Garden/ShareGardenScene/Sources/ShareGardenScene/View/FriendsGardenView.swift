@@ -90,6 +90,7 @@ extension ShareGardenSceneViewController {
 extension ShareGardenSceneViewController.FriendsGardenView {
   private func setup() {
     self.setupStackView()
+    self.setupEditButton()
     self.addSubviews()
     self.setCustomSpacing()
   }
@@ -99,6 +100,13 @@ extension ShareGardenSceneViewController.FriendsGardenView {
     self.distribution = UIStackView.Distribution.fill
     self.axis = NSLayoutConstraint.Axis.vertical
     self.alignment = UIStackView.Alignment.center
+  }
+  
+  private func setupEditButton() {
+    let editButtonDidTap = UIAction { [weak self] _ in
+      self?.friendsGardenListView.isEditing.toggle()
+    }
+    self.sectionHeaderView.setupRightActionButton(action: editButtonDidTap)
   }
   
   private func addSubviews() {
