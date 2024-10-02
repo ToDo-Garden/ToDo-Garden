@@ -71,11 +71,11 @@ final class ShareGardenSceneViewController: UIViewController, ShareGardenSceneVi
 
 extension ShareGardenSceneViewController: ShareGardenSceneDisplayLogic {
   func displayFriendsGardenList(_ viewModel: ShareGardenScene.RequestFriendsGardenList.ViewModel) {
-    // TODO: - view update
+    self.friendsGardenView.displayFriendsGardenList(viewModel.identifiers)
   }
   
   func stopShimmeringFriendsGardenList() {
-    // TODO: - view update
+    self.friendsGardenView.stopShimmeringAnimation()
   }
 }
 
