@@ -9,13 +9,13 @@ import Foundation
 
 extension Constant.AppleLoginButton {
   public static let width: CGFloat = 325.0
-  public static let height: CGFloat = 56.0
-  public static let cornerRadius: CGFloat = 12.0
+  public static let height: CGFloat = 44.0
+  public static let cornerRadius: CGFloat = 10.0
   public static let fontSize: CGFloat = 19.0
   
   public enum AppleLogo {
     public static let width: CGFloat = 39.5
-    public static let leading: CGFloat = 20.0
+    public static let trailing: CGFloat = -10.0
   }
   
   public enum StringLiteral {
