@@ -59,11 +59,13 @@ final class EditUserNameSceneViewController: UIViewController, EditUserNameScene
 
 extension EditUserNameSceneViewController: EditUserNameSceneDisplayLogic {
   func displayUserName(_ userName: String) {
-    
+    self.inputUserNameView.setBeginEditing(with: userName)
+    self.editUserNameButton.isEnabled = true
   }
   
   func displayEmptyUserName() {
-
+    self.inputUserNameView.setBeginEditing(with: "")
+    self.editUserNameButton.isEnabled = false
   }
 }
 
