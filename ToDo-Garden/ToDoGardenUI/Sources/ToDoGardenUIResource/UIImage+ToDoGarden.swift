@@ -106,4 +106,8 @@ extension UIImage {
   public static let circledCheckMarkEmpty = UIImage(
     systemName: "circle"
   )
+  
+  public static let loginBackground = UIImage(
+    resource: .loginBackground
+  )
 }
