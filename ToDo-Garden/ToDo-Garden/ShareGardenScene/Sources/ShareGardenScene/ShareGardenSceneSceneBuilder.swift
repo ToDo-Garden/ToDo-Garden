@@ -29,6 +29,13 @@ public struct ShareGardenSceneSceneBuilder {
   }
 }
 
+extension ShareGardenSceneSceneBuilder.Dependency {
+#if DEBUG
+  @MainActor
+  public static let preview = Self(shareGardenSceneWorker: ShareGardenSceneWorkerStub())
+#endif
+}
+
 extension ShareGardenSceneSceneBuilder: ShareGardenSceneSceneBuildable {
   ///  VIP Cycle, 런타임 의존성이 설정된 ViewController 인스턴스를 반환하는 함수입니다.
   /// - Returns: 런타임 의존성, VIP Cycle이 설정된 ViewController를 반환합니다.
