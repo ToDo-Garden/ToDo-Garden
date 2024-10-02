@@ -30,6 +30,10 @@ extension EditUserNameScenePresenter: EditUserNameScenePresentationLogic {
   }
 
   func presentUserNameVerification(isValid: Bool) {
-    
+    if isValid {
+      self.viewController?.displayUserNameValid()
+    } else {
+      self.viewController?.displayUserNameInvalid()
+    }
   }
 }

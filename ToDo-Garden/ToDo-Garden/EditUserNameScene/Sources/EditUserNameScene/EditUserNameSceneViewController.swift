@@ -18,6 +18,8 @@ import ToDoGardenUIResource
 protocol EditUserNameSceneDisplayLogic: AnyObject {
   func displayUserName(_ userName: String)
   func displayEmptyUserName()
+  func displayUserNameValid()
+  func displayUserNameInvalid()
 }
 
 final class EditUserNameSceneViewController: UIViewController, EditUserNameSceneViewControllable {
@@ -73,6 +75,16 @@ extension EditUserNameSceneViewController: EditUserNameSceneDisplayLogic {
   func displayEmptyUserName() {
     self.inputUserNameView.setBeginEditing(with: "")
     self.editUserNameButton.isEnabled = false
+  }
+
+  func displayUserNameInvalid() {
+    self.inputUserNameView.showValidationText()
+    self.editUserNameButton.isEnabled = false
+  }
+
+  func displayUserNameValid() {
+    self.inputUserNameView.hideValidationText()
+    self.editUserNameButton.isEnabled = true
   }
 }
 
