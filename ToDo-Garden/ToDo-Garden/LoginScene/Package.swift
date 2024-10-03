@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
   name: "LoginScene",
+  platforms: [.iOS(.v15)],
   products: [
     .library(
       name: "LoginSceneAPI",
@@ -25,7 +26,10 @@ let package = Package(
   ],
   targets: [
     .target(
-      name: "LoginSceneAPI"
+      name: "LoginSceneAPI",
+      dependencies: [
+        .product(name: "ToDoGardenUIAPI", package: "ToDoGardenUI")
+      ]
     ),
     .target(
       name: "LoginSceneEntity"
