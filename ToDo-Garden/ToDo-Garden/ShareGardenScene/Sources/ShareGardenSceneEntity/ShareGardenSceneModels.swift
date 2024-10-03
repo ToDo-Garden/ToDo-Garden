@@ -29,6 +29,22 @@ public enum ShareGardenScene {
     }
   }
   
+  public struct MyGarden: Sendable {
+    public let nickname: String
+    public let description: String
+    public let pomodoroRecords: PomodoroRecordCollection
+    
+    public init(
+      nickname: String,
+      description: String,
+      pomodoroRecords: PomodoroRecordCollection
+    ) {
+      self.nickname = nickname
+      self.description = description
+      self.pomodoroRecords = pomodoroRecords
+    }
+  }
+  
   // MARK: Use cases
   
   public enum RequestFriendsGardenList {
@@ -45,6 +61,16 @@ public enum ShareGardenScene {
       
       public init(identifiers: [UUID]) {
         self.identifiers = identifiers
+      }
+    }
+  }
+  
+  public enum RequestMyGarden {
+    public struct Response: Sendable {
+      public let myGarden: MyGarden
+      
+      public init(myGarden: MyGarden) {
+        self.myGarden = myGarden
       }
     }
   }
