@@ -15,6 +15,9 @@ extension ShareGardenSceneViewController.FriendsGardenView {
       get {
         return self.friendListView.isEditing
       } set {
+        if newValue {
+          self.collapseAll()
+        }
         self.friendListView.isEditing = newValue
       }
     }
