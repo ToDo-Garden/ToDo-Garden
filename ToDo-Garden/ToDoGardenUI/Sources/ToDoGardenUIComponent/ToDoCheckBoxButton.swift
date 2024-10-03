@@ -14,6 +14,8 @@ import ToDoGardenUIResource
 public final class ToDoCheckBoxButton: UIButton, HapticFeedbackable {
   private var checkmarkDrawingLayer: CAShapeLayer
 
+  @ExecuteOnce private var setAnimation: (() -> Void)?
+
   public init() {
     self.checkmarkDrawingLayer = CAShapeLayer()
     super.init(frame: CGRect.zero)
@@ -61,14 +63,10 @@ extension ToDoCheckBoxButton {
     )
   }
 
-  private func makeButtonAction() -> UIAction {
-    return UIAction { [weak self] _ in
-      guard let self else { return }
-      if self.isSelected {
-        self.resetToDo()
-      } else {
-        self.completeToDo()
-      }
+  public override func draw(_ rect: CGRect) {
+    super.draw(rect)
+    self.setAnimation = {
+      self.setupAnimationPath()
     }
   }
 }
@@ -76,21 +74,7 @@ extension ToDoCheckBoxButton {
 // MARK: Set up Animation
 
 extension ToDoCheckBoxButton {
-  private func setupToDoCompleteAnimation() {
-    self.setupAnimationUI()
-    self.setupAnimationPath()
-  }
-
-  private func drawCompleteToDoAnimation() {
-    let animation = CABasicAnimation(keyPath: Constant.ToDoCheckBoxButton.Animation.keyPath)
-    animation.duration = Constant.ToDoCheckBoxButton.Animation.duration
-    animation.fromValue = Constant.ToDoCheckBoxButton.Animation.fromValue
-    animation.toValue = Constant.ToDoCheckBoxButton.Animation.toValue
-    animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
-    self.checkmarkDrawingLayer.add(animation, forKey: nil)
-  }
-
-  private func setupAnimationUI() {
+  private func setupAnimationLayerUI() {
     self.checkmarkDrawingLayer.lineWidth = Constant.ToDoCheckBoxButton.Layout.lineWidth
     self.checkmarkDrawingLayer.fillColor = UIColor.clear.cgColor
     self.checkmarkDrawingLayer.strokeColor = UIColor.white.cgColor
@@ -99,6 +83,8 @@ extension ToDoCheckBoxButton {
     self.layer.addSublayer(self.checkmarkDrawingLayer)
   }
 
+  /// 버튼의 크기에 맞게 체크표시 애니메이션의 경로를 설정하는 메서드입니다.
+  /// 버튼의 크기를 얻기 위해 draw 메서드에서 호출됩니다.
   private func setupAnimationPath() {
     let bezierPath = UIBezierPath()
     self.setupStartPoint(to: bezierPath)
@@ -108,32 +94,26 @@ extension ToDoCheckBoxButton {
   }
 
   private func setupStartPoint(to bezierPath: UIBezierPath) {
-    let offsetXToStartPoint = Constant.ToDoCheckBoxButton.Animation.Path.offsetXToStartPoint
-    let offsetYToStartPoint = Constant.ToDoCheckBoxButton.Animation.Path.offsetYToStartPoint
-    let startPoint = CGPoint(
-      x: self.frame.origin.x + offsetXToStartPoint,
-      y: self.frame.origin.x + offsetYToStartPoint
-    )
+    let constant = Constant.ToDoCheckBoxButton.Animation.Path.StartPoint.self
+    let pointX = self.bounds.origin.x + (self.bounds.width * constant.offsetX)
+    let pointY = self.bounds.origin.y + (self.bounds.height * constant.offsetY)
+    let startPoint = CGPoint(x: pointX, y: pointY)
     bezierPath.move(to: startPoint)
   }
 
   private func setupMiddlePoint(to bezierPath: UIBezierPath) {
-    let offsetXToMiddlePoint = Constant.ToDoCheckBoxButton.Animation.Path.offsetXToMiddlePoint
-    let offsetYToMiddlePoint = Constant.ToDoCheckBoxButton.Animation.Path.offsetYToMiddlePoint
-    let middlePoint = CGPoint(
-      x: bezierPath.currentPoint.x + offsetXToMiddlePoint,
-      y: bezierPath.currentPoint.y + offsetYToMiddlePoint
-    )
+    let constant = Constant.ToDoCheckBoxButton.Animation.Path.MiddlePoint.self
+    let pointX = bezierPath.currentPoint.x + (self.bounds.width * constant.offsetX)
+    let pointY = bezierPath.currentPoint.y + (self.bounds.height * constant.offsetY)
+    let middlePoint = CGPoint(x: pointX, y: pointY)
     bezierPath.addLine(to: middlePoint)
   }
 
   private func setupEndPoint(to bezierPath: UIBezierPath) {
-    let offsetXToEndPoint = Constant.ToDoCheckBoxButton.Animation.Path.offsetXToEndPoint
-    let offsetYToEndPoint = Constant.ToDoCheckBoxButton.Animation.Path.offsetYToEndPoint
-    let endPoint = CGPoint(
-      x: bezierPath.currentPoint.x + offsetXToEndPoint,
-      y: bezierPath.currentPoint.y - offsetYToEndPoint
-    )
+    let constant = Constant.ToDoCheckBoxButton.Animation.Path.EndPoint.self
+    let pointX = bezierPath.currentPoint.x + (self.bounds.width * constant.offsetX)
+    let pointY = bezierPath.currentPoint.y - (self.bounds.height * constant.offsetY)
+    let endPoint = CGPoint(x: pointX, y: pointY)
     bezierPath.addLine(to: endPoint)
   }
 }
