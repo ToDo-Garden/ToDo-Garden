@@ -67,6 +67,7 @@
 		AE645FE92C64BE80001A5612 /* GuideScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = GuideScene; sourceTree = "<group>"; };
 		AE930F3C2C2E9306002F26AB /* TimerScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = TimerScene; sourceTree = "<group>"; };
 		E4754C0F2C3BB9790079CFAE /* PostGroupScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = PostGroupScene; sourceTree = "<group>"; };
+		E4DBB5922CAD595E00B58C23 /* LoginScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = LoginScene; sourceTree = "<group>"; };
 		E4DEA1722C2BEC2900E3CE3C /* ManageGroupScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ManageGroupScene; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -133,6 +134,7 @@
 		4F0DF12A2B4EABCE00097B7D /* ToDo-Garden */ = {
 			isa = PBXGroup;
 			children = (
+				E4DBB5922CAD595E00B58C23 /* LoginScene */,
 				634BD1762CA1728500396CAB /* EditUserNameScene */,
 				638F7F532C7F4AF500338FA3 /* UserInfoScene */,
 				AE645FE92C64BE80001A5612 /* GuideScene */,
