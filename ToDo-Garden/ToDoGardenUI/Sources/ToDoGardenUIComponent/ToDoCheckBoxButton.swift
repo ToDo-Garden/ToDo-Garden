@@ -12,11 +12,9 @@ import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 public final class ToDoCheckBoxButton: UIButton, HapticFeedbackable {
-  private var checkBoxModel: ToDoCheckBoxButton.CheckBoxModel
   private var checkmarkDrawingLayer: CAShapeLayer
 
-  public init(checkBoxModel: ToDoCheckBoxButton.CheckBoxModel) {
-    self.checkBoxModel = checkBoxModel
+  public init() {
     self.checkmarkDrawingLayer = CAShapeLayer()
     super.init(frame: CGRect.zero)
     self.setup()
@@ -32,23 +30,13 @@ public final class ToDoCheckBoxButton: UIButton, HapticFeedbackable {
 
 extension ToDoCheckBoxButton {
   private func setup() {
-    self.updateState()
     self.setupAction()
     self.setupToDoCompleteAnimation()
     self.setupUI()
   }
 
-  private func updateState() {
-    if self.checkBoxModel.isToDoDone {
-      self.completeToDo()
-    } else {
-      self.resetToDo()
-    }
-  }
-
   private func completeToDo() {
     self.isSelected = true
-    self.backgroundColor = self.checkBoxModel.groupColor
     self.triggerHapticFeedback(
       type: HapticFeedbackType.impact(
         style: UIImpactFeedbackGenerator.FeedbackStyle.heavy
@@ -154,52 +142,13 @@ extension ToDoCheckBoxButton {
 
 extension ToDoCheckBoxButton {
   private func setupUI() {
-    self.setupBorder()
-    self.setupRoundedCorner()
-  }
-
-  private func setupBorder() {
-    self.layer.borderColor = self.checkBoxModel.groupColor.cgColor
-    self.layer.borderWidth = self.checkBoxModel.borderWidth
-  }
-
-  private func setupRoundedCorner() {
-    self.layer.cornerRadius = self.checkBoxModel.cornerRadius
-  }
-}
-
-// MARK: CheckBox Model
-
-extension ToDoCheckBoxButton {
-  public struct CheckBoxModel {
-    var isToDoDone: Bool
-    var groupColor: UIColor
-    var borderWidth: CGFloat
-    var cornerRadius: CGFloat
-
-    public init(
-      isToDoDone: Bool,
-      groupColor: UIColor,
-      borderWidth: CGFloat = Constant.ToDoCheckBoxButton.Layout.borderWidth,
-      cornerRadius: CGFloat = Constant.ToDoCheckBoxButton.Layout.cornerRadius
-    ) {
-      self.isToDoDone = isToDoDone
-      self.groupColor = groupColor
-      self.borderWidth = borderWidth
-      self.cornerRadius = cornerRadius
-    }
   }
 }
 
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  let button = ToDoCheckBoxButton(
-    checkBoxModel: ToDoCheckBoxButton.CheckBoxModel.init(
-      isToDoDone: true,
-      groupColor: UIColor.toDoGardenBlue
-    )
-  )
+  let button = ToDoCheckBoxButton()
   button.translatesAutoresizingMaskIntoConstraints = false
   button.widthAnchor.constraint(equalToConstant: Constant.ToDoCheckBoxButton.Size.priamry.width).isActive = true
   button.heightAnchor.constraint(equalToConstant: Constant.ToDoCheckBoxButton.Size.priamry.height).isActive = true
