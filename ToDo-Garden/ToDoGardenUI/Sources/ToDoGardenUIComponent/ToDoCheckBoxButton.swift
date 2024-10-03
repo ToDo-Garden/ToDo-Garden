@@ -146,10 +146,42 @@ extension ToDoCheckBoxButton {
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  let button = ToDoCheckBoxButton()
-  button.translatesAutoresizingMaskIntoConstraints = false
-  button.widthAnchor.constraint(equalToConstant: Constant.ToDoCheckBoxButton.Size.priamry.width).isActive = true
-  button.heightAnchor.constraint(equalToConstant: Constant.ToDoCheckBoxButton.Size.priamry.height).isActive = true
-  return button
+  var stackView = UIStackView()
+  stackView.axis = .vertical
+  stackView.spacing = 50
+  stackView.alignment = .center
+  stackView.distribution = .fill
+
+  let toDoButton = ToDoCheckBoxButton()
+  toDoButton.updateMainColor(UIColor.toDoGardenRed)
+  toDoButton.addAction(
+    UIAction { _ in
+      if toDoButton.isSelected {
+        toDoButton.setSelected()
+      } else {
+        toDoButton.setDeSelected()
+      }
+    }, for: UIControl.Event.touchUpInside
+  )
+  toDoButton.widthAnchor.constraint(equalToConstant: 18).isActive = true
+  toDoButton.heightAnchor.constraint(equalToConstant: 18).isActive = true
+
+  let agreementButton = ToDoCheckBoxButton()
+  agreementButton.addAction(
+    UIAction { _ in
+      if agreementButton.isSelected {
+        agreementButton.setSelected()
+      } else {
+        agreementButton.setDeSelected()
+      }
+    }, for: UIControl.Event.touchUpInside
+  )
+  agreementButton.layer.cornerRadius = 7
+  agreementButton.widthAnchor.constraint(equalToConstant: 14).isActive = true
+  agreementButton.heightAnchor.constraint(equalToConstant: 14).isActive = true
+  
+  stackView.addArrangedSubview(toDoButton)
+  stackView.addArrangedSubview(agreementButton)
+  return stackView
 }
 #endif
