@@ -7,6 +7,7 @@
 
 import UIKit
 
+import TDUtility
 import ToDoGardenUIAPI
 import ToDoGardenUIConstant
 import ToDoGardenUIResource
@@ -26,48 +27,39 @@ public final class ToDoCheckBoxButton: UIButton, HapticFeedbackable {
   public required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-}
-
-// MARK: Private Functions
-
-extension ToDoCheckBoxButton {
-  private func setup() {
-    self.setupAction()
-    self.setupToDoCompleteAnimation()
-    self.setupUI()
-  }
-
-  private func completeToDo() {
-    self.isSelected = true
-    self.triggerHapticFeedback(
-      type: HapticFeedbackType.impact(
-        style: UIImpactFeedbackGenerator.FeedbackStyle.heavy
-      )
-    )
-    self.drawCompleteToDoAnimation()
-  }
-
-  private func resetToDo() {
-    self.isSelected = false
-    self.backgroundColor = UIColor.toDoGardenWhite
-  }
-}
-
-// MARK: Set Up Action
-
-extension ToDoCheckBoxButton {
-  private func setupAction() {
-    self.addAction(
-      self.makeButtonAction(),
-      for: UIControl.Event.touchUpInside
-    )
-  }
 
   public override func draw(_ rect: CGRect) {
     super.draw(rect)
     self.setAnimation = {
       self.setupAnimationPath()
     }
+  }
+
+  // TODO: - 런타임에 버튼의 색상을 변경할 수 있어야 함.
+
+  // TODO: - 런타임에 선택 상태 or 선택 해제 상태로 만들 수 있어야 함.
+  public func setSelected() {
+    self.makeVibration()
+  }
+
+  public func setDeSelected() {
+    self.backgroundColor = UIColor.toDoGardenWhite
+  }
+}
+
+// MARK: Set up UI
+
+extension ToDoCheckBoxButton {
+  private func setup() {
+    self.setupAnimationLayerUI()
+  }
+
+  private func makeVibration() {
+    self.triggerHapticFeedback(
+      type: HapticFeedbackType.impact(
+        style: UIImpactFeedbackGenerator.FeedbackStyle.heavy
+      )
+    )
   }
 }
 
@@ -115,13 +107,6 @@ extension ToDoCheckBoxButton {
     let pointY = bezierPath.currentPoint.y - (self.bounds.height * constant.offsetY)
     let endPoint = CGPoint(x: pointX, y: pointY)
     bezierPath.addLine(to: endPoint)
-  }
-}
-
-// MARK: set up UI
-
-extension ToDoCheckBoxButton {
-  private func setupUI() {
   }
 }
 
