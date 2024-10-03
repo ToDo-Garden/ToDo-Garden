@@ -64,4 +64,14 @@ public enum ShareGardenScene {
       }
     }
   }
+  
+  public enum RequestMyGarden {
+    public struct Response: Sendable {
+      public let myGarden: MyGarden
+      
+      public init(myGarden: MyGarden) {
+        self.myGarden = myGarden
+      }
+    }
+  }
 }
