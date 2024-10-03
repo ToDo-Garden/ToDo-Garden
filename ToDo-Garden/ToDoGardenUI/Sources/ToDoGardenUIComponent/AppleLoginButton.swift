@@ -49,13 +49,17 @@ public final class AppleLoginButton: UIButton {
   }
   
   private func addAppleLogo() {
+    guard let titleLabel = self.titleLabel else {
+      return
+    }
+    
     let appleLogo = self.createAppleLogo()
     self.addSubview(appleLogo)
     
     NSLayoutConstraint.activate([
-      appleLogo.leadingAnchor.constraint(
-        equalTo: leadingAnchor,
-        constant: Constant.AppleLoginButton.AppleLogo.leading
+      appleLogo.trailingAnchor.constraint(
+        equalTo: titleLabel.leadingAnchor,
+        constant: Constant.AppleLoginButton.AppleLogo.trailing
       ),
       appleLogo.centerYAnchor.constraint(equalTo: centerYAnchor),
       appleLogo.widthAnchor.constraint(
