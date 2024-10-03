@@ -76,6 +76,26 @@ extension ToDoCheckBoxButton {
   }
 }
 
+// MARK: Set up UI
+
+extension ToDoCheckBoxButton {
+  private func setup() {
+    self.setupToggle()
+    self.setupLayer()
+    self.setupAnimationLayerUI()
+  }
+
+  private func setupToggle() {
+    self.changesSelectionAsPrimaryAction = true
+  }
+
+  private func setupLayer() {
+    self.layer.masksToBounds = true
+    self.layer.borderWidth = Constant.ToDoCheckBoxButton.Layout.borderWidth
+    self.layer.cornerRadius = Constant.ToDoCheckBoxButton.Layout.cornerRadius
+  }
+}
+
 // MARK: Set up Animation
 
 extension ToDoCheckBoxButton {
