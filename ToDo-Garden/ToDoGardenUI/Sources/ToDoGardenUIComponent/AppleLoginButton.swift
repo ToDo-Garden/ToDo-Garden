@@ -4,6 +4,8 @@ import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 public final class AppleLoginButton: UIButton {
+  private var glowLayer: CALayer?
+  
   public override init(frame: CGRect) {
     super.init(frame: frame)
     self.setupButton()
@@ -25,6 +27,16 @@ public final class AppleLoginButton: UIButton {
   private func setupButton() {
     self.configureAppearance()
     self.addAppleLogo()
+    self.setupGlowEffect()
+    self.addAction(UIAction { [weak self] _ in
+      self?.buttonTouchDown()
+    }, for: UIControl.Event.touchDown)
+    self.addAction(UIAction { [weak self] _ in
+      self?.buttonTouchUpInside()
+    }, for: UIControl.Event.touchUpInside)
+    self.addAction(UIAction { [weak self] _ in
+      self?.buttonTouchDragExit()
+    }, for: UIControl.Event.touchDragExit)
   }
   
   private func configureAppearance() {
@@ -61,7 +73,7 @@ public final class AppleLoginButton: UIButton {
         equalTo: titleLabel.leadingAnchor,
         constant: Constant.AppleLoginButton.AppleLogo.trailing
       ),
-      appleLogo.centerYAnchor.constraint(equalTo: centerYAnchor),
+      appleLogo.centerYAnchor.constraint(equalTo: self.centerYAnchor),
       appleLogo.widthAnchor.constraint(
         equalToConstant: Constant.AppleLoginButton.AppleLogo.width
       ),
@@ -76,6 +88,42 @@ public final class AppleLoginButton: UIButton {
     imageView.contentMode = UIView.ContentMode.scaleAspectFit
     imageView.usingAutolayout()
     return imageView
+  }
+  
+  private func setupGlowEffect() {
+    self.glowLayer = CALayer()
+    self.glowLayer?.backgroundColor = UIColor.white.cgColor
+    self.glowLayer?.opacity = 0
+    self.glowLayer?.cornerRadius = Constant.AppleLoginButton.cornerRadius
+    
+    if let glowLayer = self.glowLayer {
+      self.layer.addSublayer(glowLayer)
+    }
+  }
+  
+  private func buttonTouchDown() {
+    UIView.animate(withDuration: 0.1) {
+      self.glowLayer?.opacity = 0.5
+    }
+  }
+  
+  private func buttonTouchUpInside() {
+    self.fadeOutGlowEffect()
+  }
+  
+  private func buttonTouchDragExit() {
+    self.fadeOutGlowEffect()
+  }
+  
+  private func fadeOutGlowEffect() {
+    UIView.animate(withDuration: 0.5, animations: {
+      self.glowLayer?.opacity = 0
+    })
+  }
+  
+  public override func layoutSubviews() {
+    super.layoutSubviews()
+    self.glowLayer?.frame = self.bounds
   }
 }
 
