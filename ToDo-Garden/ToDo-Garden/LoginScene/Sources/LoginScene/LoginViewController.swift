@@ -15,7 +15,12 @@ protocol LoginDisplayLogic: AnyObject {
   func displaySomething(viewModel: Login.Something.ViewModel)
 }
 
-class LoginViewController: UIViewController, LoginViewControllable {
+protocol AppleLoginBottomSheetDelegate: AnyObject {
+  func bottomSheetWillDisappear()
+  func bottomSheetWillAppear()
+}
+
+final class LoginViewController: UIViewController, LoginViewControllable {
   
   // MARK: - VIP Properties
   
@@ -122,5 +127,22 @@ extension LoginViewController {
   func doSomething() {
     let request = Login.Something.Request()
     self.interactor?.doSomething(request: request)
+  }
+}
+
+extension LoginViewController: AppleLoginBottomSheetDelegate {
+  func bottomSheetWillDisappear() {
+    UIView.animate(withDuration: Constant.DimmingView.animateDuration) {
+      self.dimmingView.alpha = 0
+    } completion: { _ in
+      self.dimmingView.isHidden = true
+    }
+  }
+  
+  func bottomSheetWillAppear() {
+    self.dimmingView.isHidden = false
+    UIView.animate(withDuration: Constant.DimmingView.animateDuration) {
+      self.dimmingView.alpha = 1
+    }
   }
 }
