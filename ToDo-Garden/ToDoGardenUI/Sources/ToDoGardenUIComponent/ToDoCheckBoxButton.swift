@@ -44,8 +44,9 @@ public final class ToDoCheckBoxButton: UIButton, HapticFeedbackable {
     self.layer.borderColor = color.cgColor
   }
 
-  // TODO: - 런타임에 선택 상태 or 선택 해제 상태로 만들 수 있어야 함.
   public func setSelected() {
+    self.backgroundColor = self.mainColor
+    self.drawCompleteToDoAnimation()
     self.makeVibration()
   }
 
@@ -54,11 +55,16 @@ public final class ToDoCheckBoxButton: UIButton, HapticFeedbackable {
   }
 }
 
-// MARK: Set up UI
+// MARK: - Private Functions
 
 extension ToDoCheckBoxButton {
-  private func setup() {
-    self.setupAnimationLayerUI()
+  private func drawCompleteToDoAnimation() {
+    let animation = CABasicAnimation(keyPath: Constant.ToDoCheckBoxButton.Animation.keyPath)
+    animation.duration = Constant.ToDoCheckBoxButton.Animation.duration
+    animation.fromValue = Constant.ToDoCheckBoxButton.Animation.fromValue
+    animation.toValue = Constant.ToDoCheckBoxButton.Animation.toValue
+    animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+    self.checkmarkDrawingLayer.add(animation, forKey: nil)
   }
 
   private func makeVibration() {
