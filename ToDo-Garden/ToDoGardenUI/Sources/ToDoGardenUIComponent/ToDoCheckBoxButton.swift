@@ -13,11 +13,13 @@ import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 public final class ToDoCheckBoxButton: UIButton, HapticFeedbackable {
+  private var mainColor: UIColor
   private var checkmarkDrawingLayer: CAShapeLayer
 
   @ExecuteOnce private var setAnimation: (() -> Void)?
 
   public init() {
+    self.mainColor = UIColor.toDoGardenGreenDark
     self.checkmarkDrawingLayer = CAShapeLayer()
     super.init(frame: CGRect.zero)
     self.setup()
@@ -35,7 +37,12 @@ public final class ToDoCheckBoxButton: UIButton, HapticFeedbackable {
     }
   }
 
-  // TODO: - 런타임에 버튼의 색상을 변경할 수 있어야 함.
+  /// 체크박스의 메인 색상을 변경하는 함수입니다.
+  /// 메인 색상 변경시, 테두리 색상과 선택되었을 때 배경색이 함께 변경됩니다.
+  public func updateMainColor(_ color: UIColor) {
+    self.mainColor = color
+    self.layer.borderColor = color.cgColor
+  }
 
   // TODO: - 런타임에 선택 상태 or 선택 해제 상태로 만들 수 있어야 함.
   public func setSelected() {
