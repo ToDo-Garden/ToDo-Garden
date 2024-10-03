@@ -10,37 +10,36 @@ import Foundation
 import LoginSceneAPI
 
 protocol LoginRoutingLogic {
-	func routeToSomewhere()
+  func routeToSomewhere()
 }
 
 protocol LoginDataPassing {
-	var dataStore: LoginDataStore? { get }
+  var dataStore: LoginDataStore? { get }
 }
 
 class LoginRouter: LoginDataPassing {
-	weak var viewController: LoginViewController?
-	var dataStore: LoginDataStore?
-	private let nextSceneBuilder: NextSceneBuildable
-	
-	init(nextSceneBuilder: NextSceneBuildable) {
-		self.nextSceneBuilder = nextSceneBuilder
-	}
+  weak var viewController: LoginViewController?
+  var dataStore: LoginDataStore?
+  private let nextSceneBuilder: NextSceneBuildable
+  
+  init(nextSceneBuilder: NextSceneBuildable) {
+    self.nextSceneBuilder = nextSceneBuilder
+  }
 }
 
 // MARK: - Routing
 
 extension LoginRouter: LoginRoutingLogic {
-	func routeToSomewhere() {
+  func routeToSomewhere() {
     // let destinationViewController = self.nextSceneBuilder.build(with: NextScenePayload())
-		
-		// self.viewController?.present(destinationViewController, animated: true)
-	}
+    // self.viewController?.present(destinationViewController, animated: true)
+  }
 }
 
 // MARK: - Declare Payload for scene
 
 extension LoginRouter {
-	struct NextScenePayload: NextScenePayloadable {
-		// var name: String
-	}
+  struct NextScenePayload: NextScenePayloadable {
+    // var name: String
+  }
 }

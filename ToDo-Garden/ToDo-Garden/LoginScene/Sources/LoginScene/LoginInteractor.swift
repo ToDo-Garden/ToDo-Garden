@@ -11,30 +11,30 @@ import LoginSceneAPI
 import LoginSceneEntity
 
 protocol LoginDataStore {
-	// var name: String { get set }
+  // var name: String { get set }
 }
 
 protocol LoginBusinessLogic {
-	func doSomething(request: Login.Something.Request)
+  func doSomething(request: Login.Something.Request)
 }
 
 class LoginInteractor: LoginDataStore {
-	// var name: String = ""
-	var presenter: LoginPresentationLogic?
-	private let someWorker: LoginWorkable
-	
-	init(someWorker: LoginWorkable) {
-		self.someWorker = someWorker
-	}
+  // var name: String = ""
+  var presenter: LoginPresentationLogic?
+  private let someWorker: LoginWorkable
+  
+  init(someWorker: LoginWorkable) {
+    self.someWorker = someWorker
+  }
 }
 
 // MARK: - Request to worker
 
 extension LoginInteractor: LoginBusinessLogic {
-	func doSomething(request: Login.Something.Request) {
-		self.someWorker.doSomeWork()
-		
-		let response = Login.Something.Response()
-		self.presenter?.presentSomething(response: response)
-	}
+  func doSomething(request: Login.Something.Request) {
+    self.someWorker.doSomeWork()
+    
+    let response = Login.Something.Response()
+    self.presenter?.presentSomething(response: response)
+  }
 }
