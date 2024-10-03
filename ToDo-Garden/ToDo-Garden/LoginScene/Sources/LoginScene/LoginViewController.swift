@@ -146,3 +146,11 @@ extension LoginViewController: AppleLoginBottomSheetDelegate {
     }
   }
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let view = LoginViewController()
+  return view
+}
+#endif
