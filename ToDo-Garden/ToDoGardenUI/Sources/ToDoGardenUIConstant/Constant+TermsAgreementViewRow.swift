@@ -35,6 +35,6 @@ extension Constant.TermsAgreementViewRow.ChevronButton {
 
 extension Constant.TermsAgreementViewRow.CheckButton {
   public enum Layout {
-    public static let length: CGFloat = 24.0
+    public static let length: CGFloat = 14.0
   }
 }
