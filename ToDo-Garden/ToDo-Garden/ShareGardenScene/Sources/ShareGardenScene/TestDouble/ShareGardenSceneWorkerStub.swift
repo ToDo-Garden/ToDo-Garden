@@ -19,7 +19,7 @@ actor ShareGardenSceneWorkerStub: ShareGardenSceneWorkable {
   
   // MARK: - Friends Garden
   
-  func requestFriendsGardenList() async throws -> [ShareGardenScene.FriendsGarden] { 
+  func requestFriendsGardenList() async throws -> [ShareGardenScene.FriendsGarden] {
     let pomodoroRecords = self.makeRandomPomodoroRecords()
     let nicknames = ["강운", "노아", "우드", "울버린"]
     var friendsGardens = [ShareGardenScene.FriendsGarden]()
