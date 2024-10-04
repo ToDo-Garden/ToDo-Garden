@@ -72,7 +72,7 @@ final class ShareGardenSceneViewController: UIViewController, ShareGardenSceneVi
 
 extension ShareGardenSceneViewController: ShareGardenSceneDisplayLogic {
   func displayMyGarden(_ viewModel: ShareGardenSceneEntity.ShareGardenScene.RequestMyGarden.ViewModel) {
-    // TODO: - view update
+    self.myGardenView.update(viewModel: viewModel)
   }
   
   func displayFriendsGardenList(_ viewModel: ShareGardenScene.RequestFriendsGardenList.ViewModel) {
