@@ -56,7 +56,7 @@ actor ShareGardenSceneWorkerStub: ShareGardenSceneWorkable {
   
   // MARK: - My Garden
   
-  func requestMyGarden() async throws -> ShareGardenScene.RequestMyGarden.Response {
+  func requestMyGarden() async throws -> ShareGardenScene.MyGarden {
     let pomodoroRecords = self.makeRandomPomodoroRecords()
     
     let myGarden = ShareGardenScene.MyGarden(
@@ -65,13 +65,9 @@ actor ShareGardenSceneWorkerStub: ShareGardenSceneWorkable {
       pomodoroRecords: PomodoroRecordCollection(pomodoroRecords: pomodoroRecords)
     )
     
-    let response = ShareGardenScene.RequestMyGarden.Response(
-      myGarden: myGarden
-    )
-    
     try await Task.sleep(nanoseconds: 2_000_000_000)
     
-    return response
+    return myGarden
   }
 }
 
