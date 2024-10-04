@@ -24,7 +24,13 @@ final class ShareGardenScenePresenter {
 
 extension ShareGardenScenePresenter: ShareGardenScenePresentationLogic {
   func presentMyGarden(response: ShareGardenScene.RequestMyGarden.Response) {
-    // TODO: - viewcontroller 연결
+    let viewModel = ShareGardenScene.RequestMyGarden.ViewModel(
+      nickname: response.myGarden.nickname,
+      description: response.myGarden.description,
+      pomodoroRecords: response.myGarden.pomodoroRecords
+    )
+    
+    self.viewController?.displayMyGarden(viewModel)
   }
   
   func presentFriendsGardens(response: ShareGardenScene.RequestFriendsGardenList.Response) {
