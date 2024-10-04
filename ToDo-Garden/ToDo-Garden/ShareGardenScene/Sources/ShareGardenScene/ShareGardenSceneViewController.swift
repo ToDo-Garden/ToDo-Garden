@@ -12,6 +12,7 @@ import ShareGardenSceneEntity
 
 @MainActor
 protocol ShareGardenSceneDisplayLogic: AnyObject {
+  func displayMyGarden(_ viewModel: ShareGardenScene.RequestMyGarden.ViewModel)
   func displayFriendsGardenList(_ viewModel: ShareGardenScene.RequestFriendsGardenList.ViewModel)
   func stopShimmeringFriendsGardenList()
 }
@@ -70,6 +71,10 @@ final class ShareGardenSceneViewController: UIViewController, ShareGardenSceneVi
 // MARK: - Conform to display logic protocol
 
 extension ShareGardenSceneViewController: ShareGardenSceneDisplayLogic {
+  func displayMyGarden(_ viewModel: ShareGardenSceneEntity.ShareGardenScene.RequestMyGarden.ViewModel) {
+    // TODO: - view update
+  }
+  
   func displayFriendsGardenList(_ viewModel: ShareGardenScene.RequestFriendsGardenList.ViewModel) {
     self.friendsGardenView.displayFriendsGardenList(viewModel.identifiers)
   }
