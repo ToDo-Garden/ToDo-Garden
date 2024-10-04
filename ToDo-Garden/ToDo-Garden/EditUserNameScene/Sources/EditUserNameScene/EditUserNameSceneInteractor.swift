@@ -31,6 +31,10 @@ final class EditUserNameSceneInteractor: EditUserNameSceneDataStore {
   init(editUserNameWorker: EditUserNameSceneWorkable) {
     self.editUserNameWorker = editUserNameWorker
   }
+
+  deinit {
+    self.editUserNameTask?.cancel()
+  }
 }
 
 // MARK: - Request to worker
