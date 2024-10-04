@@ -16,14 +16,7 @@ extension Styled.Row {
   }
   
   private func buildButton(stack: UIStackView, isSelecetd: Bool, handler: @escaping (Bool) -> Void) {
-    let button = ToDoCheckBoxButton(
-      checkBoxModel: .init(
-        isToDoDone: isSelecetd,
-        groupColor: UIColor.toDoGardenRed,
-        borderWidth: Constant.Styled.Row.ToDoList.buttonBorderWidth,
-        cornerRadius: Constant.Styled.Row.ToDoList.buttonCornerRadius
-      )
-    )
+    let button = ToDoCheckBoxButton()
     let action = UIAction { [weak self, weak button] _ in
       guard let button else { return }
       self?.configuration.todoListModel

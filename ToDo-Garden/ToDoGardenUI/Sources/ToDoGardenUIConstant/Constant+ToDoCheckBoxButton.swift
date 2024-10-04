@@ -37,11 +37,23 @@ extension Constant.ToDoCheckBoxButton.Animation {
 
 extension Constant.ToDoCheckBoxButton.Animation {
   public enum Path {
-    public static let offsetXToStartPoint: CGFloat = 4.0
-    public static let offsetYToStartPoint: CGFloat = 7.5
-    public static let offsetXToMiddlePoint: CGFloat = 3.5
-    public static let offsetYToMiddlePoint: CGFloat = 5.5
-    public static let offsetXToEndPoint: CGFloat = 6.0
-    public static let offsetYToEndPoint: CGFloat = 8.5
+    public enum StartPoint {}
+    public enum MiddlePoint {}
+    public enum EndPoint {}
   }
+}
+
+public extension Constant.ToDoCheckBoxButton.Animation.Path.StartPoint {
+  static let offsetX: CGFloat = 0.29
+  static let offsetY: CGFloat = 0.43
+}
+
+public extension Constant.ToDoCheckBoxButton.Animation.Path.MiddlePoint {
+  static let offsetX: CGFloat = 0.18
+  static let offsetY: CGFloat = 0.29
+}
+
+public extension Constant.ToDoCheckBoxButton.Animation.Path.EndPoint {
+  static let offsetX: CGFloat = 0.25
+  static let offsetY: CGFloat = 0.43
 }
