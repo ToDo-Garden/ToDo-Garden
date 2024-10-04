@@ -54,8 +54,14 @@ final class TermsAgreementViewRow: UIView {
   
   private func setupCheckButton() {
     self.checkButton.updateMainColor(UIColor.toDoGardenGreenDark)
+    self.setupCheckButtonRoundedCorner()
   }
-  
+
+  private func setupCheckButtonRoundedCorner() {
+    let length = Constant.TermsAgreementViewRow.CheckButton.Layout.length
+    self.checkButton.layer.cornerRadius = length / 2.0
+  }
+
   private func setupTextLabel() {
     self.textLabel.textColor = UIColor.toDoGardenGreenDark
   }
