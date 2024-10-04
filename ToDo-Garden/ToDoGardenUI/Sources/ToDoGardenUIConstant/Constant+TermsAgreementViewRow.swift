@@ -10,7 +10,7 @@ import Foundation
 extension Constant.TermsAgreementViewRow {
   public enum Layout {
     public static let size: CGSize = CGSize(width: 220.0, height: 30.0)
-    public static let commonMargin: CGFloat = 4.0
+    public static let commonMargin: CGFloat = 7.0
   }
   
   public enum TextLabel { }
