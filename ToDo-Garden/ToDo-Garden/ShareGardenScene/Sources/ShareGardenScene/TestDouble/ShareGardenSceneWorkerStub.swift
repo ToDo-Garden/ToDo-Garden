@@ -53,6 +53,27 @@ actor ShareGardenSceneWorkerStub: ShareGardenSceneWorkable {
       throw NSError(domain: "", code: 99999)
     }
   }
+  
+  // MARK: - My Garden
+  
+  func requestMyGarden() async throws -> ShareGardenScene.RequestMyGarden.Response {
+    let pomodoroRecords = self.makeRandomPomodoroRecords()
+    
+    let myGarden = ShareGardenScene.MyGarden(
+      nickname: UUID().uuidString,
+      description: UUID().uuidString,
+      pomodoroRecords: PomodoroRecordCollection(pomodoroRecords: pomodoroRecords)
+    )
+    
+    let response = ShareGardenScene.RequestMyGarden.Response(
+      myGarden: myGarden
+    )
+    
+    try await Task.sleep(nanoseconds: 2_000_000_000)
+    
+    return response
+  }
+}
 
 extension ShareGardenSceneWorkerStub {
   private func makeRandomPomodoroRecords() -> [PomodoroRecord] {
