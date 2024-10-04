@@ -63,6 +63,15 @@ final class EditUserNameSceneViewController: UIViewController, EditUserNameScene
     super.viewIsAppearing(animated)
     self.interactor?.setUserName()
   }
+
+  override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    self.interactor?.cancelAllTasks()
+  }
+
+  deinit {
+    self.interactor?.cancelAllTasks()
+  }
 }
 
 // MARK: - Confirm display logic protocol

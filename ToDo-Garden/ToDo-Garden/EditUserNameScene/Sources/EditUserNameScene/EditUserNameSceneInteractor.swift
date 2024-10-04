@@ -18,6 +18,8 @@ protocol EditUserNameSceneBusinessLogic {
   func setUserName()
   func verifyUserName(_ userName: String)
   func requestEditUserName(_ userName: String)
+
+  func cancelAllTasks()
 }
 
 final class EditUserNameSceneInteractor: EditUserNameSceneDataStore {
@@ -33,7 +35,7 @@ final class EditUserNameSceneInteractor: EditUserNameSceneDataStore {
   }
 
   deinit {
-    self.editUserNameTask?.cancel()
+    self.cancelAllTasks()
   }
 }
 
@@ -69,6 +71,12 @@ extension EditUserNameSceneInteractor: EditUserNameSceneBusinessLogic {
         await self.presenter?.presentEditUserNameResult(error)
       }
     }
+  }
+}
+
+extension EditUserNameSceneInteractor {
+  func cancelAllTasks() {
+    self.editUserNameTask?.cancel()
   }
 }
 
