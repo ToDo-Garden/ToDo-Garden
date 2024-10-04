@@ -10,7 +10,7 @@ import Foundation
 import EditUserNameSceneAPI
 
 protocol EditUserNameSceneRoutingLogic {
-  func routeToSomewhere()
+  func routeToUserInfoScene()
 }
 
 protocol EditUserNameSceneDataPassing {
@@ -25,7 +25,8 @@ class EditUserNameSceneRouter: EditUserNameSceneDataPassing {
 // MARK: - Routing
 
 extension EditUserNameSceneRouter: EditUserNameSceneRoutingLogic {
-  func routeToSomewhere() {
+  func routeToUserInfoScene() {
+    self.viewController?.navigationController?.popViewController(animated: true)
   }
 }
 

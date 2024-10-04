@@ -10,18 +10,37 @@ import Foundation
 import EditUserNameSceneEntity
 
 protocol EditUserNameScenePresentationLogic {
-  func presentSomething(response: EditUserNameScene.Something.Response)
+  func presentUserName(_ userName: String?)
+  func presentUserNameVerification(isValid: Bool)
+  @MainActor func presentEditUserNameResult(_ error: Error?)
 }
 
-class EditUserNameScenePresenter {
+final class EditUserNameScenePresenter {
   weak var viewController: EditUserNameSceneDisplayLogic?
 }
 
 // MARK: - Request to ViewController
 
 extension EditUserNameScenePresenter: EditUserNameScenePresentationLogic {
-  func presentSomething(response: EditUserNameScene.Something.Response) {
-    let viewModel = EditUserNameScene.Something.ViewModel()
-    self.viewController?.displaySomething(viewModel: viewModel)
+  func presentEditUserNameResult(_ error: Error?) {
+    if error != nil {
+      self.viewController?.displayEditUserNameSuccess()
+    }
+  }
+  
+  func presentUserName(_ userName: String?) {
+    if let userName {
+      self.viewController?.displayUserName(userName)
+    } else {
+      self.viewController?.displayEmptyUserName()
+    }
+  }
+
+  func presentUserNameVerification(isValid: Bool) {
+    if isValid {
+      self.viewController?.displayUserNameValid()
+    } else {
+      self.viewController?.displayUserNameInvalid()
+    }
   }
 }
