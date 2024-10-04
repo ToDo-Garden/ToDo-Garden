@@ -50,9 +50,10 @@ extension ShareGardenSceneInteractor: ShareGardenSceneBusinessLogic {
       do {
         let myGarden = try await self.shareGardenSceneWorker.requestMyGarden()
         try Task.checkCancellation()
-        // TODO: - presenter 연결
+        let response = ShareGardenScene.RequestMyGarden.Response(myGarden: myGarden)
+        self.presenter?.presentMyGarden(response: response)
       } catch {
-        // TODO: - error handling
+        // TODO: - error handling (error view 표시 예정)
       }
     }
   }
