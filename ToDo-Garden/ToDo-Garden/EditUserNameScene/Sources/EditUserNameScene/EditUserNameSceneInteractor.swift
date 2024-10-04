@@ -63,6 +63,7 @@ extension EditUserNameSceneInteractor: EditUserNameSceneBusinessLogic {
         try await self.editUserNameWorker.requestEditUserName(userName)
         await self.presenter?.presentEditUserNameResult(nil)
       } catch let error {
+        if error as? CancellationError != nil { return }
         await self.presenter?.presentEditUserNameResult(error)
       }
     }
