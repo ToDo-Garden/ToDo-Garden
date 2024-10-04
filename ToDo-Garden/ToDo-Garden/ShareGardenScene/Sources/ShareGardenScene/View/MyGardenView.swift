@@ -83,10 +83,6 @@ extension ShareGardenSceneViewController {
       self.layoutIfNeeded()
       self.profileInfoView.startShimmering()
     }
-    
-    func stopShimmeringAnimation() {
-      self.profileInfoView.stopShimmering()
-    }
   }
 }
 
@@ -109,6 +105,10 @@ extension ShareGardenSceneViewController.MyGardenView {
     self.addArrangedSubview(self.sectionHeaderView)
     self.addArrangedSubview(self.profileInfoView)
     self.addArrangedSubview(self.gardenView)
+  }
+  
+  private func stopShimmeringAnimation() {
+    self.profileInfoView.stopShimmering()
   }
 }
 
