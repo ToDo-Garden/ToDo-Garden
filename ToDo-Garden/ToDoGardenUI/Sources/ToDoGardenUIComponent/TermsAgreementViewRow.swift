@@ -12,7 +12,7 @@ import ToDoGardenUIResource
 
 final class TermsAgreementViewRow: UIView {
   // MARK: - Properties
-  let checkButton: UIButton
+  let checkButton: ToDoCheckBoxButton
   private let textLabel: UILabel
   private let chevronButton: UIButton
   
@@ -29,7 +29,7 @@ final class TermsAgreementViewRow: UIView {
   
   // MARK: - Initialization
   init(title: String, font: UIFont, chevronIsHidden: Bool) {
-    self.checkButton = UIButton(type: UIButton.ButtonType.custom)
+    self.checkButton = ToDoCheckBoxButton()
     self.textLabel = UILabel()
     self.chevronButton = UIButton(type: UIButton.ButtonType.system)
     
@@ -53,12 +53,7 @@ final class TermsAgreementViewRow: UIView {
   }
   
   private func setupCheckButton() {
-    self.checkButton.setImage(UIImage.circledCheckMarkEmpty, for: UIControl.State.normal)
-    self.checkButton.setImage(UIImage.circledCheckMarkFill, for: UIControl.State.selected)
-    self.checkButton.tintColor = UIColor.toDoGardenGreenDark
-    self.checkButton.addAction(UIAction(handler: { [weak self] _ in
-      self?.checkButtonTapped()
-    }), for: UIControl.Event.touchUpInside)
+    self.checkButton.updateMainColor(UIColor.toDoGardenGreenDark)
   }
   
   private func setupTextLabel() {
