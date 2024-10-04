@@ -146,7 +146,7 @@ extension ToDoCheckBoxButton {
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  var stackView = UIStackView()
+  let stackView = UIStackView()
   stackView.axis = .vertical
   stackView.spacing = 50
   stackView.alignment = .center
