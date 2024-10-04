@@ -11,6 +11,8 @@ import TDUtility
 import ToDoGardenUIComponent
 import ToDoGardenUIResource
 
+import ShareGardenSceneEntity
+
 extension ShareGardenSceneViewController {
   final class MyGardenView: UIStackView {
     
@@ -75,8 +77,10 @@ extension ShareGardenSceneViewController {
       }
     }
     
-    func configure(with pomodoroRecordCollection: PomodoroRecordCollection) {
-      self.gardenView.configure(with: pomodoroRecordCollection)
+    func update(viewModel: ShareGardenScene.RequestMyGarden.ViewModel) {
+      self.updateGardenView(with: viewModel.pomodoroRecords)
+      self.updateProfileInfoView(with: viewModel.nickname, viewModel.description)
+      self.stopShimmeringAnimation()
     }
     
     func startShimmeringAnimation() {
@@ -105,6 +109,20 @@ extension ShareGardenSceneViewController.MyGardenView {
     self.addArrangedSubview(self.sectionHeaderView)
     self.addArrangedSubview(self.profileInfoView)
     self.addArrangedSubview(self.gardenView)
+  }
+  
+  private func updateProfileInfoView(with nickname: String, _ description: String) {
+    self.profileInfoView.configuration = Styled.Row.Configuration.profile(
+      Styled.Row.Configuration.ProfileModel(
+        style: Styled.Row.Configuration.ProfileModel.Style.shareProfile,
+        title: nickname,
+        description: description
+      )
+    )
+  }
+  
+  private func updateGardenView(with pomodoroRecordCollection: PomodoroRecordCollection) {
+    self.gardenView.configure(with: pomodoroRecordCollection)
   }
   
   private func stopShimmeringAnimation() {
