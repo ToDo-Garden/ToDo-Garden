@@ -72,7 +72,7 @@ final class ShareGardenSceneViewController: UIViewController, ShareGardenSceneVi
 
 extension ShareGardenSceneViewController: ShareGardenSceneDisplayLogic {
   func displayMyGarden(_ viewModel: ShareGardenSceneEntity.ShareGardenScene.RequestMyGarden.ViewModel) {
-    // TODO: - view update
+    self.myGardenView.update(viewModel: viewModel)
   }
   
   func displayFriendsGardenList(_ viewModel: ShareGardenScene.RequestFriendsGardenList.ViewModel) {
@@ -89,6 +89,7 @@ extension ShareGardenSceneViewController: ShareGardenSceneDisplayLogic {
 extension ShareGardenSceneViewController {
   private func updateViewContents() {
     self.friendsGardenView.startShimmeringAnimation()
+    self.myGardenView.startShimmeringAnimation()
     self.interactor?.requestMyGarden()
     self.interactor?.requestFriendsGardenList()
   }
