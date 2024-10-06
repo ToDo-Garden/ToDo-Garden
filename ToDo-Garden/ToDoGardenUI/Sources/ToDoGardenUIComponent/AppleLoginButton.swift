@@ -4,17 +4,18 @@ import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 public final class AppleLoginButton: UIButton {
-  private var glowLayer: CALayer?
+  private let appleLogo: UIImageView
   
   public override init(frame: CGRect) {
+    self.appleLogo = UIImageView(image: UIImage.appleLogo)
     super.init(frame: frame)
     self.setupButton()
+    self.setupAppleLogo()
   }
   
   @available(*, unavailable)
   required init?(coder: NSCoder) {
-    super.init(coder: coder)
-    fatalError()
+    fatalError("init(coder:) has not been implemented")
   }
   
   public override var intrinsicContentSize: CGSize {
@@ -26,16 +27,17 @@ public final class AppleLoginButton: UIButton {
   
   private func setupButton() {
     self.configureAppearance()
-    self.addAppleLogo()
-    self.setupGlowEffect()
     self.addAction(UIAction { [weak self] _ in
-      self?.buttonTouchDown()
+      self?.highlightOn()
     }, for: UIControl.Event.touchDown)
     self.addAction(UIAction { [weak self] _ in
-      self?.buttonTouchUpInside()
+      self?.highlightOn()
+    }, for: UIControl.Event.touchDragEnter)
+    self.addAction(UIAction { [weak self] _ in
+      self?.highlightOff()
     }, for: UIControl.Event.touchUpInside)
     self.addAction(UIAction { [weak self] _ in
-      self?.buttonTouchDragExit()
+      self?.highlightOff()
     }, for: UIControl.Event.touchDragExit)
   }
   
@@ -60,70 +62,42 @@ public final class AppleLoginButton: UIButton {
     )
   }
   
-  private func addAppleLogo() {
+  private func setupAppleLogo() {
     guard let titleLabel = self.titleLabel else {
       return
     }
     
-    let appleLogo = self.createAppleLogo()
-    self.addSubview(appleLogo)
+    self.appleLogo.contentMode = UIView.ContentMode.scaleAspectFit
+    self.appleLogo.usingAutolayout()
+    self.addSubview(self.appleLogo)
     
     NSLayoutConstraint.activate([
-      appleLogo.trailingAnchor.constraint(
+      self.appleLogo.trailingAnchor.constraint(
         equalTo: titleLabel.leadingAnchor,
         constant: Constant.AppleLoginButton.AppleLogo.trailing
       ),
-      appleLogo.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-      appleLogo.widthAnchor.constraint(
+      self.appleLogo.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+      self.appleLogo.widthAnchor.constraint(
         equalToConstant: Constant.AppleLoginButton.AppleLogo.width
       ),
-      appleLogo.heightAnchor.constraint(
+      self.appleLogo.heightAnchor.constraint(
         equalToConstant: Constant.AppleLoginButton.height
       )
     ])
   }
   
-  private func createAppleLogo() -> UIImageView {
-    let imageView = UIImageView(image: UIImage.appleLogo)
-    imageView.contentMode = UIView.ContentMode.scaleAspectFit
-    imageView.usingAutolayout()
-    return imageView
-  }
-  
-  private func setupGlowEffect() {
-    self.glowLayer = CALayer()
-    self.glowLayer?.backgroundColor = UIColor.white.cgColor
-    self.glowLayer?.opacity = 0
-    self.glowLayer?.cornerRadius = Constant.AppleLoginButton.cornerRadius
-    
-    if let glowLayer = self.glowLayer {
-      self.layer.addSublayer(glowLayer)
+  private func highlightOn() {
+    UIView.animate(withDuration: 0.3) {
+      self.titleLabel?.alpha = 0.5
+      self.appleLogo.alpha = 0.5
     }
   }
   
-  private func buttonTouchDown() {
-    UIView.animate(withDuration: 0.1) {
-      self.glowLayer?.opacity = 0.5
+  private func highlightOff() {
+    UIView.animate(withDuration: 0.3) {
+      self.titleLabel?.alpha = 1.0
+      self.appleLogo.alpha = 1.0
     }
-  }
-  
-  private func buttonTouchUpInside() {
-    self.fadeOutGlowEffect()
-  }
-  
-  private func buttonTouchDragExit() {
-    self.fadeOutGlowEffect()
-  }
-  
-  private func fadeOutGlowEffect() {
-    UIView.animate(withDuration: 0.5, animations: {
-      self.glowLayer?.opacity = 0
-    })
-  }
-  
-  public override func layoutSubviews() {
-    super.layoutSubviews()
-    self.glowLayer?.frame = self.bounds
   }
 }
 
