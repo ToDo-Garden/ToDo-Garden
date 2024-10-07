@@ -23,7 +23,11 @@ public final class InputTextValidationView: UIView {
     return self.caluclateIntrinsicContentSize()
   }
 
-  public init(inputText: String, placeholderText: String, validationText: String) {
+  public init(
+    inputText: String,
+    placeholderText: String,
+    validationText: String
+  ) {
     self.textInputView = TextInputView(inputText: inputText, placeholderText: placeholderText)
     self.validationTextLabel = UILabel()
     super.init(frame: CGRect.zero)
