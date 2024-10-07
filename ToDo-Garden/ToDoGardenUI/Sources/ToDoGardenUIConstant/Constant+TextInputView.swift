@@ -15,6 +15,7 @@ extension Constant.TextInputView {
 
 extension Constant.TextInputView.Animation {
   public static let duration: CGFloat = 0.4
+  public static let shrinkScale: CGFloat = 0.8
 }
 
 extension Constant.TextInputView.Layout {

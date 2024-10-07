@@ -23,8 +23,8 @@ public final class InputTextValidationView: UIView {
     return self.caluclateIntrinsicContentSize()
   }
 
-  public init(inputText: String, validationText: String) {
-    self.textInputView = TextInputView(model: TextInputView.Model(inputText: inputText))
+  public init(inputText: String, placeholderText: String, validationText: String) {
+    self.textInputView = TextInputView(inputText: inputText, placeholderText: placeholderText)
     self.validationTextLabel = UILabel()
     super.init(frame: CGRect.zero)
     self.setupUI(with: validationText)
@@ -163,6 +163,7 @@ extension InputTextValidationView {
 
   let idView = InputTextValidationView(
     inputText: "아이디",
+    placeholderText: "아이디를 입력해주세요.",
     validationText: "아이디는 5~12자 내외 띄어쓰기 없이\n영문, 숫자만 사용 가능합니다"
   )
   stackView.addArrangedSubview(idView)
@@ -170,6 +171,7 @@ extension InputTextValidationView {
 
   let existedIdView = InputTextValidationView(
     inputText: "아이디",
+    placeholderText: "아이디를 입력해주세요.",
     validationText: "아이디는 5~12자 내외 띄어쓰기 없이\n영문, 숫자만 사용 가능합니다"
   )
   stackView.addArrangedSubview(existedIdView)
@@ -178,6 +180,7 @@ extension InputTextValidationView {
 
   let nickNameView = InputTextValidationView(
     inputText: "닉네임",
+    placeholderText: "닉네임을 입력해주세요.",
     validationText: "닉네임은 5~12자 내외\n띄어쓰기, 특수기호 없이 사용 가능합니다"
   )
   stackView.addArrangedSubview(nickNameView)
@@ -185,6 +188,7 @@ extension InputTextValidationView {
 
   let introductionView = InputTextValidationView(
     inputText: "소개",
+    placeholderText: "당신을 소개해주세요.",
     validationText: "한줄소개는 최대 15글자까지 사용 가능합니다"
   )
   stackView.addArrangedSubview(introductionView)
