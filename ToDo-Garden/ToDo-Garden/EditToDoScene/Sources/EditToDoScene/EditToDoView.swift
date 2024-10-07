@@ -10,6 +10,7 @@ import UIKit
 import EditToDoSceneEntity
 import ToDoGardenUIAPI
 import ToDoGardenUIComponent
+import ToDoGardenUIConstant
 
 final class EditToDoView: UIView {
   private let toDoNameInputView: TextInputView
@@ -19,7 +20,11 @@ final class EditToDoView: UIView {
   weak var delegate: EditToDoView.EditToDoViewDelegate?
 
   init() {
-    self.toDoNameInputView = TextInputView(model: TextInputView.Model.groupName)
+    let constant = ToDoGardenUIConstant.Constant.TextInputView.StringLiteral.ToDoName.self
+    self.toDoNameInputView = TextInputView(
+      inputText: constant.inputText,
+      placeholderText: constant.placeholderText
+    )
     self.groupSelectionView = GroupSelectionView(model: GroupSelectionView.Model.primary)
     self.deleteToDoButton = UIButton()
     super.init(frame: CGRect.zero)
