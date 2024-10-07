@@ -11,6 +11,7 @@ import ShareGardenSceneEntity
 
 @MainActor
 protocol ShareGardenScenePresentationLogic {
+  func presentMyGarden(response: ShareGardenScene.RequestMyGarden.Response)
   func presentFriendsGardens(response: ShareGardenScene.RequestFriendsGardenList.Response)
   func stopShimmeringFriendsGardenList()
 }
@@ -22,6 +23,16 @@ final class ShareGardenScenePresenter {
 // MARK: - Request to ViewController
 
 extension ShareGardenScenePresenter: ShareGardenScenePresentationLogic {
+  func presentMyGarden(response: ShareGardenScene.RequestMyGarden.Response) {
+    let viewModel = ShareGardenScene.RequestMyGarden.ViewModel(
+      nickname: response.myGarden.nickname,
+      description: response.myGarden.description,
+      pomodoroRecords: response.myGarden.pomodoroRecords
+    )
+    
+    self.viewController?.displayMyGarden(viewModel)
+  }
+  
   func presentFriendsGardens(response: ShareGardenScene.RequestFriendsGardenList.Response) {
     let identifiers = response.friendsGardenList.map(\.id)
     

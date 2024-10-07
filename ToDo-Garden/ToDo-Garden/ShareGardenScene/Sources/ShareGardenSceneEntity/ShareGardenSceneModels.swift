@@ -73,5 +73,21 @@ public enum ShareGardenScene {
         self.myGarden = myGarden
       }
     }
+    
+    public struct ViewModel: Sendable {
+      public let nickname: String
+      public let description: String
+      public let pomodoroRecords: PomodoroRecordCollection
+      
+      public init(
+        nickname: String,
+        description: String,
+        pomodoroRecords: PomodoroRecordCollection
+      ) {
+        self.nickname = nickname
+        self.description = description
+        self.pomodoroRecords = pomodoroRecords
+      }
+    }
   }
 }
