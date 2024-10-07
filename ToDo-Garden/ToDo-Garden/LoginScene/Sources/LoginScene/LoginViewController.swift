@@ -23,6 +23,7 @@ final class LoginViewController: UIViewController, LoginViewControllable {
   var interactor: LoginBusinessLogic?
   var router: (LoginRoutingLogic & LoginDataPassing)?
   
+  private var appleLoginManager: AppleLoginManager?
   private let appleLoginButton: AppleLoginButton
   private let dimmingView: UIView
   private let termAgreementView: TermsAgreementView
@@ -45,6 +46,7 @@ final class LoginViewController: UIViewController, LoginViewControllable {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    self.setAppleLoginManager()
     self.setUI()
     self.doSomething()
   }
@@ -76,8 +78,9 @@ extension LoginViewController {
         constant: self.view.bounds.height * Constant.AppleLoginButton.centerYMultiplier
       )
     ])
+    
     self.appleLoginButton.addAction(UIAction { [weak self] _ in
-      self?.appleLoginButtonTapped()
+      self?.appleLoginManager?.performAppleLogin()
     }, for: UIControl.Event.touchUpInside)
   }
   
@@ -105,6 +108,31 @@ extension LoginViewController {
     
   }
   
+  private func setAppleLoginManager() {
+    self.appleLoginManager = AppleLoginManager(presentationContextProvider: self)
+    self.appleLoginManager?.delegate = self
+  }
+  
+  private func showTermAgreementView() {
+    self.termAgreementView.isHidden = false
+    UIView.animate(withDuration: 0.5) {
+      self.dimmingView.alpha = 1
+      self.termAgreementView.alpha = 1
+      self.termAgreementView.transform = .identity
+    }
+  }
+  
+  private func hideTermAgreementView() {
+    UIView.animate(
+      withDuration: 0.5,
+      animations: {
+        self.dimmingView.alpha = 0
+        self.termAgreementView.alpha = 0
+        self.termAgreementView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+      }, completion: { _ in
+        self.termAgreementView.isHidden = true
+      })
+  }
 }
 
 // MARK: - Confirm display logic protocol
@@ -124,7 +152,7 @@ extension LoginViewController {
   }
 }
 
-extension LoginViewController: AppleLoginBottomSheetDelegate {
+extension LoginViewController: ASAuthorizationControllerPresentationContextProviding {
   public func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
     return self.view.window ?? UIWindow()
   }
@@ -137,7 +165,49 @@ extension LoginViewController: AppleLoginManagerDelegate {
       //      let userIdentifier = appleIDCredential.user
       //      let fullName = appleIDCredential.fullName
       //      let email = appleIDCredential.email
+      // TODO: 로딩 인디케이터
+      self.showTermAgreementView()
+      
+    case .failure(let error):
+      // TODO: 에러처리
+      print("인증 오류 발생: \(error.localizedDescription)")
     }
+  }
+}
+
+extension LoginViewController: TermsAgreementViewDelegate {
+  public func termsAgreementView(
+    _ view: ToDoGardenUIComponent.TermsAgreementView,
+    didTapTermsAndPoliciesAgreement: Void
+  ) {
+    // TODO: 약관 및 정책 열람 코드
+  }
+  
+  public func termsAgreementView(
+    _ view: ToDoGardenUIComponent.TermsAgreementView,
+    didTapPrivacyPolicy: Void
+  ) {
+    // TODO: 개인정보 처리 방침 열람 코드
+  }
+  
+  public func termsAgreementView(
+    _ view: ToDoGardenUIComponent.TermsAgreementView,
+    didTapEventAndPromotionalInformation: Void
+  ) {
+    // TODO: 이벤트, 광고성 정보 안내 (선택) 열람 코드
+  }
+  
+  public func termsAgreementView(
+    _ view: ToDoGardenUIComponent.TermsAgreementView,
+    didTapDoneButton isEventAndPromotionalInformationAgreed: Bool
+  ) {
+    self.hideTermAgreementView()
+    // TODO: 이벤트, 광고성 정보 안내 (선택)에 동의했을 때 / 안했을 때 동작 분기
+    
+    let nextVC = UIViewController()
+    nextVC.view.backgroundColor = .white
+    
+    self.navigationController?.pushViewController(nextVC, animated: true)
   }
 }
 
