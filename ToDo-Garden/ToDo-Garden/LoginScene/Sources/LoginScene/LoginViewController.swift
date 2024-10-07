@@ -118,7 +118,7 @@ extension LoginViewController {
     UIView.animate(withDuration: 0.5) {
       self.dimmingView.alpha = 1
       self.termAgreementView.alpha = 1
-      self.termAgreementView.transform = .identity
+      self.termAgreementView.transform = CGAffineTransform.identity
     }
   }
   
@@ -165,12 +165,11 @@ extension LoginViewController: AppleLoginManagerDelegate {
       //      let userIdentifier = appleIDCredential.user
       //      let fullName = appleIDCredential.fullName
       //      let email = appleIDCredential.email
-      // TODO: 로딩 인디케이터
+      // TODO: 신규회원인지 기존회원인지 체크
       self.showTermAgreementView()
       
-    case .failure(let error):
+    case .failure(let error): break
       // TODO: 에러처리
-      print("인증 오류 발생: \(error.localizedDescription)")
     }
   }
 }
