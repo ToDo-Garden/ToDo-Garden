@@ -39,6 +39,27 @@ final class AnimatedMultiLinesTitleView: UIStackView {
   required init(coder: NSCoder) {
     fatalError()
   }
+  
+  public func startAnimation() {
+    Task {
+      await withTaskGroup(of: Void.self) { group in
+        group.addTask { await self.animateText(for: self.mainTitleLabelFirst, with: self.firstLineText) }
+        group.addTask { await self.animateText(for: self.mainTitleLabelSecond, with: self.secondLineText) }
+        group.addTask { await self.animateText(for: self.subTitleLabel, with: self.thirdLineText) }
+      }
+    }
+  }
+  
+  private func animateText(for label: UILabel, with text: String) async {
+    for character in text {
+      await MainActor.run {
+        label.text?.append(character)
+      }
+      try? await Task.sleep(nanoseconds: 100_000_000)
+    }
+  }
+}
+
 extension AnimatedMultiLinesTitleView {
   private func setupStackView() {
     self.axis = NSLayoutConstraint.Axis.vertical
