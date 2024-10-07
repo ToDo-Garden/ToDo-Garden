@@ -33,6 +33,9 @@
 		E40EB3F32C3BBD64004D5329 /* PostGroupScene in Frameworks */ = {isa = PBXBuildFile; productRef = E40EB3F22C3BBD64004D5329 /* PostGroupScene */; };
 		E40EB3F52C3BBD88004D5329 /* PostGroupSceneAPI in Frameworks */ = {isa = PBXBuildFile; productRef = E40EB3F42C3BBD88004D5329 /* PostGroupSceneAPI */; };
 		E40EB3F72C3BBD88004D5329 /* PostGroupSceneEntity in Frameworks */ = {isa = PBXBuildFile; productRef = E40EB3F62C3BBD88004D5329 /* PostGroupSceneEntity */; };
+		E41282A12CB2900F000F6B7E /* InputIDScene in Frameworks */ = {isa = PBXBuildFile; productRef = E41282A02CB2900F000F6B7E /* InputIDScene */; };
+		E41282A32CB2900F000F6B7E /* InputIDSceneAPI in Frameworks */ = {isa = PBXBuildFile; productRef = E41282A22CB2900F000F6B7E /* InputIDSceneAPI */; };
+		E41282A52CB2900F000F6B7E /* InputIDSceneEntity in Frameworks */ = {isa = PBXBuildFile; productRef = E41282A42CB2900F000F6B7E /* InputIDSceneEntity */; };
 		E48680232CAE902600C6D535 /* LoginScene in Frameworks */ = {isa = PBXBuildFile; productRef = E48680222CAE902600C6D535 /* LoginScene */; };
 		E48680252CAE902600C6D535 /* LoginSceneAPI in Frameworks */ = {isa = PBXBuildFile; productRef = E48680242CAE902600C6D535 /* LoginSceneAPI */; };
 		E48680272CAE902600C6D535 /* LoginSceneEntity in Frameworks */ = {isa = PBXBuildFile; productRef = E48680262CAE902600C6D535 /* LoginSceneEntity */; };
@@ -73,6 +76,7 @@
 		AE645FE82C64BD3E001A5612 /* CommonViews */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CommonViews; sourceTree = "<group>"; };
 		AE645FE92C64BE80001A5612 /* GuideScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = GuideScene; sourceTree = "<group>"; };
 		AE930F3C2C2E9306002F26AB /* TimerScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = TimerScene; sourceTree = "<group>"; };
+		E42DEDE12CB28D6200FF4D4C /* InputIDScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = InputIDScene; sourceTree = "<group>"; };
 		E4754C0F2C3BB9790079CFAE /* PostGroupScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = PostGroupScene; sourceTree = "<group>"; };
 		E4DBB5922CAD595E00B58C23 /* LoginScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = LoginScene; sourceTree = "<group>"; };
 		E4DEA1722C2BEC2900E3CE3C /* ManageGroupScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ManageGroupScene; sourceTree = "<group>"; };
@@ -85,12 +89,15 @@
 			files = (
 				63C1A0F12C2FD74100B6D6DE /* EditToDoSceneAPI in Frameworks */,
 				E40EB3F72C3BBD88004D5329 /* PostGroupSceneEntity in Frameworks */,
+				E41282A52CB2900F000F6B7E /* InputIDSceneEntity in Frameworks */,
 				E4DEA1782C2BED0700E3CE3C /* ManageGroupSceneEntity in Frameworks */,
 				4FEB41422C3686DB00E3682A /* ShareGardenScene in Frameworks */,
+				E41282A32CB2900F000F6B7E /* InputIDSceneAPI in Frameworks */,
 				E48680272CAE902600C6D535 /* LoginSceneEntity in Frameworks */,
 				4FC8C1512B8C575A00BA223E /* ToDoGardenUIAPI in Frameworks */,
 				638F7F592C7F4E0900338FA3 /* UserInfoSceneEntity in Frameworks */,
 				634BD17A2CA1755B00396CAB /* EditUserNameSceneAPI in Frameworks */,
+				E41282A12CB2900F000F6B7E /* InputIDScene in Frameworks */,
 				638F7F572C7F4E0900338FA3 /* UserInfoSceneAPI in Frameworks */,
 				638125FE2CB3BFEE00FB4EEB /* EditUserIntroductionScene in Frameworks */,
 				638126022CB3BFEE00FB4EEB /* EditUserIntroductionSceneEntity in Frameworks */,
@@ -147,6 +154,7 @@
 		4F0DF12A2B4EABCE00097B7D /* ToDo-Garden */ = {
 			isa = PBXGroup;
 			children = (
+				E42DEDE12CB28D6200FF4D4C /* InputIDScene */,
 				63E20C1D2CB3BBFE00EC158E /* EditUserIntroductionScene */,
 				E4DBB5922CAD595E00B58C23 /* LoginScene */,
 				634BD1762CA1728500396CAB /* EditUserNameScene */,
@@ -246,6 +254,9 @@
 				634BD1772CA1755B00396CAB /* EditUserNameScene */,
 				634BD1792CA1755B00396CAB /* EditUserNameSceneAPI */,
 				634BD17B2CA1755B00396CAB /* EditUserNameSceneEntity */,
+				E41282A02CB2900F000F6B7E /* InputIDScene */,
+				E41282A22CB2900F000F6B7E /* InputIDSceneAPI */,
+				E41282A42CB2900F000F6B7E /* InputIDSceneEntity */,
 				E48680222CAE902600C6D535 /* LoginScene */,
 				E48680242CAE902600C6D535 /* LoginSceneAPI */,
 				E48680262CAE902600C6D535 /* LoginSceneEntity */,
@@ -697,6 +708,17 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = PostGroupSceneEntity;
 		};
+		E41282A02CB2900F000F6B7E /* InputIDScene */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = InputIDScene;
+		};
+		E41282A22CB2900F000F6B7E /* InputIDSceneAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = InputIDSceneAPI;
+		};
+		E41282A42CB2900F000F6B7E /* InputIDSceneEntity */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = InputIDSceneEntity;
 		E48680222CAE902600C6D535 /* LoginScene */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = LoginScene;
