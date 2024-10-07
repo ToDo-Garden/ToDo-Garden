@@ -37,7 +37,11 @@ final class PostGroupViewController: UIViewController, PostGroupViewControllable
   // MARK: - Object lifecycle
   
   init() {
-    self.textInputView = TextInputView(model: TextInputView.Model.groupName)
+    let constant = ToDoGardenUIConstant.Constant.TextInputView.StringLiteral.GroupName.self
+    self.textInputView = TextInputView(
+      inputText: constant.inputText,
+      placeholderText: constant.placeholderText
+    )
     self.postGroupColorPickerRow = PostGroupColorPickerRow()
     self.colorPickButton = UIButton()
     self.doneBottomButton = ToDoGardenBoxButton(
