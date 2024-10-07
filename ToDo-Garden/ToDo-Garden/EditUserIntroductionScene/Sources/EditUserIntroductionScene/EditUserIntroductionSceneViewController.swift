@@ -63,7 +63,13 @@ extension EditUserIntroductionSceneViewController {
 
 extension EditUserIntroductionSceneViewController {
   private func setupUI() {
+    self.setupMainViewUI()
     self.setupDoneButtonTitle()
+  }
+
+  private func setupMainViewUI() {
+    self.title = "소개 변경"
+    self.view.backgroundColor = UIColor.toDoGardenWhite
   }
 
   private func setupDoneButtonTitle() {
