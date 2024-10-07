@@ -96,4 +96,28 @@ extension AnimatedMultiLinesTitleView {
   }
 }
 
+@available(iOS 17.0, *)
+#Preview {
+  let backplaneView = UIView()
+  backplaneView.backgroundColor = .white
+  backplaneView.usingAutolayout()
+  
+  let view = AnimatedMultiLinesTitleView(
+    firstLineText: "환영한다.",
+    secondLineText: "안녕하세요.안녕하세요.안녕??",
+    thirdLineText: "안녕. 내이름은 홍길동"
+  )
+  
+  view.usingAutolayout()
+  backplaneView.addSubview(view)
+  
+  NSLayoutConstraint.activate([
+    backplaneView.widthAnchor.constraint(equalToConstant: 300),
+    backplaneView.heightAnchor.constraint(equalToConstant: 200),
+    view.leadingAnchor.constraint(equalTo: backplaneView.leadingAnchor, constant: 16),
+    view.topAnchor.constraint(equalTo: backplaneView.topAnchor, constant: 16)
+  ])
+  
+  view.startAnimation()
+  return backplaneView
 }
