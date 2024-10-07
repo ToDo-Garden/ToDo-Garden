@@ -232,15 +232,19 @@ extension TextInputView {
     inputText: "닉네임",
     placeholderText: "닉네임을 입력해주세요."
   )
-  groupNameView.changeBottomLine(color: UIColor.toDoGardenYellow)
-  stackView.addArrangedSubview(groupNameView)
+  stackView.addArrangedSubview(toDoNameView)
 
-  let userIdInputView = TextInputView(
+  let groupNameInputView = TextInputView(
+    inputText: "그룹명",
+    placeholderText: "그룹명을 입력해주세요."
+  )
+  stackView.addArrangedSubview(groupNameInputView)
+
+  let userIntroductionInputView = TextInputView(
     inputText: "소개",
     placeholderText: "당신을 소개해주세요."
   )
-  userIdInputView.setBeginEditing(with: "우드")
-  stackView.addArrangedSubview(userIdInputView)
+  stackView.addArrangedSubview(userIntroductionInputView)
 
   return stackView
 }
