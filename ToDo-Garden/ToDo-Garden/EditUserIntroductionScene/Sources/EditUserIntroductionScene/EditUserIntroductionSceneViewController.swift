@@ -9,21 +9,22 @@ import UIKit
 
 import EditUserIntroductionSceneAPI
 import EditUserIntroductionSceneEntity
+import ToDoGardenUIResource
 
 protocol EditUserIntroductionSceneDisplayLogic: AnyObject {
   func displaySomething(viewModel: EditUserIntroductionScene.Something.ViewModel)
 }
 
 class EditUserIntroductionSceneViewController: UIViewController, EditUserIntroductionSceneViewControllable {
-  
-  // MARK: - VIP Properties
-  
+  private let doneButton: UIBarButtonItem
+
   var interactor: EditUserIntroductionSceneBusinessLogic?
   var router: (EditUserIntroductionSceneRoutingLogic & EditUserIntroductionSceneDataPassing)?
   
   // MARK: - Object lifecycle
   
   init() {
+    self.doneButton = UIBarButtonItem()
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -36,6 +37,7 @@ class EditUserIntroductionSceneViewController: UIViewController, EditUserIntrodu
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    self.setupUI()
     self.doSomething()
   }
 }
@@ -54,6 +56,30 @@ extension EditUserIntroductionSceneViewController {
   func doSomething() {
     let request = EditUserIntroductionScene.Something.Request()
     self.interactor?.doSomething(request: request)
+  }
+}
+
+// MARK: - Set up UI
+
+extension EditUserIntroductionSceneViewController {
+  private func setupUI() {
+    self.setupDoneButtonTitle()
+  }
+
+  private func setupDoneButtonTitle() {
+    self.doneButton.setTitlePositionAdjustment(
+      UIOffset(horizontal: -10, vertical: 0),
+      for: UIBarMetrics.default
+    )
+    self.doneButton.setTitleTextAttributes(
+      [
+        NSAttributedString.Key.foregroundColor: UIColor.toDoGardenGreenDark,
+        NSAttributedString.Key.font: UIFont.pretendardBodyRegular
+      ],
+      for: UIControl.State.normal
+    )
+    self.doneButton.title = "완료"
+    self.navigationItem.rightBarButtonItem = self.doneButton
   }
 }
 
