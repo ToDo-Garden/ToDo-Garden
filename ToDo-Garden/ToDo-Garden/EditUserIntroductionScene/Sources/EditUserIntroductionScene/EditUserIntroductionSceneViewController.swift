@@ -56,3 +56,10 @@ extension EditUserIntroductionSceneViewController {
     self.interactor?.doSomething(request: request)
   }
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  return EditUserIntroductionSceneViewController()
+}
+#endif
