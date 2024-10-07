@@ -222,27 +222,28 @@ extension TextInputView {
   stackView.axis = .vertical
   stackView.spacing = 50
 
+  let constant = Constant.TextInputView.StringLiteral.self
   let toDoNameView = TextInputView(
-    inputText: "아이디",
-    placeholderText: "아이디를 입력해주세요."
+    inputText: constant.UserID.inputText,
+    placeholderText: constant.UserID.placeholderText
   )
   stackView.addArrangedSubview(toDoNameView)
 
   let groupNameView = TextInputView(
-    inputText: "닉네임",
-    placeholderText: "닉네임을 입력해주세요."
+    inputText: constant.UserName.inputText,
+    placeholderText: constant.UserName.placeholderText
   )
   stackView.addArrangedSubview(toDoNameView)
 
   let groupNameInputView = TextInputView(
-    inputText: "그룹명",
-    placeholderText: "그룹명을 입력해주세요."
+    inputText: constant.GroupName.inputText,
+    placeholderText: constant.GroupName.placeholderText
   )
   stackView.addArrangedSubview(groupNameInputView)
 
   let userIntroductionInputView = TextInputView(
-    inputText: "소개",
-    placeholderText: "당신을 소개해주세요."
+    inputText: constant.UserIntroduction.inputText,
+    placeholderText: constant.UserIntroduction.placeholderText
   )
   stackView.addArrangedSubview(userIntroductionInputView)
 

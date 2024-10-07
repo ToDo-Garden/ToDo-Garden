@@ -40,13 +40,34 @@ extension Constant.TextInputView.StringLiteral {
 }
 
 extension Constant.TextInputView.StringLiteral {
-  public enum Model {}
+  public enum UserID {}
+  public enum UserName {}
+  public enum GroupName {}
+  public enum ToDoName {}
+  public enum UserIntroduction {}
 }
 
-extension Constant.TextInputView.StringLiteral.Model {
-  public static let toDoName = "할 일"
-  public static let groupName = "그룹명"
-  public static let userNickname = "닉네임"
-  public static let userId = "아이디"
-  public static let userDescription = "소개"
+extension Constant.TextInputView.StringLiteral.UserID {
+  public static let inputText = "아이디"
+  public static let placeholderText = "아이디를 입력해주세요."
+}
+
+extension Constant.TextInputView.StringLiteral.UserName {
+  public static let inputText = "닉네임"
+  public static let placeholderText = "닉네임을 입력해주세요."
+}
+
+extension Constant.TextInputView.StringLiteral.GroupName {
+  public static let inputText = "그룹명"
+  public static let placeholderText = "그룹명을 입력해주세요."
+}
+
+extension Constant.TextInputView.StringLiteral.ToDoName {
+  public static let inputText = "투두명"
+  public static let placeholderText = "투두명을 입력해주세요."
+}
+
+extension Constant.TextInputView.StringLiteral.UserIntroduction {
+  public static let inputText = "소개"
+  public static let placeholderText = "당신을 소개해주세요."
 }
