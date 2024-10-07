@@ -7,6 +7,8 @@
 
 import Foundation
 
+import EditUserIntroductionSceneAPI
+
 struct EditUserIntroductionSceneWorker: EditUserIntroductionSceneWorkable {
   func doSomeWork() {
   }

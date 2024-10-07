@@ -7,6 +7,8 @@
 
 import Foundation
 
+import EditUserIntroductionSceneEntity
+
 // swiftlint:disable type_name
 protocol EditUserIntroductionScenePresentationLogic {
   func presentSomething(response: EditUserIntroductionScene.Something.Response)

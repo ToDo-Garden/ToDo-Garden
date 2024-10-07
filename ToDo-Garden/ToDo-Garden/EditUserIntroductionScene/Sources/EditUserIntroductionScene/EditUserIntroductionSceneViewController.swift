@@ -7,6 +7,9 @@
 
 import UIKit
 
+import EditUserIntroductionSceneAPI
+import EditUserIntroductionSceneEntity
+
 protocol EditUserIntroductionSceneDisplayLogic: AnyObject {
   func displaySomething(viewModel: EditUserIntroductionScene.Something.ViewModel)
 }

@@ -7,6 +7,9 @@
 
 import Foundation
 
+import EditUserIntroductionSceneAPI
+import EditUserIntroductionSceneEntity
+
 protocol EditUserIntroductionSceneDataStore {
   // var name: String { get set }
 }

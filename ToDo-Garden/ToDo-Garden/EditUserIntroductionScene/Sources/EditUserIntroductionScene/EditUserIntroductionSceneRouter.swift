@@ -7,6 +7,9 @@
 
 import Foundation
 
+import EditUserIntroductionSceneAPI
+import EditUserIntroductionSceneEntity
+
 protocol EditUserIntroductionSceneRoutingLogic {
   func routeToSomewhere()
 }

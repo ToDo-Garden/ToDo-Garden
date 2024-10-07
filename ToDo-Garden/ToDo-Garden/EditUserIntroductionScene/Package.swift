@@ -8,13 +8,40 @@ let package = Package(
   platforms: [.iOS(.v15)],
   products: [
     .library(
+      name: "EditUserIntroductionSceneAPI",
+      targets: ["EditUserIntroductionSceneAPI"]
+    ),
+    .library(
+      name: "EditUserIntroductionSceneEntity",
+      targets: ["EditUserIntroductionSceneEntity"]
+    ),
+    .library(
       name: "EditUserIntroductionScene",
       targets: ["EditUserIntroductionScene"]
     )
   ],
+  dependencies: [
+    .package(name: "ToDoGardenUI", path: "../ToDoGardenUI")
+  ],
   targets: [
     .target(
-      name: "EditUserIntroductionScene"
+      name: "EditUserIntroductionSceneAPI",
+      dependencies: [
+        .product(name: "ToDoGardenUIAPI", package: "ToDoGardenUI")
+      ]
+    ),
+    .target(
+      name: "EditUserIntroductionSceneEntity"
+    ),
+    .target(
+      name: "EditUserIntroductionScene",
+      dependencies: [
+        "EditUserIntroductionSceneAPI",
+        "EditUserIntroductionSceneEntity",
+        .product(name: "ToDoGardenUIAPI", package: "ToDoGardenUI"),
+        .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI"),
+        .product(name: "ToDoGardenUIResource", package: "ToDoGardenUI")
+      ]
     )
   ]
 )
