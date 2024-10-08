@@ -18,7 +18,14 @@ final class TermsAgreementViewRow: UIView {
   
   var isSelected: Bool {
     get { return self.checkButton.isSelected }
-    set { self.checkButton.isSelected = newValue }
+    set {
+      if newValue {
+        self.checkButton.setSelected()
+      } else {
+        self.checkButton.setDeSelected()
+      }
+      self.checkButton.isSelected = newValue
+    }
   }
   
   var chevronAction: (() -> Void)?
@@ -60,6 +67,14 @@ final class TermsAgreementViewRow: UIView {
   private func setupCheckButtonRoundedCorner() {
     let length = Constant.TermsAgreementViewRow.CheckButton.Layout.length
     self.checkButton.layer.cornerRadius = length / 2.0
+    self.checkButton.updateMainColor(UIColor.toDoGardenGreenDark)
+    self.checkButton.changesSelectionAsPrimaryAction = true
+    self.checkButton.addAction(
+      UIAction { [weak self] _ in
+        self?.checkButtonTapped()
+      },
+      for: UIControl.Event.touchUpInside
+    )
   }
 
   private func setupTextLabel() {
@@ -138,6 +153,7 @@ final class TermsAgreementViewRow: UIView {
   
   // MARK: - Actions
   private func checkButtonTapped() {
+    self.checkButton.isSelected.toggle()
     self.isSelected.toggle()
   }
   
