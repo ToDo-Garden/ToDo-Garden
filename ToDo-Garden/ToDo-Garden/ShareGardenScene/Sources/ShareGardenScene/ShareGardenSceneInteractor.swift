@@ -53,7 +53,7 @@ extension ShareGardenSceneInteractor: ShareGardenSceneBusinessLogic {
         let response = ShareGardenScene.RequestMyGarden.Response(myGarden: myGarden)
         self.presenter?.presentMyGarden(response: response)
       } catch {
-        // TODO: - error handling (error view 표시 예정)
+        self.presenter?.presentMyGardenRequestError()
       }
     }
   }
