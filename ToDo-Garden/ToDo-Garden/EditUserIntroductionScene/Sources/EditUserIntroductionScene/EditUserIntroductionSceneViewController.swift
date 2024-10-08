@@ -79,7 +79,7 @@ extension EditUserIntroductionSceneViewController {
   }
 
   private func setupMainViewUI() {
-    self.title = "소개 변경"
+    self.title = Constant.StringLiteral.title
     self.view.backgroundColor = UIColor.toDoGardenWhite
   }
 
@@ -96,7 +96,7 @@ extension EditUserIntroductionSceneViewController {
       ],
       for: UIControl.State.normal
     )
-    self.doneButton.title = "완료"
+    self.doneButton.title = Constant.StringLiteral.DoneButton.title
     self.navigationItem.rightBarButtonItem = self.doneButton
   }
 

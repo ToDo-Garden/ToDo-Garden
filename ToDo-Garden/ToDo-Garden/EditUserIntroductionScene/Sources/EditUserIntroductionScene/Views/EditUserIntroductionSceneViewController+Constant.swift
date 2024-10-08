@@ -13,6 +13,7 @@ extension EditUserIntroductionSceneViewController {
 
 extension EditUserIntroductionSceneViewController.Constant {
   enum Layout {}
+  enum StringLiteral {}
 }
 
 extension EditUserIntroductionSceneViewController.Constant.Layout {
@@ -24,4 +25,12 @@ extension EditUserIntroductionSceneViewController.Constant.Layout {
     static let topMarginRatio: CGFloat = 50 / 812
     static let widthRatio: CGFloat = 275 / 375
   }
+}
+
+extension EditUserIntroductionSceneViewController.Constant.StringLiteral {
+  enum DoneButton {
+    static let title = "완료"
+  }
+
+  static let title = "소개 변경"
 }
