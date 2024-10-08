@@ -104,16 +104,16 @@ extension EditUserIntroductionSceneViewController {
     self.view.addSubview(self.inputUserIntroductionView)
     self.inputUserIntroductionView.usingAutolayout()
 
-    let screenSize = self.view.bounds
+    let viewBounds = self.view.bounds
     let constant = Constant.Layout.InputUserIntroductionView.self
     NSLayoutConstraint.activate(
       [
         self.inputUserIntroductionView.topAnchor.constraint(
           equalTo: self.view.safeAreaLayoutGuide.topAnchor,
-          constant: screenSize.height * constant.topMarginRatio
+          constant: viewBounds.height * constant.topMarginRatio
         ),
         self.inputUserIntroductionView.widthAnchor.constraint(
-          equalToConstant: screenSize.width * constant.widthRatio
+          equalToConstant: viewBounds.width * constant.widthRatio
         ),
         self.inputUserIntroductionView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
       ]
