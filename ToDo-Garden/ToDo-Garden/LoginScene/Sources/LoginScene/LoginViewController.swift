@@ -105,7 +105,7 @@ extension LoginViewController {
   }
   
   private func setGuestLoginButon() {
-    
+    // TODO: 게스트 로그인
   }
   
   private func setAppleLoginManager() {
@@ -158,21 +158,24 @@ extension LoginViewController: ASAuthorizationControllerPresentationContextProvi
   }
 }
 
+// TODO: 린트관련 주석 지우기
+// swiftlint:disable empty_enum_arguments
 extension LoginViewController: AppleLoginManagerDelegate {
   func appleLoginDidComplete(with result: Result<ASAuthorizationAppleIDCredential, Error>) {
     switch result {
-    case .success(let appleIDCredential):
+    case .success(_):
       //      let userIdentifier = appleIDCredential.user
       //      let fullName = appleIDCredential.fullName
       //      let email = appleIDCredential.email
       // TODO: 신규회원인지 기존회원인지 체크
       self.showTermAgreementView()
       
-    case .failure(let error): break
+    case .failure(_): break
       // TODO: 에러처리
     }
   }
 }
+// swiftlint:enable empty_enum_arguments
 
 extension LoginViewController: TermsAgreementViewDelegate {
   public func termsAgreementView(
