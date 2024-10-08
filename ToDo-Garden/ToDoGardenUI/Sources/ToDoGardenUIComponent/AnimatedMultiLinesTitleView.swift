@@ -10,7 +10,7 @@ import UIKit
 import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
-final class AnimatedMultiLinesTitleView: UIStackView {
+public final class AnimatedMultiLinesTitleView: UIStackView {
   private let mainTitleLabelFirst: UILabel
   private let mainTitleLabelSecond: UILabel
   private let subTitleLabel: UILabel
@@ -19,7 +19,7 @@ final class AnimatedMultiLinesTitleView: UIStackView {
   private let secondLineText: String
   private let thirdLineText: String
   
-  init(
+  public init(
     firstLineText: String,
     secondLineText: String,
     thirdLineText: String
