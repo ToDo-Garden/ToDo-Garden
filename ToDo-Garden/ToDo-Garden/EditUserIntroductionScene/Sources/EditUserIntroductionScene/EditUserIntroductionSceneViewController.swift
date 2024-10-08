@@ -84,8 +84,9 @@ extension EditUserIntroductionSceneViewController {
   }
 
   private func setupDoneButtonTitle() {
+    let constant = Constant.Layout.DoneButton.self
     self.doneButton.setTitlePositionAdjustment(
-      UIOffset(horizontal: -10, vertical: 0),
+      UIOffset(horizontal: -constant.horizontalOffset, vertical: 0),
       for: UIBarMetrics.default
     )
     self.doneButton.setTitleTextAttributes(
@@ -104,15 +105,16 @@ extension EditUserIntroductionSceneViewController {
     self.inputUserIntroductionView.usingAutolayout()
 
     let screenSize = self.view.bounds
-    let topMargin: CGFloat = 50 / 812
-    let widthRatio: CGFloat = 275 / 375
+    let constant = Constant.Layout.InputUserIntroductionView.self
     NSLayoutConstraint.activate(
       [
         self.inputUserIntroductionView.topAnchor.constraint(
           equalTo: self.view.safeAreaLayoutGuide.topAnchor,
-          constant: screenSize.height * topMargin
+          constant: screenSize.height * constant.topMarginRatio
         ),
-        self.inputUserIntroductionView.widthAnchor.constraint(equalToConstant: screenSize.width * widthRatio),
+        self.inputUserIntroductionView.widthAnchor.constraint(
+          equalToConstant: screenSize.width * constant.widthRatio
+        ),
         self.inputUserIntroductionView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
       ]
     )
