@@ -39,3 +39,25 @@ final class ShareGardenSceneViewControllerStub {
     bufferingPolicy: AsyncStream.Continuation.BufferingPolicy.bufferingNewest(1)
   )
 }
+
+extension ShareGardenSceneViewControllerStub: ShareGardenSceneDisplayLogic {
+  func displayMyGarden(_ viewModel: ShareGardenScene.RequestMyGarden.ViewModel) {
+    self.myGardenStreamContinuation.yield(viewModel)
+  }
+  
+  func displayMyGardenRequestError() {
+    self.myGardenRequestErrorStreamContinuation.yield()
+  }
+  
+  func displayFriendsGardenList(_ viewModel: ShareGardenScene.RequestFriendsGardenList.ViewModel) {
+    self.friendsGardenListStreamContinuation.yield(viewModel)
+  }
+  
+  func displayFriendsGardenListRequestError() {
+    self.friendsGardenListRequestErrorStreamContinuation.yield()
+  }
+  
+  func stopShimmeringFriendsGardenList() {
+    self.shimmeringStopStreamContinuation.yield()
+  }
+}
