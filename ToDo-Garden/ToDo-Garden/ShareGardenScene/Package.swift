@@ -67,6 +67,11 @@ let package = Package(
           package: "TDUtility"
         )
       ]
+    ),
+    .testTarget(
+      name: "ShareGardenSceneTests",
+      dependencies: [
+      ]
     )
   ]
 )
