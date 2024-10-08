@@ -54,3 +54,9 @@ extension PomodoroRecordCollection {
     return levels[levelIndex]
   }
 }
+
+extension PomodoroRecordCollection: Equatable {
+  public static func == (lhs: PomodoroRecordCollection, rhs: PomodoroRecordCollection) -> Bool {
+    return lhs.pomodoroRecords == rhs.pomodoroRecords
+  }
+}
