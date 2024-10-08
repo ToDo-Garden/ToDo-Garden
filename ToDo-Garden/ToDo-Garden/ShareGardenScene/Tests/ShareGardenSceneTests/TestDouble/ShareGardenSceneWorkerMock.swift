@@ -17,9 +17,14 @@ import ShareGardenSceneEntity
 actor ShareGardenSceneWorkerMock {
   private var isSuccessful: Bool = false
   private var myGarden: ShareGardenScene.MyGarden?
+  private var friendsGardenList: [ShareGardenScene.FriendsGarden]?
   
   func setMyGarden(_ myGarden: ShareGardenScene.MyGarden) {
     self.myGarden = myGarden
+  }
+  
+  func setFriendsGardenList(_ friendsGardenList: [ShareGardenScene.FriendsGarden]) {
+    self.friendsGardenList = friendsGardenList
   }
 
 extension ShareGardenSceneWorkerMock {
