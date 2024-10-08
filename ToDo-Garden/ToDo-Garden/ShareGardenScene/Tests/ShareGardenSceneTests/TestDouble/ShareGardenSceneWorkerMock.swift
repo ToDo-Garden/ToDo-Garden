@@ -16,6 +16,11 @@ import ShareGardenSceneEntity
 
 actor ShareGardenSceneWorkerMock {
   private var isSuccessful: Bool = false
+  private var myGarden: ShareGardenScene.MyGarden?
+  
+  func setMyGarden(_ myGarden: ShareGardenScene.MyGarden) {
+    self.myGarden = myGarden
+  }
 
 extension ShareGardenSceneWorkerMock {
   private func checkIsSuccessfulTask() throws {
