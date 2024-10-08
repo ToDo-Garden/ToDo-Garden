@@ -71,6 +71,13 @@ let package = Package(
     .testTarget(
       name: "ShareGardenSceneTests",
       dependencies: [
+        "ShareGardenScene",
+        "ShareGardenSceneAPI",
+        "ShareGardenSceneEntity",
+        Target.Dependency.product(
+          name: "ToDoGardenUIComponent",
+          package: "ToDoGardenUI"
+        )
       ]
     )
   ]
