@@ -207,7 +207,7 @@ extension LoginViewController: TermsAgreementViewDelegate {
     // TODO: 이벤트, 광고성 정보 안내 (선택)에 동의했을 때 / 안했을 때 동작 분기
     
     let nextVC = UIViewController()
-    nextVC.view.backgroundColor = .white
+    nextVC.view.backgroundColor = UIColor.white
     
     self.navigationController?.pushViewController(nextVC, animated: true)
   }
