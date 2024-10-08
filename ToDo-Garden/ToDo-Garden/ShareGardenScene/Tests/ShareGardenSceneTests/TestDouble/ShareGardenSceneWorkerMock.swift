@@ -32,6 +32,24 @@ actor ShareGardenSceneWorkerMock {
   }
 }
 
+extension ShareGardenSceneWorkerMock: ShareGardenSceneWorkable {
+  func requestMyGarden() async throws -> ShareGardenScene.MyGarden {
+    try self.checkIsSuccessfulTask()
+    
+    return self.myGarden!
+  }
+  
+  func requestFriendsGardenList() async throws -> [ShareGardenScene.FriendsGarden] {
+    try self.checkIsSuccessfulTask()
+    
+    return self.friendsGardenList!
+  }
+  
+  func delete(by id: ShareGardenSceneEntity.ShareGardenScene.FriendsGarden.ID) async throws {
+    try self.checkIsSuccessfulTask()
+  }
+}
+
 extension ShareGardenSceneWorkerMock {
   private func checkIsSuccessfulTask() throws {
     if self.isSuccessful == false {
