@@ -13,7 +13,9 @@ import ShareGardenSceneEntity
 @MainActor
 protocol ShareGardenSceneDisplayLogic: AnyObject {
   func displayMyGarden(_ viewModel: ShareGardenScene.RequestMyGarden.ViewModel)
+  func displayMyGardenRequestError()
   func displayFriendsGardenList(_ viewModel: ShareGardenScene.RequestFriendsGardenList.ViewModel)
+  func displayFriendsGardenListRequestError()
   func stopShimmeringFriendsGardenList()
 }
 
@@ -75,8 +77,16 @@ extension ShareGardenSceneViewController: ShareGardenSceneDisplayLogic {
     self.myGardenView.update(viewModel: viewModel)
   }
   
+  func displayMyGardenRequestError() {
+    // TODO: - display my garden request error view
+  }
+  
   func displayFriendsGardenList(_ viewModel: ShareGardenScene.RequestFriendsGardenList.ViewModel) {
     self.friendsGardenView.displayFriendsGardenList(viewModel.identifiers)
+  }
+  
+  func displayFriendsGardenListRequestError() {
+    // TODO: - display friends garden request error view
   }
   
   func stopShimmeringFriendsGardenList() {

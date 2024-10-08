@@ -12,7 +12,9 @@ import ShareGardenSceneEntity
 @MainActor
 protocol ShareGardenScenePresentationLogic {
   func presentMyGarden(response: ShareGardenScene.RequestMyGarden.Response)
+  func presentMyGardenRequestError()
   func presentFriendsGardens(response: ShareGardenScene.RequestFriendsGardenList.Response)
+  func presentFriendsGardenListRequestError()
   func stopShimmeringFriendsGardenList()
 }
 
@@ -33,12 +35,20 @@ extension ShareGardenScenePresenter: ShareGardenScenePresentationLogic {
     self.viewController?.displayMyGarden(viewModel)
   }
   
+  func presentMyGardenRequestError() {
+    self.viewController?.displayMyGardenRequestError()
+  }
+  
   func presentFriendsGardens(response: ShareGardenScene.RequestFriendsGardenList.Response) {
     let identifiers = response.friendsGardenList.map(\.id)
     
     self.viewController?.displayFriendsGardenList(
       ShareGardenScene.RequestFriendsGardenList.ViewModel(identifiers: identifiers)
     )
+  }
+  
+  func presentFriendsGardenListRequestError() {
+    self.viewController?.displayFriendsGardenListRequestError()
   }
   
   func stopShimmeringFriendsGardenList() {
