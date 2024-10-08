@@ -1,3 +1,4 @@
+// swiftlint:disable all
 //
 //  ShareGardenSceneViewControllerStub.swift
 //  ShareGardenScene
@@ -61,3 +62,5 @@ extension ShareGardenSceneViewControllerStub: ShareGardenSceneDisplayLogic {
     self.shimmeringStopStreamContinuation.yield()
   }
 }
+
+// swiftlint:enable all
