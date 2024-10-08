@@ -15,6 +15,14 @@ import ShareGardenSceneAPI
 import ShareGardenSceneEntity
 
 actor ShareGardenSceneWorkerMock {
+  private var isSuccessful: Bool = false
+
+extension ShareGardenSceneWorkerMock {
+  private func checkIsSuccessfulTask() throws {
+    if self.isSuccessful == false {
+      throw NSError(domain: "", code: 999)
+    }
+  }
 }
 
 // swiftlint:enable all
