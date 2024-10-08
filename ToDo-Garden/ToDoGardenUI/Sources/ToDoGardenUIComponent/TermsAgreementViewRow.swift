@@ -12,13 +12,20 @@ import ToDoGardenUIResource
 
 final class TermsAgreementViewRow: UIView {
   // MARK: - Properties
-  let checkButton: UIButton
+  let checkButton: ToDoCheckBoxButton
   private let textLabel: UILabel
   private let chevronButton: UIButton
   
   var isSelected: Bool {
     get { return self.checkButton.isSelected }
-    set { self.checkButton.isSelected = newValue }
+    set {
+      if newValue {
+        self.checkButton.setSelected()
+      } else {
+        self.checkButton.setDeSelected()
+      }
+      self.checkButton.isSelected = newValue
+    }
   }
   
   var chevronAction: (() -> Void)?
@@ -29,7 +36,7 @@ final class TermsAgreementViewRow: UIView {
   
   // MARK: - Initialization
   init(title: String, font: UIFont, chevronIsHidden: Bool) {
-    self.checkButton = UIButton(type: UIButton.ButtonType.custom)
+    self.checkButton = ToDoCheckBoxButton()
     self.textLabel = UILabel()
     self.chevronButton = UIButton(type: UIButton.ButtonType.system)
     
@@ -53,14 +60,23 @@ final class TermsAgreementViewRow: UIView {
   }
   
   private func setupCheckButton() {
-    self.checkButton.setImage(UIImage.circledCheckMarkEmpty, for: UIControl.State.normal)
-    self.checkButton.setImage(UIImage.circledCheckMarkFill, for: UIControl.State.selected)
-    self.checkButton.tintColor = UIColor.toDoGardenGreenDark
-    self.checkButton.addAction(UIAction(handler: { [weak self] _ in
-      self?.checkButtonTapped()
-    }), for: UIControl.Event.touchUpInside)
+    self.checkButton.updateMainColor(UIColor.toDoGardenGreenDark)
+    self.setupCheckButtonRoundedCorner()
   }
-  
+
+  private func setupCheckButtonRoundedCorner() {
+    let length = Constant.TermsAgreementViewRow.CheckButton.Layout.length
+    self.checkButton.layer.cornerRadius = length / 2.0
+    self.checkButton.updateMainColor(UIColor.toDoGardenGreenDark)
+    self.checkButton.changesSelectionAsPrimaryAction = true
+    self.checkButton.addAction(
+      UIAction { [weak self] _ in
+        self?.checkButtonTapped()
+      },
+      for: UIControl.Event.touchUpInside
+    )
+  }
+
   private func setupTextLabel() {
     self.textLabel.textColor = UIColor.toDoGardenGreenDark
   }
@@ -137,6 +153,7 @@ final class TermsAgreementViewRow: UIView {
   
   // MARK: - Actions
   private func checkButtonTapped() {
+    self.checkButton.isSelected.toggle()
     self.isSelected.toggle()
   }
   
