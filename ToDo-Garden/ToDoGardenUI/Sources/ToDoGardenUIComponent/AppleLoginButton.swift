@@ -4,13 +4,10 @@ import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 public final class AppleLoginButton: UIButton {
-  private let appleLogo: UIImageView
-  
   public override init(frame: CGRect) {
-    self.appleLogo = UIImageView(image: UIImage.appleLogo)
     super.init(frame: frame)
-    self.setupButton()
-    self.setupAppleLogo()
+    self.configuration = UIButton.Configuration.plain()
+    self.configureAppearance()
   }
   
   @available(*, unavailable)
@@ -25,29 +22,35 @@ public final class AppleLoginButton: UIButton {
     )
   }
   
-  private func setupButton() {
-    self.configureAppearance()
-    self.addAction(UIAction { [weak self] _ in
-      self?.highlightOn()
-    }, for: UIControl.Event.touchDown)
-    self.addAction(UIAction { [weak self] _ in
-      self?.highlightOn()
-    }, for: UIControl.Event.touchDragEnter)
-    self.addAction(UIAction { [weak self] _ in
-      self?.highlightOff()
-    }, for: UIControl.Event.touchUpInside)
-    self.addAction(UIAction { [weak self] _ in
-      self?.highlightOff()
-    }, for: UIControl.Event.touchDragExit)
+  override public func updateConfiguration() {
+    super.updateConfiguration()
+    if self.isHighlighted {
+      self.highlightOn()
+    } else {
+      self.highlightOff()
+    }
   }
   
   private func configureAppearance() {
-    self.backgroundColor = UIColor.black
-    self.layer.cornerRadius = Constant.AppleLoginButton.cornerRadius
+    let constants = Constant.AppleLoginButton.self
+    
+    self.configuration?.background.backgroundColor = UIColor.toDoGardenBlack
+    self.layer.cornerRadius = constants.cornerRadius
     self.clipsToBounds = true
     
-    let attributedTitle = self.createAttributedButtonTitle(with: Constant.AppleLoginButton.StringLiteral.title)
-    self.setAttributedTitle(attributedTitle, for: UIControl.State.normal)
+    self.configuration?.image = UIImage.appleLogo
+    self.configuration?.attributedTitle = AttributedString(
+      self.createAttributedButtonTitle(
+        with: constants.StringLiteral.title
+      )
+    )
+    self.configuration?.imagePadding = constants.AppleLogo.imagePadding
+    self.configuration?.contentInsets = NSDirectionalEdgeInsets(
+      top: constants.ContentInsets.vertical,
+      leading: constants.ContentInsets.leading,
+      bottom: constants.ContentInsets.vertical,
+      trailing: constants.ContentInsets.trailing
+    )
   }
   
   private func createAttributedButtonTitle(with title: String) -> NSAttributedString {
@@ -62,41 +65,17 @@ public final class AppleLoginButton: UIButton {
     )
   }
   
-  private func setupAppleLogo() {
-    guard let titleLabel = self.titleLabel else {
-      return
-    }
-    
-    self.appleLogo.contentMode = UIView.ContentMode.scaleAspectFit
-    self.appleLogo.usingAutolayout()
-    self.addSubview(self.appleLogo)
-    
-    NSLayoutConstraint.activate([
-      self.appleLogo.trailingAnchor.constraint(
-        equalTo: titleLabel.leadingAnchor,
-        constant: Constant.AppleLoginButton.AppleLogo.trailing
-      ),
-      self.appleLogo.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-      self.appleLogo.widthAnchor.constraint(
-        equalToConstant: Constant.AppleLoginButton.AppleLogo.width
-      ),
-      self.appleLogo.heightAnchor.constraint(
-        equalToConstant: Constant.AppleLoginButton.height
-      )
-    ])
-  }
-  
   private func highlightOn() {
     UIView.animate(withDuration: 0.3) {
       self.titleLabel?.alpha = 0.5
-      self.appleLogo.alpha = 0.5
+      self.imageView?.alpha = 0.5
     }
   }
   
   private func highlightOff() {
     UIView.animate(withDuration: 0.3) {
       self.titleLabel?.alpha = 1.0
-      self.appleLogo.alpha = 1.0
+      self.imageView?.alpha = 1.0
     }
   }
 }
