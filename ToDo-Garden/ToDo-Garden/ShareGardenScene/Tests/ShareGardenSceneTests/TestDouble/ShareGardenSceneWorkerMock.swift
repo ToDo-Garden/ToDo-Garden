@@ -26,6 +26,11 @@ actor ShareGardenSceneWorkerMock {
   func setFriendsGardenList(_ friendsGardenList: [ShareGardenScene.FriendsGarden]) {
     self.friendsGardenList = friendsGardenList
   }
+  
+  func setIsSuccessful(_ isSuccessful: Bool) {
+    self.isSuccessful = isSuccessful
+  }
+}
 
 extension ShareGardenSceneWorkerMock {
   private func checkIsSuccessfulTask() throws {
