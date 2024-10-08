@@ -19,7 +19,7 @@ public final class AnimatedMultiLinesTitleView: UIStackView {
   private let secondLineText: String
   private let thirdLineText: String
   
-  private var isAnimating = false
+  private var isAnimating: Bool
   private var animationTask: Task<Void, Never>?
   
   public init(
@@ -33,6 +33,7 @@ public final class AnimatedMultiLinesTitleView: UIStackView {
     self.firstLineText = firstLineText
     self.secondLineText = secondLineText
     self.thirdLineText = thirdLineText
+    self.isAnimating = false
     super.init(frame: CGRect.zero)
     self.setupStackView()
     self.setupTitles()
@@ -44,9 +45,9 @@ public final class AnimatedMultiLinesTitleView: UIStackView {
   }
   
   public func startAnimation() {
-    guard !isAnimating else { return }
-    self.isAnimating = true
+    guard !self.isAnimating else { return }
     
+    self.isAnimating = true
     self.animationTask = Task { @MainActor in
       await withTaskGroup(of: Void.self) { group in
         group.addTask { await self.animateText(for: self.mainTitleLabelFirst, with: self.firstLineText) }
@@ -59,7 +60,8 @@ public final class AnimatedMultiLinesTitleView: UIStackView {
   
   private func animateText(for label: UILabel, with text: String) async {
     for character in text {
-      guard isAnimating else { return }
+      guard self.isAnimating else { return }
+      
       await MainActor.run {
         label.text?.append(character)
       }
@@ -84,6 +86,7 @@ public final class AnimatedMultiLinesTitleView: UIStackView {
     }
   }
 }
+
 extension AnimatedMultiLinesTitleView {
   private func setupStackView() {
     self.axis = NSLayoutConstraint.Axis.vertical
