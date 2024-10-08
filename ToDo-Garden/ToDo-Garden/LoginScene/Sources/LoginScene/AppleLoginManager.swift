@@ -6,7 +6,6 @@
 //
 
 import AuthenticationServices
-import Foundation
 
 protocol AppleLoginManagerDelegate: AnyObject {
   func appleLoginDidComplete(with result: Result<ASAuthorizationAppleIDCredential, Error>)
