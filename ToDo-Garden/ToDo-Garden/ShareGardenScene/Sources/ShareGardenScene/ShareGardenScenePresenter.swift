@@ -14,6 +14,7 @@ protocol ShareGardenScenePresentationLogic {
   func presentMyGarden(response: ShareGardenScene.RequestMyGarden.Response)
   func presentMyGardenRequestError()
   func presentFriendsGardens(response: ShareGardenScene.RequestFriendsGardenList.Response)
+  func presentFriendsGardenListRequestError()
   func stopShimmeringFriendsGardenList()
 }
 
@@ -44,6 +45,10 @@ extension ShareGardenScenePresenter: ShareGardenScenePresentationLogic {
     self.viewController?.displayFriendsGardenList(
       ShareGardenScene.RequestFriendsGardenList.ViewModel(identifiers: identifiers)
     )
+  }
+  
+  func presentFriendsGardenListRequestError() {
+    self.viewController?.displayFriendsGardenListRequestError()
   }
   
   func stopShimmeringFriendsGardenList() {

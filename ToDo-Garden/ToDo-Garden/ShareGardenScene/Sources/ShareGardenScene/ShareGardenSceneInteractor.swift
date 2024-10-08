@@ -68,7 +68,7 @@ extension ShareGardenSceneInteractor: ShareGardenSceneBusinessLogic {
         self.presenter?.stopShimmeringFriendsGardenList()
         self.friendsGardenDataStore.update(to: friendsGardenList)
       } catch {
-        // TODO: - error handling (error view 표시 예정)
+        self.presenter?.presentFriendsGardenListRequestError()
       }
     }
   }
