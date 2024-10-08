@@ -33,6 +33,9 @@
 		E40EB3F32C3BBD64004D5329 /* PostGroupScene in Frameworks */ = {isa = PBXBuildFile; productRef = E40EB3F22C3BBD64004D5329 /* PostGroupScene */; };
 		E40EB3F52C3BBD88004D5329 /* PostGroupSceneAPI in Frameworks */ = {isa = PBXBuildFile; productRef = E40EB3F42C3BBD88004D5329 /* PostGroupSceneAPI */; };
 		E40EB3F72C3BBD88004D5329 /* PostGroupSceneEntity in Frameworks */ = {isa = PBXBuildFile; productRef = E40EB3F62C3BBD88004D5329 /* PostGroupSceneEntity */; };
+		E437F3CE2CB3E2E5003589F0 /* InputIDScene in Frameworks */ = {isa = PBXBuildFile; productRef = E437F3CD2CB3E2E5003589F0 /* InputIDScene */; };
+		E437F3D02CB3E2E5003589F0 /* InputIDSceneAPI in Frameworks */ = {isa = PBXBuildFile; productRef = E437F3CF2CB3E2E5003589F0 /* InputIDSceneAPI */; };
+		E437F3D22CB3E2E5003589F0 /* InputIDSceneEntity in Frameworks */ = {isa = PBXBuildFile; productRef = E437F3D12CB3E2E5003589F0 /* InputIDSceneEntity */; };
 		E48680232CAE902600C6D535 /* LoginScene in Frameworks */ = {isa = PBXBuildFile; productRef = E48680222CAE902600C6D535 /* LoginScene */; };
 		E48680252CAE902600C6D535 /* LoginSceneAPI in Frameworks */ = {isa = PBXBuildFile; productRef = E48680242CAE902600C6D535 /* LoginSceneAPI */; };
 		E48680272CAE902600C6D535 /* LoginSceneEntity in Frameworks */ = {isa = PBXBuildFile; productRef = E48680262CAE902600C6D535 /* LoginSceneEntity */; };
@@ -73,6 +76,7 @@
 		AE645FE82C64BD3E001A5612 /* CommonViews */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CommonViews; sourceTree = "<group>"; };
 		AE645FE92C64BE80001A5612 /* GuideScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = GuideScene; sourceTree = "<group>"; };
 		AE930F3C2C2E9306002F26AB /* TimerScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = TimerScene; sourceTree = "<group>"; };
+		E437F3CC2CB3E246003589F0 /* InputIDScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = InputIDScene; sourceTree = "<group>"; };
 		E4754C0F2C3BB9790079CFAE /* PostGroupScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = PostGroupScene; sourceTree = "<group>"; };
 		E4DBB5922CAD595E00B58C23 /* LoginScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = LoginScene; sourceTree = "<group>"; };
 		E4DEA1722C2BEC2900E3CE3C /* ManageGroupScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ManageGroupScene; sourceTree = "<group>"; };
@@ -94,13 +98,16 @@
 				638F7F572C7F4E0900338FA3 /* UserInfoSceneAPI in Frameworks */,
 				638125FE2CB3BFEE00FB4EEB /* EditUserIntroductionScene in Frameworks */,
 				638126022CB3BFEE00FB4EEB /* EditUserIntroductionSceneEntity in Frameworks */,
+				E437F3CE2CB3E2E5003589F0 /* InputIDScene in Frameworks */,
 				634BD17C2CA1755B00396CAB /* EditUserNameSceneEntity in Frameworks */,
 				E4DEA1762C2BED0700E3CE3C /* ManageGroupSceneAPI in Frameworks */,
 				634BD1782CA1755B00396CAB /* EditUserNameScene in Frameworks */,
+				E437F3D02CB3E2E5003589F0 /* InputIDSceneAPI in Frameworks */,
 				638F7F552C7F4E0900338FA3 /* UserInfoScene in Frameworks */,
 				4F3D03862B8EF89800C495E5 /* ToDoGardenUIResource in Frameworks */,
 				E4DEA1742C2BED0700E3CE3C /* ManageGroupScene in Frameworks */,
 				4F3D03842B8EF89800C495E5 /* ToDoGardenUIComponent in Frameworks */,
+				E437F3D22CB3E2E5003589F0 /* InputIDSceneEntity in Frameworks */,
 				E48680252CAE902600C6D535 /* LoginSceneAPI in Frameworks */,
 				E40EB3F52C3BBD88004D5329 /* PostGroupSceneAPI in Frameworks */,
 				E40EB3F32C3BBD64004D5329 /* PostGroupScene in Frameworks */,
@@ -147,6 +154,7 @@
 		4F0DF12A2B4EABCE00097B7D /* ToDo-Garden */ = {
 			isa = PBXGroup;
 			children = (
+				E437F3CC2CB3E246003589F0 /* InputIDScene */,
 				63E20C1D2CB3BBFE00EC158E /* EditUserIntroductionScene */,
 				E4DBB5922CAD595E00B58C23 /* LoginScene */,
 				634BD1762CA1728500396CAB /* EditUserNameScene */,
@@ -252,6 +260,9 @@
 				638125FD2CB3BFEE00FB4EEB /* EditUserIntroductionScene */,
 				638125FF2CB3BFEE00FB4EEB /* EditUserIntroductionSceneAPI */,
 				638126012CB3BFEE00FB4EEB /* EditUserIntroductionSceneEntity */,
+				E437F3CD2CB3E2E5003589F0 /* InputIDScene */,
+				E437F3CF2CB3E2E5003589F0 /* InputIDSceneAPI */,
+				E437F3D12CB3E2E5003589F0 /* InputIDSceneEntity */,
 			);
 			productName = "ToDo-Garden";
 			productReference = 4F0DF1282B4EABCE00097B7D /* ToDo-Garden.app */;
@@ -696,6 +707,18 @@
 		E40EB3F62C3BBD88004D5329 /* PostGroupSceneEntity */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = PostGroupSceneEntity;
+		};
+		E437F3CD2CB3E2E5003589F0 /* InputIDScene */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = InputIDScene;
+		};
+		E437F3CF2CB3E2E5003589F0 /* InputIDSceneAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = InputIDSceneAPI;
+		};
+		E437F3D12CB3E2E5003589F0 /* InputIDSceneEntity */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = InputIDSceneEntity;
 		};
 		E48680222CAE902600C6D535 /* LoginScene */ = {
 			isa = XCSwiftPackageProductDependency;
