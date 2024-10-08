@@ -4,11 +4,13 @@ import ToDoGardenUIAPI
 import ToDoGardenUIConstant
 
 public final class TextInputView: UIView, TextInputViewAPI {
-  public weak var delegate: TextInputViewDelegate?
-  private let model: Model
+  private let inputText: String
+  private let placeholderText: String
+
   private let inputTextField: Styled.TextField
   private let placeholderLabel: UILabel
-  private var placeholderText: String
+
+  public weak var delegate: TextInputViewDelegate?
 
   private var height: CGFloat {
     let layout = Constant.TextInputView.Layout.self
@@ -29,15 +31,15 @@ public final class TextInputView: UIView, TextInputViewAPI {
     return self.inputTextField.isFirstResponder
   }
 
-  public init(model: Model) {
-    self.model = model
+  public init(inputText: String, placeholderText: String) {
     self.inputTextField = Styled.TextField(
       configuration: Styled.TextField.Configuration.groupEdit(
         Styled.TextField.Configuration.GroupEditModel.standard
       )
     )
     self.placeholderLabel = UILabel()
-    self.placeholderText = ""
+    self.inputText = inputText
+    self.placeholderText = placeholderText
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -76,7 +78,6 @@ extension TextInputView {
     self.setupMainUI()
     self.setupInputTextUI()
     self.setupReturnButtonType()
-    self.setupPlaceholderText()
     self.setupPlaceholderLabel()
     self.setupInputTextFieldDelegate()
     self.addSubviews()
@@ -95,22 +96,6 @@ extension TextInputView {
 
   private func setupReturnButtonType() {
     self.inputTextField.returnKeyType = UIReturnKeyType.done
-  }
-
-  private func setupPlaceholderText() {
-    self.placeholderText = self.makePlaceholderText()
-  }
-
-  private func makePlaceholderText() -> String {
-    guard let lastCharacter = self.model.inputText.last
-    else { return self.model.inputText + Constant.TextInputView.StringLiteral.defaultPlaceholderSuffix }
-
-    let consonants = String(lastCharacter).decomposedStringWithCompatibilityMapping.unicodeScalars
-    if consonants.count >= 3 {
-      return self.model.inputText + Constant.TextInputView.StringLiteral.suffixWithFinalConsonant
-    } else {
-      return self.model.inputText + Constant.TextInputView.StringLiteral.suffixWithoutFinalConsonant
-    }
   }
 
   private func setupPlaceholderLabel() {
@@ -151,7 +136,7 @@ extension TextInputView: UITextFieldDelegate {
   }
 
   private func updatePlaceholderLabelText(isEditing: Bool) {
-    let text = isEditing ? self.model.inputText : self.placeholderText
+    let text = isEditing ? self.inputText : self.placeholderText
     self.placeholderLabel.text = text
 
     let textColor = isEditing ? UIColor.toDoGardenGreenDark : UIColor.toDoGardenGray2
@@ -159,13 +144,13 @@ extension TextInputView: UITextFieldDelegate {
   }
 
   private func updatePlaceholderLabelPosition(isEditing: Bool) {
-    let transform = self.makePlaceholderLabelTrasnform(isEditing: isEditing, scale: self.model.shrinkScale)
+    let constant = Constant.TextInputView.Animation.self
+    let transform = self.makePlaceholderLabelTrasnform(isEditing: isEditing, scale: constant.shrinkScale)
     if isEditing == false {
       self.placeholderLabel.transform = transform
     }
 
-    let duration = Constant.TextInputView.Animation.duration
-    UIView.animate(withDuration: duration, delay: 0.0) {
+    UIView.animate(withDuration: constant.duration, delay: 0.0) {
       let animationTransform = isEditing ? transform : CGAffineTransform.identity
       self.placeholderLabel.transform = animationTransform
     }
@@ -230,26 +215,6 @@ extension TextInputView {
   }
 }
 
-// MARK: Model
-
-extension TextInputView {
-  public struct Model: Equatable {
-    let inputText: String
-    let shrinkScale: CGFloat
-
-    public init(inputText: String, shrinkScale: CGFloat = 0.8) {
-      self.inputText = inputText
-      self.shrinkScale = shrinkScale
-    }
-
-    public static let toDoName = Self(inputText: Constant.TextInputView.StringLiteral.Model.toDoName)
-    public static let groupName = Self(inputText: Constant.TextInputView.StringLiteral.Model.groupName)
-    public static let userNickname = Self(inputText: Constant.TextInputView.StringLiteral.Model.userNickname)
-    public static let userId = Self(inputText: Constant.TextInputView.StringLiteral.Model.userId)
-    public static let userDescription = Self(inputText: Constant.TextInputView.StringLiteral.Model.userDescription)
-  }
-}
-
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
@@ -257,16 +222,30 @@ extension TextInputView {
   stackView.axis = .vertical
   stackView.spacing = 50
 
-  let toDoNameView = TextInputView(model: TextInputView.Model.toDoName)
+  let constant = Constant.TextInputView.StringLiteral.self
+  let toDoNameView = TextInputView(
+    inputText: constant.UserID.inputText,
+    placeholderText: constant.UserID.placeholderText
+  )
   stackView.addArrangedSubview(toDoNameView)
 
-  let groupNameView = TextInputView(model: TextInputView.Model.groupName)
-  groupNameView.changeBottomLine(color: UIColor.toDoGardenYellow)
-  stackView.addArrangedSubview(groupNameView)
+  let groupNameView = TextInputView(
+    inputText: constant.UserName.inputText,
+    placeholderText: constant.UserName.placeholderText
+  )
+  stackView.addArrangedSubview(toDoNameView)
 
-  let userIdInputView = TextInputView(model: TextInputView.Model.userId)
-  userIdInputView.setBeginEditing(with: "우드")
-  stackView.addArrangedSubview(userIdInputView)
+  let groupNameInputView = TextInputView(
+    inputText: constant.GroupName.inputText,
+    placeholderText: constant.GroupName.placeholderText
+  )
+  stackView.addArrangedSubview(groupNameInputView)
+
+  let userIntroductionInputView = TextInputView(
+    inputText: constant.UserIntroduction.inputText,
+    placeholderText: constant.UserIntroduction.placeholderText
+  )
+  stackView.addArrangedSubview(userIntroductionInputView)
 
   return stackView
 }

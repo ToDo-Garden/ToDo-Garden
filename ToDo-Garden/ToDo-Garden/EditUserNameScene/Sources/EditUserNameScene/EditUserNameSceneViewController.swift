@@ -37,10 +37,12 @@ final class EditUserNameSceneViewController: UIViewController, EditUserNameScene
 
   init() {
     self.editUserNameButton = UIBarButtonItem()
-    let constant = ToDoGardenUIConstant.Constant.self
+    let constant = ToDoGardenUIConstant.Constant.TextInputView.StringLiteral.UserName.self
+    let validationTextConstant = ToDoGardenUIConstant.Constant.InputTextValidationView.StringLiteral.ValidationText.self
     self.inputUserNameView = InputTextValidationView(
-      inputText: constant.TextInputView.StringLiteral.Model.userNickname,
-      validationText: constant.InputTextValidationView.StringLiteral.ValidationText.invalidNickname
+      inputText: constant.inputText,
+      placeholderText: constant.placeholderText,
+      validationText: validationTextConstant.invalidIntroduction
     )
     self.inputUserNameSubject = PassthroughSubject<String, Never>()
     self.cancellables = Set<AnyCancellable>()
