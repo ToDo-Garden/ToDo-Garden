@@ -233,7 +233,7 @@ extension TextInputView {
     inputText: constant.UserName.inputText,
     placeholderText: constant.UserName.placeholderText
   )
-  stackView.addArrangedSubview(toDoNameView)
+  stackView.addArrangedSubview(groupNameView)
 
   let groupNameInputView = TextInputView(
     inputText: constant.GroupName.inputText,
