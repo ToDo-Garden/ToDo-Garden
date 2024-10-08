@@ -9,6 +9,8 @@ import UIKit
 
 import EditUserIntroductionSceneAPI
 import EditUserIntroductionSceneEntity
+import ToDoGardenUIComponent
+import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 protocol EditUserIntroductionSceneDisplayLogic: AnyObject {
@@ -17,6 +19,7 @@ protocol EditUserIntroductionSceneDisplayLogic: AnyObject {
 
 class EditUserIntroductionSceneViewController: UIViewController, EditUserIntroductionSceneViewControllable {
   private let doneButton: UIBarButtonItem
+  private let inputUserIntroductionView: InputTextValidationView
 
   var interactor: EditUserIntroductionSceneBusinessLogic?
   var router: (EditUserIntroductionSceneRoutingLogic & EditUserIntroductionSceneDataPassing)?
@@ -25,6 +28,13 @@ class EditUserIntroductionSceneViewController: UIViewController, EditUserIntrodu
   
   init() {
     self.doneButton = UIBarButtonItem()
+    let introductionConstant = ToDoGardenUIConstant.Constant.TextInputView.StringLiteral.UserIntroduction.self
+    let constant = ToDoGardenUIConstant.Constant.InputTextValidationView.StringLiteral.ValidationText.self
+    self.inputUserIntroductionView = InputTextValidationView(
+      inputText: introductionConstant.inputText,
+      placeholderText: introductionConstant.placeholderText,
+      validationText: constant.invalidIntroduction
+    )
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -65,6 +75,7 @@ extension EditUserIntroductionSceneViewController {
   private func setupUI() {
     self.setupMainViewUI()
     self.setupDoneButtonTitle()
+    self.setupInputIntroductionViewLayout()
   }
 
   private func setupMainViewUI() {
@@ -87,11 +98,30 @@ extension EditUserIntroductionSceneViewController {
     self.doneButton.title = "완료"
     self.navigationItem.rightBarButtonItem = self.doneButton
   }
+
+  private func setupInputIntroductionViewLayout() {
+    self.view.addSubview(self.inputUserIntroductionView)
+    self.inputUserIntroductionView.usingAutolayout()
+
+    let screenSize = self.view.bounds
+    let topMargin: CGFloat = 50 / 812
+    let widthRatio: CGFloat = 275 / 375
+    NSLayoutConstraint.activate(
+      [
+        self.inputUserIntroductionView.topAnchor.constraint(
+          equalTo: self.view.safeAreaLayoutGuide.topAnchor,
+          constant: screenSize.height * topMargin
+        ),
+        self.inputUserIntroductionView.widthAnchor.constraint(equalToConstant: screenSize.width * widthRatio),
+        self.inputUserIntroductionView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
+      ]
+    )
+  }
 }
 
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  return EditUserIntroductionSceneViewController()
+  return UINavigationController(rootViewController: EditUserIntroductionSceneViewController())
 }
 #endif
