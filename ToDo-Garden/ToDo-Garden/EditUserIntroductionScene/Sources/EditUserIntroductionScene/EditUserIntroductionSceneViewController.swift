@@ -28,12 +28,12 @@ class EditUserIntroductionSceneViewController: UIViewController, EditUserIntrodu
   
   init() {
     self.doneButton = UIBarButtonItem()
-    let introductionConstant = ToDoGardenUIConstant.Constant.TextInputView.StringLiteral.UserIntroduction.self
-    let constant = ToDoGardenUIConstant.Constant.InputTextValidationView.StringLiteral.ValidationText.self
+    let introductionTextConstant = ToDoGardenUIConstant.Constant.TextInputView.StringLiteral.UserIntroduction.self
+    let validationTextConstant = ToDoGardenUIConstant.Constant.InputTextValidationView.StringLiteral.ValidationText.self
     self.inputUserIntroductionView = InputTextValidationView(
-      inputText: introductionConstant.inputText,
-      placeholderText: introductionConstant.placeholderText,
-      validationText: constant.invalidIntroduction
+      inputText: introductionTextConstant.inputText,
+      placeholderText: introductionTextConstant.placeholderText,
+      validationText: validationTextConstant.invalidIntroduction
     )
     super.init(nibName: nil, bundle: nil)
   }
