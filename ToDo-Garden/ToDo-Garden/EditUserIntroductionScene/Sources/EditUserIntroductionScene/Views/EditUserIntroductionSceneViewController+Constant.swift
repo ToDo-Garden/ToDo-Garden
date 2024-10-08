@@ -22,7 +22,7 @@ extension EditUserIntroductionSceneViewController.Constant.Layout {
   }
 
   enum InputUserIntroductionView {
-    static let topMarginRatio: CGFloat = 50 / 812
+    static let topMarginRatio: CGFloat = 23 / 812
     static let widthRatio: CGFloat = 275 / 375
   }
 }
