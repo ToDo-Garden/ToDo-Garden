@@ -1,10 +1,11 @@
 //
 //  LoginViewController.swift
-//  
+//
 //
 //  Created by SONG on 10/2/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
+import AuthenticationServices
 import UIKit
 
 import LoginSceneAPI
@@ -15,11 +16,6 @@ protocol LoginDisplayLogic: AnyObject {
   func displaySomething(viewModel: Login.Something.ViewModel)
 }
 
-protocol AppleLoginBottomSheetDelegate: AnyObject {
-  func bottomSheetWillDisappear()
-  func bottomSheetWillAppear()
-}
-
 final class LoginViewController: UIViewController, LoginViewControllable {
   
   // MARK: - VIP Properties
@@ -27,14 +23,17 @@ final class LoginViewController: UIViewController, LoginViewControllable {
   var interactor: LoginBusinessLogic?
   var router: (LoginRoutingLogic & LoginDataPassing)?
   
+  private var appleLoginManager: AppleLoginManager?
   private let appleLoginButton: AppleLoginButton
   private let dimmingView: UIView
+  private let termAgreementView: TermsAgreementView
   
   // MARK: - Object lifecycle
   
   init() {
     self.appleLoginButton = AppleLoginButton()
     self.dimmingView = UIView()
+    self.termAgreementView = TermsAgreementView()
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -47,6 +46,7 @@ final class LoginViewController: UIViewController, LoginViewControllable {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    self.setAppleLoginManager()
     self.setUI()
     self.doSomething()
   }
@@ -57,6 +57,7 @@ extension LoginViewController {
     self.setBackgroundImage()
     self.setAppleLoginButton()
     self.setupDimmingView()
+    self.setupTermAgreementView()
   }
   
   private func setBackgroundImage() {
@@ -77,8 +78,9 @@ extension LoginViewController {
         constant: self.view.bounds.height * Constant.AppleLoginButton.centerYMultiplier
       )
     ])
+    
     self.appleLoginButton.addAction(UIAction { [weak self] _ in
-      self?.appleLoginButtonTapped()
+      self?.appleLoginManager?.performAppleLogin()
     }, for: UIControl.Event.touchUpInside)
   }
   
@@ -89,27 +91,47 @@ extension LoginViewController {
     self.dimmingView.frame = self.view.bounds
   }
   
-  private func appleLoginButtonTapped() {
-    let bottomSheetVC = AppleLoginBottomSheetViewController()
-    bottomSheetVC.delegate = self
-    bottomSheetVC.modalPresentationStyle = UIModalPresentationStyle.pageSheet
-    
-    if let sheet = bottomSheetVC.sheetPresentationController {
-      if #available(iOS 16.0, *) {
-        sheet.detents = [UISheetPresentationController.Detent.custom { _ in
-          return self.view.bounds.height * Constant.AppleLoginBottomSheet.heightMultiplier
-        }]
-      } else {
-        sheet.detents = [UISheetPresentationController.Detent.medium()]
-      }
-      sheet.prefersGrabberVisible = true
-    }
-    
-    self.present(bottomSheetVC, animated: true, completion: nil)
+  private func setupTermAgreementView() {
+    self.termAgreementView.delegate = self
+    self.view.addSubview(self.termAgreementView)
+    self.termAgreementView.usingAutolayout()
+    NSLayoutConstraint.activate([
+      self.termAgreementView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+      self.termAgreementView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
+    ])
+    self.termAgreementView.isHidden = true
+    self.termAgreementView.alpha = 0
+    self.termAgreementView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
   }
   
   private func setGuestLoginButon() {
-    
+    // TODO: 게스트 로그인
+  }
+  
+  private func setAppleLoginManager() {
+    self.appleLoginManager = AppleLoginManager(presentationContextProvider: self)
+    self.appleLoginManager?.delegate = self
+  }
+  
+  private func showTermAgreementView() {
+    self.termAgreementView.isHidden = false
+    UIView.animate(withDuration: 0.5) {
+      self.dimmingView.alpha = 1
+      self.termAgreementView.alpha = 1
+      self.termAgreementView.transform = CGAffineTransform.identity
+    }
+  }
+  
+  private func hideTermAgreementView() {
+    UIView.animate(
+      withDuration: 0.5,
+      animations: {
+        self.dimmingView.alpha = 0
+        self.termAgreementView.alpha = 0
+        self.termAgreementView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+      }, completion: { _ in
+        self.termAgreementView.isHidden = true
+      })
   }
 }
 
@@ -130,20 +152,64 @@ extension LoginViewController {
   }
 }
 
-extension LoginViewController: AppleLoginBottomSheetDelegate {
-  func bottomSheetWillDisappear() {
-    UIView.animate(withDuration: Constant.DimmingView.animateDuration) {
-      self.dimmingView.alpha = 0
-    } completion: { _ in
-      self.dimmingView.isHidden = true
+extension LoginViewController: ASAuthorizationControllerPresentationContextProviding {
+  public func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+    return self.view.window ?? UIWindow()
+  }
+}
+
+// TODO: 린트관련 주석 지우기
+// swiftlint:disable empty_enum_arguments
+extension LoginViewController: AppleLoginManagerDelegate {
+  func appleLoginDidComplete(with result: Result<ASAuthorizationAppleIDCredential, Error>) {
+    switch result {
+    case .success(_):
+      //      let userIdentifier = appleIDCredential.user
+      //      let fullName = appleIDCredential.fullName
+      //      let email = appleIDCredential.email
+      // TODO: 신규회원인지 기존회원인지 체크
+      self.showTermAgreementView()
+      
+    case .failure(_): break
+      // TODO: 에러처리
     }
   }
+}
+// swiftlint:enable empty_enum_arguments
+
+extension LoginViewController: TermsAgreementViewDelegate {
+  public func termsAgreementView(
+    _ view: ToDoGardenUIComponent.TermsAgreementView,
+    didTapTermsAndPoliciesAgreement: Void
+  ) {
+    // TODO: 약관 및 정책 열람 코드
+  }
   
-  func bottomSheetWillAppear() {
-    self.dimmingView.isHidden = false
-    UIView.animate(withDuration: Constant.DimmingView.animateDuration) {
-      self.dimmingView.alpha = 1
-    }
+  public func termsAgreementView(
+    _ view: ToDoGardenUIComponent.TermsAgreementView,
+    didTapPrivacyPolicy: Void
+  ) {
+    // TODO: 개인정보 처리 방침 열람 코드
+  }
+  
+  public func termsAgreementView(
+    _ view: ToDoGardenUIComponent.TermsAgreementView,
+    didTapEventAndPromotionalInformation: Void
+  ) {
+    // TODO: 이벤트, 광고성 정보 안내 (선택) 열람 코드
+  }
+  
+  public func termsAgreementView(
+    _ view: ToDoGardenUIComponent.TermsAgreementView,
+    didTapDoneButton isEventAndPromotionalInformationAgreed: Bool
+  ) {
+    self.hideTermAgreementView()
+    // TODO: 이벤트, 광고성 정보 안내 (선택)에 동의했을 때 / 안했을 때 동작 분기
+    
+    let nextVC = UIViewController()
+    nextVC.view.backgroundColor = UIColor.white
+    
+    self.navigationController?.pushViewController(nextVC, animated: true)
   }
 }
 
