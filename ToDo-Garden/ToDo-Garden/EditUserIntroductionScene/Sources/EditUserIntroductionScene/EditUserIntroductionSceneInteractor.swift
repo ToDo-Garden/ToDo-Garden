@@ -16,6 +16,7 @@ protocol EditUserIntroductionSceneDataStore {
 }
 
 protocol EditUserIntroductionSceneBusinessLogic {
+  func loadUserIntroduction()
 }
 
 final class EditUserIntroductionSceneInteractor: EditUserIntroductionSceneDataStore {
@@ -32,4 +33,7 @@ final class EditUserIntroductionSceneInteractor: EditUserIntroductionSceneDataSt
 // MARK: - Request to worker
 
 extension EditUserIntroductionSceneInteractor: EditUserIntroductionSceneBusinessLogic {
+  func loadUserIntroduction() {
+    self.presenter?.presentUserIntroduction(self.userIntroduction)
+  }
 }

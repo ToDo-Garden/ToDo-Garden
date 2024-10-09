@@ -11,7 +11,7 @@ import EditUserIntroductionSceneEntity
 
 // swiftlint:disable type_name
 protocol EditUserIntroductionScenePresentationLogic {
-  func presentSomething(response: EditUserIntroductionScene.Something.Response)
+  func presentUserIntroduction(_ introduction: String?)
 }
 // swiftlint:enable type_name
 
@@ -22,8 +22,7 @@ class EditUserIntroductionScenePresenter {
 // MARK: - Request to ViewController
 
 extension EditUserIntroductionScenePresenter: EditUserIntroductionScenePresentationLogic {
-  func presentSomething(response: EditUserIntroductionScene.Something.Response) {
-    let viewModel = EditUserIntroductionScene.Something.ViewModel()
-    self.viewController?.displaySomething(viewModel: viewModel)
+  func presentUserIntroduction(_ introduction: String?) {
+    // TODO: - Display 로직 호출
   }
 }
