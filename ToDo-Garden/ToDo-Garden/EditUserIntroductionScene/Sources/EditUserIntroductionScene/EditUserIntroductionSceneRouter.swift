@@ -21,20 +21,12 @@ protocol EditUserIntroductionSceneDataPassing {
 class EditUserIntroductionSceneRouter: EditUserIntroductionSceneDataPassing {
   weak var viewController: EditUserIntroductionSceneViewController?
   var dataStore: EditUserIntroductionSceneDataStore?
-  private let nextSceneBuilder: NextSceneBuildable
-  
-  init(nextSceneBuilder: NextSceneBuildable) {
-    self.nextSceneBuilder = nextSceneBuilder
-  }
 }
 
 // MARK: - Routing
 
 extension EditUserIntroductionSceneRouter: EditUserIntroductionSceneRoutingLogic {
   func routeToSomewhere() {
-    let destinationViewController = self.nextSceneBuilder.build(with: NextScenePayload())
-    
-    self.viewController?.present(destinationViewController, animated: true)
   }
 }
 
