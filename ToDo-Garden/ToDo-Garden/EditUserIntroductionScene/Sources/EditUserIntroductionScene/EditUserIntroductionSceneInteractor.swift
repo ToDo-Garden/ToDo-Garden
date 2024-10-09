@@ -17,7 +17,7 @@ protocol EditUserIntroductionSceneDataStore {
 protocol EditUserIntroductionSceneBusinessLogic {
 }
 
-class EditUserIntroductionSceneInteractor: EditUserIntroductionSceneDataStore {
+final class EditUserIntroductionSceneInteractor: EditUserIntroductionSceneDataStore {
   // var name: String = ""
   var presenter: EditUserIntroductionScenePresentationLogic?
   private let someWorker: EditUserIntroductionSceneWorkable
