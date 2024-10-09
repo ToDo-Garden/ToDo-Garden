@@ -1,13 +1,13 @@
 //
-//  InputIDModels.swift
-//  
+//  SignUpModels.swift
+//
 //
 //  Created by SONG on 10/7/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
 import Foundation
 
-public enum InputID {
+public enum SignUp {
   
   // MARK: Use cases
   

@@ -1,5 +1,5 @@
 //
-//  InputIDSceneBuilder.swift
+//  SignUpSceneBuilder.swift
 //  
 //
 //  Created by SONG on 10/7/24.
@@ -7,16 +7,16 @@
 
 import Foundation
 
-import InputIDSceneAPI
-import InputIDSceneEntity
+import SignUpSceneAPI
+import SignUpSceneEntity
 
-public struct InputIDSceneBuilder {
+public struct SignUpSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
   public struct Dependency {
-    let someWorker: InputIDWorkable
+    let someWorker: SignUpWorkable
     let nextSceneBuilder: NextSceneBuildable
     
-    public init(someWorker: InputIDWorkable, nextSceneBuilder: NextSceneBuildable) {
+    public init(someWorker: SignUpWorkable, nextSceneBuilder: NextSceneBuildable) {
       self.someWorker = someWorker
       self.nextSceneBuilder = nextSceneBuilder
     }
@@ -29,26 +29,26 @@ public struct InputIDSceneBuilder {
   }
 }
 
-extension InputIDSceneBuilder: InputIDSceneBuildable {
+extension SignUpSceneBuilder: SignUpSceneBuildable {
   ///  VIP Cycle, 런타임 의존성이 설정된 ViewController 인스턴스를 반환하는 함수입니다.
   /// - Parameter payload: 런타임에 전달받아야 하는 의존성입니다.
   /// - Returns: 런타임 의존성, VIP Cycle이 설정된 ViewController를 반환합니다.
-  public func build(with payload: InputIDScenePayloadable) -> InputIDViewControllable {
-    let someViewController = self.configureVIPCycle(for: InputIDViewController())
+  public func build(with payload: SignUpScenePayloadable) -> SignUpViewControllable {
+    let someViewController = self.configureVIPCycle(for: SignUpViewController())
     self.setPayload(for: someViewController, with: payload)
     
     return someViewController
   }
 }
 
-extension InputIDSceneBuilder {
+extension SignUpSceneBuilder {
   /// VIP Cycle을 설정합니다.
   /// - Parameter viewController: VIPCycle을 설정할 viewController입니다.
   /// - Returns: VIP Cycle 설정이 완료된 `ViewControllable` 프로토콜을 준수한 `ViewController` 인스턴스를 반환합니다.
-  private func configureVIPCycle(for viewController: InputIDViewController) -> InputIDViewController {
-    let interactor = InputIDInteractor(someWorker: self.dependency.someWorker)
-    let presenter = InputIDPresenter()
-    let router = InputIDRouter(nextSceneBuilder: self.dependency.nextSceneBuilder)
+  private func configureVIPCycle(for viewController: SignUpViewController) -> SignUpViewController {
+    let interactor = SignUpInteractor(someWorker: self.dependency.someWorker)
+    let presenter = SignUpPresenter()
+    let router = SignUpRouter(nextSceneBuilder: self.dependency.nextSceneBuilder)
     viewController.interactor = interactor
     viewController.router = router
     interactor.presenter = presenter
@@ -63,7 +63,7 @@ extension InputIDSceneBuilder {
   /// - Parameters:
   ///   - viewController: 런타임 의존성을 설정할 ViewController 객체입니다.
   ///   - payload: 런타임에 전달할 의존성입니다.
-  private func setPayload(for viewController: InputIDViewController, with payload: InputIDScenePayloadable) {
+  private func setPayload(for viewController: SignUpViewController, with payload: SignUpScenePayloadable) {
     // viewController.router?.dataStore?.name = payload.name
   }
 }
