@@ -44,11 +44,12 @@ public final class AnimatedMultiLinesTitleView: UIStackView {
     fatalError()
   }
   
+  @MainActor
   public func startAnimation() {
     guard !self.isAnimating else { return }
     
     self.isAnimating = true
-    self.animationTask = Task { @MainActor in
+    self.animationTask = Task {
       await withTaskGroup(of: Void.self) { group in
         group.addTask { await self.animateText(for: self.mainTitleLabelFirst, with: self.firstLineText) }
         group.addTask { await self.animateText(for: self.mainTitleLabelSecond, with: self.secondLineText) }
@@ -62,13 +63,12 @@ public final class AnimatedMultiLinesTitleView: UIStackView {
     for character in text {
       guard self.isAnimating else { return }
       
-      await MainActor.run {
-        label.text?.append(character)
-      }
+      label.text?.append(character)
       try? await Task.sleep(nanoseconds: 100_000_000)
     }
   }
   
+  @MainActor
   public func cancelTask() {
     if self.isAnimating {
       self.completeAnimationImmediately()
@@ -79,11 +79,9 @@ public final class AnimatedMultiLinesTitleView: UIStackView {
     self.animationTask?.cancel()
     self.isAnimating = false
     
-    Task { @MainActor in
-      self.mainTitleLabelFirst.text = self.firstLineText
-      self.mainTitleLabelSecond.text = self.secondLineText
-      self.subTitleLabel.text = self.thirdLineText
-    }
+    self.mainTitleLabelFirst.text = self.firstLineText
+    self.mainTitleLabelSecond.text = self.secondLineText
+    self.subTitleLabel.text = self.thirdLineText
   }
 }
 
