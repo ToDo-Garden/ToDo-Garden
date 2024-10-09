@@ -17,6 +17,7 @@ protocol EditUserIntroductionSceneDataStore {
 
 protocol EditUserIntroductionSceneBusinessLogic {
   func loadUserIntroduction()
+  func verifyUserIntroduction(_ introduction: String)
 }
 
 final class EditUserIntroductionSceneInteractor: EditUserIntroductionSceneDataStore {
@@ -35,5 +36,18 @@ final class EditUserIntroductionSceneInteractor: EditUserIntroductionSceneDataSt
 extension EditUserIntroductionSceneInteractor: EditUserIntroductionSceneBusinessLogic {
   func loadUserIntroduction() {
     self.presenter?.presentUserIntroduction(self.userIntroduction)
+  }
+
+  func verifyUserIntroduction(_ introduction: String) {
+    let isValid = self.checkUserIntroductionValidity(introduction)
+    self.presenter?.presentUserNameVerification(isValid: isValid)
+  }
+}
+
+// MARK: - Private Functions
+
+extension EditUserIntroductionSceneInteractor {
+  private func checkUserIntroductionValidity(_ introduction: String) -> Bool {
+    return introduction.count <= 15
   }
 }
