@@ -72,3 +72,18 @@ extension EditUserIntroductionSceneBuilder {
     // viewController.router?.dataStore?.name = payload.name
   }
 }
+
+// MARK: - Preview Builder
+
+#if DEBUG
+extension EditUserIntroductionSceneBuilder {
+  private struct PreviewPayload: EditUserIntroductionScenePayloadable {}
+
+  /// Preview에서 VIP 동작을 확인하기 위한 Builder입니다.
+  static let previewScene = Self(
+    dependency: Dependency(
+      someWorker: EditUserIntroductionSceneWorker()
+    )
+  ).build(with: PreviewPayload())
+}
+#endif
