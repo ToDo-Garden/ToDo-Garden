@@ -11,14 +11,16 @@ import EditUserIntroductionSceneAPI
 import EditUserIntroductionSceneEntity
 
 protocol EditUserIntroductionSceneDataStore {
-  // var name: String { get set }
+  /// UserInfoScene에서 Payload로 런타임에 전달받을 한줄 소개에 대한 데이터입니다.
+  var userIntroduction: String? { get }
 }
 
 protocol EditUserIntroductionSceneBusinessLogic {
 }
 
 final class EditUserIntroductionSceneInteractor: EditUserIntroductionSceneDataStore {
-  // var name: String = ""
+  var userIntroduction: String?
+
   var presenter: EditUserIntroductionScenePresentationLogic?
   private let someWorker: EditUserIntroductionSceneWorkable
 
