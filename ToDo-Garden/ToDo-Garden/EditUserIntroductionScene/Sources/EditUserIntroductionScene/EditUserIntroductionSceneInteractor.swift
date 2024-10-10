@@ -15,7 +15,6 @@ protocol EditUserIntroductionSceneDataStore {
 }
 
 protocol EditUserIntroductionSceneBusinessLogic {
-  func doSomething(request: EditUserIntroductionScene.Something.Request)
 }
 
 class EditUserIntroductionSceneInteractor: EditUserIntroductionSceneDataStore {
@@ -31,10 +30,4 @@ class EditUserIntroductionSceneInteractor: EditUserIntroductionSceneDataStore {
 // MARK: - Request to worker
 
 extension EditUserIntroductionSceneInteractor: EditUserIntroductionSceneBusinessLogic {
-  func doSomething(request: EditUserIntroductionScene.Something.Request) {
-    self.someWorker.doSomeWork()
-
-    let response = EditUserIntroductionScene.Something.Response()
-    self.presenter?.presentSomething(response: response)
-  }
 }
