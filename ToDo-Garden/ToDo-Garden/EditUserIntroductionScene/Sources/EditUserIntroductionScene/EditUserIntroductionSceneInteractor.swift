@@ -21,7 +21,7 @@ protocol EditUserIntroductionSceneBusinessLogic {
   func verifyUserIntroduction(_ introduction: String)
   func requestEditUserIntroduction(_ introduction: String)
 
-  func cancelRunningTask()
+  func cancelTask()
 }
 
 final class EditUserIntroductionSceneInteractor: EditUserIntroductionSceneDataStore {
@@ -77,7 +77,7 @@ extension EditUserIntroductionSceneInteractor: EditUserIntroductionSceneBusiness
     }
   }
 
-  func cancelRunningTask() {
+  func cancelTask() {
     self.requestEditUserIntroductionTask?.cancel()
   }
 }

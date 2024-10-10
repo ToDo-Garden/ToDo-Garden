@@ -52,7 +52,7 @@ class EditUserIntroductionSceneViewController: UIViewController, EditUserIntrodu
 
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
-    self.interactor?.cancelRunningTask()
+    self.interactor?.cancelTask()
   }
 }
 
