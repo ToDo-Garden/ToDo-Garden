@@ -43,9 +43,12 @@ public class SignUpInputView: UIView {
   }
   
   public override var intrinsicContentSize: CGSize {
+    let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+    let screenWidth = windowScene?.screen.bounds.width ?? CGFloat.zero
+    let screenHeight = windowScene?.screen.bounds.height ?? CGFloat.zero
     return CGSize(
-      width: UIScreen.main.bounds.width,
-      height: UIScreen.main.bounds.height * Constant.SignUpInputView.heightMultiplier
+      width: screenWidth,
+      height: screenHeight * Constant.SignUpInputView.heightMultiplier
     )
   }
   
