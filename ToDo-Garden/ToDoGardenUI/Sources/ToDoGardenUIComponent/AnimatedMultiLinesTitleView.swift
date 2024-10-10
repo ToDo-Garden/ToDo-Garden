@@ -63,13 +63,13 @@ public final class AnimatedMultiLinesTitleView: UIStackView {
     for character in text {
       label.text?.append(character)
       do {
-        guard !Task.isCancelled else { return }
+        try Task.checkCancellation()
         
         try await Task.sleep(nanoseconds: 100_000_000)
         
-        guard !Task.isCancelled else { return }
+        try Task.checkCancellation()
       } catch {
-        guard !Task.isCancelled else { return }
+        return
       }
     }
   }
