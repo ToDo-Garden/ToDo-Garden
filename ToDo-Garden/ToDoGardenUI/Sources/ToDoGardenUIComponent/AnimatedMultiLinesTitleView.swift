@@ -61,10 +61,12 @@ public final class AnimatedMultiLinesTitleView: UIStackView {
   
   private func animateText(for label: UILabel, with text: String) async {
     for character in text {
-      guard self.isAnimating else { return }
-      
       label.text?.append(character)
-      try? await Task.sleep(nanoseconds: 100_000_000)
+      do {
+        try await Task.sleep(nanoseconds: 100_000_000)
+      } catch {
+        guard !Task.isCancelled else { return }
+      }
     }
   }
   
@@ -95,7 +97,7 @@ extension AnimatedMultiLinesTitleView {
     self.addArrangedSubview(self.mainTitleLabelSecond)
     self.addArrangedSubview(self.subTitleLabel)
   }
-
+  
   private func setupTitles() {
     self.setupMainTitle(text: self.firstLineText, at: self.mainTitleLabelFirst)
     self.setupMainTitle(text: self.secondLineText, at: self.mainTitleLabelSecond)
