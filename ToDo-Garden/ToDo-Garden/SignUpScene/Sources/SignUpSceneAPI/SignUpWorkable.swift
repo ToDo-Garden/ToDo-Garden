@@ -1,5 +1,5 @@
 //
-//  InputIDWorkable.swift
+//  SignUpWorkable.swift
 //  
 //
 //  Created by SONG on 10/7/24.
@@ -7,6 +7,6 @@
 
 import Foundation
 
-public protocol InputIDWorkable {
+public protocol SignUpWorkable {
   func doSomeWork()
 }

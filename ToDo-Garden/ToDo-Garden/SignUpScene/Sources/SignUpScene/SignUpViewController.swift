@@ -1,5 +1,5 @@
 //
-//  InputIDViewController.swift
+//  SignUpViewController.swift
 //  
 //
 //  Created by SONG on 10/7/24.
@@ -7,19 +7,19 @@
 
 import UIKit
 
-import InputIDSceneAPI
-import InputIDSceneEntity
+import SignUpSceneAPI
+import SignUpSceneEntity
 
-protocol InputIDDisplayLogic: AnyObject {
-  func displaySomething(viewModel: InputID.Something.ViewModel)
+protocol SignUpDisplayLogic: AnyObject {
+  func displaySomething(viewModel: SignUp.Something.ViewModel)
 }
 
-class InputIDViewController: UIViewController, InputIDViewControllable {
+class SignUpViewController: UIViewController, SignUpViewControllable {
   
   // MARK: - VIP Properties
   
-  var interactor: InputIDBusinessLogic?
-  var router: (InputIDRoutingLogic & InputIDDataPassing)?
+  var interactor: SignUpBusinessLogic?
+  var router: (SignUpRoutingLogic & SignUpDataPassing)?
   
   // MARK: - Object lifecycle
   
@@ -42,17 +42,17 @@ class InputIDViewController: UIViewController, InputIDViewControllable {
 
 // MARK: - Confirm display logic protocol
 
-extension InputIDViewController: InputIDDisplayLogic {
-  func displaySomething(viewModel: InputID.Something.ViewModel) {
+extension SignUpViewController: SignUpDisplayLogic {
+  func displaySomething(viewModel: SignUp.Something.ViewModel) {
     // self.nameTextField.text = viewModel.name
   }
 }
 
 // MARK: - Request to interactor
 
-extension InputIDViewController {
+extension SignUpViewController {
   func doSomething() {
-    let request = InputID.Something.Request()
+    let request = SignUp.Something.Request()
     self.interactor?.doSomething(request: request)
   }
 }

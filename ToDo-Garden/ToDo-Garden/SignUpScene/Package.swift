@@ -4,20 +4,20 @@
 import PackageDescription
 
 let package = Package(
-  name: "InputIDScene",
+  name: "SignUpScene",
   platforms: [.iOS(.v15)],
   products: [
     .library(
-      name: "InputIDSceneAPI",
-      targets: ["InputIDSceneAPI"]
+      name: "SignUpSceneAPI",
+      targets: ["SignUpSceneAPI"]
     ),
     .library(
-      name: "InputIDSceneEntity",
-      targets: ["InputIDSceneEntity"]
+      name: "SignUpSceneEntity",
+      targets: ["SignUpSceneEntity"]
     ),
     .library(
-      name: "InputIDScene",
-      targets: ["InputIDScene"]
+      name: "SignUpScene",
+      targets: ["SignUpScene"]
     )
   ],
   dependencies: [
@@ -26,28 +26,28 @@ let package = Package(
   ],
   targets: [
     .target(
-      name: "InputIDSceneAPI",
+      name: "SignUpSceneAPI",
       dependencies: [
         .product(name: "ToDoGardenUIAPI", package: "ToDoGardenUI")
       ]
     ),
     .target(
-      name: "InputIDSceneEntity"
+      name: "SignUpSceneEntity"
     ),
     .target(
-      name: "InputIDScene",
+      name: "SignUpScene",
       dependencies: [
         .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI"),
-        "InputIDSceneAPI",
-        "InputIDSceneEntity",
+        "SignUpSceneAPI",
+        "SignUpSceneEntity",
         .product(name: "TDUtility", package: "TDUtility"),
         .product(name: "ToDoGardenUIAPI", package: "ToDoGardenUI"),
         .product(name: "ToDoGardenUIResource", package: "ToDoGardenUI")
       ]
     ),
     .testTarget(
-      name: "InputIDSceneTests",
-      dependencies: ["InputIDScene"]
+      name: "SignUpSceneTests",
+      dependencies: ["SignUpScene"]
     )
   ]
 )

@@ -1,5 +1,5 @@
 //
-//  InputIDWorker.swift
+//  SignUpWorker.swift
 //  
 //
 //  Created by SONG on 10/7/24.
@@ -7,9 +7,9 @@
 
 import Foundation
 
-import InputIDSceneAPI
+import SignUpSceneAPI
 
-struct InputIDWorker: InputIDWorkable {
+struct SignUpWorker: SignUpWorkable {
   func doSomeWork() {
   }
 }

@@ -1,5 +1,5 @@
 //
-//  InputIDViewControllable.swift
+//  SignUpViewControllable.swift
 //  
 //
 //  Created by SONG on 10/7/24.
@@ -7,5 +7,5 @@
 
 import ToDoGardenUIAPI
 
-public protocol InputIDViewControllable: ViewControllable {
+public protocol SignUpViewControllable: ViewControllable {
 }
