@@ -53,13 +53,11 @@ extension EditUserIntroductionSceneInteractor: EditUserIntroductionSceneBusiness
     guard self.checkUserIntroductionValidity(introduction)
     else { return }
 
-    self.requestEditUserIntroductionTask = Task { [weak self] in
-      guard let self else { return }
-
+    self.requestEditUserIntroductionTask = Task {
       defer { self.requestEditUserIntroductionTask = nil }
-      if Task.isCancelled { return }
 
       do {
+        try Task.checkCancellation()
         try await self.editUserIntroductionWorker.editUserIntroduction(introduction)
 
         try Task.checkCancellation()
