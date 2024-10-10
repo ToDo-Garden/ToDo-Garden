@@ -15,19 +15,23 @@ protocol EditUserIntroductionSceneDataStore {
   var userIntroduction: String? { get }
 }
 
+@MainActor
 protocol EditUserIntroductionSceneBusinessLogic {
   func loadUserIntroduction()
   func verifyUserIntroduction(_ introduction: String)
+  func requestEditUserIntroduction(_ introduction: String)
 }
 
 final class EditUserIntroductionSceneInteractor: EditUserIntroductionSceneDataStore {
   var userIntroduction: String?
 
-  var presenter: EditUserIntroductionScenePresentationLogic?
-  private let someWorker: EditUserIntroductionSceneWorkable
+  private var requestEditUserIntroductionTask: Task<Void, Never>?
 
-  init(someWorker: EditUserIntroductionSceneWorkable) {
-    self.someWorker = someWorker
+  var presenter: EditUserIntroductionScenePresentationLogic?
+  private let editUserIntroductionWorker: EditUserIntroductionSceneWorkable
+
+  init(editUserIntroductionWorker: EditUserIntroductionSceneWorkable) {
+    self.editUserIntroductionWorker = editUserIntroductionWorker
   }
 }
 
@@ -41,6 +45,25 @@ extension EditUserIntroductionSceneInteractor: EditUserIntroductionSceneBusiness
   func verifyUserIntroduction(_ introduction: String) {
     let isValid = self.checkUserIntroductionValidity(introduction)
     self.presenter?.presentUserNameVerification(isValid: isValid)
+  }
+
+  func requestEditUserIntroduction(_ introduction: String) {
+    guard self.checkUserIntroductionValidity(introduction)
+    else { return }
+
+    self.requestEditUserIntroductionTask = Task { [weak self] in
+      guard let self else { return }
+
+      defer { self.requestEditUserIntroductionTask = nil }
+
+      do {
+        try await self.editUserIntroductionWorker.editUserIntroduction(introduction)
+
+        self.presenter?.presentEditUserIntroductionResult(nil)
+      } catch let error {
+        self.presenter?.presentEditUserIntroductionResult(error)
+      }
+    }
   }
 }
 

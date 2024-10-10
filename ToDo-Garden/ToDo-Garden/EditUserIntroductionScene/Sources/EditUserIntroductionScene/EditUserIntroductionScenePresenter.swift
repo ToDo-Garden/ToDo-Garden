@@ -10,9 +10,11 @@ import Foundation
 import EditUserIntroductionSceneEntity
 
 // swiftlint:disable type_name
+@MainActor
 protocol EditUserIntroductionScenePresentationLogic {
   func presentUserIntroduction(_ introduction: String?)
   func presentUserNameVerification(isValid: Bool)
+  func presentEditUserIntroductionResult(_ error: Error?)
 }
 // swiftlint:enable type_name
 
@@ -29,5 +31,9 @@ extension EditUserIntroductionScenePresenter: EditUserIntroductionScenePresentat
 
   func presentUserNameVerification(isValid: Bool) {
     // TODO: - Display 로직 호출
+  }
+
+  func presentEditUserIntroductionResult(_ error: Error?) {
+
   }
 }
