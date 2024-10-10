@@ -33,6 +33,7 @@ public class SignUpInputView: UIView {
       validationText: validationText
     )
     super.init(frame: CGRect.zero)
+    self.setupUI()
     self.backgroundColor = UIColor.white
   }
   
@@ -46,5 +47,40 @@ public class SignUpInputView: UIView {
       width: UIScreen.main.bounds.width,
       height: UIScreen.main.bounds.height * Constant.SignUpInputView.heightMultiplier
     )
+  }
+extension SignUpInputView {
+  private func setupUI() {
+    self.setupTextInputView()
+    self.setupTitleView()
+  }
+  
+  private func setupTextInputView() {
+    let constants = Constant.SignUpInputView.TextInputView.self
+    self.addSubview(self.textInputView)
+    self.textInputView.usingAutolayout()
+    NSLayoutConstraint.activate([
+      self.textInputView.topAnchor.constraint(
+        equalTo: self.topAnchor,
+        constant: constants.topMargin
+      ),
+      self.textInputView.leadingAnchor.constraint(
+        equalTo: self.leadingAnchor,
+        constant: self.intrinsicContentSize.width * constants.leadingMultiplier
+      ),
+      self.textInputView.trailingAnchor.constraint(
+        equalTo: self.trailingAnchor,
+        constant: self.intrinsicContentSize.width * constants.trailingMultiplier
+      )
+    ])
+  }
+  
+  private func setupTitleView() {
+    self.addSubview(self.titleView)
+    self.titleView.usingAutolayout()
+    NSLayoutConstraint.activate([
+      self.titleView.topAnchor.constraint(equalTo: self.topAnchor),
+      self.titleView.leadingAnchor.constraint(equalTo: self.textInputView.leadingAnchor),
+      self.titleView.trailingAnchor.constraint(lessThanOrEqualTo: self.textInputView.trailingAnchor)
+    ])
   }
 }
