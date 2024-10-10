@@ -96,3 +96,25 @@ extension SignUpInputView {
     ])
   }
 }
+
+@available(iOS 17.0, *)
+#Preview {
+  let view = SignUpInputView(
+    firstTitle: "환영해요!",
+    secondTitle: "아이디를 정해볼까요?",
+    thirdTitle: "아이디로 친구의 가든을 찾을 수 있어요.",
+    textFieldTitle: "아이디",
+    placeholderText: "아이디를 입력해주세요.",
+    validationText: "아이디는 5~12자 내외 띄어쓰기 없이\n영문, 숫자만 사용 가능합니다"
+  )
+  
+  view.startTitleAnimation()
+  DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+    view.textInputView.showValidationText()
+  }
+  
+  DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
+    view.textInputView.hideValidationText()
+  }
+  return view
+}
