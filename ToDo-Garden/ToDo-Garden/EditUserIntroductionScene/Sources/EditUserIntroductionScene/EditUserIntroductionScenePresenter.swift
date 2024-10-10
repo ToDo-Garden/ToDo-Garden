@@ -12,7 +12,8 @@ import EditUserIntroductionSceneEntity
 // swiftlint:disable type_name
 @MainActor
 protocol EditUserIntroductionScenePresentationLogic {
-  func presentUserIntroduction(_ introduction: String?)
+  func presentUserIntroduction(_ introduction: String)
+  func presentEmptyUserIntroduction()
   func presentUserNameVerification(isValid: Bool)
   func presentEditUserIntroductionSuccess()
   func presentEditUserIntroductionError(_ error: Error)
@@ -26,15 +27,19 @@ class EditUserIntroductionScenePresenter {
 // MARK: - Request to ViewController
 
 extension EditUserIntroductionScenePresenter: EditUserIntroductionScenePresentationLogic {
+  func presentUserIntroduction(_ introduction: String) {
+    // TODO: - Display 로직 호출
+  }
+
+  func presentEmptyUserIntroduction() {
+    // TODO: - Display로직 호출
+  }
+
   func presentEditUserIntroductionSuccess() {
     // TODO: - Display 로직 호출
   }
-  
+
   func presentEditUserIntroductionError(_ error: Error) {
-    // TODO: - Display 로직 호출
-  }
-  
-  func presentUserIntroduction(_ introduction: String?) {
     // TODO: - Display 로직 호출
   }
 

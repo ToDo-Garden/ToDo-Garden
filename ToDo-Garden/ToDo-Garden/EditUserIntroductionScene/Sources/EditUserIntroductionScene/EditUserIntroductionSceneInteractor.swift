@@ -41,7 +41,11 @@ final class EditUserIntroductionSceneInteractor: EditUserIntroductionSceneDataSt
 
 extension EditUserIntroductionSceneInteractor: EditUserIntroductionSceneBusinessLogic {
   func loadUserIntroduction() {
-    self.presenter?.presentUserIntroduction(self.userIntroduction)
+    if let userIntroduction {
+      self.presenter?.presentUserIntroduction(userIntroduction)
+    } else {
+      self.presenter?.presentEmptyUserIntroduction()
+    }
   }
 
   func verifyUserIntroduction(_ introduction: String) {
