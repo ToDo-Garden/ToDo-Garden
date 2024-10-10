@@ -50,6 +50,11 @@ class EditUserIntroductionSceneViewController: UIViewController, EditUserIntrodu
     self.setupUI()
     self.doSomething()
   }
+
+  override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    self.interactor?.cancelRunningTask()
+  }
 }
 
 // MARK: - Confirm display logic protocol

@@ -20,6 +20,8 @@ protocol EditUserIntroductionSceneBusinessLogic {
   func loadUserIntroduction()
   func verifyUserIntroduction(_ introduction: String)
   func requestEditUserIntroduction(_ introduction: String)
+
+  func cancelRunningTask()
 }
 
 final class EditUserIntroductionSceneInteractor: EditUserIntroductionSceneDataStore {
@@ -55,15 +57,22 @@ extension EditUserIntroductionSceneInteractor: EditUserIntroductionSceneBusiness
       guard let self else { return }
 
       defer { self.requestEditUserIntroductionTask = nil }
+      if Task.isCancelled { return }
 
       do {
         try await self.editUserIntroductionWorker.editUserIntroduction(introduction)
 
+        try Task.checkCancellation()
         self.presenter?.presentEditUserIntroductionResult(nil)
       } catch let error {
+        if error is CancellationError { return }
         self.presenter?.presentEditUserIntroductionResult(error)
       }
     }
+  }
+
+  func cancelRunningTask() {
+    self.requestEditUserIntroductionTask?.cancel()
   }
 }
 
