@@ -63,10 +63,10 @@ extension EditUserIntroductionSceneInteractor: EditUserIntroductionSceneBusiness
         try await self.editUserIntroductionWorker.editUserIntroduction(introduction)
 
         try Task.checkCancellation()
-        self.presenter?.presentEditUserIntroductionResult(nil)
+        self.presenter?.presentEditUserIntroductionSuccess()
       } catch let error {
         if error is CancellationError { return }
-        self.presenter?.presentEditUserIntroductionResult(error)
+        self.presenter?.presentEditUserIntroductionError(error)
       }
     }
   }
