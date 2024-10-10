@@ -48,7 +48,6 @@ class EditUserIntroductionSceneViewController: UIViewController, EditUserIntrodu
   override func viewDidLoad() {
     super.viewDidLoad()
     self.setupUI()
-    self.doSomething()
   }
 
   override func viewDidDisappear(_ animated: Bool) {
@@ -68,10 +67,6 @@ extension EditUserIntroductionSceneViewController: EditUserIntroductionSceneDisp
 // MARK: - Request to interactor
 
 extension EditUserIntroductionSceneViewController {
-  func doSomething() {
-    let request = EditUserIntroductionScene.Something.Request()
-    self.interactor?.doSomething(request: request)
-  }
 }
 
 // MARK: - Set up UI
