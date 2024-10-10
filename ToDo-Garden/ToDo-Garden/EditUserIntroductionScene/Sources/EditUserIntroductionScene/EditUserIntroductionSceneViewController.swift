@@ -124,6 +124,6 @@ extension EditUserIntroductionSceneViewController {
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  return UINavigationController(rootViewController: EditUserIntroductionSceneViewController())
+  return UINavigationController(rootViewController: EditUserIntroductionSceneBuilder.previewScene)
 }
 #endif
