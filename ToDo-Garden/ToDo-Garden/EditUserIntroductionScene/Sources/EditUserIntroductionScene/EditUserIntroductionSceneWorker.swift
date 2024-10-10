@@ -10,6 +10,7 @@ import Foundation
 import EditUserIntroductionSceneAPI
 
 struct EditUserIntroductionSceneWorker: EditUserIntroductionSceneWorkable {
-  func doSomeWork() {
+  func editUserIntroduction(_ introduction: String) async throws {
+    // TODO: 서버 구현이 완료되면 구현할 예정입니다.
   }
 }

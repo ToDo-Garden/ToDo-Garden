@@ -8,5 +8,5 @@
 import Foundation
 
 public protocol EditUserIntroductionSceneWorkable {
-  func doSomeWork()
+  func editUserIntroduction(_ introduction: String) async throws
 }
