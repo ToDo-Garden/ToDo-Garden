@@ -11,30 +11,81 @@ import EditUserIntroductionSceneAPI
 import EditUserIntroductionSceneEntity
 
 protocol EditUserIntroductionSceneDataStore {
-  // var name: String { get set }
+  /// UserInfoScene에서 Payload로 런타임에 전달받을 한줄 소개에 대한 데이터입니다.
+  var userIntroduction: String? { get }
 }
 
+@MainActor
 protocol EditUserIntroductionSceneBusinessLogic {
-  func doSomething(request: EditUserIntroductionScene.Something.Request)
+  func loadUserIntroduction()
+  func verifyUserIntroduction(_ introduction: String)
+  func requestEditUserIntroduction(_ introduction: String)
+
+  func cancelTask()
 }
 
-class EditUserIntroductionSceneInteractor: EditUserIntroductionSceneDataStore {
-  // var name: String = ""
-  var presenter: EditUserIntroductionScenePresentationLogic?
-  private let someWorker: EditUserIntroductionSceneWorkable
+final class EditUserIntroductionSceneInteractor: EditUserIntroductionSceneDataStore {
+  var userIntroduction: String?
 
-  init(someWorker: EditUserIntroductionSceneWorkable) {
-    self.someWorker = someWorker
+  private var requestEditUserIntroductionTask: Task<Void, Never>?
+
+  var presenter: EditUserIntroductionScenePresentationLogic?
+  private let editUserIntroductionWorker: EditUserIntroductionSceneWorkable
+
+  init(editUserIntroductionWorker: EditUserIntroductionSceneWorkable) {
+    self.editUserIntroductionWorker = editUserIntroductionWorker
   }
 }
 
 // MARK: - Request to worker
 
 extension EditUserIntroductionSceneInteractor: EditUserIntroductionSceneBusinessLogic {
-  func doSomething(request: EditUserIntroductionScene.Something.Request) {
-    self.someWorker.doSomeWork()
+  func loadUserIntroduction() {
+    if let userIntroduction {
+      self.presenter?.presentUserIntroduction(userIntroduction)
+    } else {
+      self.presenter?.presentEmptyUserIntroduction()
+    }
+  }
 
-    let response = EditUserIntroductionScene.Something.Response()
-    self.presenter?.presentSomething(response: response)
+  func verifyUserIntroduction(_ introduction: String) {
+    let isValid = self.checkUserIntroductionValidity(introduction)
+    if isValid {
+      self.presenter?.presentIntroductionIsValid()
+    } else {
+      self.presenter?.presentIntroductionIsInvalid()
+    }
+  }
+
+  func requestEditUserIntroduction(_ introduction: String) {
+    guard self.checkUserIntroductionValidity(introduction)
+    else { return }
+
+    self.requestEditUserIntroductionTask = Task {
+      defer { self.requestEditUserIntroductionTask = nil }
+
+      do {
+        try Task.checkCancellation()
+        try await self.editUserIntroductionWorker.editUserIntroduction(introduction)
+
+        try Task.checkCancellation()
+        self.presenter?.presentEditUserIntroductionSuccess()
+      } catch let error {
+        if error is CancellationError { return }
+        self.presenter?.presentEditUserIntroductionError(error)
+      }
+    }
+  }
+
+  func cancelTask() {
+    self.requestEditUserIntroductionTask?.cancel()
+  }
+}
+
+// MARK: - Private Functions
+
+extension EditUserIntroductionSceneInteractor {
+  private func checkUserIntroductionValidity(_ introduction: String) -> Bool {
+    return introduction.count <= 15
   }
 }

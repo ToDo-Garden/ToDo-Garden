@@ -10,8 +10,14 @@ import Foundation
 import EditUserIntroductionSceneEntity
 
 // swiftlint:disable type_name
+@MainActor
 protocol EditUserIntroductionScenePresentationLogic {
-  func presentSomething(response: EditUserIntroductionScene.Something.Response)
+  func presentUserIntroduction(_ introduction: String)
+  func presentEmptyUserIntroduction()
+  func presentIntroductionIsValid()
+  func presentIntroductionIsInvalid()
+  func presentEditUserIntroductionSuccess()
+  func presentEditUserIntroductionError(_ error: Error)
 }
 // swiftlint:enable type_name
 
@@ -22,8 +28,27 @@ class EditUserIntroductionScenePresenter {
 // MARK: - Request to ViewController
 
 extension EditUserIntroductionScenePresenter: EditUserIntroductionScenePresentationLogic {
-  func presentSomething(response: EditUserIntroductionScene.Something.Response) {
-    let viewModel = EditUserIntroductionScene.Something.ViewModel()
-    self.viewController?.displaySomething(viewModel: viewModel)
+  func presentUserIntroduction(_ introduction: String) {
+    // TODO: - Display 로직 호출
+  }
+
+  func presentEmptyUserIntroduction() {
+    // TODO: - Display 로직 호출
+  }
+
+  func presentIntroductionIsValid() {
+    // TODO: - Display 로직 호출
+  }
+
+  func presentIntroductionIsInvalid() {
+    // TODO: - Display 로직 호출
+  }
+
+  func presentEditUserIntroductionSuccess() {
+    // TODO: - Display 로직 호출
+  }
+
+  func presentEditUserIntroductionError(_ error: Error) {
+    // TODO: - Display 로직 호출
   }
 }
