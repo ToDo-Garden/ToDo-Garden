@@ -48,6 +48,18 @@ public class SignUpInputView: UIView {
       height: UIScreen.main.bounds.height * Constant.SignUpInputView.heightMultiplier
     )
   }
+  
+  @MainActor
+  public func startTitleAnimation() {
+    self.titleView.startAnimation()
+  }
+  
+  @MainActor
+  public func cancelTitleAnimation() {
+    self.titleView.cancelTask()
+  }
+}
+
 extension SignUpInputView {
   private func setupUI() {
     self.setupTextInputView()
