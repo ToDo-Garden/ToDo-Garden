@@ -14,7 +14,8 @@ import EditUserIntroductionSceneEntity
 protocol EditUserIntroductionScenePresentationLogic {
   func presentUserIntroduction(_ introduction: String)
   func presentEmptyUserIntroduction()
-  func presentUserNameVerification(isValid: Bool)
+  func presentIntroductionIsValid()
+  func presentIntroductionIsInvalid()
   func presentEditUserIntroductionSuccess()
   func presentEditUserIntroductionError(_ error: Error)
 }
@@ -32,7 +33,15 @@ extension EditUserIntroductionScenePresenter: EditUserIntroductionScenePresentat
   }
 
   func presentEmptyUserIntroduction() {
-    // TODO: - Display로직 호출
+    // TODO: - Display 로직 호출
+  }
+
+  func presentIntroductionIsValid() {
+    // TODO: - Display 로직 호출
+  }
+
+  func presentIntroductionIsInvalid() {
+    // TODO: - Display 로직 호출
   }
 
   func presentEditUserIntroductionSuccess() {
@@ -40,10 +49,6 @@ extension EditUserIntroductionScenePresenter: EditUserIntroductionScenePresentat
   }
 
   func presentEditUserIntroductionError(_ error: Error) {
-    // TODO: - Display 로직 호출
-  }
-
-  func presentUserNameVerification(isValid: Bool) {
     // TODO: - Display 로직 호출
   }
 }

@@ -50,7 +50,11 @@ extension EditUserIntroductionSceneInteractor: EditUserIntroductionSceneBusiness
 
   func verifyUserIntroduction(_ introduction: String) {
     let isValid = self.checkUserIntroductionValidity(introduction)
-    self.presenter?.presentUserNameVerification(isValid: isValid)
+    if isValid {
+      self.presenter?.presentIntroductionIsValid()
+    } else {
+      self.presenter?.presentIntroductionIsInvalid()
+    }
   }
 
   func requestEditUserIntroduction(_ introduction: String) {
