@@ -19,7 +19,7 @@ protocol EditUserIntroductionSceneDataStore {
 protocol EditUserIntroductionSceneBusinessLogic {
   func loadUserIntroduction()
   func verifyUserIntroduction(_ introduction: String)
-  func requestEditUserIntroduction(_ introduction: String)
+  func requestEditUserIntroduction(_ introduction: String?)
 
   func cancelTask()
 }
@@ -57,8 +57,8 @@ extension EditUserIntroductionSceneInteractor: EditUserIntroductionSceneBusiness
     }
   }
 
-  func requestEditUserIntroduction(_ introduction: String) {
-    guard self.checkUserIntroductionValidity(introduction)
+  func requestEditUserIntroduction(_ introduction: String?) {
+    guard let introduction, self.checkUserIntroductionValidity(introduction)
     else { return }
 
     self.requestEditUserIntroductionTask = Task {
