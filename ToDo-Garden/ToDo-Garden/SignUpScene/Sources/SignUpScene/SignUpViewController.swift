@@ -37,6 +37,7 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
     self.view.backgroundColor = UIColor.white
     self.setupNavigationBar()
     self.setupSignUpScrollView()
+    self.setupBottomButton()
   }
   
   @available(*, unavailable)
@@ -80,6 +81,29 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
         )
       ]
     )
+  }
+  
+  private func setupBottomButton() {
+    self.view.addSubview(self.bottomButton)
+    self.bottomButton.usingAutolayout()
+    self.bottomButton.addAction(UIAction { [weak self] _ in
+      self?.signUpScrollView.goToNextPage()
+    }, for: UIControl.Event.touchUpInside)
+    
+    NSLayoutConstraint.activate(
+      [
+        self.bottomButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+        self.bottomButton.centerYAnchor.constraint(
+          equalTo: self.view.centerYAnchor,
+          constant: Constant.BottomButton.centerYOffset
+        )
+      ]
+    )
+  }
+  
+  private func exitSignUpFlow() {
+    // TODO: Router
+    self.navigationController?.popViewController(animated: true)
   }
   
   @objc private func backButtonTapped() {
