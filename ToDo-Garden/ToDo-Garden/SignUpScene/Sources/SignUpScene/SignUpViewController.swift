@@ -9,22 +9,32 @@ import UIKit
 
 import SignUpSceneAPI
 import SignUpSceneEntity
+import ToDoGardenUIComponent
 
 protocol SignUpDisplayLogic: AnyObject {
   func displaySomething(viewModel: SignUp.Something.ViewModel)
 }
 
-class SignUpViewController: UIViewController, SignUpViewControllable {
+final class SignUpViewController: UIViewController, SignUpViewControllable {
   
   // MARK: - VIP Properties
   
   var interactor: SignUpBusinessLogic?
   var router: (SignUpRoutingLogic & SignUpDataPassing)?
   
+  private let signUpScrollView: SignUpScrollView
+  private let bottomButton: ToDoGardenBoxButton
+  
   // MARK: - Object lifecycle
   
   init() {
+    self.signUpScrollView = SignUpScrollView()
+    self.bottomButton = ToDoGardenBoxButton(
+      title: Constant.BottomButton.StringLiteral.done,
+      buttonType: ToDoGardenBoxButton.Configuration.rectangleButton
+    )
     super.init(nibName: nil, bundle: nil)
+    self.view.backgroundColor = UIColor.white
   }
   
   @available(*, unavailable)
