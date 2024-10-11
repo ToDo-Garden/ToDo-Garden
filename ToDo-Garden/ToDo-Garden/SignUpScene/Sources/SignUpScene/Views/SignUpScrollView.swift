@@ -116,4 +116,33 @@ final class SignUpScrollView: UIScrollView {
       ])
     }
   }
+  
+  // MARK: Page Controls
+  func goToNextPage() {
+    let nextPageIndex = self.currentPageIndex + 1
+    if nextPageIndex < self.inputViews.count {
+      self.setContentOffset(
+        CGPoint(
+          x: self.screenWidth * CGFloat(nextPageIndex),
+          y: CGFloat.zero
+        ),
+        animated: true
+      )
+      self.currentPageIndex = nextPageIndex
+    }
+  }
+  
+  func goToPreviousPage() {
+    let previousPageIndex = self.currentPageIndex - 1
+    if previousPageIndex >= Int.zero {
+      self.setContentOffset(
+        CGPoint(
+          x: self.screenWidth * CGFloat(previousPageIndex),
+          y: CGFloat.zero
+        ),
+        animated: true
+      )
+      self.currentPageIndex = previousPageIndex
+    }
+  }
 }
