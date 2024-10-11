@@ -102,7 +102,7 @@ extension EditUserIntroductionSceneViewController: InputTextValidationViewDelega
 extension EditUserIntroductionSceneViewController {
   private func setupUI() {
     self.setupMainViewUI()
-    self.setupDoneButtonTitle()
+    self.setupDoneButton()
     self.bindInputTextChanged()
     self.setupInputIntroductionViewLayout()
   }
@@ -110,6 +110,18 @@ extension EditUserIntroductionSceneViewController {
   private func setupMainViewUI() {
     self.title = Constant.StringLiteral.title
     self.view.backgroundColor = UIColor.toDoGardenWhite
+  }
+
+  private func setupDoneButton() {
+    self.setupDoneButtonAction()
+    self.setupDoneButtonTitle()
+  }
+
+  private func setupDoneButtonAction() {
+    self.doneButton.primaryAction = UIAction { [weak self] _ in
+      let inputIntroduction = self?.inputUserIntroductionView.getEditingText()
+      self?.interactor?.requestEditUserIntroduction(inputIntroduction)
+    }
   }
 
   private func setupDoneButtonTitle() {
