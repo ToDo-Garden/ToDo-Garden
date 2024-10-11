@@ -36,6 +36,7 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
     super.init(nibName: nil, bundle: nil)
     self.view.backgroundColor = UIColor.white
     self.setupNavigationBar()
+    self.setupSignUpScrollView()
   }
   
   @available(*, unavailable)
@@ -61,6 +62,24 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
     )
     backButton.tintColor = UIColor.toDoGardenGreenDark
     self.navigationItem.setLeftBarButton(backButton, animated: true)
+  }
+  
+  private func setupSignUpScrollView() {
+    self.view.addSubview(self.signUpScrollView)
+    self.signUpScrollView.usingAutolayout()
+    NSLayoutConstraint.activate(
+      [
+        self.signUpScrollView.topAnchor.constraint(
+          equalTo: self.view.safeAreaLayoutGuide.topAnchor,
+          constant: Constant.ScrollView.topMargin
+        ),
+        self.signUpScrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+        self.signUpScrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+        self.signUpScrollView.heightAnchor.constraint(
+          equalToConstant: self.view.bounds.height * Constant.ScrollView.heightMultiplier
+        )
+      ]
+    )
   }
   
   @objc private func backButtonTapped() {
