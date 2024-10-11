@@ -16,11 +16,19 @@ final class SignUpScrollView: UIScrollView {
       self.didChangePage()
     }
   }
+  
+  private var screenWidth: CGFloat {
+    let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+    return windowScene?.screen.bounds.width ?? CGFloat.zero
+  }
+  
   private var inputViews: [SignUpInputView]
+  private let contentView: UIView
   
   override init(frame: CGRect) {
     self.currentPageIndex = Int.zero
     self.inputViews = []
+    self.contentView = UIView()
     super.init(frame: frame)
   }
   
