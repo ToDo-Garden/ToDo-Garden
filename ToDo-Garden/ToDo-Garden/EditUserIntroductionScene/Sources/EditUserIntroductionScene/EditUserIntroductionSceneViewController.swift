@@ -17,7 +17,7 @@ protocol EditUserIntroductionSceneDisplayLogic: AnyObject {
   func displaySomething(viewModel: EditUserIntroductionScene.Something.ViewModel)
 }
 
-class EditUserIntroductionSceneViewController: UIViewController, EditUserIntroductionSceneViewControllable {
+final class EditUserIntroductionSceneViewController: UIViewController, EditUserIntroductionSceneViewControllable {
   private let doneButton: UIBarButtonItem
   private let inputUserIntroductionView: InputTextValidationView
 
