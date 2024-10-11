@@ -31,6 +31,7 @@ final class SignUpScrollView: UIScrollView {
     self.contentView = UIView()
     super.init(frame: frame)
     self.setupInputViews()
+    self.setupScrollView()
   }
   
   @available(*, unavailable)
@@ -38,6 +39,7 @@ final class SignUpScrollView: UIScrollView {
     fatalError("init(coder:) has not been implemented")
   }
   
+  // MARK: Setups
   // swiftlint:disable function_body_length
   private func setupInputViews() {
     let constants = Constant.ScrollView.SignUpInputView.StringLiteral.self
