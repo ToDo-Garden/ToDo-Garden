@@ -5,6 +5,7 @@
 //  Created by Wood on 10/7/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
+import Combine
 import UIKit
 
 import EditUserIntroductionSceneAPI
@@ -21,6 +22,9 @@ final class EditUserIntroductionSceneViewController: UIViewController, EditUserI
   private let doneButton: UIBarButtonItem
   private let inputUserIntroductionView: InputTextValidationView
 
+  private var inputUserNameSubject: PassthroughSubject<String, Never>
+  private var cancellables: Set<AnyCancellable>
+
   var interactor: EditUserIntroductionSceneBusinessLogic?
   var router: (EditUserIntroductionSceneRoutingLogic & EditUserIntroductionSceneDataPassing)?
   
@@ -35,6 +39,8 @@ final class EditUserIntroductionSceneViewController: UIViewController, EditUserI
       placeholderText: introductionTextConstant.placeholderText,
       validationText: validationTextConstant.invalidIntroduction
     )
+    self.inputUserNameSubject = PassthroughSubject<String, Never>()
+    self.cancellables = Set<AnyCancellable>()
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -72,6 +78,23 @@ extension EditUserIntroductionSceneViewController: EditUserIntroductionSceneDisp
 // MARK: - Request to interactor
 
 extension EditUserIntroductionSceneViewController {
+  private func bindInputTextChanged() {
+    self.inputUserIntroductionView.delegate = self
+    self.inputUserNameSubject
+      .debounce(for: .seconds(0.5), scheduler: RunLoop.main)
+      .sink { [weak self] introduction in
+        self?.interactor?.verifyUserIntroduction(introduction)
+      }
+      .store(in: &self.cancellables)
+  }
+}
+
+extension EditUserIntroductionSceneViewController: InputTextValidationViewDelegate {
+  func inputTextDidChanged(_ text: String?) {
+    if let text {
+      self.inputUserNameSubject.send(text)
+    }
+  }
 }
 
 // MARK: - Set up UI
@@ -80,6 +103,7 @@ extension EditUserIntroductionSceneViewController {
   private func setupUI() {
     self.setupMainViewUI()
     self.setupDoneButtonTitle()
+    self.bindInputTextChanged()
     self.setupInputIntroductionViewLayout()
   }
 
