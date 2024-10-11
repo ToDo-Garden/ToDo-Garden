@@ -70,4 +70,48 @@ final class SignUpScrollView: UIScrollView {
     ]
   }
   // swiftlint:enable function_body_length
+  
+  private func setupScrollView() {
+    self.isPagingEnabled = true
+    self.showsHorizontalScrollIndicator = false
+    self.isScrollEnabled = false
+  
+    self.addSubview(self.contentView)
+    self.contentView.usingAutolayout()
+    
+    self.setupContentViewConstraints()
+    self.setupInputViewConstraints()
+    
+    self.contentView.widthAnchor.constraint(
+      equalTo: self.widthAnchor,
+      multiplier: CGFloat(self.inputViews.count)
+    ).isActive = true
+  }
+  
+  private func setupContentViewConstraints() {
+    NSLayoutConstraint.activate([
+      self.contentView.topAnchor.constraint(equalTo: self.topAnchor),
+      self.contentView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+      self.contentView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+      self.contentView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+      self.contentView.heightAnchor.constraint(equalTo: self.heightAnchor)
+    ])
+  }
+  
+  private func setupInputViewConstraints() {
+    for (index, inputView) in self.inputViews.enumerated() {
+      self.contentView.addSubview(inputView)
+      inputView.usingAutolayout()
+      
+      NSLayoutConstraint.activate([
+        inputView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
+        inputView.leadingAnchor.constraint(
+          equalTo: self.contentView.leadingAnchor,
+          constant: CGFloat(index) * self.screenWidth
+        ),
+        inputView.widthAnchor.constraint(equalTo: self.widthAnchor),
+        inputView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor)
+      ])
+    }
+  }
 }
