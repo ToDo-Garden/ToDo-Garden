@@ -50,6 +50,11 @@ class EditUserIntroductionSceneViewController: UIViewController, EditUserIntrodu
     self.setupUI()
   }
 
+  override func viewIsAppearing(_ animated: Bool) {
+    super.viewIsAppearing(animated)
+    self.interactor?.loadUserIntroduction()
+  }
+
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
     self.interactor?.cancelTask()
