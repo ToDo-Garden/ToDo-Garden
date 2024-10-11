@@ -141,3 +141,12 @@ extension SignUpViewController {
     self.interactor?.doSomething(request: request)
   }
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let viewController = SignUpViewController()
+  let navi = UINavigationController(rootViewController: viewController)
+  return navi
+}
+#endif
