@@ -38,6 +38,7 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
     self.setupNavigationBar()
     self.setupSignUpScrollView()
     self.setupBottomButton()
+    self.setupTapRecognizer()
   }
   
   @available(*, unavailable)
@@ -101,6 +102,11 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
     )
   }
   
+  private func setupTapRecognizer() {
+    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleTap))
+    self.view.addGestureRecognizer(tapGesture)
+  }
+  
   private func exitSignUpFlow() {
     // TODO: Router
     self.navigationController?.popViewController(animated: true)
@@ -112,6 +118,10 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
     } else {
       self.signUpScrollView.goToPreviousPage()
     }
+  }
+  
+  @objc private func handleTap() {
+    self.signUpScrollView.cancelAnimation()
   }
 }
 
