@@ -9,7 +9,7 @@ import UIKit
 
 import ToDoGardenUIConstant
 
-public class SignUpInputView: UIView {
+public final class SignUpInputView: UIView {
   private let titleView: AnimatedMultiLinesTitleView
   
   public let textInputView: InputTextValidationView
