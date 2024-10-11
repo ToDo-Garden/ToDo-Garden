@@ -35,6 +35,7 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
     )
     super.init(nibName: nil, bundle: nil)
     self.view.backgroundColor = UIColor.white
+    self.setupNavigationBar()
   }
   
   @available(*, unavailable)
@@ -47,6 +48,27 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
   override func viewDidLoad() {
     super.viewDidLoad()
     self.doSomething()
+  }
+  
+  // MARK: - Setups
+  
+  private func setupNavigationBar() {
+    let backButton = UIBarButtonItem(
+      image: UIImage.backwardButtonImage,
+      style: UIBarButtonItem.Style.plain,
+      target: self,
+      action: #selector(self.backButtonTapped)
+    )
+    backButton.tintColor = UIColor.toDoGardenGreenDark
+    self.navigationItem.setLeftBarButton(backButton, animated: true)
+  }
+  
+  @objc private func backButtonTapped() {
+    if self.signUpScrollView.currentPageIndex == Int.zero {
+      self.exitSignUpFlow()
+    } else {
+      self.signUpScrollView.goToPreviousPage()
+    }
   }
 }
 
