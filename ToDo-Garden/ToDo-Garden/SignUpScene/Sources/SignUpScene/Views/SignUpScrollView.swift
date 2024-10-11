@@ -25,6 +25,10 @@ final class SignUpScrollView: UIScrollView {
   private var inputViews: [SignUpInputView]
   private let contentView: UIView
   
+  @ExecuteOnce private var firstPageAnimation: (() -> Void)?
+  @ExecuteOnce private var secondPageAnimation: (() -> Void)?
+  @ExecuteOnce private var thirdPageAnimation: (() -> Void)?
+  
   override init(frame: CGRect) {
     self.currentPageIndex = Int.zero
     self.inputViews = []
@@ -32,6 +36,7 @@ final class SignUpScrollView: UIScrollView {
     super.init(frame: frame)
     self.setupInputViews()
     self.setupScrollView()
+    self.didChangePage()
   }
   
   @available(*, unavailable)
@@ -143,6 +148,24 @@ final class SignUpScrollView: UIScrollView {
         animated: true
       )
       self.currentPageIndex = previousPageIndex
+    }
+  }
+  
+  // MARK: Animation Controls
+  func cancelAnimation() {
+    self.inputViews[self.currentPageIndex].cancelTitleAnimation()
+  }
+  
+  private func didChangePage() {
+    let animation: (() -> Void)? = {
+      self.inputViews[self.currentPageIndex].startTitleAnimation()
+    }
+    
+    switch self.currentPageIndex {
+    case 0: self.firstPageAnimation = animation
+    case 1: self.secondPageAnimation = animation
+    case 2: self.thirdPageAnimation = animation
+    default: break
     }
   }
 }
