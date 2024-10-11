@@ -10,7 +10,7 @@ import UIKit
 import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
-public final class AnimatedMultiLinesTitleView: UIStackView {
+final class AnimatedMultiLinesTitleView: UIStackView {
   private let mainTitleLabelFirst: UILabel
   private let mainTitleLabelSecond: UILabel
   private let subTitleLabel: UILabel
@@ -22,7 +22,7 @@ public final class AnimatedMultiLinesTitleView: UIStackView {
   private var isAnimating: Bool
   private var animationTask: Task<Void, Never>?
   
-  public init(
+  init(
     firstLineText: String,
     secondLineText: String,
     thirdLineText: String
@@ -44,8 +44,7 @@ public final class AnimatedMultiLinesTitleView: UIStackView {
     fatalError()
   }
   
-  @MainActor
-  public func startAnimation() {
+  func startAnimation() {
     guard !self.isAnimating else { return }
     
     self.isAnimating = true
@@ -74,8 +73,7 @@ public final class AnimatedMultiLinesTitleView: UIStackView {
     }
   }
   
-  @MainActor
-  public func cancelTask() {
+  func cancelTask() {
     if self.isAnimating {
       self.completeAnimationImmediately()
     }
