@@ -100,6 +100,7 @@ extension SignUpInputView {
   }
 }
 
+#if DEBUG
 @available(iOS 17.0, *)
 #Preview {
   let view = SignUpInputView(
@@ -121,3 +122,4 @@ extension SignUpInputView {
   }
   return view
 }
+#endif
