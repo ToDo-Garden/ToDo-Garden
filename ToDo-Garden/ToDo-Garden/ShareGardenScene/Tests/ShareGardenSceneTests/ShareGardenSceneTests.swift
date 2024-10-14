@@ -78,6 +78,73 @@ extension ShareGardenSceneTests {
       group.cancelAll()
     }
   }
+  
+  @Test(arguments: [true, false])
+  func friendsGardenListRequest(isSuccessful: Bool) async {
+    // Given
+    await self.shareGardenSceneWorkerMock.setIsSuccessful(isSuccessful)
+    let pomodoroRecords = [PomodoroRecord(date: Date(), pomodoroCount: 0)]
+    let expectedFriendsGardenList = [
+      ShareGardenScene.FriendsGarden(
+        nickname: UUID().uuidString,
+        focusStreakDays: Int.random(
+          in: 0..<100
+        ),
+        pomodoroRecords: PomodoroRecordCollection(
+          pomodoroRecords: pomodoroRecords
+        )
+      ),
+      ShareGardenScene.FriendsGarden(
+        nickname: UUID().uuidString,
+        focusStreakDays: Int.random(
+          in: 0..<100
+        ),
+        pomodoroRecords: PomodoroRecordCollection(
+          pomodoroRecords: pomodoroRecords
+        )
+      ),
+      ShareGardenScene.FriendsGarden(
+        nickname: UUID().uuidString,
+        focusStreakDays: Int.random(in: 0..<100),
+        pomodoroRecords: PomodoroRecordCollection(pomodoroRecords: pomodoroRecords)
+      )
+    ]
+    await self.shareGardenSceneWorkerMock.setFriendsGardenList(expectedFriendsGardenList)
+    
+    // When
+    self.loadView()
+    
+    // Then
+    await withTaskGroup(of: Void.self) { group in
+      group.addTask {
+        var isShimmeringStopped = false
+        for await _ in self.sut.shimmeringStopStream {
+          isShimmeringStopped = true
+          self.sut.shimmeringStopStreamContinuation.finish()
+        }
+        
+        for await viewModel in self.sut.friendsGardenListStream {
+          guard isSuccessful else { fatalError("성공 시나리오에 대한 테스트 입니다.") }
+          
+          #expect(isShimmeringStopped)
+          #expect(viewModel.identifiers == expectedFriendsGardenList.map { $0.id })
+          #expect(isSuccessful)
+          return
+        }
+      }
+      
+      group.addTask {
+        for await _ in self.sut.friendsGardenListRequestErrorStream {
+          guard isSuccessful == false else { fatalError("실패 시나리오에 대한 테스트 입니다.") }
+          #expect(isSuccessful == false)
+          return
+        }
+      }
+      
+      await group.next()
+      group.cancelAll()
+    }
+  }
 }
 // swiftlint:enable function_body_length
 
