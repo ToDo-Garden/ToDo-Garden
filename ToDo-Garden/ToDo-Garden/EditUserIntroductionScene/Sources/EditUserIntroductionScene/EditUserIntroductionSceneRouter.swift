@@ -11,7 +11,7 @@ import EditUserIntroductionSceneAPI
 import EditUserIntroductionSceneEntity
 
 protocol EditUserIntroductionSceneRoutingLogic {
-  func routeToSomewhere()
+  func routeToUserInfoScene()
 }
 
 protocol EditUserIntroductionSceneDataPassing {
@@ -26,7 +26,8 @@ class EditUserIntroductionSceneRouter: EditUserIntroductionSceneDataPassing {
 // MARK: - Routing
 
 extension EditUserIntroductionSceneRouter: EditUserIntroductionSceneRoutingLogic {
-  func routeToSomewhere() {
+  func routeToUserInfoScene() {
+    self.viewController?.navigationController?.popViewController(animated: true)
   }
 }
 

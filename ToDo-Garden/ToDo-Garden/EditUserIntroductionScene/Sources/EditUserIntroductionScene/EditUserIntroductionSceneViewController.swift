@@ -97,7 +97,7 @@ extension EditUserIntroductionSceneViewController: EditUserIntroductionSceneDisp
   }
 
   func displayEditUserIntroductionSuccess() {
-    // TODO: - UI 업데이트 로직
+    self.router?.routeToUserInfoScene()
   }
 
   func displayEditUserIntroductionFailure(_ errorMessage: String) {
