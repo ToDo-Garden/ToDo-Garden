@@ -48,12 +48,12 @@ extension EditUserNameSceneInteractor: EditUserNameSceneBusinessLogic {
   }
 
   func verifyUserName(_ userName: String) {
-    let isValid = StringValidationChecker.isValidName(userName)
+    let isValid = StringValidationChecker.isValidNickName(userName)
     self.presenter?.presentUserNameVerification(isValid: isValid)
   }
 
   func requestEditUserName(_ userName: String) {
-    guard StringValidationChecker.isValidName(userName)
+    guard StringValidationChecker.isValidNickName(userName)
     else { return }
 
     self.editUserNameTask = Task { [weak self] in
