@@ -49,6 +49,7 @@ extension EditUserIntroductionScenePresenter: EditUserIntroductionScenePresentat
   }
 
   func presentEditUserIntroductionError(_ error: Error) {
-    // TODO: - Display 로직 호출
+    // TODO: ToDoGardenAlertController에 Model 추가 후 구현 예정입니다. 에러 발생시 알럿에 표시할 문자열을 Display 로직으로 전달합니다.
+//    self.viewController?.displayEditUserIntroductionFailure(error.localizedDescription)
   }
 }
