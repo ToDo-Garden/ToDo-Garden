@@ -82,7 +82,8 @@ extension EditUserIntroductionSceneViewController: EditUserIntroductionSceneDisp
   }
 
   func displayEmptyUserIntroduction() {
-    // TODO: - UI 업데이트 로직
+    self.inputUserIntroductionView.setBeginEditing(with: "")
+    self.doneButton.isEnabled = false
   }
 
   func displayUserIntroductionValid() {
