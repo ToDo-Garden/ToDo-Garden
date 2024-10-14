@@ -101,7 +101,7 @@ extension EditUserIntroductionSceneViewController: EditUserIntroductionSceneDisp
   }
 
   func displayEditUserIntroductionFailure(_ errorMessage: String) {
-    // TODO: - UI 업데이트 로직
+    // TODO: - 알럿을 띄울 예정이며, 알럿 디자인을 추가한 이후에 구현할 예정입니다.
   }
 
   func displaySomething(viewModel: EditUserIntroductionScene.Something.ViewModel) {
