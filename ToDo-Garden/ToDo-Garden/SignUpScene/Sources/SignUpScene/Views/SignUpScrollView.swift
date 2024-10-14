@@ -94,6 +94,7 @@ final class SignUpScrollView: UIScrollView {
   private func setupScrollView() {
     self.isPagingEnabled = true
     self.showsHorizontalScrollIndicator = false
+    self.showsVerticalScrollIndicator = false
     self.isScrollEnabled = false
   
     self.addSubview(self.contentView)
