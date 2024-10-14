@@ -46,4 +46,8 @@ enum Constant {
       static let doItLater: String = "나중에 할래요."
     }
   }
+  
+  enum Animation {
+    static let duration: CGFloat = 0.3
+  }
 }

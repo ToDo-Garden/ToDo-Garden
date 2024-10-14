@@ -108,6 +108,10 @@ extension TextInputView {
   private func setupInputTextFieldDelegate() {
     self.inputTextField.delegate = self
   }
+  
+  func setBecomeFirstResoponder() {
+    _ = self.inputTextField.becomeFirstResponder()
+  }
 }
 
 // MARK: TextField Delegate Functions

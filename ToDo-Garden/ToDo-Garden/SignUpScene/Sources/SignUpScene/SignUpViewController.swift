@@ -34,11 +34,7 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
       buttonType: ToDoGardenBoxButton.Configuration.rectangleButton
     )
     super.init(nibName: nil, bundle: nil)
-    self.view.backgroundColor = UIColor.white
-    self.setupNavigationBar()
-    self.setupSignUpScrollView()
-    self.setupBottomButton()
-    self.setupTapRecognizer()
+    self.setup()
   }
   
   @available(*, unavailable)
@@ -55,18 +51,28 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
   
   // MARK: - Setups
   
+  private func setup() {
+    self.view.backgroundColor = UIColor.white
+    self.setupNavigationBar()
+    self.setupSignUpScrollView()
+    self.setupBottomButton()
+    self.setupTapRecognizer()
+    self.setupKeyboardObservers()
+  }
+  
   private func setupNavigationBar() {
     let backButton = UIBarButtonItem(
       image: UIImage.backwardButtonImage,
-      style: UIBarButtonItem.Style.plain,
-      target: self,
-      action: #selector(self.backButtonTapped)
+      primaryAction: UIAction { [weak self] _ in
+        self?.backButtonTapped()
+      }
     )
     backButton.tintColor = UIColor.toDoGardenGreenDark
     self.navigationItem.setLeftBarButton(backButton, animated: true)
   }
   
   private func setupSignUpScrollView() {
+    self.signUpScrollView.changeButtonTitleDelegate = self
     self.view.addSubview(self.signUpScrollView)
     self.signUpScrollView.usingAutolayout()
     NSLayoutConstraint.activate(
@@ -94,12 +100,12 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
     NSLayoutConstraint.activate(
       [
         self.bottomButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-        self.bottomButton.centerYAnchor.constraint(
-          equalTo: self.view.centerYAnchor,
-          constant: Constant.BottomButton.centerYOffset
+        self.bottomButton.bottomAnchor.constraint(
+          equalTo: self.view.safeAreaLayoutGuide.bottomAnchor
         )
       ]
     )
+    self.hideBottomButton()
   }
   
   private func setupTapRecognizer() {
@@ -112,7 +118,7 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
     self.navigationController?.popViewController(animated: true)
   }
   
-  @objc private func backButtonTapped() {
+  private func backButtonTapped() {
     if self.signUpScrollView.currentPageIndex == Int.zero {
       self.exitSignUpFlow()
     } else {
@@ -122,6 +128,56 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
   
   @objc private func handleTap() {
     self.signUpScrollView.cancelAnimation()
+  }
+  
+  // MARK: - Keyboard Observers
+  
+  private func setupKeyboardObservers() {
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(self.showKeyBoard),
+      name: UIResponder.keyboardWillShowNotification,
+      object: nil
+    )
+    
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(self.hideKeyBoard),
+      name: UIResponder.keyboardWillHideNotification,
+      object: nil
+    )
+  }
+  
+  @objc private func showKeyBoard(notification: Notification) {
+    guard 
+      let userInfo = notification.userInfo,
+      let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+    
+    let keyboardHeight = keyboardFrame.cgRectValue.height
+    UIView.animate(withDuration: Constant.Animation.duration) {
+      self.showBottomButton()
+      self.bottomButton.transform = CGAffineTransform(
+        translationX: CGFloat.zero,
+        y: -keyboardHeight + self.view.safeAreaInsets.bottom
+      )
+    }
+  }
+  
+  @objc private func hideKeyBoard() {
+    UIView.animate(withDuration: Constant.Animation.duration) {
+      self.hideBottomButton()
+      self.bottomButton.transform = CGAffineTransform.identity
+    }
+  }
+  
+  private func hideBottomButton() {
+    self.bottomButton.isHidden = true
+    self.bottomButton.alpha = CGFloat.zero
+  }
+  
+  private func showBottomButton() {
+    self.bottomButton.isHidden = false
+    self.bottomButton.alpha = 1
   }
 }
 
@@ -139,6 +195,18 @@ extension SignUpViewController {
   func doSomething() {
     let request = SignUp.Something.Request()
     self.interactor?.doSomething(request: request)
+  }
+}
+
+extension SignUpViewController: ChangeButtonTitleDelegate {
+  func changeButtonTitle(pageIndex: Int) {
+    let editingText = self.signUpScrollView.getEditingText()
+    let isEditingTextEmpty: Bool = editingText?.isEmpty ?? true
+    if pageIndex == 1 && isEditingTextEmpty {
+      self.bottomButton.changeTitle(text: Constant.BottomButton.StringLiteral.doItLater)
+    } else {
+      self.bottomButton.changeTitle(text: Constant.BottomButton.StringLiteral.done)
+    }
   }
 }
 

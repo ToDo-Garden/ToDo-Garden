@@ -10,6 +10,10 @@ import UIKit
 import TDUtility
 import ToDoGardenUIComponent
 
+protocol ChangeButtonTitleDelegate: AnyObject {
+  func changeButtonTitle(pageIndex: Int)
+}
+
 final class SignUpScrollView: UIScrollView {
   private(set) var currentPageIndex: Int {
     didSet {
@@ -29,13 +33,14 @@ final class SignUpScrollView: UIScrollView {
   @ExecuteOnce private var secondPageAnimation: (() -> Void)?
   @ExecuteOnce private var thirdPageAnimation: (() -> Void)?
   
+  weak var changeButtonTitleDelegate: ChangeButtonTitleDelegate?
+  
   override init(frame: CGRect) {
     self.currentPageIndex = Int.zero
     self.inputViews = []
     self.contentView = UIView()
     super.init(frame: frame)
-    self.setupInputViews()
-    self.setupScrollView()
+    self.setup()
     self.didChangePage()
   }
   
@@ -45,6 +50,12 @@ final class SignUpScrollView: UIScrollView {
   }
   
   // MARK: Setups
+  
+  private func setup() {
+    self.setupInputViews()
+    self.setupScrollView()
+  }
+  
   // swiftlint:disable function_body_length
   private func setupInputViews() {
     let constants = Constant.ScrollView.SignUpInputView.StringLiteral.self
@@ -75,12 +86,15 @@ final class SignUpScrollView: UIScrollView {
         validationText: ""
       )
     ]
+    
+    self.inputViews[1].textInputView.delegate = self
   }
   // swiftlint:enable function_body_length
   
   private func setupScrollView() {
     self.isPagingEnabled = true
     self.showsHorizontalScrollIndicator = false
+    self.showsVerticalScrollIndicator = false
     self.isScrollEnabled = false
   
     self.addSubview(self.contentView)
@@ -116,10 +130,17 @@ final class SignUpScrollView: UIScrollView {
           equalTo: self.contentView.leadingAnchor,
           constant: CGFloat(index) * self.screenWidth
         ),
-        inputView.widthAnchor.constraint(equalTo: self.widthAnchor),
+        inputView.trailingAnchor.constraint(
+          equalTo: self.contentView.leadingAnchor,
+          constant: CGFloat(index + 1) * self.screenWidth
+        ),
         inputView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor)
       ])
     }
+  }
+  
+  func getEditingText() -> String? {
+    return self.inputViews[self.currentPageIndex].textInputView.getEditingText()
   }
   
   // MARK: Page Controls
@@ -167,5 +188,14 @@ final class SignUpScrollView: UIScrollView {
     case 2: self.thirdPageAnimation = animation
     default: break
     }
+    
+    self.changeButtonTitleDelegate?.changeButtonTitle(pageIndex: self.currentPageIndex)
+    self.inputViews[self.currentPageIndex].textInputView.setBecomeFirstRespoder()
+  }
+}
+
+extension SignUpScrollView: InputTextValidationViewDelegate {
+  func inputTextDidChanged(_ text: String?) {
+    self.changeButtonTitleDelegate?.changeButtonTitle(pageIndex: self.currentPageIndex)
   }
 }

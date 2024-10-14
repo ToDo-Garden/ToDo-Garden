@@ -58,6 +58,10 @@ public final class InputTextValidationView: UIView {
   public func changeValidationText(_ text: String) {
     self.validationTextLabel.text = text
   }
+  
+  public func setBecomeFirstRespoder() {
+    self.textInputView.setBecomeFirstResoponder()
+  }
 }
 
 // MARK: - Validation Text Moving Animation
