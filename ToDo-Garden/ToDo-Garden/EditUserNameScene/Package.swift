@@ -21,7 +21,8 @@ let package = Package(
     )
   ],
   dependencies: [
-    .package(name: "ToDoGardenUI", path: "../ToDoGardenUI")
+    .package(name: "ToDoGardenUI", path: "../ToDoGardenUI"),
+    .package(path: "../TDUtility")
   ],
   targets: [
     .target(
@@ -40,7 +41,8 @@ let package = Package(
         "EditUserNameSceneEntity",
         .product(name: "ToDoGardenUIAPI", package: "ToDoGardenUI"),
         .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI"),
-        .product(name: "ToDoGardenUIResource", package: "ToDoGardenUI")
+        .product(name: "ToDoGardenUIResource", package: "ToDoGardenUI"),
+        .product(name: "TDUtility", package: "TDUtility")
       ]
     )
   ]

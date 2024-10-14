@@ -9,6 +9,7 @@ import Foundation
 
 import EditUserNameSceneAPI
 import EditUserNameSceneEntity
+import TDUtility
 
 protocol EditUserNameSceneDataStore {
   var userName: String? { get }
@@ -47,12 +48,12 @@ extension EditUserNameSceneInteractor: EditUserNameSceneBusinessLogic {
   }
 
   func verifyUserName(_ userName: String) {
-    let isValid = self.isValidNickname(userName)
+    let isValid = StringValidationChecker.isValidName(userName)
     self.presenter?.presentUserNameVerification(isValid: isValid)
   }
 
   func requestEditUserName(_ userName: String) {
-    guard self.isValidNickname(userName)
+    guard StringValidationChecker.isValidName(userName)
     else { return }
 
     self.editUserNameTask = Task { [weak self] in
@@ -77,13 +78,5 @@ extension EditUserNameSceneInteractor: EditUserNameSceneBusinessLogic {
 extension EditUserNameSceneInteractor {
   func cancelAllTasks() {
     self.editUserNameTask?.cancel()
-  }
-}
-
-extension EditUserNameSceneInteractor {
-  private func isValidNickname(_ nickName: String) -> Bool {
-    let regexPattern = "^[\\p{L}\\p{N}]{5,12}$"
-    let result = nickName.range(of: regexPattern, options: String.CompareOptions.regularExpression)
-    return result != nil
   }
 }
