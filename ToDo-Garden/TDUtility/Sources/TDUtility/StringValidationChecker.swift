@@ -15,6 +15,12 @@ public final class StringValidationChecker {
   }
   
   public static func isValidIntroduction(_ string: String) -> Bool {
-    return string.count <= 10
+    return string.count <= 15
+  }
+  
+  public static func isValidID(_ string: String) -> Bool {
+    let regexPattern = "^[a-zA-Z0-9]{5,12}$"
+    let result = string.range(of: regexPattern, options: String.CompareOptions.regularExpression)
+    return result != nil
   }
 }
