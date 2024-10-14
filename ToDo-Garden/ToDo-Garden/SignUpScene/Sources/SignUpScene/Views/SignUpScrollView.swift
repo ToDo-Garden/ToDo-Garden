@@ -10,6 +10,10 @@ import UIKit
 import TDUtility
 import ToDoGardenUIComponent
 
+protocol ChageButtonTitleDelegate: AnyObject {
+  func changeButtonTitle(pageIndex: Int)
+}
+
 final class SignUpScrollView: UIScrollView {
   private(set) var currentPageIndex: Int {
     didSet {
@@ -28,6 +32,8 @@ final class SignUpScrollView: UIScrollView {
   @ExecuteOnce private var firstPageAnimation: (() -> Void)?
   @ExecuteOnce private var secondPageAnimation: (() -> Void)?
   @ExecuteOnce private var thirdPageAnimation: (() -> Void)?
+  
+  weak var changeButtonTitleDelegate: ChageButtonTitleDelegate?
   
   override init(frame: CGRect) {
     self.currentPageIndex = Int.zero
@@ -75,6 +81,8 @@ final class SignUpScrollView: UIScrollView {
         validationText: ""
       )
     ]
+    
+    self.inputViews[1].textInputView.delegate = self
   }
   // swiftlint:enable function_body_length
   
@@ -122,6 +130,10 @@ final class SignUpScrollView: UIScrollView {
     }
   }
   
+  func getEditingText() -> String? {
+    return self.inputViews[self.currentPageIndex].textInputView.getEditingText()
+  }
+  
   // MARK: Page Controls
   func goToNextPage() {
     let nextPageIndex = self.currentPageIndex + 1
@@ -167,5 +179,14 @@ final class SignUpScrollView: UIScrollView {
     case 2: self.thirdPageAnimation = animation
     default: break
     }
+    
+    self.changeButtonTitleDelegate?.changeButtonTitle(pageIndex: self.currentPageIndex)
+    self.inputViews[self.currentPageIndex].textInputView.setBecomeFirstRespoder()
+  }
+}
+
+extension SignUpScrollView: InputTextValidationViewDelegate {
+  func inputTextDidChanged(_ text: String?) {
+    self.changeButtonTitleDelegate?.changeButtonTitle(pageIndex: self.currentPageIndex)
   }
 }
