@@ -154,7 +154,7 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
       let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
     
     let keyboardHeight = keyboardFrame.cgRectValue.height
-    UIView.animate(withDuration: 0.3) {
+    UIView.animate(withDuration: Constant.Animation.duration) {
       self.showBottomButton()
       self.bottomButton.transform = CGAffineTransform(
         translationX: CGFloat.zero,
@@ -164,15 +164,15 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
   }
   
   @objc private func hideKeyBoard() {
-    UIView.animate(withDuration: 0.3) {
+    UIView.animate(withDuration: Constant.Animation.duration) {
       self.hideBottomButton()
-      self.bottomButton.transform = .identity
+      self.bottomButton.transform = CGAffineTransform.identity
     }
   }
   
   private func hideBottomButton() {
     self.bottomButton.isHidden = true
-    self.bottomButton.alpha = 0
+    self.bottomButton.alpha = CGFloat.zero
   }
   
   private func showBottomButton() {
