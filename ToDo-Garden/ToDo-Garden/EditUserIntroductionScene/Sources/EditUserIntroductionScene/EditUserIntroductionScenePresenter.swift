@@ -21,7 +21,7 @@ protocol EditUserIntroductionScenePresentationLogic {
 }
 // swiftlint:enable type_name
 
-class EditUserIntroductionScenePresenter {
+final class EditUserIntroductionScenePresenter {
   weak var viewController: EditUserIntroductionSceneDisplayLogic?
 }
 
@@ -29,26 +29,27 @@ class EditUserIntroductionScenePresenter {
 
 extension EditUserIntroductionScenePresenter: EditUserIntroductionScenePresentationLogic {
   func presentUserIntroduction(_ introduction: String) {
-    // TODO: - Display 로직 호출
+    self.viewController?.displayUserIntroduction(introduction)
   }
 
   func presentEmptyUserIntroduction() {
-    // TODO: - Display 로직 호출
+    self.viewController?.displayEmptyUserIntroduction()
   }
 
   func presentIntroductionIsValid() {
-    // TODO: - Display 로직 호출
+    self.viewController?.displayUserIntroductionValid()
   }
 
   func presentIntroductionIsInvalid() {
-    // TODO: - Display 로직 호출
+    self.viewController?.displayUserIntroductionInvalid()
   }
 
   func presentEditUserIntroductionSuccess() {
-    // TODO: - Display 로직 호출
+    self.viewController?.displayEditUserIntroductionSuccess()
   }
 
   func presentEditUserIntroductionError(_ error: Error) {
-    // TODO: - Display 로직 호출
+    // TODO: ToDoGardenAlertController에 Model 추가 후 구현 예정입니다. 에러 발생시 알럿에 표시할 문자열을 Display 로직으로 전달합니다.
+//    self.viewController?.displayEditUserIntroductionFailure(error.localizedDescription)
   }
 }
