@@ -77,7 +77,8 @@ final class EditUserIntroductionSceneViewController: UIViewController, EditUserI
 
 extension EditUserIntroductionSceneViewController: EditUserIntroductionSceneDisplayLogic {
   func displayUserIntroduction(_ introduction: String) {
-    // TODO: - UI 업데이트 로직
+    self.inputUserIntroductionView.setBeginEditing(with: introduction)
+    self.doneButton.isEnabled = true
   }
 
   func displayEmptyUserIntroduction() {
