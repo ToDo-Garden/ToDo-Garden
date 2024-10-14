@@ -10,7 +10,7 @@ import UIKit
 import TDUtility
 import ToDoGardenUIComponent
 
-protocol ChageButtonTitleDelegate: AnyObject {
+protocol ChangeButtonTitleDelegate: AnyObject {
   func changeButtonTitle(pageIndex: Int)
 }
 
@@ -33,7 +33,7 @@ final class SignUpScrollView: UIScrollView {
   @ExecuteOnce private var secondPageAnimation: (() -> Void)?
   @ExecuteOnce private var thirdPageAnimation: (() -> Void)?
   
-  weak var changeButtonTitleDelegate: ChageButtonTitleDelegate?
+  weak var changeButtonTitleDelegate: ChangeButtonTitleDelegate?
   
   override init(frame: CGRect) {
     self.currentPageIndex = Int.zero
