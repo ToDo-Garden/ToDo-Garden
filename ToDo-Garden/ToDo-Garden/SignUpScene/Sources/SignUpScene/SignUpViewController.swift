@@ -63,9 +63,9 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
   private func setupNavigationBar() {
     let backButton = UIBarButtonItem(
       image: UIImage.backwardButtonImage,
-      style: UIBarButtonItem.Style.plain,
-      target: self,
-      action: #selector(self.backButtonTapped)
+      primaryAction: UIAction { [weak self] _ in
+        self?.backButtonTapped()
+      }
     )
     backButton.tintColor = UIColor.toDoGardenGreenDark
     self.navigationItem.setLeftBarButton(backButton, animated: true)
@@ -118,7 +118,7 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
     self.navigationController?.popViewController(animated: true)
   }
   
-  @objc private func backButtonTapped() {
+  private func backButtonTapped() {
     if self.signUpScrollView.currentPageIndex == Int.zero {
       self.exitSignUpFlow()
     } else {
