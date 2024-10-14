@@ -40,8 +40,7 @@ final class SignUpScrollView: UIScrollView {
     self.inputViews = []
     self.contentView = UIView()
     super.init(frame: frame)
-    self.setupInputViews()
-    self.setupScrollView()
+    self.setup()
     self.didChangePage()
   }
   
@@ -51,6 +50,12 @@ final class SignUpScrollView: UIScrollView {
   }
   
   // MARK: Setups
+  
+  private func setup() {
+    self.setupInputViews()
+    self.setupScrollView()
+  }
+  
   // swiftlint:disable function_body_length
   private func setupInputViews() {
     let constants = Constant.ScrollView.SignUpInputView.StringLiteral.self

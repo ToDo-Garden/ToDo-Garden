@@ -34,12 +34,7 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
       buttonType: ToDoGardenBoxButton.Configuration.rectangleButton
     )
     super.init(nibName: nil, bundle: nil)
-    self.view.backgroundColor = UIColor.white
-    self.setupNavigationBar()
-    self.setupSignUpScrollView()
-    self.setupBottomButton()
-    self.setupTapRecognizer()
-    self.setupKeyboardObservers()
+    self.setup()
   }
   
   @available(*, unavailable)
@@ -55,6 +50,15 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
   }
   
   // MARK: - Setups
+  
+  private func setup() {
+    self.view.backgroundColor = UIColor.white
+    self.setupNavigationBar()
+    self.setupSignUpScrollView()
+    self.setupBottomButton()
+    self.setupTapRecognizer()
+    self.setupKeyboardObservers()
+  }
   
   private func setupNavigationBar() {
     let backButton = UIBarButtonItem(
