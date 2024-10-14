@@ -21,7 +21,7 @@ protocol EditUserIntroductionScenePresentationLogic {
 }
 // swiftlint:enable type_name
 
-class EditUserIntroductionScenePresenter {
+final class EditUserIntroductionScenePresenter {
   weak var viewController: EditUserIntroductionSceneDisplayLogic?
 }
 
