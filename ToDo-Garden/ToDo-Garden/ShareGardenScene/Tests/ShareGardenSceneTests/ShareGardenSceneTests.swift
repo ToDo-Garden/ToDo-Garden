@@ -35,6 +35,52 @@ final class ShareGardenSceneTests {
   }
 }
 
+// swiftlint:disable function_body_length
+extension ShareGardenSceneTests {
+  @Test(arguments: [true, false])
+  func myGardenRequest(isSuccessful: Bool) async {
+    // Given
+    await self.shareGardenSceneWorkerMock.setIsSuccessful(isSuccessful)
+    let pomodoroRecords = [PomodoroRecord(date: Date(), pomodoroCount: 0)]
+    let expectedMyGarden = ShareGardenScene.MyGarden(
+      nickname: UUID().uuidString,
+      description: UUID().uuidString,
+      pomodoroRecords: PomodoroRecordCollection(pomodoroRecords: pomodoroRecords)
+    )
+    await self.shareGardenSceneWorkerMock.setMyGarden(expectedMyGarden)
+    
+    // When
+    self.loadView()
+    
+    // Then
+    await withTaskGroup(of: Void.self) { group in
+      group.addTask {
+        for await viewModel in self.sut.myGardenStream {
+          guard isSuccessful else { fatalError("성공 시나리오에 대한 테스트입니다.") }
+          #expect(viewModel.nickname == expectedMyGarden.nickname)
+          #expect(viewModel.description == expectedMyGarden.description)
+          #expect(viewModel.pomodoroRecords == expectedMyGarden.pomodoroRecords)
+          #expect(isSuccessful)
+          return
+        }
+      }
+      
+      group.addTask {
+        for await _ in self.sut.myGardenRequestErrorStream {
+          guard isSuccessful == false else { fatalError("실패 시나리오에 대한 테스트입니다.") }
+          
+          #expect(isSuccessful == false)
+          return
+        }
+      }
+      
+      await group.next()
+      group.cancelAll()
+    }
+  }
+}
+// swiftlint:enable function_body_length
+
 extension ShareGardenSceneTests {
   private func configureUnitTestVIPCycle() {
     self.shareGardenScene.interactor = self.interactor
