@@ -18,6 +18,7 @@ protocol EditUserIntroductionSceneDisplayLogic: AnyObject {
   func displaySomething(viewModel: EditUserIntroductionScene.Something.ViewModel)
   func displayUserIntroduction(_ introduction: String)
   func displayEmptyUserIntroduction()
+  func displayUserIntroductionValid()
 }
 
 final class EditUserIntroductionSceneViewController: UIViewController, EditUserIntroductionSceneViewControllable {
@@ -77,6 +78,10 @@ extension EditUserIntroductionSceneViewController: EditUserIntroductionSceneDisp
   }
 
   func displayEmptyUserIntroduction() {
+    // TODO: - UI 업데이트 로직
+  }
+
+  func displayUserIntroductionValid() {
     // TODO: - UI 업데이트 로직
   }
 
