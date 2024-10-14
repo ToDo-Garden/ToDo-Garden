@@ -36,13 +36,21 @@ extension ShareGardenSceneWorkerMock: ShareGardenSceneWorkable {
   func requestMyGarden() async throws -> ShareGardenScene.MyGarden {
     try self.checkIsSuccessfulTask()
     
-    return self.myGarden!
+    if let myGarden {
+      return myGarden
+    }
+    
+    throw NSError()
   }
   
   func requestFriendsGardenList() async throws -> [ShareGardenScene.FriendsGarden] {
     try self.checkIsSuccessfulTask()
     
-    return self.friendsGardenList!
+    if let friendsGardenList {
+      return friendsGardenList
+    }
+    
+    throw NSError()
   }
   
   func delete(by id: ShareGardenSceneEntity.ShareGardenScene.FriendsGarden.ID) async throws {
