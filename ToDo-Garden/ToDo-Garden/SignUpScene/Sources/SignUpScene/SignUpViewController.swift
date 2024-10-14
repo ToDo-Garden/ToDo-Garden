@@ -39,6 +39,7 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
     self.setupSignUpScrollView()
     self.setupBottomButton()
     self.setupTapRecognizer()
+    self.setupKeyboardObservers()
   }
   
   @available(*, unavailable)
@@ -95,12 +96,12 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
     NSLayoutConstraint.activate(
       [
         self.bottomButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-        self.bottomButton.centerYAnchor.constraint(
-          equalTo: self.view.centerYAnchor,
-          constant: Constant.BottomButton.centerYOffset
+        self.bottomButton.bottomAnchor.constraint(
+          equalTo: self.view.safeAreaLayoutGuide.bottomAnchor
         )
       ]
     )
+    self.hideBottomButton()
   }
   
   private func setupTapRecognizer() {
@@ -123,6 +124,56 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
   
   @objc private func handleTap() {
     self.signUpScrollView.cancelAnimation()
+  }
+  
+  // MARK: - Keyboard Observers
+  
+  private func setupKeyboardObservers() {
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(self.showKeyBoard),
+      name: UIResponder.keyboardWillShowNotification,
+      object: nil
+    )
+    
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(self.hideKeyBoard),
+      name: UIResponder.keyboardWillHideNotification,
+      object: nil
+    )
+  }
+  
+  @objc private func showKeyBoard(notification: Notification) {
+    guard 
+      let userInfo = notification.userInfo,
+      let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+    
+    let keyboardHeight = keyboardFrame.cgRectValue.height
+    UIView.animate(withDuration: 0.3) {
+      self.showBottomButton()
+      self.bottomButton.transform = CGAffineTransform(
+        translationX: CGFloat.zero,
+        y: -keyboardHeight + self.view.safeAreaInsets.bottom
+      )
+    }
+  }
+  
+  @objc private func hideKeyBoard() {
+    UIView.animate(withDuration: 0.3) {
+      self.hideBottomButton()
+      self.bottomButton.transform = .identity
+    }
+  }
+  
+  private func hideBottomButton() {
+    self.bottomButton.isHidden = true
+    self.bottomButton.alpha = 0
+  }
+  
+  private func showBottomButton() {
+    self.bottomButton.isHidden = false
+    self.bottomButton.alpha = 1
   }
 }
 
