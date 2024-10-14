@@ -29,7 +29,7 @@ class EditUserIntroductionScenePresenter {
 
 extension EditUserIntroductionScenePresenter: EditUserIntroductionScenePresentationLogic {
   func presentUserIntroduction(_ introduction: String) {
-    // TODO: - Display 로직 호출
+    self.viewController?.displayUserIntroduction(introduction)
   }
 
   func presentEmptyUserIntroduction() {

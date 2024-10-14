@@ -16,6 +16,7 @@ import ToDoGardenUIResource
 
 protocol EditUserIntroductionSceneDisplayLogic: AnyObject {
   func displaySomething(viewModel: EditUserIntroductionScene.Something.ViewModel)
+  func displayUserIntroduction(_ introduction: String)
 }
 
 final class EditUserIntroductionSceneViewController: UIViewController, EditUserIntroductionSceneViewControllable {
@@ -70,6 +71,10 @@ final class EditUserIntroductionSceneViewController: UIViewController, EditUserI
 // MARK: - Confirm display logic protocol
 
 extension EditUserIntroductionSceneViewController: EditUserIntroductionSceneDisplayLogic {
+  func displayUserIntroduction(_ introduction: String) {
+    // TODO: - UI 업데이트 로직
+  }
+  
   func displaySomething(viewModel: EditUserIntroductionScene.Something.ViewModel) {
     // self.nameTextField.text = viewModel.name
   }
