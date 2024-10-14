@@ -145,6 +145,87 @@ extension ShareGardenSceneTests {
       group.cancelAll()
     }
   }
+  
+  @Test(arguments: [true, false])
+  private func deleteFriendsGarden(isSuccessful: Bool) async {
+    // Given
+    let pomodoroRecords = [PomodoroRecord(date: Date(), pomodoroCount: 0)]
+    let sourceFriendsGardenList = [
+      ShareGardenScene.FriendsGarden(
+        nickname: UUID().uuidString,
+        focusStreakDays: Int.random(
+          in: 0..<100
+        ),
+        pomodoroRecords: PomodoroRecordCollection(
+          pomodoroRecords: pomodoroRecords
+        )
+      ),
+      ShareGardenScene.FriendsGarden(
+        nickname: UUID().uuidString,
+        focusStreakDays: Int.random(
+          in: 0..<100
+        ),
+        pomodoroRecords: PomodoroRecordCollection(
+          pomodoroRecords: pomodoroRecords
+        )
+      ),
+      ShareGardenScene
+        .FriendsGarden(
+          nickname: UUID().uuidString,
+          focusStreakDays: Int.random(
+            in: 0..<100
+          ),
+          pomodoroRecords: PomodoroRecordCollection(
+            pomodoroRecords: pomodoroRecords
+          )
+        )
+    ]
+    await self.shareGardenSceneWorkerMock.setFriendsGardenList(sourceFriendsGardenList)
+    await self.shareGardenSceneWorkerMock.setIsSuccessful(true)
+    let deleteTargetFriendsGarden = sourceFriendsGardenList[0]
+    let expectedDeleteResult: [UUID] = sourceFriendsGardenList
+      .filter { $0.id != deleteTargetFriendsGarden.id }
+      .map { $0.id }
+    
+    self.loadView()
+    
+    /// 삭제 요청이 진행되었는지 여부를 나타내는 변수입니다.
+    var isDeleteExecuted = false
+    /// 롤백 요청이 진행되었는지 여부를 나타내는 변수입니다.
+    var isRollbackExecuted = false
+    
+    for await viewModel in self.sut.friendsGardenListStream {
+      if isDeleteExecuted == false {
+        await self.shareGardenSceneWorkerMock.setIsSuccessful(isSuccessful)
+        // When
+        self.interactor.delete(by: deleteTargetFriendsGarden.id)
+        isDeleteExecuted = true
+        continue
+      }
+      
+      if isDeleteExecuted {
+        // Then
+        if isSuccessful {
+          // 삭제에 성공했을 경우, 삭제 기대값과 같아야합니다.
+          #expect(viewModel.identifiers == expectedDeleteResult)
+          self.sut.friendsGardenListStreamContinuation.finish()
+        }
+        
+        if isSuccessful == false {
+          if isRollbackExecuted == false {
+            // 먼저 사용자에게 삭제가 반영된 친구 목록 리스트를 표시합니다.
+            #expect(viewModel.identifiers == expectedDeleteResult)
+            isRollbackExecuted = true
+            continue
+          }
+          
+          // 삭제에 실패했을 경우, 삭제 이전의 친구 목록 리스트를 표시합니다.
+          #expect(viewModel.identifiers == sourceFriendsGardenList.map { $0.id })
+          self.sut.friendsGardenListStreamContinuation.finish()
+        }
+      }
+    }
+  }
 }
 // swiftlint:enable function_body_length
 
