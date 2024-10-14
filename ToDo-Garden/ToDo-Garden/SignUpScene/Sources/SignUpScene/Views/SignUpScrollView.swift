@@ -130,7 +130,10 @@ final class SignUpScrollView: UIScrollView {
           equalTo: self.contentView.leadingAnchor,
           constant: CGFloat(index) * self.screenWidth
         ),
-        inputView.widthAnchor.constraint(equalTo: self.widthAnchor),
+        inputView.trailingAnchor.constraint(
+          equalTo: self.contentView.leadingAnchor,
+          constant: CGFloat(index + 1) * self.screenWidth
+        ),
         inputView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor)
       ])
     }
