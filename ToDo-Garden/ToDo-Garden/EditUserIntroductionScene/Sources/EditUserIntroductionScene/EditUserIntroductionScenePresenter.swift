@@ -41,7 +41,7 @@ extension EditUserIntroductionScenePresenter: EditUserIntroductionScenePresentat
   }
 
   func presentIntroductionIsInvalid() {
-    // TODO: - Display 로직 호출
+    self.viewController?.displayUserIntroductionInvalid()
   }
 
   func presentEditUserIntroductionSuccess() {
