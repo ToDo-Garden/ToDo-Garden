@@ -5,6 +5,7 @@
 //  Created by Wood on 10/7/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
+import Combine
 import UIKit
 
 import EditUserIntroductionSceneAPI
@@ -17,9 +18,12 @@ protocol EditUserIntroductionSceneDisplayLogic: AnyObject {
   func displaySomething(viewModel: EditUserIntroductionScene.Something.ViewModel)
 }
 
-class EditUserIntroductionSceneViewController: UIViewController, EditUserIntroductionSceneViewControllable {
+final class EditUserIntroductionSceneViewController: UIViewController, EditUserIntroductionSceneViewControllable {
   private let doneButton: UIBarButtonItem
   private let inputUserIntroductionView: InputTextValidationView
+
+  private var inputUserNameSubject: PassthroughSubject<String, Never>
+  private var cancellables: Set<AnyCancellable>
 
   var interactor: EditUserIntroductionSceneBusinessLogic?
   var router: (EditUserIntroductionSceneRoutingLogic & EditUserIntroductionSceneDataPassing)?
@@ -35,6 +39,8 @@ class EditUserIntroductionSceneViewController: UIViewController, EditUserIntrodu
       placeholderText: introductionTextConstant.placeholderText,
       validationText: validationTextConstant.invalidIntroduction
     )
+    self.inputUserNameSubject = PassthroughSubject<String, Never>()
+    self.cancellables = Set<AnyCancellable>()
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -48,6 +54,11 @@ class EditUserIntroductionSceneViewController: UIViewController, EditUserIntrodu
   override func viewDidLoad() {
     super.viewDidLoad()
     self.setupUI()
+  }
+
+  override func viewIsAppearing(_ animated: Bool) {
+    super.viewIsAppearing(animated)
+    self.interactor?.loadUserIntroduction()
   }
 
   override func viewDidDisappear(_ animated: Bool) {
@@ -67,6 +78,23 @@ extension EditUserIntroductionSceneViewController: EditUserIntroductionSceneDisp
 // MARK: - Request to interactor
 
 extension EditUserIntroductionSceneViewController {
+  private func bindInputTextChanged() {
+    self.inputUserIntroductionView.delegate = self
+    self.inputUserNameSubject
+      .debounce(for: .seconds(0.5), scheduler: RunLoop.main)
+      .sink { [weak self] introduction in
+        self?.interactor?.verifyUserIntroduction(introduction)
+      }
+      .store(in: &self.cancellables)
+  }
+}
+
+extension EditUserIntroductionSceneViewController: InputTextValidationViewDelegate {
+  func inputTextDidChanged(_ text: String?) {
+    if let text {
+      self.inputUserNameSubject.send(text)
+    }
+  }
 }
 
 // MARK: - Set up UI
@@ -74,13 +102,26 @@ extension EditUserIntroductionSceneViewController {
 extension EditUserIntroductionSceneViewController {
   private func setupUI() {
     self.setupMainViewUI()
-    self.setupDoneButtonTitle()
+    self.setupDoneButton()
+    self.bindInputTextChanged()
     self.setupInputIntroductionViewLayout()
   }
 
   private func setupMainViewUI() {
     self.title = Constant.StringLiteral.title
     self.view.backgroundColor = UIColor.toDoGardenWhite
+  }
+
+  private func setupDoneButton() {
+    self.setupDoneButtonAction()
+    self.setupDoneButtonTitle()
+  }
+
+  private func setupDoneButtonAction() {
+    self.doneButton.primaryAction = UIAction { [weak self] _ in
+      let inputIntroduction = self?.inputUserIntroductionView.getEditingText()
+      self?.interactor?.requestEditUserIntroduction(inputIntroduction)
+    }
   }
 
   private func setupDoneButtonTitle() {
