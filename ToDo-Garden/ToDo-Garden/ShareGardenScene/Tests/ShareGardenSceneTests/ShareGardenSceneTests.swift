@@ -42,4 +42,8 @@ extension ShareGardenSceneTests {
     self.presenter.viewController = self.sut
     self.sut.viewController = self.shareGardenScene
   }
+  
+  private func loadView() {
+    self.window.addSubview(self.shareGardenScene.view)
+  }
 }
