@@ -17,6 +17,7 @@ import ToDoGardenUIResource
 protocol EditUserIntroductionSceneDisplayLogic: AnyObject {
   func displaySomething(viewModel: EditUserIntroductionScene.Something.ViewModel)
   func displayUserIntroduction(_ introduction: String)
+  func displayEmptyUserIntroduction()
 }
 
 final class EditUserIntroductionSceneViewController: UIViewController, EditUserIntroductionSceneViewControllable {
@@ -74,7 +75,11 @@ extension EditUserIntroductionSceneViewController: EditUserIntroductionSceneDisp
   func displayUserIntroduction(_ introduction: String) {
     // TODO: - UI 업데이트 로직
   }
-  
+
+  func displayEmptyUserIntroduction() {
+    // TODO: - UI 업데이트 로직
+  }
+
   func displaySomething(viewModel: EditUserIntroductionScene.Something.ViewModel) {
     // self.nameTextField.text = viewModel.name
   }

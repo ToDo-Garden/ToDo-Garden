@@ -33,7 +33,7 @@ extension EditUserIntroductionScenePresenter: EditUserIntroductionScenePresentat
   }
 
   func presentEmptyUserIntroduction() {
-    // TODO: - Display 로직 호출
+    self.viewController?.displayEmptyUserIntroduction()
   }
 
   func presentIntroductionIsValid() {
