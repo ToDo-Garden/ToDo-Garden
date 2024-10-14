@@ -31,5 +31,15 @@ final class ShareGardenSceneTests {
     self.shareGardenScene = ShareGardenSceneViewController(friendsGardenStore: self.interactor)
     self.presenter = ShareGardenScenePresenter()
     self.sut = ShareGardenSceneViewControllerStub()
+    self.configureUnitTestVIPCycle()
+  }
+}
+
+extension ShareGardenSceneTests {
+  private func configureUnitTestVIPCycle() {
+    self.shareGardenScene.interactor = self.interactor
+    self.interactor.presenter = self.presenter
+    self.presenter.viewController = self.sut
+    self.sut.viewController = self.shareGardenScene
   }
 }
