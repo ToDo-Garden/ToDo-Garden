@@ -25,7 +25,7 @@ final class RetryRequestView {
     let titleLabel = UILabel()
     titleLabel.numberOfLines = 2
     titleLabel.textAlignment = NSTextAlignment.center
-    titleLabel.text = "앗 로딩을 하지 못했어요.\n 다시 시도해주세요."
+    titleLabel.text = Constant.StringLiteral.title
     titleLabel.font = UIFont.pretendardHeadBold
     titleLabel.textColor = UIColor.toDoGardenGreenDark
     
@@ -65,7 +65,7 @@ extension RetryRequestView {
     }
     
     private func configureAppearance() {
-      let title = "다시 시도하기"
+      let title = Constant.StringLiteral.Button.title
       let configuration = UIButton.Configuration.plain()
       self.configuration = configuration
       
@@ -105,6 +105,19 @@ extension RetryRequestView {
       }
     }
   }
+}
+
+extension RetryRequestView {
+  enum Constant {
+    enum StringLiteral { }
+  }
+}
+
+extension RetryRequestView.Constant.StringLiteral {
+  enum Button {
+    static let title = "다시 시도하기"
+  }
+  static let title = "앗 로딩을 하지 못했어요.\n 다시 시도해주세요."
 }
 
 #if DEBUG
