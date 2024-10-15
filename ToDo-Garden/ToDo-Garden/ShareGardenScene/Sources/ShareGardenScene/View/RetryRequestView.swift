@@ -15,15 +15,19 @@ final class RetryRequestView {
     let logoImageView = UIImageView(image: UIImage.leafSymbolImage)
     logoImageView.contentMode = UIView.ContentMode.scaleAspectFit
     logoImageView.usingAutolayout()
-    logoImageView.widthAnchor.constraint(equalToConstant: 48).isActive = true
-    logoImageView.heightAnchor.constraint(equalToConstant: 60).isActive = true
+    logoImageView.widthAnchor.constraint(
+      equalToConstant: Constant.Layout.LogoImageView.size.width
+    ).isActive = true
+    logoImageView.heightAnchor.constraint(
+      equalToConstant: Constant.Layout.LogoImageView.size.height
+    ).isActive = true
     
     return logoImageView
   }()
   
   private let titleLabel: UILabel = {
     let titleLabel = UILabel()
-    titleLabel.numberOfLines = 2
+    titleLabel.numberOfLines = Constant.Layout.TitleLabel.numberOfLines
     titleLabel.textAlignment = NSTextAlignment.center
     titleLabel.text = Constant.StringLiteral.title
     titleLabel.font = UIFont.pretendardHeadBold
@@ -46,7 +50,7 @@ final class RetryRequestView {
   lazy var view: UIView = {
     return UIVStackView(
       alignment: UIStackView.Alignment.center,
-      spacing: 14,
+      spacing: Constant.Layout.spacing,
       arrangedSubviews: [self.logoImageView, self.titleLabel, self.retryButton]
     )
   }()
@@ -110,6 +114,7 @@ extension RetryRequestView {
 extension RetryRequestView {
   enum Constant {
     enum StringLiteral { }
+    enum Layout { }
   }
 }
 
@@ -118,6 +123,18 @@ extension RetryRequestView.Constant.StringLiteral {
     static let title = "다시 시도하기"
   }
   static let title = "앗 로딩을 하지 못했어요.\n 다시 시도해주세요."
+}
+
+extension RetryRequestView.Constant.Layout {
+  enum LogoImageView {
+    static let size: CGSize = CGSize(width: 100, height: 100)
+  }
+  
+  enum TitleLabel {
+    static let numberOfLines: Int = 2
+  }
+  
+  static let spacing: CGFloat = 14
 }
 
 #if DEBUG
