@@ -38,7 +38,7 @@ final class ShareGardenSceneTests {
 // swiftlint:disable function_body_length
 extension ShareGardenSceneTests {
   @Test(arguments: [true, false])
-  func myGardenRequest(isSuccessful: Bool) async {
+  private func myGardenRequest(isSuccessful: Bool) async {
     // Given
     await self.shareGardenSceneWorkerMock.setIsSuccessful(isSuccessful)
     let pomodoroRecords = [PomodoroRecord(date: Date(), pomodoroCount: 0)]
@@ -80,7 +80,7 @@ extension ShareGardenSceneTests {
   }
   
   @Test(arguments: [true, false])
-  func friendsGardenListRequest(isSuccessful: Bool) async {
+  private func friendsGardenListRequest(isSuccessful: Bool) async {
     // Given
     await self.shareGardenSceneWorkerMock.setIsSuccessful(isSuccessful)
     let pomodoroRecords = [PomodoroRecord(date: Date(), pomodoroCount: 0)]
