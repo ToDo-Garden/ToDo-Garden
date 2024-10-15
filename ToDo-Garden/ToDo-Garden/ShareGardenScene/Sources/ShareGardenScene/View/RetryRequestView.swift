@@ -92,7 +92,7 @@ extension RetryRequestView {
         ]
       )
       return NSMutableAttributedString(attributedString: attributedTitle)
-        .addUnderline(with: UIColor.toDoGardenGreenDark, from: 0, to: title.count)
+        .addUnderline(with: color, from: 0, to: title.count)
     }
     
     private func setConfiguration(_ configuration: UIButton.Configuration, duration: Double = 0.3) {
