@@ -95,6 +95,9 @@ extension UIImage {
   public static let leafImage = UIImage(
     resource: .leaf
   )
+  public static let leafSymbolImage = UIImage(
+    resource: .leafSymbol
+  )
   public static let appleLogo = UIImage(
     resource: .appleLogo
   )
