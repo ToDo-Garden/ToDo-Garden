@@ -106,3 +106,11 @@ extension RetryRequestView {
     }
   }
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let retryRequestView = RetryRequestView()
+  return retryRequestView.view
+}
+#endif
