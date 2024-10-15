@@ -11,7 +11,11 @@ import Foundation
 @testable import ShareGardenScene
 import ShareGardenSceneEntity
 
+@MainActor
 final class ShareGardenSceneViewControllerStub {
+  
+  weak var viewController: ShareGardenSceneDisplayLogic?
+  
   // MARK: - My Garden 관련 스트림
   let (myGardenStream, myGardenStreamContinuation) = AsyncStream.makeStream(
     of: ShareGardenScene.RequestMyGarden.ViewModel.self,
@@ -44,22 +48,27 @@ final class ShareGardenSceneViewControllerStub {
 extension ShareGardenSceneViewControllerStub: ShareGardenSceneDisplayLogic {
   func displayMyGarden(_ viewModel: ShareGardenScene.RequestMyGarden.ViewModel) {
     self.myGardenStreamContinuation.yield(viewModel)
+    self.viewController?.displayMyGarden(viewModel)
   }
   
   func displayMyGardenRequestError() {
     self.myGardenRequestErrorStreamContinuation.yield()
+    self.viewController?.displayMyGardenRequestError()
   }
   
   func displayFriendsGardenList(_ viewModel: ShareGardenScene.RequestFriendsGardenList.ViewModel) {
     self.friendsGardenListStreamContinuation.yield(viewModel)
+    self.viewController?.displayFriendsGardenList(viewModel)
   }
   
   func displayFriendsGardenListRequestError() {
     self.friendsGardenListRequestErrorStreamContinuation.yield()
+    self.viewController?.displayFriendsGardenListRequestError()
   }
   
   func stopShimmeringFriendsGardenList() {
     self.shimmeringStopStreamContinuation.yield()
+    self.viewController?.stopShimmeringFriendsGardenList()
   }
 }
 
