@@ -11,7 +11,7 @@ import UserInfoSceneAPI
 import UserInfoSceneEntity
 
 protocol UserInfoSceneDataStore {
-  // var name: String { get set }
+  var userIntroduction: String? { get set }
 }
 
 protocol UserInfoSceneBusinessLogic {
@@ -24,6 +24,8 @@ protocol UserInfoSceneBusinessLogic {
 }
 
 final class UserInfoSceneInteractor: UserInfoSceneDataStore {
+  var userIntroduction: String?
+
   private var requestPhotoAccessTask: Task<Void, Error>?
   private var requestUserPhotoTask: Task<Void, Error>?
   private var requestWithdrawTask: Task<Void, Error>?
@@ -121,6 +123,9 @@ extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
 extension UserInfoSceneInteractor: UserInfoLoadable {
   func requestDescription(for userInfo: UserInfoScene.UserInfo) async -> String {
     let description = await self.userInfoWorker.requestUserProfile(urlString: userInfo.rawValue)
+    if userInfo == .introduction {
+      self.userIntroduction = description
+    }
     return description
   }
 }
