@@ -103,7 +103,7 @@ extension RetryRequestView {
       UIView.transition(
         with: self,
         duration: duration,
-        options: .transitionCrossDissolve
+        options: UIView.AnimationOptions.transitionCrossDissolve
       ) {
         self.configuration? = configuration
       }
