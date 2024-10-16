@@ -8,6 +8,7 @@
 import PhotosUI
 import UIKit.UIApplication
 
+import EditUserIntroductionSceneAPI
 import UserInfoSceneAPI
 import UserInfoSceneEntity
 
@@ -18,20 +19,20 @@ public struct UserInfoSceneSceneBuilder {
     let appServiceWorker: AppServiceWorkable
     let userPhotoWorker: UserPhotoWorker
     let userInfoWorker: UserInfoSceneWorkable
-    let nextSceneBuilder: NextSceneBuildable?
+    let editUserIntroductionSceneBuilder: EditUserIntroductionSceneBuildable?
 
     public init(
       photoPicker: PHPickerViewController,
       appServiceWorker: AppServiceWorkable,
       userPhotoWorker: UserPhotoWorker,
       userInfoWorker: UserInfoSceneWorkable,
-      nextSceneBuilder: NextSceneBuildable?
+      editUserIntroductionSceneBuilder: EditUserIntroductionSceneBuildable?
     ) {
       self.photoPicker = photoPicker
       self.appServiceWorker = appServiceWorker
       self.userPhotoWorker = userPhotoWorker
       self.userInfoWorker = userInfoWorker
-      self.nextSceneBuilder = nextSceneBuilder
+      self.editUserIntroductionSceneBuilder = editUserIntroductionSceneBuilder
     }
   }
 
@@ -69,7 +70,9 @@ extension UserInfoSceneSceneBuilder {
       userPhotoWorker: self.dependency.userPhotoWorker
     )
     let presenter = UserInfoScenePresenter()
-    let router = UserInfoSceneRouter(nextSceneBuilder: self.dependency.nextSceneBuilder)
+    let router = UserInfoSceneRouter(
+      editUserIntroductionSceneBuilder: self.dependency.editUserIntroductionSceneBuilder
+    )
     viewController.interactor = interactor
     viewController.router = router
     interactor.presenter = presenter
