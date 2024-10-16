@@ -7,6 +7,7 @@
 
 import Foundation
 
+import EditUserIntroductionSceneAPI
 import UserInfoSceneAPI
 
 protocol UserInfoSceneRoutingLogic {
@@ -20,10 +21,10 @@ protocol UserInfoSceneDataPassing {
 class UserInfoSceneRouter: UserInfoSceneDataPassing {
   weak var viewController: UserInfoSceneViewController?
   var dataStore: UserInfoSceneDataStore?
-  private let nextSceneBuilder: NextSceneBuildable?
+  private let editUserIntroductionSceneBuilder: EditUserIntroductionSceneBuildable?
 
-  init(nextSceneBuilder: NextSceneBuildable?) {
-    self.nextSceneBuilder = nextSceneBuilder
+  init(editUserIntroductionSceneBuilder: EditUserIntroductionSceneBuildable?) {
+    self.editUserIntroductionSceneBuilder = editUserIntroductionSceneBuilder
   }
 }
 
@@ -38,7 +39,4 @@ extension UserInfoSceneRouter: UserInfoSceneRoutingLogic {
 // MARK: - Declare Payload for scene
 
 extension UserInfoSceneRouter {
-  struct NextScenePayload: NextScenePayloadable {
-    // var name: String
-  }
 }
