@@ -39,7 +39,4 @@ extension UserInfoSceneRouter: UserInfoSceneRoutingLogic {
 // MARK: - Declare Payload for scene
 
 extension UserInfoSceneRouter {
-  struct NextScenePayload: NextScenePayloadable {
-    // var name: String
-  }
 }
