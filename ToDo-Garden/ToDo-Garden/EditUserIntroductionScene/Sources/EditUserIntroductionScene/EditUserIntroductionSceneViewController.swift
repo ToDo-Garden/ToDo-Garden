@@ -15,7 +15,6 @@ import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 protocol EditUserIntroductionSceneDisplayLogic: AnyObject {
-  func displaySomething(viewModel: EditUserIntroductionScene.Something.ViewModel)
   func displayUserIntroduction(_ introduction: String)
   func displayEmptyUserIntroduction()
   func displayUserIntroductionValid()
@@ -77,31 +76,31 @@ final class EditUserIntroductionSceneViewController: UIViewController, EditUserI
 
 extension EditUserIntroductionSceneViewController: EditUserIntroductionSceneDisplayLogic {
   func displayUserIntroduction(_ introduction: String) {
-    // TODO: - UI 업데이트 로직
+    self.inputUserIntroductionView.setBeginEditing(with: introduction)
+    self.doneButton.isEnabled = true
   }
 
   func displayEmptyUserIntroduction() {
-    // TODO: - UI 업데이트 로직
+    self.inputUserIntroductionView.setBeginEditing(with: "")
+    self.doneButton.isEnabled = false
   }
 
   func displayUserIntroductionValid() {
-    // TODO: - UI 업데이트 로직
+    self.inputUserIntroductionView.hideValidationText()
+    self.doneButton.isEnabled = true
   }
 
   func displayUserIntroductionInvalid() {
-    // TODO: - UI 업데이트 로직
+    self.inputUserIntroductionView.showValidationText()
+    self.doneButton.isEnabled = false
   }
 
   func displayEditUserIntroductionSuccess() {
-    // TODO: - UI 업데이트 로직
+    self.router?.routeToUserInfoScene()
   }
 
   func displayEditUserIntroductionFailure(_ errorMessage: String) {
-    // TODO: - UI 업데이트 로직
-  }
-
-  func displaySomething(viewModel: EditUserIntroductionScene.Something.ViewModel) {
-    // self.nameTextField.text = viewModel.name
+    // TODO: - 알럿을 띄울 예정이며, 알럿 디자인을 추가한 이후에 구현할 예정입니다.
   }
 }
 
