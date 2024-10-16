@@ -320,7 +320,7 @@ struct SomePayload: UserInfoSceneScenePayloadable {}
       appServiceWorker: AppServiceWorker(),
       userPhotoWorker: UserPhotoWorker(),
       userInfoWorker: UserInfoSceneWorker(),
-      nextSceneBuilder: nil
+      editUserIntroductionSceneBuilder: nil
     )
   ).build(with: SomePayload())
   return userInfoScene
