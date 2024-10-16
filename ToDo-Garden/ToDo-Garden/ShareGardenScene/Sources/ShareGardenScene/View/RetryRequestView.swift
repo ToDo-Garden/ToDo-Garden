@@ -122,7 +122,7 @@ extension RetryRequestView.Constant.StringLiteral {
   enum Button {
     static let title = "다시 시도하기"
   }
-  static let title = "앗 로딩을 하지 못했어요.\n 다시 시도해주세요."
+  static let title = "앗, 로딩을 하지 못했어요.\n 다시 시도해주세요."
 }
 
 extension RetryRequestView.Constant.Layout {
