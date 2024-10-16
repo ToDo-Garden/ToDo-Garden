@@ -23,21 +23,7 @@ protocol UserInfoSceneBusinessLogic {
   func signOut()
 }
 
-actor UserInfoDataManager {
-  private var userInfoData: [UserInfoScene.UserInfo: String]
-
-  init() {
-    self.userInfoData = [:]
-  }
-
-  func updateUserInfoData(for userInfo: UserInfoScene.UserInfo, with value: String) {
-    self.userInfoData[userInfo] = value
-  }
-}
-
 final class UserInfoSceneInteractor: UserInfoSceneDataStore {
-  private var userInfoDataManager: UserInfoDataManager
-
   private var requestPhotoAccessTask: Task<Void, Error>?
   private var requestUserPhotoTask: Task<Void, Error>?
   private var requestWithdrawTask: Task<Void, Error>?
@@ -54,7 +40,6 @@ final class UserInfoSceneInteractor: UserInfoSceneDataStore {
     appServiceWorker: AppServiceWorkable,
     userPhotoWorker: UserPhotoWorker
   ) {
-    self.userInfoDataManager = UserInfoDataManager()
     self.userInfoWorker = userInfoWorker
     self.appServiceWorker = appServiceWorker
     self.userPhotoWorker = userPhotoWorker
@@ -136,7 +121,6 @@ extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
 extension UserInfoSceneInteractor: UserInfoLoadable {
   func requestDescription(for userInfo: UserInfoScene.UserInfo) async -> String {
     let description = await self.userInfoWorker.requestUserProfile(urlString: userInfo.rawValue)
-    await self.userInfoDataManager.updateUserInfoData(for: userInfo, with: description)
     return description
   }
 }
