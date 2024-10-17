@@ -92,6 +92,7 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
   
   private func setupBottomButton() {
     self.view.addSubview(self.bottomButton)
+    self.bottomButton.isEnabled = false
     self.bottomButton.usingAutolayout()
     self.bottomButton.addAction(UIAction { [weak self] _ in
       self?.signUpScrollView.goToNextPage()
