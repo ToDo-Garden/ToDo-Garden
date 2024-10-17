@@ -200,6 +200,10 @@ extension SignUpViewController {
 }
 
 extension SignUpViewController: ChangeButtonDelegate {
+  func changeButtonState(isEnabled: Bool) {
+    self.bottomButton.isEnabled = isEnabled
+  }
+  
   func changeButtonTitle(pageIndex: Int) {
     let editingText = self.signUpScrollView.getEditingText()
     let isEditingTextEmpty: Bool = editingText?.isEmpty ?? true
