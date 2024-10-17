@@ -34,6 +34,8 @@ enum Constant {
         
         static let conditionsForIDGenerationWarning: String = "아이디는 5~12자 내외 띄어쓰기 없이\n영문, 숫자만 사용 가능합니다"
         static let inUseIDAlreadyWarning: String = "이미 사용중인 아이디 입니다"
+        static let introductionWarning: String = "한줄소개는 최대 15글자까지 사용 가능합니다"
+        static let nicknameWarning: String = "닉네임은 5~12자 내외\n띄어쓰기, 특수기호 없이 사용 가능합니다"
       }
     }
   }
