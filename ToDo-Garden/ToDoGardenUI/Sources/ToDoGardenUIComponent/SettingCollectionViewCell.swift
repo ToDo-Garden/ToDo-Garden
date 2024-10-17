@@ -19,7 +19,7 @@ open class SettingCollectionViewCell: UICollectionViewCell, ReusableIdentifier {
   private var cellPosition: Position
   private let titleLabel: UILabel
   private let descriptionLabel: UILabel
-  private let rightForwardImageView: UIImageView
+  private let rightButton: UIButton
 
   @ExecuteOnce private var isSetupLayerCalled: (() -> Void)?
 
@@ -27,7 +27,7 @@ open class SettingCollectionViewCell: UICollectionViewCell, ReusableIdentifier {
     self.cellPosition = Position.middle
     self.titleLabel = UILabel()
     self.descriptionLabel = UILabel()
-    self.rightForwardImageView = UIImageView()
+    self.rightButton = UIButton()
     super.init(frame: frame)
     self.setup()
   }
@@ -57,8 +57,12 @@ open class SettingCollectionViewCell: UICollectionViewCell, ReusableIdentifier {
   ) {
     self.titleLabel.text = title
     self.titleLabel.font = titleFont
-    self.rightForwardImageView.isHidden = !isShowingModal
+    self.rightButton.isHidden = !isShowingModal
     self.cellPosition = position
+  }
+
+  public func setupRightButtonAction(_ action: UIAction) {
+    self.rightButton.addAction(action, for: UIControl.Event.touchUpInside)
   }
 
   public func updateDescription(_ text: String?) {
@@ -92,7 +96,7 @@ extension SettingCollectionViewCell {
   }
 
   private func setupRightForwardImageView() {
-    self.rightForwardImageView.image = UIImage.forwardButtonImage
+    self.rightButton.setImage(UIImage.forwardButtonImage, for: UIControl.State.normal)
     self.setupRightForwardImageViewLayout()
   }
 
@@ -111,18 +115,18 @@ extension SettingCollectionViewCell {
 
 extension SettingCollectionViewCell {
   private func setupRightForwardImageViewLayout() {
-    self.contentView.addSubview(self.rightForwardImageView)
-    self.rightForwardImageView.usingAutolayout()
+    self.contentView.addSubview(self.rightButton)
+    self.rightButton.usingAutolayout()
 
     NSLayoutConstraint.activate(
       [
-        self.rightForwardImageView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
-        self.rightForwardImageView.trailingAnchor.constraint(
+        self.rightButton.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
+        self.rightButton.trailingAnchor.constraint(
           equalTo: self.contentView.trailingAnchor,
           constant: -8
         ),
-        self.rightForwardImageView.widthAnchor.constraint(equalToConstant: 24),
-        self.rightForwardImageView.heightAnchor.constraint(equalToConstant: 24)
+        self.rightButton.widthAnchor.constraint(equalToConstant: 24),
+        self.rightButton.heightAnchor.constraint(equalToConstant: 24)
       ]
     )
   }
@@ -150,7 +154,7 @@ extension SettingCollectionViewCell {
       [
         self.descriptionLabel.leadingAnchor.constraint(greaterThanOrEqualTo: self.titleLabel.trailingAnchor),
         self.descriptionLabel.trailingAnchor.constraint(
-          equalTo: self.rightForwardImageView.leadingAnchor,
+          equalTo: self.rightButton.leadingAnchor,
           constant: -3
         ),
         self.descriptionLabel.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor)
