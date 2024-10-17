@@ -61,6 +61,10 @@ open class SettingCollectionViewCell: UICollectionViewCell, ReusableIdentifier {
     self.cellPosition = position
   }
 
+  public func setupRightButtonAction(_ action: UIAction) {
+    self.rightButton.addAction(action, for: UIControl.Event.touchUpInside)
+  }
+
   public func updateDescription(_ text: String?) {
     self.descriptionLabel.text = text
   }
