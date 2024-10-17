@@ -69,7 +69,7 @@ extension EditUserIntroductionSceneBuilder {
     for viewController: EditUserIntroductionSceneViewController,
     with payload: EditUserIntroductionScenePayloadable
   ) {
-    // viewController.router?.dataStore?.name = payload.name
+    viewController.router?.dataStore?.userIntroduction = payload.userIntroduction
   }
 }
 

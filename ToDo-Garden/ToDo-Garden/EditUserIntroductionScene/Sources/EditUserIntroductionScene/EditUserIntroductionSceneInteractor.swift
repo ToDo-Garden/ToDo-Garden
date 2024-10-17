@@ -12,7 +12,7 @@ import EditUserIntroductionSceneEntity
 
 protocol EditUserIntroductionSceneDataStore {
   /// UserInfoScene에서 Payload로 런타임에 전달받을 한줄 소개에 대한 데이터입니다.
-  var userIntroduction: String? { get }
+  var userIntroduction: String? { get set }
 }
 
 @MainActor

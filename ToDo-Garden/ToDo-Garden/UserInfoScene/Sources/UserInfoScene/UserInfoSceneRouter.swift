@@ -12,6 +12,7 @@ import UserInfoSceneAPI
 
 protocol UserInfoSceneRoutingLogic {
   func routeToLoginScene()
+  func routeToEditUserIntroductionScene()
 }
 
 protocol UserInfoSceneDataPassing {
