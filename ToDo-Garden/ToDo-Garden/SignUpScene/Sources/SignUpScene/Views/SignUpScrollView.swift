@@ -10,8 +10,9 @@ import UIKit
 import TDUtility
 import ToDoGardenUIComponent
 
-protocol ChangeButtonTitleDelegate: AnyObject {
+protocol ChangeButtonDelegate: AnyObject {
   func changeButtonTitle(pageIndex: Int)
+  func changeButtonState(isEnabled: Bool)
 }
 
 final class SignUpScrollView: UIScrollView {
@@ -33,7 +34,7 @@ final class SignUpScrollView: UIScrollView {
   @ExecuteOnce private var secondPageAnimation: (() -> Void)?
   @ExecuteOnce private var thirdPageAnimation: (() -> Void)?
   
-  weak var changeButtonTitleDelegate: ChangeButtonTitleDelegate?
+  weak var changeButtonDelegate: ChangeButtonDelegate?
   
   override init(frame: CGRect) {
     self.currentPageIndex = Int.zero
@@ -189,13 +190,13 @@ final class SignUpScrollView: UIScrollView {
     default: break
     }
     
-    self.changeButtonTitleDelegate?.changeButtonTitle(pageIndex: self.currentPageIndex)
+    self.changeButtonDelegate?.changeButtonTitle(pageIndex: self.currentPageIndex)
     self.inputViews[self.currentPageIndex].textInputView.setBecomeFirstRespoder()
   }
 }
 
 extension SignUpScrollView: InputTextValidationViewDelegate {
   func inputTextDidChanged(_ text: String?) {
-    self.changeButtonTitleDelegate?.changeButtonTitle(pageIndex: self.currentPageIndex)
+    self.changeButtonDelegate?.changeButtonTitle(pageIndex: self.currentPageIndex)
   }
 }

@@ -72,7 +72,7 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
   }
   
   private func setupSignUpScrollView() {
-    self.signUpScrollView.changeButtonTitleDelegate = self
+    self.signUpScrollView.changeButtonDelegate = self
     self.view.addSubview(self.signUpScrollView)
     self.signUpScrollView.usingAutolayout()
     NSLayoutConstraint.activate(
@@ -198,7 +198,7 @@ extension SignUpViewController {
   }
 }
 
-extension SignUpViewController: ChangeButtonTitleDelegate {
+extension SignUpViewController: ChangeButtonDelegate {
   func changeButtonTitle(pageIndex: Int) {
     let editingText = self.signUpScrollView.getEditingText()
     let isEditingTextEmpty: Bool = editingText?.isEmpty ?? true
