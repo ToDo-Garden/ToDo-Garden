@@ -231,6 +231,19 @@ extension SignUpViewController: ChangeButtonDelegate {
   }
 }
 
+extension SignUpViewController: InputTextValidationViewDelegate {
+  public func inputTextDidChanged(_ text: String?) {
+    self.checkStringValidation(text: text)
+    self.changeButtonTitle(pageIndex: self.signUpScrollView.currentPageIndex)
+  }
+}
+
+extension SignUpViewController: UIScrollViewDelegate {
+  public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    self.checkStringValidation(text: self.signUpScrollView.getEditingText())
+  }
+}
+
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
