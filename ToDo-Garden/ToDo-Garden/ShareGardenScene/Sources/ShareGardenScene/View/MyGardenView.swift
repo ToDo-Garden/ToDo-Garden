@@ -18,6 +18,8 @@ extension ShareGardenSceneViewController {
     
     // MARK: - UI Properties
     
+    private let contentView: UIStackView
+    
     private let sectionHeaderView: SectionHeaderView = {
       let shareButton = UIButton()
       shareButton.setImage(UIImage.shareIconImage, for: UIControl.State.normal)
@@ -61,6 +63,14 @@ extension ShareGardenSceneViewController {
     @ExecuteOnce private var setupLayoutIfNeeded: (() -> Void)?
     
     init() {
+      self.contentView = UIVStackView(
+        alignment: UIStackView.Alignment.center,
+        spacing: 14,
+        arrangedSubviews: [
+          self.profileInfoView,
+          self.gardenView
+        ]
+      )
       super.init(frame: CGRect.zero)
       self.setup()
     }
@@ -107,8 +117,7 @@ extension ShareGardenSceneViewController.MyGardenView {
   
   private func addSubviews() {
     self.addArrangedSubview(self.sectionHeaderView)
-    self.addArrangedSubview(self.profileInfoView)
-    self.addArrangedSubview(self.gardenView)
+    self.addArrangedSubview(self.contentView)
   }
   
   private func updateProfileInfoView(with nickname: String, _ description: String) {
