@@ -18,6 +18,7 @@ extension ShareGardenSceneViewController {
     
     // MARK: - UI Properties
     
+    private let retryRequestView: RetryRequestView = RetryRequestView()
     private let contentView: UIStackView
     
     private let sectionHeaderView: SectionHeaderView = {
