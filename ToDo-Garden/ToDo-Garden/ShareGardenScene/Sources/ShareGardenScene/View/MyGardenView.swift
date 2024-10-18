@@ -18,6 +18,9 @@ extension ShareGardenSceneViewController {
     
     // MARK: - UI Properties
     
+    private let retryRequestView: RetryRequestView = RetryRequestView()
+    private let contentView: UIStackView
+    
     private let sectionHeaderView: SectionHeaderView = {
       let shareButton = UIButton()
       shareButton.setImage(UIImage.shareIconImage, for: UIControl.State.normal)
@@ -60,7 +63,21 @@ extension ShareGardenSceneViewController {
     
     @ExecuteOnce private var setupLayoutIfNeeded: (() -> Void)?
     
+    var retryAction: UIAction? {
+      didSet {
+        self.retryRequestView.retryAction = self.retryAction
+      }
+    }
+    
     init() {
+      self.contentView = UIVStackView(
+        alignment: UIStackView.Alignment.center,
+        spacing: 14,
+        arrangedSubviews: [
+          self.profileInfoView,
+          self.gardenView
+        ]
+      )
       super.init(frame: CGRect.zero)
       self.setup()
     }
@@ -87,6 +104,22 @@ extension ShareGardenSceneViewController {
       self.layoutIfNeeded()
       self.profileInfoView.startShimmering()
     }
+    
+    func showContentsLoadingFailure() {
+      self.removeArrangedSubview(self.contentView)
+      self.addArrangedSubview(self.retryRequestView.view)
+      self.contentView.isHidden = true
+      self.retryRequestView.view.isHidden = false
+      self.stopShimmeringAnimation()
+    }
+    
+    func showContents() {
+      self.addArrangedSubview(self.contentView)
+      self.removeArrangedSubview(self.retryRequestView.view)
+      self.contentView.isHidden = false
+      self.retryRequestView.view.isHidden = true
+      self.startShimmeringAnimation()
+    }
   }
 }
 
@@ -107,8 +140,7 @@ extension ShareGardenSceneViewController.MyGardenView {
   
   private func addSubviews() {
     self.addArrangedSubview(self.sectionHeaderView)
-    self.addArrangedSubview(self.profileInfoView)
-    self.addArrangedSubview(self.gardenView)
+    self.addArrangedSubview(self.contentView)
   }
   
   private func updateProfileInfoView(with nickname: String, _ description: String) {
@@ -166,3 +198,11 @@ extension ShareGardenSceneViewController.MyGardenView {
     ])
   }
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let view = ShareGardenSceneViewController.MyGardenView()
+  return view
+}
+#endif

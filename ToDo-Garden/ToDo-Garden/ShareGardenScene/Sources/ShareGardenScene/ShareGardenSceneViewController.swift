@@ -70,7 +70,7 @@ extension ShareGardenSceneViewController: ShareGardenSceneDisplayLogic {
   }
   
   func displayMyGardenRequestError() {
-    // TODO: - display my garden request error view
+    self.myGardenView.showContentsLoadingFailure()
   }
   
   func displayFriendsGardenList(_ viewModel: ShareGardenScene.RequestFriendsGardenList.ViewModel) {
@@ -105,6 +105,7 @@ extension ShareGardenSceneViewController {
 
 extension ShareGardenSceneViewController {
   private func setup() {
+    self.setupActions()
     self.setupViewAppearance()
     self.addSubviews()
     self.setupLayoutConstraints()
@@ -122,6 +123,23 @@ extension ShareGardenSceneViewController {
   private func setupLayoutConstraints() {
     self.setupMyGardenViewLayoutConstraints()
     self.setupFriendsGardenViewLayoutConstraints()
+  }
+  
+  private func setupActions() {
+    self.setupMyGardenViewRetryAction()
+  }
+}
+
+// MARK: - Setup ui action
+
+extension ShareGardenSceneViewController {
+  private func setupMyGardenViewRetryAction() {
+    self.myGardenView.retryAction = UIAction { [weak self] _ in
+      DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.15) {
+        self?.myGardenView.showContents()
+        self?.interactor?.requestMyGarden()
+      }
+    }
   }
 }
 
