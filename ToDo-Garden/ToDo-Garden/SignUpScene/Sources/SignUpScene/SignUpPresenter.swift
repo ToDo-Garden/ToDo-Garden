@@ -10,7 +10,7 @@ import Foundation
 import SignUpSceneEntity
 
 protocol SignUpPresentationLogic {
-  func presentSomething(response: SignUp.Something.Response)
+  func presentValidation(response: SignUp.CheckStringValidation.Response)
 }
 
 class SignUpPresenter {
@@ -20,8 +20,53 @@ class SignUpPresenter {
 // MARK: - Request to ViewController
 
 extension SignUpPresenter: SignUpPresentationLogic {
-  func presentSomething(response: SignUp.Something.Response) {
-    let viewModel = SignUp.Something.ViewModel()
-    self.viewController?.displaySomething(viewModel: viewModel)
+  func presentValidation(response: SignUp.CheckStringValidation.Response) {
+    let viewModel = self.makeViewModel(response: response)
+    self.viewController?.presentValidation(viewModel: viewModel)
+  }
+  
+  private func makeViewModel(
+    response: SignUp.CheckStringValidation.Response
+  ) -> SignUp.CheckStringValidation.ViewModel {
+    let viewModel = SignUp.CheckStringValidation.ViewModel(
+      warningText: self.makeWarningText(currentPageIndex: response.currentPageIndex),
+      isValid: self.isValid(
+        currentPageIndex: response.currentPageIndex,
+        validationState: response.validationState
+      ),
+      currentPageIndex: response.currentPageIndex
+    )
+    return viewModel
+  }
+  
+  private func makeWarningText(currentPageIndex: Int) -> String {
+    switch currentPageIndex {
+    case 0:
+      return Constant.ScrollView.SignUpInputView.StringLiteral.conditionsForIDGenerationWarning
+    case 1:
+      return Constant.ScrollView.SignUpInputView.StringLiteral.introductionWarning
+    case 2:
+      return Constant.ScrollView.SignUpInputView.StringLiteral.nicknameWarning
+    default:
+      return ""
+    }
+  }
+  
+  private func isValid(currentPageIndex: Int, validationState: SignUp.ValidationState) -> Bool {
+    if currentPageIndex == 1 {
+      switch validationState {
+      case SignUp.ValidationState.invalid:
+        return false
+      default:
+        return true
+      }
+    } else {
+      switch validationState {
+      case SignUp.ValidationState.valid:
+        return true
+      default:
+        return false
+      }
+    }
   }
 }
