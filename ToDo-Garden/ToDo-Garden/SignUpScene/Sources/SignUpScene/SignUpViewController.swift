@@ -12,7 +12,7 @@ import SignUpSceneEntity
 import ToDoGardenUIComponent
 
 protocol SignUpDisplayLogic: AnyObject {
-  func displaySomething(viewModel: SignUp.Something.ViewModel)
+  func presentValidation(viewModel: SignUp.CheckStringValidation.ViewModel)
 }
 
 final class SignUpViewController: UIViewController, SignUpViewControllable {
@@ -46,7 +46,6 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    self.doSomething()
   }
   
   // MARK: - Setups
@@ -73,6 +72,12 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
   
   private func setupSignUpScrollView() {
     self.signUpScrollView.changeButtonDelegate = self
+    self.signUpScrollView.delegate = self
+    let inputViews = self.signUpScrollView.inputViews
+    for inputView in inputViews {
+      inputView.textInputView.delegate = self
+    }
+    
     self.view.addSubview(self.signUpScrollView)
     self.signUpScrollView.usingAutolayout()
     NSLayoutConstraint.activate(
@@ -180,13 +185,25 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
     self.bottomButton.isHidden = false
     self.bottomButton.alpha = 1
   }
+  
+  private func changeButtonState(isEnabled: Bool) {
+    self.bottomButton.isEnabled = isEnabled
+  }
 }
 
 // MARK: - Confirm display logic protocol
 
 extension SignUpViewController: SignUpDisplayLogic {
-  func displaySomething(viewModel: SignUp.Something.ViewModel) {
-    // self.nameTextField.text = viewModel.name
+  func presentValidation(viewModel: SignUp.CheckStringValidation.ViewModel) {
+    let textInputView = self.signUpScrollView.inputViews[viewModel.currentPageIndex].textInputView
+    textInputView.changeValidationText(viewModel.warningText)
+
+    if viewModel.isValid {
+      textInputView.hideValidationText()
+    } else {
+      textInputView.showValidationText()
+    }
+    self.changeButtonState(isEnabled: viewModel.isValid)
   }
 }
 
@@ -203,10 +220,6 @@ extension SignUpViewController {
 }
 
 extension SignUpViewController: ChangeButtonDelegate {
-  func changeButtonState(isEnabled: Bool) {
-    self.bottomButton.isEnabled = isEnabled
-  }
-  
   func changeButtonTitle(pageIndex: Int) {
     let editingText = self.signUpScrollView.getEditingText()
     let isEditingTextEmpty: Bool = editingText?.isEmpty ?? true
