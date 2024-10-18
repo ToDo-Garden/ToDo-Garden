@@ -198,3 +198,11 @@ extension ShareGardenSceneViewController.MyGardenView {
     ])
   }
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let view = ShareGardenSceneViewController.MyGardenView()
+  return view
+}
+#endif
