@@ -11,15 +11,47 @@ public enum SignUp {
   
   // MARK: Use cases
   
-  public enum Something {
+  public enum CheckStringValidation {
     public struct Request {
-      public init() { }
+      public let text: String?
+      public let currentPageIndex: Int
+      
+      public init(text: String?, currentPageIndex: Int) {
+        self.text = text
+        self.currentPageIndex = currentPageIndex
+      }
     }
     public struct Response {
-      public init() { }
+      public let validationState: ValidationState
+      public let currentPageIndex: Int
+      
+      public init(validationState: ValidationState, currentPageIndex: Int) {
+        self.validationState = validationState
+        self.currentPageIndex = currentPageIndex
+      }
     }
     public struct ViewModel {
-      public init() { }
+      public let warningText: String
+      public let isValid: Bool
+      public let currentPageIndex: Int
+      
+      public init(
+        warningText: String,
+        isValid: Bool,
+        currentPageIndex: Int
+      ) {
+        self.warningText = warningText
+        self.isValid = isValid
+        self.currentPageIndex = currentPageIndex
+      }
     }
+  }
+}
+
+extension SignUp {
+  public enum ValidationState {
+    case valid
+    case invalid
+    case empty
   }
 }
