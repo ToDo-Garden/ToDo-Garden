@@ -12,7 +12,6 @@ import ToDoGardenUIComponent
 
 protocol ChangeButtonDelegate: AnyObject {
   func changeButtonTitle(pageIndex: Int)
-  func changeButtonState(isEnabled: Bool)
 }
 
 final class SignUpScrollView: UIScrollView {
@@ -87,10 +86,6 @@ final class SignUpScrollView: UIScrollView {
         validationText: ""
       )
     ]
-    
-    for inputView in self.inputViews {
-      inputView.textInputView.delegate = self
-    }
   }
   // swiftlint:enable function_body_length
 
@@ -180,78 +175,23 @@ final class SignUpScrollView: UIScrollView {
     self.inputViews[self.currentPageIndex].cancelTitleAnimation()
   }
   
-  // swiftlint:disable function_body_length
   private func didChangePage() {
     let animation: (() -> Void)? = {
       self.inputViews[self.currentPageIndex].startTitleAnimation()
     }
     
     switch self.currentPageIndex {
-    case 0: self.firstPageAnimation = animation
-      self.changeButtonDelegate?.changeButtonState(
-        isEnabled: StringValidationChecker.isValidID(
-          self.inputViews[0].textInputView.getEditingText() ?? ""
-        )
-      )
-    case 1: self.secondPageAnimation = animation
-      self.changeButtonDelegate?.changeButtonState(
-        isEnabled: StringValidationChecker.isValidIntroduction(
-          self.inputViews[1].textInputView.getEditingText() ?? ""
-        )
-      )
-    case 2: self.thirdPageAnimation = animation
-      self.changeButtonDelegate?.changeButtonState(
-        isEnabled: StringValidationChecker.isValidNickName(
-          self.inputViews[2].textInputView.getEditingText() ?? ""
-        )
-      )
-    default: break
+    case 0:
+      self.firstPageAnimation = animation
+    case 1: 
+      self.secondPageAnimation = animation
+    case 2: 
+      self.thirdPageAnimation = animation
+    default: 
+      break
     }
     
     self.changeButtonDelegate?.changeButtonTitle(pageIndex: self.currentPageIndex)
     self.inputViews[self.currentPageIndex].textInputView.setBecomeFirstRespoder()
-  }
-}
-// swiftlint:enable function_body_length
-
-extension SignUpScrollView: InputTextValidationViewDelegate {
-  func inputTextDidChanged(_ text: String?) {
-    self.changeButtonDelegate?.changeButtonTitle(pageIndex: self.currentPageIndex)
-    self.checkStringValidation(text: text)
-  }
-  
-  private func checkStringValidation(text: String?) {
-    guard let text = text else { return }
-    
-    let validationMethods: [(validationMethod: (String) -> Bool, warningText: String)] = [
-      (
-        StringValidationChecker.isValidID,
-        Constant.ScrollView.SignUpInputView.StringLiteral.conditionsForIDGenerationWarning
-      ),
-      (
-        StringValidationChecker.isValidIntroduction,
-        Constant.ScrollView.SignUpInputView.StringLiteral.introductionWarning
-      ),
-      (
-        StringValidationChecker.isValidNickName,
-        Constant.ScrollView.SignUpInputView.StringLiteral.nicknameWarning
-      )
-    ]
-    
-    if self.currentPageIndex < validationMethods.count {
-      let (validationMethod, warningText) = validationMethods[self.currentPageIndex]
-      self.validateInput(text: text, validationMethod: validationMethod, warningText: warningText)
-    }
-  }
-  
-  private func validateInput(text: String, validationMethod: (String) -> Bool, warningText: String) {
-    self.inputViews[self.currentPageIndex].textInputView.changeValidationText(warningText)
-    if !validationMethod(text) {
-      self.inputViews[self.currentPageIndex].textInputView.showValidationText()
-      self.changeButtonDelegate?.changeButtonState(isEnabled: false)
-    } else {
-      self.inputViews[self.currentPageIndex].textInputView.hideValidationText()
-      self.changeButtonDelegate?.changeButtonState(isEnabled: true)
-    }
   }
 }
