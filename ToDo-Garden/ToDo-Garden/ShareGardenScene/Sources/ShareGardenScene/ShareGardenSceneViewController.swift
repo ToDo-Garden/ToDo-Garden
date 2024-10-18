@@ -105,6 +105,7 @@ extension ShareGardenSceneViewController {
 
 extension ShareGardenSceneViewController {
   private func setup() {
+    self.setupActions()
     self.setupViewAppearance()
     self.addSubviews()
     self.setupLayoutConstraints()
@@ -122,6 +123,21 @@ extension ShareGardenSceneViewController {
   private func setupLayoutConstraints() {
     self.setupMyGardenViewLayoutConstraints()
     self.setupFriendsGardenViewLayoutConstraints()
+  }
+  
+  private func setupActions() {
+    self.setupMyGardenViewRetryAction()
+  }
+}
+
+// MARK: - Setup ui action
+
+extension ShareGardenSceneViewController {
+  private func setupMyGardenViewRetryAction() {
+    self.myGardenView.retryAction = UIAction { _ in
+      self.myGardenView.showContents()
+      self.interactor?.requestMyGarden()
+    }
   }
 }
 
