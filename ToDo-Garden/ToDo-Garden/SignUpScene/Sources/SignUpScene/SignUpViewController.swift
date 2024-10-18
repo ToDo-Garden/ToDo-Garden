@@ -42,12 +42,6 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
     fatalError("init(coder:) has not been implemented")
   }
   
-  // MARK: - View lifecycle
-  
-  override func viewDidLoad() {
-    super.viewDidLoad()
-  }
-  
   // MARK: - Setups
   
   private func setup() {
