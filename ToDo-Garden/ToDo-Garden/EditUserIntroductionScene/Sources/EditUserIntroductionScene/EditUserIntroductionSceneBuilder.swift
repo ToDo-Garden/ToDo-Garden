@@ -69,7 +69,7 @@ extension EditUserIntroductionSceneBuilder {
     for viewController: EditUserIntroductionSceneViewController,
     with payload: EditUserIntroductionScenePayloadable
   ) {
-    // viewController.router?.dataStore?.name = payload.name
+    viewController.router?.dataStore?.userIntroduction = payload.userIntroduction
   }
 }
 
@@ -77,7 +77,9 @@ extension EditUserIntroductionSceneBuilder {
 
 #if DEBUG
 extension EditUserIntroductionSceneBuilder {
-  private struct PreviewPayload: EditUserIntroductionScenePayloadable {}
+  private struct PreviewPayload: EditUserIntroductionScenePayloadable {
+    var userIntroduction: String?
+  }
 
   /// Preview에서 VIP 동작을 확인하기 위한 Builder입니다.
   static let previewScene = Self(

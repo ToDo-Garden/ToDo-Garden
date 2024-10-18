@@ -7,10 +7,12 @@
 
 import Foundation
 
+import EditUserIntroductionSceneAPI
 import UserInfoSceneAPI
 
 protocol UserInfoSceneRoutingLogic {
   func routeToLoginScene()
+  func routeToEditUserIntroductionScene()
 }
 
 protocol UserInfoSceneDataPassing {
@@ -20,10 +22,10 @@ protocol UserInfoSceneDataPassing {
 class UserInfoSceneRouter: UserInfoSceneDataPassing {
   weak var viewController: UserInfoSceneViewController?
   var dataStore: UserInfoSceneDataStore?
-  private let nextSceneBuilder: NextSceneBuildable?
+  private let editUserIntroductionSceneBuilder: EditUserIntroductionSceneBuildable?
 
-  init(nextSceneBuilder: NextSceneBuildable?) {
-    self.nextSceneBuilder = nextSceneBuilder
+  init(editUserIntroductionSceneBuilder: EditUserIntroductionSceneBuildable?) {
+    self.editUserIntroductionSceneBuilder = editUserIntroductionSceneBuilder
   }
 }
 
@@ -33,12 +35,23 @@ extension UserInfoSceneRouter: UserInfoSceneRoutingLogic {
   func routeToLoginScene() {
     // TODO: LoginSceneBuilder가 구현되면 해당 화면으로 라우팅할 예정입니다.
   }
+
+  func routeToEditUserIntroductionScene() {
+    guard let editUserIntroductionScene = self.editUserIntroductionSceneBuilder?.build(
+      with: EditUserIntroductionScenePayload(userIntroduction: self.dataStore?.userIntroduction)
+    ) else { return }
+
+    self.viewController?.navigationController?.pushViewController(
+      editUserIntroductionScene,
+      animated: true
+    )
+  }
 }
 
 // MARK: - Declare Payload for scene
 
 extension UserInfoSceneRouter {
-  struct NextScenePayload: NextScenePayloadable {
-    // var name: String
+  struct EditUserIntroductionScenePayload: EditUserIntroductionScenePayloadable {
+    var userIntroduction: String?
   }
 }

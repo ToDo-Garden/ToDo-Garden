@@ -9,6 +9,7 @@ import UIKit
 
 import ToDoGardenUIComponent
 import ToDoGardenUIResource
+import UserInfoSceneEntity
 
 extension UserInfoSceneViewController {
   typealias DiffableDataSource = UICollectionViewDiffableDataSource<UserInfoSection, UserInfoItem>
@@ -38,6 +39,7 @@ extension UserInfoSceneViewController {
         isShowingModal: item.isRightImageExisted,
         position: cellPosition
       )
+      self.setupButtonAction(to: cell, with: item)
       cell.updateUserInfo(item.userInfo, with: self.interactor)
     }
   }
@@ -53,6 +55,22 @@ extension UserInfoSceneViewController {
       return SettingCollectionViewCell.Position.bottom
     } else {
       return SettingCollectionViewCell.Position.middle
+    }
+  }
+
+  private func setupButtonAction(to cell: UserInfoCollectionViewCell, with item: UserInfoItem) {
+    let action = UIAction { [weak self] _ in
+      self?.handleRoute(for: item)
+    }
+    cell.setupRightButtonAction(action)
+  }
+
+  private func handleRoute(for item: UserInfoItem) {
+    switch item.userInfo {
+    case UserInfoScene.UserInfo.introduction:
+      self.router?.routeToEditUserIntroductionScene()
+    default:
+      break
     }
   }
 

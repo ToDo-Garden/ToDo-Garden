@@ -9,7 +9,7 @@ import Foundation
 
 /// 런타임에 전달받을 의존성을 선언한 구조체입니다.
 public protocol EditUserIntroductionScenePayloadable {
-  // var name: String { get }
+  var userIntroduction: String? { get }
 }
 
 public protocol EditUserIntroductionSceneBuildable {
