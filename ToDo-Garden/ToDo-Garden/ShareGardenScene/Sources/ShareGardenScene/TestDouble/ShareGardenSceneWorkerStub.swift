@@ -56,7 +56,10 @@ actor ShareGardenSceneWorkerStub: ShareGardenSceneWorkable {
   
   // MARK: - My Garden
   
+  var isThrowErrorForRequestMyGarden = true
+  
   func requestMyGarden() async throws -> ShareGardenScene.MyGarden {
+    defer { self.isThrowErrorForRequestMyGarden.toggle() }
     let pomodoroRecords = self.makeRandomPomodoroRecords()
     
     let myGarden = ShareGardenScene.MyGarden(
@@ -66,6 +69,10 @@ actor ShareGardenSceneWorkerStub: ShareGardenSceneWorkable {
     )
     
     try await Task.sleep(nanoseconds: 2_000_000_000)
+    
+    if self.isThrowErrorForRequestMyGarden {
+      throw NSError(domain: "", code: 99999)
+    }
     
     return myGarden
   }
