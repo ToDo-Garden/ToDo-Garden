@@ -26,7 +26,7 @@ final class SignUpScrollView: UIScrollView {
     return windowScene?.screen.bounds.width ?? CGFloat.zero
   }
   
-  private var inputViews: [SignUpInputView]
+  var inputViews: [SignUpInputView]
   private let contentView: UIView
   
   @ExecuteOnce private var firstPageAnimation: (() -> Void)?
