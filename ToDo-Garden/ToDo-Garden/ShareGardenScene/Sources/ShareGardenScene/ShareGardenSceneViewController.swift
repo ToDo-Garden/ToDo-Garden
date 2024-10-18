@@ -134,9 +134,9 @@ extension ShareGardenSceneViewController {
 
 extension ShareGardenSceneViewController {
   private func setupMyGardenViewRetryAction() {
-    self.myGardenView.retryAction = UIAction { _ in
-      self.myGardenView.showContents()
-      self.interactor?.requestMyGarden()
+    self.myGardenView.retryAction = UIAction { [weak self] _ in
+      self?.myGardenView.showContents()
+      self?.interactor?.requestMyGarden()
     }
   }
 }
