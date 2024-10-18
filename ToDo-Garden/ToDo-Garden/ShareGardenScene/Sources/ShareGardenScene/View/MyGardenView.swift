@@ -63,6 +63,12 @@ extension ShareGardenSceneViewController {
     
     @ExecuteOnce private var setupLayoutIfNeeded: (() -> Void)?
     
+    var retryAction: UIAction? {
+      didSet {
+        self.retryRequestView.retryAction = self.retryAction
+      }
+    }
+    
     init() {
       self.contentView = UIVStackView(
         alignment: UIStackView.Alignment.center,
