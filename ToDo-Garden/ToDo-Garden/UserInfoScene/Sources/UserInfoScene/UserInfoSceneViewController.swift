@@ -8,6 +8,7 @@
 import PhotosUI
 import UIKit
 
+import EditUserIntroductionSceneAPI
 import ToDoGardenUIAPI
 import ToDoGardenUIComponent
 import ToDoGardenUIConstant
@@ -123,7 +124,11 @@ extension UserInfoSceneViewController: UserInfoSceneDisplayLogic {
 
 // MARK: - Request to interactor
 
-extension UserInfoSceneViewController {
+extension UserInfoSceneViewController: EditUserIntroductionDelegate {
+  func userIntroductionDidEdited(new introduction: String?) {
+    // TODO: 소개 리로드 Business Logic 호출 예정
+  }
+
   func didSelectEditProfileButton() {
     self.interactor?.fetchUserPhotoAccess()
   }
