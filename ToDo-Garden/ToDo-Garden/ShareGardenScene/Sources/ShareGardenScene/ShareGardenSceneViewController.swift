@@ -70,7 +70,7 @@ extension ShareGardenSceneViewController: ShareGardenSceneDisplayLogic {
   }
   
   func displayMyGardenRequestError() {
-    // TODO: - display my garden request error view
+    self.myGardenView.showContentsLoadingFailure()
   }
   
   func displayFriendsGardenList(_ viewModel: ShareGardenScene.RequestFriendsGardenList.ViewModel) {
