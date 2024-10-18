@@ -125,7 +125,7 @@ extension UserInfoSceneViewController: UserInfoSceneDisplayLogic {
 // MARK: - Request to interactor
 
 extension UserInfoSceneViewController: EditUserIntroductionDelegate {
-  func userIntroductionDidEdited(new introduction: String?) {
+  func userIntroductionDidEdited(_ introduction: String?) {
     // TODO: 소개 리로드 Business Logic 호출 예정
   }
 
