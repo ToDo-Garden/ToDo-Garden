@@ -8,5 +8,5 @@
 import Foundation
 
 public protocol EditUserIntroductionDelegate: AnyObject {
-  func userIntroductionDidEdited(new introduction: String)
+  func userIntroductionDidEdited(new introduction: String?)
 }
