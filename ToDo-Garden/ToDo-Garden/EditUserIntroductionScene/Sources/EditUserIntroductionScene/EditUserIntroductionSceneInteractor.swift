@@ -67,6 +67,7 @@ extension EditUserIntroductionSceneInteractor: EditUserIntroductionSceneBusiness
       do {
         try Task.checkCancellation()
         try await self.editUserIntroductionWorker.editUserIntroduction(introduction)
+        self.userIntroduction = introduction
 
         try Task.checkCancellation()
         self.presenter?.presentEditUserIntroductionSuccess()

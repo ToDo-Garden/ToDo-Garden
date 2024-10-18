@@ -30,10 +30,9 @@ public struct EditUserIntroductionSceneBuilder {
 extension EditUserIntroductionSceneBuilder: EditUserIntroductionSceneBuildable {
   ///  VIP Cycle, 런타임 의존성이 설정된 ViewController 인스턴스를 반환하는 함수입니다.
   /// - Parameter payload: 런타임에 전달받아야 하는 의존성입니다.
-  /// - Returns: 런타임 의존성, VIP Cycle이 설정된 ViewController를 반환합니다.
-  public func build(
-    with payload: EditUserIntroductionScenePayloadable
-  ) -> EditUserIntroductionSceneViewControllable {
+  /// - Parameter delegate: 런타임에 이전 화면으로 데이터를 전달하는 Delegate 객체입니다.
+  /// - Returns: 런타임 의존성, delegate 객체, VIP Cycle이 설정된 ViewController를 반환합니다.
+  public func build(with payload: EditUserIntroductionScenePayloadable) -> EditUserIntroductionSceneViewControllable {
     let someViewController = self.configureVIPCycle(for: EditUserIntroductionSceneViewController())
     self.setPayload(for: someViewController, with: payload)
 
@@ -70,6 +69,7 @@ extension EditUserIntroductionSceneBuilder {
     with payload: EditUserIntroductionScenePayloadable
   ) {
     viewController.router?.dataStore?.userIntroduction = payload.userIntroduction
+    viewController.router?.delegate = payload.delegate
   }
 }
 
@@ -78,6 +78,7 @@ extension EditUserIntroductionSceneBuilder {
 #if DEBUG
 extension EditUserIntroductionSceneBuilder {
   private struct PreviewPayload: EditUserIntroductionScenePayloadable {
+    var delegate: EditUserIntroductionDelegate?
     var userIntroduction: String?
   }
 

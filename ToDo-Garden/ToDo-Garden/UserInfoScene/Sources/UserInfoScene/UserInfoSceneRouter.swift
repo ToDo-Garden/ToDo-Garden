@@ -38,7 +38,10 @@ extension UserInfoSceneRouter: UserInfoSceneRoutingLogic {
 
   func routeToEditUserIntroductionScene() {
     guard let editUserIntroductionScene = self.editUserIntroductionSceneBuilder?.build(
-      with: EditUserIntroductionScenePayload(userIntroduction: self.dataStore?.userIntroduction)
+      with: EditUserIntroductionScenePayload(
+        userIntroduction: self.dataStore?.userIntroduction,
+        delegate: self.viewController
+      )
     ) else { return }
 
     self.viewController?.navigationController?.pushViewController(
@@ -53,5 +56,6 @@ extension UserInfoSceneRouter: UserInfoSceneRoutingLogic {
 extension UserInfoSceneRouter {
   struct EditUserIntroductionScenePayload: EditUserIntroductionScenePayloadable {
     var userIntroduction: String?
+    var delegate: EditUserIntroductionDelegate?
   }
 }
