@@ -78,6 +78,7 @@ extension EditUserIntroductionSceneBuilder {
 #if DEBUG
 extension EditUserIntroductionSceneBuilder {
   private struct PreviewPayload: EditUserIntroductionScenePayloadable {
+    var delegate: EditUserIntroductionDelegate?
     var userIntroduction: String?
   }
 
@@ -86,6 +87,6 @@ extension EditUserIntroductionSceneBuilder {
     dependency: Dependency(
       someWorker: EditUserIntroductionSceneWorker()
     )
-  ).build(with: PreviewPayload(), delegate: nil)
+  ).build(with: PreviewPayload())
 }
 #endif
