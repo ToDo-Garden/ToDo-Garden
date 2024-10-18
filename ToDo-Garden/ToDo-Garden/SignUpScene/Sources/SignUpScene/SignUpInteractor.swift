@@ -15,26 +15,31 @@ protocol SignUpDataStore {
 }
 
 protocol SignUpBusinessLogic {
-  func doSomething(request: SignUp.Something.Request)
+  func checkStringValidation(request: SignUp.CheckStringValidation.Request)
 }
 
 class SignUpInteractor: SignUpDataStore {
   // var name: String = ""
   var presenter: SignUpPresentationLogic?
-  private let someWorker: SignUpWorkable
+  private let signUpWorker: SignUpWorkable
   
+  // TODO: 파라미터 명 바꾸기
   init(someWorker: SignUpWorkable) {
-    self.someWorker = someWorker
+    self.signUpWorker = someWorker
   }
 }
 
 // MARK: - Request to worker
 
 extension SignUpInteractor: SignUpBusinessLogic {
-  func doSomething(request: SignUp.Something.Request) {
-    self.someWorker.doSomeWork()
+  func checkStringValidation(request: SignUp.CheckStringValidation.Request) {
+    let state = self.signUpWorker.checkStringValidation(text: request.text, currentPageIndex: request.currentPageIndex)
     
-    let response = SignUp.Something.Response()
-    self.presenter?.presentSomething(response: response)
+    let response = SignUp.CheckStringValidation.Response(
+      validationState: state,
+      currentPageIndex: request.currentPageIndex
+    )
+    
+    self.presenter?.presentValidation(response: response)
   }
 }

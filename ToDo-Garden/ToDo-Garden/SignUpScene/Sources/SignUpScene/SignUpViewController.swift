@@ -193,9 +193,12 @@ extension SignUpViewController: SignUpDisplayLogic {
 // MARK: - Request to interactor
 
 extension SignUpViewController {
-  func doSomething() {
-    let request = SignUp.Something.Request()
-    self.interactor?.doSomething(request: request)
+  func checkStringValidation(text: String?) {
+    let request = SignUp.CheckStringValidation.Request(
+      text: text,
+      currentPageIndex: self.signUpScrollView.currentPageIndex
+    )
+    self.interactor?.checkStringValidation(request: request)
   }
 }
 
