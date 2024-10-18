@@ -16,10 +16,12 @@ protocol EditUserIntroductionSceneRoutingLogic {
 
 protocol EditUserIntroductionSceneDataPassing {
   var dataStore: EditUserIntroductionSceneDataStore? { get set }
+  var delegate: EditUserIntroductionDelegate? { get set }
 }
 
 class EditUserIntroductionSceneRouter: EditUserIntroductionSceneDataPassing {
   weak var viewController: EditUserIntroductionSceneViewController?
+  weak var delegate: EditUserIntroductionDelegate?
   var dataStore: EditUserIntroductionSceneDataStore?
 }
 
