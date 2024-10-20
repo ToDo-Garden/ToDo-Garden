@@ -133,6 +133,7 @@ extension ShareGardenSceneViewController.MyGardenView {
   
   private func setupStackView() {
     self.spacing = 14
+    self.setCustomSpacing(0, after: self.contentView)
     self.distribution = UIStackView.Distribution.fill
     self.axis = NSLayoutConstraint.Axis.vertical
     self.alignment = UIStackView.Alignment.center
