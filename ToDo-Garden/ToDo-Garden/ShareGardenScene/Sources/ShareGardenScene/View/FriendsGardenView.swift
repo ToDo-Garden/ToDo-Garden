@@ -99,6 +99,16 @@ extension ShareGardenSceneViewController {
     func stopShimmeringAnimation() {
       self.friendsGardenListView.stopShimmeringAnimation()
     }
+    
+    func showRetryRequestView() {
+      self.removeArrangedSubview(self.friendsGardenListView)
+      self.insertArrangedSubview(self.retryRequestView.view, at: 2)
+      self.addArrangedSubview(self.spacer)
+      self.friendsGardenListView.isHidden = true
+      self.retryRequestView.view.isHidden = false
+      self.spacer.isHidden = false
+      self.setCustomSpacingForRetryRequestView()
+    }
   }
 }
 
