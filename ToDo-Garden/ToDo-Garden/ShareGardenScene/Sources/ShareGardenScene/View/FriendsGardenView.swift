@@ -188,4 +188,13 @@ extension ShareGardenSceneViewController.FriendsGardenView {
     let searchGardenButtonTopInset = Self.layoutConstant.searchGardenButtonTopInset
     self.setCustomSpacing(searchGardenButtonTopInset, after: self.sectionHeaderView)
   }
+  
+  private func setCustomSpacingForRetryRequestView() {
+    let spacingRatio: CGFloat = Self.layoutConstant.retryRequestViewTopSpacingRatio
+    
+    self.setCustomSpacing(
+      self.bounds.height * spacingRatio,
+      after: self.searchGardenButton
+    )
+  }
 }
