@@ -22,7 +22,8 @@ let package = Package(
   ],
   dependencies: [
     .package(name: "ToDoGardenUI", path: "../ToDoGardenUI"),
-    .package(name: "EditUserIntroductionScene", path: "EditUserIntroductionScene")
+    .package(name: "EditUserIntroductionScene", path: "EditUserIntroductionScene"),
+    .package(name: "EditUserNameScene", path: "EditUserNameScene")
   ],
   targets: [
     .target(
@@ -40,6 +41,7 @@ let package = Package(
         "UserInfoSceneAPI",
         "UserInfoSceneEntity",
         .product(name: "EditUserIntroductionSceneAPI", package: "EditUserIntroductionScene"),
+        .product(name: "EditUserNameSceneAPI", package: "EditUserNameScene"),
         .product(name: "ToDoGardenUIAPI", package: "ToDoGardenUI"),
         .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI"),
         .product(name: "ToDoGardenUIResource", package: "ToDoGardenUI")
