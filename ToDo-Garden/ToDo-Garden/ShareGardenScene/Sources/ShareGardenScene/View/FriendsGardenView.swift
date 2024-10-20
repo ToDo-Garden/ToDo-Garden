@@ -50,6 +50,20 @@ extension ShareGardenSceneViewController {
     }()
     
     private let friendsGardenListView: FriendsGardenListView
+    private let spacer: UIView = {
+      let spacer = UIView()
+      spacer.translatesAutoresizingMaskIntoConstraints = false
+      spacer.setContentHuggingPriority(
+        UILayoutPriority.defaultLow,
+        for: NSLayoutConstraint.Axis.vertical
+      )
+      spacer.setContentCompressionResistancePriority(
+        UILayoutPriority.defaultLow,
+        for: NSLayoutConstraint.Axis.vertical
+      )
+      
+      return spacer
+    }()
     
     // MARK: - Properties
     private static let layoutConstant = ShareGardenSceneViewController.Constant.Layout.FriendsGardenView.self
