@@ -197,4 +197,11 @@ extension ShareGardenSceneViewController.FriendsGardenView {
       after: self.searchGardenButton
     )
   }
+  
+  private func setCustomrSpacingForFriendsGardenListView() {
+    self.setCustomSpacing(
+      Self.layoutConstant.stackViewSpacing,
+      after: self.searchGardenButton
+    )
+  }
 }
