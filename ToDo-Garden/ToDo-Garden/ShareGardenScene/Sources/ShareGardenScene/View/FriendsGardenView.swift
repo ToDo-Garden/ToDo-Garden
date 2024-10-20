@@ -69,6 +69,12 @@ extension ShareGardenSceneViewController {
     private static let layoutConstant = ShareGardenSceneViewController.Constant.Layout.FriendsGardenView.self
     @ExecuteOnce private var setupLayoutIfNeeded: (() -> Void)?
     
+    var retryAction: UIAction? {
+      didSet {
+        self.retryRequestView.retryAction = self.retryAction
+      }
+    }
+    
     init(friendsGardenStore: FriendsGardenStore) {
       self.friendsGardenListView = FriendsGardenListView(friendsGardenStore: friendsGardenStore)
       super.init(frame: CGRect.zero)
