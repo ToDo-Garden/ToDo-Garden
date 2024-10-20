@@ -75,7 +75,8 @@ extension UserInfoSceneSceneBuilder {
     )
     let presenter = UserInfoScenePresenter()
     let router = UserInfoSceneRouter(
-      editUserIntroductionSceneBuilder: self.dependency.editUserIntroductionSceneBuilder
+      editUserIntroductionSceneBuilder: self.dependency.editUserIntroductionSceneBuilder,
+      editUserNameSceneBuilder: self.dependency.editUserNameSceneBuilder
     )
     viewController.interactor = interactor
     viewController.router = router
