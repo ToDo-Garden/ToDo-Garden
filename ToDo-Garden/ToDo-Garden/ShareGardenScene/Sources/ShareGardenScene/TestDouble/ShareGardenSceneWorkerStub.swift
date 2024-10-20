@@ -19,7 +19,11 @@ actor ShareGardenSceneWorkerStub: ShareGardenSceneWorkable {
   
   // MARK: - Friends Garden
   
+  var isThrowErrorForFriendsGardenList: Bool = true
+  
   func requestFriendsGardenList() async throws -> [ShareGardenScene.FriendsGarden] {
+    defer { self.isThrowErrorForFriendsGardenList.toggle() }
+    
     let pomodoroRecords = self.makeRandomPomodoroRecords()
     let nicknames = ["강운", "노아", "우드", "울버린"]
     var friendsGardens = [ShareGardenScene.FriendsGarden]()
@@ -38,6 +42,10 @@ actor ShareGardenSceneWorkerStub: ShareGardenSceneWorkable {
     }
     
     try await Task.sleep(nanoseconds: 2_000_000_000 )
+    
+    if self.isThrowErrorForFriendsGardenList {
+      throw NSError(domain: "", code: 99999)
+    }
     
     return friendsGardens
   }
