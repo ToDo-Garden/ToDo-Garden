@@ -77,31 +77,29 @@ extension GardenView {
     self.setupPomodoroRecordsCollectionViewLayoutConstraints()
   }
   
-  // TODO: - Intrinsic content size를 기준으로 수정
-  
   private func setupPomodoroRecordsCollectionViewLayoutConstraints() {
     self.pomodoroRecordCollectionView.usingAutolayout()
-    let topMarginFraction: CGFloat = Constant.GardenView.Layout.PomodoroRecordCollectionView.topMarginFraction
-    let horizontalMarginFraction: CGFloat =
-    Constant.GardenView.Layout.PomodoroRecordCollectionView.horizontalMarginFraction
-    let bottomMarginFraction: CGFloat = Constant.GardenView.Layout.PomodoroRecordCollectionView.bottomMarginFraction
+    let topMargin: CGFloat = Constant.GardenView.Layout.PomodoroRecordCollectionView.topMargin
+    let horizontalMargin: CGFloat =
+    Constant.GardenView.Layout.PomodoroRecordCollectionView.horizontalMargin
+    let bottomMargin: CGFloat = Constant.GardenView.Layout.PomodoroRecordCollectionView.bottomMargin
     
     NSLayoutConstraint.activate([
       self.pomodoroRecordCollectionView.topAnchor.constraint(
         equalTo: self.topAnchor,
-        constant: self.bounds.height * topMarginFraction
+        constant: topMargin
       ),
       self.pomodoroRecordCollectionView.leadingAnchor.constraint(
         equalTo: self.leadingAnchor,
-        constant: self.bounds.width * horizontalMarginFraction
+        constant: horizontalMargin
       ),
       self.pomodoroRecordCollectionView.trailingAnchor.constraint(
         equalTo: self.trailingAnchor,
-        constant: -(self.bounds.width * horizontalMarginFraction)
+        constant: -(horizontalMargin)
       ),
       self.pomodoroRecordCollectionView.bottomAnchor.constraint(
         equalTo: self.bottomAnchor,
-        constant: -(self.bounds.height * bottomMarginFraction)
+        constant: -(bottomMargin)
       )
     ])
   }
