@@ -9,6 +9,7 @@ import UIKit
 
 import TDUtility
 
+import ToDoGardenUIComponent
 import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
@@ -18,6 +19,8 @@ extension ShareGardenSceneViewController {
   final class FriendsGardenView: UIStackView {
     
     // MARK: - UI Properties
+    
+    private let retryRequestView: RetryRequestView = RetryRequestView()
     
     private let sectionHeaderView: SectionHeaderView = {
       let editButton = UIButton()
