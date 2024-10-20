@@ -11,7 +11,7 @@ import UserInfoSceneEntity
 
 @MainActor
 protocol UserInfoScenePresentationLogic {
-  nonisolated func presentCollectionViewSections()
+  func presentCollectionViewSections()
   func presentUserProfile(response: UserInfoScene.FetchProfile.Response)
   func presentUserPhotoAccess(response: UserInfoScene.FetchUserPhotoAccess.Response)
   func presentChangedProfileImage(response: UserInfoScene.ChangeProfileImage.Response)
