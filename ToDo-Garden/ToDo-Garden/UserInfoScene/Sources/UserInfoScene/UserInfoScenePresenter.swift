@@ -17,6 +17,7 @@ protocol UserInfoScenePresentationLogic {
   func presentChangedProfileImage(response: UserInfoScene.ChangeProfileImage.Response)
   func presentWithdrawResult(response: UserInfoScene.WithdrawMembership.Response)
   func presentSignOutResult(response: UserInfoScene.SignOut.Response)
+  func presentChangedUserIntroduction(_ userIntroduction: String)
 }
 
 final class UserInfoScenePresenter {
@@ -61,6 +62,10 @@ extension UserInfoScenePresenter: UserInfoScenePresentationLogic {
     let signOutError = response.signOutError
     let viewModel = UserInfoScene.SignOut.ViewModel(signOutError: signOutError)
     self.viewController?.displaySignOutResult(viewModel: viewModel)
+  }
+
+  func presentChangedUserIntroduction(_ userIntroduction: String) {
+    // TODO: - Presenter 로직 구현 예정
   }
 }
 
