@@ -18,6 +18,7 @@ protocol UserInfoScenePresentationLogic {
   func presentWithdrawResult(response: UserInfoScene.WithdrawMembership.Response)
   func presentSignOutResult(response: UserInfoScene.SignOut.Response)
   func presentChangedUserIntroduction(_ userIntroduction: String)
+  func presentEmptyUserIntroduction()
 }
 
 final class UserInfoScenePresenter {
@@ -65,6 +66,10 @@ extension UserInfoScenePresenter: UserInfoScenePresentationLogic {
   }
 
   func presentChangedUserIntroduction(_ userIntroduction: String) {
+    // TODO: - Presenter 로직 구현 예정
+  }
+
+  func presentEmptyUserIntroduction() {
     // TODO: - Presenter 로직 구현 예정
   }
 }
