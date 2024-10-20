@@ -177,10 +177,12 @@ extension ShareGardenSceneViewController.FriendsGardenView {
   
   private func setupFriendsGadenListViewLayoutConstraints() {
     self.friendsGardenListView.usingAutolayout()
+    let height = Self.layoutConstant.friendsGardenListViewMinimumHeight
     
     NSLayoutConstraint.activate([
       self.friendsGardenListView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-      self.friendsGardenListView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+      self.friendsGardenListView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+      self.friendsGardenListView.heightAnchor.constraint(greaterThanOrEqualToConstant: height)
     ])
   }
   
