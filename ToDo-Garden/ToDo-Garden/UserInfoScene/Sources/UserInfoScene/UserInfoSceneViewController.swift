@@ -126,7 +126,7 @@ extension UserInfoSceneViewController: UserInfoSceneDisplayLogic {
 
 extension UserInfoSceneViewController: EditUserIntroductionDelegate {
   func userIntroductionDidEdited(_ introduction: String?) {
-    // TODO: 소개 리로드 Business Logic 호출 예정
+    self.interactor?.reloadUserIntroduction(introduction)
   }
 
   func didSelectEditProfileButton() {

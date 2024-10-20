@@ -21,6 +21,7 @@ protocol UserInfoSceneBusinessLogic {
   func openSettingApp()
   func withdrawMembership()
   func signOut()
+  func reloadUserIntroduction(_ introduction: String?)
 }
 
 final class UserInfoSceneInteractor: UserInfoSceneDataStore {
@@ -117,6 +118,10 @@ extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
       let response = UserInfoScene.SignOut.Response(signOutError: signOutError)
       await self.presenter?.presentSignOutResult(response: response)
     }
+  }
+
+  func reloadUserIntroduction(_ introduction: String?) {
+    self.userIntroduction = introduction
   }
 }
 
