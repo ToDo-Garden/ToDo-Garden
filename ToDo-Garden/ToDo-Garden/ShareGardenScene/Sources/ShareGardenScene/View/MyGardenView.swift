@@ -141,6 +141,20 @@ extension ShareGardenSceneViewController.MyGardenView {
   private func addSubviews() {
     self.addArrangedSubview(self.sectionHeaderView)
     self.addArrangedSubview(self.contentView)
+    self.addSpacerAtLast()
+  }
+  
+  private func addSpacerAtLast() {
+    let spacer = UIView()
+    spacer.setContentHuggingPriority(
+      UILayoutPriority.defaultLow,
+      for: NSLayoutConstraint.Axis.vertical
+    )
+    spacer.setContentCompressionResistancePriority(
+      UILayoutPriority.defaultLow,
+      for: NSLayoutConstraint.Axis.vertical
+    )
+    self.addArrangedSubview(spacer)
   }
   
   private func updateProfileInfoView(with nickname: String, _ description: String) {
