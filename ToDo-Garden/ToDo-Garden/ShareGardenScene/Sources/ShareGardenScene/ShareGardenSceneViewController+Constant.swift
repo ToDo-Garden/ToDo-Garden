@@ -87,8 +87,8 @@ extension ShareGardenSceneViewController.Constant.Layout {
   }
   
   enum MyGardenView {
-    static let contentHeight: CGFloat = 270
-    static let shareButtonSize: CGSize = CGSize(width: 25, height: 25)
+    static let contentHeight: CGFloat = 270.0
+    static let shareButtonSize: CGSize = CGSize(width: 25.0, height: 25.0)
     static let contentViewSpacing: CGFloat = 14.0
     static let stackViewSpacing: CGFloat = 14.0
     static let spacerTopInset: CGFloat = CGFloat.zero
