@@ -25,6 +25,7 @@ protocol UserInfoSceneDisplayLogic: AnyObject {
   func displayWithdrawResult(viewModel: UserInfoScene.WithdrawMembership.ViewModel)
   func displaySignOutResult(viewModel: UserInfoScene.SignOut.ViewModel)
   func displayChangedUserIntroduction(_ introduction: String)
+  func displayEmptyUserIntroduction(_ placeholderText: String)
 }
 
 final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewControllable {
@@ -125,6 +126,10 @@ extension UserInfoSceneViewController: UserInfoSceneDisplayLogic {
 
   func displayChangedUserIntroduction(_ introduction: String) {
     self.updateUserIntroduction(introduction)
+  }
+
+  func displayEmptyUserIntroduction(_ placeholderText: String) {
+    
   }
 
   private func updateUserIntroduction(_ introduction: String) {
