@@ -10,7 +10,8 @@ import Foundation
 import SignUpSceneEntity
 
 protocol SignUpPresentationLogic {
-  func presentValidation(response: SignUp.CheckStringValidation.Response)
+  func presentValid(response: SignUp.CheckStringValidation.Response)
+  func presentInvalid(response: SignUp.CheckStringValidation.Response)
 }
 
 class SignUpPresenter {
@@ -20,9 +21,17 @@ class SignUpPresenter {
 // MARK: - Request to ViewController
 
 extension SignUpPresenter: SignUpPresentationLogic {
-  func presentValidation(response: SignUp.CheckStringValidation.Response) {
-    let viewModel = self.makeViewModel(response: response)
-    self.viewController?.displayValidation(viewModel: viewModel)
+  func presentValid(response: SignUp.CheckStringValidation.Response) {
+    let viewModel = SignUp.CheckStringValidation.ViewModel(warningText: "", currentPageIndex: response.currentPageIndex)
+    self.viewController?.displayValid(viewModel: viewModel)
+  }
+  
+  func presentInvalid(response: SignUp.CheckStringValidation.Response) {
+    let viewModel = SignUp.CheckStringValidation.ViewModel(
+      warningText: self.makeWarningText(currentPageIndex: response.currentPageIndex),
+      currentPageIndex: response.currentPageIndex
+    )
+    self.viewController?.displayInvalid(viewModel: viewModel)
   }
   
   private func makeViewModel(
@@ -30,10 +39,6 @@ extension SignUpPresenter: SignUpPresentationLogic {
   ) -> SignUp.CheckStringValidation.ViewModel {
     let viewModel = SignUp.CheckStringValidation.ViewModel(
       warningText: self.makeWarningText(currentPageIndex: response.currentPageIndex),
-      isValid: self.isValid(
-        currentPageIndex: response.currentPageIndex,
-        validationState: response.validationState
-      ),
       currentPageIndex: response.currentPageIndex
     )
     return viewModel
@@ -49,24 +54,6 @@ extension SignUpPresenter: SignUpPresentationLogic {
       return Constant.ScrollView.SignUpInputView.StringLiteral.nicknameWarning
     default:
       return ""
-    }
-  }
-  
-  private func isValid(currentPageIndex: Int, validationState: SignUp.ValidationState) -> Bool {
-    if currentPageIndex == 1 {
-      switch validationState {
-      case SignUp.ValidationState.invalid:
-        return false
-      default:
-        return true
-      }
-    } else {
-      switch validationState {
-      case SignUp.ValidationState.valid:
-        return true
-      default:
-        return false
-      }
     }
   }
 }
