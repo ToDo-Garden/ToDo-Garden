@@ -24,6 +24,7 @@ protocol UserInfoSceneDisplayLogic: AnyObject {
   func displayChangedProfileImage(viewModel: UserInfoScene.ChangeProfileImage.ViewModel)
   func displayWithdrawResult(viewModel: UserInfoScene.WithdrawMembership.ViewModel)
   func displaySignOutResult(viewModel: UserInfoScene.SignOut.ViewModel)
+  func displayChangedUserIntroduction(_ userIntroduction: String)
 }
 
 final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewControllable {
@@ -120,6 +121,10 @@ extension UserInfoSceneViewController: UserInfoSceneDisplayLogic {
     if viewModel.signOutError == nil {
       self.router?.routeToLoginScene()
     }
+  }
+
+  func displayChangedUserIntroduction(_ userIntroduction: String) {
+    
   }
 }
 

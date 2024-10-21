@@ -66,7 +66,7 @@ extension UserInfoScenePresenter: UserInfoScenePresentationLogic {
   }
 
   func presentChangedUserIntroduction(_ userIntroduction: String) {
-    // TODO: - Presenter 로직 구현 예정
+    self.viewController?.displayChangedUserIntroduction(userIntroduction)
   }
 
   func presentEmptyUserIntroduction() {
