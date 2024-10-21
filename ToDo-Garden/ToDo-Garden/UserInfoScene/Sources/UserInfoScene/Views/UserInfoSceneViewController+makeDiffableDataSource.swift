@@ -69,6 +69,8 @@ extension UserInfoSceneViewController {
     switch item.userInfo {
     case UserInfoScene.UserInfo.introduction:
       self.router?.routeToEditUserIntroductionScene()
+    case UserInfoScene.UserInfo.nickName:
+      self.router?.routeToEditUserNameScene()
     default:
       break
     }
