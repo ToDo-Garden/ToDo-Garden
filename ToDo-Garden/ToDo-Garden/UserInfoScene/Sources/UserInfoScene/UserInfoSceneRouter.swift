@@ -44,8 +44,8 @@ extension UserInfoSceneRouter: UserInfoSceneRoutingLogic {
   }
 
   func routeToEditUserNameScene() {
-    let userName = self.dataStore?.userName ?? ""
-    guard let editUserNameScene = self.editUserNameSceneBuilder?.build(
+    guard let userName = self.dataStore?.userName,
+      let editUserNameScene = self.editUserNameSceneBuilder?.build(
       with: EditUserNameScenePayload(userName: userName)
     ) else { return }
 
