@@ -9,6 +9,7 @@ import PhotosUI
 import UIKit
 
 import EditUserIntroductionSceneAPI
+import EditUserNameSceneAPI
 import ToDoGardenUIAPI
 import ToDoGardenUIComponent
 import ToDoGardenUIConstant
@@ -325,7 +326,8 @@ struct SomePayload: UserInfoSceneScenePayloadable {}
       appServiceWorker: AppServiceWorker(),
       userPhotoWorker: UserPhotoWorker(),
       userInfoWorker: UserInfoSceneWorker(),
-      editUserIntroductionSceneBuilder: nil
+      editUserIntroductionSceneBuilder: nil,
+      editUserNameSceneBuilder: nil
     )
   ).build(with: SomePayload())
   return userInfoScene

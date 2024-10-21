@@ -8,6 +8,7 @@
 import Foundation
 
 import EditUserIntroductionSceneAPI
+import EditUserNameSceneAPI
 import UserInfoSceneAPI
 
 protocol UserInfoSceneRoutingLogic {
@@ -23,9 +24,14 @@ class UserInfoSceneRouter: UserInfoSceneDataPassing {
   weak var viewController: UserInfoSceneViewController?
   var dataStore: UserInfoSceneDataStore?
   private let editUserIntroductionSceneBuilder: EditUserIntroductionSceneBuildable?
+  private let editUserNameSceneBuilder: EditUserNameSceneSceneBuildable?
 
-  init(editUserIntroductionSceneBuilder: EditUserIntroductionSceneBuildable?) {
+  init(
+    editUserIntroductionSceneBuilder: EditUserIntroductionSceneBuildable?,
+    editUserNameSceneBuilder: EditUserNameSceneSceneBuildable?
+  ) {
     self.editUserIntroductionSceneBuilder = editUserIntroductionSceneBuilder
+    self.editUserNameSceneBuilder = editUserNameSceneBuilder
   }
 }
 
