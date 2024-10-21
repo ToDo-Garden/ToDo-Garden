@@ -107,14 +107,14 @@ extension ShareGardenSceneViewController {
     
     func showContentsLoadingFailure() {
       self.removeArrangedSubview(self.contentView)
-      self.addArrangedSubview(self.retryRequestView.view)
+      self.insertArrangedSubview(self.retryRequestView.view, at: 1)
       self.contentView.isHidden = true
       self.retryRequestView.view.isHidden = false
       self.stopShimmeringAnimation()
     }
     
     func showContents() {
-      self.addArrangedSubview(self.contentView)
+      self.insertArrangedSubview(self.contentView, at: 1)
       self.removeArrangedSubview(self.retryRequestView.view)
       self.contentView.isHidden = false
       self.retryRequestView.view.isHidden = true
@@ -133,6 +133,7 @@ extension ShareGardenSceneViewController.MyGardenView {
   
   private func setupStackView() {
     self.spacing = 14
+    self.setCustomSpacing(0, after: self.contentView)
     self.distribution = UIStackView.Distribution.fill
     self.axis = NSLayoutConstraint.Axis.vertical
     self.alignment = UIStackView.Alignment.center
@@ -141,6 +142,20 @@ extension ShareGardenSceneViewController.MyGardenView {
   private func addSubviews() {
     self.addArrangedSubview(self.sectionHeaderView)
     self.addArrangedSubview(self.contentView)
+    self.addSpacerAtLast()
+  }
+  
+  private func addSpacerAtLast() {
+    let spacer = UIView()
+    spacer.setContentHuggingPriority(
+      UILayoutPriority.defaultLow,
+      for: NSLayoutConstraint.Axis.vertical
+    )
+    spacer.setContentCompressionResistancePriority(
+      UILayoutPriority.defaultLow,
+      for: NSLayoutConstraint.Axis.vertical
+    )
+    self.addArrangedSubview(spacer)
   }
   
   private func updateProfileInfoView(with nickname: String, _ description: String) {
