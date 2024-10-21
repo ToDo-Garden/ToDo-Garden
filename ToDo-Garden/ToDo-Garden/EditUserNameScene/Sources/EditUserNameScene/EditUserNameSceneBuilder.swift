@@ -27,7 +27,9 @@ public struct EditUserNameSceneBuilder {
 }
 
 extension EditUserNameSceneBuilder {
-  private struct SomePayload: EditUserNameScenePayloadable {}
+  private struct SomePayload: EditUserNameScenePayloadable {
+    var userName: String = "나야울버린"
+  }
 
   public static let previewScene = Self(
     dependency: Dependency(
