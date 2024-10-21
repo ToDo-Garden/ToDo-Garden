@@ -74,11 +74,11 @@ extension UserInfoSceneRouter: UserInfoSceneRoutingLogic {
 
 extension UserInfoSceneRouter {
   struct EditUserIntroductionScenePayload: EditUserIntroductionScenePayloadable {
-    var userIntroduction: String?
-    var delegate: EditUserIntroductionDelegate?
+    let userIntroduction: String?
+    let delegate: EditUserIntroductionDelegate?
   }
 
   struct EditUserNameScenePayload: EditUserNameScenePayloadable {
-    var userName: String
+    let userName: String
   }
 }
