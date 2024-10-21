@@ -11,6 +11,7 @@ import UserInfoSceneAPI
 import UserInfoSceneEntity
 
 protocol UserInfoSceneDataStore {
+  var userName: String { get set }
   var userIntroduction: String? { get set }
 }
 
@@ -24,6 +25,7 @@ protocol UserInfoSceneBusinessLogic {
 }
 
 final class UserInfoSceneInteractor: UserInfoSceneDataStore {
+  var userName: String
   var userIntroduction: String?
 
   private var requestPhotoAccessTask: Task<Void, Error>?
@@ -31,7 +33,6 @@ final class UserInfoSceneInteractor: UserInfoSceneDataStore {
   private var requestWithdrawTask: Task<Void, Error>?
   private var requestSignOutTask: Task<Void, Error>?
 
-  // var name: String = ""
   var presenter: UserInfoScenePresentationLogic?
   private let userInfoWorker: UserInfoSceneWorkable
   private let appServiceWorker: AppServiceWorkable
@@ -42,6 +43,7 @@ final class UserInfoSceneInteractor: UserInfoSceneDataStore {
     appServiceWorker: AppServiceWorkable,
     userPhotoWorker: UserPhotoWorker
   ) {
+    self.userName = ""
     self.userInfoWorker = userInfoWorker
     self.appServiceWorker = appServiceWorker
     self.userPhotoWorker = userPhotoWorker
