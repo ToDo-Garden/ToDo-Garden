@@ -78,7 +78,7 @@ extension ShareGardenSceneViewController: ShareGardenSceneDisplayLogic {
   }
   
   func displayFriendsGardenListRequestError() {
-    // TODO: - display friends garden request error view
+    self.friendsGardenView.showRetryRequestView()
   }
   
   func stopShimmeringFriendsGardenList() {
