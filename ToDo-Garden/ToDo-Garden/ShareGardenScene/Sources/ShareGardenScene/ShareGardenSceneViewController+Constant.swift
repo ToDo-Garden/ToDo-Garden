@@ -86,6 +86,10 @@ extension ShareGardenSceneViewController.Constant.Layout {
     )
   }
   
+  enum MyGardenView {
+    static let contentHeight: CGFloat = 270
+  }
+  
   enum FriendsGardenView {
     static let editButtonWidth: CGFloat = 35.0
     static let editButtonHeight: CGFloat = 35.0
