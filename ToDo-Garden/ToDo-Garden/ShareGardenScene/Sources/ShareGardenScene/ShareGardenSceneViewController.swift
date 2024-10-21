@@ -78,7 +78,7 @@ extension ShareGardenSceneViewController: ShareGardenSceneDisplayLogic {
   }
   
   func displayFriendsGardenListRequestError() {
-    // TODO: - display friends garden request error view
+    self.friendsGardenView.showRetryRequestView()
   }
   
   func stopShimmeringFriendsGardenList() {
@@ -127,6 +127,7 @@ extension ShareGardenSceneViewController {
   
   private func setupActions() {
     self.setupMyGardenViewRetryAction()
+    self.setupFriendsGardenViewRetryAction()
   }
 }
 
@@ -139,6 +140,13 @@ extension ShareGardenSceneViewController {
         self?.myGardenView.showContents()
         self?.interactor?.requestMyGarden()
       }
+    }
+  }
+  
+  private func setupFriendsGardenViewRetryAction() {
+    self.friendsGardenView.retryAction = UIAction { [weak self] _ in
+      self?.friendsGardenView.showFriendsGardenListView()
+      self?.interactor?.requestFriendsGardenList()
     }
   }
 }
@@ -160,13 +168,10 @@ extension ShareGardenSceneViewController {
   }
   
   private func setupFriendsGardenViewLayoutConstraints() {
-    let topInsetRatio = Constant.Layout.friendsGardenViewTopInsetRatio
-    let topInset: CGFloat = self.view.bounds.height * topInsetRatio
-    
     self.friendsGardenView.usingAutolayout()
     
     NSLayoutConstraint.activate([
-      self.friendsGardenView.topAnchor.constraint(equalTo: self.myGardenView.bottomAnchor, constant: topInset),
+      self.friendsGardenView.topAnchor.constraint(equalTo: self.myGardenView.bottomAnchor),
       self.friendsGardenView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
       self.friendsGardenView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
       self.friendsGardenView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
