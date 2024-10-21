@@ -135,10 +135,19 @@ extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
 
 extension UserInfoSceneInteractor: UserInfoLoadable {
   func requestDescription(for userInfo: UserInfoScene.UserInfo) async -> String {
-    let description = await self.userInfoWorker.requestUserProfile(urlString: userInfo.rawValue)
-    if userInfo == .introduction {
-      self.userIntroduction = description
+    let value = await self.userInfoWorker.requestUserProfile(urlString: userInfo.rawValue)
+    self.storeUserInfoData(of: userInfo, value: value)
+    return value
+  }
+
+  private func storeUserInfoData(of userInfo: UserInfoScene.UserInfo, value: String) {
+    switch userInfo {
+    case UserInfoScene.UserInfo.nickName:
+      self.userName = value
+    case UserInfoScene.UserInfo.introduction:
+      self.userIntroduction = value
+    default:
+      break
     }
-    return description
   }
 }
