@@ -129,7 +129,7 @@ extension UserInfoSceneViewController: UserInfoSceneDisplayLogic {
   }
 
   func displayEmptyUserIntroduction(_ placeholderText: String) {
-    
+    self.updateUserIntroduction(placeholderText)
   }
 
   private func updateUserIntroduction(_ introduction: String) {
