@@ -27,7 +27,7 @@ public struct EditUserNameSceneBuilder {
 }
 
 extension EditUserNameSceneBuilder {
-  private struct SomePayload: EditUserNameScenePayloadable {
+  private struct PreviewScenePayload: EditUserNameScenePayloadable {
     var userName: String = "나야울버린"
   }
 
@@ -35,7 +35,7 @@ extension EditUserNameSceneBuilder {
     dependency: Dependency(
       editUserNameWorker: EditUserNameSceneWorker()
     )
-  ).build(with: SomePayload())
+  ).build(with: PreviewScenePayload())
 }
 
 extension EditUserNameSceneBuilder: EditUserNameSceneSceneBuildable {
