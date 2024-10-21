@@ -137,7 +137,7 @@ extension ShareGardenSceneViewController {
   private func setupMyGardenViewRetryAction() {
     self.myGardenView.retryAction = UIAction { [weak self] _ in
       DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.15) {
-        self?.myGardenView.showContents()
+        self?.myGardenView.showMyGardenView()
         self?.interactor?.requestMyGarden()
       }
     }

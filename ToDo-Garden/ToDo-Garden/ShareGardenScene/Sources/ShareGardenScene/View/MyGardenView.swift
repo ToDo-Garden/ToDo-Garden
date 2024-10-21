@@ -122,7 +122,7 @@ extension ShareGardenSceneViewController {
       self.stopShimmeringAnimation()
     }
     
-    func showContents() {
+    func showMyGardenView() {
       self.insertArrangedSubview(self.contentView, at: 1)
       self.removeArrangedSubview(self.retryRequestView.view)
       self.contentView.isHidden = false
