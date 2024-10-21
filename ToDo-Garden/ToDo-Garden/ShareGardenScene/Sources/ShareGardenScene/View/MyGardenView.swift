@@ -78,9 +78,10 @@ extension ShareGardenSceneViewController {
     }
     
     init() {
+      let contentViewSpacing = Self.layoutConstant.contentViewSpacing
       self.contentView = UIVStackView(
         alignment: UIStackView.Alignment.center,
-        spacing: 14,
+        spacing: contentViewSpacing,
         arrangedSubviews: [
           self.profileInfoView,
           self.gardenView
