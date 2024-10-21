@@ -123,7 +123,7 @@ extension ShareGardenSceneViewController {
       self.spacer.isHidden = true
       self.retryRequestView.view.isHidden = true
       self.friendsGardenListView.isHidden = false
-      self.setCustomrSpacingForFriendsGardenListView()
+      self.setCustomSpacingForFriendsGardenListView()
       self.startShimmeringAnimation()
     }
   }
@@ -227,7 +227,7 @@ extension ShareGardenSceneViewController.FriendsGardenView {
     )
   }
   
-  private func setCustomrSpacingForFriendsGardenListView() {
+  private func setCustomSpacingForFriendsGardenListView() {
     self.setCustomSpacing(
       Self.layoutConstant.stackViewSpacing,
       after: self.searchGardenButton
