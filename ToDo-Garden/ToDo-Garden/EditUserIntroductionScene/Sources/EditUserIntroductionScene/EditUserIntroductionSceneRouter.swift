@@ -29,7 +29,7 @@ class EditUserIntroductionSceneRouter: EditUserIntroductionSceneDataPassing {
 
 extension EditUserIntroductionSceneRouter: EditUserIntroductionSceneRoutingLogic {
   func routeToUserInfoScene() {
-    self.delegate?.userIntroductionDidEdited(new: self.dataStore?.userIntroduction)
+    self.delegate?.userIntroductionDidEdited(self.dataStore?.userIntroduction)
     self.viewController?.navigationController?.popViewController(animated: true)
   }
 }
