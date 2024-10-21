@@ -37,7 +37,6 @@ extension ShareGardenSceneViewController.Constant.StringLiteral {
 
 extension ShareGardenSceneViewController.Constant.Layout {
   static let myGardenViewTopInsetRatio: CGFloat = 19 / 812
-  static let friendsGardenViewTopInsetRatio: CGFloat = 26 / 812
   
   enum SectionHeaderView {
     static let spacingRatio: CGFloat = 100 / 323

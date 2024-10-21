@@ -160,13 +160,10 @@ extension ShareGardenSceneViewController {
   }
   
   private func setupFriendsGardenViewLayoutConstraints() {
-    let topInsetRatio = Constant.Layout.friendsGardenViewTopInsetRatio
-    let topInset: CGFloat = self.view.bounds.height * topInsetRatio
-    
     self.friendsGardenView.usingAutolayout()
     
     NSLayoutConstraint.activate([
-      self.friendsGardenView.topAnchor.constraint(equalTo: self.myGardenView.bottomAnchor, constant: topInset),
+      self.friendsGardenView.topAnchor.constraint(equalTo: self.myGardenView.bottomAnchor),
       self.friendsGardenView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
       self.friendsGardenView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
       self.friendsGardenView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
