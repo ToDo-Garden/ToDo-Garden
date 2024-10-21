@@ -12,7 +12,8 @@ import SignUpSceneEntity
 import ToDoGardenUIComponent
 
 protocol SignUpDisplayLogic: AnyObject {
-  func displayValidation(viewModel: SignUp.CheckStringValidation.ViewModel)
+  func displayValid(viewModel: SignUp.CheckStringValidation.ViewModel)
+  func displayInvalid(viewModel: SignUp.CheckStringValidation.ViewModel)
 }
 
 final class SignUpViewController: UIViewController, SignUpViewControllable {
@@ -188,16 +189,21 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
 // MARK: - Confirm display logic protocol
 
 extension SignUpViewController: SignUpDisplayLogic {
-  func displayValidation(viewModel: SignUp.CheckStringValidation.ViewModel) {
+  func displayValid(viewModel: SignUp.CheckStringValidation.ViewModel) {
+    guard self.signUpScrollView.currentPageIndex == viewModel.currentPageIndex else { return }
+    
+    self.changeButtonState(isEnabled: true)
+    let textInputView = self.signUpScrollView.inputViews[viewModel.currentPageIndex].textInputView
+    textInputView.hideValidationText()
+  }
+  
+  func displayInvalid(viewModel: SignUp.CheckStringValidation.ViewModel) {
+    guard self.signUpScrollView.currentPageIndex == viewModel.currentPageIndex else { return }
+    
+    self.changeButtonState(isEnabled: false)
     let textInputView = self.signUpScrollView.inputViews[viewModel.currentPageIndex].textInputView
     textInputView.changeValidationText(viewModel.warningText)
-
-    if viewModel.isValid {
-      textInputView.hideValidationText()
-    } else {
-      textInputView.showValidationText()
-    }
-    self.changeButtonState(isEnabled: viewModel.isValid)
+    textInputView.showValidationText()
   }
 }
 
