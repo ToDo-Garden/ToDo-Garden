@@ -97,5 +97,7 @@ extension ShareGardenSceneViewController.Constant.Layout {
     static let searchGardenButtonHeight: CGFloat = 24.0
     static let searchGardenButtonHorizontalInsetRatio: CGFloat = 19.0 / 375.0
     static let numberOfPlaceholderCells: Int = 3
+    static let retryRequestViewTopSpacingRatio: CGFloat = 72 / 812
+    static let friendsGardenListViewMinimumHeight: CGFloat = 278
   }
 }

@@ -9,6 +9,7 @@ import UIKit
 
 import TDUtility
 
+import ToDoGardenUIComponent
 import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
@@ -18,6 +19,8 @@ extension ShareGardenSceneViewController {
   final class FriendsGardenView: UIStackView {
     
     // MARK: - UI Properties
+    
+    private let retryRequestView: RetryRequestView = RetryRequestView()
     
     private let sectionHeaderView: SectionHeaderView = {
       let editButton = UIButton()
@@ -47,10 +50,30 @@ extension ShareGardenSceneViewController {
     }()
     
     private let friendsGardenListView: FriendsGardenListView
+    private let spacer: UIView = {
+      let spacer = UIView()
+      spacer.translatesAutoresizingMaskIntoConstraints = false
+      spacer.setContentHuggingPriority(
+        UILayoutPriority.defaultLow,
+        for: NSLayoutConstraint.Axis.vertical
+      )
+      spacer.setContentCompressionResistancePriority(
+        UILayoutPriority.defaultLow,
+        for: NSLayoutConstraint.Axis.vertical
+      )
+      
+      return spacer
+    }()
     
     // MARK: - Properties
     private static let layoutConstant = ShareGardenSceneViewController.Constant.Layout.FriendsGardenView.self
     @ExecuteOnce private var setupLayoutIfNeeded: (() -> Void)?
+    
+    var retryAction: UIAction? {
+      didSet {
+        self.retryRequestView.retryAction = self.retryAction
+      }
+    }
     
     init(friendsGardenStore: FriendsGardenStore) {
       self.friendsGardenListView = FriendsGardenListView(friendsGardenStore: friendsGardenStore)
@@ -82,6 +105,27 @@ extension ShareGardenSceneViewController {
     func stopShimmeringAnimation() {
       self.friendsGardenListView.stopShimmeringAnimation()
     }
+    
+    func showRetryRequestView() {
+      self.removeArrangedSubview(self.friendsGardenListView)
+      self.insertArrangedSubview(self.retryRequestView.view, at: 2)
+      self.addArrangedSubview(self.spacer)
+      self.friendsGardenListView.isHidden = true
+      self.retryRequestView.view.isHidden = false
+      self.spacer.isHidden = false
+      self.setCustomSpacingForRetryRequestView()
+    }
+    
+    func showFriendsGardenListView() {
+      self.removeArrangedSubview(self.retryRequestView.view)
+      self.removeArrangedSubview(self.spacer)
+      self.addArrangedSubview(self.friendsGardenListView)
+      self.spacer.isHidden = true
+      self.retryRequestView.view.isHidden = true
+      self.friendsGardenListView.isHidden = false
+      self.setCustomSpacingForFriendsGardenListView()
+      self.startShimmeringAnimation()
+    }
   }
 }
 
@@ -92,7 +136,7 @@ extension ShareGardenSceneViewController.FriendsGardenView {
     self.setupStackView()
     self.setupEditButton()
     self.addSubviews()
-    self.setCustomSpacing()
+    self.setCustomSpacingForSearchGardenButton()
   }
   
   private func setupStackView() {
@@ -160,15 +204,33 @@ extension ShareGardenSceneViewController.FriendsGardenView {
   
   private func setupFriendsGadenListViewLayoutConstraints() {
     self.friendsGardenListView.usingAutolayout()
+    let height = Self.layoutConstant.friendsGardenListViewMinimumHeight
     
     NSLayoutConstraint.activate([
       self.friendsGardenListView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-      self.friendsGardenListView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+      self.friendsGardenListView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+      self.friendsGardenListView.heightAnchor.constraint(greaterThanOrEqualToConstant: height)
     ])
   }
   
-  private func setCustomSpacing() {
+  private func setCustomSpacingForSearchGardenButton() {
     let searchGardenButtonTopInset = Self.layoutConstant.searchGardenButtonTopInset
     self.setCustomSpacing(searchGardenButtonTopInset, after: self.sectionHeaderView)
+  }
+  
+  private func setCustomSpacingForRetryRequestView() {
+    let spacingRatio: CGFloat = Self.layoutConstant.retryRequestViewTopSpacingRatio
+    
+    self.setCustomSpacing(
+      self.bounds.height * spacingRatio,
+      after: self.searchGardenButton
+    )
+  }
+  
+  private func setCustomSpacingForFriendsGardenListView() {
+    self.setCustomSpacing(
+      Self.layoutConstant.stackViewSpacing,
+      after: self.searchGardenButton
+    )
   }
 }
