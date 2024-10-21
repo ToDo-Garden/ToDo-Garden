@@ -24,7 +24,7 @@ protocol UserInfoSceneDisplayLogic: AnyObject {
   func displayChangedProfileImage(viewModel: UserInfoScene.ChangeProfileImage.ViewModel)
   func displayWithdrawResult(viewModel: UserInfoScene.WithdrawMembership.ViewModel)
   func displaySignOutResult(viewModel: UserInfoScene.SignOut.ViewModel)
-  func displayChangedUserIntroduction(_ userIntroduction: String)
+  func displayChangedUserIntroduction(_ introduction: String)
 }
 
 final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewControllable {
@@ -123,8 +123,16 @@ extension UserInfoSceneViewController: UserInfoSceneDisplayLogic {
     }
   }
 
-  func displayChangedUserIntroduction(_ userIntroduction: String) {
-    
+  func displayChangedUserIntroduction(_ introduction: String) {
+    self.updateUserIntroduction(introduction)
+  }
+
+  private func updateUserIntroduction(_ introduction: String) {
+    guard let userIntroductionCell = self.userInfoCollectionView.cellForItem(
+      at: IndexPath(row: 1, section: 0)
+    ) as? UserInfoCollectionViewCell else { return }
+
+    userIntroductionCell.updateDescription(introduction)
   }
 }
 
