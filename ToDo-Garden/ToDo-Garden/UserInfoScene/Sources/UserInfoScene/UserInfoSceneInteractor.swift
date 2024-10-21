@@ -14,6 +14,7 @@ protocol UserInfoSceneDataStore {
   var userIntroduction: String? { get set }
 }
 
+@MainActor
 protocol UserInfoSceneBusinessLogic {
   func configureCollectionView()
   func fetchUserPhotoAccess()
@@ -21,6 +22,7 @@ protocol UserInfoSceneBusinessLogic {
   func openSettingApp()
   func withdrawMembership()
   func signOut()
+  func reloadUserIntroduction(_ introduction: String?)
 }
 
 final class UserInfoSceneInteractor: UserInfoSceneDataStore {
@@ -60,7 +62,7 @@ extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
       let isPhotoAccessible = await self.userPhotoWorker.requestPhotoAccess()
       let response = UserInfoScene.FetchUserPhotoAccess.Response(isPhotoAccessible: isPhotoAccessible)
 
-      await self.presenter?.presentUserPhotoAccess(response: response)
+      self.presenter?.presentUserPhotoAccess(response: response)
     }
   }
 
@@ -74,13 +76,13 @@ extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
             changeResult: Result.success(profileImageToChange)
           )
 
-          await self.presenter?.presentChangedProfileImage(response: response)
+          self.presenter?.presentChangedProfileImage(response: response)
         }
       } catch let error {
         let response = UserInfoScene.ChangeProfileImage.Response(
           changeResult: Result.failure(error)
         )
-        await self.presenter?.presentChangedProfileImage(response: response)
+        self.presenter?.presentChangedProfileImage(response: response)
       }
     }
   }
@@ -100,7 +102,7 @@ extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
       }
 
       let response = UserInfoScene.WithdrawMembership.Response(withdrawError: withdrawError)
-      await self.presenter?.presentWithdrawResult(response: response)
+      self.presenter?.presentWithdrawResult(response: response)
     }
   }
 
@@ -115,7 +117,16 @@ extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
       }
 
       let response = UserInfoScene.SignOut.Response(signOutError: signOutError)
-      await self.presenter?.presentSignOutResult(response: response)
+      self.presenter?.presentSignOutResult(response: response)
+    }
+  }
+
+  func reloadUserIntroduction(_ introduction: String?) {
+    self.userIntroduction = introduction
+    if let introduction {
+      self.presenter?.presentChangedUserIntroduction(introduction)
+    } else {
+      self.presenter?.presentEmptyUserIntroduction()
     }
   }
 }

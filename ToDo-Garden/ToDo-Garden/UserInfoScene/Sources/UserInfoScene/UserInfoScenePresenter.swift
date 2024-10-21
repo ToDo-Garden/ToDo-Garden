@@ -11,12 +11,14 @@ import UserInfoSceneEntity
 
 @MainActor
 protocol UserInfoScenePresentationLogic {
-  nonisolated func presentCollectionViewSections()
+  func presentCollectionViewSections()
   func presentUserProfile(response: UserInfoScene.FetchProfile.Response)
   func presentUserPhotoAccess(response: UserInfoScene.FetchUserPhotoAccess.Response)
   func presentChangedProfileImage(response: UserInfoScene.ChangeProfileImage.Response)
   func presentWithdrawResult(response: UserInfoScene.WithdrawMembership.Response)
   func presentSignOutResult(response: UserInfoScene.SignOut.Response)
+  func presentChangedUserIntroduction(_ userIntroduction: String)
+  func presentEmptyUserIntroduction()
 }
 
 final class UserInfoScenePresenter {
@@ -61,6 +63,14 @@ extension UserInfoScenePresenter: UserInfoScenePresentationLogic {
     let signOutError = response.signOutError
     let viewModel = UserInfoScene.SignOut.ViewModel(signOutError: signOutError)
     self.viewController?.displaySignOutResult(viewModel: viewModel)
+  }
+
+  func presentChangedUserIntroduction(_ userIntroduction: String) {
+    // TODO: - Presenter 로직 구현 예정
+  }
+
+  func presentEmptyUserIntroduction() {
+    // TODO: - Presenter 로직 구현 예정
   }
 }
 
