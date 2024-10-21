@@ -32,16 +32,13 @@ public enum SignUp {
     }
     public struct ViewModel {
       public let warningText: String
-      public let isValid: Bool
       public let currentPageIndex: Int
       
       public init(
         warningText: String,
-        isValid: Bool,
         currentPageIndex: Int
       ) {
         self.warningText = warningText
-        self.isValid = isValid
         self.currentPageIndex = currentPageIndex
       }
     }
