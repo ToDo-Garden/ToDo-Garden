@@ -7,6 +7,8 @@
 
 import Foundation
 
+import SignUpSceneEntity
+
 public protocol SignUpWorkable {
-  func doSomeWork()
+  func checkStringValidation(text: String?, currentPageIndex: Int) -> SignUp.ValidationState
 }

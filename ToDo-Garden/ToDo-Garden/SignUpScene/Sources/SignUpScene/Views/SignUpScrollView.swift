@@ -10,7 +10,7 @@ import UIKit
 import TDUtility
 import ToDoGardenUIComponent
 
-protocol ChangeButtonTitleDelegate: AnyObject {
+protocol ChangeButtonDelegate: AnyObject {
   func changeButtonTitle(pageIndex: Int)
 }
 
@@ -26,14 +26,14 @@ final class SignUpScrollView: UIScrollView {
     return windowScene?.screen.bounds.width ?? CGFloat.zero
   }
   
-  private var inputViews: [SignUpInputView]
+  var inputViews: [SignUpInputView]
   private let contentView: UIView
   
   @ExecuteOnce private var firstPageAnimation: (() -> Void)?
   @ExecuteOnce private var secondPageAnimation: (() -> Void)?
   @ExecuteOnce private var thirdPageAnimation: (() -> Void)?
   
-  weak var changeButtonTitleDelegate: ChangeButtonTitleDelegate?
+  weak var changeButtonDelegate: ChangeButtonDelegate?
   
   override init(frame: CGRect) {
     self.currentPageIndex = Int.zero
@@ -86,11 +86,9 @@ final class SignUpScrollView: UIScrollView {
         validationText: ""
       )
     ]
-    
-    self.inputViews[1].textInputView.delegate = self
   }
   // swiftlint:enable function_body_length
-  
+
   private func setupScrollView() {
     self.isPagingEnabled = true
     self.showsHorizontalScrollIndicator = false
@@ -183,19 +181,17 @@ final class SignUpScrollView: UIScrollView {
     }
     
     switch self.currentPageIndex {
-    case 0: self.firstPageAnimation = animation
-    case 1: self.secondPageAnimation = animation
-    case 2: self.thirdPageAnimation = animation
-    default: break
+    case 0:
+      self.firstPageAnimation = animation
+    case 1: 
+      self.secondPageAnimation = animation
+    case 2: 
+      self.thirdPageAnimation = animation
+    default: 
+      break
     }
     
-    self.changeButtonTitleDelegate?.changeButtonTitle(pageIndex: self.currentPageIndex)
+    self.changeButtonDelegate?.changeButtonTitle(pageIndex: self.currentPageIndex)
     self.inputViews[self.currentPageIndex].textInputView.setBecomeFirstRespoder()
-  }
-}
-
-extension SignUpScrollView: InputTextValidationViewDelegate {
-  func inputTextDidChanged(_ text: String?) {
-    self.changeButtonTitleDelegate?.changeButtonTitle(pageIndex: self.currentPageIndex)
   }
 }
