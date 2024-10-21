@@ -68,6 +68,8 @@ extension ShareGardenSceneViewController {
       return CGSize(width: super.intrinsicContentSize.width, height: contentHeight)
     }
     
+    private static let layoutConstant = Constant.Layout.MyGardenView.self
+    
     var retryAction: UIAction? {
       didSet {
         self.retryRequestView.retryAction = self.retryAction
