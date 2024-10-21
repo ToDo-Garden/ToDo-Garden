@@ -70,7 +70,8 @@ extension UserInfoScenePresenter: UserInfoScenePresentationLogic {
   }
 
   func presentEmptyUserIntroduction() {
-    self.viewController?.displayEmptyUserIntroduction(Self.userIntroductionPlaceholderText)
+    let placeholderText = UserInfoSceneTheme.StringLiteral.UserInfoCollectionView.userIntroductionPlaceholderText
+    self.viewController?.displayEmptyUserIntroduction(placeholderText)
   }
 }
 
@@ -96,6 +97,4 @@ extension UserInfoScenePresenter {
 
     return [profileSection, accountSection]
   }
-
-  static let userIntroductionPlaceholderText = "소개글을 입력해주세요"
 }
