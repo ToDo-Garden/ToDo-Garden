@@ -40,6 +40,17 @@ extension SignUpInteractor: SignUpBusinessLogic {
       currentPageIndex: request.currentPageIndex
     )
     
-    self.presenter?.presentValidation(response: response)
+    switch state {
+    case SignUp.ValidationState.valid:
+      self.presenter?.presentValid(response: response)
+    case SignUp.ValidationState.invalid:
+      self.presenter?.presentInvalid(response: response)
+    case SignUp.ValidationState.empty:
+      if request.currentPageIndex == 1 {
+        self.presenter?.presentValid(response: response)
+      } else {
+        self.presenter?.presentInvalid(response: response)
+      }
+    }
   }
 }
