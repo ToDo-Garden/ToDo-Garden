@@ -12,7 +12,7 @@ import EditUserNameSceneEntity
 import TDUtility
 
 protocol EditUserNameSceneDataStore {
-  var userName: String? { get }
+  var userName: String? { get set }
 }
 
 protocol EditUserNameSceneBusinessLogic {

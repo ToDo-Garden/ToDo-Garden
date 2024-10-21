@@ -78,6 +78,6 @@ extension EditUserNameSceneBuilder {
     for viewController: EditUserNameSceneViewController,
     with payload: EditUserNameScenePayloadable
   ) {
-    // viewController.router?.dataStore?.name = payload.name
+    viewController.router?.dataStore?.userName = payload.userName
   }
 }
