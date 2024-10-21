@@ -12,7 +12,7 @@ import SignUpSceneEntity
 import ToDoGardenUIComponent
 
 protocol SignUpDisplayLogic: AnyObject {
-  func presentValidation(viewModel: SignUp.CheckStringValidation.ViewModel)
+  func displayValidation(viewModel: SignUp.CheckStringValidation.ViewModel)
 }
 
 final class SignUpViewController: UIViewController, SignUpViewControllable {
@@ -188,7 +188,7 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
 // MARK: - Confirm display logic protocol
 
 extension SignUpViewController: SignUpDisplayLogic {
-  func presentValidation(viewModel: SignUp.CheckStringValidation.ViewModel) {
+  func displayValidation(viewModel: SignUp.CheckStringValidation.ViewModel) {
     let textInputView = self.signUpScrollView.inputViews[viewModel.currentPageIndex].textInputView
     textInputView.changeValidationText(viewModel.warningText)
 

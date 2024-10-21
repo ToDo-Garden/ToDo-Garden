@@ -22,7 +22,7 @@ class SignUpPresenter {
 extension SignUpPresenter: SignUpPresentationLogic {
   func presentValidation(response: SignUp.CheckStringValidation.Response) {
     let viewModel = self.makeViewModel(response: response)
-    self.viewController?.presentValidation(viewModel: viewModel)
+    self.viewController?.displayValidation(viewModel: viewModel)
   }
   
   private func makeViewModel(

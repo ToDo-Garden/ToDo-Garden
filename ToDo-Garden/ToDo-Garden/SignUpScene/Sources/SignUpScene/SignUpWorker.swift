@@ -15,7 +15,7 @@ public struct SignUpWorker: SignUpWorkable {
   public init() {}
   
   public func checkStringValidation(text: String?, currentPageIndex: Int) -> SignUp.ValidationState {
-    guard let text = text else {
+    guard let text else {
       return SignUp.ValidationState.empty
     }
     switch currentPageIndex {
