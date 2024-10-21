@@ -114,7 +114,7 @@ extension ShareGardenSceneViewController {
       self.profileInfoView.startShimmering()
     }
     
-    func showContentsLoadingFailure() {
+    func showRetryRequestView() {
       self.removeArrangedSubview(self.contentView)
       self.insertArrangedSubview(self.retryRequestView.view, at: 1)
       self.contentView.isHidden = true
