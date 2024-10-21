@@ -22,12 +22,13 @@ extension ShareGardenSceneViewController {
     private let contentView: UIStackView
     
     private let sectionHeaderView: SectionHeaderView = {
+      let shareButtonSize = MyGardenView.layoutConstant.shareButtonSize
       let shareButton = UIButton()
       shareButton.setImage(UIImage.shareIconImage, for: UIControl.State.normal)
       let title = ShareGardenSceneViewController.Constant.StringLiteral.MyGardenSectionHeaderView.title
       shareButton.usingAutolayout()
-      shareButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
-      shareButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
+      shareButton.widthAnchor.constraint(equalToConstant: shareButtonSize.width).isActive = true
+      shareButton.heightAnchor.constraint(equalToConstant: shareButtonSize.height).isActive = true
       shareButton.setTitleColor(UIColor.darkGray, for: UIControl.State.highlighted)
       
       let sectionHeaderView = SectionHeaderView(
@@ -68,6 +69,8 @@ extension ShareGardenSceneViewController {
       return CGSize(width: super.intrinsicContentSize.width, height: contentHeight)
     }
     
+    private static let layoutConstant = Constant.Layout.MyGardenView.self
+    
     var retryAction: UIAction? {
       didSet {
         self.retryRequestView.retryAction = self.retryAction
@@ -75,9 +78,10 @@ extension ShareGardenSceneViewController {
     }
     
     init() {
+      let contentViewSpacing = Self.layoutConstant.contentViewSpacing
       self.contentView = UIVStackView(
         alignment: UIStackView.Alignment.center,
-        spacing: 14,
+        spacing: contentViewSpacing,
         arrangedSubviews: [
           self.profileInfoView,
           self.gardenView
@@ -137,8 +141,8 @@ extension ShareGardenSceneViewController.MyGardenView {
   }
   
   private func setupStackView() {
-    self.spacing = 14
-    self.setCustomSpacing(0, after: self.contentView)
+    self.spacing = Self.layoutConstant.stackViewSpacing
+    self.setCustomSpacing(Self.layoutConstant.spacerTopInset, after: self.contentView)
     self.distribution = UIStackView.Distribution.fill
     self.axis = NSLayoutConstraint.Axis.vertical
     self.alignment = UIStackView.Alignment.center
@@ -191,8 +195,8 @@ extension ShareGardenSceneViewController.MyGardenView {
   }
   
   private func setupSectionHeaderViewLayoutConstraints() {
-    let leftInset: CGFloat = self.bounds.width * (28 / 375)
-    let rightInset: CGFloat = self.bounds.width * (24 / 375)
+    let leftInset: CGFloat = self.bounds.width * Self.layoutConstant.sectionHeaderViewLeftInsetRatio
+    let rightInset: CGFloat = self.bounds.width * Self.layoutConstant.sectionHeaderViewRightInsetRatio
     
     self.sectionHeaderView.layoutMargins = UIEdgeInsets(
       top: CGFloat.zero,
