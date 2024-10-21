@@ -14,6 +14,7 @@ import UserInfoSceneAPI
 protocol UserInfoSceneRoutingLogic {
   func routeToLoginScene()
   func routeToEditUserIntroductionScene()
+  func routeToEditUserNameScene()
 }
 
 protocol UserInfoSceneDataPassing {
@@ -42,6 +43,18 @@ extension UserInfoSceneRouter: UserInfoSceneRoutingLogic {
     // TODO: LoginSceneBuilder가 구현되면 해당 화면으로 라우팅할 예정입니다.
   }
 
+  func routeToEditUserNameScene() {
+    guard let userName = self.dataStore?.userName,
+      let editUserNameScene = self.editUserNameSceneBuilder?.build(
+      with: EditUserNameScenePayload(userName: userName)
+    ) else { return }
+
+    self.viewController?.navigationController?.pushViewController(
+      editUserNameScene,
+      animated: true
+    )
+  }
+
   func routeToEditUserIntroductionScene() {
     guard let editUserIntroductionScene = self.editUserIntroductionSceneBuilder?.build(
       with: EditUserIntroductionScenePayload(
@@ -61,7 +74,11 @@ extension UserInfoSceneRouter: UserInfoSceneRoutingLogic {
 
 extension UserInfoSceneRouter {
   struct EditUserIntroductionScenePayload: EditUserIntroductionScenePayloadable {
-    var userIntroduction: String?
-    var delegate: EditUserIntroductionDelegate?
+    let userIntroduction: String?
+    let delegate: EditUserIntroductionDelegate?
+  }
+
+  struct EditUserNameScenePayload: EditUserNameScenePayloadable {
+    let userName: String
   }
 }

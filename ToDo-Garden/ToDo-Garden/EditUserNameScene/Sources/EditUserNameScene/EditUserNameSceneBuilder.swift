@@ -27,13 +27,15 @@ public struct EditUserNameSceneBuilder {
 }
 
 extension EditUserNameSceneBuilder {
-  private struct SomePayload: EditUserNameScenePayloadable {}
+  private struct PreviewScenePayload: EditUserNameScenePayloadable {
+    var userName: String = "나야울버린"
+  }
 
   public static let previewScene = Self(
     dependency: Dependency(
       editUserNameWorker: EditUserNameSceneWorker()
     )
-  ).build(with: SomePayload())
+  ).build(with: PreviewScenePayload())
 }
 
 extension EditUserNameSceneBuilder: EditUserNameSceneSceneBuildable {
@@ -76,6 +78,6 @@ extension EditUserNameSceneBuilder {
     for viewController: EditUserNameSceneViewController,
     with payload: EditUserNameScenePayloadable
   ) {
-    // viewController.router?.dataStore?.name = payload.name
+    viewController.router?.dataStore?.userName = payload.userName
   }
 }

@@ -14,7 +14,7 @@ protocol EditUserNameSceneRoutingLogic {
 }
 
 protocol EditUserNameSceneDataPassing {
-  var dataStore: EditUserNameSceneDataStore? { get }
+  var dataStore: EditUserNameSceneDataStore? { get set }
 }
 
 class EditUserNameSceneRouter: EditUserNameSceneDataPassing {
