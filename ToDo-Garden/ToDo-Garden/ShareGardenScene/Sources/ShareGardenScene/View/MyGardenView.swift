@@ -22,12 +22,13 @@ extension ShareGardenSceneViewController {
     private let contentView: UIStackView
     
     private let sectionHeaderView: SectionHeaderView = {
+      let shareButtonSize = MyGardenView.layoutConstant.shareButtonSize
       let shareButton = UIButton()
       shareButton.setImage(UIImage.shareIconImage, for: UIControl.State.normal)
       let title = ShareGardenSceneViewController.Constant.StringLiteral.MyGardenSectionHeaderView.title
       shareButton.usingAutolayout()
-      shareButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
-      shareButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
+      shareButton.widthAnchor.constraint(equalToConstant: shareButtonSize.width).isActive = true
+      shareButton.heightAnchor.constraint(equalToConstant: shareButtonSize.height).isActive = true
       shareButton.setTitleColor(UIColor.darkGray, for: UIControl.State.highlighted)
       
       let sectionHeaderView = SectionHeaderView(
