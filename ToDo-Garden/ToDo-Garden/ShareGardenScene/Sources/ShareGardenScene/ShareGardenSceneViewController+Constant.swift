@@ -92,6 +92,8 @@ extension ShareGardenSceneViewController.Constant.Layout {
     static let contentViewSpacing: CGFloat = 14.0
     static let stackViewSpacing: CGFloat = 14.0
     static let spacerTopInset: CGFloat = CGFloat.zero
+    static let sectionHeaderViewLeftInsetRatio: CGFloat = 28.0 / 375.0
+    static let sectionHeaderViewRightInsetRatio: CGFloat = 24.0 / 375.0
   }
   
   enum FriendsGardenView {

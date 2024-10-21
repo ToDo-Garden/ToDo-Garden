@@ -195,8 +195,8 @@ extension ShareGardenSceneViewController.MyGardenView {
   }
   
   private func setupSectionHeaderViewLayoutConstraints() {
-    let leftInset: CGFloat = self.bounds.width * (28 / 375)
-    let rightInset: CGFloat = self.bounds.width * (24 / 375)
+    let leftInset: CGFloat = self.bounds.width * Self.layoutConstant.sectionHeaderViewLeftInsetRatio
+    let rightInset: CGFloat = self.bounds.width * Self.layoutConstant.sectionHeaderViewRightInsetRatio
     
     self.sectionHeaderView.layoutMargins = UIEdgeInsets(
       top: CGFloat.zero,
