@@ -80,5 +80,6 @@ extension UserInfoSceneRouter {
 
   struct EditUserNameScenePayload: EditUserNameScenePayloadable {
     let userName: String
+    var delegate: EditUserNameSceneDelegate?
   }
 }
