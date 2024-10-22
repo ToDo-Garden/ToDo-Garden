@@ -66,11 +66,12 @@ extension UserInfoScenePresenter: UserInfoScenePresentationLogic {
   }
 
   func presentChangedUserIntroduction(_ userIntroduction: String) {
-    // TODO: - Presenter 로직 구현 예정
+    self.viewController?.displayChangedUserIntroduction(userIntroduction)
   }
 
   func presentEmptyUserIntroduction() {
-    // TODO: - Presenter 로직 구현 예정
+    let placeholderText = UserInfoSceneTheme.StringLiteral.UserInfoCollectionView.userIntroductionPlaceholderText
+    self.viewController?.displayEmptyUserIntroduction(placeholderText)
   }
 }
 
