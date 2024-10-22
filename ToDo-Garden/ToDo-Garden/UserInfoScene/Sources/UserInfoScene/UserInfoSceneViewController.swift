@@ -143,9 +143,13 @@ extension UserInfoSceneViewController: UserInfoSceneDisplayLogic {
 
 // MARK: - Request to interactor
 
-extension UserInfoSceneViewController: EditUserIntroductionDelegate {
+extension UserInfoSceneViewController: EditUserIntroductionDelegate, EditUserNameSceneDelegate {
   func userIntroductionDidEdited(_ introduction: String?) {
     self.interactor?.reloadUserIntroduction(introduction)
+  }
+
+  func userNameDidEdited(_ userName: String) {
+    // TODO: - 변경된 닉네임 전달 Business Logic 호출 예정
   }
 
   func didSelectEditProfileButton() {
