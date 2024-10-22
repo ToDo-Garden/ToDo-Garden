@@ -28,6 +28,10 @@ class EditUserNameSceneRouter: EditUserNameSceneDataPassing {
 
 extension EditUserNameSceneRouter: EditUserNameSceneRoutingLogic {
   func routeToUserInfoScene() {
+    guard let userName = self.dataStore?.userName
+    else { return }
+
+    self.delegate?.userNameDidEdited(userName)
     self.viewController?.navigationController?.popViewController(animated: true)
   }
 }
