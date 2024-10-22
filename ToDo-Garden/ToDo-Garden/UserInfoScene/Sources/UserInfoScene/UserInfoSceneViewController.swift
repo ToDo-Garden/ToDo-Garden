@@ -143,7 +143,7 @@ extension UserInfoSceneViewController: UserInfoSceneDisplayLogic {
 
 // MARK: - Request to interactor
 
-extension UserInfoSceneViewController: EditUserIntroductionDelegate, EditUserNameSceneDelegate {
+extension UserInfoSceneViewController: EditUserIntroductionDelegate, EditUserNameDelegate {
   func userIntroductionDidEdited(_ introduction: String?) {
     self.interactor?.reloadUserIntroduction(introduction)
   }
