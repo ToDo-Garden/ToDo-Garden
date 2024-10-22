@@ -8,16 +8,17 @@
 import Foundation
 
 import LoginSceneAPI
+import SignUpSceneAPI
 
 public struct LoginSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
   public struct Dependency {
-    let someWorker: LoginWorkable
-    let nextSceneBuilder: NextSceneBuildable
+    let loginWorker: LoginWorkable
+    let signUpSceneBuilder: SignUpSceneBuildable
     
-    public init(someWorker: LoginWorkable, nextSceneBuilder: NextSceneBuildable) {
-      self.someWorker = someWorker
-      self.nextSceneBuilder = nextSceneBuilder
+    public init(loginWorker: LoginWorkable, signUpSceneBuilder: SignUpSceneBuildable) {
+      self.loginWorker = loginWorker
+      self.signUpSceneBuilder = signUpSceneBuilder
     }
   }
   
@@ -32,7 +33,7 @@ extension LoginSceneBuilder: LoginSceneBuildable {
   ///  VIP Cycle, 런타임 의존성이 설정된 ViewController 인스턴스를 반환하는 함수입니다.
   /// - Parameter payload: 런타임에 전달받아야 하는 의존성입니다.
   /// - Returns: 런타임 의존성, VIP Cycle이 설정된 ViewController를 반환합니다.
-  public func build(with payload: LoginScenePayloadable) -> LoginViewControllable {
+  public func build(with payload: LoginScenePayloadable?) -> LoginViewControllable {
     let someViewController = self.configureVIPCycle(for: LoginViewController())
     self.setPayload(for: someViewController, with: payload)
     
@@ -45,9 +46,9 @@ extension LoginSceneBuilder {
   /// - Parameter viewController: VIPCycle을 설정할 viewController입니다.
   /// - Returns: VIP Cycle 설정이 완료된 `ViewControllable` 프로토콜을 준수한 `ViewController` 인스턴스를 반환합니다.
   private func configureVIPCycle(for viewController: LoginViewController) -> LoginViewController {
-    let interactor = LoginInteractor(someWorker: self.dependency.someWorker)
+    let interactor = LoginInteractor(someWorker: self.dependency.loginWorker)
     let presenter = LoginPresenter()
-    let router = LoginRouter(nextSceneBuilder: self.dependency.nextSceneBuilder)
+    let router = LoginRouter(signUpSceneBuilder: self.dependency.signUpSceneBuilder)
     viewController.interactor = interactor
     viewController.router = router
     interactor.presenter = presenter
@@ -62,7 +63,7 @@ extension LoginSceneBuilder {
   /// - Parameters:
   ///   - viewController: 런타임 의존성을 설정할 ViewController 객체입니다.
   ///   - payload: 런타임에 전달할 의존성입니다.
-  private func setPayload(for viewController: LoginViewController, with payload: LoginScenePayloadable) {
+  private func setPayload(for viewController: LoginViewController, with payload: LoginScenePayloadable?) {
     // viewController.router?.dataStore?.name = payload.name
   }
 }
