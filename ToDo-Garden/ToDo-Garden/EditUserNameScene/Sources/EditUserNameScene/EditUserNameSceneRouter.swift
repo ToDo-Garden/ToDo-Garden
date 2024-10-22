@@ -15,10 +15,12 @@ protocol EditUserNameSceneRoutingLogic {
 
 protocol EditUserNameSceneDataPassing {
   var dataStore: EditUserNameSceneDataStore? { get set }
+  var delegate: EditUserNameSceneDelegate? { get set }
 }
 
 class EditUserNameSceneRouter: EditUserNameSceneDataPassing {
   weak var viewController: EditUserNameSceneViewController?
+  weak var delegate: EditUserNameSceneDelegate?
   var dataStore: EditUserNameSceneDataStore?
 }
 
