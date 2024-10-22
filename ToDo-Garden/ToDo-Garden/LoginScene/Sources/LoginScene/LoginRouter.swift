@@ -10,7 +10,11 @@ import Foundation
 import LoginSceneAPI
 
 protocol LoginRoutingLogic {
-  func routeToSomewhere()
+  func routeToSignUpScene(
+    userIdentifier: String,
+    userEmailAddress: String?,
+    agreeOptionalCondition: Bool
+  )
 }
 
 protocol LoginDataPassing {
@@ -30,9 +34,11 @@ class LoginRouter: LoginDataPassing {
 // MARK: - Routing
 
 extension LoginRouter: LoginRoutingLogic {
-  func routeToSomewhere() {
-    // let destinationViewController = self.nextSceneBuilder.build(with: NextScenePayload())
-    // self.viewController?.present(destinationViewController, animated: true)
+  func routeToSignUpScene(
+    userIdentifier: String,
+    userEmailAddress: String?,
+    agreeOptionalCondition: Bool
+  ) {
   }
 }
 
