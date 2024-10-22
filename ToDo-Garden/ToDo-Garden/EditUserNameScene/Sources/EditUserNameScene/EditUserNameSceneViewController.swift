@@ -42,7 +42,7 @@ final class EditUserNameSceneViewController: UIViewController, EditUserNameScene
     self.inputUserNameView = InputTextValidationView(
       inputText: constant.inputText,
       placeholderText: constant.placeholderText,
-      validationText: validationTextConstant.invalidIntroduction
+      validationText: validationTextConstant.invalidNickname
     )
     self.inputUserNameSubject = PassthroughSubject<String, Never>()
     self.cancellables = Set<AnyCancellable>()
