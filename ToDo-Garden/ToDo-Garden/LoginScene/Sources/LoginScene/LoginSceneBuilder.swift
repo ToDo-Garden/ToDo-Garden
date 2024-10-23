@@ -33,7 +33,7 @@ extension LoginSceneBuilder: LoginSceneBuildable {
   ///  VIP Cycle, 런타임 의존성이 설정된 ViewController 인스턴스를 반환하는 함수입니다.
   /// - Parameter payload: 런타임에 전달받아야 하는 의존성입니다.
   /// - Returns: 런타임 의존성, VIP Cycle이 설정된 ViewController를 반환합니다.
-  public func build(with payload: LoginScenePayloadable?) -> LoginViewControllable {
+  public func build(with payload: LoginScenePayloadable) -> LoginViewControllable {
     let someViewController = self.configureVIPCycle(for: LoginViewController())
     self.setPayload(for: someViewController, with: payload)
     
