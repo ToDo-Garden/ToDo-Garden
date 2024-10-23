@@ -28,6 +28,11 @@ final class LoginViewController: UIViewController, LoginViewControllable {
   private let dimmingView: UIView
   private let termAgreementView: TermsAgreementView
   
+  // MARK: - 임시 저장용 개인정보 / 인증정보 등 이후 PR에서 프로퍼티 제거 및 보안강화 처리 예정
+  private var userIdentifier: String = ""
+  private var userEmailAddress: String?
+  private var agreeOptionalCondition: Bool = false
+  
   // MARK: - Object lifecycle
   
   init() {
@@ -49,6 +54,11 @@ final class LoginViewController: UIViewController, LoginViewControllable {
     self.setAppleLoginManager()
     self.setUI()
     self.doSomething()
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    self.navigationController?.navigationBar.isHidden = true
   }
 }
 
@@ -205,11 +215,16 @@ extension LoginViewController: TermsAgreementViewDelegate {
   ) {
     self.hideTermAgreementView()
     // TODO: 이벤트, 광고성 정보 안내 (선택)에 동의했을 때 / 안했을 때 동작 분기
-    
-    let nextVC = UIViewController()
-    nextVC.view.backgroundColor = UIColor.white
-    
-    self.navigationController?.pushViewController(nextVC, animated: true)
+    if isEventAndPromotionalInformationAgreed {
+      self.agreeOptionalCondition = true
+    } else {
+      self.agreeOptionalCondition = false
+    }
+    self.router?.routeToSignUpScene(
+      userIdentifier: self.userIdentifier,
+      userEmailAddress: self.userEmailAddress,
+      agreeOptionalCondition: self.agreeOptionalCondition
+    )
   }
 }
 
