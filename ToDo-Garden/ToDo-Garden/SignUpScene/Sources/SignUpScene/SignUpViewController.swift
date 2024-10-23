@@ -55,6 +55,7 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
   }
   
   private func setupNavigationBar() {
+    self.navigationController?.navigationBar.isHidden = false
     let backButton = UIBarButtonItem(
       image: UIImage.backwardButtonImage,
       primaryAction: UIAction { [weak self] _ in
