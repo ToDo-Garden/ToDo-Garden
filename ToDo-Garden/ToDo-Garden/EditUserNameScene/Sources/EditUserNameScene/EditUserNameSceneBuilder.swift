@@ -29,6 +29,7 @@ public struct EditUserNameSceneBuilder {
 extension EditUserNameSceneBuilder {
   private struct PreviewScenePayload: EditUserNameScenePayloadable {
     var userName: String = "나야울버린"
+    var delegate: EditUserNameDelegate?
   }
 
   public static let previewScene = Self(
@@ -79,5 +80,6 @@ extension EditUserNameSceneBuilder {
     with payload: EditUserNameScenePayloadable
   ) {
     viewController.router?.dataStore?.userName = payload.userName
+    viewController.router?.delegate = payload.delegate
   }
 }
