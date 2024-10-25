@@ -6,6 +6,7 @@
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
 import AuthenticationServices
+import OSLog
 import UIKit
 
 import LoginSceneAPI
@@ -28,11 +29,7 @@ final class LoginViewController: UIViewController, LoginViewControllable {
   private let dimmingView: UIView
   private let termAgreementView: TermsAgreementView
   
-  // MARK: - 임시 저장용 개인정보 / 인증정보 등 이후 PR에서 프로퍼티 제거 및 보안강화 처리 예정
-  private var userIdentifier: String = ""
-  private var userEmailAddress: String?
-  private var agreeOptionalCondition: Bool = false
-  
+  private let loger = Logger()
   // MARK: - Object lifecycle
   
   init() {
@@ -168,24 +165,28 @@ extension LoginViewController: ASAuthorizationControllerPresentationContextProvi
   }
 }
 
-// TODO: 린트관련 주석 지우기
-// swiftlint:disable empty_enum_arguments
 extension LoginViewController: AppleLoginManagerDelegate {
   func appleLoginDidComplete(with result: Result<ASAuthorizationAppleIDCredential, Error>) {
     switch result {
-    case .success(_):
-      //      let userIdentifier = appleIDCredential.user
-      //      let fullName = appleIDCredential.fullName
-      //      let email = appleIDCredential.email
-      // TODO: 신규회원인지 기존회원인지 체크
-      self.showTermAgreementView()
+    case .success(let credential):
+      do {
+        try KeychainManager.shared.saveLoginData(
+          identifier: credential.user,
+          identifyToken: credential.identityToken ?? Data(),
+          email: credential.email
+        )
+        
+        // TODO: 신규회원인지 기존회원인지 판별
+        self.showTermAgreementView()
+      } catch {
+        self.loger.log("Keychain에 저장 실패: \(error)")
+      }
       
-    case .failure(_): break
-      // TODO: 에러처리
+    case .failure(let error):
+      self.loger.log("Apple Login 실패: \(error)")
     }
   }
 }
-// swiftlint:enable empty_enum_arguments
 
 extension LoginViewController: TermsAgreementViewDelegate {
   public func termsAgreementView(
@@ -214,17 +215,18 @@ extension LoginViewController: TermsAgreementViewDelegate {
     didTapDoneButton isEventAndPromotionalInformationAgreed: Bool
   ) {
     self.hideTermAgreementView()
-    // TODO: 이벤트, 광고성 정보 안내 (선택)에 동의했을 때 / 안했을 때 동작 분기
-    if isEventAndPromotionalInformationAgreed {
-      self.agreeOptionalCondition = true
-    } else {
-      self.agreeOptionalCondition = false
+    do {
+      if let loginData = try KeychainManager.shared.getLoginData() {
+        self.router?.routeToSignUpScene(
+          userIdentifier: loginData.identifier,
+          userEmailAddress: loginData.email,
+          agreeOptionalCondition: isEventAndPromotionalInformationAgreed
+        )
+        // try KeychainManager.shared.clearLoginData()
+      }
+    } catch {
+      self.loger.log("Keychain에 저장된 데이터 뽑아오기 실패: \(error)")
     }
-    self.router?.routeToSignUpScene(
-      userIdentifier: self.userIdentifier,
-      userEmailAddress: self.userEmailAddress,
-      agreeOptionalCondition: self.agreeOptionalCondition
-    )
   }
 }
 
