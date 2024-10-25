@@ -70,6 +70,43 @@ final class KeychainManager {
   }
 }
 
+// MARK: - Login 관련
+
+extension KeychainManager {
+  func saveLoginData(identifier: String, identifyToken: Data, email: String?) throws {
+    try save(Data(identifier.utf8), forKey: KeychainKey.userIdentifier)
+    try save(identifyToken, forKey: KeychainKey.identifyToken)
+    
+    if let email = email {
+      try save(Data(email.utf8), forKey: KeychainKey.userEmail)
+    } else {
+      try save(Data(), forKey: KeychainKey.userEmail)
+    }
+  }
+  
+  // swiftlint:disable large_tuple
+  func getLoginData() throws -> (identifier: String, identifyToken: String, email: String?)? {
+    guard let identifierData = try load(forKey: KeychainKey.userIdentifier),
+      let identifier = String(data: identifierData, encoding: String.Encoding.utf8),
+      let tokenData = try load(forKey: KeychainKey.identifyToken),
+      let identifyToken = String(data: tokenData, encoding: String.Encoding.utf8)
+    else {
+      return nil
+    }
+    
+    let emailData = try load(forKey: KeychainKey.userEmail)
+    let email = emailData.flatMap { String(data: $0, encoding: String.Encoding.utf8) }
+    return (identifier, identifyToken, email)
+  }
+  // swiftlint:enable large_tuple
+  
+  func clearLoginData() throws {
+    try delete(forKey: KeychainKey.userIdentifier)
+    try delete(forKey: KeychainKey.userEmail)
+    try delete(forKey: KeychainKey.identifyToken)
+  }
+}
+
 enum KeychainError: Error {
   case nonExistentKey
   case unhandledError(status: OSStatus)
