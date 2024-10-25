@@ -69,3 +69,8 @@ final class KeychainManager {
     }
   }
 }
+
+enum KeychainError: Error {
+  case nonExistentKey
+  case unhandledError(status: OSStatus)
+}
