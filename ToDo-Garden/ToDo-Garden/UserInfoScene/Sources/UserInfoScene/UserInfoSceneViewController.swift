@@ -26,6 +26,7 @@ protocol UserInfoSceneDisplayLogic: AnyObject {
   func displaySignOutResult(viewModel: UserInfoScene.SignOut.ViewModel)
   func displayChangedUserIntroduction(_ introduction: String)
   func displayEmptyUserIntroduction(_ placeholderText: String)
+  func displayChangedUserName(_ userName: String)
 }
 
 final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewControllable {
@@ -125,7 +126,7 @@ extension UserInfoSceneViewController: UserInfoSceneDisplayLogic {
   }
 
   func displayChangedUserIntroduction(_ introduction: String) {
-    self.updateUserIntroduction(introduction)
+    self.updateReloadedUserInfo(introduction, isUserName: false)
   }
 
   func displayEmptyUserIntroduction(_ placeholderText: String) {
