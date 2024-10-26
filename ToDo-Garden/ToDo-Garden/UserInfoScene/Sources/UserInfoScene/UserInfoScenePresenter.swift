@@ -19,6 +19,7 @@ protocol UserInfoScenePresentationLogic {
   func presentSignOutResult(response: UserInfoScene.SignOut.Response)
   func presentChangedUserIntroduction(_ userIntroduction: String)
   func presentEmptyUserIntroduction()
+  func presentChangedUserName(_ userName: String)
 }
 
 final class UserInfoScenePresenter {
@@ -72,6 +73,10 @@ extension UserInfoScenePresenter: UserInfoScenePresentationLogic {
   func presentEmptyUserIntroduction() {
     let placeholderText = UserInfoSceneTheme.StringLiteral.UserInfoCollectionView.userIntroductionPlaceholderText
     self.viewController?.displayEmptyUserIntroduction(placeholderText)
+  }
+
+  func presentChangedUserName(_ userName: String) {
+    self.viewController?.displayChangedUserName(userName)
   }
 }
 
