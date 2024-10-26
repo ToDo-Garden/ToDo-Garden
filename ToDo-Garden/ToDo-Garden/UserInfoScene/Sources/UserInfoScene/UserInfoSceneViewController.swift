@@ -129,15 +129,21 @@ extension UserInfoSceneViewController: UserInfoSceneDisplayLogic {
   }
 
   func displayEmptyUserIntroduction(_ placeholderText: String) {
-    self.updateUserIntroduction(placeholderText)
+    self.updateReloadedUserInfo(placeholderText, isUserName: false)
   }
 
-  private func updateUserIntroduction(_ introduction: String) {
-    guard let userIntroductionCell = self.userInfoCollectionView.cellForItem(
-      at: IndexPath(row: 1, section: 0)
+  func displayChangedUserName(_ userName: String) {
+    self.updateReloadedUserInfo(userName, isUserName: true)
+  }
+
+  private func updateReloadedUserInfo(_ value: String, isUserName: Bool) {
+    let row = isUserName ? 0 : 1
+    let indexPath = IndexPath(row: row, section: 0)
+    guard let cell = self.userInfoCollectionView.cellForItem(
+      at: indexPath
     ) as? UserInfoCollectionViewCell else { return }
 
-    userIntroductionCell.updateDescription(introduction)
+    cell.updateDescription(value)
   }
 }
 
