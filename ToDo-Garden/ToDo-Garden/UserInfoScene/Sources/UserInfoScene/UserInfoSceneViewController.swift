@@ -149,7 +149,7 @@ extension UserInfoSceneViewController: EditUserIntroductionDelegate, EditUserNam
   }
 
   func userNameDidEdited(_ userName: String) {
-    // TODO: - 변경된 닉네임 전달 Business Logic 호출 예정
+    self.interactor?.reloadUserName(userName)
   }
 
   func didSelectEditProfileButton() {
