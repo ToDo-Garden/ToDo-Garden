@@ -32,10 +32,8 @@ final class KeychainManager {
     if status == errSecSuccess {
       return
     } else if status == errSecDuplicateItem {
-      // MARK: - 이미 존재하는 Key에 대해 create를 시도할 경우 실패함. 그럴땐 업데이트 시도
-      try update(data, forKey: key)
+      throw KeychainError.alreadyExistentKey
     } else {
-      // MARK: - 업데이트 마저 실패하면 Error throwing
       throw KeychainError.unhandledError(status: status)
     }
   }
@@ -94,40 +92,43 @@ final class KeychainManager {
 
 extension KeychainManager {
   func saveLoginData(identifier: String, identifyToken: Data, email: String?) throws {
-    try create(Data(identifier.utf8), forKey: KeychainKey.userIdentifier)
-    try create(identifyToken, forKey: KeychainKey.identifyToken)
+    try self.clearLoginData()
+    
+    try self.create(Data(identifier.utf8), forKey: KeychainKey.userIdentifier)
+    try self.create(identifyToken, forKey: KeychainKey.identifyToken)
     
     if let email = email {
-      try create(Data(email.utf8), forKey: KeychainKey.userEmail)
+      try self.create(Data(email.utf8), forKey: KeychainKey.userEmail)
     } else {
-      try create(Data(), forKey: KeychainKey.userEmail)
+      try self.create(Data(), forKey: KeychainKey.userEmail)
     }
   }
   
   // swiftlint:disable large_tuple
   func getLoginData() throws -> (identifier: String, identifyToken: String, email: String?)? {
-    guard let identifierData = try load(forKey: KeychainKey.userIdentifier),
+    guard let identifierData = try self.load(forKey: KeychainKey.userIdentifier),
       let identifier = String(data: identifierData, encoding: String.Encoding.utf8),
-      let tokenData = try load(forKey: KeychainKey.identifyToken),
+      let tokenData = try self.load(forKey: KeychainKey.identifyToken),
       let identifyToken = String(data: tokenData, encoding: String.Encoding.utf8)
     else {
       return nil
     }
     
-    let emailData = try load(forKey: KeychainKey.userEmail)
+    let emailData = try self.load(forKey: KeychainKey.userEmail)
     let email = emailData.flatMap { String(data: $0, encoding: String.Encoding.utf8) }
     return (identifier, identifyToken, email)
   }
   // swiftlint:enable large_tuple
   
   func clearLoginData() throws {
-    try delete(forKey: KeychainKey.userIdentifier)
-    try delete(forKey: KeychainKey.userEmail)
-    try delete(forKey: KeychainKey.identifyToken)
+    try self.delete(forKey: KeychainKey.userIdentifier)
+    try self.delete(forKey: KeychainKey.userEmail)
+    try self.delete(forKey: KeychainKey.identifyToken)
   }
 }
 
 enum KeychainError: Error {
   case nonExistentKey
+  case alreadyExistentKey // 새로운 에러 추가
   case unhandledError(status: OSStatus)
 }
