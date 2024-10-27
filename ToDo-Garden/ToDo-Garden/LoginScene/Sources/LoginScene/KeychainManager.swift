@@ -20,7 +20,7 @@ final class KeychainManager {
     // MARK: - 필요한 키값을 직접 추가하세요
   }
   
-  func save(_ data: Data, forKey key: String) throws {
+  func create(_ data: Data, forKey key: String) throws {
     let query: [String: Any] = [
       kSecClass as String: kSecClassGenericPassword,
       kSecAttrAccount as String: key,
@@ -28,9 +28,29 @@ final class KeychainManager {
       kSecAttrAccessible as String: kSecAttrAccessibleWhenUnlocked
     ]
     
-    SecItemDelete(query as CFDictionary)
-    
     let status = SecItemAdd(query as CFDictionary, nil)
+    if status == errSecSuccess {
+      return
+    } else if status == errSecDuplicateItem {
+      // MARK: - 이미 존재하는 Key에 대해 create를 시도할 경우 실패함. 그럴땐 업데이트 시도
+      try update(data, forKey: key)
+    } else {
+      // MARK: - 업데이트 마저 실패하면 Error throwing
+      throw KeychainError.unhandledError(status: status)
+    }
+  }
+  
+  func update(_ data: Data, forKey key: String) throws {
+    let query: [String: Any] = [
+      kSecClass as String: kSecClassGenericPassword,
+      kSecAttrAccount as String: key
+    ]
+    
+    let attributesToUpdate: [String: Any] = [
+      kSecValueData as String: data
+    ]
+    
+    let status = SecItemUpdate(query as CFDictionary, attributesToUpdate as CFDictionary)
     guard status == errSecSuccess else {
       throw KeychainError.unhandledError(status: status)
     }
@@ -74,13 +94,13 @@ final class KeychainManager {
 
 extension KeychainManager {
   func saveLoginData(identifier: String, identifyToken: Data, email: String?) throws {
-    try save(Data(identifier.utf8), forKey: KeychainKey.userIdentifier)
-    try save(identifyToken, forKey: KeychainKey.identifyToken)
+    try create(Data(identifier.utf8), forKey: KeychainKey.userIdentifier)
+    try create(identifyToken, forKey: KeychainKey.identifyToken)
     
     if let email = email {
-      try save(Data(email.utf8), forKey: KeychainKey.userEmail)
+      try create(Data(email.utf8), forKey: KeychainKey.userEmail)
     } else {
-      try save(Data(), forKey: KeychainKey.userEmail)
+      try create(Data(), forKey: KeychainKey.userEmail)
     }
   }
   
