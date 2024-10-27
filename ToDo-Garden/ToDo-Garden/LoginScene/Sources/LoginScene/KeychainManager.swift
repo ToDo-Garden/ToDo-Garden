@@ -129,6 +129,6 @@ extension KeychainManager {
 
 enum KeychainError: Error {
   case nonExistentKey
-  case alreadyExistentKey // 새로운 에러 추가
+  case alreadyExistentKey
   case unhandledError(status: OSStatus)
 }
