@@ -113,4 +113,8 @@ extension UIImage {
   public static let loginBackground = UIImage(
     resource: .loginBackground
   )
+  
+  public static let instaFeed = UIImage(
+    resource: .instaFeed
+  )
 }

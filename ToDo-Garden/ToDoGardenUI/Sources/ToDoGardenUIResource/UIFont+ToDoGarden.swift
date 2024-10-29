@@ -84,6 +84,11 @@ extension UIFont {
     name: PretendardFont.regular.name,
     size: 5
   ) ?? UIFont.systemFont(ofSize: 5, weight: .regular)
+  
+  public static let gmarkSansBold: UIFont = UIFont(
+    name: GmarkSansFont.bold.name,
+    size: 27
+  ) ?? UIFont.systemFont(ofSize: 27, weight: .bold)
 }
 
 public enum PretendardFont: String, CaseIterable {
@@ -121,4 +126,32 @@ public enum PretendardFont: String, CaseIterable {
 			CTFontManagerRegisterFontsForURL(url as CFURL, CTFontManagerScope.process, nil)
 		}
 	}
+}
+
+public enum GmarkSansFont: String, CaseIterable {
+  case bold = "GmarkSansFontTTFBold"
+  
+  private static let extensionName: String = "ttf"
+  
+  fileprivate var name: String {
+    return self.rawValue
+  }
+  
+  private static var isFontRegistered: Bool = false
+  
+  public static func register() {
+    guard Self.isFontRegistered == false
+    else { return }
+    defer { Self.isFontRegistered = true }
+    
+    GmarkSansFont.allCases.forEach { font in
+      guard let url = Bundle.module.url(
+        forResource: font.name,
+        withExtension: GmarkSansFont.extensionName
+      )
+      else { return }
+      
+      CTFontManagerRegisterFontsForURL(url as CFURL, CTFontManagerScope.process, nil)
+    }
+  }
 }
