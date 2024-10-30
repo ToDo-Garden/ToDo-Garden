@@ -18,3 +18,11 @@ let package = Package(
     )
   ]
 )
+
+for target in package.targets {
+  var swiftSettings = target.swiftSettings ?? []
+  swiftSettings.append(
+    SwiftSetting.enableExperimentalFeature("StrictConcurrency")
+  )
+  target.swiftSettings = swiftSettings
+}
