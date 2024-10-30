@@ -4,17 +4,17 @@
 import PackageDescription
 
 let package = Package(
-    name: "TDFoundation",
-    platforms: [SupportedPlatform.iOS(SupportedPlatform.IOSVersion.v15)],
-    products: [
-        Product.library(
-            name: "TDFoundation",
-            targets: ["TDFoundation"]
-        )
-    ],
-    targets: [
-      Target.target(
-        name: "TDFoundation"
-      )
-    ]
+  name: "TDFoundation",
+  platforms: [SupportedPlatform.iOS(SupportedPlatform.IOSVersion.v15)],
+  products: [
+    Product.library(
+      name: "TDFoundation",
+      targets: ["TDFoundation"]
+    )
+  ],
+  targets: [
+    Target.target(
+      name: "TDFoundation"
+    )
+  ]
 )
