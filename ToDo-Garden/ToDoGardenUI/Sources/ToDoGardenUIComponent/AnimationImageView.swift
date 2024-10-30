@@ -84,3 +84,22 @@ public class AnimationImageView: UIView {
     self.animationView.pause()
   }
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let view = AnimationImageView(jsonName: "LoadingIndicator")
+  
+  Task {
+    try? await Task.sleep(nanoseconds: 3000000000)
+    view.pauseAnimation()
+  }
+  
+  Task {
+    try? await Task.sleep(nanoseconds: 6000000000)
+    view.startAnimation()
+  }
+  
+  return view
+}
+#endif
