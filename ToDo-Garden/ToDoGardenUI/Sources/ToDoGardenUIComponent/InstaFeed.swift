@@ -1,5 +1,17 @@
 import UIKit
 // swiftlint:disable identifier_name
+
+// MARK: - Helper
+private extension UIView {
+  var snapshot: UIImage {
+    let renderer = UIGraphicsImageRenderer(bounds: self.bounds)
+    let image = renderer.image { _ in
+      self.drawHierarchy(in: self.bounds, afterScreenUpdates: true)
+    }
+    return image
+  }
+}
+
 final class InstaFeedViewController: UIViewController {
   private let state: State
   struct State {
