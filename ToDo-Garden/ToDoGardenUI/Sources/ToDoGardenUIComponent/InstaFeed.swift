@@ -1,5 +1,67 @@
 import UIKit
 // swiftlint:disable identifier_name
+public struct InstaShareClient {
+  var _imageData: (String, UIImage, Int) throws -> Data
+  var _setItem: (Data) -> Void
+  var _openInstagram: () throws -> Void
+  
+  init(
+    imageData: @escaping (String, UIImage, Int) throws -> Data,
+    setItem: @escaping (Data) -> Void,
+    openInstagram: @escaping () throws -> Void
+  ) {
+    self._imageData = imageData
+    self._setItem = setItem
+    self._openInstagram = openInstagram
+  }
+  
+  public func story(name: String, icon: UIImage, focusDays: Int) throws {
+    let data = try self._imageData(name, icon, focusDays)
+    self._setItem(data)
+    try self._openInstagram()
+  }
+}
+
+extension InstaShareClient {
+  public enum InternalError: Error {
+    case unexpected
+    case notInstalled
+  }
+  
+  public static let live = Self(
+    imageData: { name, icon, focusDays in
+      let image = InstaFeedViewController(
+        state: InstaFeedViewController.State(
+          name: name,
+          icon: icon,
+          focusDays: focusDays
+        )
+      )
+      .view
+      .snapshot
+      guard let data = image.pngData() else {
+        throw InternalError.unexpected
+      }
+      return data
+    },
+    setItem: { data in
+      let pasteItem = [
+        "com.instagram.sharedSticker.backgroundImage": data
+      ]
+      let options = [
+        UIPasteboard.OptionsKey.expirationDate: Date().addingTimeInterval(60)
+      ]
+      UIPasteboard.general.setItems([pasteItem])
+    },
+    openInstagram: {
+      guard
+        let url = URL(string: "instagram-stories://share?source_application=405152385990835")
+      else { throw URLError(.badURL) }
+      guard UIApplication.shared.canOpenURL(url) else { throw InternalError.notInstalled }
+      UIApplication.shared.open(url)
+    }
+  )
+}
 
 // MARK: - Helper
 private extension UIView {
