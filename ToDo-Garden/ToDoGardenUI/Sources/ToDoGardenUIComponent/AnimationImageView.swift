@@ -8,7 +8,14 @@
 import UIKit
 
 import Lottie
+import ToDoGardenUIConstant
 import ToDoGardenUIResource
+
+private enum AnimationImageViewError: Error {
+  case bundleLoadFailed
+  case jsonURLNotFound
+  case animationLoadFailed
+}
 
 public class AnimationImageView: UIView {
   private var animationView: LottieAnimationView
@@ -18,7 +25,6 @@ public class AnimationImageView: UIView {
     self.animationView = LottieAnimationView()
     super.init(frame: .zero)
     self.setupAnimation(jsonName: jsonName)
-    
   }
   
   @available(*, unavailable)
@@ -32,31 +38,36 @@ public class AnimationImageView: UIView {
         self.animationTask = nil
       }
       
-      guard let bundle = Bundle.toDoGardenUIResource else {
-        // Bundle load 실패
-        return
+      do {
+        try await self.loadAndSetupAnimation(jsonName: jsonName)
+      } catch {
+        // TODO: 에러처리 
       }
-      
-      guard let jsonURL = bundle.url(
-        forResource: jsonName,
-        withExtension: "json",
-        subdirectory: "LottieJsons"
-      ) else {
-        // JSON URL을 찾지 못함
-        return
-      }
-      
-      await self.loadAnimation(from: jsonURL)
-      self.setupAnimationView()
     }
   }
   
-  private func loadAnimation(from url: URL) async {
+  private func loadAndSetupAnimation(jsonName: String) async throws {
+    guard let bundle = Bundle.toDoGardenUIResource else {
+      throw AnimationImageViewError.bundleLoadFailed
+    }
+    
+    guard let jsonURL = bundle.url(
+      forResource: jsonName,
+      withExtension: Constant.AnimationImageView.StringLiteral.fileFormat,
+      subdirectory: Constant.AnimationImageView.StringLiteral.subDirectory
+    ) else {
+      throw AnimationImageViewError.jsonURLNotFound
+    }
+    
+    try await self.loadAnimation(from: jsonURL)
+    self.setupAnimationView()
+  }
+  
+  private func loadAnimation(from url: URL) async throws {
     if let animation = await LottieAnimation.loadedFrom(url: url) {
       self.animationView = LottieAnimationView(animation: animation)
     } else {
-      // Animation load 실패
-      return
+      throw AnimationImageViewError.animationLoadFailed
     }
   }
   
