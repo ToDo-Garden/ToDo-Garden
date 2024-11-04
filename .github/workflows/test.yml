@@ -18,3 +18,6 @@ jobs:
             xcode_archive_path: "ToDo-Garden.xcresult"
             token: ${{ secrets.CODECOV_TOKEN }}
             slug: ToDo-Garden/ToDo-Garden
+      - name: Add Facebook API ID
+        env:
+          FACEBOOK_API_ID: ${{ secrets.FACEBOOK_API_ID }}
