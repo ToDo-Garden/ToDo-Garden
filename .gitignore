@@ -7,7 +7,6 @@ xcuserdata/
 !*.xcodeproj/project.pbxproj
 !*.xcodeproj/xcshareddata/
 !*.xcworkspace/contents.xcworkspacedata
-*.xcconfig
 
 # SPM
 .build/
