@@ -33,5 +33,6 @@ extension SceneDelegate {
   
   private func registerCustomFonts() {
     PretendardFont.register()
+    GmarkSansFont.register()
   }
 }
