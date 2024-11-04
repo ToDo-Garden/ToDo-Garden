@@ -23,5 +23,7 @@
 			</array>
 		</dict>
 	</dict>
+	<key>facebookAPIKey</key>
+	<string>${FACEBOOK_API_KEY}</string>
 </dict>
 </plist>
