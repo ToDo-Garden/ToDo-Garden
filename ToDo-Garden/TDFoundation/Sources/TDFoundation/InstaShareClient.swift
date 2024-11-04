@@ -6,22 +6,25 @@ import ToDoGardenUIComponent
 public struct InstaShareClient {
   var _imageData: (String, UIImage, Int) throws -> Data
   var _setItem: (Data) -> Void
-  var _openInstagram: () throws -> Void
+  var _apiID: () throws -> String
+  var _openInstagram: (String) throws -> Void
   
   init(
     imageData: @escaping (String, UIImage, Int) throws -> Data,
     setItem: @escaping (Data) -> Void,
-    openInstagram: @escaping () throws -> Void
+    apiID: @escaping () throws -> String,
+    openInstagram: @escaping (String) throws -> Void
   ) {
     self._imageData = imageData
     self._setItem = setItem
+    self._apiID = apiID
     self._openInstagram = openInstagram
   }
   
   public func story(name: String, icon: UIImage, focusDays: Int) throws {
     let data = try self._imageData(name, icon, focusDays)
     self._setItem(data)
-    try self._openInstagram()
+    try self._openInstagram(self._apiID())
   }
 }
 
@@ -29,6 +32,7 @@ extension InstaShareClient {
   public enum InternalError: Error {
     case unexpected
     case notInstalled
+    case missingAPIKey
   }
   
   @MainActor
@@ -57,9 +61,15 @@ extension InstaShareClient {
       ]
       UIPasteboard.general.setItems([pasteItem])
     },
-    openInstagram: {
+    apiID: {
       guard
-        let url = URL(string: "instagram-stories://share?source_application=405152385990835")
+        let id = Bundle.main.infoDictionary?["facebookAPIKey"] as? String
+      else { throw InternalError.missingAPIKey }
+      return id
+    },
+    openInstagram: { id in
+      guard
+        let url = URL(string: "instagram-stories://share?source_application=\(id)")
       else { throw URLError(.badURL) }
       guard UIApplication.shared.canOpenURL(url) else { throw InternalError.notInstalled }
       UIApplication.shared.open(url)
