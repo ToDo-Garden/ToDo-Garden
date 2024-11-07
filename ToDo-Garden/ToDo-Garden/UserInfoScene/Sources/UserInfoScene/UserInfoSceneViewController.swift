@@ -26,6 +26,7 @@ protocol UserInfoSceneDisplayLogic: AnyObject {
   func displaySignOutResult(viewModel: UserInfoScene.SignOut.ViewModel)
   func displayChangedUserIntroduction(_ introduction: String)
   func displayEmptyUserIntroduction(_ placeholderText: String)
+  func displayChangedUserName(_ userName: String)
 }
 
 final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewControllable {
@@ -125,19 +126,25 @@ extension UserInfoSceneViewController: UserInfoSceneDisplayLogic {
   }
 
   func displayChangedUserIntroduction(_ introduction: String) {
-    self.updateUserIntroduction(introduction)
+    self.updateReloadedUserInfo(introduction, isUserName: false)
   }
 
   func displayEmptyUserIntroduction(_ placeholderText: String) {
-    self.updateUserIntroduction(placeholderText)
+    self.updateReloadedUserInfo(placeholderText, isUserName: false)
   }
 
-  private func updateUserIntroduction(_ introduction: String) {
-    guard let userIntroductionCell = self.userInfoCollectionView.cellForItem(
-      at: IndexPath(row: 1, section: 0)
+  func displayChangedUserName(_ userName: String) {
+    self.updateReloadedUserInfo(userName, isUserName: true)
+  }
+
+  private func updateReloadedUserInfo(_ value: String, isUserName: Bool) {
+    let row = isUserName ? 0 : 1
+    let indexPath = IndexPath(row: row, section: 0)
+    guard let cell = self.userInfoCollectionView.cellForItem(
+      at: indexPath
     ) as? UserInfoCollectionViewCell else { return }
 
-    userIntroductionCell.updateDescription(introduction)
+    cell.updateDescription(value)
   }
 }
 
@@ -149,7 +156,7 @@ extension UserInfoSceneViewController: EditUserIntroductionDelegate, EditUserNam
   }
 
   func userNameDidEdited(_ userName: String) {
-    // TODO: - 변경된 닉네임 전달 Business Logic 호출 예정
+    self.interactor?.reloadUserName(userName)
   }
 
   func didSelectEditProfileButton() {

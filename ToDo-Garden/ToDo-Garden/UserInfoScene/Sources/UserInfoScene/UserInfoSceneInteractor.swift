@@ -24,6 +24,7 @@ protocol UserInfoSceneBusinessLogic {
   func withdrawMembership()
   func signOut()
   func reloadUserIntroduction(_ introduction: String?)
+  func reloadUserName(_ userName: String)
 }
 
 final class UserInfoSceneInteractor: UserInfoSceneDataStore {
@@ -130,6 +131,11 @@ extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
     } else {
       self.presenter?.presentEmptyUserIntroduction()
     }
+  }
+
+  func reloadUserName(_ userName: String) {
+    self.userName = userName
+    self.presenter?.presentChangedUserName(userName)
   }
 }
 
