@@ -41,4 +41,5 @@ public enum Constant {
   public enum TermsAgreementViewRow { }
   public enum InputTextValidationView {}
   public enum SignUpInputView { }
+  public enum AnimationImageView { }
 }

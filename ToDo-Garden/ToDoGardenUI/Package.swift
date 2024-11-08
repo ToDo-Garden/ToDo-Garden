@@ -50,7 +50,8 @@ let package = Package(
     .target(
       name: "ToDoGardenUIResource",
       resources: [
-        .process("Fonts")
+        .process("Fonts"),
+        .copy("LottieJsons")
       ]
     ),
     .target(name: "ToDoGardenUIConstant"),
