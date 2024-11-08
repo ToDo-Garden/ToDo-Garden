@@ -99,4 +99,11 @@ public final class LeafLabel: UIView {
   }
 }
 
+@available(iOS 17.0, *)
+#Preview {
+  let view = LeafLabel(
+    titleText: "완료한 투두 기록하기",
+    descriptionText: "매일 투두를 완료하고 기록을 갱신해요"
+  )
+  return view
 }
