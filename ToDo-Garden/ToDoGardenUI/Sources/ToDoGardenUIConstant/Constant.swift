@@ -42,4 +42,5 @@ public enum Constant {
   public enum InputTextValidationView {}
   public enum SignUpInputView { }
   public enum AnimationImageView { }
+  public enum LeafLabel { }
 }
