@@ -16,7 +16,7 @@ private enum AnimationImageViewError: Error {
   case animationLoadFailed
 }
 
-public class AnimationImageView: UIView {
+public final class AnimationImageView: UIView {
   private var animationView: LottieAnimationView
   private var animationTask: Task<Void, Never>?
   
