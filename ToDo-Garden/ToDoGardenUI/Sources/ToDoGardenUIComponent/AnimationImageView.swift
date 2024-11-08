@@ -8,7 +8,6 @@
 import UIKit
 
 import Lottie
-import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 private enum AnimationImageViewError: Error {
@@ -21,10 +20,10 @@ public class AnimationImageView: UIView {
   private var animationView: LottieAnimationView
   private var animationTask: Task<Void, Never>?
   
-  public init(jsonName: String) {
+  public init(jsonURL: URL?) {
     self.animationView = LottieAnimationView()
     super.init(frame: .zero)
-    self.setupAnimation(jsonName: jsonName)
+    self.setupAnimation(jsonURL: jsonURL)
   }
   
   @available(*, unavailable)
@@ -32,30 +31,22 @@ public class AnimationImageView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
   
-  private func setupAnimation(jsonName: String) {
+  private func setupAnimation(jsonURL: URL?) {
     self.animationTask = Task {
       defer {
         self.animationTask = nil
       }
       
       do {
-        try await self.loadAndSetupAnimation(jsonName: jsonName)
+        try await self.loadAndSetupAnimation(jsonURL: jsonURL)
       } catch {
         // TODO: 에러처리 
       }
     }
   }
   
-  private func loadAndSetupAnimation(jsonName: String) async throws {
-    guard let bundle = Bundle.toDoGardenUIResource else {
-      throw AnimationImageViewError.bundleLoadFailed
-    }
-    
-    guard let jsonURL = bundle.url(
-      forResource: jsonName,
-      withExtension: Constant.AnimationImageView.StringLiteral.fileFormat,
-      subdirectory: Constant.AnimationImageView.StringLiteral.subDirectory
-    ) else {
+  private func loadAndSetupAnimation(jsonURL: URL?) async throws {
+    guard let jsonURL = jsonURL else {
       throw AnimationImageViewError.jsonURLNotFound
     }
     
@@ -99,7 +90,7 @@ public class AnimationImageView: UIView {
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  let view = AnimationImageView(jsonName: "LoadingIndicator")
+  let view = AnimationImageView(jsonURL: URL.loadingIndicatorURL)
   
   Task {
     try? await Task.sleep(nanoseconds: 3000000000)
