@@ -110,3 +110,13 @@ public final class BubbleLabel: UIView {
     self.delegate?.didTapCancelButton()
   }
 }
+
+@available(iOS 17.0, *)
+#Preview {
+  let view = BubbleLabel(
+    tailPosition: .right,
+    iconImage: UIImage.createToDoButtonImage,
+    text: "버튼을 눌러 제발 눌러서 그룹을\n추가해보지 않을래?응? Lorem 어쩌구저쩌구 ㅁㄴㅇㅁㄴㅇㅁㄴㅇㅁㄴㅇㅁㄴㅇㅁㄴㅇ"
+  )
+  return view
+}
