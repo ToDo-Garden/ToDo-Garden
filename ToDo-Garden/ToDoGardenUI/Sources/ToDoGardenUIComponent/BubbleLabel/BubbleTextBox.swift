@@ -7,6 +7,7 @@
 
 import UIKit
 
+import TDUtility
 import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
@@ -44,8 +45,11 @@ final class BubbleTextBox: UIView {
   }
   
   private func setupTextLabel(iconImage: UIImage, text: String) {
+    let length = Constant.BubbleLabel.BubbleTextBox.iconLength
+    let targetSize = CGSize(width: length, height: length)
+    
     let imageAttachment = NSTextAttachment()
-    imageAttachment.image = resizeImage(image: iconImage)
+    imageAttachment.image = iconImage.resizedImage(targetSize: targetSize)
     let stringWithImage = NSMutableAttributedString(attachment: imageAttachment)
     
     let attributedString = NSMutableAttributedString(string: text)
@@ -66,18 +70,6 @@ final class BubbleTextBox: UIView {
     self.textLabel.numberOfLines = Int.zero
     self.textLabel.usingAutolayout()
     self.addSubview(self.textLabel)
-  }
-  
-  private func resizeImage(image: UIImage) -> UIImage? {
-    let length = Constant.BubbleLabel.BubbleTextBox.iconLength
-    let targetSize = CGSize(width: length, height: length)
-    
-    UIGraphicsBeginImageContextWithOptions(targetSize, false, CGFloat.zero)
-    // targetSize로, 투명한 배경(false), scale은 현재 display기준 그대로 (0.0)
-    image.draw(in: CGRect(origin: .zero, size: targetSize))
-    let newImage = UIGraphicsGetImageFromCurrentImageContext()
-    UIGraphicsEndImageContext()
-    return newImage
   }
   
   private func setupCancelButton() {
