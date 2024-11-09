@@ -57,8 +57,8 @@ public final class BubbleLabel: UIView {
   
   private func setupCancelButtonAction() {
     self.bubbleTextBox.cancelButton.addAction(
-      UIAction { _ in
-        self.cancelButtonTapped()
+      UIAction { [weak self] _ in
+        self?.cancelButtonTapped()
     },
       for: UIControl.Event.touchUpInside
     )
