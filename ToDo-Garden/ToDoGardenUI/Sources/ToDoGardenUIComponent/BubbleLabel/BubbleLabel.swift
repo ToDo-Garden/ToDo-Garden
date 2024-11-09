@@ -11,7 +11,7 @@ import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 public protocol BubbleLabelDelegate: AnyObject {
-  func didTapCancelButton()
+  func didTap()
 }
 
 public final class BubbleLabel: UIView {
@@ -46,7 +46,7 @@ public final class BubbleLabel: UIView {
   private func setupView() {
     self.backgroundColor = UIColor.white
     self.addSubviews()
-    self.setupCancelButtonAction()
+    self.setupTapAction()
     self.setupConstraints()
   }
   
@@ -55,13 +55,18 @@ public final class BubbleLabel: UIView {
     self.addSubview(self.tailView)
   }
   
-  private func setupCancelButtonAction() {
-    self.bubbleTextBox.cancelButton.addAction(
-      UIAction { [weak self] _ in
-        self?.cancelButtonTapped()
-    },
+  private func setupTapAction() {
+    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleTap))
+    self.bubbleTextBox.addGestureRecognizer(tapGesture)
+    self.bubbleTextBox.cancelButton.addTarget(
+      self,
+      action: #selector(self.handleTap),
       for: UIControl.Event.touchUpInside
     )
+  }
+  
+  @objc private func handleTap() {
+    self.delegate?.didTap()
   }
   
   private func setupConstraints() {
@@ -104,10 +109,6 @@ public final class BubbleLabel: UIView {
     case .right:
       self.tailView.centerXAnchor.constraint(equalTo: self.trailingAnchor, constant: -margin).isActive = true
     }
-  }
-  
-  private func cancelButtonTapped() {
-    self.delegate?.didTapCancelButton()
   }
 }
 
