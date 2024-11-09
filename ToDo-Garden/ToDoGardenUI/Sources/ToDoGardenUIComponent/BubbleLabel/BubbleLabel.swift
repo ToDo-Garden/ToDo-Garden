@@ -9,6 +9,11 @@ import UIKit
 
 import ToDoGardenUIConstant
 import ToDoGardenUIResource
+
+public protocol BubbleLabelDelegate: AnyObject {
+  func didTapCancelButton()
+}
+
 public final class BubbleLabel: UIView {
   private let bubbleTextBox: BubbleTextBox
   private let tailView: TailView
@@ -99,5 +104,9 @@ public final class BubbleLabel: UIView {
     case .right:
       self.tailView.centerXAnchor.constraint(equalTo: self.trailingAnchor, constant: -margin).isActive = true
     }
+  }
+  
+  private func cancelButtonTapped() {
+    self.delegate?.didTapCancelButton()
   }
 }
