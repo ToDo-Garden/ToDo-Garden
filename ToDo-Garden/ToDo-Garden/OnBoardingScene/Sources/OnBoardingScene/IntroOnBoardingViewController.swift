@@ -106,3 +106,12 @@ extension IntroOnBoardingViewController {
     ])
   }
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let viewController = IntroOnBoardingViewController()
+  let navi = UINavigationController(rootViewController: viewController)
+  return navi
+}
+#endif
