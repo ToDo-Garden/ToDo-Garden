@@ -56,6 +56,8 @@ extension UIColor {
   
   public static let toDoGardenWhite = UIColor(resource: .toDoGardenWhite)
   
+  public static let toDoGardenBeige = UIColor(resource: .toDoGardenBeige)
+  
   // MARK: - Garden view
   
   public static let toDoGardenGrassNone = UIColor(resource: .toDoGardenGrassNone)
