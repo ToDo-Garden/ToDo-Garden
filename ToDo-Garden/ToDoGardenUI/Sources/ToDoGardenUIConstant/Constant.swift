@@ -43,4 +43,5 @@ public enum Constant {
   public enum SignUpInputView { }
   public enum AnimationImageView { }
   public enum LeafLabel { }
+  public enum BubbleLabel { }
 }

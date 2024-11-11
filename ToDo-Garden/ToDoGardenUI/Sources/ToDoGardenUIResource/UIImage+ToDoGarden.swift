@@ -117,4 +117,12 @@ extension UIImage {
   public static let instaFeed = UIImage(
     resource: .instaFeed
   )
+  
+  public static let xMark = UIImage(
+    systemName: "xmark.circle.fill"
+  )
+  
+  public static let onBoarding = UIImage(
+    resource: .onBoarding
+  )
 }
