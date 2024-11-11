@@ -113,3 +113,47 @@ extension TutorialOnBoardingViewController {
   }
 }
 
+extension TutorialOnBoardingViewController: BubbleLabelDelegate {
+  public func didTap() {
+    if !self.leftBubbleLabel.isHidden {
+      self.animateLeftBubbleLabel()
+    } else if !self.rightBubbleLabel.isHidden {
+      self.animateRightBubbleLabel()
+    }
+  }
+  
+  private func animateLeftBubbleLabel() {
+    UIView.animate(
+      withDuration: 0.5,
+      animations: { [weak self] in
+        self?.leftBubbleLabel.alpha = 0
+      },
+      completion: { _ in
+        self.leftBubbleLabel.isHidden = true
+        self.rightBubbleLabel.isHidden = false
+        self.showRightBubbleLabel()
+      }
+    )
+  }
+  
+  private func showRightBubbleLabel() {
+    UIView.animate(
+      withDuration: 0.5,
+      animations: { [weak self] in
+        self?.rightBubbleLabel.alpha = 1
+      }
+    )
+  }
+  
+  private func animateRightBubbleLabel() {
+    UIView.animate(
+      withDuration: 0.5,
+      animations: { [weak self] in
+        self?.rightBubbleLabel.alpha = 0
+      },
+      completion: { _ in
+        self.rightBubbleLabel.isHidden = true
+      }
+    )
+  }
+}
