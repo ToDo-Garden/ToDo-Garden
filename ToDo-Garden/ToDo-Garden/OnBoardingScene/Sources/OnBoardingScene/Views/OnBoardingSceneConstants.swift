@@ -31,5 +31,7 @@ enum Constant {
     
     static let leftBubbleTitle: String = "를 눌러 ToDo를 추가할 수 있어요"
     static let rightBubbleTitle: String = "뽀모도로 타이머를 이용하여\n집중력을 향상시킬 수 있어요"
+    
+    static let groupName: String = "그룹 1"
   }
 }
