@@ -41,5 +41,75 @@ final class TutorialOnBoardingViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     self.view.backgroundColor = UIColor.white
+    self.setupCell()
+    self.setupBubbleLabels()
   }
 }
+
+extension TutorialOnBoardingViewController {
+  private func setupCell() {
+    self.cell.isUserInteractionEnabled = false
+    self.cell.applyModelSecondary(
+      id: UUID(),
+      groupName: Constant.StringLiteral.groupName,
+      progressColor: UIColor.red,
+      progressRate: 0.5
+    )
+    self.cell.usingAutolayout()
+    self.view.addSubview(self.cell)
+    
+    NSLayoutConstraint.activate(
+      [
+        self.cell.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+        self.cell.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+        self.cell.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+        self.cell.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
+      ]
+    )
+  }
+  
+  private func setupBubbleLabels() {
+    self.leftBubbleLabel.delegate = self
+    self.rightBubbleLabel.delegate = self
+    
+    self.view.addSubview(self.leftBubbleLabel)
+    self.view.addSubview(self.rightBubbleLabel)
+    
+    self.leftBubbleLabel.usingAutolayout()
+    self.rightBubbleLabel.usingAutolayout()
+    
+    self.setBubbleConstraints()
+    
+    self.leftBubbleLabel.alpha = 1
+    self.rightBubbleLabel.alpha = 0
+  }
+  
+  private func setBubbleConstraints() {
+    guard let groupNameButton = self.cell.groupNameButton,
+      let rightImageButton = self.cell.rightImageButton else {
+      return
+    }
+    
+    let constant = Constant.Layout.self
+    NSLayoutConstraint.activate([
+      self.leftBubbleLabel.topAnchor.constraint(
+        equalTo: groupNameButton.bottomAnchor,
+        constant: constant.bubbleLabelMargin
+      ),
+      self.leftBubbleLabel.leadingAnchor.constraint(
+        equalTo: groupNameButton.trailingAnchor,
+        constant: constant.leftBubbleLabelLeading
+      ),
+      self.rightBubbleLabel.topAnchor.constraint(
+        equalTo: rightImageButton.bottomAnchor,
+        constant: constant.bubbleLabelMargin
+      ),
+      self.rightBubbleLabel.trailingAnchor.constraint(
+        equalTo: rightImageButton.centerXAnchor,
+        constant: constant.rightBubbleLabelTrailing
+      )
+    ])
+    self.leftBubbleLabel.isHidden = false
+  }
+}
+
