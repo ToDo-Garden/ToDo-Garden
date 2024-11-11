@@ -16,7 +16,8 @@ let package = Package(
     .target(
       name: "OnBoardingScene",
       dependencies: [
-        .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI")
+        .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI"),
+        .product(name: "ToDoGardenUIResource", package: "ToDoGardenUI")
       ]
     )
   ]

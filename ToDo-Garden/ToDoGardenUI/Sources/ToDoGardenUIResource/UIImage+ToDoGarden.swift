@@ -121,4 +121,8 @@ extension UIImage {
   public static let xMark = UIImage(
     systemName: "xmark.circle.fill"
   )
+  
+  public static let onBoarding = UIImage(
+    resource: .onBoarding
+  )
 }
