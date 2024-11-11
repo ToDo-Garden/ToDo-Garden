@@ -157,3 +157,12 @@ extension TutorialOnBoardingViewController: BubbleLabelDelegate {
     )
   }
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let viewController = TutorialOnBoardingViewController()
+  let navi = UINavigationController(rootViewController: viewController)
+  return navi
+}
+#endif
