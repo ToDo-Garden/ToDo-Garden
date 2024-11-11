@@ -10,7 +10,7 @@ import UIKit
 import ToDoGardenUIComponent
 import ToDoGardenUIResource
 
-public class IntroOnBoardingViewController: UIViewController {
+public final class IntroOnBoardingViewController: UIViewController {
   // private let mainImageView: AnimationImageView
   private let mainImageView: UIImageView
   private let stackView: LeafLabelStackView
