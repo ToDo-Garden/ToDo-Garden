@@ -46,7 +46,7 @@ public final class LeafLabel: UIView {
   
   private func setupImageView() {
     self.leafImageView.usingAutolayout()
-    self.leafImageView.contentMode = .scaleAspectFit
+    self.leafImageView.contentMode = UIView.ContentMode.scaleAspectFit
     self.addSubview(self.leafImageView)
   }
   
