@@ -39,7 +39,7 @@ public final class LeafLabel: UIView {
   
   public override var intrinsicContentSize: CGSize {
     return CGSize(
-      width: UIView.noIntrinsicMetric,
+      width: Constant.LeafLabel.width,
       height: Constant.LeafLabel.height
     )
   }
