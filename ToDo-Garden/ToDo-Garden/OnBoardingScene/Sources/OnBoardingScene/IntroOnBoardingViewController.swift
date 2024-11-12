@@ -48,8 +48,8 @@ public final class IntroOnBoardingViewController: UIViewController {
 extension IntroOnBoardingViewController {
   private func setupViews() {
     self.addMainImageView()
-    self.addStackView()
     self.addStartButton()
+    self.addStackView()
   }
   
   private func addMainImageView() {
@@ -66,8 +66,8 @@ extension IntroOnBoardingViewController {
   
   private func setupConstraints() {
     self.setupMainImageViewConstraints()
-    self.setupStackViewConstraints()
     self.setupStartButtonConstraints()
+    self.setupStackViewConstraints()
   }
   
   private func setupMainImageViewConstraints() {
@@ -87,12 +87,26 @@ extension IntroOnBoardingViewController {
   }
   
   private func setupStackViewConstraints() {
+    let dummyView = UIView()
+    self.view.addSubview(dummyView)
+    dummyView.usingAutolayout()
+    
+    NSLayoutConstraint.activate([
+      dummyView.widthAnchor.constraint(
+        equalToConstant: CGFloat.zero
+      ),
+      dummyView.topAnchor.constraint(
+        equalTo: self.mainImageView.bottomAnchor
+      ),
+      dummyView.bottomAnchor.constraint(equalTo: self.startButton.topAnchor)
+    ])
+    
     self.stackView.usingAutolayout()
     
     NSLayoutConstraint.activate([
       self.stackView.centerYAnchor.constraint(
-        equalTo: self.view.centerYAnchor,
-        constant: self.view.bounds.height * Constant.Layout.multiplier
+        equalTo: dummyView.centerYAnchor,
+        constant: -Constant.Layout.space / 2
       ),
       self.stackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
     ])
