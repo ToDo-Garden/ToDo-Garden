@@ -128,10 +128,10 @@ extension TutorialOnBoardingViewController: BubbleLabelDelegate {
       animations: { [weak self] in
         self?.leftBubbleLabel.alpha = 0
       },
-      completion: { _ in
-        self.leftBubbleLabel.isHidden = true
-        self.rightBubbleLabel.isHidden = false
-        self.showRightBubbleLabel()
+      completion: { [weak self] _ in
+        self?.leftBubbleLabel.isHidden = true
+        self?.rightBubbleLabel.isHidden = false
+        self?.showRightBubbleLabel()
       }
     )
   }
@@ -151,8 +151,8 @@ extension TutorialOnBoardingViewController: BubbleLabelDelegate {
       animations: { [weak self] in
         self?.rightBubbleLabel.alpha = 0
       },
-      completion: { _ in
-        self.rightBubbleLabel.isHidden = true
+      completion: { [weak self] _ in
+        self?.rightBubbleLabel.isHidden = true
       }
     )
   }
