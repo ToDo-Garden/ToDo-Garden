@@ -13,7 +13,7 @@ import ToDoGardenUIResource
 
 public final class LongestRecordView: UIView {
   private let titleLabel: UILabel
-  private let labelStackView: UIStackView
+  private let labelStackView: UIVStackView
   
   public var informationButton: UIButton?
   
@@ -30,7 +30,11 @@ public final class LongestRecordView: UIView {
     date: [Date]
   ) {
     self.titleLabel = UILabel()
-    self.labelStackView = UIStackView(frame: CGRect.zero)
+    self.labelStackView = UIVStackView(
+      alignment: UIStackView.Alignment.trailing,
+      spacing: 1.0,
+      arrangedSubviews: []
+    )
     super.init(frame: CGRect.zero)
     self.backgroundColor = UIColor.white
     self.layer.cornerRadius = Constant.LongestRecordView.Layout.cornerRadius
@@ -124,10 +128,6 @@ extension LongestRecordView {
     recordCount: Int,
     date: [Date]
   ) {
-    self.labelStackView.axis = NSLayoutConstraint.Axis.vertical
-    self.labelStackView.alignment = UIStackView.Alignment.trailing
-    self.labelStackView.spacing = 1.0
-    
     self.addSubview(self.labelStackView)
     self.labelStackView.usingAutolayout()
     
@@ -252,9 +252,10 @@ extension LongestRecordView {
 
 @available(iOS 17.0, *)
 #Preview {
-  let stackView = UIStackView()
-  stackView.axis = .horizontal
-  stackView.spacing = 7.0
+  let stackView = UIHStackView(
+    alignment: UIStackView.Alignment.fill,
+    arrangedSubviews: []
+  )
   stackView.distribution = .fillEqually
   
   let view1 = LongestRecordView(
