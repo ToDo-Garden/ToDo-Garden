@@ -8,6 +8,7 @@
 import UIKit
 
 import TDFoundationExtension
+import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 public final class LongestRecordView: UIView {
@@ -24,7 +25,7 @@ public final class LongestRecordView: UIView {
   public init(
     style: LongestRecordView.Configuration,
     title: String,
-    groupName: String? = nil,
+    groupName: String?,
     recordCount: Int,
     date: [Date]
   ) {
@@ -32,8 +33,8 @@ public final class LongestRecordView: UIView {
     self.labelStackView = UIStackView(frame: CGRect.zero)
     super.init(frame: CGRect.zero)
     self.backgroundColor = UIColor.white
-    self.layer.cornerRadius = 10.0
-    self.layer.borderWidth = 1.0
+    self.layer.cornerRadius = Constant.LongestRecordView.Layout.cornerRadius
+    self.layer.borderWidth = Constant.LongestRecordView.Layout.borderWidth
     self.layer.borderColor = UIColor.toDoGardenGreenGray.cgColor
     self.setupViews(
       style: style,
@@ -79,10 +80,11 @@ extension LongestRecordView {
   }
   
   private func setupTitleLabelConstraints() {
+    let constant = Constant.LongestRecordView.TitleLabel.Layout.self
     NSLayoutConstraint.activate(
       [
-        self.titleLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 10.0),
-        self.titleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 12.0)
+        self.titleLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: constant.top),
+        self.titleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: constant.leading)
       ]
     )
   }
@@ -105,12 +107,13 @@ extension LongestRecordView {
   }
   
   private func setupInformationButtonConstraints(_ button: UIButton) {
+    let constant = Constant.LongestRecordView.InfoButton.Layout.self
     NSLayoutConstraint.activate(
       [
-        button.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 3.0),
+        button.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: constant.leading),
         button.centerYAnchor.constraint(equalTo: self.titleLabel.centerYAnchor),
-        button.widthAnchor.constraint(equalToConstant: 12.0),
-        button.heightAnchor.constraint(equalToConstant: 12.0)
+        button.widthAnchor.constraint(equalToConstant: constant.length),
+        button.heightAnchor.constraint(equalToConstant: constant.length)
       ]
     )
   }
@@ -154,10 +157,11 @@ extension LongestRecordView {
   }
   
   private func setupLabelStackViewConstraints() {
+    let constant = Constant.LongestRecordView.LabelStackView.Layout.self
     NSLayoutConstraint.activate(
       [
-        self.labelStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -12.0),
-        self.labelStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -12.0)
+        self.labelStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: constant.commonMargin),
+        self.labelStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: constant.commonMargin)
       ]
     )
   }
@@ -172,12 +176,13 @@ extension LongestRecordView {
   }
   
   private func setupLeafSymbolImageViewConstraints(_ imageView: UIImageView) {
+    let constant = Constant.LongestRecordView.LeafSymbol.Layout.self
     NSLayoutConstraint.activate(
       [
-        imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15.0),
-        imageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -21.0),
-        imageView.widthAnchor.constraint(equalToConstant: 30.0),
-        imageView.heightAnchor.constraint(equalToConstant: 38.0)
+        imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: constant.leading),
+        imageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: constant.bottom),
+        imageView.widthAnchor.constraint(equalToConstant: constant.width),
+        imageView.heightAnchor.constraint(equalToConstant: constant.height)
       ]
     )
   }
@@ -202,13 +207,14 @@ extension LongestRecordView {
   
   private func buildRecordLabel(style: LongestRecordView.Configuration, with recordCount: Int) -> UILabel {
     var text: String
-    
+    var unit: String
     switch style {
     case .pomo:
-      text = "\(recordCount)뽀모"
+      unit = Constant.LongestRecordView.StringLiteral.pomo
     case .dateRange:
-      text = "\(recordCount)일"
+      unit = Constant.LongestRecordView.StringLiteral.day
     }
+    text = "\(recordCount)\(unit)"
     
     let label = UILabel(frame: CGRect.zero)
     label.attributedText = text.applyTextAttributes(
