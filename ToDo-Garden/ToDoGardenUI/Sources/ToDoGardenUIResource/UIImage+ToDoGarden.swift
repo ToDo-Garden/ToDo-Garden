@@ -125,4 +125,8 @@ extension UIImage {
   public static let onBoarding = UIImage(
     resource: .onBoarding
   )
+  
+  public static let informationMark = UIImage(
+    systemName: "info.circle"
+  )
 }
