@@ -50,6 +50,7 @@ extension IntroOnBoardingViewController {
     self.addMainImageView()
     self.addStartButton()
     self.addStackView()
+    self.setupButtonAction()
   }
   
   private func addMainImageView() {
@@ -122,6 +123,17 @@ extension IntroOnBoardingViewController {
       ),
       self.startButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
     ])
+  }
+  
+  private func setupButtonAction() {
+    self.startButton.addAction(
+      UIAction { [weak self] _ in
+        let tutorialViewController = TutorialOnBoardingViewController()
+        
+        self?.navigationController?.pushViewController(tutorialViewController, animated: true)
+      },
+      for: UIControl.Event.touchUpInside
+    )
   }
 }
 
