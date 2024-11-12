@@ -197,7 +197,7 @@ extension LongestRecordView {
     let label = UILabel(frame: CGRect.zero)
     label.attributedText = groupName.applyTextAttributes(
       attributes: [
-        NSAttributedString.Key.font: UIFont.pretendardDetailLight,
+        NSAttributedString.Key.font: UIFont.pretendardDetailLight10,
         NSAttributedString.Key.foregroundColor: UIColor.toDoGardenGreenGray
       ]
     )
@@ -241,7 +241,7 @@ extension LongestRecordView {
     let label = UILabel(frame: CGRect.zero)
     label.attributedText = text.applyTextAttributes(
       attributes: [
-        NSAttributedString.Key.font: UIFont.pretendardDetailLight,
+        NSAttributedString.Key.font: UIFont.pretendardDetailLight10,
         NSAttributedString.Key.foregroundColor: UIColor.toDoGardenGray3
       ]
     )
