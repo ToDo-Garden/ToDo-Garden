@@ -10,11 +10,18 @@ let package = Package(
     Product.library(
       name: "TDFoundation",
       targets: ["TDFoundation"]
+    ),
+    Product.library(
+      name: "HTTPClientAPI",
+      targets: ["HTTPClientAPI"]
     )
   ],
   targets: [
     Target.target(
       name: "TDFoundation"
+    ),
+    Target.target(
+      name: "HTTPClientAPI"
     )
   ]
 )
