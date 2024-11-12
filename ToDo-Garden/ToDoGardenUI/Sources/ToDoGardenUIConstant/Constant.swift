@@ -44,4 +44,5 @@ public enum Constant {
   public enum AnimationImageView { }
   public enum LeafLabel { }
   public enum BubbleLabel { }
+  public enum LongestRecordView { }
 }
