@@ -12,9 +12,18 @@ let package = Package(
       targets: ["TDFoundation"]
     )
   ],
+  dependencies: [
+    Package.Dependency.package(path: "../ToDoGardenUI")
+  ],
   targets: [
     Target.target(
-      name: "TDFoundation"
+      name: "TDFoundation",
+      dependencies: [
+        Target.Dependency.product(
+          name: "ToDoGardenUIComponent",
+          package: "ToDoGardenUI"
+        )
+      ]
     )
   ]
 )

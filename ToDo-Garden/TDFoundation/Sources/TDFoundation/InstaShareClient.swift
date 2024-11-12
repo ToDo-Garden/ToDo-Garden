@@ -1,4 +1,7 @@
 import UIKit
+
+import ToDoGardenUIComponent
+
 // swiftlint:disable identifier_name
 public struct InstaShareClient {
   var _imageData: (String, UIImage, Int) throws -> Data
@@ -26,8 +29,10 @@ extension InstaShareClient {
   public enum InternalError: Error {
     case unexpected
     case notInstalled
+    case missingAPIKey
   }
   
+  @MainActor
   public static let live = Self(
     imageData: { name, icon, focusDays in
       let image = InstaFeedViewController(
@@ -53,9 +58,9 @@ extension InstaShareClient {
       ]
       UIPasteboard.general.setItems([pasteItem])
     },
-    openInstagram: {
+    openInstagram: { 
       guard
-        let url = URL(string: "instagram-stories://share?source_application=405152385990835")
+        let url = URL(string: "instagram-stories://share?source_application=\(KeyConstants.facebookAPIKey)")
       else { throw URLError(.badURL) }
       guard UIApplication.shared.canOpenURL(url) else { throw InternalError.notInstalled }
       UIApplication.shared.open(url)
