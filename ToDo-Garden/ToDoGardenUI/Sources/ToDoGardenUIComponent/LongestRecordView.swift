@@ -243,3 +243,43 @@ extension LongestRecordView {
     return label
   }
 }
+
+@available(iOS 17.0, *)
+#Preview {
+  let stackView = UIStackView()
+  stackView.axis = .horizontal
+  stackView.spacing = 7.0
+  stackView.distribution = .fillEqually
+  
+  let view1 = LongestRecordView(
+    style: .pomo,
+    title: "최장 집중 기록",
+    groupName: "아아아아아아",
+    recordCount: 9,
+    date: [Date.now]
+  )
+  
+  let view2 = LongestRecordView(
+    style: .dateRange,
+    title: "최장 연속 기록",
+    groupName: nil,
+    recordCount: 30,
+    date: [Date.now, Date.now]
+  )
+  
+  view1.usingAutolayout()
+  view2.usingAutolayout()
+
+  stackView.addArrangedSubview(view1)
+  stackView.addArrangedSubview(view2)
+  
+  stackView.usingAutolayout()
+  NSLayoutConstraint.activate(
+    [
+      stackView.widthAnchor.constraint(equalToConstant: 332),
+      stackView.heightAnchor.constraint(equalToConstant: 125)
+    ]
+  )
+  
+  return stackView
+}
