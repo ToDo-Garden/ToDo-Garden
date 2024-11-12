@@ -13,13 +13,13 @@ import ToDoGardenUIResource
 public final class IntroOnBoardingViewController: UIViewController {
   // private let mainImageView: AnimationImageView
   private let mainImageView: UIImageView
-  private let stackView: LeafLabelStackView
+  private let leafLabelStackView: LeafLabelStackView
   private let startButton: ToDoGardenBoxButton
   
   public init() {
     // self.mainImageView = AnimationImageView(jsonURL: URL.onBoardingURL)
     self.mainImageView = UIImageView(image: UIImage.onBoarding)
-    self.stackView = LeafLabelStackView()
+    self.leafLabelStackView = LeafLabelStackView()
     self.startButton = ToDoGardenBoxButton(
       title: Constant.StringLiteral.buttonTitle,
       buttonType: ToDoGardenBoxButton.Configuration.primaryRoundRectButton
@@ -58,7 +58,7 @@ extension IntroOnBoardingViewController {
   }
   
   private func addStackView() {
-    self.view.addSubview(self.stackView)
+    self.view.addSubview(self.leafLabelStackView)
   }
   
   private func addStartButton() {
@@ -102,14 +102,14 @@ extension IntroOnBoardingViewController {
       dummyView.bottomAnchor.constraint(equalTo: self.startButton.topAnchor)
     ])
     
-    self.stackView.usingAutolayout()
+    self.leafLabelStackView.usingAutolayout()
     
     NSLayoutConstraint.activate([
-      self.stackView.centerYAnchor.constraint(
+      self.leafLabelStackView.centerYAnchor.constraint(
         equalTo: dummyView.centerYAnchor,
         constant: -Constant.Layout.space / 2
       ),
-      self.stackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
+      self.leafLabelStackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
     ])
   }
   
