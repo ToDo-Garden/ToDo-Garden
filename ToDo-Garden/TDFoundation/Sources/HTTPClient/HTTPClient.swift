@@ -10,6 +10,16 @@ import Foundation
 import HTTPClientAPI
 
 public struct HTTPClient: Sendable {
+  public var transport: any ClientTransport
+  public var middlewares: [any ClientMiddleware]
+  
+  public init(
+    transport: any ClientTransport,
+    middlewares: [any ClientMiddleware]
+  ) {
+    self.transport = transport
+    self.middlewares = middlewares
+  }
 }
 
 extension HTTPClient {
