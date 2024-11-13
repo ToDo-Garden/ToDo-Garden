@@ -13,13 +13,13 @@ import ToDoGardenUIResource
 public final class IntroOnBoardingViewController: UIViewController {
   // private let mainImageView: AnimationImageView
   private let mainImageView: UIImageView
-  private let stackView: LeafLabelStackView
+  private let leafLabelStackView: LeafLabelStackView
   private let startButton: ToDoGardenBoxButton
   
   public init() {
     // self.mainImageView = AnimationImageView(jsonURL: URL.onBoardingURL)
     self.mainImageView = UIImageView(image: UIImage.onBoarding)
-    self.stackView = LeafLabelStackView()
+    self.leafLabelStackView = LeafLabelStackView()
     self.startButton = ToDoGardenBoxButton(
       title: Constant.StringLiteral.buttonTitle,
       buttonType: ToDoGardenBoxButton.Configuration.primaryRoundRectButton
@@ -48,8 +48,9 @@ public final class IntroOnBoardingViewController: UIViewController {
 extension IntroOnBoardingViewController {
   private func setupViews() {
     self.addMainImageView()
-    self.addStackView()
     self.addStartButton()
+    self.addStackView()
+    self.setupButtonAction()
   }
   
   private func addMainImageView() {
@@ -57,7 +58,7 @@ extension IntroOnBoardingViewController {
   }
   
   private func addStackView() {
-    self.view.addSubview(self.stackView)
+    self.view.addSubview(self.leafLabelStackView)
   }
   
   private func addStartButton() {
@@ -66,8 +67,8 @@ extension IntroOnBoardingViewController {
   
   private func setupConstraints() {
     self.setupMainImageViewConstraints()
-    self.setupStackViewConstraints()
     self.setupStartButtonConstraints()
+    self.setupStackViewConstraints()
   }
   
   private func setupMainImageViewConstraints() {
@@ -87,14 +88,28 @@ extension IntroOnBoardingViewController {
   }
   
   private func setupStackViewConstraints() {
-    self.stackView.usingAutolayout()
+    let dummyView = UIView()
+    self.view.addSubview(dummyView)
+    dummyView.usingAutolayout()
     
     NSLayoutConstraint.activate([
-      self.stackView.centerYAnchor.constraint(
-        equalTo: self.view.centerYAnchor,
-        constant: self.view.bounds.height * Constant.Layout.multiplier
+      dummyView.widthAnchor.constraint(
+        equalToConstant: CGFloat.zero
       ),
-      self.stackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
+      dummyView.topAnchor.constraint(
+        equalTo: self.mainImageView.bottomAnchor
+      ),
+      dummyView.bottomAnchor.constraint(equalTo: self.startButton.topAnchor)
+    ])
+    
+    self.leafLabelStackView.usingAutolayout()
+    
+    NSLayoutConstraint.activate([
+      self.leafLabelStackView.centerYAnchor.constraint(
+        equalTo: dummyView.centerYAnchor,
+        constant: -Constant.Layout.space / 2
+      ),
+      self.leafLabelStackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
     ])
   }
   
@@ -108,6 +123,17 @@ extension IntroOnBoardingViewController {
       ),
       self.startButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
     ])
+  }
+  
+  private func setupButtonAction() {
+    self.startButton.addAction(
+      UIAction { [weak self] _ in
+        let tutorialViewController = TutorialOnBoardingViewController()
+        
+        self?.navigationController?.pushViewController(tutorialViewController, animated: true)
+      },
+      for: UIControl.Event.touchUpInside
+    )
   }
 }
 
