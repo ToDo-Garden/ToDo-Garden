@@ -13,7 +13,7 @@ public struct HTTPClient: Sendable {
 }
 
 extension HTTPClient {
-  @Sendable func wrappingErrors<Result>(
+  @Sendable private func wrappingErrors<Result>(
     work: () async throws -> Result,
     mapError: (any Error) -> HTTPClientErrorContext
   ) async throws -> Result {
