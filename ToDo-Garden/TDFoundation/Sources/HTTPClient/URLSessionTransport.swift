@@ -9,6 +9,53 @@ import Foundation
 
 import HTTPClientAPI
 
+public struct URLSessionTransport: Sendable, ClientTransport {
+  private let urlSession: URLSession
+  
+  public init(urlSession: URLSession) {
+    self.urlSession = urlSession
+  }
+  
+  /// HTTPRequest를 보내고 결과로 받은 HTTP 응답을 반환합니다.
+  ///
+  /// - Parameter request: `HTTPRequest`
+  /// - Returns: 통신의 결과로 `HTTPResponse`를 반환합니다.
+  /// - Throws: HTTP 요청 수행 중 오류가 발생한 경우 오류를 throw 합니다.
+  public func send(request: HTTPRequest) async throws -> HTTPResponse {
+    let (urlRequest, httpBody) = try URLRequestBuilder(request: request).build()
+    let (data, response): (Data, URLResponse)
+    
+    try Task.checkCancellation()
+    if let httpBody {
+      (data, response) = try await self.urlSession.upload(for: urlRequest, from: httpBody)
+    } else {
+      (data, response) = try await self.urlSession.data(for: urlRequest)
+    }
+    try Task.checkCancellation()
+    
+    guard let httpResponse = response as? HTTPURLResponse
+    else {
+      throw HTTPClientError.notHTTPResponse(response)
+    }
+    
+    var responseHeader: [String: String] = [:]
+    
+    for (headerKey, headerValue) in httpResponse.allHeaderFields {
+      guard let key = headerKey as? String,
+        let value = headerValue as? String
+      else { continue }
+      
+      responseHeader[key] = value
+    }
+    
+    return HTTPResponse(
+      statusCode: httpResponse.statusCode,
+      header: responseHeader,
+      body: data
+    )
+  }
+}
+
 private final class URLRequestBuilder {
   private let request: HTTPRequest
   private var urlComponents: URLComponents?
