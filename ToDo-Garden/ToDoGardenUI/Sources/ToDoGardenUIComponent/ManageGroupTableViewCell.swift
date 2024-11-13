@@ -14,8 +14,8 @@ public final class ManageGroupTableViewCell: UITableViewCell, ManageGroupTableVi
   private var configuration: ManageGroupTableViewCell.Configuration?
   
   private var progressCircle: CircularProgressView?
-  private var groupNameButton: UIButton?
-  private var rightImageButton: UIButton?
+  public var groupNameButton: UIButton?
+  public var rightImageButton: UIButton?
   
   private var rightButtonActionHandler: ((UUID, String, UIColor) -> Void)?
   private var groupNameButtonActionHandler: ((UUID) -> Void)?
