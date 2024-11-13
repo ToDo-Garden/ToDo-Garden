@@ -14,6 +14,10 @@ let package = Package(
     Product.library(
       name: "HTTPClientAPI",
       targets: ["HTTPClientAPI"]
+    ),
+    Product.library(
+      name: "HTTPClient",
+      targets: ["HTTPClient"]
     )
   ],
   dependencies: [
@@ -22,6 +26,10 @@ let package = Package(
   targets: [
     Target.target(
       name: "HTTPClientAPI"
+    ),
+    Target.target(
+      name: "HTTPClient",
+      dependencies: ["HTTPClientAPI"]
     ),
     Target.target(
       name: "TDFoundation",
