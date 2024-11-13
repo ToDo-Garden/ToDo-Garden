@@ -39,6 +39,13 @@ let package = Package(
           package: "ToDoGardenUI"
         )
       ]
+    ),
+    Target.testTarget(
+      name: "HTTPClientTests",
+      dependencies: [
+        "HTTPClientAPI",
+        "HTTPClient"
+      ]
     )
   ]
 )
