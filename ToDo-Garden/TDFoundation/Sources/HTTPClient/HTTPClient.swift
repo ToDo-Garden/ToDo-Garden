@@ -22,6 +22,20 @@ public struct HTTPClient: Sendable, HTTPClientAPI {
   }
   
   // swiftlint:disable function_body_length identifier_name
+  /// HTTP 작업을 수행합니다.
+  ///
+  /// 작업은 세 단계로 구성됩니다:
+  /// 1. 입력을 `HTTPRequest`로 변환합니다.
+  /// 2. 미들웨어로 감싼 `ClientTransport`를 호출하여 HTTP 호출을 수행합니다.
+  /// 3. 수신받은 `HTTPResposne`를 출력으로 변환합니다.
+  /// 발생한 모든 오류를 감싸고 적절한 컨텍스트(`HTTPClientErrorContext`)를 첨부합니다.
+  ///
+  /// - Parameters:
+  ///   - input: 작업별 입력 값입니다.
+  ///   - serializer: 제공된 입력 값에서 `HTTPRequest`를 새성합니다.
+  ///   - deserializer: 제공된 `HTTPResponse`를 기반으로 출력 값을 생성합니다.
+  /// - Returns: `deserializer`에서 생성된 출력 값을 반환합니다.
+  /// - Throws: HTTP 작업 프로세스의 어느 부분이든 실패하면 `HTTPClientErrorContext` 오류가 발생합니다.
   public func send<Input, Output>(
     input: Input,
     serializer: @Sendable (Input) throws -> HTTPRequest,
