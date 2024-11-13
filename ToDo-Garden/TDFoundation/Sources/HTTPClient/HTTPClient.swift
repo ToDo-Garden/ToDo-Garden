@@ -13,4 +13,14 @@ public struct HTTPClient: Sendable {
 }
 
 extension HTTPClient {
+  @Sendable func wrappingErrors<Result>(
+    work: () async throws -> Result,
+    mapError: (any Error) -> HTTPClientErrorContext
+  ) async throws -> Result {
+    do {
+      return try await work()
+    } catch {
+      throw mapError(error)
+    }
+  }
 }
