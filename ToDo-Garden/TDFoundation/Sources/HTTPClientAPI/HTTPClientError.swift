@@ -11,8 +11,8 @@ import Foundation
 public enum HTTPClientError: Error, Sendable {
   case deserializationError
   case serializationError
-  case badURL
-  case notHTTPResponse
+  case badURL(String)
+  case notHTTPResponse(URLResponse)
   case transportFailed(any Error)
   case middlewareFailed(middlewareType: Any.Type, any Error)
   
