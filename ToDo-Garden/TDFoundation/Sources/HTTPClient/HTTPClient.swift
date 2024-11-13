@@ -23,4 +23,25 @@ extension HTTPClient {
       throw mapError(error)
     }
   }
+  
+  @Sendable private func makeError(
+    request: HTTPRequest? = nil,
+    response: HTTPResponse? = nil,
+    error: any Error
+  ) -> HTTPClientErrorContext {
+    let underlyingError: any Error
+    
+    if let clientError = error as? HTTPClientError,
+      let unwrappedUnderlyingError = clientError.underlyingError {
+      underlyingError = unwrappedUnderlyingError
+    } else {
+      underlyingError = error
+    }
+    
+    return HTTPClientErrorContext(
+      request: request,
+      response: response,
+      underlyingError: underlyingError
+    )
+  }
 }
