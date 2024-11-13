@@ -9,7 +9,7 @@ import Foundation
 
 import HTTPClientAPI
 
-public struct HTTPClient: Sendable {
+public struct HTTPClient: Sendable, HTTPClientAPI {
   public var transport: any ClientTransport
   public var middlewares: [any ClientMiddleware]
   
@@ -20,6 +20,63 @@ public struct HTTPClient: Sendable {
     self.transport = transport
     self.middlewares = middlewares
   }
+  
+  // swiftlint:disable function_body_length identifier_name
+  public func send<Input, Output>(
+    input: Input,
+    serializer: @Sendable (Input) throws -> HTTPRequest,
+    deserializer: @Sendable (HTTPResponse) throws -> Output
+  ) async throws -> Output where Input: Sendable, Output: Sendable {
+    let request: HTTPRequest = try await self.wrappingErrors {
+      return try serializer(input)
+    } mapError: { _ in
+      return self.makeError(error: HTTPClientError.serializationError)
+    }
+    
+    var next: @Sendable (HTTPRequest) async throws -> HTTPResponse = { _request in
+      return try await self.wrappingErrors {
+        return try await self.transport.send(request: _request)
+      } mapError: { error in
+        return self.makeError(
+          request: request,
+          error: HTTPClientError.transportFailed(error)
+        )
+      }
+    }
+    
+    for middleWare in self.middlewares.reversed() {
+      let temp = next
+      next = { _request in
+        return try await self.wrappingErrors {
+          return try await middleWare.intercept(
+            request: _request,
+            next: temp
+          )
+        } mapError: { error in
+          return self.makeError(
+            request: request,
+            error: HTTPClientError.middlewareFailed(
+              middlewareType: type(of: middleWare),
+              error
+            )
+          )
+        }
+      }
+    }
+    
+    let response = try await next(request)
+    
+    return try await self.wrappingErrors {
+      return try deserializer(response)
+    } mapError: { _ in
+      return self.makeError(
+        request: request,
+        response: response,
+        error: HTTPClientError.deserializationError
+      )
+    }
+  }
+  // swiftlint:enable function_body_length identifier_name
 }
 
 extension HTTPClient {
