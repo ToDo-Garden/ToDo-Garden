@@ -37,6 +37,7 @@
 		E48680232CAE902600C6D535 /* LoginScene in Frameworks */ = {isa = PBXBuildFile; productRef = E48680222CAE902600C6D535 /* LoginScene */; };
 		E48680252CAE902600C6D535 /* LoginSceneAPI in Frameworks */ = {isa = PBXBuildFile; productRef = E48680242CAE902600C6D535 /* LoginSceneAPI */; };
 		E48680272CAE902600C6D535 /* LoginSceneEntity in Frameworks */ = {isa = PBXBuildFile; productRef = E48680262CAE902600C6D535 /* LoginSceneEntity */; };
+		E4CDB1402CE07EE5007374FE /* OnBoardingScene in Frameworks */ = {isa = PBXBuildFile; productRef = E4CDB13F2CE07EE5007374FE /* OnBoardingScene */; };
 		E4DEA1742C2BED0700E3CE3C /* ManageGroupScene in Frameworks */ = {isa = PBXBuildFile; productRef = E4DEA1732C2BED0700E3CE3C /* ManageGroupScene */; };
 		E4DEA1762C2BED0700E3CE3C /* ManageGroupSceneAPI in Frameworks */ = {isa = PBXBuildFile; productRef = E4DEA1752C2BED0700E3CE3C /* ManageGroupSceneAPI */; };
 		E4DEA1782C2BED0700E3CE3C /* ManageGroupSceneEntity in Frameworks */ = {isa = PBXBuildFile; productRef = E4DEA1772C2BED0700E3CE3C /* ManageGroupSceneEntity */; };
@@ -83,6 +84,7 @@
 		E4BC897A2CB6B4A8002DA1E1 /* SignUpScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SignUpScene; sourceTree = "<group>"; };
 		E4DBB5922CAD595E00B58C23 /* LoginScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = LoginScene; sourceTree = "<group>"; };
 		E4DEA1722C2BEC2900E3CE3C /* ManageGroupScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ManageGroupScene; sourceTree = "<group>"; };
+		E4FE64602CDF49DE00AB04EF /* OnBoardingScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = OnBoardingScene; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +92,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E4CDB1402CE07EE5007374FE /* OnBoardingScene in Frameworks */,
 				63C1A0F12C2FD74100B6D6DE /* EditToDoSceneAPI in Frameworks */,
 				E40EB3F72C3BBD88004D5329 /* PostGroupSceneEntity in Frameworks */,
 				E4DEA1782C2BED0700E3CE3C /* ManageGroupSceneEntity in Frameworks */,
@@ -159,6 +162,7 @@
 		4F0DF12A2B4EABCE00097B7D /* ToDo-Garden */ = {
 			isa = PBXGroup;
 			children = (
+				E4FE64602CDF49DE00AB04EF /* OnBoardingScene */,
 				E437F3D32CB3E817003589F0 /* ToDo-Garden.entitlements */,
 				E4BC897A2CB6B4A8002DA1E1 /* SignUpScene */,
 				63E20C1D2CB3BBFE00EC158E /* EditUserIntroductionScene */,
@@ -270,6 +274,7 @@
 				E4FE0BFC2CB6B6F200633453 /* SignUpSceneAPI */,
 				E4FE0BFE2CB6B6F200633453 /* SignUpSceneEntity */,
 				E44542B82CD0B821008B8F93 /* Lottie */,
+				E4CDB13F2CE07EE5007374FE /* OnBoardingScene */,
 			);
 			productName = "ToDo-Garden";
 			productReference = 4F0DF1282B4EABCE00097B7D /* ToDo-Garden.app */;
@@ -747,6 +752,10 @@
 		E48680262CAE902600C6D535 /* LoginSceneEntity */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = LoginSceneEntity;
+		};
+		E4CDB13F2CE07EE5007374FE /* OnBoardingScene */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OnBoardingScene;
 		};
 		E4DEA1732C2BED0700E3CE3C /* ManageGroupScene */ = {
 			isa = XCSwiftPackageProductDependency;

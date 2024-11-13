@@ -41,4 +41,8 @@ public enum Constant {
   public enum TermsAgreementViewRow { }
   public enum InputTextValidationView {}
   public enum SignUpInputView { }
+  public enum AnimationImageView { }
+  public enum LeafLabel { }
+  public enum BubbleLabel { }
+  public enum LongestRecordView { }
 }

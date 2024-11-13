@@ -16,12 +16,21 @@ let package = Package(
       targets: ["HTTPClientAPI"]
     )
   ],
+  dependencies: [
+    Package.Dependency.package(path: "../ToDoGardenUI")
+  ],
   targets: [
     Target.target(
-      name: "TDFoundation"
+      name: "HTTPClientAPI"
     ),
     Target.target(
-      name: "HTTPClientAPI"
+      name: "TDFoundation",
+      dependencies: [
+        Target.Dependency.product(
+          name: "ToDoGardenUIComponent",
+          package: "ToDoGardenUI"
+        )
+      ]
     )
   ]
 )
