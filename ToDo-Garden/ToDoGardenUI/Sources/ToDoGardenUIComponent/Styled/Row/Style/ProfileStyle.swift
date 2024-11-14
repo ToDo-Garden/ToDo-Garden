@@ -12,7 +12,8 @@ extension Styled.Row {
     )
     stack.addInnerPadding(model[style: \.innerPadding])
     
-    if model.style == Configuration.ProfileModel.Style.shareProfile {
+    if model.style == Configuration.ProfileModel.Style.shareProfile ||
+      model.style == Configuration.ProfileModel.Style.myStats {
       stack.isShimmering = true
     }
     
@@ -87,7 +88,7 @@ extension Styled.Row {
     }
     
     if model.style == Configuration.ProfileModel.Style.shareProfile ||
-        model.style == Configuration.ProfileModel.Style.myStats {
+      model.style == Configuration.ProfileModel.Style.myStats {
       self.setupShimmeringInnerStack(titleLabel, descriptionLabel, stack)
     }
     
@@ -104,7 +105,8 @@ extension Styled.Row {
       self.bindingForwardImage(imageView: forwardImage)
     }
     
-    if style == Configuration.ProfileModel.Style.shareProfile {
+    if style == Configuration.ProfileModel.Style.shareProfile ||
+      style == Configuration.ProfileModel.Style.myStats {
       self.setupShimmeringProfileImageView(profileImageView)
     }
   }
