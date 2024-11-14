@@ -38,6 +38,15 @@ extension Styled.Row {
       innerStack,
       forwardImage
     ]
+    
+    if model.style == .myStats {
+      subviews = [
+        profileImageView,
+        profileImageTrailingPadding,
+        innerStack
+      ]
+    }
+    
     if model[style: \.axis] == .vertical {
       subviews.insert(UIView(), at: 3)
     }
@@ -69,10 +78,15 @@ extension Styled.Row {
     stack.axis = model[style: \.axis]
     
     if model[style: \.axis] == NSLayoutConstraint.Axis.vertical {
-      spacing.heightAnchor.constraint(equalToConstant: 3).isActive = true
+      if model.style == Configuration.ProfileModel.Style.myStats {
+        spacing.heightAnchor.constraint(equalToConstant: 8).isActive = true
+      } else {
+        spacing.heightAnchor.constraint(equalToConstant: 3).isActive = true
+      }
     }
     
-    if model.style == Configuration.ProfileModel.Style.shareProfile {
+    if model.style == Configuration.ProfileModel.Style.shareProfile ||
+        model.style == Configuration.ProfileModel.Style.myStats {
       self.setupShimmeringInnerStack(titleLabel, descriptionLabel, stack)
     }
     
