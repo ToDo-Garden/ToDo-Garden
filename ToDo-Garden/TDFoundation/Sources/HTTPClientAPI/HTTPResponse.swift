@@ -16,8 +16,8 @@ public struct HTTPResponse: Sendable {
   
   public init(
     statusCode: Int,
-    header: [String: String],
-    body: Data?
+    header: [String: String] = [:],
+    body: Data? = nil
   ) {
     self.statusCode = statusCode
     self.header = header
