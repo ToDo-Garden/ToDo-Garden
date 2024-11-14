@@ -19,6 +19,7 @@ extension Styled.Row {
     return stack
   }
 
+  // swiftlint:disable function_body_length
   private func buildProfileSubviews(model: Configuration.ProfileModel) -> [UIView] {
     let profileImageView = self.buildImageView(
       image: model[style: \.defaultImage],
@@ -92,6 +93,7 @@ extension Styled.Row {
     
     return stack
   }
+  // swiftlint:enable function_body_length
   
   private func setupViewsBasedOnStyle(
     style: Configuration.ProfileModel.Style,
