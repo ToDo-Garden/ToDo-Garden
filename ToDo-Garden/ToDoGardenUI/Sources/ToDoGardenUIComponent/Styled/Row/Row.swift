@@ -111,6 +111,7 @@ extension Styled.Row {
     let label = UILabel()
     label.text = text
     label.font = font
+    label.numberOfLines = Int.zero
     label.textColor = textColor
     return label
   }
