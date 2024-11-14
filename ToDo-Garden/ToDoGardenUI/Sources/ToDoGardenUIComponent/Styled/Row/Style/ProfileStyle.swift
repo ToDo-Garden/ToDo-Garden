@@ -81,6 +81,7 @@ extension Styled.Row {
     
     if model[style: \.axis] == NSLayoutConstraint.Axis.vertical {
       if model.style == Configuration.ProfileModel.Style.myStats {
+        titleLabel.numberOfLines = Int.zero
         spacing.heightAnchor.constraint(equalToConstant: 8).isActive = true
       } else {
         spacing.heightAnchor.constraint(equalToConstant: 3).isActive = true
