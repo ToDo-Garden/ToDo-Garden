@@ -18,7 +18,14 @@ public enum HTTPClientError: Error, Sendable {
   
   public var underlyingError: (any Error)? {
     switch self {
-    case HTTPClientError.transportFailed(let error), HTTPClientError.middlewareFailed(_, let error): return error
+    case HTTPClientError.transportFailed(let error):
+      return error
+    case HTTPClientError.middlewareFailed(_, let error):
+      if let error = error as? HTTPClientErrorContext {
+        return error.underlyingError
+      }
+      
+      return error
     default: return nil
     }
   }
