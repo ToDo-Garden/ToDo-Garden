@@ -150,6 +150,41 @@ struct HTTPClientTests {
       )
     }
   }
+  
+  @Test("client transport error throw test")
+  private func clientTransportErrorThrowTest() async throws {
+    // Given
+    let givenURL = try #require(URL(string: "test url"))
+    let expectedRequest: HTTPRequest = HTTPRequest(
+      method: HTTPMethod.get,
+      endPoint: givenURL,
+      header: [:],
+      queryItems: [:],
+      body: nil
+    )
+    let expectedError = HTTPClientErrorContext(
+      request: expectedRequest,
+      underlyingError: self.transportMock.error
+    )
+    self.transportMock.isThrowError = true
+    
+    // Then
+    await #expect(
+      throws: expectedError,
+      "기대하는 에러와 일치하지 않습니다."
+    ) {
+      // When
+      try await self.sut.send(
+        input: Void(),
+        serializer: { _ in
+          return expectedRequest
+        },
+        deserializer: { _ in
+          return Void()
+        }
+      )
+    }
+  }
 }
 
 extension HTTPClientErrorContext: Equatable {
