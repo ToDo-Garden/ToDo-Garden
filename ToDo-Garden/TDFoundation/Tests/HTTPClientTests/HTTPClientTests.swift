@@ -78,6 +78,43 @@ struct HTTPClientTests {
       )
     }
   }
+  
+  @Test("deserializer error throw test")
+  private func deserializerErrorThrowTest() async throws {
+    // Given
+    let givenURL = try #require(URL(string: "test url"))
+    let expectedRequest: HTTPRequest = HTTPRequest(
+      method: HTTPMethod.get,
+      endPoint: givenURL,
+      header: [:],
+      queryItems: [:],
+      body: nil
+    )
+    let expectedResponse: HTTPResponse = HTTPResponse(statusCode: 200)
+    self.transportMock.expectedResponse = expectedResponse
+    let expectedError = HTTPClientErrorContext(
+      request: expectedRequest,
+      response: expectedResponse,
+      underlyingError: HTTPClientError.deserializationError
+    )
+    
+    // Then
+    await #expect(
+      throws: expectedError,
+      "deserialization error를 throw 해야합니다."
+    ) {
+      // when
+      try await self.sut.send(
+        input: Void(),
+        serializer: { _ in
+          return expectedRequest
+        },
+        deserializer: { _ in
+          throw NSError(domain: "Error thrown by the deserializer", code: 99999)
+        }
+      )
+    }
+  }
 }
 
 // swiftlint:enable function_body_length
