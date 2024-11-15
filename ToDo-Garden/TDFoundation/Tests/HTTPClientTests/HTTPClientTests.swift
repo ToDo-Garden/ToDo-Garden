@@ -53,6 +53,31 @@ struct HTTPClientTests {
     #expect(self.middlewareMock.isIntercepterCalled)
     #expect(self.middlewareMock.interceptedRequest == expectedInterceptedRequest)
   }
+  
+  @Test("serializer error throw test")
+  private func serializerErrorThrowTest() async throws {
+    // Given
+    let expectedError = HTTPClientErrorContext(
+      underlyingError: HTTPClientError.serializationError
+    )
+    
+    // Then
+    await #expect(
+      throws: expectedError,
+      "serialization error를 throw 해야합니다."
+    ) {
+      // when
+      try await self.sut.send(
+        input: Void(),
+        serializer: { _ in
+          throw NSError(domain: "Error thrown by the serializer", code: 99999)
+        },
+        deserializer: { _ in
+          return Void()
+        }
+      )
+    }
+  }
 }
 
 // swiftlint:enable function_body_length
