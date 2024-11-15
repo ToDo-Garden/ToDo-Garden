@@ -115,6 +115,55 @@ struct HTTPClientTests {
       )
     }
   }
+  
+  @Test("middleware error throw test")
+  private func middlewareErrorThrowTest() async throws {
+    // Given
+    let givenURL = try #require(URL(string: "test url"))
+    let expectedRequest: HTTPRequest = HTTPRequest(
+      method: HTTPMethod.get,
+      endPoint: givenURL,
+      header: [:],
+      queryItems: [:],
+      body: nil
+    )
+    let expectedError = HTTPClientErrorContext(
+      request: expectedRequest,
+      underlyingError: self.middlewareMock.error
+    )
+    self.middlewareMock.isThrowError = true
+    
+    // Then
+    await #expect(
+      throws: expectedError,
+      "기대하는 에러와 일치하지 않습니다."
+    ) {
+      // When
+      try await self.sut.send(
+        input: Void(),
+        serializer: { _ in
+          return expectedRequest
+        },
+        deserializer: { _ in
+          return Void()
+        }
+      )
+    }
+  }
+}
+
+extension HTTPClientErrorContext: Equatable {
+  /// test를 위한 구현입니다.
+  public static func == (
+    lhs: HTTPClientErrorContext,
+    rhs: HTTPClientErrorContext
+  ) -> Bool {
+    let request = lhs.request == lhs.request
+    let response = lhs.response == rhs.response
+    let underlyingError = (lhs.underlyingError as NSError) == (rhs.underlyingError as NSError)
+    
+    return request && response && underlyingError
+  }
 }
 
 // swiftlint:enable function_body_length
