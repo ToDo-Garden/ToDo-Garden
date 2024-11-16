@@ -41,7 +41,7 @@ extension Styled.Row {
       forwardImage
     ]
     
-    if model.style == .myStats {
+    if model.style == Configuration.ProfileModel.Style.myStats {
       subviews = [
         profileImageView,
         profileImageTrailingPadding,
