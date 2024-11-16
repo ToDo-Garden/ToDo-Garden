@@ -114,6 +114,8 @@ extension Styled.Row.Configuration.ProfileModel {
         return NSDirectionalEdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 36)
       case Self.shareRow:
         return NSDirectionalEdgeInsets(top: 6, leading: 25, bottom: 6, trailing: 25)
+      case Self.myStats:
+        return NSDirectionalEdgeInsets(top: 6, leading: 25, bottom: 6, trailing: 25)
       }
     }
     
@@ -137,6 +139,8 @@ extension Styled.Row.Configuration.ProfileModel {
         return 15
       case Self.shareRow:
         return 6
+      case Self.myStats:
+        return 15
       }
     }
     
@@ -155,5 +159,6 @@ extension Styled.Row.Configuration.ProfileModel {
     case setting
     case shareProfile
     case shareRow
+    case myStats
   }
 }

@@ -12,13 +12,15 @@ extension Styled.Row {
     )
     stack.addInnerPadding(model[style: \.innerPadding])
     
-    if model.style == Configuration.ProfileModel.Style.shareProfile {
+    if model.style == Configuration.ProfileModel.Style.shareProfile ||
+      model.style == Configuration.ProfileModel.Style.myStats {
       stack.isShimmering = true
     }
     
     return stack
   }
 
+  // swiftlint:disable function_body_length
   private func buildProfileSubviews(model: Configuration.ProfileModel) -> [UIView] {
     let profileImageView = self.buildImageView(
       image: model[style: \.defaultImage],
@@ -38,6 +40,15 @@ extension Styled.Row {
       innerStack,
       forwardImage
     ]
+    
+    if model.style == Configuration.ProfileModel.Style.myStats {
+      subviews = [
+        profileImageView,
+        profileImageTrailingPadding,
+        innerStack
+      ]
+    }
+    
     if model[style: \.axis] == .vertical {
       subviews.insert(UIView(), at: 3)
     }
@@ -69,15 +80,22 @@ extension Styled.Row {
     stack.axis = model[style: \.axis]
     
     if model[style: \.axis] == NSLayoutConstraint.Axis.vertical {
-      spacing.heightAnchor.constraint(equalToConstant: 3).isActive = true
+      if model.style == Configuration.ProfileModel.Style.myStats {
+        titleLabel.numberOfLines = Int.zero
+        spacing.heightAnchor.constraint(equalToConstant: 8).isActive = true
+      } else {
+        spacing.heightAnchor.constraint(equalToConstant: 3).isActive = true
+      }
     }
     
-    if model.style == Configuration.ProfileModel.Style.shareProfile {
+    if model.style == Configuration.ProfileModel.Style.shareProfile ||
+      model.style == Configuration.ProfileModel.Style.myStats {
       self.setupShimmeringInnerStack(titleLabel, descriptionLabel, stack)
     }
     
     return stack
   }
+  // swiftlint:enable function_body_length
   
   private func setupViewsBasedOnStyle(
     style: Configuration.ProfileModel.Style,
@@ -88,7 +106,8 @@ extension Styled.Row {
       self.bindingForwardImage(imageView: forwardImage)
     }
     
-    if style == Configuration.ProfileModel.Style.shareProfile {
+    if style == Configuration.ProfileModel.Style.shareProfile ||
+      style == Configuration.ProfileModel.Style.myStats {
       self.setupShimmeringProfileImageView(profileImageView)
     }
   }

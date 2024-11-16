@@ -212,16 +212,30 @@ extension Styled.Row {
     )
   )
   row3.backgroundColor = .brown
+  
+  let row4 =  Styled.Row(
+    configuration: .profile(
+      .init(
+        style: .myStats,
+        title: "이인우님,\n15일 연속으로 기록 유지중이에요!",
+        description: "9999.99.99 ~ 3333.33.33"
+      )
+    )
+  )
+  row4.backgroundColor = .lightGray
 
   let stack = UIVStackView(
     arrangedSubviews: [
-      row, row2, row3
+      row, row2, row3, row4
     ]
   )
+
   row.widthAnchor.constraint(equalTo: stack.widthAnchor).isActive = true
   row2.widthAnchor.constraint(equalTo: stack.widthAnchor).isActive = true
   row3.widthAnchor.constraint(equalTo: stack.widthAnchor).isActive = true
-
+  row4.widthAnchor.constraint(equalTo: stack.widthAnchor).isActive = true
+  row4.heightAnchor.constraint(equalToConstant: 110).isActive = true
+  
   stack.alignment = .leading
   stack.backgroundColor = .green
   
