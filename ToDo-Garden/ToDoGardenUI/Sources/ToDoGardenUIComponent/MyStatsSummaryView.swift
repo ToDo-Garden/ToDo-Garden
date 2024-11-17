@@ -147,8 +147,15 @@ class TitleDescriptionView: UIView {
     self.addSubview(self.titleLabel)
     self.addSubview(self.descriptionLabel)
     
+    self.setupShimmerable()
+    
     self.setupTitleLabelConstraints()
     self.setupDescriptionLabelConstraints()
+  }
+  
+  private func setupShimmerable() {
+    self.isShimmering = true
+    self.descriptionLabel.isShimmering = true
   }
   
   private func setupTitleLabelConstraints() {
