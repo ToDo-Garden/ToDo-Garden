@@ -45,4 +45,5 @@ public enum Constant {
   public enum LeafLabel { }
   public enum BubbleLabel { }
   public enum LongestRecordView { }
+  public enum MyStatsSummaryView { }
 }
