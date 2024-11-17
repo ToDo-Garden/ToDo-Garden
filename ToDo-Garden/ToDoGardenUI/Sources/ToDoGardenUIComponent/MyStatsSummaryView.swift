@@ -25,11 +25,7 @@ public final class MyStatsSummaryView: UIView {
     self.leftView = TitleDescriptionView()
     self.rightView = TitleDescriptionView()
     super.init(frame: CGRect.zero)
-    self.backgroundColor = UIColor.white
-    self.layer.cornerRadius = Constant.MyStatsSummaryView.Layout.cornerRadius
-    self.layer.borderColor = UIColor.toDoGardenGreenGray.cgColor
-    self.layer.borderWidth = 1
-    
+    self.setupAppearance()
     self.setupView(
       leftTitle: leftTitle,
       leftDescription: leftDescription,
@@ -58,6 +54,12 @@ public final class MyStatsSummaryView: UIView {
     self.rightView.updateDescriptionLabel(text: description)
     
   }
+  
+  private func setupAppearance() {
+    self.backgroundColor = UIColor.white
+    self.layer.cornerRadius = Constant.MyStatsSummaryView.Layout.cornerRadius
+    self.layer.borderColor = UIColor.toDoGardenGreenGray.cgColor
+    self.layer.borderWidth = 1
   }
   
   private func setupView(
