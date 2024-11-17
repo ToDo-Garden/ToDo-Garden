@@ -100,7 +100,10 @@ public final class MyStatsSummaryView: UIView {
     NSLayoutConstraint.activate([
       self.leftView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: constant.commonMargin),
       self.leftView.topAnchor.constraint(equalTo: self.topAnchor, constant: constant.commonMargin),
-      self.leftView.trailingAnchor.constraint(equalTo: self.verticalLine.leadingAnchor, constant: -constant.commonMargin),
+      self.leftView.trailingAnchor.constraint(
+        equalTo: self.verticalLine.leadingAnchor,
+        constant: -constant.commonMargin
+      ),
       self.leftView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -constant.commonMargin)
     ])
   }
@@ -109,7 +112,10 @@ public final class MyStatsSummaryView: UIView {
     self.rightView.usingAutolayout()
     let constant = Constant.MyStatsSummaryView.Layout.self
     NSLayoutConstraint.activate([
-      self.rightView.leadingAnchor.constraint(equalTo: self.verticalLine.trailingAnchor, constant: constant.commonMargin),
+      self.rightView.leadingAnchor.constraint(
+        equalTo: self.verticalLine.trailingAnchor,
+        constant: constant.commonMargin
+      ),
       self.rightView.topAnchor.constraint(equalTo: self.topAnchor, constant: constant.commonMargin),
       self.rightView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -constant.commonMargin),
       self.rightView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -constant.commonMargin)
@@ -164,7 +170,7 @@ class TitleDescriptionView: UIView {
   func updateTitleLabel(text: String) {
     self.titleLabel.attributedText = text.applyTextAttributes(
       attributes: [
-        NSAttributedString.Key.font : UIFont.pretendardBodySemiBold,
+        NSAttributedString.Key.font: UIFont.pretendardBodySemiBold,
         NSAttributedString.Key.foregroundColor: UIColor.toDoGardenGreenDark
       ]
     )
@@ -173,7 +179,7 @@ class TitleDescriptionView: UIView {
   func updateDescriptionLabel(text: String) {
     self.descriptionLabel.attributedText = text.applyTextAttributes(
       attributes: [
-        NSAttributedString.Key.font : UIFont.pretendardHeadBold,
+        NSAttributedString.Key.font: UIFont.pretendardHeadBold,
         NSAttributedString.Key.foregroundColor: UIColor.toDoGardenGreenDark
       ]
     )
