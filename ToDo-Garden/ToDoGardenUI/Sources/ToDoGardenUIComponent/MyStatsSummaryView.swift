@@ -43,24 +43,21 @@ public final class MyStatsSummaryView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
   
-  public func updateLeftView(title: String? = nil, description: String?) {
+  public func updateLeftView(title: String? = nil, description: String) {
     if let title = title {
       self.leftView.updateTitleLabel(text: title)
     }
     
-    if let description = description {
-      self.leftView.updateDescriptionLabel(text: description)
-    }
+    self.leftView.updateDescriptionLabel(text: description)
   }
   
-  public func updateRightView(title: String? = nil, description: String?) {
+  public func updateRightView(title: String? = nil, description: String) {
     if let title = title {
       self.rightView.updateTitleLabel(text: title)
     }
+    self.rightView.updateDescriptionLabel(text: description)
     
-    if let description = description {
-      self.rightView.updateDescriptionLabel(text: description)
-    }
+  }
   }
   
   private func setupView(
