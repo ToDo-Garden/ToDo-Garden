@@ -14,6 +14,7 @@ import ToDoGardenUIResource
 public final class LongestRecordView: UIView {
   private let titleLabel: UILabel
   private let labelStackView: UIVStackView
+  private let style: LongestRecordView.Configuration
   
   public var informationButton: UIButton?
   
@@ -29,6 +30,7 @@ public final class LongestRecordView: UIView {
     recordCount: Int,
     date: [Date]
   ) {
+    self.style = style
     self.titleLabel = UILabel()
     self.labelStackView = UIVStackView(
       alignment: UIStackView.Alignment.trailing,
