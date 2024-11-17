@@ -123,7 +123,7 @@ public final class MyStatsSummaryView: UIView {
   }
 }
 
-class TitleDescriptionView: UIView {
+final class TitleDescriptionView: UIView {
   private let titleLabel: UILabel
   private let descriptionLabel: UILabel
   
