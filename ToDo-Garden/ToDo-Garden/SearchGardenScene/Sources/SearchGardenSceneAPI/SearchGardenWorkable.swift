@@ -8,5 +8,5 @@
 import Foundation
 
 public protocol SearchGardenWorkable {
-	func doSomeWork()
+  func doSomeWork()
 }

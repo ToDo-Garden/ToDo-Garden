@@ -7,19 +7,21 @@
 
 import Foundation
 
+import SearchGardenSceneEntity
+
 protocol SearchGardenPresentationLogic {
-	func presentSomething(response: SearchGarden.Something.Response)
+  func presentSomething(response: SearchGarden.Something.Response)
 }
 
 class SearchGardenPresenter {
-	weak var viewController: SearchGardenDisplayLogic?
+  weak var viewController: SearchGardenDisplayLogic?
 }
 
 // MARK: - Request to ViewController
 
 extension SearchGardenPresenter: SearchGardenPresentationLogic {
-	func presentSomething(response: SearchGarden.Something.Response) {
-		let viewModel = SearchGarden.Something.ViewModel()
-		self.viewController?.displaySomething(viewModel: viewModel)
-	}
+  func presentSomething(response: SearchGarden.Something.Response) {
+    let viewModel = SearchGarden.Something.ViewModel()
+    self.viewController?.displaySomething(viewModel: viewModel)
+  }
 }

@@ -7,38 +7,31 @@
 
 import Foundation
 
+import SearchGardenSceneAPI
+import SearchGardenSceneEntity
+
 protocol SearchGardenRoutingLogic {
-	func routeToSomewhere()
+  func routeToSomewhere()
 }
 
 protocol SearchGardenDataPassing {
-	var dataStore: SearchGardenDataStore? { get }
+  var dataStore: SearchGardenDataStore? { get }
 }
 
 class SearchGardenRouter: SearchGardenDataPassing {
-	weak var viewController: SearchGardenViewController?
-	var dataStore: SearchGardenDataStore?
-	private let nextSceneBuilder: NextSceneBuildable
-	
-	init(nextSceneBuilder: NextSceneBuildable) {
-		self.nextSceneBuilder = nextSceneBuilder
-	}
+  weak var viewController: SearchGardenViewController?
+  var dataStore: SearchGardenDataStore?
+  
+  init() {
+  }
 }
 
 // MARK: - Routing
 
 extension SearchGardenRouter: SearchGardenRoutingLogic {
-	func routeToSomewhere() {
-		let destinationViewController = self.nextSceneBuilder.build(with: NextScenePayload())
-		
-		self.viewController?.present(destinationViewController, animated: true)
-	}
-}
-
-// MARK: - Declare Payload for scene
-
-extension SearchGardenRouter {
-	struct NextScenePayload: NextScenePayloadable {
-		// var name: String
-	}
+  func routeToSomewhere() {
+    //		let destinationViewController = self.nextSceneBuilder.build(with: NextScenePayload())
+    //		
+    //		self.viewController?.present(destinationViewController, animated: true)
+  }
 }

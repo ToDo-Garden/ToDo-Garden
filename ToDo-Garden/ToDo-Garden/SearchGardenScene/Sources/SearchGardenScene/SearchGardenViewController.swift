@@ -7,6 +7,9 @@
 
 import UIKit
 
+import SearchGardenSceneAPI
+import SearchGardenSceneEntity
+
 protocol SearchGardenDisplayLogic: AnyObject {
   func displaySomething(viewModel: SearchGarden.Something.ViewModel)
 }

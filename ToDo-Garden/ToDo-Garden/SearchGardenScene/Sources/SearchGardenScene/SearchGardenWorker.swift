@@ -7,6 +7,8 @@
 
 import Foundation
 
+import SearchGardenSceneAPI
+
 struct SearchGardenWorker: SearchGardenWorkable {
   func doSomeWork() {
   }
