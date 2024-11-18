@@ -223,10 +223,21 @@ extension Styled.Row {
     )
   )
   row4.backgroundColor = .lightGray
-
+  
+  let row5 = Styled.Row(
+    configuration: .profile(
+      .init(
+        style: .searchRow,
+        title: "SearchRow",
+        description: "@userID"
+      )
+    )
+  )
+  row5.backgroundColor = .white
+  
   let stack = UIVStackView(
     arrangedSubviews: [
-      row, row2, row3, row4
+      row, row2, row3, row4, row5
     ]
   )
 
@@ -235,6 +246,7 @@ extension Styled.Row {
   row3.widthAnchor.constraint(equalTo: stack.widthAnchor).isActive = true
   row4.widthAnchor.constraint(equalTo: stack.widthAnchor).isActive = true
   row4.heightAnchor.constraint(equalToConstant: 110).isActive = true
+  row5.widthAnchor.constraint(equalTo: stack.widthAnchor).isActive = true
   
   stack.alignment = .leading
   stack.backgroundColor = .green

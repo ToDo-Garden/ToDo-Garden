@@ -33,3 +33,17 @@ public class TableRow: UITableViewCell {
       .eraseToAnyPublisher()
   }
 }
+
+@available(iOS 17.0, *)
+#Preview {
+  let cell = TableRow().build(
+    configuration: .profile(
+      .init(
+        style: .searchRow,
+        title: "searchRow",
+        description: "@userID"
+      )
+    )
+  )
+  return cell
+}
