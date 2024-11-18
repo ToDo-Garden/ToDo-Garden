@@ -13,7 +13,10 @@ import ToDoGardenUIResource
 
 public final class LongestRecordView: UIView {
   private let titleLabel: UILabel
-  private let labelStackView: UIVStackView
+  private var groupNameLabel: UILabel?
+  private var recordLabel: UILabel
+  private var dateLabel: UILabel
+  private let style: LongestRecordView.Configuration
   
   public var informationButton: UIButton?
   
@@ -29,46 +32,57 @@ public final class LongestRecordView: UIView {
     recordCount: Int,
     date: [Date]
   ) {
+    self.style = style
     self.titleLabel = UILabel()
-    self.labelStackView = UIVStackView(
-      alignment: UIStackView.Alignment.trailing,
-      spacing: 1.0,
-      arrangedSubviews: []
-    )
+    self.groupNameLabel = UILabel()
+    self.recordLabel = UILabel()
+    self.dateLabel = UILabel()
     super.init(frame: CGRect.zero)
     self.backgroundColor = UIColor.white
     self.layer.cornerRadius = Constant.LongestRecordView.Layout.cornerRadius
     self.layer.borderWidth = Constant.LongestRecordView.Layout.borderWidth
     self.layer.borderColor = UIColor.toDoGardenGreenGray.cgColor
     self.setupViews(
-      style: style,
       title: title,
       groupName: groupName,
       recordCount: recordCount,
-      date: date
+      dateRange: date
     )
+    self.setupShimmerable()
   }
   
   @available(*, unavailable)
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+  
+  public func update(
+    groupName: String?,
+    recordCount: Int,
+    dateRange: [Date]
+  ) {
+    self.setupGroupNameLabel(with: groupName)
+    self.setupRecordLabel(with: recordCount)
+    self.setupDateLabel(with: dateRange)
+  }
 }
 
 extension LongestRecordView {
   private func setupViews(
-    style: LongestRecordView.Configuration,
     title: String,
     groupName: String?,
     recordCount: Int,
-    date: [Date]
+    dateRange: [Date]
   ) {
-    self.setupTitleView(style: style, with: title)
-    self.setupLabelStackView(style: style, groupName: groupName, recordCount: recordCount, date: date)
+    self.setupTitleView(with: title)
     self.setupLeafSymbolImageView()
+    self.setupGroupNameLabel(with: groupName)
+    self.setupRecordLabel(with: recordCount)
+    self.setupDateLabel(with: dateRange)
+    self.setupLabelsConstraints()
   }
   
-  private func setupTitleView(style: LongestRecordView.Configuration, with title: String) {
+  private func setupTitleView(with title: String) {
     self.titleLabel.attributedText = title.applyTextAttributes(
       attributes: [
         NSAttributedString.Key.font: UIFont.pretendardBodySemiBold,
@@ -80,7 +94,7 @@ extension LongestRecordView {
     self.titleLabel.usingAutolayout()
     
     self.setupTitleLabelConstraints()
-    self.setupInformationButton(style: style)
+    self.setupInformationButton()
   }
   
   private func setupTitleLabelConstraints() {
@@ -93,8 +107,8 @@ extension LongestRecordView {
     )
   }
   
-  private func setupInformationButton(style: LongestRecordView.Configuration) {
-    switch style {
+  private func setupInformationButton() {
+    switch self.style {
     case .pomo:
       self.informationButton = UIButton()
       guard let informationButton = self.informationButton else { return }
@@ -122,46 +136,50 @@ extension LongestRecordView {
     )
   }
   
-  private func setupLabelStackView(
-    style: LongestRecordView.Configuration,
-    groupName: String?,
-    recordCount: Int,
-    date: [Date]
-  ) {
-    self.addSubview(self.labelStackView)
-    self.labelStackView.usingAutolayout()
+  private func setupLabelsConstraints() {
     
-    self.addLabelsToStackView(style: style, groupName: groupName, recordCount: recordCount, date: date)
-    self.setupLabelStackViewConstraints()
-  }
-  
-  private func addLabelsToStackView(
-    style: LongestRecordView.Configuration,
-    groupName: String?,
-    recordCount: Int,
-    date: [Date]
-  ) {
-    let groupNameLabel = self.buildGroupNameLabel(with: groupName)
-    let recordLabel = self.buildRecordLabel(style: style, with: recordCount)
-    let dateLabel = self.buildDateLabel(style: style, with: date)
+    self.addSubview(self.dateLabel)
+    self.dateLabel.usingAutolayout()
+    self.setupDateLabelConstraints()
     
-    let labels = [groupNameLabel, recordLabel, dateLabel]
+    self.addSubview(self.recordLabel)
+    self.recordLabel.usingAutolayout()
+    self.setupRecordLabelConstraints()
     
-    for label in labels {
-      guard let label = label else {
-        continue
-      }
-      
-      self.labelStackView.addArrangedSubview(label)
+    if let groupNameLabel = self.groupNameLabel {
+      self.addSubview(groupNameLabel)
+      groupNameLabel.usingAutolayout()
+      self.setupGroupNameLabelConstraints(groupNameLabel)
     }
+
   }
   
-  private func setupLabelStackViewConstraints() {
+  private func setupGroupNameLabelConstraints(_ label: UILabel) {
     let constant = Constant.LongestRecordView.LabelStackView.Layout.self
     NSLayoutConstraint.activate(
       [
-        self.labelStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: constant.commonMargin),
-        self.labelStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: constant.commonMargin)
+        label.bottomAnchor.constraint(equalTo: self.recordLabel.topAnchor, constant: -1),
+        label.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: constant.commonMargin)
+      ]
+    )
+  }
+  
+  private func setupRecordLabelConstraints() {
+    let constant = Constant.LongestRecordView.LabelStackView.Layout.self
+    NSLayoutConstraint.activate(
+      [
+        self.recordLabel.bottomAnchor.constraint(equalTo: self.dateLabel.topAnchor, constant: -1),
+        self.recordLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: constant.commonMargin)
+      ]
+    )
+  }
+  
+  private func setupDateLabelConstraints() {
+    let constant = Constant.LongestRecordView.LabelStackView.Layout.self
+    NSLayoutConstraint.activate(
+      [
+        self.dateLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: constant.commonMargin),
+        self.dateLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: constant.commonMargin)
       ]
     )
   }
@@ -189,26 +207,23 @@ extension LongestRecordView {
 }
 
 extension LongestRecordView {
-  private func buildGroupNameLabel(with groupName: String?) -> UILabel? {
+  private func setupGroupNameLabel(with groupName: String?) {
     guard let groupName = groupName else {
-      return nil
+      return
     }
-    
-    let label = UILabel(frame: CGRect.zero)
-    label.attributedText = groupName.applyTextAttributes(
+
+    self.groupNameLabel?.attributedText = groupName.applyTextAttributes(
       attributes: [
         NSAttributedString.Key.font: UIFont.pretendardDetailLight10,
         NSAttributedString.Key.foregroundColor: UIColor.toDoGardenGreenGray
       ]
     )
-    
-    return label
   }
   
-  private func buildRecordLabel(style: LongestRecordView.Configuration, with recordCount: Int) -> UILabel {
+  private func setupRecordLabel(with recordCount: Int) {
     var text: String
     var unit: String
-    switch style {
+    switch self.style {
     case .pomo:
       unit = Constant.LongestRecordView.StringLiteral.pomo
     case .dateRange:
@@ -216,20 +231,17 @@ extension LongestRecordView {
     }
     text = "\(recordCount)\(unit)"
     
-    let label = UILabel(frame: CGRect.zero)
-    label.attributedText = text.applyTextAttributes(
+    self.recordLabel.attributedText = text.applyTextAttributes(
       attributes: [
         NSAttributedString.Key.font: UIFont.pretendardHeadBold,
         NSAttributedString.Key.foregroundColor: UIColor.toDoGardenGreenDark
       ]
     )
-    
-    return label
   }
   
-  private func buildDateLabel(style: LongestRecordView.Configuration, with date: [Date]) -> UILabel {
+  private func setupDateLabel(with date: [Date]) {
     var text: String = ""
-    switch style {
+    switch self.style {
     case .pomo:
       text = date.first?.toStringDefaultFormat() ?? ""
     case .dateRange:
@@ -237,16 +249,21 @@ extension LongestRecordView {
       let endDate = date.last?.toStringDefaultFormat() ?? ""
       text = "\(startDate) ~ \(endDate)"
     }
-    
-    let label = UILabel(frame: CGRect.zero)
-    label.attributedText = text.applyTextAttributes(
+
+    self.dateLabel.attributedText = text.applyTextAttributes(
       attributes: [
         NSAttributedString.Key.font: UIFont.pretendardDetailLight10,
         NSAttributedString.Key.foregroundColor: UIColor.toDoGardenGray3
       ]
     )
+  }
+  
+  private func setupShimmerable() {
+    let labels = [self.groupNameLabel, self.recordLabel, self.dateLabel].compactMap { $0 }
     
-    return label
+    for label in labels {
+      label.isShimmering = true
+    }
   }
 }
 
@@ -276,7 +293,8 @@ extension LongestRecordView {
   
   view1.usingAutolayout()
   view2.usingAutolayout()
-
+  view2.startShimmering()
+  
   stackView.addArrangedSubview(view1)
   stackView.addArrangedSubview(view2)
   
