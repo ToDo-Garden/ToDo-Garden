@@ -32,7 +32,7 @@ final class MyStatsView: UIView {
     self.periodicSummaryView = MyStatsPeriodicSummaryView()
     super.init(frame: CGRect.zero)
     self.setupView()
-    self.backgroundColor = .toDoGardenLightRed
+    self.backgroundColor = UIColor.white
   }
   
   @available(*, unavailable)
