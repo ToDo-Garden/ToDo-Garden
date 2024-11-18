@@ -81,6 +81,24 @@ struct URLSessionTransportTests {
       _ = try await self.sut.send(request: request)
     }
   }
+  
+  @Test("task cancel 시 sut에서 Cancellation Error를 반환하는 가")
+  private func throwCancellationError() async throws {
+    // Given
+    let testURL = try #require(URL(string: "test url"))
+    let request = HTTPRequest(
+      method: HTTPMethod.get,
+      endPoint: testURL
+    )
+    let task = Task {
+      await #expect(throws: CancellationError.self) {
+        let response = try await self.sut.send(request: request)
+        return response
+      }
+    }
+    task.cancel()
+    await task.value
+  }
 }
 
 extension HTTPClientError: Equatable {
