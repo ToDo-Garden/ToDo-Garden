@@ -60,6 +60,49 @@ struct URLSessionTransportTests {
     // Then
     #expect(response == expectedResponse)
   }
+  
+  @Test("URLSession에서 HTTPURLResponse가 아닌 응답을 받았을 때 올바른 에러를 반환하는가")
+  private func notHTTPURLResponseReturned() async throws {
+    // Given
+    let testURL = try #require(URL(string: "test url"))
+    let request = HTTPRequest(
+      method: HTTPMethod.get,
+      endPoint: testURL
+    )
+    let expectedResponse = URLResponse()
+    let expectedError = HTTPClientError.notHTTPResponse(expectedResponse)
+    URLProtocolMock.requestHandler = {
+      return (expectedResponse, Data())
+    }
+    
+    // Then
+    await #expect(throws: expectedError) {
+      // When
+      _ = try await self.sut.send(request: request)
+    }
+  }
+}
+
+extension HTTPClientError: Equatable {
+  // test를 위한 구현입니다.
+  public static func == (
+    lhs: HTTPClientError,
+    rhs: HTTPClientError
+  ) -> Bool {
+    switch (lhs, rhs) {
+    case (
+      HTTPClientError.notHTTPResponse(let lhsResponse),
+      HTTPClientError.notHTTPResponse(let rhsResponse)
+    ):
+      return lhsResponse.url == rhsResponse.url
+      && lhsResponse.mimeType == rhsResponse.mimeType
+      && lhsResponse.expectedContentLength == rhsResponse.expectedContentLength
+      && lhsResponse.suggestedFilename == rhsResponse.suggestedFilename
+      && lhsResponse.textEncodingName == rhsResponse.textEncodingName
+    default:
+      return false
+    }
+  }
 }
 
 // swiftlint:enable function_body_length
