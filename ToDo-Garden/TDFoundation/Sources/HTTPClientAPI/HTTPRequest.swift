@@ -19,9 +19,9 @@ public struct HTTPRequest: Sendable, Equatable {
   public init(
     method: HTTPMethod,
     endPoint: URL,
-    header: [String: String],
-    queryItems: [String: String],
-    body: Data?
+    header: [String: String] = [:],
+    queryItems: [String: String] = [:],
+    body: Data? = nil
   ) {
     self.method = method
     self.endPoint = endPoint
