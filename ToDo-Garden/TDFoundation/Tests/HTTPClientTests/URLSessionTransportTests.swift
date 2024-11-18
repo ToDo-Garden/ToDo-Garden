@@ -12,6 +12,7 @@ import Testing
 import HTTPClient
 import HTTPClientAPI
 
+@Suite(ParallelizationTrait.serialized)
 struct URLSessionTransportTests {
   private let sut: URLSessionTransport
   
