@@ -101,7 +101,7 @@ extension Styled.Row.Configuration {
 extension Styled.Row.Configuration.ProfileModel {
   public enum Style {
     var axis: NSLayoutConstraint.Axis {
-      self == Self.shareRow
+      self == Self.shareRow || self == Self.searchRow
       ? NSLayoutConstraint.Axis.horizontal
       : NSLayoutConstraint.Axis.vertical
     }
@@ -116,17 +116,19 @@ extension Styled.Row.Configuration.ProfileModel {
         return NSDirectionalEdgeInsets(top: 6, leading: 25, bottom: 6, trailing: 25)
       case Self.myStats:
         return NSDirectionalEdgeInsets(top: 6, leading: 25, bottom: 6, trailing: 25)
+      case Self.searchRow:
+        return NSDirectionalEdgeInsets(top: 6, leading: 25, bottom: 6, trailing: 25)
       }
     }
     
     var defaultImage: UIImage {
-      self == Self.shareRow
+      self == Self.shareRow || self == Self.searchRow
       ? UIImage.defaultFriendProfileImage
       : UIImage.defaultProfileImage
     }
     
     var imageSize: CGSize {
-      self == Self.shareRow
+      self == Self.shareRow || self == Self.searchRow
       ? CGSize(width: 36, height: 36)
       : CGSize(width: 56, height: 56)
     }
@@ -141,17 +143,19 @@ extension Styled.Row.Configuration.ProfileModel {
         return 6
       case Self.myStats:
         return 15
+      case Self.searchRow:
+        return 10
       }
     }
     
     var titleFont: UIFont {
-      self == Self.shareRow
+      self == Self.shareRow || self == Self.searchRow
       ? UIFont.pretendardBodySemiBold15
       : UIFont.pretendardHeadBold
     }
     
     var descriptionFont: UIFont {
-      self == Self.shareRow
+      self == Self.shareRow || self == Self.searchRow
       ? UIFont.pretendardBodyMedium
       : UIFont.pretendardDetailLight
     }
@@ -160,5 +164,6 @@ extension Styled.Row.Configuration.ProfileModel {
     case shareProfile
     case shareRow
     case myStats
+    case searchRow
   }
 }
