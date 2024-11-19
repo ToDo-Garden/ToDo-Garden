@@ -15,6 +15,7 @@ public final class IntroOnBoardingViewController: UIViewController {
   private let mainImageView: UIImageView
   private let leafLabelStackView: LeafLabelStackView
   private let startButton: ToDoGardenBoxButton
+  var startButtonAction: (() -> Void)?
   
   public init() {
     // self.mainImageView = AnimationImageView(jsonURL: URL.onBoardingURL)
@@ -128,9 +129,7 @@ extension IntroOnBoardingViewController {
   private func setupButtonAction() {
     self.startButton.addAction(
       UIAction { [weak self] _ in
-        let tutorialViewController = TutorialOnBoardingViewController()
-        
-        self?.navigationController?.pushViewController(tutorialViewController, animated: true)
+        self?.startButtonAction?()
       },
       for: UIControl.Event.touchUpInside
     )
@@ -140,8 +139,20 @@ extension IntroOnBoardingViewController {
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  let viewController = IntroOnBoardingViewController()
-  let navi = UINavigationController(rootViewController: viewController)
+  /// AppRoot에서 하게 될 동작.
+  let intro = IntroOnBoardingViewController()
+  let tutorial = TutorialOnBoardingViewController()
+  let navi = UINavigationController(rootViewController: intro)
+  intro.startButtonAction = { [weak navi] in
+    navi?.pushViewController(tutorial, animated: true)
+  }
+  
+  let viewController = UIViewController()
+  viewController.view.backgroundColor = .systemIndigo
+  tutorial.endEvent = { [weak navi] in
+    navi?.pushViewController(viewController, animated: true)
+  }
+  
   return navi
 }
 #endif

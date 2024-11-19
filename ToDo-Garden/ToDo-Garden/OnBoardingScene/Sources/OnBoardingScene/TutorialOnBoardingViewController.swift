@@ -15,6 +15,8 @@ final class TutorialOnBoardingViewController: UIViewController {
   private let leftBubbleLabel: BubbleLabel
   private let rightBubbleLabel: BubbleLabel
   
+  var endEvent: (() -> Void)?
+  
   init() {
     self.cell = ManageGroupTableViewCell(
       style: UITableViewCell.CellStyle.default,
@@ -153,6 +155,7 @@ extension TutorialOnBoardingViewController: BubbleLabelDelegate {
       },
       completion: { [weak self] _ in
         self?.rightBubbleLabel.isHidden = true
+        self?.endEvent?()
       }
     )
   }
