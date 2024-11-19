@@ -9,7 +9,7 @@ import Foundation
 
 /// HTTP 요청 정보를 표현하는 HTTPRequest 구조체입니다.
 /// HTTP request method, end point url, 요청 헤더, 쿼리 파라미터, 요청 본문을 가질 수 있습니다.
-public struct HTTPRequest: Sendable {
+public struct HTTPRequest: Sendable, Equatable {
   public let method: HTTPMethod
   public let endPoint: URL
   public let header: [String: String]
@@ -19,9 +19,9 @@ public struct HTTPRequest: Sendable {
   public init(
     method: HTTPMethod,
     endPoint: URL,
-    header: [String: String],
-    queryItems: [String: String],
-    body: Data?
+    header: [String: String] = [:],
+    queryItems: [String: String] = [:],
+    body: Data? = nil
   ) {
     self.method = method
     self.endPoint = endPoint

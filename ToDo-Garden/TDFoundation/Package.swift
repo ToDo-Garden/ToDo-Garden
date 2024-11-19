@@ -14,6 +14,10 @@ let package = Package(
     Product.library(
       name: "HTTPClientAPI",
       targets: ["HTTPClientAPI"]
+    ),
+    Product.library(
+      name: "HTTPClient",
+      targets: ["HTTPClient"]
     )
   ],
   dependencies: [
@@ -24,12 +28,23 @@ let package = Package(
       name: "HTTPClientAPI"
     ),
     Target.target(
+      name: "HTTPClient",
+      dependencies: ["HTTPClientAPI"]
+    ),
+    Target.target(
       name: "TDFoundation",
       dependencies: [
         Target.Dependency.product(
           name: "ToDoGardenUIComponent",
           package: "ToDoGardenUI"
         )
+      ]
+    ),
+    Target.testTarget(
+      name: "HTTPClientTests",
+      dependencies: [
+        "HTTPClientAPI",
+        "HTTPClient"
       ]
     )
   ]
