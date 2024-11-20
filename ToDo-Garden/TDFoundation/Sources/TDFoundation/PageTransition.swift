@@ -20,6 +20,18 @@ public final class PageTransition: NSObject, UIViewControllerAnimatedTransitioni
   }
 
 extension PageTransition {
+  private func getTransitionInfo(
+    for key: UITransitionContextViewControllerKey,
+    context: UIViewControllerContextTransitioning
+  ) -> (UIViewController, UIView, Int)? {
+    guard let viewController = context.viewController(forKey: key),
+      let view = viewController.view,
+      let index = self.getIndex(for: viewController)
+    else { return nil }
+    
+    return (viewController, view, index)
+  }
+  
   private func getIndex(for targetViewController: UIViewController) -> Int? {
     for (index, viewController) in self.viewControllers.enumerated() where viewController == targetViewController {
       return index
