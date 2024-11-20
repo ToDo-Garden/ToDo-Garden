@@ -41,13 +41,20 @@ public final class PageTransition: NSObject, UIViewControllerAnimatedTransitioni
     
     let frame = transitionContext.initialFrame(for: fromViewController)
     var toFrameStart = frame
-    let offsetX = frame.width * 0.1
+    var fromFrameEnd = frame
+    
+    let toFrameOffsetX = frame.width * 0.1
+    let fromFrameOffsetX = frame.width * 0.1
     toFrameStart.origin.x = toIndex > fromIndex
-      ? frame.origin.x + offsetX
-      : frame.origin.x - offsetX
+      ? frame.origin.x + toFrameOffsetX
+      : frame.origin.x - toFrameOffsetX
     toView.frame = toFrameStart
-    transitionContext.containerView.addSubview(toView)
+    fromFrameEnd.origin.x = toIndex > fromIndex
+    ? frame.origin.x - fromFrameOffsetX
+    : frame.origin.x + fromFrameOffsetX
+    
     transitionContext.containerView.addSubview(fromView)
+    transitionContext.containerView.addSubview(toView)
     
     UIView.animate(
       withDuration: self.transitionDuration,
@@ -57,8 +64,9 @@ public final class PageTransition: NSObject, UIViewControllerAnimatedTransitioni
       options: [UIView.AnimationOptions.curveEaseInOut],
       animations: {
         fromView.layer.opacity = 0
-        toView.frame = frame
         toView.layer.opacity = 1
+        fromView.frame = fromFrameEnd
+        toView.frame = frame
       },
       completion: { success in
         fromView.removeFromSuperview()
