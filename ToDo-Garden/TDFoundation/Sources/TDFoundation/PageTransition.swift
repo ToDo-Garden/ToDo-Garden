@@ -50,8 +50,8 @@ public final class PageTransition: NSObject, UIViewControllerAnimatedTransitioni
       : frame.origin.x - toFrameOffsetX
     toView.frame = toFrameStart
     fromFrameEnd.origin.x = toIndex > fromIndex
-    ? frame.origin.x - fromFrameOffsetX
-    : frame.origin.x + fromFrameOffsetX
+      ? frame.origin.x - fromFrameOffsetX
+      : frame.origin.x + fromFrameOffsetX
     
     transitionContext.containerView.addSubview(fromView)
     transitionContext.containerView.addSubview(toView)
