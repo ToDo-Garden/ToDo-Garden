@@ -12,7 +12,7 @@ public final class PageTransition: NSObject, UIViewControllerAnimatedTransitioni
   private let viewControllers: [UIViewController]
   
   public init(
-    transitionDuration: TimeInterval = 0.5,
+    transitionDuration: TimeInterval = 0.35,
     viewControllers: [UIViewController]
   ) {
     self.transitionDuration = transitionDuration
