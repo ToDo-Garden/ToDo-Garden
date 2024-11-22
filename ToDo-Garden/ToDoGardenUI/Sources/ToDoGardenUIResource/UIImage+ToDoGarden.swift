@@ -129,4 +129,8 @@ extension UIImage {
   public static let informationMark = UIImage(
     systemName: "info.circle"
   )
+  
+  public static let homeTabBarItemImage = UIImage(
+    resource: .homeTabIcon
+  )
 }
