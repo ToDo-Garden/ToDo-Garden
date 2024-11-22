@@ -137,4 +137,8 @@ extension UIImage {
   public static let shareTabBarItemImage = UIImage(
     resource: .shareTabIcon
   )
+  
+  public static let settingsTabBarItemImage = UIImage(
+    resource: .settingsTabIcon
+  )
 }
