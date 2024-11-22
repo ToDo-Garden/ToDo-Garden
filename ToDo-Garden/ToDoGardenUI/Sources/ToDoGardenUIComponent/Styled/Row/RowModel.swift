@@ -101,9 +101,12 @@ extension Styled.Row.Configuration {
 extension Styled.Row.Configuration.ProfileModel {
   public enum Style {
     var axis: NSLayoutConstraint.Axis {
-      self == Self.shareRow || self == Self.searchRow
-      ? NSLayoutConstraint.Axis.horizontal
-      : NSLayoutConstraint.Axis.vertical
+      switch self {
+      case Self.shareRow, Self.searchRow:
+        return NSLayoutConstraint.Axis.horizontal
+      default:
+        return NSLayoutConstraint.Axis.vertical
+      }
     }
     
     var innerPadding: NSDirectionalEdgeInsets {
@@ -112,25 +115,27 @@ extension Styled.Row.Configuration.ProfileModel {
         return NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
       case Self.shareProfile:
         return NSDirectionalEdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 36)
-      case Self.shareRow:
-        return NSDirectionalEdgeInsets(top: 6, leading: 25, bottom: 6, trailing: 25)
-      case Self.myStats:
-        return NSDirectionalEdgeInsets(top: 6, leading: 25, bottom: 6, trailing: 25)
-      case Self.searchRow:
+      case Self.shareRow, Self.myStats, Self.searchRow:
         return NSDirectionalEdgeInsets(top: 6, leading: 25, bottom: 6, trailing: 25)
       }
     }
     
     var defaultImage: UIImage {
-      self == Self.shareRow || self == Self.searchRow
-      ? UIImage.defaultFriendProfileImage
-      : UIImage.defaultProfileImage
+      switch self {
+      case Self.shareRow, Self.searchRow:
+        return UIImage.defaultFriendProfileImage
+      default:
+        return UIImage.defaultProfileImage
+      }
     }
     
     var imageSize: CGSize {
-      self == Self.shareRow || self == Self.searchRow
-      ? CGSize(width: 36, height: 36)
-      : CGSize(width: 56, height: 56)
+      switch self {
+      case Self.shareRow, Self.searchRow:
+        return CGSize(width: 36, height: 36)
+      default:
+        return CGSize(width: 56, height: 56)
+      }
     }
     
     var profileImageTrailingPadding: CGFloat {
@@ -149,15 +154,21 @@ extension Styled.Row.Configuration.ProfileModel {
     }
     
     var titleFont: UIFont {
-      self == Self.shareRow || self == Self.searchRow
-      ? UIFont.pretendardBodySemiBold15
-      : UIFont.pretendardHeadBold
+      switch self {
+      case Self.shareRow, Self.searchRow:
+        return UIFont.pretendardBodySemiBold15
+      default:
+        return UIFont.pretendardHeadBold
+      }
     }
     
     var descriptionFont: UIFont {
-      self == Self.shareRow || self == Self.searchRow
-      ? UIFont.pretendardBodyMedium
-      : UIFont.pretendardDetailLight
+      switch self {
+      case Self.shareRow, Self.searchRow:
+        return UIFont.pretendardBodyMedium
+      default:
+        return UIFont.pretendardDetailLight
+      }
     }
     
     case setting
