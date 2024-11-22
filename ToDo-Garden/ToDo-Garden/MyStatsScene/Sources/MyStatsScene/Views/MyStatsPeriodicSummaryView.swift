@@ -14,16 +14,16 @@ final class MyStatsPeriodicSummaryView: UIView {
   private let segmentedControl: PeriodSegmentedControl
   private let summaryView: MyStatsSummaryView
   
-  private let constants = Constant.MyStatsPeriodicSummaryView.self
+  private typealias Constants = Constant.MyStatsPeriodicSummaryView
   
   init() {
     self.titleLabel = UILabel()
     self.segmentedControl = PeriodSegmentedControl()
     self.summaryView = MyStatsSummaryView(
-      leftTitle: self.constants.StringLiteral.leftViewTitle,
-      leftDescription: self.constants.StringLiteral.leftViewDesc,
-      rightTitle: self.constants.StringLiteral.rightViewTitle,
-      rightDescription: self.constants.StringLiteral.rightViewDesc
+      leftTitle: Constants.StringLiteral.leftViewTitle,
+      leftDescription: Constants.StringLiteral.leftViewDesc,
+      rightTitle: Constants.StringLiteral.rightViewTitle,
+      rightDescription: Constants.StringLiteral.rightViewDesc
     )
     super.init(frame: CGRect.zero)
     self.setupView()
@@ -51,7 +51,7 @@ final class MyStatsPeriodicSummaryView: UIView {
   }
   
   private func setupTitleLabel() {
-    let title = self.constants.StringLiteral.headerTitle
+    let title = Constants.StringLiteral.headerTitle
     self.titleLabel.attributedText = title.applyTextAttributes(
       attributes: [
         NSAttributedString.Key.font: UIFont.pretendardHeadBold,
@@ -66,7 +66,7 @@ final class MyStatsPeriodicSummaryView: UIView {
         self.titleLabel.topAnchor.constraint(equalTo: self.topAnchor),
         self.titleLabel.leadingAnchor.constraint(
           equalTo: self.leadingAnchor,
-          constant: self.constants.Layout.horizontalMargin
+          constant: Constants.Layout.horizontalMargin
         )
       ]
     )
@@ -80,7 +80,7 @@ final class MyStatsPeriodicSummaryView: UIView {
         self.segmentedControl.centerYAnchor.constraint(equalTo: self.titleLabel.centerYAnchor),
         self.segmentedControl.trailingAnchor.constraint(
           equalTo: self.trailingAnchor,
-          constant: -self.constants.Layout.horizontalMargin
+          constant: -Constants.Layout.horizontalMargin
         )
       ]
     )
@@ -93,11 +93,11 @@ final class MyStatsPeriodicSummaryView: UIView {
       [
         self.summaryView.topAnchor.constraint(
           equalTo: self.titleLabel.bottomAnchor,
-          constant: self.constants.Layout.topMargin
+          constant: Constants.Layout.topMargin
         ),
         self.summaryView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
         self.summaryView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-        self.summaryView.heightAnchor.constraint(equalToConstant: self.constants.Layout.summaryViewHeight)
+        self.summaryView.heightAnchor.constraint(equalToConstant: Constants.Layout.summaryViewHeight)
       ]
     )
   }

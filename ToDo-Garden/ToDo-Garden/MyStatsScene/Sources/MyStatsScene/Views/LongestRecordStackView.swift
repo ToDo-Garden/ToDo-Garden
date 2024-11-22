@@ -14,19 +14,19 @@ final class LongestRecordStackView: UIStackView {
   private let rightView: LongestRecordView
   private let bubbleLabel: BubbleLabel
   
-  private let constants = Constant.LongestRecordStackView.self
+  private typealias Constants = Constant.LongestRecordStackView
   
   init() {
     self.leftView = LongestRecordView(
       style: LongestRecordView.Configuration.pomo,
-      title: self.constants.StringLiteral.leftViewTitle,
+      title: Constants.StringLiteral.leftViewTitle,
       groupName: "",
       recordCount: Int.zero,
       date: [Date.now]
     )
     self.rightView = LongestRecordView(
       style: LongestRecordView.Configuration.dateRange,
-      title: self.constants.StringLiteral.rightViewTitle,
+      title: Constants.StringLiteral.rightViewTitle,
       groupName: nil,
       recordCount: Int.zero,
       date: [Date.now, Date.now]
@@ -35,7 +35,7 @@ final class LongestRecordStackView: UIStackView {
     self.bubbleLabel = BubbleLabel(
       tailPosition: BubbleLabel.TailPosition.left,
       iconImage: UIImage.leafImage,
-      text: self.constants.StringLiteral.bubbleLabelTitle
+      text: Constants.StringLiteral.bubbleLabelTitle
     )
     super.init(frame: CGRect.zero)
     self.setupAppearance()
@@ -51,7 +51,7 @@ final class LongestRecordStackView: UIStackView {
   private func setupAppearance() {
     self.axis = NSLayoutConstraint.Axis.horizontal
     self.distribution = UIStackView.Distribution.fillEqually
-    self.spacing = self.constants.Layout.spacing
+    self.spacing = Constants.Layout.spacing
     self.alignment = UIStackView.Alignment.fill
     self.addArrangedSubview(self.leftView)
     self.addArrangedSubview(self.rightView)
@@ -72,11 +72,11 @@ final class LongestRecordStackView: UIStackView {
       [
         self.bubbleLabel.topAnchor.constraint(
           equalTo: infoButton.bottomAnchor,
-          constant: self.constants.Layout.topMargin
+          constant: Constants.Layout.topMargin
         ),
         self.bubbleLabel.leadingAnchor.constraint(
           equalTo: infoButton.leadingAnchor,
-          constant: self.constants.Layout.leading
+          constant: Constants.Layout.leading
         )
       ]
     )
@@ -100,14 +100,14 @@ final class LongestRecordStackView: UIStackView {
   
   private func showBubbleLabel() {
     self.bubbleLabel.isHidden = false
-    UIView.animate(withDuration: self.constants.Animation.duration) {
+    UIView.animate(withDuration: Constants.Animation.duration) {
       self.bubbleLabel.alpha = 1
     }
   }
   
   private func hideBubbleLabel() {
     UIView.animate(
-      withDuration: self.constants.Animation.duration,
+      withDuration: Constants.Animation.duration,
       animations: {
         self.bubbleLabel.alpha = 0
       },
