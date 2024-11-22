@@ -129,4 +129,16 @@ extension UIImage {
   public static let informationMark = UIImage(
     systemName: "info.circle"
   )
+  
+  public static let homeTabBarItemImage = UIImage(
+    resource: .homeTabIcon
+  )
+  
+  public static let shareTabBarItemImage = UIImage(
+    resource: .shareTabIcon
+  )
+  
+  public static let settingsTabBarItemImage = UIImage(
+    resource: .settingsTabIcon
+  )
 }
