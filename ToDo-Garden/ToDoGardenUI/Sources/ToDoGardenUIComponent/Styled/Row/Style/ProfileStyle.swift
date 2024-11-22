@@ -19,7 +19,7 @@ extension Styled.Row {
     
     return stack
   }
-
+  
   // swiftlint:disable function_body_length
   private func buildProfileSubviews(model: Configuration.ProfileModel) -> [UIView] {
     let profileImageView = self.buildImageView(
@@ -41,7 +41,8 @@ extension Styled.Row {
       forwardImage
     ]
     
-    if model.style == Configuration.ProfileModel.Style.myStats {
+    if model.style == Configuration.ProfileModel.Style.myStats ||
+      model.style == Configuration.ProfileModel.Style.searchRow {
       subviews = [
         profileImageView,
         profileImageTrailingPadding,
@@ -59,16 +60,30 @@ extension Styled.Row {
   }
   
   private func buildInnerStack(model: Configuration.ProfileModel) -> UIStackView {
+    var descriptionLabel: UILabel
+    
     let titleLabel = self.buildTextLabel(
       text: model.title,
       font: model[style: \.titleFont],
       textColor: UIColor.toDoGardenGreenDark
     )
-    let descriptionLabel = self.buildTextLabel(
-      text: model.description,
-      font: model[style: \.descriptionFont],
-      textColor: UIColor.toDoGardenGreenDark
-    )
+    
+    switch model.style {
+    case .searchRow:
+      descriptionLabel = self.buildTextLabel(
+        text: model.description,
+        font: model[style: \.descriptionFont],
+        textColor: UIColor.gray
+      )
+      
+    default:
+      descriptionLabel = self.buildTextLabel(
+        text: model.description,
+        font: model[style: \.descriptionFont],
+        textColor: UIColor.toDoGardenGreenDark
+      )
+    }
+    
     self.bindingProfileInnerTitleState(
       titleLabel: titleLabel,
       descriptionLabel: descriptionLabel
@@ -85,6 +100,13 @@ extension Styled.Row {
         spacing.heightAnchor.constraint(equalToConstant: 8).isActive = true
       } else {
         spacing.heightAnchor.constraint(equalToConstant: 3).isActive = true
+      }
+    } else {
+      if model.style == Configuration.ProfileModel.Style.searchRow {
+        stack.alignment = UIStackView.Alignment.center
+        stack.distribution = UIStackView.Distribution.fill
+        spacing.widthAnchor.constraint(equalToConstant: 10).isActive = true
+        stack.addArrangedSubview(UIView())
       }
     }
     
