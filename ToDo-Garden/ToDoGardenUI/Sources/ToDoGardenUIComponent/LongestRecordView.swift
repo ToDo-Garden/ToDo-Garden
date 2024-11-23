@@ -262,6 +262,7 @@ extension LongestRecordView {
     let labels = [self.groupNameLabel, self.recordLabel, self.dateLabel].compactMap { $0 }
     
     for label in labels {
+      label.layer.cornerRadius = 5.0
       label.isShimmering = true
     }
   }

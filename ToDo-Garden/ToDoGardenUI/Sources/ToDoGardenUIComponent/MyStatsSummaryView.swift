@@ -153,6 +153,7 @@ final class TitleDescriptionView: UIView {
   }
   
   private func setupShimmerable() {
+    self.descriptionLabel.layer.cornerRadius = 5.0
     self.isShimmering = true
     self.descriptionLabel.isShimmering = true
   }
