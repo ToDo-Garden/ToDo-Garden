@@ -39,6 +39,7 @@ final class LongestRecordStackView: UIStackView {
     )
     super.init(frame: CGRect.zero)
     self.setupAppearance()
+    self.setupShimmerable()
     self.setupBubbleLabel()
     self.setupButtonAction()
   }
@@ -55,6 +56,12 @@ final class LongestRecordStackView: UIStackView {
     self.alignment = UIStackView.Alignment.fill
     self.addArrangedSubview(self.leftView)
     self.addArrangedSubview(self.rightView)
+  }
+  
+  private func setupShimmerable() {
+    self.isShimmering = true
+    self.leftView.isShimmering = true
+    self.rightView.isShimmering = true
   }
   
   private func setupBubbleLabel() {

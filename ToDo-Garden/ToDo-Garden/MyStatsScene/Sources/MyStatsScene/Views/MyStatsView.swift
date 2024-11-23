@@ -45,6 +45,7 @@ final class MyStatsView: UIView {
     self.setupGardenView()
     self.setupLongestRecordsStackView()
     self.setupPeriodicSummaryView()
+    self.setupShimmerable()
   }
   
   private func setupProfileView() {
@@ -193,13 +194,19 @@ extension MyStatsView {
     let fixedSentence = Constant.StringLiteral.keepingDesctription
     return "\(userName)\(fixedSuffix)\(fixedNextLine)\(dayCount)\(fixedSentence)"
   }
+  
+  private func setupShimmerable() {
+    self.profileView.isShimmering = true
+    self.gardenView.isShimmering = true
+    self.longestRecordStackView.isShimmering = true
+    self.periodicSummaryView.isShimmering = true
+  }
 }
 
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
   let view = MyStatsView()
-
   view.usingAutolayout()
   NSLayoutConstraint.activate([
     view.widthAnchor.constraint(equalToConstant: 380),
