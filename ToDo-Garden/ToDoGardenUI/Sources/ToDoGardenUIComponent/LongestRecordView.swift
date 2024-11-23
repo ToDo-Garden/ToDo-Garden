@@ -30,7 +30,7 @@ public final class LongestRecordView: UIView {
     title: String,
     groupName: String?,
     recordCount: Int,
-    date: [Date]
+    date: [String]
   ) {
     self.style = style
     self.titleLabel = UILabel()
@@ -59,7 +59,7 @@ public final class LongestRecordView: UIView {
   public func update(
     groupName: String?,
     recordCount: Int,
-    dateRange: [Date]
+    dateRange: [String]
   ) {
     self.setupGroupNameLabel(with: groupName)
     self.setupRecordLabel(with: recordCount)
@@ -72,7 +72,7 @@ extension LongestRecordView {
     title: String,
     groupName: String?,
     recordCount: Int,
-    dateRange: [Date]
+    dateRange: [String]
   ) {
     self.setupTitleView(with: title)
     self.setupLeafSymbolImageView()
@@ -239,14 +239,14 @@ extension LongestRecordView {
     )
   }
   
-  private func setupDateLabel(with date: [Date]) {
+  private func setupDateLabel(with date: [String]) {
     var text: String = ""
     switch self.style {
     case .pomo:
-      text = date.first?.toStringDefaultFormat() ?? ""
+      text = date.first ?? ""
     case .dateRange:
-      let startDate = date.first?.toStringDefaultFormat() ?? ""
-      let endDate = date.last?.toStringDefaultFormat() ?? ""
+      let startDate = date.first ?? ""
+      let endDate = date.last ?? ""
       text = "\(startDate) ~ \(endDate)"
     }
 
@@ -280,7 +280,7 @@ extension LongestRecordView {
     title: "최장 집중 기록",
     groupName: "아아아아아아",
     recordCount: 9,
-    date: [Date.now]
+    date: ["1111.11.11"]
   )
   
   let view2 = LongestRecordView(
@@ -288,7 +288,7 @@ extension LongestRecordView {
     title: "최장 연속 기록",
     groupName: nil,
     recordCount: 30,
-    date: [Date.now, Date.now]
+    date: ["9900.99.99", "9999.99.99"]
   )
   
   view1.usingAutolayout()

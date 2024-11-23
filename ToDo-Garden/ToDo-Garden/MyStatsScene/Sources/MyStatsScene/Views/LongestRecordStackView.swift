@@ -22,14 +22,14 @@ final class LongestRecordStackView: UIStackView {
       title: Constants.StringLiteral.leftViewTitle,
       groupName: "",
       recordCount: Int.zero,
-      date: [Date.now]
+      date: [""]
     )
     self.rightView = LongestRecordView(
       style: LongestRecordView.Configuration.dateRange,
       title: Constants.StringLiteral.rightViewTitle,
       groupName: nil,
       recordCount: Int.zero,
-      date: [Date.now, Date.now]
+      date: ["", ""]
     )
     
     self.bubbleLabel = BubbleLabel(
@@ -117,11 +117,11 @@ final class LongestRecordStackView: UIStackView {
     )
   }
   
-  func updateLeftView(groupName: String, recordCount: Int, dateRange: [Date]) {
+  func updateLeftView(groupName: String, recordCount: Int, dateRange: [String]) {
     self.leftView.update(groupName: groupName, recordCount: recordCount, dateRange: dateRange)
   }
   
-  func updateRightView(groupName: String? = nil, recordCount: Int, dateRange: [Date]) {
+  func updateRightView(groupName: String? = nil, recordCount: Int, dateRange: [String]) {
     self.rightView.update(groupName: groupName, recordCount: recordCount, dateRange: dateRange)
   }
 }

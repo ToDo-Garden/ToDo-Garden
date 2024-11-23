@@ -139,9 +139,9 @@ final class MyStatsView: UIView {
 
 // MARK: Update
 extension MyStatsView {
-  func updateProfileView(userImage: UIImage, userName: String, dayCount: Int, dateRange: [Date]) {
-    let startDate = dateRange.first?.toStringDefaultFormat()
-    let endDate = dateRange.last?.toStringDefaultFormat()
+  func updateProfileView(userImage: UIImage, userName: String, dayCount: Int, dateRange: [String]) {
+    let startDate = dateRange.first
+    let endDate = dateRange.last
     
     var dateRangeString: String
     
@@ -165,11 +165,11 @@ extension MyStatsView {
     self.gardenView.configure(with: pomodoroRecordCollection)
   }
   
-  func updateLeftRecordStackView(groupName: String, recordCount: Int, dateRange: [Date]) {
+  func updateLeftRecordStackView(groupName: String, recordCount: Int, dateRange: [String]) {
     self.longestRecordStackView.updateLeftView(groupName: groupName, recordCount: recordCount, dateRange: dateRange)
   }
   
-  func updateRightRecordStackView(recordCount: Int, dateRange: [Date]) {
+  func updateRightRecordStackView(recordCount: Int, dateRange: [String]) {
     self.longestRecordStackView.updateRightView(recordCount: recordCount, dateRange: dateRange)
   }
   
