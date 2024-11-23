@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  MyStatsSceneConstants.swift
+//
 //
 //  Created by SONG on 11/18/24.
 //
