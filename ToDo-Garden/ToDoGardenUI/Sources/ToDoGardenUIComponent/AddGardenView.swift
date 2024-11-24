@@ -177,3 +177,20 @@ extension AddGardenView {
     )
   }
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let view = AddGardenView(
+    userNickname: "울버린",
+    userIntroduction: "안녕하세욤ㄴㅇㅁㄴㅇㅁㄴㅇㅁㄴㅇㅁㄴㅁㄴㅇㅁㄴㅇㅁㄴㅇ",
+    userImage: nil,
+    pomodoroCollection: PomodoroRecordCollection()
+  )
+  
+  view.usingAutolayout()
+  view.widthAnchor.constraint(equalToConstant: 320).isActive = true
+  view.heightAnchor.constraint(equalToConstant: 390).isActive = true
+  return view
+}
+#endif
