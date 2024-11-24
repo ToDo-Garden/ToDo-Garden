@@ -7,6 +7,7 @@
 import UIKit.UITextField
 
 import ToDoGardenUIConstant
+import ToDoGardenUIResource
 
 extension UITextField {
   public func applySearchGardenStyle() -> UITextField {
