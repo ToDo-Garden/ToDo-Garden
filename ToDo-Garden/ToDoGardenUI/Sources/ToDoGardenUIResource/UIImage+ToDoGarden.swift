@@ -141,4 +141,8 @@ extension UIImage {
   public static let settingsTabBarItemImage = UIImage(
     resource: .settingsTabIcon
   )
+  
+  public static let magnifyingGlassImage = UIImage(
+    systemName: "magnifyingglass"
+  )
 }
