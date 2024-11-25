@@ -21,7 +21,7 @@ class MyStatsViewController: UIViewController, MyStatsViewControllable {
   var interactor: MyStatsBusinessLogic?
   var router: (MyStatsRoutingLogic & MyStatsDataPassing)?
   
-  var myStatsView: MyStatsView
+  private var myStatsView: MyStatsView
   
   // MARK: - Object lifecycle
   
