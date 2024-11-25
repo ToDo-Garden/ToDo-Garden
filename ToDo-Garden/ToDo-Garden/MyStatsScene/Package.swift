@@ -28,11 +28,15 @@ let package = Package(
     .target(
       name: "MyStatsSceneAPI",
       dependencies: [
+        "MyStatsSceneEntity",
         .product(name: "ToDoGardenUIAPI", package: "ToDoGardenUI")
       ]
     ),
     .target(
-      name: "MyStatsSceneEntity"
+      name: "MyStatsSceneEntity",
+      dependencies: [
+        .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI") // TODO: - PomodoroRecordCollection 이관 예정
+      ]
     ),
     .target(
       name: "MyStatsScene",

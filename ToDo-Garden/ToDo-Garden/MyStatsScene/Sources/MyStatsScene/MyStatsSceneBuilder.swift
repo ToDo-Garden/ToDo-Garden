@@ -13,10 +13,10 @@ import MyStatsSceneEntity
 public struct MyStatsSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
   public struct Dependency {
-    let someWorker: MyStatsWorkable
+    let myStatsWorker: MyStatsWorkable
     
-    public init(someWorker: MyStatsWorkable) {
-      self.someWorker = someWorker
+    public init(myStatsWorker: MyStatsWorkable) {
+      self.myStatsWorker = myStatsWorker
     }
   }
   
@@ -44,7 +44,7 @@ extension MyStatsSceneBuilder {
   /// - Parameter viewController: VIPCycle을 설정할 viewController입니다.
   /// - Returns: VIP Cycle 설정이 완료된 `ViewControllable` 프로토콜을 준수한 `ViewController` 인스턴스를 반환합니다.
   private func configureVIPCycle(for viewController: MyStatsViewController) -> MyStatsViewController {
-    let interactor = MyStatsInteractor(someWorker: self.dependency.someWorker)
+    let interactor = MyStatsInteractor(myStatsWorker: self.dependency.myStatsWorker)
     let presenter = MyStatsPresenter()
     let router = MyStatsRouter()
     viewController.interactor = interactor
