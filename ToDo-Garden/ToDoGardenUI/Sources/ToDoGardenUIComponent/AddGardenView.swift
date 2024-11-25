@@ -23,10 +23,10 @@ public final class AddGardenView: UIView {
     pomodoroCollection: PomodoroRecordCollection
   ) {
     self.titleLabel = UILabel()
-    self.cancelButton = UIButton(configuration: .borderless())
+    self.cancelButton = UIButton(configuration: UIButton.Configuration.borderless())
     self.addButton = ToDoGardenBoxButton(
       title: Constants.StringLiteral.addButtonTitle,
-      buttonType: .tertiaryRoundRectButton
+      buttonType: ToDoGardenBoxButton.Configuration.tertiaryRoundRectButton
     )
     
     super.init(frame: CGRect.zero)
@@ -65,7 +65,11 @@ extension AddGardenView {
     self.setupTitleLabel()
     self.setupCancelButton()
     self.setupAddButton()
-    self.setupProfileView(userNickname: userNickname, userIntroduction: userIntroduction, userImage: userImage)
+    self.setupProfileView(
+      userNickname: userNickname,
+      userIntroduction: userIntroduction,
+      userImage: userImage
+    )
     self.setupGardenView(pomodoroCollection: pomodoroCollection)
   }
   
@@ -119,7 +123,7 @@ extension AddGardenView {
     let profileView = Styled.Row(
       configuration: Styled.Row.Configuration.profile(
         .init(
-          style: .myStats,
+          style: Styled.Row.Configuration.ProfileModel.Style.myStats,
           title: userNickname,
           description: userIntroduction,
           image: userImage
