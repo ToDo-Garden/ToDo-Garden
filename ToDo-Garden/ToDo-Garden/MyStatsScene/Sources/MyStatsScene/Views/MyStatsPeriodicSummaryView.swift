@@ -27,6 +27,7 @@ final class MyStatsPeriodicSummaryView: UIView {
     )
     super.init(frame: CGRect.zero)
     self.setupView()
+    self.setupShimmerable()
   }
   
   @available(*, unavailable)
@@ -100,5 +101,9 @@ final class MyStatsPeriodicSummaryView: UIView {
         self.summaryView.heightAnchor.constraint(equalToConstant: Constants.Layout.summaryViewHeight)
       ]
     )
+  }
+  
+  private func setupShimmerable() {
+    self.summaryView.isShimmering = true
   }
 }
