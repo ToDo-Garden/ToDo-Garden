@@ -47,4 +47,5 @@ public enum Constant {
   public enum LongestRecordView { }
   public enum MyStatsSummaryView { }
   public enum SearchGardenTextField { }
+  public enum AddGardenView { }
 }
