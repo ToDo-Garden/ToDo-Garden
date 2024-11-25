@@ -197,7 +197,6 @@ extension MyStatsView {
   
   private func setupShimmerable() {
     self.profileView.isShimmering = true
-    self.gardenView.isShimmering = true
     self.longestRecordStackView.isShimmering = true
     self.periodicSummaryView.isShimmering = true
   }
