@@ -10,7 +10,7 @@ import Foundation
 enum Constant {
   enum Layout {
     static let topMargin: CGFloat = 15.0
-    static let horizontalMargin: CGFloat = 10.0
+    static let horizontalMargin: CGFloat = 22.0
     static let gardenViewHeight: CGFloat = 120.0
     static let longestRecordsViewHeight: CGFloat = 125.0
     static let summaryViewViewHeight: CGFloat = 150.0
