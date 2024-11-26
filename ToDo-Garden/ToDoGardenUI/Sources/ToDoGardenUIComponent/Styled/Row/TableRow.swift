@@ -2,6 +2,14 @@ import Combine
 import UIKit
 
 public class TableRow: UITableViewCell {
+  
+  public override func prepareForReuse() {
+    super.prepareForReuse()
+    self.contentView.subviews.forEach { subview in
+      subview.removeFromSuperview()
+    }
+  }
+  
   private func setupRow(configuration: Styled.Row.Configuration) -> Styled.Row {
     let newRow = Styled.Row(configuration: configuration)
     newRow.usingAutolayout()
