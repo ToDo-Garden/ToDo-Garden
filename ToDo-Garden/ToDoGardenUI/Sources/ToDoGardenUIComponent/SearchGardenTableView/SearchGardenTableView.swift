@@ -29,6 +29,10 @@ final public class SearchGardenTableView: UITableView {
     self.diffableDataSource.apply(snapshot, animatingDifferences: true)
   }
   
+  public func userForCell(at indexPath: IndexPath) -> SearchGardenUser? {
+    return self.diffableDataSource.itemIdentifier(for: indexPath)
+  }
+  
   private func configureDataSource() {
     self.diffableDataSource = UITableViewDiffableDataSource<
       SearchGardenSection,
