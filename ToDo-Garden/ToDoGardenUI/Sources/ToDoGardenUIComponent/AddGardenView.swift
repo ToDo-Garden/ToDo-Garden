@@ -65,20 +65,13 @@ public final class AddGardenView: UIView {
     userImage: UIImage?,
     pomodoroCollection: PomodoroRecordCollection
   ) {
-    self.profileView.removeFromSuperview()
-    
-    self.profileView = Styled.Row(
-      configuration: Styled.Row.Configuration.profile(
-        .init(
-          style: Styled.Row.Configuration.ProfileModel.Style.myStats,
-          title: userNickname,
-          description: userIntroduction,
-          image: userImage
-        )
+    self.profileView.configuration = Styled.Row.Configuration.profile(
+      Styled.Row.Configuration.ProfileModel(
+        style: Styled.Row.Configuration.ProfileModel.Style.myStats,
+        title: userNickname,
+        description: userIntroduction
       )
     )
-    self.addSubview(self.profileView)
-    self.setupProfileViewConstraints()
     
     self.gardenView.configure(with: pomodoroCollection)
   }
