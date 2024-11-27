@@ -8,6 +8,7 @@ public class TableRow: UITableViewCell {
     self.contentView.subviews.forEach { subview in
       subview.removeFromSuperview()
     }
+    // TODO: 좀 더 저렴한 방법 고민
   }
   
   private func setupRow(configuration: Styled.Row.Configuration) -> Styled.Row {
