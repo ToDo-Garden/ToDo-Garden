@@ -32,7 +32,7 @@ extension RootTabBarController {
     
     private func adjustTabBarItemImageInsets() {
       self.items?.forEach { item in
-        item.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: -3, right: 0)
+        item.imageInsets = LayoutConstant.imageInsets
       }
     }
     
@@ -42,4 +42,8 @@ extension RootTabBarController {
       self.layer.addSublayer(self.topSeparatorLineLayer)
     }
   }
+}
+
+extension RootTabBarController.RootTabBar {
+  typealias LayoutConstant = Constant.Layout.RootTabBar
 }
