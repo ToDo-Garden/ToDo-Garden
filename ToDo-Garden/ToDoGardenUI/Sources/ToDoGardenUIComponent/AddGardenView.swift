@@ -14,6 +14,8 @@ public final class AddGardenView: UIView {
   private let titleLabel: UILabel
   public let cancelButton: UIButton
   public let addButton: UIButton
+  private var profileView: Styled.Row
+  private var gardenView: GardenView
   typealias Constants = Constant.AddGardenView
   
   public init(
@@ -29,14 +31,23 @@ public final class AddGardenView: UIView {
       buttonType: ToDoGardenBoxButton.Configuration.tertiaryRoundRectButton
     )
     
+    self.profileView = Styled.Row(
+      configuration: Styled.Row.Configuration.profile(
+        .init(
+          style: Styled.Row.Configuration.ProfileModel.Style.myStats,
+          title: userNickname,
+          description: userIntroduction,
+          image: userImage
+        )
+      )
+    )
+    
+    self.gardenView = GardenView()
+    self.gardenView.configure(with: pomodoroCollection)
+    
     super.init(frame: CGRect.zero)
     self.setupAppearance()
-    self.setupSubViews(
-      userNickname: userNickname,
-      userIntroduction: userIntroduction,
-      userImage: userImage,
-      pomodoroCollection: pomodoroCollection
-    )
+    self.setupSubViews()
   }
   
   @available(*, unavailable)
@@ -47,6 +58,23 @@ public final class AddGardenView: UIView {
   override public var intrinsicContentSize: CGSize {
     return Constants.Layout.size
   }
+  
+  public func update(
+    userNickname: String,
+    userIntroduction: String,
+    userImage: UIImage?,
+    pomodoroCollection: PomodoroRecordCollection
+  ) {
+    self.profileView.configuration = Styled.Row.Configuration.profile(
+      Styled.Row.Configuration.ProfileModel(
+        style: Styled.Row.Configuration.ProfileModel.Style.myStats,
+        title: userNickname,
+        description: userIntroduction
+      )
+    )
+    
+    self.gardenView.configure(with: pomodoroCollection)
+  }
 }
 
 extension AddGardenView {
@@ -55,22 +83,16 @@ extension AddGardenView {
     self.layer.cornerRadius = Constants.Layout.cornerRadius
   }
   
-  private func setupSubViews(
-    userNickname: String,
-    userIntroduction: String,
-    userImage: UIImage?,
-    pomodoroCollection: PomodoroRecordCollection
-  ) {
-    
+  private func setupSubViews() {
     self.setupTitleLabel()
     self.setupCancelButton()
     self.setupAddButton()
-    self.setupProfileView(
-      userNickname: userNickname,
-      userIntroduction: userIntroduction,
-      userImage: userImage
-    )
-    self.setupGardenView(pomodoroCollection: pomodoroCollection)
+    
+    self.addSubview(self.profileView)
+    self.addSubview(self.gardenView)
+    
+    self.setupProfileViewConstraints()
+    self.setupGardenViewConstraints()
   }
   
   private func setupTitleLabel() {
@@ -119,24 +141,13 @@ extension AddGardenView {
     )
   }
   
-  private func setupProfileView(userNickname: String, userIntroduction: String, userImage: UIImage?) {
-    let profileView = Styled.Row(
-      configuration: Styled.Row.Configuration.profile(
-        .init(
-          style: Styled.Row.Configuration.ProfileModel.Style.myStats,
-          title: userNickname,
-          description: userIntroduction,
-          image: userImage
-        )
-      )
-    )
-    self.addSubview(profileView)
-    profileView.usingAutolayout()
+  private func setupProfileViewConstraints() {
+    self.profileView.usingAutolayout()
     NSLayoutConstraint.activate(
       [
-        profileView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-        profileView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-        profileView.topAnchor.constraint(
+        self.profileView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+        self.profileView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+        self.profileView.topAnchor.constraint(
           equalTo: self.titleLabel.bottomAnchor,
           constant: Constants.Layout.commonHorizontalMargin
         )
@@ -144,22 +155,19 @@ extension AddGardenView {
     )
   }
   
-  private func setupGardenView(pomodoroCollection: PomodoroRecordCollection) {
-    let gardenView = GardenView()
-    gardenView.configure(with: pomodoroCollection)
-    self.addSubview(gardenView)
-    gardenView.usingAutolayout()
+  private func setupGardenViewConstraints() {
+    self.gardenView.usingAutolayout()
     NSLayoutConstraint.activate(
       [
-        gardenView.leadingAnchor.constraint(
+        self.gardenView.leadingAnchor.constraint(
           equalTo: self.leadingAnchor,
           constant: Constants.Layout.commonHorizontalMargin
         ),
-        gardenView.trailingAnchor.constraint(
+        self.gardenView.trailingAnchor.constraint(
           equalTo: self.trailingAnchor,
           constant: -Constants.Layout.commonHorizontalMargin
         ),
-        gardenView.bottomAnchor.constraint(
+        self.gardenView.bottomAnchor.constraint(
           equalTo: self.addButton.topAnchor,
           constant: Constants.GardenView.Layout.verticalMargin
         )
@@ -195,6 +203,13 @@ extension AddGardenView {
   view.usingAutolayout()
   view.widthAnchor.constraint(equalToConstant: 320).isActive = true
   view.heightAnchor.constraint(equalToConstant: 390).isActive = true
+  
+  view.update(
+    userNickname: "zxc",
+    userIntroduction: "asdasdasdasdasdasd",
+    userImage: nil,
+    pomodoroCollection: PomodoroRecordCollection()
+  )
   return view
 }
 #endif

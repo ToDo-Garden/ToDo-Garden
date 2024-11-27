@@ -29,6 +29,10 @@ final public class SearchGardenTableView: UITableView {
     self.diffableDataSource.apply(snapshot, animatingDifferences: true)
   }
   
+  public func userForCell(at indexPath: IndexPath) -> SearchGardenUser? {
+    return self.diffableDataSource.itemIdentifier(for: indexPath)
+  }
+  
   private func configureDataSource() {
     self.diffableDataSource = UITableViewDiffableDataSource<
       SearchGardenSection,
@@ -41,7 +45,7 @@ final public class SearchGardenTableView: UITableView {
         return nil
       }
       
-      let cell = tableRow.build(
+      tableRow.update(
         configuration: Styled.Row.Configuration.profile(
           .init(
             style: .searchRow,
@@ -51,7 +55,8 @@ final public class SearchGardenTableView: UITableView {
           )
         )
       )
-      return cell
+
+      return tableRow
     }
   }
 }

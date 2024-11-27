@@ -48,4 +48,5 @@ public enum Constant {
   public enum MyStatsSummaryView { }
   public enum SearchGardenTextField { }
   public enum AddGardenView { }
+  public enum DefaultModalNavigationBar { }
 }
