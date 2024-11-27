@@ -45,7 +45,7 @@ final public class SearchGardenTableView: UITableView {
         return nil
       }
       
-      let cell = tableRow.build(
+      tableRow.update(
         configuration: Styled.Row.Configuration.profile(
           .init(
             style: .searchRow,
@@ -55,7 +55,8 @@ final public class SearchGardenTableView: UITableView {
           )
         )
       )
-      return cell
+
+      return tableRow
     }
   }
 }

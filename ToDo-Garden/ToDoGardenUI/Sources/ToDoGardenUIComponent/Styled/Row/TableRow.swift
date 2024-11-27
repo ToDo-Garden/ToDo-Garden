@@ -2,50 +2,61 @@ import Combine
 import UIKit
 
 public class TableRow: UITableViewCell {
+  private let row: Styled.Row
   
-  public override func prepareForReuse() {
-    super.prepareForReuse()
-    self.contentView.subviews.forEach { subview in
-      subview.removeFromSuperview()
-    }
-    // TODO: 좀 더 저렴한 방법 고민
+  override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    self.row = Styled.Row(
+      configuration: .profile(
+        .init(
+          style: .searchRow,
+          title: "",
+          description: ""
+        )
+      )
+    )
+    super.init(style: style, reuseIdentifier: reuseIdentifier)
+    self.setupRow()
   }
   
-  private func setupRow(configuration: Styled.Row.Configuration) -> Styled.Row {
-    let newRow = Styled.Row(configuration: configuration)
-    newRow.usingAutolayout()
-    self.contentView.addSubview(newRow)
-    
-    NSLayoutConstraint.activate([
-      newRow.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-      newRow.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
-      newRow.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
-      newRow.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor)
-    ])
-    
-    self.selectionStyle = UITableViewCell.SelectionStyle.none
-    return newRow
+  @available(*, unavailable)
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
   }
   
-  public func build(configuration: Styled.Row.Configuration) -> Self {
-    _ = self.setupRow(configuration: configuration)
-    return self
+  public func update(configuration: Styled.Row.Configuration) {
+    self.row.configuration = configuration
   }
   
   public func build<T>(
     configuration: Styled.Row.Configuration,
     keyPath: KeyPath<Styled.Row.Configuration, T>
   ) -> AnyPublisher<T, Never>? {
-    let setupRow = self.setupRow(configuration: configuration)
-    return setupRow.$configuration
+    return self.row.$configuration
       .map(keyPath)
       .eraseToAnyPublisher()
+  }
+  
+  private func setupRow() {
+    self.row.usingAutolayout()
+    self.contentView.addSubview(self.row)
+    
+    NSLayoutConstraint.activate(
+      [
+        self.row.topAnchor.constraint(equalTo: self.contentView.topAnchor),
+        self.row.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
+        self.row.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+        self.row.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor)
+      ]
+    )
+    
+    self.selectionStyle = UITableViewCell.SelectionStyle.none
   }
 }
 
 @available(iOS 17.0, *)
 #Preview {
-  let cell = TableRow().build(
+  let tableRow = TableRow()
+  tableRow.update(
     configuration: .profile(
       .init(
         style: .searchRow,
@@ -54,5 +65,6 @@ public class TableRow: UITableViewCell {
       )
     )
   )
-  return cell
+  
+  return tableRow
 }
