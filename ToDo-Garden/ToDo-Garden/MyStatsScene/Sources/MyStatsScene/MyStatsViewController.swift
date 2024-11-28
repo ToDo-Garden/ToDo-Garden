@@ -42,6 +42,7 @@ class MyStatsViewController: UIViewController, MyStatsViewControllable {
     self.view.backgroundColor = UIColor.white
     self.title = "나의 가든"
     self.setupMyStatsView()
+    self.loadMyStatsViewData()
   }
 }
 
@@ -49,7 +50,11 @@ class MyStatsViewController: UIViewController, MyStatsViewControllable {
 
 extension MyStatsViewController: MyStatsDisplayLogic {
   func displayMyStatsView(viewModel: MyStats.LoadMyStatsViewData.ViewModel) {
-    // self.nameTextField.text = viewModel.name
+    self.myStatsView.stopShimmering()
+    self.updateProfileView(viewModel: viewModel.profileViewModel)
+    self.updateGardenView(viewModel: viewModel.gardenViewModel)
+    self.updateLongestRecordView(viewModel: viewModel.longestRecordViewModel)
+    self.updateSummaryView(viewModel: viewModel.summaryViewModel)
   }
 }
 
@@ -59,6 +64,7 @@ extension MyStatsViewController {
   func loadMyStatsViewData() {
     self.myStatsView.startShimmering()
     let request = MyStats.LoadMyStatsViewData.Request()
+    self.interactor?.loadMyStatsViewData(request: request)
   }
 }
 
@@ -78,6 +84,46 @@ extension MyStatsViewController {
         self.myStatsView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 15.0),
         self.myStatsView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
       ]
+    )
+  }
+}
+
+extension MyStatsViewController {
+  private func updateProfileView(viewModel: MyStats.ProfileViewModel) {
+    self.myStatsView.updateProfileView(
+      userImage: viewModel.myImage,
+      userName: viewModel.myName,
+      dayCount: viewModel.continuousRecordCount,
+      dateRange: [
+        viewModel.continuousRecordStartDate,
+        viewModel.continuousRecordEndDate
+      ]
+    )
+  }
+  
+  private func updateGardenView(viewModel: MyStats.GardenViewModel) {
+    self.myStatsView.updateGardenView(pomodoroRecordCollection: viewModel.pomodoroCollection)
+  }
+  
+  private func updateLongestRecordView(viewModel: MyStats.LongestRecordViewModel) {
+    self.myStatsView.updateLeftRecordStackView(
+      groupName: viewModel.concentratedRecordGroupName,
+      recordCount: viewModel.concentratedRecordCount,
+      dateRange: [viewModel.concentratedRecordDate]
+    )
+    self.myStatsView.updateRightRecordStackView(
+      recordCount: viewModel.longestContinuousRecordCount,
+      dateRange: [
+        viewModel.longestContinuousRecordStartDate,
+        viewModel.longestContinuousRecordEndDate
+      ]
+    )
+  }
+  
+  private func updateSummaryView(viewModel: MyStats.SummaryViewModel) {
+    self.myStatsView.updatePeriodicSummaryView(
+      leftDescription: viewModel.concentratedTime,
+      rightDescription: viewModel.completedCount
     )
   }
 }
