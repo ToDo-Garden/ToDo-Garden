@@ -8,6 +8,7 @@
 import UIKit
 
 public final class RootTabBarController: UITabBarController {
+  private let rootTabBar = RootTabBar()
   private let tabItems: [RootTab]
   
   public init(tabItems: [RootTab]) {
@@ -18,6 +19,11 @@ public final class RootTabBarController: UITabBarController {
   @available(*, unavailable)
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+  
+  public override func loadView() {
+    super.loadView()
+    self.setValue(self.rootTabBar, forKey: "tabBar")
   }
 }
 
