@@ -8,9 +8,10 @@
 import UIKit
 
 import TDFoundation
+import ToDoGardenUIAPI
 import ToDoGardenUIResource
 
-public final class RootTabBarController: UITabBarController {
+public final class RootTabBarController: UITabBarController, HapticFeedbackable {
   private let rootTabBar = RootTabBar()
   private let bounceAnimation: CAKeyframeAnimation = {
     let bounceAnimation = CAKeyframeAnimation(keyPath: "transform.scale")
@@ -46,6 +47,9 @@ public final class RootTabBarController: UITabBarController {
       let selectedImageView = self.getSelectedTabBarImageView(in: tabBarButtton)
       selectedImageView?.layer.add(self.bounceAnimation, forKey: nil)
     }
+    self.triggerHapticFeedback(type: HapticFeedbackType.selection)
+  }
+}
 
 extension RootTabBarController: UITabBarControllerDelegate {
   public func tabBarController(
