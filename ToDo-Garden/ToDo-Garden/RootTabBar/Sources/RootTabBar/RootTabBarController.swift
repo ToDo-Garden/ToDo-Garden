@@ -7,6 +7,8 @@
 
 import UIKit
 
+import ToDoGardenUIResource
+
 public final class RootTabBarController: UITabBarController {
   private let rootTabBar = RootTabBar()
   private let bounceAnimation: CAKeyframeAnimation = {
@@ -22,6 +24,7 @@ public final class RootTabBarController: UITabBarController {
   public init(tabItems: [RootTab]) {
     self.tabItems = tabItems
     super.init(nibName: nil, bundle: nil)
+    self.setup()
   }
   
   @available(*, unavailable)
@@ -51,6 +54,20 @@ extension RootTabBarController {
     case settings(index: Int, viewController: UIViewController)
   }
   
+  private func homeTabBarItemStyle(for tabBarItem: UITabBarItem) {
+    tabBarItem.image = UIImage.homeTabBarItemImage
+    tabBarItem.title = "홈"
+  }
+  
+  private func shareTabBarItemStyle(for tabBarItem: UITabBarItem) {
+    tabBarItem.image = UIImage.shareTabBarItemImage
+    tabBarItem.title = "공유"
+  }
+  
+  private func settingsTabBarItemStyle(for tabBarItem: UITabBarItem) {
+    tabBarItem.image = UIImage.settingsTabBarItemImage
+    tabBarItem.title = "설정"
+  }
   
   private func getSelectedTabBarImageView(in selectedTabBarButton: UIView) -> UIImageView? {
     let selectedImageView = selectedTabBarButton.subviews
@@ -58,5 +75,57 @@ extension RootTabBarController {
       .first
     
     return selectedImageView
+  }
+  
+  private func setup() {
+    self.setupViewControllers()
+    self.setupAppearance()
+  }
+  
+  private func setupViewControllers() {
+    var viewControllers = [UIViewController]()
+    for tabItem in self.tabItems {
+      switch tabItem {
+      case RootTab
+        .home(_, let viewController),
+        RootTab
+          .share(_, let viewController),
+        RootTab
+          .settings(_, let viewController):
+        viewControllers.append(viewController)
+      }
+    }
+    self.viewControllers = viewControllers
+  }
+  
+  private func setupAppearance() {
+    self.view.backgroundColor = UIColor.white
+    self.setupTabBarStyles()
+  }
+  
+  private func setupTabBarStyles() {
+    for tabItem in tabItems {
+      switch tabItem {
+      case RootTab.home(let index, _):
+        self.tabBarItem(atIndex: index)
+          .map { self.homeTabBarItemStyle(for: $0) }
+      case RootTab.share(let index, _):
+        self.tabBarItem(atIndex: index)
+          .map { self.shareTabBarItemStyle(for: $0) }
+      case RootTab.settings(let index, _):
+        self.tabBarItem(atIndex: index)
+          .map { self.settingsTabBarItemStyle(for: $0) }
+      }
+    }
+  }
+  
+  private func tabBarItem(atIndex index: Int) -> UITabBarItem? {
+    if index < (self.tabBar.items?.count ?? 0) {
+      if let item = self.tabBar.items?[index] {
+        return item
+      }
+    }
+    
+    return nil
   }
 }
