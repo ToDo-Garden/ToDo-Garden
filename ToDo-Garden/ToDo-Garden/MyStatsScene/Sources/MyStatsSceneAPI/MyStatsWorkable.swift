@@ -10,7 +10,7 @@ import UIKit
 import MyStatsSceneEntity
 
 public protocol MyStatsWorkable {
-  func fetchProfileViewData() async -> MyStats.FetchedProfileViewData
-  func fetchLongestRecordsViewData() async -> MyStats.FetchedLongestRecordViewData
-  func fetchSummaryViewData() async -> MyStats.FetchedSummaryViewData
+  func fetchProfileViewData() async throws -> MyStats.FetchedProfileViewData 
+  func fetchLongestRecordsViewData() async throws -> MyStats.FetchedLongestRecordViewData
+  func fetchSummaryViewData() async throws -> MyStats.FetchedSummaryViewData
 }

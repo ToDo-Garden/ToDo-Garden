@@ -1,6 +1,6 @@
 //
 //  MyStatsInteractor.swift
-//  
+//
 //
 //  Created by SONG on 11/13/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
@@ -19,6 +19,7 @@ protocol MyStatsDataStore {
 
 protocol MyStatsBusinessLogic {
   func loadMyStatsViewData(request: MyStats.LoadMyStatsViewData.Request)
+  func cancelLoadMyStatsViewData()
 }
 
 class MyStatsInteractor: MyStatsDataStore {
@@ -28,6 +29,7 @@ class MyStatsInteractor: MyStatsDataStore {
   
   var presenter: MyStatsPresentationLogic?
   private let myStatsWorker: MyStatsWorkable
+  private var loadMyStatsViewDataTask: Task<Void, Never>?
   
   init(myStatsWorker: MyStatsWorkable) {
     self.myName = "이인우"
@@ -42,28 +44,57 @@ class MyStatsInteractor: MyStatsDataStore {
 
 extension MyStatsInteractor: MyStatsBusinessLogic {
   func loadMyStatsViewData(request: MyStats.LoadMyStatsViewData.Request) {
-    Task {
-      self.myGarden = .init(pomodoroRecords: self.makeRandomPomodoroRecords())
-      // TODO: ↑ 페이로드 세팅이후 제거예정
-      
-      let payload = MyStats.Payload(
-        myName: self.myName,
-        myImage: self.myImage,
-        myGarden: self.myGarden
-      )
-      
-      async let profileViewData = self.myStatsWorker.fetchProfileViewData()
-      async let longestRecordViewData = self.myStatsWorker.fetchLongestRecordsViewData()
-      async let summaryViewData = self.myStatsWorker.fetchSummaryViewData()
-
-      let response = MyStats.LoadMyStatsViewData.Response(
-        profileViewData: await profileViewData,
-        longestRecordViewData: await longestRecordViewData,
-        summaryViewData: await summaryViewData
-      )
-      
-      self.presenter?.presentMyStatsViewData(response: response, with: payload)
+    self.loadMyStatsViewDataTask = Task {
+      do {
+        try Task.checkCancellation()
+        let payload = self.createPayload()
+        let response = try await self.fetchViewData()
+        try Task.checkCancellation()
+        self.presenter?.presentMyStatsViewData(response: response, with: payload)
+      } catch is CancellationError {
+        // 취소된 경우의 처리
+      } catch let error as MyStatsWorkerError {
+        self.handleWorkerError(error)
+      } catch {
+        // 기타 예상치 못한 에러 처리
+      }
     }
+  }
+  
+  private func createPayload() -> MyStats.Payload {
+    return MyStats.Payload(
+      myName: self.myName,
+      myImage: self.myImage,
+      myGarden: self.myGarden
+    )
+  }
+  
+  private func fetchViewData() async throws -> MyStats.LoadMyStatsViewData.Response {
+    async let profileViewData = self.myStatsWorker.fetchProfileViewData()
+    async let longestRecordViewData = self.myStatsWorker.fetchLongestRecordsViewData()
+    async let summaryViewData = self.myStatsWorker.fetchSummaryViewData()
+    
+    return MyStats.LoadMyStatsViewData.Response(
+      profileViewData: try await profileViewData,
+      longestRecordViewData: try await longestRecordViewData,
+      summaryViewData: try await summaryViewData
+    )
+  }
+  
+  private func handleWorkerError(_ error: MyStatsWorkerError) {
+    switch error {
+    case MyStatsWorkerError.fetchProfileDataFailed:
+      break
+    case MyStatsWorkerError.fetchLongestRecordDataFailed:
+      break
+    case MyStatsWorkerError.fetchSummaryDataFailed:
+      break
+    }
+  }
+  
+  func cancelLoadMyStatsViewData() {
+    self.loadMyStatsViewDataTask?.cancel()
+    self.loadMyStatsViewDataTask = nil
   }
 }
 
