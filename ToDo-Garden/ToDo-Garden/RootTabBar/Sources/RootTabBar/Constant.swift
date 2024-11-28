@@ -18,9 +18,15 @@ extension Constant.Layout {
 }
 
 extension Constant.StringLiteral {
-  
+  enum RootTabBarController { }
 }
 
 extension Constant.Layout.RootTabBar {
   static let imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: -3, right: 0)
+}
+
+extension Constant.StringLiteral.RootTabBarController {
+  static let homeTabTitle = "홈"
+  static let shareTabTitle = "공유"
+  static let settingsTabTitle = "설정"
 }

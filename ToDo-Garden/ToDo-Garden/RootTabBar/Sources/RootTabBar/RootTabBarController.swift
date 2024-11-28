@@ -12,6 +12,7 @@ import ToDoGardenUIAPI
 import ToDoGardenUIResource
 
 public final class RootTabBarController: UITabBarController, HapticFeedbackable {
+  typealias StringLiteral = Constant.StringLiteral.RootTabBarController
   private let rootTabBar = RootTabBar()
   private let bounceAnimation: CAKeyframeAnimation = {
     let bounceAnimation = CAKeyframeAnimation(keyPath: "transform.scale")
@@ -73,17 +74,17 @@ extension RootTabBarController {
   
   private func homeTabBarItemStyle(for tabBarItem: UITabBarItem) {
     tabBarItem.image = UIImage.homeTabBarItemImage
-    tabBarItem.title = "홈"
+    tabBarItem.title = StringLiteral.homeTabTitle
   }
   
   private func shareTabBarItemStyle(for tabBarItem: UITabBarItem) {
     tabBarItem.image = UIImage.shareTabBarItemImage
-    tabBarItem.title = "공유"
+    tabBarItem.title = StringLiteral.shareTabTitle
   }
   
   private func settingsTabBarItemStyle(for tabBarItem: UITabBarItem) {
     tabBarItem.image = UIImage.settingsTabBarItemImage
-    tabBarItem.title = "설정"
+    tabBarItem.title = StringLiteral.settingsTabTitle
   }
   
   private func getSelectedTabBarImageView(in selectedTabBarButton: UIView) -> UIImageView? {
