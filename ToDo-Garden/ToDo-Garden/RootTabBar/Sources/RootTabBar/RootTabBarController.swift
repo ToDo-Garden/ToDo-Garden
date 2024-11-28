@@ -7,6 +7,7 @@
 
 import UIKit
 
+import TDFoundation
 import ToDoGardenUIResource
 
 public final class RootTabBarController: UITabBarController {
@@ -25,6 +26,7 @@ public final class RootTabBarController: UITabBarController {
     self.tabItems = tabItems
     super.init(nibName: nil, bundle: nil)
     self.setup()
+    self.delegate = self
   }
   
   @available(*, unavailable)
@@ -44,6 +46,17 @@ public final class RootTabBarController: UITabBarController {
       let selectedImageView = self.getSelectedTabBarImageView(in: tabBarButtton)
       selectedImageView?.layer.add(self.bounceAnimation, forKey: nil)
     }
+
+extension RootTabBarController: UITabBarControllerDelegate {
+  public func tabBarController(
+    _ tabBarController: UITabBarController,
+    animationControllerForTransitionFrom fromVC: UIViewController,
+    to toVC: UIViewController
+  ) -> (any UIViewControllerAnimatedTransitioning)? {
+    guard let viewControllers = tabBarController.viewControllers
+    else { return nil }
+    
+    return PageTransition(viewControllers: viewControllers)
   }
 }
 
