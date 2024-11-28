@@ -7,6 +7,8 @@
 
 import UIKit
 
+import ToDoGardenUIResource
+
 extension RootTabBarController {
   final class RootTabBar: UITabBar {
     private let topSeparatorLineLayer: CALayer = {
