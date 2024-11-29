@@ -16,7 +16,7 @@ let package = Package(
       targets: ["SearchGardenSceneEntity"]
     ),
     .library(
-      name: "SearchGardenSceneScene",
+      name: "SearchGardenScene",
       targets: ["SearchGardenScene"]
     )
   ],
