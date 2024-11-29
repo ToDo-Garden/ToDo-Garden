@@ -56,7 +56,50 @@ class SearchGardenViewController: UIViewController, SearchGardenViewControllable
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    self.doSomething()
+    self.setupView()
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+  }
+}
+
+extension SearchGardenViewController {
+  
+  private func setupView() {
+    self.setupNavigationBar()
+    self.setupSearchGardenView()
+  }
+  
+  private func setupNavigationBar() {
+    self.view.addSubview(self.customNavigationBar)
+    self.customNavigationBar.usingAutolayout()
+    self.customNavigationBar.delegate = self
+    
+    NSLayoutConstraint.activate(
+      [
+        self.customNavigationBar.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+        self.customNavigationBar.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+        self.customNavigationBar.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+        self.customNavigationBar.heightAnchor.constraint(equalToConstant: Constant.NavigationBar.height)
+      ]
+    )
+  }
+  
+  private func setupSearchGardenView() {
+    self.searchGardenView.tableView.delegate = self
+    self.searchGardenView.tableView.updateData(with: MockData.preview) // ← TODO: 제거예정
+    self.view.addSubview(self.searchGardenView)
+    self.searchGardenView.usingAutolayout()
+    
+    NSLayoutConstraint.activate(
+      [
+        self.searchGardenView.topAnchor.constraint(equalTo: self.customNavigationBar.bottomAnchor),
+        self.searchGardenView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+        self.searchGardenView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+        self.searchGardenView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
+      ]
+    )
   }
 }
 
