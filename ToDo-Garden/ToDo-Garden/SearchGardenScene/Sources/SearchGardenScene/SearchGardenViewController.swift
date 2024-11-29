@@ -27,7 +27,7 @@ class SearchGardenViewController: UIViewController, SearchGardenViewControllable
   private let searchGardenView: SearchGardenView
   private let loadingIndicator: AnimationImageView
   private let addGardenView: AddGardenView
-  private let customNavigationBar: DefaultModalNavigationBar
+  private let defaultModalNavigationBar: DefaultModalNavigationBar
   
   // MARK: - Object lifecycle
   
@@ -40,7 +40,7 @@ class SearchGardenViewController: UIViewController, SearchGardenViewControllable
       userImage: nil,
       pomodoroCollection: PomodoroRecordCollection()
     )
-    self.customNavigationBar = DefaultModalNavigationBar(
+    self.defaultModalNavigationBar = DefaultModalNavigationBar(
       title: Constant.NavigationBar.title,
       rightButtonTitle: Constant.NavigationBar.rightButtonTitle
     )
@@ -68,16 +68,16 @@ extension SearchGardenViewController {
   }
   
   private func setupNavigationBar() {
-    self.view.addSubview(self.customNavigationBar)
-    self.customNavigationBar.usingAutolayout()
-    self.customNavigationBar.delegate = self
+    self.view.addSubview(self.defaultModalNavigationBar)
+    self.defaultModalNavigationBar.usingAutolayout()
+    self.defaultModalNavigationBar.delegate = self
     
     NSLayoutConstraint.activate(
       [
-        self.customNavigationBar.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-        self.customNavigationBar.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-        self.customNavigationBar.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-        self.customNavigationBar.heightAnchor.constraint(equalToConstant: Constant.NavigationBar.height)
+        self.defaultModalNavigationBar.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+        self.defaultModalNavigationBar.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+        self.defaultModalNavigationBar.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+        self.defaultModalNavigationBar.heightAnchor.constraint(equalToConstant: Constant.NavigationBar.height)
       ]
     )
   }
@@ -90,7 +90,7 @@ extension SearchGardenViewController {
     
     NSLayoutConstraint.activate(
       [
-        self.searchGardenView.topAnchor.constraint(equalTo: self.customNavigationBar.bottomAnchor),
+        self.searchGardenView.topAnchor.constraint(equalTo: self.defaultModalNavigationBar.bottomAnchor),
         self.searchGardenView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
         self.searchGardenView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
         self.searchGardenView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
