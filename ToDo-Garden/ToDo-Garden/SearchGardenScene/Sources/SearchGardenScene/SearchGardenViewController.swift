@@ -9,6 +9,9 @@ import UIKit
 
 import SearchGardenSceneAPI
 import SearchGardenSceneEntity
+import TDUtility
+import ToDoGardenUIComponent
+import ToDoGardenUIResource
 
 protocol SearchGardenDisplayLogic: AnyObject {
   func displaySomething(viewModel: SearchGarden.Something.ViewModel)
@@ -21,9 +24,26 @@ class SearchGardenViewController: UIViewController, SearchGardenViewControllable
   var interactor: SearchGardenBusinessLogic?
   var router: (SearchGardenRoutingLogic & SearchGardenDataPassing)?
   
+  private let searchGardenView: SearchGardenView
+  private let loadingIndicator: AnimationImageView
+  private let addGardenView: AddGardenView
+  private let customNavigationBar: DefaultModalNavigationBar
+  
   // MARK: - Object lifecycle
   
   init() {
+    self.searchGardenView = SearchGardenView()
+    self.loadingIndicator = AnimationImageView(jsonURL: URL.loadingIndicatorURL)
+    self.addGardenView = AddGardenView(
+      userNickname: "",
+      userIntroduction: "",
+      userImage: nil,
+      pomodoroCollection: PomodoroRecordCollection()
+    )
+    self.customNavigationBar = DefaultModalNavigationBar(
+      title: Constant.NavigationBar.title,
+      rightButtonTitle: Constant.NavigationBar.rightButtonTitle
+    )
     super.init(nibName: nil, bundle: nil)
   }
   
