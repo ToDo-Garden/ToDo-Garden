@@ -51,7 +51,12 @@ let package = Package(
     ),
     .testTarget(
       name: "MyStatsSceneTests",
-      dependencies: ["MyStatsScene"]
+      dependencies: [
+        "MyStatsScene",
+        "MyStatsSceneAPI",
+        "MyStatsSceneEntity",
+        .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI") // TODO: - PomodoroRecordCollection 이관 예정
+      ]
     )
   ]
 )
