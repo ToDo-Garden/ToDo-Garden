@@ -9,7 +9,11 @@ import Foundation
 
 import SearchGardenSceneAPI
 
-struct SearchGardenWorker: SearchGardenWorkable {
-  func doSomeWork() {
+public struct SearchGardenWorker: SearchGardenWorkable {
+  
+  public init() {
+  }
+  
+  public func doSomeWork() {
   }
 }
