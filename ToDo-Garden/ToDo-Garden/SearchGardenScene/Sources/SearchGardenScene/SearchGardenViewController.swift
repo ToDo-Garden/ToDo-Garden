@@ -119,3 +119,29 @@ extension SearchGardenViewController {
     self.interactor?.doSomething(request: request)
   }
 }
+
+extension SearchGardenViewController: UITableViewDelegate {
+  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    return Constant.SearchGardenView.cellHeight
+  }
+  
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//    guard let tableView = tableView as? SearchGardenTableView else {
+//      return
+//    }
+    
+//    let userData = tableView.userForCell(at: indexPath)
+  }
+}
+
+extension SearchGardenViewController: UITextFieldDelegate {
+  func textFieldDidEndEditing(_ textField: UITextField) {
+//    let input = textField.text
+  }
+}
+
+extension SearchGardenViewController: DefaultModalNavigationBarDelegate {
+  func didTapRightButton() {
+    self.router?.dismissModal()
+  }
+}
