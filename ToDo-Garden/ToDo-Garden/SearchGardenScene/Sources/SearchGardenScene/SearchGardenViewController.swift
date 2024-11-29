@@ -58,10 +58,6 @@ class SearchGardenViewController: UIViewController, SearchGardenViewControllable
     super.viewDidLoad()
     self.setupView()
   }
-  
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-  }
 }
 
 extension SearchGardenViewController {
@@ -144,4 +140,13 @@ extension SearchGardenViewController: DefaultModalNavigationBarDelegate {
   func didTapRightButton() {
     self.router?.dismissModal()
   }
+}
+
+@available(iOS 17.0, *)
+#Preview {
+  // 프로젝트 타겟에 SeachGardenScene 추가 필요.
+  // 앱루트 작업내용과 충돌할까봐 타겟에 포함시키지 않았음.
+  let viewController = SearchGardenViewController()
+  
+  return viewController
 }
