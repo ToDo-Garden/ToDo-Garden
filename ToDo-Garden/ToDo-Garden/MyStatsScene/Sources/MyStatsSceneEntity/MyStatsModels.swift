@@ -1,6 +1,6 @@
 //
 //  MyStatsModels.swift
-//  
+//
 //
 //  Created by SONG on 11/13/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
@@ -111,7 +111,7 @@ extension MyStats {
       self.longestContinuousRecordEndDate = longestContinuousRecordEndDate
     }
   }
-
+  
   public struct SummaryViewModel: Sendable {
     public let concentratedTime: String
     public let completedCount: String
@@ -138,6 +138,44 @@ extension MyStats {
   }
 }
 
+// ProfileViewModel Equatable
+extension MyStats.ProfileViewModel: Equatable {
+  public static func == (lhs: MyStats.ProfileViewModel, rhs: MyStats.ProfileViewModel) -> Bool {
+    return lhs.myName == rhs.myName &&
+    lhs.myImage.pngData() == rhs.myImage.pngData() &&
+    lhs.continuousRecordCount == rhs.continuousRecordCount &&
+    lhs.continuousRecordStartDate == rhs.continuousRecordStartDate &&
+    lhs.continuousRecordEndDate == rhs.continuousRecordEndDate
+  }
+}
+
+// GardenViewModel Equatable
+extension MyStats.GardenViewModel: Equatable {
+  public static func == (lhs: MyStats.GardenViewModel, rhs: MyStats.GardenViewModel) -> Bool {
+    return lhs.pomodoroCollection == rhs.pomodoroCollection
+  }
+}
+
+// LongestRecordViewModel Equatable
+extension MyStats.LongestRecordViewModel: Equatable {
+  public static func == (lhs: MyStats.LongestRecordViewModel, rhs: MyStats.LongestRecordViewModel) -> Bool {
+    return lhs.concentratedRecordGroupName == rhs.concentratedRecordGroupName &&
+    lhs.concentratedRecordCount == rhs.concentratedRecordCount &&
+    lhs.concentratedRecordDate == rhs.concentratedRecordDate &&
+    lhs.longestContinuousRecordCount == rhs.longestContinuousRecordCount &&
+    lhs.longestContinuousRecordStartDate == rhs.longestContinuousRecordStartDate &&
+    lhs.longestContinuousRecordEndDate == rhs.longestContinuousRecordEndDate
+  }
+}
+
+// SummaryViewModel Equatable
+extension MyStats.SummaryViewModel: Equatable {
+  public static func == (lhs: MyStats.SummaryViewModel, rhs: MyStats.SummaryViewModel) -> Bool {
+    return lhs.concentratedTime == rhs.concentratedTime &&
+    lhs.completedCount == rhs.completedCount
+  }
+}
+
 // MARK: Data Models
 
 extension MyStats {
@@ -156,7 +194,7 @@ extension MyStats {
       self.continuousRecordEndDate = continuousRecordEndDate
     }
   }
-
+  
   public struct FetchedLongestRecordViewData: Sendable {
     public let concentratedRecordGroupName: String
     public let concentratedRecordCount: Int
@@ -182,7 +220,7 @@ extension MyStats {
       self.longestContinuousRecordEndDate = longestContinuousRecordEndDate
     }
   }
-
+  
   public struct FetchedSummaryViewData: Sendable {
     public let concentratedTime: Int
     public let completedCount: Double
@@ -194,5 +232,13 @@ extension MyStats {
       self.concentratedTime = concentratedTime
       self.completedCount = completedCount
     }
+  }
+}
+
+extension MyStats {
+  public enum MyStatsWorkerError: Error {
+    case fetchProfileDataFailed
+    case fetchLongestRecordDataFailed
+    case fetchSummaryDataFailed
   }
 }

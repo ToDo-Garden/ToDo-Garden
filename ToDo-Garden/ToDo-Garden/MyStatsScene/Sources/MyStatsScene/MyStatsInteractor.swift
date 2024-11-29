@@ -53,7 +53,7 @@ extension MyStatsInteractor: MyStatsBusinessLogic {
         self.presenter?.presentMyStatsViewData(response: response, with: payload)
       } catch is CancellationError {
         // 취소된 경우의 처리
-      } catch let error as MyStatsWorkerError {
+      } catch let error as MyStats.MyStatsWorkerError {
         self.handleWorkerError(error)
       } catch {
         // 기타 예상치 못한 에러 처리
@@ -81,13 +81,13 @@ extension MyStatsInteractor: MyStatsBusinessLogic {
     )
   }
   
-  private func handleWorkerError(_ error: MyStatsWorkerError) {
+  private func handleWorkerError(_ error: MyStats.MyStatsWorkerError) {
     switch error {
-    case MyStatsWorkerError.fetchProfileDataFailed:
+    case MyStats.MyStatsWorkerError.fetchProfileDataFailed:
       break
-    case MyStatsWorkerError.fetchLongestRecordDataFailed:
+    case MyStats.MyStatsWorkerError.fetchLongestRecordDataFailed:
       break
-    case MyStatsWorkerError.fetchSummaryDataFailed:
+    case MyStats.MyStatsWorkerError.fetchSummaryDataFailed:
       break
     }
   }

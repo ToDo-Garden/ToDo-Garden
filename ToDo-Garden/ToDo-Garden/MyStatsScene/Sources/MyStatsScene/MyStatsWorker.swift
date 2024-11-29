@@ -3,17 +3,12 @@ import Foundation
 import MyStatsSceneAPI
 import MyStatsSceneEntity
 
-public enum MyStatsWorkerError: Error {
-  case fetchProfileDataFailed
-  case fetchLongestRecordDataFailed
-  case fetchSummaryDataFailed
-}
-
 public struct MyStatsWorker: MyStatsWorkable {
   public init() {}
   
   public func fetchProfileViewData() async throws -> MyStats.FetchedProfileViewData {
     do {
+      // TODO: RESTAPI 연동
       
       return MyStats.FetchedProfileViewData(
         continuousRecordCount: 99,
@@ -21,12 +16,13 @@ public struct MyStatsWorker: MyStatsWorkable {
         continuousRecordEndDate: Date.distantFuture
       )
     } catch {
-      throw MyStatsWorkerError.fetchProfileDataFailed
+      throw MyStats.MyStatsWorkerError.fetchProfileDataFailed
     }
   }
   
   public func fetchLongestRecordsViewData() async throws -> MyStats.FetchedLongestRecordViewData {
     do {
+      // TODO: RESTAPI 연동
       return MyStats.FetchedLongestRecordViewData(
         concentratedRecordGroupName: "킹왕짱그룹",
         concentratedRecordCount: 99,
@@ -36,18 +32,19 @@ public struct MyStatsWorker: MyStatsWorkable {
         longestContinuousRecordEndDate: Date.distantFuture
       )
     } catch {
-      throw MyStatsWorkerError.fetchLongestRecordDataFailed
+      throw MyStats.MyStatsWorkerError.fetchLongestRecordDataFailed
     }
   }
   
   public func fetchSummaryViewData() async throws -> MyStats.FetchedSummaryViewData {
     do {
+      // TODO: RESTAPI 연동
       return MyStats.FetchedSummaryViewData(
         concentratedTime: 3660,
         completedCount: 3.5
       )
     } catch {
-      throw MyStatsWorkerError.fetchSummaryDataFailed
+      throw MyStats.MyStatsWorkerError.fetchSummaryDataFailed
     }
   }
 }
