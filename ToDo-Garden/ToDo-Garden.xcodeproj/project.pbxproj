@@ -69,6 +69,7 @@
 		4FC8C1082B8336A100BA223E /* ToDoGardenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoGardenTests.swift; sourceTree = "<group>"; };
 		4FC8C10F2B83375500BA223E /* ToDo-GardenTestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "ToDo-GardenTestPlan.xctestplan"; sourceTree = "<group>"; };
 		4FC8C14A2B87562600BA223E /* ToDoGardenUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ToDoGardenUI; sourceTree = "<group>"; };
+		4FD2D0132CF56C3B0040E747 /* RootTabBar */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RootTabBar; sourceTree = "<group>"; };
 		4FDA5E382B4FF1E4006506ED /* Asset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Asset.xcassets; sourceTree = "<group>"; };
 		4FEB41402C36864D00E3682A /* ShareGardenScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ShareGardenScene; sourceTree = "<group>"; };
 		631CD21F2C609FAD0000F78E /* SettingScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SettingScene; sourceTree = "<group>"; };
@@ -164,6 +165,7 @@
 		4F0DF12A2B4EABCE00097B7D /* ToDo-Garden */ = {
 			isa = PBXGroup;
 			children = (
+				4FD2D0132CF56C3B0040E747 /* RootTabBar */,
 				E4EED7D52CEB5130006B145D /* SearchGardenScene */,
 				E440FDE72CE4878100775512 /* MyStatsScene */,
 				E4FE64602CDF49DE00AB04EF /* OnBoardingScene */,

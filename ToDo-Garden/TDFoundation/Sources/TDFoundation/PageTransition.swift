@@ -63,8 +63,6 @@ public final class PageTransition: NSObject, UIViewControllerAnimatedTransitioni
       initialSpringVelocity: 0.7,
       options: [UIView.AnimationOptions.curveEaseInOut],
       animations: {
-        fromView.layer.opacity = 0
-        toView.layer.opacity = 1
         fromView.frame = fromFrameEnd
         toView.frame = frame
       },
