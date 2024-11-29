@@ -110,11 +110,9 @@ extension SearchGarden {
 extension SearchGarden {
   public struct CurrentSelectedUser {
     public let userID: String
-    public let userImage: UIImage?
     
-    public init(userID: String, userImage: UIImage?) {
+    public init(userID: String) {
       self.userID = userID
-      self.userImage = userImage
     }
   }
 }
