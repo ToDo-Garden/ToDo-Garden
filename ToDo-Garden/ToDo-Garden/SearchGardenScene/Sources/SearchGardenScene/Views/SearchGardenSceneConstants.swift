@@ -12,8 +12,8 @@ enum Constant {
     public static let commonMargin: CGFloat = 18.0
     public static let textfieldHeight: CGFloat = 32.0
     public static let cellHeight: CGFloat = 59.0
-    public static let defaultUserNickName: "UserNickName"
-    public static let defaultUserIntroduction: "UserIntroduction"
+    public static let defaultUserNickName = "UserNickName"
+    public static let defaultUserIntroduction = "UserIntroduction"
   }
   
   enum NavigationBar {
