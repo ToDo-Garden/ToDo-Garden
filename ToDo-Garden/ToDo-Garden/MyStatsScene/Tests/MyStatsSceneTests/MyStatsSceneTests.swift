@@ -97,8 +97,7 @@ private final class MyStatsViewSceneTests {
         completedCount: "5.5개 목표"
       )
     )
-    
-    viewController.interactor!.loadMyStatsViewData(request: MyStats.LoadMyStatsViewData.Request())
+    viewController.loadMyStatsViewData()
     do {
       try await Task.sleep(nanoseconds: 500000000)
     } catch { return }
