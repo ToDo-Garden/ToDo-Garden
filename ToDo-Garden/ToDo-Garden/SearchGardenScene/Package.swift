@@ -28,11 +28,15 @@ let package = Package(
     .target(
       name: "SearchGardenSceneAPI",
       dependencies: [
-        .product(name: "ToDoGardenUIAPI", package: "ToDoGardenUI")
+        .product(name: "ToDoGardenUIAPI", package: "ToDoGardenUI"),
+        "SearchGardenSceneEntity"
       ]
     ),
     .target(
-      name: "SearchGardenSceneEntity"
+      name: "SearchGardenSceneEntity",
+      dependencies: [
+        .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI") // TODO: PomodoroRecordCollection 이관 예정
+      ]
     ),
     .target(
       name: "SearchGardenScene",
