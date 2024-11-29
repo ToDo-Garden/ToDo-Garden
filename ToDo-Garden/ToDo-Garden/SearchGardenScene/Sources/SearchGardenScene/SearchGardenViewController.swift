@@ -35,8 +35,8 @@ class SearchGardenViewController: UIViewController, SearchGardenViewControllable
     self.searchGardenView = SearchGardenView()
     self.loadingIndicator = AnimationImageView(jsonURL: URL.loadingIndicatorURL)
     self.addGardenView = AddGardenView(
-      userNickname: "",
-      userIntroduction: "",
+      userNickname: Constant.SearchGardenView.defaultUserNickName,
+      userIntroduction: Constant.SearchGardenView.defaultUserIntroduction,
       userImage: nil,
       pomodoroCollection: PomodoroRecordCollection()
     )
