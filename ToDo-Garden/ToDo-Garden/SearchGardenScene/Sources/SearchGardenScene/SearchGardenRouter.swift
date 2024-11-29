@@ -1,6 +1,6 @@
 //
 //  SearchGardenRouter.swift
-//  
+//
 //
 //  Created by SONG on 11/18/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
@@ -11,7 +11,7 @@ import SearchGardenSceneAPI
 import SearchGardenSceneEntity
 
 protocol SearchGardenRoutingLogic {
-  func routeToSomewhere()
+  func dismissModal()
 }
 
 protocol SearchGardenDataPassing {
@@ -29,9 +29,7 @@ class SearchGardenRouter: SearchGardenDataPassing {
 // MARK: - Routing
 
 extension SearchGardenRouter: SearchGardenRoutingLogic {
-  func routeToSomewhere() {
-    //		let destinationViewController = self.nextSceneBuilder.build(with: NextScenePayload())
-    //		
-    //		self.viewController?.present(destinationViewController, animated: true)
+  func dismissModal() {
+    self.viewController?.dismiss(animated: true)
   }
 }
