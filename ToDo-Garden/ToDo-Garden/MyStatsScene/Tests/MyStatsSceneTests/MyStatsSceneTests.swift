@@ -165,26 +165,91 @@ extension MyStatsViewSceneTests {
     #expect(summaryData.completedCount == 5.5)
   }
   
-  @Test func testFailedDataFetch() async {
+  @Test func testFailedDataFetchByBadURL() async {
     self.resetWorker()
     self.worker.setError(HTTPClientError.badURL("SomeBadURL"))
     
     do {
       _ = try await self.worker.fetchProfileViewData()
+    } catch let error as HTTPClientError{
+      switch error {
+      case .badURL(let urlString):
+        #expect(urlString == "SomeBadURL")
+      default:
+        Issue.record("Unexpected error: \(error)")
+      }
     } catch let error {
-      #expect(error is HTTPClientError)
+      Issue.record("Unexpected error: \(error)")
     }
     
     do {
       _ = try await self.worker.fetchLongestRecordsViewData()
+    } catch let error as HTTPClientError{
+      switch error {
+      case .badURL(let urlString):
+        #expect(urlString == "SomeBadURL")
+      default:
+        Issue.record("Unexpected error: \(error)")
+      }
     } catch let error {
-      #expect(error is HTTPClientError)
+      Issue.record("Unexpected error: \(error)")
     }
     
     do {
       _ = try await self.worker.fetchSummaryViewData()
+    } catch let error as HTTPClientError{
+      switch error {
+      case .badURL(let urlString):
+        #expect(urlString == "SomeBadURL")
+      default:
+        Issue.record("Unexpected error: \(error)")
+      }
     } catch let error {
-      #expect(error is HTTPClientError)
+      Issue.record("Unexpected error: \(error)")
+    }
+  }
+  
+  @Test func testFailedDataFetchByDeserializationError() async {
+    self.resetWorker()
+    self.worker.setError(HTTPClientError.deserializationError)
+    
+    do {
+      _ = try await self.worker.fetchProfileViewData()
+    } catch let error as HTTPClientError{
+      switch error {
+      case .deserializationError:
+        #expect(true)
+      default:
+        Issue.record("Unexpected error: \(error)")
+      }
+    } catch let error {
+      Issue.record("Unexpected error: \(error)")
+    }
+    
+    do {
+      _ = try await self.worker.fetchLongestRecordsViewData()
+    } catch let error as HTTPClientError{
+      switch error {
+      case .deserializationError:
+        #expect(true)
+      default:
+        Issue.record("Unexpected error: \(error)")
+      }
+    } catch let error {
+      Issue.record("Unexpected error: \(error)")
+    }
+    
+    do {
+      _ = try await self.worker.fetchSummaryViewData()
+    } catch let error as HTTPClientError{
+      switch error {
+      case .deserializationError:
+        #expect(true)
+      default:
+        Issue.record("Unexpected error: \(error)")
+      }
+    } catch let error {
+      Issue.record("Unexpected error: \(error)")
     }
   }
 }
