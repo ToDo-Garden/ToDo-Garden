@@ -74,7 +74,7 @@ extension SearchGardenViewController {
   
   // TODO: 모달로 올라오는 뷰컨에 대해서는 화면 상단부분을 디밍뷰가 커버하지 못함.
   private func setupDimmingView() {
-    self.dimmingView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+    self.dimmingView.backgroundColor = UIColor.black.withAlphaComponent(0.3)
     self.dimmingView.frame = self.view.bounds
     self.dimmingView.isHidden = true
     self.dimmingView.alpha = CGFloat.zero
