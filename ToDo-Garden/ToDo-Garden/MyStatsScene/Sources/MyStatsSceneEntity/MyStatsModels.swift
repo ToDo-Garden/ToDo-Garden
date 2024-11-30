@@ -56,7 +56,7 @@ public enum MyStats {
 }
 
 extension MyStats {
-  public struct ProfileViewModel: Sendable {
+  public struct ProfileViewModel: Sendable, Equatable {
     public let myName: String
     public let myImage: UIImage
     public let continuousRecordCount: Int
@@ -78,7 +78,7 @@ extension MyStats {
     }
   }
   
-  public struct GardenViewModel: Sendable {
+  public struct GardenViewModel: Sendable, Equatable {
     public let pomodoroCollection: PomodoroRecordCollection
     
     public init(pomodoroCollection: PomodoroRecordCollection) {
@@ -86,7 +86,7 @@ extension MyStats {
     }
   }
   
-  public struct LongestRecordViewModel: Sendable {
+  public struct LongestRecordViewModel: Sendable, Equatable {
     public let concentratedRecordGroupName: String
     public let concentratedRecordCount: Int
     public let concentratedRecordDate: String
@@ -112,7 +112,7 @@ extension MyStats {
     }
   }
   
-  public struct SummaryViewModel: Sendable {
+  public struct SummaryViewModel: Sendable, Equatable {
     public let concentratedTime: String
     public let completedCount: String
     
@@ -135,44 +135,6 @@ extension MyStats {
       self.myImage = myImage
       self.myGarden = myGarden
     }
-  }
-}
-
-// ProfileViewModel Equatable
-extension MyStats.ProfileViewModel: Equatable {
-  public static func == (lhs: MyStats.ProfileViewModel, rhs: MyStats.ProfileViewModel) -> Bool {
-    return lhs.myName == rhs.myName &&
-    lhs.myImage.pngData() == rhs.myImage.pngData() &&
-    lhs.continuousRecordCount == rhs.continuousRecordCount &&
-    lhs.continuousRecordStartDate == rhs.continuousRecordStartDate &&
-    lhs.continuousRecordEndDate == rhs.continuousRecordEndDate
-  }
-}
-
-// GardenViewModel Equatable
-extension MyStats.GardenViewModel: Equatable {
-  public static func == (lhs: MyStats.GardenViewModel, rhs: MyStats.GardenViewModel) -> Bool {
-    return lhs.pomodoroCollection == rhs.pomodoroCollection
-  }
-}
-
-// LongestRecordViewModel Equatable
-extension MyStats.LongestRecordViewModel: Equatable {
-  public static func == (lhs: MyStats.LongestRecordViewModel, rhs: MyStats.LongestRecordViewModel) -> Bool {
-    return lhs.concentratedRecordGroupName == rhs.concentratedRecordGroupName &&
-    lhs.concentratedRecordCount == rhs.concentratedRecordCount &&
-    lhs.concentratedRecordDate == rhs.concentratedRecordDate &&
-    lhs.longestContinuousRecordCount == rhs.longestContinuousRecordCount &&
-    lhs.longestContinuousRecordStartDate == rhs.longestContinuousRecordStartDate &&
-    lhs.longestContinuousRecordEndDate == rhs.longestContinuousRecordEndDate
-  }
-}
-
-// SummaryViewModel Equatable
-extension MyStats.SummaryViewModel: Equatable {
-  public static func == (lhs: MyStats.SummaryViewModel, rhs: MyStats.SummaryViewModel) -> Bool {
-    return lhs.concentratedTime == rhs.concentratedTime &&
-    lhs.completedCount == rhs.completedCount
   }
 }
 
