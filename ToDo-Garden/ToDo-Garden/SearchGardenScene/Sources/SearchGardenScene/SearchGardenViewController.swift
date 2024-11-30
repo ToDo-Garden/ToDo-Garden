@@ -98,7 +98,8 @@ extension SearchGardenViewController {
   
   private func setupSearchGardenView() {
     self.searchGardenView.tableView.delegate = self
-    self.searchGardenView.tableView.updateData(with: MockData.preview) // ← TODO: 제거예정
+    self.searchGardenView.tableView.updateData(with: MockData.preview) 
+    // TODO: ↑ 제거예정
     self.view.addSubview(self.searchGardenView)
     self.searchGardenView.usingAutolayout()
     
@@ -135,6 +136,11 @@ extension SearchGardenViewController {
       ]
     )
   }
+  
+  private func doneButtonTapped() {
+    self.router?.dismissModal()
+  }
+  
   private func showAddGardenView() {
     self.dimmingView.isHidden = false
     UIView.animate(withDuration: Constant.AddGardenView.duration) {
@@ -159,8 +165,16 @@ extension SearchGardenViewController {
 // MARK: - Confirm display logic protocol
 
 extension SearchGardenViewController: SearchGardenDisplayLogic {
-  func displaySomething(viewModel: SearchGarden.Something.ViewModel) {
-    // self.nameTextField.text = viewModel.name
+  func displayUserDataForAddingGarden(viewModel: SearchGarden.LoadUserDataForAddingGarden.ViewModel) {
+    self.addGardenView.update(
+      userNickname: viewModel.userNickname,
+      userIntroduction: viewModel.userIntroduction,
+      userImage: viewModel.userImage,
+      pomodoroCollection: viewModel.userGarden
+    )
+    
+    self.addGardenView.addButton.isEnabled = viewModel.isButtonEnable
+    self.showAddGardenView()
   }
 }
 
