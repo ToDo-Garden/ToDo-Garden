@@ -14,7 +14,7 @@ import ToDoGardenUIComponent
 import ToDoGardenUIResource
 
 protocol SearchGardenDisplayLogic: AnyObject {
-  func displaySomething(viewModel: SearchGarden.Something.ViewModel)
+  func displayUserDataForAddingGarden(viewModel: SearchGarden.LoadUserDataForAddingGarden.ViewModel)
 }
 
 class SearchGardenViewController: UIViewController, SearchGardenViewControllable {
@@ -167,9 +167,12 @@ extension SearchGardenViewController: SearchGardenDisplayLogic {
 // MARK: - Request to interactor
 
 extension SearchGardenViewController {
-  func doSomething() {
-    let request = SearchGarden.Something.Request()
-    self.interactor?.doSomething(request: request)
+  func loadUserDataForAddingGarden(userID: String, userImage: UIImage?) {
+    let request = SearchGarden.LoadUserDataForAddingGarden.Request(
+      userID: userID,
+      userImage: userImage
+    )
+    self.interactor?.loadUserDataForAddingGarden(request: request)
   }
 }
 
@@ -179,11 +182,18 @@ extension SearchGardenViewController: UITableViewDelegate {
   }
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//    guard let tableView = tableView as? SearchGardenTableView else {
-//      return
-//    }
+    guard let tableView = tableView as? SearchGardenTableView else {
+      return
+    }
     
-//    let userData = tableView.userForCell(at: indexPath)
+    guard let userData = tableView.userForCell(at: indexPath) else {
+      return
+    }
+    
+    self.loadUserDataForAddingGarden(
+      userID: userData.userID,
+      userImage: userData.userImage
+    )
   }
 }
 
