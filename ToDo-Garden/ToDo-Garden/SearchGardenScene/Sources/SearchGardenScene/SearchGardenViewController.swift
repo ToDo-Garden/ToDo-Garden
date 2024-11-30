@@ -28,6 +28,7 @@ class SearchGardenViewController: UIViewController, SearchGardenViewControllable
   private let loadingIndicator: AnimationImageView
   private let addGardenView: AddGardenView
   private let defaultModalNavigationBar: DefaultModalNavigationBar
+  private let dimmingView: UIView
   
   // MARK: - Object lifecycle
   
@@ -44,6 +45,7 @@ class SearchGardenViewController: UIViewController, SearchGardenViewControllable
       title: Constant.NavigationBar.title,
       rightButtonTitle: Constant.NavigationBar.rightButtonTitle
     )
+    self.dimmingView = UIView()
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -63,8 +65,20 @@ class SearchGardenViewController: UIViewController, SearchGardenViewControllable
 extension SearchGardenViewController {
   
   private func setupView() {
+    self.view.backgroundColor = UIColor.white
     self.setupNavigationBar()
     self.setupSearchGardenView()
+    self.setupDimmingView()
+    self.setupAddGardenView()
+  }
+  
+  // TODO: 모달로 올라오는 뷰컨에 대해서는 화면 상단부분을 디밍뷰가 커버하지 못함.
+  private func setupDimmingView() {
+    self.dimmingView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+    self.dimmingView.frame = self.view.bounds
+    self.dimmingView.isHidden = true
+    self.dimmingView.alpha = CGFloat.zero
+    self.view.addSubview(self.dimmingView)
   }
   
   private func setupNavigationBar() {
@@ -97,6 +111,49 @@ extension SearchGardenViewController {
       ]
     )
   }
+  
+  private func setupAddGardenView() {
+    self.addGardenView.isHidden = true
+    self.addGardenView.alpha = CGFloat.zero
+    self.view.addSubview(self.addGardenView)
+    self.addGardenView.usingAutolayout()
+    self.addGardenView.addButton.addAction( 
+      UIAction { [weak self] _ in self?.hideAddGardenView() },
+      for: UIControl.Event.touchUpInside
+    )
+    self.addGardenView.cancelButton.addAction(
+      UIAction { [weak self] _ in self?.hideAddGardenView() },
+      for: UIControl.Event.touchUpInside
+    )
+    
+    NSLayoutConstraint.activate(
+      [
+        self.addGardenView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+        self.addGardenView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+        self.addGardenView.widthAnchor.constraint(equalToConstant: Constant.AddGardenView.width),
+        self.addGardenView.heightAnchor.constraint(equalToConstant: Constant.AddGardenView.height)
+      ]
+    )
+  }
+  private func showAddGardenView() {
+    self.dimmingView.isHidden = false
+    UIView.animate(withDuration: Constant.AddGardenView.duration) {
+      self.dimmingView.alpha = 1.0 
+      self.addGardenView.isHidden = false
+      self.addGardenView.alpha = 1.0
+    }
+  }
+  
+  private func hideAddGardenView() {
+    UIView.animate(withDuration: Constant.AddGardenView.duration) {
+      self.addGardenView.alpha = CGFloat.zero
+      self.dimmingView.alpha = 0.0 
+    } completion: { _ in
+      self.addGardenView.isHidden = true
+      self.dimmingView.isHidden = true
+    }
+  }
+
 }
 
 // MARK: - Confirm display logic protocol
