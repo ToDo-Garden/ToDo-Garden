@@ -1,5 +1,6 @@
 import Foundation
 
+import HTTPClientAPI
 import MyStatsSceneAPI
 import MyStatsSceneEntity
 
@@ -15,8 +16,8 @@ public struct MyStatsWorker: MyStatsWorkable {
         continuousRecordStartDate: Date.distantPast,
         continuousRecordEndDate: Date.distantFuture
       )
-    } catch {
-      throw MyStats.MyStatsWorkerError.fetchProfileDataFailed
+    } catch let error as HTTPClientError {
+      throw error
     }
   }
   
@@ -31,8 +32,8 @@ public struct MyStatsWorker: MyStatsWorkable {
         longestContinuousRecordStartDate: Date.distantPast,
         longestContinuousRecordEndDate: Date.distantFuture
       )
-    } catch {
-      throw MyStats.MyStatsWorkerError.fetchLongestRecordDataFailed
+    } catch let error as HTTPClientError {
+      throw error
     }
   }
   
@@ -43,8 +44,8 @@ public struct MyStatsWorker: MyStatsWorkable {
         concentratedTime: 3660,
         completedCount: 3.5
       )
-    } catch {
-      throw MyStats.MyStatsWorkerError.fetchSummaryDataFailed
+    } catch let error as HTTPClientError {
+      throw error
     }
   }
 }
