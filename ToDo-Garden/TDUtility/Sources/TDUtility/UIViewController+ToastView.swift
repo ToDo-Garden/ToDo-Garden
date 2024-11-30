@@ -1,10 +1,64 @@
 //
-//  Untitled.swift
+//  UIViewController+ToastView.swift
 //  TDUtility
 //
 //  Created by SONG on 11/30/24.
 //
 
+import UIKit
+
+public extension UIViewController {
+  func showToast(
+    message: String,
+    backgroundColor: UIColor = UIColor.black.withAlphaComponent(0.7),
+    textColor: UIColor = UIColor.white
+  ) {
+    let toastView = getToastView(message: message, backgroundColor: backgroundColor, textColor: textColor)
+    self.view.addSubview(toastView)
+    setupToastViewConstraints(toastView: toastView)
+    animateToastView(toastView: toastView)
+  }
+  
+  private func getToastView(message: String, backgroundColor: UIColor, textColor: UIColor) -> ToastView {
+    if let existingToastView = self.view.subviews.first(where: { $0 is ToastView }) as? ToastView {
+      existingToastView.messageLabel.text = message
+      existingToastView.backgroundColor = backgroundColor
+      existingToastView.alpha = 0.0
+      return existingToastView
+    } else {
+      return ToastView(message: message, backgroundColor: backgroundColor, textColor: textColor)
+    }
+  }
+  
+  private func setupToastViewConstraints(toastView: ToastView) {
+    toastView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      toastView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+      toastView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+      toastView.leadingAnchor.constraint(greaterThanOrEqualTo: self.view.leadingAnchor, constant: 20),
+      toastView.trailingAnchor.constraint(lessThanOrEqualTo: self.view.trailingAnchor, constant: -20)
+    ])
+  }
+  
+  private func animateToastView(toastView: ToastView) {
+    UIView.animate(
+      withDuration: 0.3,
+      animations: {
+        toastView.alpha = 1.0
+      },
+      completion: { _ in
+        UIView.animate(
+          withDuration: 0.3,
+          delay: 2.0,
+          options: [],
+          animations: {
+            toastView.alpha = 0.0
+          }
+        )
+      }
+    )
+  }
+}
 
 final class ToastView: UIView {
   let messageLabel: UILabel
