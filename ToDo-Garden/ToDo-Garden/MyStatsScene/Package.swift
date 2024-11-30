@@ -22,7 +22,8 @@ let package = Package(
   ],
   dependencies: [
     .package(name: "ToDoGardenUI", path: "../ToDoGardenUI"),
-    .package(path: "../TDUtility")
+    .package(path: "../TDUtility"),
+    .package(name: "TDFoundation", path: "../TDFoundation")
   ],
   targets: [
     .target(
@@ -44,6 +45,8 @@ let package = Package(
         .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI"),
         "MyStatsSceneAPI",
         "MyStatsSceneEntity",
+        .product(name: "HTTPClient", package: "TDFoundation"),
+        .product(name: "HTTPClientAPI", package: "TDFoundation"),
         .product(name: "TDUtility", package: "TDUtility"),
         .product(name: "ToDoGardenUIAPI", package: "ToDoGardenUI"),
         .product(name: "ToDoGardenUIResource", package: "ToDoGardenUI")
@@ -55,6 +58,7 @@ let package = Package(
         "MyStatsScene",
         "MyStatsSceneAPI",
         "MyStatsSceneEntity",
+        .product(name: "HTTPClientAPI", package: "TDFoundation"),
         .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI") // TODO: - PomodoroRecordCollection 이관 예정
       ]
     )
