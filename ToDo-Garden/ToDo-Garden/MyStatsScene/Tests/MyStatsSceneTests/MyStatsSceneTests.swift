@@ -2,24 +2,24 @@
 import Testing
 import UIKit
 
+import HTTPClientAPI
 @testable import MyStatsScene
 import MyStatsSceneAPI
 import MyStatsSceneEntity
 import ToDoGardenUIComponent // TODO: - PomodoroRecordCollection 이관 예정
 import ToDoGardenUIResource
 
+
 @MainActor
 private final class MyStatsViewSceneTests {
-  private var workable: MyStatsWorkable
-  private var mockWorker: MyStatsWorkerMock
+  private var worker: MyStatsWorkerStub
   
   init() {
-    self.workable = MyStatsWorkerMock()
-    self.mockWorker = workable as! MyStatsWorkerMock
+    self.worker = MyStatsWorkerStub()
   }
 
   @Test func testLoadMyStatsViewData() async {
-    self.resetMockWorker()
+    self.resetWorker()
     let mockPayload = MyStats.Payload(
       myName: "테스트유저",
       myImage: UIImage.defaultProfileImage,
@@ -30,21 +30,20 @@ private final class MyStatsViewSceneTests {
       )
     )
     
-    await self.mockWorker.setIsSuccessful(true)
-    await self.mockWorker.setProfileViewData(
+    self.worker.setProfileViewData(
       .init(
         continuousRecordCount: 10,
         continuousRecordStartDate: Date.distantPast,
         continuousRecordEndDate: Date.distantFuture
       )
     )
-    await self.mockWorker.setSummaryViewData(
+    self.worker.setSummaryViewData(
       .init(
         concentratedTime: 7200,
         completedCount: 5.5
       )
     )
-    await self.mockWorker.setLongestRecordViewData(
+    self.worker.setLongestRecordViewData(
       .init(
         concentratedRecordGroupName: "테스트그룹",
         concentratedRecordCount: 15,
@@ -56,7 +55,7 @@ private final class MyStatsViewSceneTests {
     )
     
     let viewController = MyStatsViewController()
-    let interactor = MyStatsInteractor(myStatsWorker: self.mockWorker)
+    let interactor = MyStatsInteractor(myStatsWorker: self.worker)
     let presenter = MyStatsPresenter()
     let mockDisplayLogic = MyStatsDisplayLogicMock()
     
@@ -112,17 +111,16 @@ private final class MyStatsViewSceneTests {
 // MockWorker Test
 extension MyStatsViewSceneTests {
   @Test func testSuccessfulProfileViewDataFetch() async throws {
-    self.resetMockWorker()
+    self.resetWorker()
     let expectedProfileData = MyStats.FetchedProfileViewData(
       continuousRecordCount: 42,
       continuousRecordStartDate: Date.distantPast,
       continuousRecordEndDate: Date.distantFuture
     )
     
-    await self.mockWorker.setIsSuccessful(true)
-    await self.mockWorker.setProfileViewData(expectedProfileData)
+    self.worker.setProfileViewData(expectedProfileData)
     
-    let profileData = try await self.workable.fetchProfileViewData()
+    let profileData = try await self.worker.fetchProfileViewData()
     
     #expect(profileData.continuousRecordCount == 42)
     #expect(profileData.continuousRecordStartDate == Date.distantPast)
@@ -130,7 +128,7 @@ extension MyStatsViewSceneTests {
   }
   
   @Test func testSuccessfulLongestRecordsViewDataFetch() async throws {
-    self.resetMockWorker()
+    self.resetWorker()
     let expectedLongestRecordData = MyStats.FetchedLongestRecordViewData(
       concentratedRecordGroupName: "테스트그룹",
       concentratedRecordCount: 15,
@@ -140,10 +138,9 @@ extension MyStatsViewSceneTests {
       longestContinuousRecordEndDate: Date.distantFuture
     )
     
-    await self.mockWorker.setIsSuccessful(true)
-    await self.mockWorker.setLongestRecordViewData(expectedLongestRecordData)
+    self.worker.setLongestRecordViewData(expectedLongestRecordData)
     
-    let longestRecordData = try await self.workable.fetchLongestRecordsViewData()
+    let longestRecordData = try await self.worker.fetchLongestRecordsViewData()
     
     #expect(longestRecordData.concentratedRecordGroupName == "테스트그룹")
     #expect(longestRecordData.concentratedRecordCount == 15)
@@ -154,55 +151,47 @@ extension MyStatsViewSceneTests {
   }
   
   @Test func testSuccessfulSummaryViewDataFetch() async throws {
-    self.resetMockWorker()
+    self.resetWorker()
     let expectedSummaryData = MyStats.FetchedSummaryViewData(
       concentratedTime: 7200,
       completedCount: 5.5
     )
     
-    await self.mockWorker.setIsSuccessful(true)
-    await self.mockWorker.setSummaryViewData(expectedSummaryData)
+    self.worker.setSummaryViewData(expectedSummaryData)
     
-    let summaryData = try await self.workable.fetchSummaryViewData()
+    let summaryData = try await self.worker.fetchSummaryViewData()
     
     #expect(summaryData.concentratedTime == 7200)
     #expect(summaryData.completedCount == 5.5)
   }
   
   @Test func testFailedDataFetch() async {
-    self.resetMockWorker()
-    await self.mockWorker.setIsSuccessful(false)
+    self.resetWorker()
+    self.worker.setError(HTTPClientError.badURL("SomeBadURL"))
     
     do {
-      _ = try await self.workable.fetchProfileViewData()
-    } catch let error as MyStats.MyStatsWorkerError {
-      #expect(error == .fetchProfileDataFailed)
-    } catch {
-      Issue.record("Unknown error")
+      _ = try await self.worker.fetchProfileViewData()
+    } catch let error {
+      #expect(error is HTTPClientError)
     }
     
     do {
-      _ = try await self.workable.fetchLongestRecordsViewData()
-    } catch let error as MyStats.MyStatsWorkerError {
-      #expect(error == .fetchLongestRecordDataFailed)
-    } catch {
-      Issue.record("Unknown error")
+      _ = try await self.worker.fetchLongestRecordsViewData()
+    } catch let error {
+      #expect(error is HTTPClientError)
     }
     
     do {
-      _ = try await self.workable.fetchSummaryViewData()
-    } catch let error as MyStats.MyStatsWorkerError {
-      #expect(error == .fetchSummaryDataFailed)
-    } catch {
-      Issue.record("Unknown error")
+      _ = try await self.worker.fetchSummaryViewData()
+    } catch let error {
+      #expect(error is HTTPClientError)
     }
   }
 }
 
 extension MyStatsViewSceneTests {
-  private func resetMockWorker() {
-    self.workable = MyStatsWorkerMock()
-    self.mockWorker = self.workable as! MyStatsWorkerMock
+  private func resetWorker() {
+    self.worker = MyStatsWorkerStub()
   }
 }
 // swiftlint:enable all
