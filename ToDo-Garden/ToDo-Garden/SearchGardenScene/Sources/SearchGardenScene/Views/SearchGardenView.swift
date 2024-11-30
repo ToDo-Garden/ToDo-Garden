@@ -22,6 +22,7 @@ final class SearchGardenView: UIVStackView {
       arrangedSubviews: []
     )
     self.isUserInteractionEnabled = true
+    self.backgroundColor = UIColor.white
     self.setupSubViews()
   }
 }
