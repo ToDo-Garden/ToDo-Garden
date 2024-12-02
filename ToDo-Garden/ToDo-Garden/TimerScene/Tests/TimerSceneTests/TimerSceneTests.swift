@@ -1,5 +1,5 @@
 // swiftlint:disable line_length
-// swiftlint:disable xctfail_message identifier_name  function_body_length opening_brace unused_closure_parameter type_name
+// swiftlint:disable xctfail_message identifier_name  function_body_length unused_closure_parameter type_name
 @testable import TimerScene
 @testable import TimerSceneEntity
 import XCTest
@@ -244,4 +244,3 @@ struct MockPresenter: TimerScenePresentationLogic {
   }
 }
 // swiftlint:enable xctfail_message identifier_name line_length function_body_length unused_closure_parameter type_name
-// swiftlint:enable opening_brace

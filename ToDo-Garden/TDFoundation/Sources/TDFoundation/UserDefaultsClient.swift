@@ -3,7 +3,7 @@ import Foundation
 extension UserDefaultsClient {
   public static let live: Self = {
     let defaults = { @Sendable in
-      UserDefaults(suiteName: "group.isowords")!
+      UserDefaults(suiteName: "group.isowords") ?? .standard
     }
 
     return Self(
