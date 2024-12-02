@@ -7,6 +7,7 @@
 
 import Foundation
 
+import HTTPClientAPI
 import SearchGardenSceneAPI
 import SearchGardenSceneEntity
 
@@ -16,16 +17,23 @@ protocol SearchGardenDataStore {
 
 protocol SearchGardenBusinessLogic {
   func loadUserDataForAddingGarden(request: SearchGarden.LoadUserDataForAddingGarden.Request)
+  func cancelTask(for key: SearchGarden.TaskKey)
 }
 
 class SearchGardenInteractor: SearchGardenDataStore {
   var presenter: SearchGardenPresentationLogic?
   private let searchGardenWorker: SearchGardenWorkable
+  private var tasks: [SearchGarden.TaskKey: Task<Void, Never>] = [:]
   private var currentSelectedUser: SearchGarden.CurrentSelectedUser?
   // ↑ 가든 추가 흐름에서 쓰일 예정
   
   init(searchGardenWorker: SearchGardenWorkable) {
     self.searchGardenWorker = searchGardenWorker
+  }
+  
+  func cancelTask(for key: SearchGarden.TaskKey) {
+    self.tasks[key]?.cancel()
+    self.tasks[key] = nil
   }
 }
 
@@ -33,15 +41,24 @@ class SearchGardenInteractor: SearchGardenDataStore {
 
 extension SearchGardenInteractor: SearchGardenBusinessLogic {
   func loadUserDataForAddingGarden(request: SearchGarden.LoadUserDataForAddingGarden.Request) {
-    Task {
-      self.currentSelectedUser = SearchGarden.CurrentSelectedUser(userID: request.userID)
-      let fetchedData = await self.searchGardenWorker.fetchUserDataForAddingGarden(userID: request.userID)
-      let response = SearchGarden.LoadUserDataForAddingGarden.Response(
-        userID: request.userID,
-        userImage: request.userImage,
-        fetchedData: fetchedData
-      )
-      self.presenter?.presentUserDataForAddingGarden(response: response)
+    self.tasks[SearchGarden.TaskKey.loadUserDataForAddingGarden] = Task {
+      do {
+        try Task.checkCancellation()
+        self.currentSelectedUser = SearchGarden.CurrentSelectedUser(userID: request.userID)
+        let fetchedData = try await self.searchGardenWorker.fetchUserDataForAddingGarden(userID: request.userID)
+        let response = SearchGarden.LoadUserDataForAddingGarden.Response(
+          userID: request.userID,
+          userImage: request.userImage,
+          fetchedData: fetchedData
+        )
+        self.presenter?.presentUserDataForAddingGarden(response: response)
+      } catch is CancellationError {
+        return
+      } catch let error as HTTPClientError {
+        switch error {
+        default: return
+        }
+      } catch { return }
     }
   }
 }
