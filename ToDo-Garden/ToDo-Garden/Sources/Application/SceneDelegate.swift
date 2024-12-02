@@ -8,11 +8,14 @@
 import UIKit
 
 import AppCore
+import ToDoGardenUIComponent
 import ToDoGardenUIResource
 
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-  
   var window: UIWindow?
+  var appCore = AppCore(
+    depdency: AppCore.Dependency.live
+  )
   
   func scene(
     _ scene: UIScene,
@@ -20,6 +23,8 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     options connectionOptions: UIScene.ConnectionOptions
   ) {
     self.setupWindow(with: scene)
+    self.prepare()
+    self.appCore.getStarted()
   }
 }
 
@@ -27,6 +32,13 @@ extension SceneDelegate {
   private func setupWindow(with scene: UIScene) {
     guard let windowScene = (scene as? UIWindowScene) else { return }
     self.window = UIWindow(windowScene: windowScene)
+    window?.rootViewController = self.appCore.dependency.router.navigationController
+    window?.makeKeyAndVisible()
+  }
+  
+  private func prepare() {
+    self.registerCustomFonts()
+    NavigationBarUIUpdator.update()
   }
   
   private func registerCustomFonts() {
