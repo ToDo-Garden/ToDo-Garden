@@ -13,10 +13,10 @@ public extension UIViewController {
     backgroundColor: UIColor = UIColor.black.withAlphaComponent(0.7),
     textColor: UIColor = UIColor.white
   ) {
-    let toastView = getToastView(message: message, backgroundColor: backgroundColor, textColor: textColor)
+    let toastView = self.getToastView(message: message, backgroundColor: backgroundColor, textColor: textColor)
     self.view.addSubview(toastView)
-    setupToastViewConstraints(toastView: toastView)
-    animateToastView(toastView: toastView)
+    self.setupToastViewConstraints(toastView: toastView)
+    toastView.animateToastView()
   }
   
   private func getToastView(message: String, backgroundColor: UIColor, textColor: UIColor) -> ToastView {
