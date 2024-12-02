@@ -8,8 +8,8 @@
 import Foundation
 import Security
 
-final class KeychainManager {
-  static let shared = KeychainManager()
+public final class KeychainManager {
+  public static let shared = KeychainManager()
   
   private init() {}
   
@@ -20,7 +20,7 @@ final class KeychainManager {
     // MARK: - 필요한 키값을 직접 추가하세요
   }
   
-  func create(_ data: Data, forKey key: String) throws {
+  public func create(_ data: Data, forKey key: String) throws {
     let query: [String: Any] = [
       kSecClass as String: kSecClassGenericPassword,
       kSecAttrAccount as String: key,
@@ -38,7 +38,7 @@ final class KeychainManager {
     }
   }
   
-  func update(_ data: Data, forKey key: String) throws {
+  public func update(_ data: Data, forKey key: String) throws {
     let query: [String: Any] = [
       kSecClass as String: kSecClassGenericPassword,
       kSecAttrAccount as String: key
@@ -54,7 +54,7 @@ final class KeychainManager {
     }
   }
   
-  func load(forKey key: String) throws -> Data? {
+  public func load(forKey key: String) throws -> Data? {
     let query: [String: Any] = [
       kSecClass as String: kSecClassGenericPassword,
       kSecAttrAccount as String: key,
@@ -75,7 +75,7 @@ final class KeychainManager {
     }
   }
   
-  func delete(forKey key: String) throws {
+  public func delete(forKey key: String) throws {
     let query: [String: Any] = [
       kSecClass as String: kSecClassGenericPassword,
       kSecAttrAccount as String: key
@@ -91,7 +91,7 @@ final class KeychainManager {
 // MARK: - Login 관련
 
 extension KeychainManager {
-  func saveLoginData(identifier: String, identifyToken: Data, email: String?) throws {
+  public func saveLoginData(identifier: String, identifyToken: Data, email: String?) throws {
     try self.clearLoginData()
     
     try self.create(Data(identifier.utf8), forKey: KeychainKey.userIdentifier)
@@ -105,7 +105,7 @@ extension KeychainManager {
   }
   
   // swiftlint:disable large_tuple
-  func getLoginData() throws -> (identifier: String, identifyToken: String, email: String?)? {
+  public func getLoginData() throws -> (identifier: String, identifyToken: String, email: String?)? {
     guard let identifierData = try self.load(forKey: KeychainKey.userIdentifier),
       let identifier = String(data: identifierData, encoding: String.Encoding.utf8),
       let tokenData = try self.load(forKey: KeychainKey.identifyToken),
@@ -120,7 +120,7 @@ extension KeychainManager {
   }
   // swiftlint:enable large_tuple
   
-  func clearLoginData() throws {
+  public func clearLoginData() throws {
     try self.delete(forKey: KeychainKey.userIdentifier)
     try self.delete(forKey: KeychainKey.userEmail)
     try self.delete(forKey: KeychainKey.identifyToken)

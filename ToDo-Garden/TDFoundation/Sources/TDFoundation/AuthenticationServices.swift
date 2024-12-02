@@ -7,16 +7,16 @@
 
 import AuthenticationServices
 
-protocol AppleLoginManagerDelegate: AnyObject {
+public protocol AppleLoginManagerDelegate: AnyObject {
   func appleLoginDidComplete(with result: Result<ASAuthorizationAppleIDCredential, Error>)
 }
 
-final class AppleLoginManager: NSObject {
+public final class AppleLoginManager: NSObject {
   private var authController: ASAuthorizationController?
   private weak var presentationContextProvider: ASAuthorizationControllerPresentationContextProviding?
-  weak var delegate: AppleLoginManagerDelegate?
+  public weak var delegate: AppleLoginManagerDelegate?
   
-  init(presentationContextProvider: ASAuthorizationControllerPresentationContextProviding) {
+  public init(presentationContextProvider: ASAuthorizationControllerPresentationContextProviding) {
     super.init()
     self.presentationContextProvider = presentationContextProvider
     self.setupAuthController()
@@ -33,13 +33,13 @@ final class AppleLoginManager: NSObject {
     self.authController?.presentationContextProvider = self.presentationContextProvider
   }
   
-  func performAppleLogin() {
+  public func performAppleLogin() {
     self.authController?.performRequests()
   }
 }
 
 extension AppleLoginManager: ASAuthorizationControllerDelegate {
-  func authorizationController(
+  public func authorizationController(
     controller: ASAuthorizationController,
     didCompleteWithAuthorization authorization: ASAuthorization
   ) {
@@ -48,7 +48,7 @@ extension AppleLoginManager: ASAuthorizationControllerDelegate {
     }
   }
   
-  func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+  public func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
     self.delegate?.appleLoginDidComplete(with: .failure(error))
   }
 }

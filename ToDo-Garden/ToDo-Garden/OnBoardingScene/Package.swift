@@ -10,14 +10,25 @@ let package = Package(
       targets: ["OnBoardingScene"])
   ],
   dependencies: [
-    .package(path: "../ToDoGardenUI")
+    Package.Dependency.package(path: "../ToDoGardenUI"),
+    Package.Dependency.package(path: "../TDFoundation")
   ],
   targets: [
     .target(
       name: "OnBoardingScene",
       dependencies: [
-        .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI"),
-        .product(name: "ToDoGardenUIResource", package: "ToDoGardenUI")
+        Target.Dependency.product(
+          name: "TDFoundation",
+          package: "TDFoundation"
+        ),
+        Target.Dependency.product(
+          name: "ToDoGardenUIComponent",
+          package: "ToDoGardenUI"
+        ),
+        Target.Dependency.product(
+          name: "ToDoGardenUIResource",
+          package: "ToDoGardenUI"
+        )
       ]
     )
   ]

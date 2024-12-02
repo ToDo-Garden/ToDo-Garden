@@ -1,13 +1,6 @@
-//
-//  LoginSceneConstant.swift
-//
-//
-//  Created by SONG on 10/3/24.
-//
+import UIKit
 
-import Foundation
-
-enum Constant {
+enum LoginViewControllerConstant {
   enum AppleLoginButton {
     static let centerYMultiplier: CGFloat = -0.14
   }

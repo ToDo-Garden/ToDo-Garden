@@ -9,21 +9,11 @@ import AuthenticationServices
 import OSLog
 import UIKit
 
-import LoginSceneAPI
-import LoginSceneEntity
+import TDFoundation
 import ToDoGardenUIComponent
 
-protocol LoginDisplayLogic: AnyObject {
-  func displaySomething(viewModel: Login.Something.ViewModel)
-}
-
-final class LoginViewController: UIViewController, LoginViewControllable {
-  
-  // MARK: - VIP Properties
-  
-  var interactor: LoginBusinessLogic?
-  var router: (LoginRoutingLogic & LoginDataPassing)?
-  
+final class LoginViewController: UIViewController {
+  typealias Constant = LoginViewControllerConstant
   private var appleLoginManager: AppleLoginManager?
   private let appleLoginButton: AppleLoginButton
   private let dimmingView: UIView
@@ -50,7 +40,6 @@ final class LoginViewController: UIViewController, LoginViewControllable {
     super.viewDidLoad()
     self.setAppleLoginManager()
     self.setUI()
-    self.doSomething()
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -142,23 +131,6 @@ extension LoginViewController {
   }
 }
 
-// MARK: - Confirm display logic protocol
-
-extension LoginViewController: LoginDisplayLogic {
-  func displaySomething(viewModel: Login.Something.ViewModel) {
-    // self.nameTextField.text = viewModel.name
-  }
-}
-
-// MARK: - Request to interactor
-
-extension LoginViewController {
-  func doSomething() {
-    let request = Login.Something.Request()
-    self.interactor?.doSomething(request: request)
-  }
-}
-
 extension LoginViewController: ASAuthorizationControllerPresentationContextProviding {
   public func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
     return self.view.window ?? UIWindow()
@@ -217,11 +189,11 @@ extension LoginViewController: TermsAgreementViewDelegate {
     self.hideTermAgreementView()
     do {
       if let loginData = try KeychainManager.shared.getLoginData() {
-        self.router?.routeToSignUpScene(
-          userIdentifier: loginData.identifier,
-          userEmailAddress: loginData.email,
-          agreeOptionalCondition: isEventAndPromotionalInformationAgreed
-        )
+        //        self.router?.routeToSignUpScene(
+        //          userIdentifier: loginData.identifier,
+        //          userEmailAddress: loginData.email,
+        //          agreeOptionalCondition: isEventAndPromotionalInformationAgreed
+        //        )
         // try KeychainManager.shared.clearLoginData()
       }
     } catch {
