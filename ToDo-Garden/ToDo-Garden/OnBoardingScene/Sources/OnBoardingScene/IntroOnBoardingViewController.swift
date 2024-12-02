@@ -16,6 +16,8 @@ public final class IntroOnBoardingViewController: UIViewController {
   private let leafLabelStackView: LeafLabelStackView
   private let startButton: ToDoGardenBoxButton
   
+  public var addAction: (() -> Void)?
+  
   public init() {
     // self.mainImageView = AnimationImageView(jsonURL: URL.onBoardingURL)
     self.mainImageView = UIImageView(image: UIImage.onBoarding)
@@ -128,9 +130,7 @@ extension IntroOnBoardingViewController {
   private func setupButtonAction() {
     self.startButton.addAction(
       UIAction { [weak self] _ in
-        let tutorialViewController = TutorialOnBoardingViewController()
-        
-        self?.navigationController?.pushViewController(tutorialViewController, animated: true)
+        self?.addAction?()
       },
       for: UIControl.Event.touchUpInside
     )
