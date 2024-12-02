@@ -11,17 +11,26 @@ public final class AppCore {
     self.dependency = depdency
   }
   
-  public func prepare() {
-    if dependency.userDefaults.hasShownFirstLaunchOnboarding {
-      //      dependency.userDefaults.setHasShownFirstLaunchOnboarding(false)
+  public func getStarted() {
+    if !dependency.userDefaults.hasShownFirstLaunchOnboarding {
+      dependency.router.switchTo(.onboarding)
+      Task {
+        await dependency.userDefaults.setHasShownFirstLaunchOnboarding(false)
+      }
     } else {
-      
+      dependency.router.switchTo(.home)
     }
   }
 }
 
 extension AppCore {
-  public struct Dependency: Sendable {
-    let userDefaults: UserDefaultsClient = .live
+  public struct Dependency {
+    @MainActor
+    public static let live = Dependency(
+      userDefaults: UserDefaultsClient.live,
+      router: AppRouter()
+    )
+    public let userDefaults: UserDefaultsClient
+    public let router: AppRouter
   }
 }
