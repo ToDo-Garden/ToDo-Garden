@@ -15,6 +15,7 @@ import ToDoGardenUIResource
 
 protocol SearchGardenDisplayLogic: AnyObject {
   func displayUserDataForAddingGarden(viewModel: SearchGarden.LoadUserDataForAddingGarden.ViewModel)
+  func displayResultOfAddingGarden(viewModel: SearchGarden.AddGarden.ViewModel)
 }
 
 class SearchGardenViewController: UIViewController, SearchGardenViewControllable {
@@ -119,7 +120,9 @@ extension SearchGardenViewController {
     self.view.addSubview(self.addGardenView)
     self.addGardenView.usingAutolayout()
     self.addGardenView.addButton.addAction( 
-      UIAction { [weak self] _ in self?.hideAddGardenView() },
+      UIAction { [weak self] _ in
+        self?.addGarden()
+      },
       for: UIControl.Event.touchUpInside
     )
     self.addGardenView.cancelButton.addAction(
@@ -159,7 +162,6 @@ extension SearchGardenViewController {
       self.dimmingView.isHidden = true
     }
   }
-
 }
 
 // MARK: - Confirm display logic protocol
@@ -176,6 +178,13 @@ extension SearchGardenViewController: SearchGardenDisplayLogic {
     self.addGardenView.addButton.isEnabled = viewModel.isButtonEnable
     self.showAddGardenView()
   }
+  
+  func displayResultOfAddingGarden(viewModel: SearchGarden.AddGarden.ViewModel) {
+    self.hideAddGardenView()
+    let message = viewModel.isSuccess ?
+    Constant.ToastView.successMessage : Constant.ToastView.failMessage
+    self.showToast(message: message)
+  }
 }
 
 // MARK: - Request to interactor
@@ -187,6 +196,11 @@ extension SearchGardenViewController {
       userImage: userImage
     )
     self.interactor?.loadUserDataForAddingGarden(request: request)
+  }
+  
+  func addGarden() {
+    let requset = SearchGarden.AddGarden.Request()
+    self.interactor?.addGarden(request: requset)
   }
 }
 

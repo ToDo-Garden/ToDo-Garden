@@ -17,6 +17,7 @@ protocol SearchGardenDataStore {
 
 protocol SearchGardenBusinessLogic {
   func loadUserDataForAddingGarden(request: SearchGarden.LoadUserDataForAddingGarden.Request)
+  func addGarden(request: SearchGarden.AddGarden.Request)
   func cancelTask(for key: SearchGarden.TaskKey)
 }
 
@@ -52,6 +53,25 @@ extension SearchGardenInteractor: SearchGardenBusinessLogic {
           fetchedData: fetchedData
         )
         self.presenter?.presentUserDataForAddingGarden(response: response)
+      } catch is CancellationError {
+        return
+      } catch let error as HTTPClientError {
+        switch error {
+        default: return
+        }
+      } catch { return }
+    }
+  }
+  
+  func addGarden(request: SearchGarden.AddGarden.Request) {
+    guard let currentSelectedUser else { return }
+    
+    self.tasks[SearchGarden.TaskKey.addGarden] = Task {
+      do {
+        try Task.checkCancellation()
+        let result = try await self.searchGardenWorker.requestToAddGarden(userID: currentSelectedUser.userID)
+        let response = SearchGarden.AddGarden.Response(result: result)
+        self.presenter?.presentResultOfAddingGarden(response: response)
       } catch is CancellationError {
         return
       } catch let error as HTTPClientError {

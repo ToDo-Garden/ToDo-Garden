@@ -11,6 +11,7 @@ import SearchGardenSceneEntity
 
 protocol SearchGardenPresentationLogic {
   func presentUserDataForAddingGarden(response: SearchGarden.LoadUserDataForAddingGarden.Response)
+  func presentResultOfAddingGarden(response: SearchGarden.AddGarden.Response)
 }
 
 class SearchGardenPresenter {
@@ -31,6 +32,16 @@ extension SearchGardenPresenter: SearchGardenPresentationLogic {
     
     Task { @MainActor in
       self.viewController?.displayUserDataForAddingGarden(viewModel: viewModel)
+    }
+  }
+  
+  func presentResultOfAddingGarden(response: SearchGarden.AddGarden.Response) {
+    let viewModel = SearchGarden.AddGarden.ViewModel(
+      isSuccess: response.result.isSuccess
+    )
+    
+    Task { @MainActor in
+      self.viewController?.displayResultOfAddingGarden(viewModel: viewModel)
     }
   }
 }
