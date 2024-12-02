@@ -9,6 +9,7 @@ import Foundation
 
 import SearchGardenSceneEntity
 
+@MainActor
 protocol SearchGardenPresentationLogic {
   func presentUserDataForAddingGarden(response: SearchGarden.LoadUserDataForAddingGarden.Response)
   func presentResultOfAddingGarden(response: SearchGarden.AddGarden.Response)
@@ -29,10 +30,8 @@ extension SearchGardenPresenter: SearchGardenPresentationLogic {
       userGarden: response.fetchedData.userGarden,
       isButtonEnable: !response.fetchedData.isFriend
     )
-    
-    Task { @MainActor in
-      self.viewController?.displayUserDataForAddingGarden(viewModel: viewModel)
-    }
+
+    self.viewController?.displayUserDataForAddingGarden(viewModel: viewModel)
   }
   
   func presentResultOfAddingGarden(response: SearchGarden.AddGarden.Response) {
@@ -40,8 +39,6 @@ extension SearchGardenPresenter: SearchGardenPresentationLogic {
       isSuccess: response.result.isSuccess
     )
     
-    Task { @MainActor in
-      self.viewController?.displayResultOfAddingGarden(viewModel: viewModel)
-    }
+    self.viewController?.displayResultOfAddingGarden(viewModel: viewModel)
   }
 }

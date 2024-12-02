@@ -13,6 +13,7 @@ import TDUtility
 import ToDoGardenUIComponent
 import ToDoGardenUIResource
 
+@MainActor
 protocol SearchGardenDisplayLogic: AnyObject {
   func displayUserDataForAddingGarden(viewModel: SearchGarden.LoadUserDataForAddingGarden.ViewModel)
   func displayResultOfAddingGarden(viewModel: SearchGarden.AddGarden.ViewModel)

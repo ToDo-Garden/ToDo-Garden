@@ -15,6 +15,7 @@ protocol SearchGardenDataStore {
   // var name: String { get set }
 }
 
+@MainActor
 protocol SearchGardenBusinessLogic {
   func loadUserDataForAddingGarden(request: SearchGarden.LoadUserDataForAddingGarden.Request)
   func addGarden(request: SearchGarden.AddGarden.Request)
