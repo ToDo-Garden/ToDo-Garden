@@ -21,4 +21,10 @@ enum Constant {
     public static let title = "가든찾기"
     public static let rightButtonTitle = "완료"
   }
+  
+  enum AddGardenView {
+    public static let height: CGFloat = 390.0
+    public static let width: CGFloat = 320.0
+    public static let duration = 0.3
+  }
 }

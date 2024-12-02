@@ -14,7 +14,7 @@ import ToDoGardenUIComponent
 import ToDoGardenUIResource
 
 protocol SearchGardenDisplayLogic: AnyObject {
-  func displaySomething(viewModel: SearchGarden.Something.ViewModel)
+  func displayUserDataForAddingGarden(viewModel: SearchGarden.LoadUserDataForAddingGarden.ViewModel)
 }
 
 class SearchGardenViewController: UIViewController, SearchGardenViewControllable {
@@ -28,6 +28,7 @@ class SearchGardenViewController: UIViewController, SearchGardenViewControllable
   private let loadingIndicator: AnimationImageView
   private let addGardenView: AddGardenView
   private let defaultModalNavigationBar: DefaultModalNavigationBar
+  private let dimmingView: UIView
   
   // MARK: - Object lifecycle
   
@@ -44,6 +45,7 @@ class SearchGardenViewController: UIViewController, SearchGardenViewControllable
       title: Constant.NavigationBar.title,
       rightButtonTitle: Constant.NavigationBar.rightButtonTitle
     )
+    self.dimmingView = UIView()
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -63,8 +65,20 @@ class SearchGardenViewController: UIViewController, SearchGardenViewControllable
 extension SearchGardenViewController {
   
   private func setupView() {
+    self.view.backgroundColor = UIColor.white
     self.setupNavigationBar()
     self.setupSearchGardenView()
+    self.setupDimmingView()
+    self.setupAddGardenView()
+  }
+  
+  // TODO: 모달로 올라오는 뷰컨에 대해서는 화면 상단부분을 디밍뷰가 커버하지 못함.
+  private func setupDimmingView() {
+    self.dimmingView.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+    self.dimmingView.frame = self.view.bounds
+    self.dimmingView.isHidden = true
+    self.dimmingView.alpha = CGFloat.zero
+    self.view.addSubview(self.dimmingView)
   }
   
   private func setupNavigationBar() {
@@ -84,7 +98,8 @@ extension SearchGardenViewController {
   
   private func setupSearchGardenView() {
     self.searchGardenView.tableView.delegate = self
-    self.searchGardenView.tableView.updateData(with: MockData.preview) // ← TODO: 제거예정
+    self.searchGardenView.tableView.updateData(with: MockData.preview) 
+    // TODO: ↑ 제거예정
     self.view.addSubview(self.searchGardenView)
     self.searchGardenView.usingAutolayout()
     
@@ -97,22 +112,81 @@ extension SearchGardenViewController {
       ]
     )
   }
+  
+  private func setupAddGardenView() {
+    self.addGardenView.isHidden = true
+    self.addGardenView.alpha = CGFloat.zero
+    self.view.addSubview(self.addGardenView)
+    self.addGardenView.usingAutolayout()
+    self.addGardenView.addButton.addAction( 
+      UIAction { [weak self] _ in self?.hideAddGardenView() },
+      for: UIControl.Event.touchUpInside
+    )
+    self.addGardenView.cancelButton.addAction(
+      UIAction { [weak self] _ in self?.hideAddGardenView() },
+      for: UIControl.Event.touchUpInside
+    )
+    
+    NSLayoutConstraint.activate(
+      [
+        self.addGardenView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+        self.addGardenView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+        self.addGardenView.widthAnchor.constraint(equalToConstant: Constant.AddGardenView.width),
+        self.addGardenView.heightAnchor.constraint(equalToConstant: Constant.AddGardenView.height)
+      ]
+    )
+  }
+  
+  private func doneButtonTapped() {
+    self.router?.dismissModal()
+  }
+  
+  private func showAddGardenView() {
+    self.dimmingView.isHidden = false
+    UIView.animate(withDuration: Constant.AddGardenView.duration) {
+      self.dimmingView.alpha = 1.0 
+      self.addGardenView.isHidden = false
+      self.addGardenView.alpha = 1.0
+    }
+  }
+  
+  private func hideAddGardenView() {
+    UIView.animate(withDuration: Constant.AddGardenView.duration) {
+      self.addGardenView.alpha = CGFloat.zero
+      self.dimmingView.alpha = 0.0 
+    } completion: { _ in
+      self.addGardenView.isHidden = true
+      self.dimmingView.isHidden = true
+    }
+  }
+
 }
 
 // MARK: - Confirm display logic protocol
 
 extension SearchGardenViewController: SearchGardenDisplayLogic {
-  func displaySomething(viewModel: SearchGarden.Something.ViewModel) {
-    // self.nameTextField.text = viewModel.name
+  func displayUserDataForAddingGarden(viewModel: SearchGarden.LoadUserDataForAddingGarden.ViewModel) {
+    self.addGardenView.update(
+      userNickname: viewModel.userNickname,
+      userIntroduction: viewModel.userIntroduction ?? "",
+      userImage: viewModel.userImage,
+      pomodoroCollection: viewModel.userGarden
+    )
+    
+    self.addGardenView.addButton.isEnabled = viewModel.isButtonEnable
+    self.showAddGardenView()
   }
 }
 
 // MARK: - Request to interactor
 
 extension SearchGardenViewController {
-  func doSomething() {
-    let request = SearchGarden.Something.Request()
-    self.interactor?.doSomething(request: request)
+  func loadUserDataForAddingGarden(userID: String, userImage: UIImage?) {
+    let request = SearchGarden.LoadUserDataForAddingGarden.Request(
+      userID: userID,
+      userImage: userImage
+    )
+    self.interactor?.loadUserDataForAddingGarden(request: request)
   }
 }
 
@@ -122,11 +196,18 @@ extension SearchGardenViewController: UITableViewDelegate {
   }
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//    guard let tableView = tableView as? SearchGardenTableView else {
-//      return
-//    }
+    guard let tableView = tableView as? SearchGardenTableView else {
+      return
+    }
     
-//    let userData = tableView.userForCell(at: indexPath)
+    guard let userData = tableView.userForCell(at: indexPath) else {
+      return
+    }
+    
+    self.loadUserDataForAddingGarden(
+      userID: userData.userID,
+      userImage: userData.userImage
+    )
   }
 }
 

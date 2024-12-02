@@ -7,6 +7,8 @@
 
 import Foundation
 
+import SearchGardenSceneEntity
+
 public protocol SearchGardenWorkable {
-  func doSomeWork()
+  func fetchUserDataForAddingGarden(userID: String) async -> SearchGarden.FetchedUserDataForAddingGarden
 }

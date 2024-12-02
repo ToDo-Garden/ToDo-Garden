@@ -15,13 +15,14 @@ protocol SearchGardenDataStore {
 }
 
 protocol SearchGardenBusinessLogic {
-  func doSomething(request: SearchGarden.Something.Request)
+  func loadUserDataForAddingGarden(request: SearchGarden.LoadUserDataForAddingGarden.Request)
 }
 
 class SearchGardenInteractor: SearchGardenDataStore {
-  // var name: String = ""
   var presenter: SearchGardenPresentationLogic?
   private let searchGardenWorker: SearchGardenWorkable
+  private var currentSelectedUser: SearchGarden.CurrentSelectedUser?
+  // ↑ 가든 추가 흐름에서 쓰일 예정
   
   init(searchGardenWorker: SearchGardenWorkable) {
     self.searchGardenWorker = searchGardenWorker
@@ -31,10 +32,16 @@ class SearchGardenInteractor: SearchGardenDataStore {
 // MARK: - Request to worker
 
 extension SearchGardenInteractor: SearchGardenBusinessLogic {
-  func doSomething(request: SearchGarden.Something.Request) {
-    self.searchGardenWorker.doSomeWork()
-    
-    let response = SearchGarden.Something.Response()
-    self.presenter?.presentSomething(response: response)
+  func loadUserDataForAddingGarden(request: SearchGarden.LoadUserDataForAddingGarden.Request) {
+    Task {
+      self.currentSelectedUser = SearchGarden.CurrentSelectedUser(userID: request.userID)
+      let fetchedData = await self.searchGardenWorker.fetchUserDataForAddingGarden(userID: request.userID)
+      let response = SearchGarden.LoadUserDataForAddingGarden.Response(
+        userID: request.userID,
+        userImage: request.userImage,
+        fetchedData: fetchedData
+      )
+      self.presenter?.presentUserDataForAddingGarden(response: response)
+    }
   }
 }

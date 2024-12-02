@@ -10,7 +10,7 @@ import Foundation
 import SearchGardenSceneEntity
 
 protocol SearchGardenPresentationLogic {
-  func presentSomething(response: SearchGarden.Something.Response)
+  func presentUserDataForAddingGarden(response: SearchGarden.LoadUserDataForAddingGarden.Response)
 }
 
 class SearchGardenPresenter {
@@ -20,8 +20,17 @@ class SearchGardenPresenter {
 // MARK: - Request to ViewController
 
 extension SearchGardenPresenter: SearchGardenPresentationLogic {
-  func presentSomething(response: SearchGarden.Something.Response) {
-    let viewModel = SearchGarden.Something.ViewModel()
-    self.viewController?.displaySomething(viewModel: viewModel)
+  func presentUserDataForAddingGarden(response: SearchGarden.LoadUserDataForAddingGarden.Response) {
+    let viewModel = SearchGarden.LoadUserDataForAddingGarden.ViewModel(
+      userImage: response.userImage,
+      userNickname: response.fetchedData.userNickname,
+      userIntroduction: response.fetchedData.userIntroduction,
+      userGarden: response.fetchedData.userGarden,
+      isButtonEnable: !response.fetchedData.isFriend
+    )
+    
+    Task { @MainActor in
+      self.viewController?.displayUserDataForAddingGarden(viewModel: viewModel)
+    }
   }
 }

@@ -8,12 +8,21 @@
 import Foundation
 
 import SearchGardenSceneAPI
+import SearchGardenSceneEntity
+import ToDoGardenUIComponent // TODO: 제거 예정
 
 public struct SearchGardenWorker: SearchGardenWorkable {
   
   public init() {
   }
   
-  public func doSomeWork() {
+  public func fetchUserDataForAddingGarden(userID: String) async -> SearchGarden.FetchedUserDataForAddingGarden {
+    return SearchGarden.FetchedUserDataForAddingGarden(
+      userNickname: "UserNickname",
+      userIntroduction: "UserIntroduction",
+      userGarden: PomodoroRecordCollection(),
+      isFriend: false
+    )
   }
+  
 }
