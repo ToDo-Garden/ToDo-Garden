@@ -66,10 +66,18 @@ public enum SearchGarden {
       public init() { }
     }
     public struct Response {
-      public init() { }
+      public let result: ResultForAddingGarden
+      
+      public init(result: ResultForAddingGarden) {
+        self.result = result
+      }
     }
     public struct ViewModel {
-      public init() { }
+      public let isSuccess: Bool
+      
+      public init(isSuccess: Bool) {
+        self.isSuccess = isSuccess
+      }
     }
   }
   
@@ -105,6 +113,14 @@ extension SearchGarden {
       self.isFriend = isFriend
     }
   }
+  
+  public struct ResultForAddingGarden: Sendable {
+    public let isSuccess: Bool
+    
+    public init(isSuccess: Bool) {
+      self.isSuccess = isSuccess
+    }
+  }
 }
 
 extension SearchGarden {
@@ -114,5 +130,11 @@ extension SearchGarden {
     public init(userID: String) {
       self.userID = userID
     }
+  }
+  
+  public enum TaskKey {
+    case loadUserDataForAddingGarden
+    case addGarden
+    case searchGarden
   }
 }
