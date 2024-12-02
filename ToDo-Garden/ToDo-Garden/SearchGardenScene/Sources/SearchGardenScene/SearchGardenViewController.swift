@@ -168,7 +168,7 @@ extension SearchGardenViewController: SearchGardenDisplayLogic {
   func displayUserDataForAddingGarden(viewModel: SearchGarden.LoadUserDataForAddingGarden.ViewModel) {
     self.addGardenView.update(
       userNickname: viewModel.userNickname,
-      userIntroduction: viewModel.userIntroduction,
+      userIntroduction: viewModel.userIntroduction ?? "",
       userImage: viewModel.userImage,
       pomodoroCollection: viewModel.userGarden
     )

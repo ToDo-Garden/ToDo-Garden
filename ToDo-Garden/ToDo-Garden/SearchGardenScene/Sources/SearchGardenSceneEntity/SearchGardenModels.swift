@@ -41,14 +41,14 @@ public enum SearchGarden {
     public struct ViewModel {
       public let userImage: UIImage?
       public let userNickname: String
-      public let userIntroduction: String
+      public let userIntroduction: String?
       public let userGarden: PomodoroRecordCollection
       public let isButtonEnable: Bool
       
       public init(
         userImage: UIImage?,
         userNickname: String,
-        userIntroduction: String,
+        userIntroduction: String?,
         userGarden: PomodoroRecordCollection,
         isButtonEnable: Bool
       ) {
@@ -89,13 +89,13 @@ public enum SearchGarden {
 extension SearchGarden {
   public struct FetchedUserDataForAddingGarden: Sendable {
     public let userNickname: String
-    public let userIntroduction: String
+    public let userIntroduction: String?
     public let userGarden: PomodoroRecordCollection
     public let isFriend: Bool
     
     public init(
       userNickname: String,
-      userIntroduction: String,
+      userIntroduction: String?,
       userGarden: PomodoroRecordCollection,
       isFriend: Bool
     ) {
