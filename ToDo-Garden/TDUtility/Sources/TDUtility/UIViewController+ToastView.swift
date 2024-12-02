@@ -39,25 +39,6 @@ public extension UIViewController {
       toastView.trailingAnchor.constraint(lessThanOrEqualTo: self.view.trailingAnchor, constant: -20)
     ])
   }
-  
-  private func animateToastView(toastView: ToastView) {
-    UIView.animate(
-      withDuration: 0.3,
-      animations: {
-        toastView.alpha = 1.0
-      },
-      completion: { _ in
-        UIView.animate(
-          withDuration: 0.3,
-          delay: 2.0,
-          options: [],
-          animations: {
-            toastView.alpha = 0.0
-          }
-        )
-      }
-    )
-  }
 }
 
 final class ToastView: UIView {
@@ -73,6 +54,25 @@ final class ToastView: UIView {
     self.setupView(backgroundColor: backgroundColor)
     self.configureMessageLabel(message: message, textColor: textColor)
     self.setupConstraints()
+  }
+  
+  func animateToastView() {
+    UIView.animate(
+      withDuration: 0.3,
+      animations: {
+        self.alpha = 1.0
+      },
+      completion: { _ in
+        UIView.animate(
+          withDuration: 0.3,
+          delay: 2.0,
+          options: [],
+          animations: {
+            self.alpha = 0.0
+          }
+        )
+      }
+    )
   }
   
   private func setupView(backgroundColor: UIColor) {
