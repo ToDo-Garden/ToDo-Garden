@@ -16,6 +16,9 @@ public final class AppRouter {
       
     case .onboarding(let completion):
       self.navigationController.viewControllers = self.buildOnBoardingFlows(completion)
+      
+    case .none:
+      break
     }
   }
   
