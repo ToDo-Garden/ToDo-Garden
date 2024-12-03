@@ -7,25 +7,15 @@ public final class AppRouter {
   public var navigationController: UINavigationController = UINavigationController(
     rootViewController: UIViewController()
   )
-
-  public enum Destination {
-    case onboarding
-    case home
-  }
-  func switchTo(_ destination: Destination) {
+  
+  func switchTo(_ destination: AppCore.Destination) {
     switch destination {
-    case Destination.home:
+    case .home:
       self.navigationController.viewControllers = [
       ]
       
-    case Destination.onboarding:
-      self.navigationController.viewControllers = self.buildOnBoardingFlows { [weak self] flag in
-        if flag {
-          self?.switchTo(.home)
-        } else {
-          // -> Route to SignUp
-        }
-      }
+    case .onboarding(let completion):
+      self.navigationController.viewControllers = self.buildOnBoardingFlows(completion)
     }
   }
   
@@ -33,7 +23,7 @@ public final class AppRouter {
     let onboarding = IntroOnBoardingViewController()
     let tutroial = TutorialOnBoardingViewController()
     let login = LoginViewController()
-
+    
     onboarding.addAction = { [weak navigationController] in
       navigationController?.pushViewController(tutroial, animated: true)
     }

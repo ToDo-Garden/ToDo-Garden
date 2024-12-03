@@ -6,20 +6,32 @@ import Foundation
 @MainActor
 public final class AppCore {
   public var dependency: Dependency
-  
-  public init(depdency: Dependency) {
-    self.dependency = depdency
+  public enum Destination {
+    case onboarding((Bool) -> Void)
+    case home // Binding HomeInteractor
+    // case login
+  }
+  var destination: Destination! {
+    didSet {
+      self.dependency.router.switchTo(self.destination)
+    }
   }
   
+  public init(dependency: Dependency) {
+    self.dependency = dependency
+  }
+  
+  // MARK: 앱시작시 무조건 먼저 호출해야하는 메소드
   public func getStarted() {
-    if !dependency.userDefaults.hasShownFirstLaunchOnboarding {
-      dependency.router.switchTo(.onboarding)
-      Task {
-        await dependency.userDefaults.setHasShownFirstLaunchOnboarding(false)
+    self.destination = !dependency.userDefaults.hasShownFirstLaunchOnboarding
+    ? .onboarding { [weak self] flag in
+      if flag {
+        self?.destination = .home
+      } else {
+        
       }
-    } else {
-      dependency.router.switchTo(.home)
     }
+    : .home
   }
 }
 
