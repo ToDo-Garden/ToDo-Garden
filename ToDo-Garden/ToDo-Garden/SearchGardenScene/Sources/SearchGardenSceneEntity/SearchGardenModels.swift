@@ -14,7 +14,7 @@ public enum SearchGarden {
   // MARK: Use cases
   
   public enum LoadUserDataForAddingGarden {
-    public struct Request {
+    public struct Request: Sendable {
       public let userID: String
       public let userImage: UIImage?
       
@@ -23,7 +23,7 @@ public enum SearchGarden {
         self.userImage = userImage
       }
     }
-    public struct Response {
+    public struct Response: Sendable {
       public let userID: String
       public let userImage: UIImage?
       public let fetchedData: FetchedUserDataForAddingGarden
@@ -38,7 +38,7 @@ public enum SearchGarden {
         self.fetchedData = fetchedData
       }
     }
-    public struct ViewModel {
+    public struct ViewModel: Sendable {
       public let userImage: UIImage?
       public let userNickname: String
       public let userIntroduction: String?
@@ -62,17 +62,17 @@ public enum SearchGarden {
   }
   
   public enum AddGarden {
-    public struct Request {
+    public struct Request: Sendable {
       public init() { }
     }
-    public struct Response {
+    public struct Response: Sendable {
       public let result: ResultForAddingGarden
       
       public init(result: ResultForAddingGarden) {
         self.result = result
       }
     }
-    public struct ViewModel {
+    public struct ViewModel: Sendable {
       public let isSuccess: Bool
       
       public init(isSuccess: Bool) {
