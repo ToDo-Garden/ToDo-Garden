@@ -71,6 +71,7 @@ extension SearchGardenInteractor: SearchGardenBusinessLogic {
       do {
         try Task.checkCancellation()
         let result = try await self.searchGardenWorker.requestToAddGarden(userID: currentSelectedUser.userID)
+        try Task.checkCancellation()
         let response = SearchGarden.AddGarden.Response(result: result)
         self.presenter?.presentResultOfAddingGarden(response: response)
       } catch is CancellationError {
