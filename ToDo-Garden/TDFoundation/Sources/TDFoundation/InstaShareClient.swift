@@ -60,7 +60,7 @@ extension InstaShareClient {
     },
     openInstagram: { 
       guard
-        let url = URL(string: "instagram-stories://share?source_application=\(KeyConstants.facebookAPIKey)")
+        let url = URL(string: "instagram-stories://share?source_application=\(try KeyConstants.facebookAPIKey)")
       else { throw URLError(.badURL) }
       guard UIApplication.shared.canOpenURL(url) else { throw InternalError.notInstalled }
       UIApplication.shared.open(url)
