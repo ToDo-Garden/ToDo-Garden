@@ -78,12 +78,12 @@ extension SearchGardenInteractor: SearchGardenBusinessLogic {
         let response = SearchGarden.AddGarden.Response(result: result)
         self.presenter?.presentResultOfAddingGarden(response: response)
       } catch is CancellationError {
-        return
+        return // TODO: presenter에 error시 호출될 메서드 구현 예정 
       } catch let error as HTTPClientError {
         switch error {
-        default: return
+        default: return // TODO: presenter에 error시 호출될 메서드 구현 예정
         }
-      } catch { return }
+      } catch { return } // TODO: presenter에 error시 호출될 메서드 구현 예정
     }
   }
 }

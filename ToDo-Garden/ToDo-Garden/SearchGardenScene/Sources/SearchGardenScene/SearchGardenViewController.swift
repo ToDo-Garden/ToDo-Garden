@@ -182,9 +182,6 @@ extension SearchGardenViewController: SearchGardenDisplayLogic {
   
   func displayResultOfAddingGarden(viewModel: SearchGarden.AddGarden.ViewModel) {
     self.hideAddGardenView()
-    let message = viewModel.isSuccess ?
-    Constant.ToastView.successMessage : Constant.ToastView.failMessage
-    self.showToast(message: message)
   }
 }
 
