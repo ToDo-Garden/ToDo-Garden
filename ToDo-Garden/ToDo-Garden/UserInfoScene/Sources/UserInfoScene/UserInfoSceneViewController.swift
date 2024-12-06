@@ -257,6 +257,7 @@ extension UserInfoSceneViewController {
   }
 
   private func setupUserInfoCollectionView() {
+    self.userInfoCollectionView.backgroundColor = UIColor.toDoGardenWhite
     self.userInfoCollectionView.isScrollEnabled = false
     self.userInfoCollectionViewDataSource = self.makeDiffableDataSource(with: self.userInfoCollectionView)
     self.userInfoCollectionView.dataSource = self.userInfoCollectionViewDataSource
