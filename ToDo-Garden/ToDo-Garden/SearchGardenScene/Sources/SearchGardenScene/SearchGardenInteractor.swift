@@ -44,10 +44,12 @@ final class SearchGardenInteractor: SearchGardenDataStore {
 extension SearchGardenInteractor: SearchGardenBusinessLogic {
   func loadUserDataForAddingGarden(request: SearchGarden.LoadUserDataForAddingGarden.Request) {
     self.tasks[SearchGarden.TaskKey.loadUserDataForAddingGarden] = Task {
+      defer { self.tasks[SearchGarden.TaskKey.loadUserDataForAddingGarden] = nil }
       do {
         try Task.checkCancellation()
         self.currentSelectedUser = SearchGarden.CurrentSelectedUser(userID: request.userID)
         let fetchedData = try await self.searchGardenWorker.fetchUserDataForAddingGarden(userID: request.userID)
+        try Task.checkCancellation()
         let response = SearchGarden.LoadUserDataForAddingGarden.Response(
           userID: request.userID,
           userImage: request.userImage,
@@ -68,6 +70,7 @@ extension SearchGardenInteractor: SearchGardenBusinessLogic {
     guard let currentSelectedUser else { return }
     
     self.tasks[SearchGarden.TaskKey.addGarden] = Task {
+      defer { self.tasks[SearchGarden.TaskKey.addGarden] = nil }
       do {
         try Task.checkCancellation()
         let result = try await self.searchGardenWorker.requestToAddGarden(userID: currentSelectedUser.userID)
