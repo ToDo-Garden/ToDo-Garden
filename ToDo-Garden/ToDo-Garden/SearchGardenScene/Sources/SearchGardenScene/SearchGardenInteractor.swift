@@ -19,13 +19,13 @@ protocol SearchGardenDataStore {
 protocol SearchGardenBusinessLogic {
   func loadUserDataForAddingGarden(request: SearchGarden.LoadUserDataForAddingGarden.Request)
   func addGarden(request: SearchGarden.AddGarden.Request)
-  func cancelTask(for key: SearchGarden.TaskKey)
+  func cancelTask(for key: SearchGardenInteractor.TaskKey)
 }
 
 final class SearchGardenInteractor: SearchGardenDataStore {
   var presenter: SearchGardenPresentationLogic?
   private let searchGardenWorker: SearchGardenWorkable
-  private var tasks: [SearchGarden.TaskKey: Task<Void, Never>] = [:]
+  private var tasks: [TaskKey: Task<Void, Never>] = [:]
   private var currentSelectedUser: SearchGarden.CurrentSelectedUser?
   // ↑ 가든 추가 흐름에서 쓰일 예정
   
@@ -33,7 +33,7 @@ final class SearchGardenInteractor: SearchGardenDataStore {
     self.searchGardenWorker = searchGardenWorker
   }
   
-  func cancelTask(for key: SearchGarden.TaskKey) {
+  func cancelTask(for key: TaskKey) {
     self.tasks[key]?.cancel()
     self.tasks[key] = nil
   }
@@ -43,8 +43,8 @@ final class SearchGardenInteractor: SearchGardenDataStore {
 
 extension SearchGardenInteractor: SearchGardenBusinessLogic {
   func loadUserDataForAddingGarden(request: SearchGarden.LoadUserDataForAddingGarden.Request) {
-    self.tasks[SearchGarden.TaskKey.loadUserDataForAddingGarden] = Task {
-      defer { self.tasks[SearchGarden.TaskKey.loadUserDataForAddingGarden] = nil }
+    self.tasks[TaskKey.loadUserDataForAddingGarden] = Task {
+      defer { self.tasks[TaskKey.loadUserDataForAddingGarden] = nil }
       do {
         try Task.checkCancellation()
         self.currentSelectedUser = SearchGarden.CurrentSelectedUser(userID: request.userID)
@@ -69,8 +69,8 @@ extension SearchGardenInteractor: SearchGardenBusinessLogic {
   func addGarden(request: SearchGarden.AddGarden.Request) {
     guard let currentSelectedUser else { return }
     
-    self.tasks[SearchGarden.TaskKey.addGarden] = Task {
-      defer { self.tasks[SearchGarden.TaskKey.addGarden] = nil }
+    self.tasks[TaskKey.addGarden] = Task {
+      defer { self.tasks[TaskKey.addGarden] = nil }
       do {
         try Task.checkCancellation()
         let result = try await self.searchGardenWorker.requestToAddGarden(userID: currentSelectedUser.userID)
@@ -85,5 +85,13 @@ extension SearchGardenInteractor: SearchGardenBusinessLogic {
         }
       } catch { return } // TODO: presenter에 error시 호출될 메서드 구현 예정
     }
+  }
+}
+
+extension SearchGardenInteractor {
+  enum TaskKey {
+    case loadUserDataForAddingGarden
+    case addGarden
+    case searchGarden
   }
 }

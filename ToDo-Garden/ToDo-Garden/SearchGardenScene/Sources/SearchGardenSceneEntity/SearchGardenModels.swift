@@ -131,10 +131,4 @@ extension SearchGarden {
       self.userID = userID
     }
   }
-  
-  public enum TaskKey {
-    case loadUserDataForAddingGarden
-    case addGarden
-    case searchGarden
-  }
 }
