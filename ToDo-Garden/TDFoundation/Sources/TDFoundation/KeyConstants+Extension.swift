@@ -11,20 +11,19 @@ extension KeyConstants {
     }
   }
 }
-extension KeyConstants {
-  enum InternalError: Error {
-    case keyNotFound(String)
+
+private func generate(_ key: String) throws -> String {
+  guard let result = KeyConstants.storage[key] else {
+    printWarning(key)
+    throw InternalError.keyNotFound(key)
   }
-  
-  static func generate(_ key: String) throws -> String {
-    guard let result = KeyConstants.storage[key] else {
-      printWarning(key)
-      throw KeyConstants.InternalError.keyNotFound(key)
-    }
-    return result
-  }
+  return result
+}
+
+private enum InternalError: Error {
+  case keyNotFound(String)
 }
 
 private func printWarning(_ key: String) {
-  debugPrint("⚠️ Warning: API Key for '\(key)' not found. Ensure you call KeyConstants.load() before accessing keys.")
+  debugPrint("⚠️ Warning: API Key for '\(key)' not found.")
 }
