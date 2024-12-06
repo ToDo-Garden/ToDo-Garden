@@ -4,6 +4,12 @@ extension KeyConstants {
       try generate("FACEBOOK_API_KEY")
     }
   }
+  
+  public static var supabaseAPIKey: String {
+    get throws {
+      try generate("SUPABASE_API_KEY")
+    }
+  }
 }
 extension KeyConstants {
   enum InternalError: Error {
