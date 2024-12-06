@@ -19,7 +19,7 @@ protocol SearchGardenDisplayLogic: AnyObject {
   func displayResultOfAddingGarden(viewModel: SearchGarden.AddGarden.ViewModel)
 }
 
-class SearchGardenViewController: UIViewController, SearchGardenViewControllable {
+final class SearchGardenViewController: UIViewController, SearchGardenViewControllable {
   
   // MARK: - VIP Properties
   

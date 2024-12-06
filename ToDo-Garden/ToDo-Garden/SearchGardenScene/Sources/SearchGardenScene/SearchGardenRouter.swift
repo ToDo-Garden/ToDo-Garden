@@ -18,7 +18,7 @@ protocol SearchGardenDataPassing {
   var dataStore: SearchGardenDataStore? { get }
 }
 
-class SearchGardenRouter: SearchGardenDataPassing {
+final class SearchGardenRouter: SearchGardenDataPassing {
   weak var viewController: SearchGardenViewController?
   var dataStore: SearchGardenDataStore?
   

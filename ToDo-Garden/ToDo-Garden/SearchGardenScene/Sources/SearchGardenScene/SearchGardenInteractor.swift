@@ -22,7 +22,7 @@ protocol SearchGardenBusinessLogic {
   func cancelTask(for key: SearchGarden.TaskKey)
 }
 
-class SearchGardenInteractor: SearchGardenDataStore {
+final class SearchGardenInteractor: SearchGardenDataStore {
   var presenter: SearchGardenPresentationLogic?
   private let searchGardenWorker: SearchGardenWorkable
   private var tasks: [SearchGarden.TaskKey: Task<Void, Never>] = [:]

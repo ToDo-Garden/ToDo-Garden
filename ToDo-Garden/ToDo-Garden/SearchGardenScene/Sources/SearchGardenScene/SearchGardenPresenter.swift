@@ -15,7 +15,7 @@ protocol SearchGardenPresentationLogic {
   func presentResultOfAddingGarden(response: SearchGarden.AddGarden.Response)
 }
 
-class SearchGardenPresenter {
+final class SearchGardenPresenter {
   weak var viewController: SearchGardenDisplayLogic?
 }
 
