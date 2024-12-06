@@ -12,7 +12,7 @@ import Foundation
 public struct HTTPRequest: Sendable, Equatable {
   public let method: HTTPMethod
   public let endPoint: URL
-  public let header: [String: String]
+  public var header: [String: String]
   public let queryItems: [String: String]
   public let body: Data?
   
