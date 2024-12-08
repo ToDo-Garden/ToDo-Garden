@@ -27,13 +27,13 @@ public final class AppCore {
   public func getStarted() {
     self.destination = !dependency.userDefaults.hasShownFirstLaunchOnboarding
     ? .onboarding { [weak self] flag in
-      if flag {
+      if flag { // 기존유저 로그인 끝난 뒤 목적지 == 홈
         self?.destination = .home
       } else {
-        
+        // 신규유저 로그인 끝난 뒤, 약관동의 "완료"버튼을 누르면 여기로 옵니다. 목적지 SignUpScene으로 전환 ( SignUpSceneBuilder() )
       }
     }
-    : .home
+    : .home // 로그인 case 생기면, 로그인 플로우가 들어갈 예정 
   }
 }
 

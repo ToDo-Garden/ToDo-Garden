@@ -22,7 +22,7 @@ public final class AppRouter {
     }
   }
   
-  private func buildOnBoardingFlows(_ completion: (Bool) -> Void) -> [UIViewController] {
+  private func buildOnBoardingFlows(_ completion: @escaping (Bool) -> Void) -> [UIViewController] {
     let onboarding = IntroOnBoardingViewController()
     let tutroial = TutorialOnBoardingViewController()
     let login = LoginViewController()
@@ -33,7 +33,20 @@ public final class AppRouter {
     tutroial.endAction = { [weak navigationController] in
       navigationController?.pushViewController(login, animated: true)
     }
-    // TODO: - Login Control Flow
+
+    login.afterLoginAction = { [weak login] isExistingUser in
+      if isExistingUser {
+        completion(true)
+      } else {
+        login?.showTermAgreementViewForRoutingToSignUpScene()
+      }
+    }
+    
+    login.doneButtonAction = { isEventAndPromotionalInformationAgreed in
+      _ = isEventAndPromotionalInformationAgreed
+      // TODO: 광고성 알림 수신 여부(isEventAndPromotionalInformationAgreed)를 SignUpScene의 payload로 받게 되어있음.
+      completion(false)
+    }
     
     return [onboarding]
   }
