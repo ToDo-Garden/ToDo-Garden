@@ -101,7 +101,8 @@ extension IntroOnBoardingViewController {
       dummyView.topAnchor.constraint(
         equalTo: self.mainImageView.bottomAnchor
       ),
-      dummyView.bottomAnchor.constraint(equalTo: self.startButton.topAnchor)
+      dummyView.bottomAnchor.constraint(equalTo: self.startButton.topAnchor),
+      dummyView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
     ])
     
     self.leafLabelStackView.usingAutolayout()
