@@ -143,8 +143,8 @@ extension LoginViewController: ASAuthorizationControllerPresentationContextProvi
 extension LoginViewController: AppleLoginManagerDelegate {
   public func appleLoginDidComplete(with result: Result<Bool, Error>) {
     switch result {
-    case .success(let isExistingUser):
-      self.afterLoginAction?(isExistingUser)
+    case .success(let isMember):
+      if isMember {
         self.afterLoginAction?()
       } else {
         self.showTermAgreementViewForRoutingToSignUpScene()

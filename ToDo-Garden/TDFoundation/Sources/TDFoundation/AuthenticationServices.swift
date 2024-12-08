@@ -52,8 +52,8 @@ extension AppleLoginManager: ASAuthorizationControllerDelegate {
         )
         
         Task {
-          let isExistingUser = try await self.requestVerificationToSupabase()
-          self.delegate?.appleLoginDidComplete(with: .success(isExistingUser))
+          let isMember = try await self.requestVerificationToSupabase()
+          self.delegate?.appleLoginDidComplete(with: .success(isMember))
         }
       } catch let error {
         self.delegate?.appleLoginDidComplete(with: .failure(error))
