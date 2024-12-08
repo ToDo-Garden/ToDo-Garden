@@ -21,7 +21,7 @@ public final class LoginViewController: UIViewController {
   
   private let loger = Logger()
   
-  public var afterLoginAction: ((Bool) -> Void)?
+  public var afterLoginAction: (() -> Void)?
   public var doneButtonAction: ((Bool) -> Void)?
   // MARK: - Object lifecycle
   
@@ -145,7 +145,10 @@ extension LoginViewController: AppleLoginManagerDelegate {
     switch result {
     case .success(let isExistingUser):
       self.afterLoginAction?(isExistingUser)
-
+        self.afterLoginAction?()
+      } else {
+        self.showTermAgreementViewForRoutingToSignUpScene()
+      }
     case .failure(let error):
       self.loger.log("Apple Login 실패: \(error)")
     }
