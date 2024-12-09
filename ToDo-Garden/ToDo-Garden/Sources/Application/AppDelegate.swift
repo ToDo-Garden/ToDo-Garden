@@ -15,7 +15,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
   ) -> Bool {
-    self.registerCustomFonts()
+    registerCustomFonts()
     return true
   }
 }
@@ -23,5 +23,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 extension AppDelegate {
   private func registerCustomFonts() {
     PretendardFont.register()
+    GmarkSansFont.register()
   }
 }

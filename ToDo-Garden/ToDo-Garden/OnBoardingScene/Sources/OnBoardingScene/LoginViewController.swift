@@ -12,7 +12,7 @@ import UIKit
 import TDFoundation
 import ToDoGardenUIComponent
 
-final class LoginViewController: UIViewController {
+public final class LoginViewController: UIViewController {
   typealias Constant = LoginViewControllerConstant
   private var appleLoginManager: AppleLoginManager?
   private let appleLoginButton: AppleLoginButton
@@ -22,7 +22,7 @@ final class LoginViewController: UIViewController {
   private let loger = Logger()
   // MARK: - Object lifecycle
   
-  init() {
+  public init() {
     self.appleLoginButton = AppleLoginButton()
     self.dimmingView = UIView()
     self.termAgreementView = TermsAgreementView()
@@ -36,13 +36,13 @@ final class LoginViewController: UIViewController {
   
   // MARK: - View lifecycle
   
-  override func viewDidLoad() {
+  public override func viewDidLoad() {
     super.viewDidLoad()
     self.setAppleLoginManager()
     self.setUI()
   }
   
-  override func viewWillAppear(_ animated: Bool) {
+  public override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     self.navigationController?.navigationBar.isHidden = true
   }
@@ -138,7 +138,7 @@ extension LoginViewController: ASAuthorizationControllerPresentationContextProvi
 }
 
 extension LoginViewController: AppleLoginManagerDelegate {
-  func appleLoginDidComplete(with result: Result<ASAuthorizationAppleIDCredential, Error>) {
+  public func appleLoginDidComplete(with result: Result<ASAuthorizationAppleIDCredential, Error>) {
     switch result {
     case .success(let credential):
       do {

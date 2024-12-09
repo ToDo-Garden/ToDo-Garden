@@ -10,14 +10,14 @@ import UIKit
 import ToDoGardenUIComponent
 import ToDoGardenUIResource
 
-final class TutorialOnBoardingViewController: UIViewController {
+public final class TutorialOnBoardingViewController: UIViewController {
   private let cell: ManageGroupTableViewCell
   private let leftBubbleLabel: BubbleLabel
   private let rightBubbleLabel: BubbleLabel
   
-  var endAction: (() -> Void)?
+  public var endAction: (() -> Void)?
   
-  init() {
+  public init() {
     self.cell = ManageGroupTableViewCell(
       style: UITableViewCell.CellStyle.default,
       reuseIdentifier: ManageGroupTableViewCell.identifier
@@ -40,7 +40,7 @@ final class TutorialOnBoardingViewController: UIViewController {
     fatalError("init(coder:) has not been implemented")
   }
   
-  override func viewDidLoad() {
+  public override func viewDidLoad() {
     super.viewDidLoad()
     self.view.backgroundColor = UIColor.white
     self.setupCell()

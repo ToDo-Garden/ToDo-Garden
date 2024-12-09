@@ -12,19 +12,19 @@ import TDUtility
 public final class NavigationBarUIUpdator {
   @ExecuteOnce private static var updateAction: (() -> Void)?
 
-  public static func update(with window: UIWindow?) {
+  public static func update() {
     self.updateAction = {
-      self.updateNavigationBarApperance(with: window)
+      self.updateNavigationBarApperance()
     }
   }
 }
 
 extension NavigationBarUIUpdator {
-  private static func updateNavigationBarApperance(with window: UIWindow?) {
+  private static func updateNavigationBarApperance() {
     let appearance = UINavigationBarAppearance()
     self.updateBackButtonAppearance(appearance)
     self.updateNavigationBarTitle(appearance)
-    self.updateNavigationBarBottomLine(appearance, with: window)
+    self.updateNavigationBarBottomLine(appearance)
     UINavigationBar.appearance().standardAppearance = appearance
     UINavigationBar.appearance().scrollEdgeAppearance = appearance
   }
@@ -52,18 +52,17 @@ extension NavigationBarUIUpdator {
     ]
   }
 
-  private static func updateNavigationBarBottomLine(_ appearance: UINavigationBarAppearance, with window: UIWindow?) {
+  private static func updateNavigationBarBottomLine(_ appearance: UINavigationBarAppearance) {
     appearance.backgroundColor = UIColor.toDoGardenWhite
-    if let shadowImage = self.makeShadowImage(with: window) {
+    if let shadowImage = self.makeShadowImage() {
       appearance.shadowImage = shadowImage
     } else {
       appearance.shadowColor = UIColor.toDoGardenGreenGray
     }
   }
 
-  private static func makeShadowImage(with window: UIWindow?) -> UIImage? {
-    guard let screenWidth = window?.screen.bounds.width
-    else { return nil }
+  private static func makeShadowImage() -> UIImage? {
+    let screenWidth = UIScreen.main.bounds.width
 
     let shadowSize = CGSize(width: screenWidth, height: 1.0)
     let shadowImage = UIGraphicsImageRenderer(size: shadowSize).image { context in
