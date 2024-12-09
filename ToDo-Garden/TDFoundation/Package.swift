@@ -37,7 +37,8 @@ let package = Package(
         Target.Dependency.product(
           name: "ToDoGardenUIComponent",
           package: "ToDoGardenUI"
-        )
+        ),
+        "HTTPClientAPI"
       ]
     ),
     Target.testTarget(
