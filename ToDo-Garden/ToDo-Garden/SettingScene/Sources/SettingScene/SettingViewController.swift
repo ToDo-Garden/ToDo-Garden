@@ -134,6 +134,7 @@ extension SettingViewController {
   }
 
   private func setupSettingCollectionView() {
+    self.settingCollectionView.backgroundColor = UIColor.toDoGardenWhite
     self.setupSettingCollectionViewRegistration()
     self.settingCollectionView.isScrollEnabled = false
     self.settingCollectionViewDataSource = self.makeDiffableDataSource(with: self.settingCollectionView)
