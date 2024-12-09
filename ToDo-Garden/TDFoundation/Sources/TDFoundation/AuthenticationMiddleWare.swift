@@ -8,7 +8,7 @@ public struct AuthenticationMiddleWare: ClientMiddleware {
     next: (HTTPRequest) async throws -> HTTPResponse
   ) async throws -> HTTPResponse {
     var copy = request
-    copy.header["apiKey"] = try KeyConstants.facebookAPIKey
+    copy.header["apiKey"] = try KeyConstants.supabaseAPIKey
     
     return try await next(copy)
   }
