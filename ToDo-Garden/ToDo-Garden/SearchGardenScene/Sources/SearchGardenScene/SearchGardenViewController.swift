@@ -17,6 +17,7 @@ import ToDoGardenUIResource
 protocol SearchGardenDisplayLogic: AnyObject {
   func displayUserDataForAddingGarden(viewModel: SearchGarden.LoadUserDataForAddingGarden.ViewModel)
   func displayResultOfAddingGarden(viewModel: SearchGarden.AddGarden.ViewModel)
+  func displayGardenForSearchingGarden(viewModel: SearchGarden.LoadSearchedGarden.ViewModel)
 }
 
 final class SearchGardenViewController: UIViewController, SearchGardenViewControllable {
@@ -184,6 +185,12 @@ extension SearchGardenViewController: SearchGardenDisplayLogic {
   
   func displayResultOfAddingGarden(viewModel: SearchGarden.AddGarden.ViewModel) {
     self.hideAddGardenView()
+  }
+  
+  func displayGardenForSearchingGarden(viewModel: SearchGarden.LoadSearchedGarden.ViewModel) {
+    self.loadingIndicator.pauseAnimation()
+    self.loadingIndicator.isHidden = true
+    self.searchGardenView.tableView.updateData(with: viewModel.fetchedData.searchedGardens)
   }
 }
 
