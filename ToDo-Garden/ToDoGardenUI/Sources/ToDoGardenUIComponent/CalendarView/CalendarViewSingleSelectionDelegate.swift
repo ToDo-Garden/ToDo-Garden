@@ -11,7 +11,8 @@ import ToDoGardenUIConstant
 
 protocol CalendarViewDelegate: UICollectionViewDelegate {
   var scrollDelegate: CalendarScrollSendable? { get set }
-  
+  var dateSelectionClosure: ((Date) -> Void)? { get set }
+
   func fetchWeekdaySymbols() -> [String]
   func getCollectionViewHeight() -> CGFloat
   func scrollCalendar(to scrollDirection: CalendarScrollDirection, animated: Bool)
@@ -33,7 +34,8 @@ class CalendarViewSingleSelectionDelegate: NSObject {
   
   weak var scrollDelegate: CalendarScrollSendable?
   var afterReloadSection: (() -> Void)?
-  
+  var dateSelectionClosure: ((Date) -> Void)?
+
   init(
     collectionView: UICollectionView,
     collectionViewLayoutModel: CalendarView.Model.CollectionViewLayout,
@@ -287,7 +289,11 @@ extension CalendarViewSingleSelectionDelegate {
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     guard let selectedNewItem = self.collectionViewDataSource.itemIdentifier(for: indexPath)
     else { return }
-    
+
+    if self.selectedItem != selectedNewItem {
+      self.dateSelectionClosure?(selectedNewItem.date)
+    }
+
     guard let scrollDirection = getScrollDirection(selectedItem: selectedNewItem, section: indexPath)
     else { return }
     

@@ -72,10 +72,17 @@ extension CalendarView {
   private func setup() {
     self.setupUI()
     self.setupCollectionViewScrollDelegate()
+    self.setupDateSelectionDelegate()
   }
   
   func setupCollectionViewScrollDelegate() {
     self.calendarViewDelegate.scrollDelegate = self
+  }
+
+  private func setupDateSelectionDelegate() {
+    self.calendarViewDelegate.dateSelectionClosure = { (selectedDate: Date) in
+      self.dateSelectionDelegate?.didSelectDate(selectedDate)
+    }
   }
 }
 
