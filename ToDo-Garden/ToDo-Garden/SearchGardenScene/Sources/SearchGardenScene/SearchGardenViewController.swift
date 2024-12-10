@@ -99,6 +99,8 @@ extension SearchGardenViewController {
   }
   
   private func setupSearchGardenView() {
+    self.searchGardenView.textField.delegate = self
+    self.searchGardenView.textField.returnKeyType = .search
     self.searchGardenView.tableView.delegate = self
     self.searchGardenView.tableView.updateData(with: MockData.preview) 
     // TODO: ↑ 제거예정
@@ -200,6 +202,14 @@ extension SearchGardenViewController {
     let requset = SearchGarden.AddGarden.Request()
     self.interactor?.addGarden(request: requset)
   }
+  
+  func loadSearchGarden(inputText: String, isCountinuous: Bool) {
+    self.loadingIndicator.isHidden = false
+    self.loadingIndicator.startAnimation()
+    let request = SearchGarden.LoadSearchedGarden.Request(inputText: inputText, isContinuous: isCountinuous)
+    self.interactor?.loadSearchedGarden(request: request)
+    
+  }
 }
 
 extension SearchGardenViewController: UITableViewDelegate {
@@ -224,8 +234,13 @@ extension SearchGardenViewController: UITableViewDelegate {
 }
 
 extension SearchGardenViewController: UITextFieldDelegate {
-  func textFieldDidEndEditing(_ textField: UITextField) {
-//    let input = textField.text
+  func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    guard let inputText = textField.text else {
+      return false
+    }
+    
+    self.loadSearchGarden(inputText: inputText, isCountinuous: false)
+    return true
   }
 }
 
