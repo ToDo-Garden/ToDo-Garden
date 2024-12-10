@@ -9,6 +9,10 @@ import UIKit
 
 import ToDoGardenUIConstant
 
+public protocol CalendarViewDateSelectionDelegate: AnyObject {
+  func didSelectDate(_ date: Date)
+}
+
 public class CalendarView: UIView {
   private let model: Model
   private var isLayoutSubviewsCalled: Bool
@@ -20,7 +24,9 @@ public class CalendarView: UIView {
   
   let dateCollectionView: UICollectionView
   var calendarViewDelegate: CalendarViewControllable
-  
+
+  public weak var dateSelectionDelegate: CalendarViewDateSelectionDelegate?
+
   public init(model: Model) {
     self.model = model
     self.isLayoutSubviewsCalled = false
