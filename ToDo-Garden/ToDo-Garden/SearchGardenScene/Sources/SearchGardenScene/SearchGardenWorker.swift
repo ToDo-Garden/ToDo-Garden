@@ -1,6 +1,6 @@
 //
 //  SearchGardenWorker.swift
-//  
+//
 //
 //  Created by SONG on 11/18/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
@@ -25,11 +25,28 @@ public struct SearchGardenWorker: SearchGardenWorkable {
       userGarden: PomodoroRecordCollection(),
       isFriend: false
     )
-    // HTTPCliendError 를 던질예정
+    // HTTPClientError 를 던질예정
   }
   
   public func requestToAddGarden(userID: String) async throws -> SearchGarden.ResultForAddingGarden {
     return SearchGarden.ResultForAddingGarden(isSuccess: true)
-    // HTTPCliendError 를 던질예정 
+    // HTTPClientError 를 던질예정
+  }
+  public func fetchSearchedGardenData(
+    inputText: String,
+    page: Int
+  ) async throws -> SearchGarden.FetchedGardenDataForSearching {
+    let result = getTextIncludedUser(inputText: inputText)
+    return SearchGarden.FetchedGardenDataForSearching(searchedGardens: result, page: 0, isEndPage: true)
+    // HTTPClientError 를 던질예정
+  }
+}
+
+// TODO: ↓ 제거 예정
+extension SearchGardenWorker {
+  private func getTextIncludedUser(inputText: String) -> [SearchGardenUser] {
+    return MockData.preview.filter { user in
+      user.userID.contains(inputText)
+    }
   }
 }
