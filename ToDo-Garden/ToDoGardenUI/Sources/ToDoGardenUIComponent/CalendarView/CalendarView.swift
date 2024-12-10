@@ -118,6 +118,7 @@ extension CalendarView: CalendarScrollSendable {
 
 extension CalendarView {
   private func setupUI() {
+    self.backgroundColor = UIColor.toDoGardenWhite
     self.setupBorder()
     self.setupMonthLabel()
     self.setupBackButton()
