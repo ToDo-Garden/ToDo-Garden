@@ -19,7 +19,7 @@ public final class ToDoCheckBoxButton: UIButton, HapticFeedbackable {
   private var mainColor: UIColor
   private var checkmarkDrawingLayer: CAShapeLayer
 
-  @ExecuteOnce private var setAnimation: (() -> Void)?
+  @ExecuteOnce private var setupUIForSize: (() -> Void)?
 
   public init() {
     self.mainColor = UIColor.toDoGardenGreenDark
@@ -35,7 +35,7 @@ public final class ToDoCheckBoxButton: UIButton, HapticFeedbackable {
 
   public override func draw(_ rect: CGRect) {
     super.draw(rect)
-    self.setAnimation = {
+    self.setupUIForSize = {
       self.setupAnimationPath()
     }
   }
