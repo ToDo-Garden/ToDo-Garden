@@ -11,7 +11,7 @@ enum SearchGardenSection {
   case main
 }
 
-public struct SearchGardenUser {
+public struct SearchGardenUser: Sendable {
   public let userNickname: String
   public let userID: String
   public let userImage: UIImage?
