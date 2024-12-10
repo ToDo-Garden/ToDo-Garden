@@ -37,6 +37,7 @@ public final class ToDoCheckBoxButton: UIButton, HapticFeedbackable {
     super.draw(rect)
     self.setupUIForSize = {
       self.setupAnimationPath()
+      self.setupCornerRadius()
     }
   }
 
@@ -95,13 +96,17 @@ extension ToDoCheckBoxButton {
   private func setupLayer() {
     self.layer.masksToBounds = true
     self.layer.borderWidth = Constant.ToDoCheckBoxButton.Layout.borderWidth
-    self.layer.cornerRadius = Constant.ToDoCheckBoxButton.Layout.cornerRadius
   }
 }
 
 // MARK: Set up Animation
 
 extension ToDoCheckBoxButton {
+  private func setupCornerRadius() {
+    let cornerRadius = Constant.ToDoCheckBoxButton.Layout.cornerRadius * self.bounds.width
+    self.layer.cornerRadius = cornerRadius
+  }
+
   private func setupAnimationLayerUI() {
     self.checkmarkDrawingLayer.lineWidth = Constant.ToDoCheckBoxButton.Layout.lineWidth
     self.checkmarkDrawingLayer.fillColor = UIColor.clear.cgColor
