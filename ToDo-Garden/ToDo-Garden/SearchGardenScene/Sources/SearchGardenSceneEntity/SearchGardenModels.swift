@@ -81,15 +81,26 @@ public enum SearchGarden {
     }
   }
   
-  public enum SearchGarden {
-    public struct Request {
-      public init() { }
+  public enum LoadSearchedGarden {
+    public struct Request: Sendable {
+      public let inputText: String
+      public let isContinuous: Bool
+      public init(inputText: String, isContinuous: Bool) {
+        self.inputText = inputText
+        self.isContinuous = isContinuous
+      }
     }
-    public struct Response {
-      public init() { }
+    public struct Response: Sendable {
+      public let fetchedData: FetchedGardenDataForSearching
+      public init(fetchedData: FetchedGardenDataForSearching) {
+        self.fetchedData = fetchedData
+      }
     }
-    public struct ViewModel {
-      public init() { }
+    public struct ViewModel: Sendable {
+      public let fetchedData: FetchedGardenDataForSearching
+      public init(fetchedData: FetchedGardenDataForSearching) {
+        self.fetchedData = fetchedData
+      }
     }
   }
 }
@@ -121,10 +132,22 @@ extension SearchGarden {
       self.isSuccess = isSuccess
     }
   }
+  
+  public struct FetchedGardenDataForSearching: Sendable {
+    public let searchedGardens: [SearchGardenUser]
+    public let page: Int
+    public let isEndPage: Bool
+    
+    public init(searchedGardens: [SearchGardenUser], page: Int, isEndPage: Bool) {
+      self.searchedGardens = searchedGardens
+      self.page = page
+      self.isEndPage = isEndPage
+    }
+  }
 }
 
 extension SearchGarden {
-  public struct CurrentSelectedUser {
+  public struct CurrentSelectedUser: Sendable {
     public let userID: String
     
     public init(userID: String) {
