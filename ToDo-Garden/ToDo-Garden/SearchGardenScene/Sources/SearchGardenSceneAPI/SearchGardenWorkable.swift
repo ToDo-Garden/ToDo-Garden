@@ -10,5 +10,7 @@ import Foundation
 import SearchGardenSceneEntity
 
 public protocol SearchGardenWorkable {
-  func fetchUserDataForAddingGarden(userID: String) async -> SearchGarden.FetchedUserDataForAddingGarden
+  func fetchUserDataForAddingGarden(userID: String) async throws -> SearchGarden.FetchedUserDataForAddingGarden
+  
+  func requestToAddGarden(userID: String) async throws -> SearchGarden.ResultForAddingGarden
 }

@@ -27,4 +27,9 @@ enum Constant {
     public static let width: CGFloat = 320.0
     public static let duration = 0.3
   }
+  
+  enum ToastView {
+    public static let successMessage = "가든 추가 성공!"
+    public static let failMessage = "가든 추가 실패!"
+  }
 }
