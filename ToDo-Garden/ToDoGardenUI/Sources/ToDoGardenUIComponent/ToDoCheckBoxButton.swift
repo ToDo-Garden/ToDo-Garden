@@ -12,6 +12,9 @@ import ToDoGardenUIAPI
 import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
+/// 눌렀을 때 체크박스 애니메이션을 보여주는 버튼입니다.
+/// - 투두 체크박스, 약관 동의 버튼에 사용됩니다.
+/// - 사이즈는 반드시 가로:세로 비율이 1:1이어야 합니다.
 public final class ToDoCheckBoxButton: UIButton, HapticFeedbackable {
   private var mainColor: UIColor
   private var checkmarkDrawingLayer: CAShapeLayer
