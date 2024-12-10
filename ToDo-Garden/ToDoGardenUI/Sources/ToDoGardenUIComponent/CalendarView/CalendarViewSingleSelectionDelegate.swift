@@ -9,7 +9,7 @@ import UIKit
 
 import ToDoGardenUIConstant
 
-protocol CalendarViewControllable: UICollectionViewDelegate {
+protocol CalendarViewDelegate: UICollectionViewDelegate {
   var scrollDelegate: CalendarScrollSendable? { get set }
   
   func fetchWeekdaySymbols() -> [String]
@@ -55,7 +55,7 @@ class CalendarViewSingleSelectionDelegate: NSObject {
 
 // MARK: CalendarViewControllable Protocol
 
-extension CalendarViewSingleSelectionDelegate: CalendarViewControllable {
+extension CalendarViewSingleSelectionDelegate: CalendarViewDelegate {
   func fetchWeekdaySymbols() -> [String] {
     return self.calendarDataGenerator.fetchWeekdaySymbols()
   }

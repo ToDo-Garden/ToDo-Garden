@@ -23,7 +23,7 @@ public class CalendarView: UIView {
   private var heightConstraint: NSLayoutConstraint
   
   let dateCollectionView: UICollectionView
-  var calendarViewDelegate: CalendarViewControllable
+  var calendarViewDelegate: CalendarViewDelegate
 
   public weak var dateSelectionDelegate: CalendarViewDateSelectionDelegate?
 
