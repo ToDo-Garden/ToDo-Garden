@@ -20,7 +20,7 @@ extension Constant.ToDoCheckBoxButton.Size {
 
 extension Constant.ToDoCheckBoxButton.Layout {
   public static let borderWidth: CGFloat = 0.6
-  public static let cornerRadius: CGFloat = 3.0 / 18.0
+  public static let cornerRadiusRatio: CGFloat = 3.0 / 18.0
   public static let lineWidth: CGFloat = 1.0
 }
 
