@@ -125,6 +125,7 @@ extension ManageGroupInteractor {
   }
   
   private func handleError(_ error: Error, about task: TaskKey) {
+    debugPrint("Error: \(error)")
     if error is CancellationError {
       return
     } else if error is HTTPClientError {
