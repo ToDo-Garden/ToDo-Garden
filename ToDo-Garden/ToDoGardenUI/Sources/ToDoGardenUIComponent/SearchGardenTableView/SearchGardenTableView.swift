@@ -46,6 +46,7 @@ final public class SearchGardenTableView: UITableView {
         return nil
       }
       
+      self.diffableDataSource.defaultRowAnimation = UITableView.RowAnimation.fade
       tableRow.update(
         configuration: Styled.Row.Configuration.profile(
           .init(
