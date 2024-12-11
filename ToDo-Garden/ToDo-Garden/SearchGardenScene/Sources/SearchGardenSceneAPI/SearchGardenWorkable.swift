@@ -13,4 +13,5 @@ public protocol SearchGardenWorkable {
   func fetchUserDataForAddingGarden(userID: String) async throws -> SearchGarden.FetchedUserDataForAddingGarden
   
   func requestToAddGarden(userID: String) async throws -> SearchGarden.ResultForAddingGarden
+  func fetchSearchedGardenData(inputText: String, page: Int) async throws -> SearchGarden.FetchedGardenDataForSearching
 }

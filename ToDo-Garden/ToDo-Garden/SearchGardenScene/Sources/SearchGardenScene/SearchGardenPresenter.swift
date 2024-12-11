@@ -1,6 +1,6 @@
 //
 //  SearchGardenPresenter.swift
-//  
+//
 //
 //  Created by SONG on 11/18/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
@@ -13,6 +13,7 @@ import SearchGardenSceneEntity
 protocol SearchGardenPresentationLogic {
   func presentUserDataForAddingGarden(response: SearchGarden.LoadUserDataForAddingGarden.Response)
   func presentResultOfAddingGarden(response: SearchGarden.AddGarden.Response)
+  func presentGardenForSearchingGarden(response: SearchGarden.LoadSearchedGarden.Response)
 }
 
 final class SearchGardenPresenter {
@@ -30,7 +31,7 @@ extension SearchGardenPresenter: SearchGardenPresentationLogic {
       userGarden: response.fetchedData.userGarden,
       isButtonEnable: !response.fetchedData.isFriend
     )
-
+    
     self.viewController?.displayUserDataForAddingGarden(viewModel: viewModel)
   }
   
@@ -40,5 +41,13 @@ extension SearchGardenPresenter: SearchGardenPresentationLogic {
     )
     
     self.viewController?.displayResultOfAddingGarden(viewModel: viewModel)
+  }
+  
+  func presentGardenForSearchingGarden(response: SearchGarden.LoadSearchedGarden.Response) {
+    let viewModel = SearchGarden.LoadSearchedGarden.ViewModel(
+      fetchedData: response.fetchedData
+    )
+    
+    self.viewController?.displayGardenForSearchingGarden(viewModel: viewModel)
   }
 }

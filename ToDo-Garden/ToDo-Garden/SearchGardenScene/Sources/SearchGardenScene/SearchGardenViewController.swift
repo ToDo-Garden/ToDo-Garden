@@ -17,6 +17,7 @@ import ToDoGardenUIResource
 protocol SearchGardenDisplayLogic: AnyObject {
   func displayUserDataForAddingGarden(viewModel: SearchGarden.LoadUserDataForAddingGarden.ViewModel)
   func displayResultOfAddingGarden(viewModel: SearchGarden.AddGarden.ViewModel)
+  func displayGardenForSearchingGarden(viewModel: SearchGarden.LoadSearchedGarden.ViewModel)
 }
 
 final class SearchGardenViewController: UIViewController, SearchGardenViewControllable {
@@ -72,6 +73,7 @@ extension SearchGardenViewController {
     self.setupSearchGardenView()
     self.setupDimmingView()
     self.setupAddGardenView()
+    self.setupLoadingIndicator()
   }
   
   // TODO: 모달로 올라오는 뷰컨에 대해서는 화면 상단부분을 디밍뷰가 커버하지 못함.
@@ -99,6 +101,8 @@ extension SearchGardenViewController {
   }
   
   private func setupSearchGardenView() {
+    self.searchGardenView.textField.delegate = self
+    self.searchGardenView.textField.returnKeyType = .search
     self.searchGardenView.tableView.delegate = self
     self.searchGardenView.tableView.updateData(with: MockData.preview) 
     // TODO: ↑ 제거예정
@@ -137,6 +141,20 @@ extension SearchGardenViewController {
         self.addGardenView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
         self.addGardenView.widthAnchor.constraint(equalToConstant: Constant.AddGardenView.width),
         self.addGardenView.heightAnchor.constraint(equalToConstant: Constant.AddGardenView.height)
+      ]
+    )
+  }
+  
+  private func setupLoadingIndicator() {
+    self.loadingIndicator.isHidden = true
+    self.loadingIndicator.pauseAnimation()
+    self.view.addSubview(self.loadingIndicator)
+    self.loadingIndicator.usingAutolayout()
+    
+    NSLayoutConstraint.activate(
+      [
+        self.loadingIndicator.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+        self.loadingIndicator.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
       ]
     )
   }
@@ -183,6 +201,12 @@ extension SearchGardenViewController: SearchGardenDisplayLogic {
   func displayResultOfAddingGarden(viewModel: SearchGarden.AddGarden.ViewModel) {
     self.hideAddGardenView()
   }
+  
+  func displayGardenForSearchingGarden(viewModel: SearchGarden.LoadSearchedGarden.ViewModel) {
+    self.loadingIndicator.isHidden = true
+    self.loadingIndicator.pauseAnimation()
+    self.searchGardenView.tableView.updateData(with: viewModel.fetchedData.searchedGardens)
+  }
 }
 
 // MARK: - Request to interactor
@@ -199,6 +223,14 @@ extension SearchGardenViewController {
   func addGarden() {
     let requset = SearchGarden.AddGarden.Request()
     self.interactor?.addGarden(request: requset)
+  }
+  
+  func loadSearchGarden(inputText: String, isCountinuous: Bool) {
+    self.loadingIndicator.isHidden = false
+    self.loadingIndicator.startAnimation()
+    let request = SearchGarden.LoadSearchedGarden.Request(inputText: inputText, isContinuous: isCountinuous)
+    self.interactor?.loadSearchedGarden(request: request)
+    
   }
 }
 
@@ -224,8 +256,14 @@ extension SearchGardenViewController: UITableViewDelegate {
 }
 
 extension SearchGardenViewController: UITextFieldDelegate {
-  func textFieldDidEndEditing(_ textField: UITextField) {
-//    let input = textField.text
+  func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    guard let inputText = textField.text else {
+      return false
+    }
+    
+    self.interactor?.cancelTask(for: SearchGardenInteractor.TaskKey.loadSearchedGarden)
+    self.loadSearchGarden(inputText: inputText, isCountinuous: false)
+    return true
   }
 }
 
