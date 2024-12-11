@@ -73,6 +73,7 @@ extension SearchGardenViewController {
     self.setupSearchGardenView()
     self.setupDimmingView()
     self.setupAddGardenView()
+    self.setupLoadingIndicator()
   }
   
   // TODO: 모달로 올라오는 뷰컨에 대해서는 화면 상단부분을 디밍뷰가 커버하지 못함.
@@ -144,6 +145,20 @@ extension SearchGardenViewController {
     )
   }
   
+  private func setupLoadingIndicator() {
+    self.loadingIndicator.isHidden = true
+    self.loadingIndicator.pauseAnimation()
+    self.view.addSubview(self.loadingIndicator)
+    self.loadingIndicator.usingAutolayout()
+    
+    NSLayoutConstraint.activate(
+      [
+        self.loadingIndicator.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+        self.loadingIndicator.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
+      ]
+    )
+  }
+  
   private func doneButtonTapped() {
     self.router?.dismissModal()
   }
@@ -188,8 +203,8 @@ extension SearchGardenViewController: SearchGardenDisplayLogic {
   }
   
   func displayGardenForSearchingGarden(viewModel: SearchGarden.LoadSearchedGarden.ViewModel) {
-    self.loadingIndicator.pauseAnimation()
     self.loadingIndicator.isHidden = true
+    self.loadingIndicator.pauseAnimation()
     self.searchGardenView.tableView.updateData(with: viewModel.fetchedData.searchedGardens)
   }
 }
