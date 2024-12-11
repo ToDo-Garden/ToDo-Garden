@@ -14,6 +14,7 @@ import TDFoundationExtension
 import ToDoGardenUIComponent
 import ToDoGardenUIResource
 
+@MainActor
 protocol ManageGroupDisplayLogic: AnyObject {
   func displayFetchedGroupList(viewModel: ManageGroup.FetchGroupList.ViewModel)
   func displaySavedGroupList(viewModel: ManageGroup.SaveGroupList.ViewModel)
@@ -72,17 +73,13 @@ open class ManageGroupViewController: UIViewController, ManageGroupViewControlla
   // MARK: - Request to interactor
   func fetchGroupList() {
     let request = ManageGroup.FetchGroupList.Request()
-    Task {
-      await interactor?.fetchGroupList(request: request)
-    }
+      self.interactor?.fetchGroupList(request: request)
   }
   
   func saveGroupList() {
     let groupList = self.manageGroupTableViewDelegate?.displayedGroups
     let request = ManageGroup.SaveGroupList.Request(with: groupList ?? [] )
-    Task {
-      await interactor?.saveGroupList(request: request)
-    }
+    self.interactor?.saveGroupList(request: request)
   }
   
   func deleteGroup(groupID: UUID, index: Int) {

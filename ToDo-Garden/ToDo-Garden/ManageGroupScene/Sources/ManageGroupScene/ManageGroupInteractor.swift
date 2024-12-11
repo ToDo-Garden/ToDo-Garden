@@ -14,6 +14,7 @@ import ManageGroupSceneEntity
 protocol ManageGroupDataStore {
 }
 
+@MainActor
 protocol ManageGroupBusinessLogic {
   func fetchGroupList(request: ManageGroup.FetchGroupList.Request)
   func saveGroupList(request: ManageGroup.SaveGroupList.Request)
