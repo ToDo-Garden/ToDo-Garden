@@ -103,7 +103,7 @@ extension ToDoCheckBoxButton {
 
 extension ToDoCheckBoxButton {
   private func setupCornerRadius() {
-    let cornerRadius = Constant.ToDoCheckBoxButton.Layout.cornerRadius * self.bounds.width
+    let cornerRadius = Constant.ToDoCheckBoxButton.Layout.cornerRadiusRatio * self.bounds.width
     self.layer.cornerRadius = cornerRadius
   }
 
