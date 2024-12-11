@@ -261,6 +261,7 @@ extension SearchGardenViewController: UITextFieldDelegate {
       return false
     }
     
+    self.interactor?.cancelTask(for: SearchGardenInteractor.TaskKey.loadSearchedGarden)
     self.loadSearchGarden(inputText: inputText, isCountinuous: false)
     return true
   }
