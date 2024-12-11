@@ -13,6 +13,7 @@ final public class SearchGardenTableView: UITableView {
   public override init(frame: CGRect, style: UITableView.Style) {
     super.init(frame: frame, style: style)
     self.configureDataSource()
+    self.backgroundColor = UIColor.white
     self.register(TableRow.self, forCellReuseIdentifier: TableRow.identifier)
     self.separatorStyle = UITableViewCell.SeparatorStyle.none
   }

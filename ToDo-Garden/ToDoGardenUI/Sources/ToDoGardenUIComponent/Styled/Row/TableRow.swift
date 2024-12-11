@@ -37,6 +37,7 @@ public class TableRow: UITableViewCell {
   }
   
   private func setupRow() {
+    self.contentView.backgroundColor = UIColor.white
     self.row.usingAutolayout()
     self.contentView.addSubview(self.row)
     
