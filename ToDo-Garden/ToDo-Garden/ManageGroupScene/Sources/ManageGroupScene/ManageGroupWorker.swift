@@ -15,23 +15,23 @@ public class ManageGroupWorker: ManageGroupWorkable {
   
   public func fetchGroupList(
     request: ManageGroupSceneEntity.ManageGroup.FetchGroupList.Request
-  ) async -> Result<[ManageGroup.ToDoGroup], Error> {
+  ) async throws -> [ManageGroup.ToDoGroup] {
     do {
       let groups = try await fetchGroupsFromDatabase()
-      return .success(groups)
-    } catch {
-      return .failure(error)
+      return groups
+    } catch let error {
+      throw error
     }
   }
   
   public func saveGroupList(
     request: ManageGroupSceneEntity.ManageGroup.SaveGroupList.Request
-  ) async -> Result<[ManageGroupSceneEntity.ManageGroup.ToDoGroup], any Error> {
+  ) async throws -> [ManageGroup.ToDoGroup] {
     do {
       let groups = try await saveGroupsInDatabase(groupList: request.list)
-      return .success(groups)
-    } catch {
-      return .failure(error)
+      return groups
+    } catch let error {
+      throw error
     }
   }
   

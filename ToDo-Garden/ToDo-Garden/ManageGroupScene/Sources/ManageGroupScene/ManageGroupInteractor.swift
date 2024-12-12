@@ -52,18 +52,12 @@ extension ManageGroupInteractor: ManageGroupBusinessLogic {
       
       do {
         try Task.checkCancellation()
-        let result = await self.manageGroupWorker.fetchGroupList(request: request)
+        let result = try await self.manageGroupWorker.fetchGroupList(request: request)
         try Task.checkCancellation()
-        switch result {
-        case .success(let groups):
-          self.currentGroups = groups
-          let response = ManageGroup.FetchGroupList.Response(with: groups)
-          self.presenter?.presentFetchedGroupList(response: response)
-        case .failure(let error):
-          self.handleError(error, about: TaskKey.fetchGroups)
-        }
-      } catch let cancellationError {
-        self.handleError(cancellationError, about: TaskKey.fetchGroups)
+        let response = ManageGroup.FetchGroupList.Response(with: result)
+        self.presenter?.presentFetchedGroupList(response: response)
+      } catch let error {
+        self.handleError(error, about: TaskKey.fetchGroups)
       }
     }
   }
@@ -74,18 +68,13 @@ extension ManageGroupInteractor: ManageGroupBusinessLogic {
       
       do {
         try Task.checkCancellation()
-        let result = await self.manageGroupWorker.saveGroupList(request: request)
+        let result = try await self.manageGroupWorker.saveGroupList(request: request)
         try Task.checkCancellation()
-        switch result {
-        case .success(let groups):
-          self.currentGroups = groups
-          let response = ManageGroup.SaveGroupList.Response(with: groups)
-          self.presenter?.presentSavedGroupList(response: response)
-        case .failure(let error):
-          self.handleError(error, about: TaskKey.saveGroups)
-        }
-      } catch let cancellationError {
-        self.handleError(cancellationError, about: TaskKey.saveGroups)
+        self.currentGroups = result
+        let response = ManageGroup.SaveGroupList.Response(with: result)
+        self.presenter?.presentSavedGroupList(response: response)
+      } catch let error {
+        self.handleError(error, about: TaskKey.saveGroups)
       }
     }
   }
