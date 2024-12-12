@@ -19,10 +19,16 @@ extension Styled.Row {
       return nil
     }
     var todoListModel: TodoListModel? {
-      if case let Self.todoList(model) = self {
-        return model
+      get {
+        if case let Self.todoList(model) = self {
+          return model
+        }
+        return nil
       }
-      return nil
+      set {
+        guard let newValue else { return }
+        self = .todoList(newValue)
+      }
     }
     var repeatOtherDaysModel: RepeatOtherDaysModel? {
       if case let Self.repeatOtherDays(model) = self {
