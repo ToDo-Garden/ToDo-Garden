@@ -54,6 +54,7 @@ extension ManageGroupInteractor: ManageGroupBusinessLogic {
         try Task.checkCancellation()
         let result = try await self.manageGroupWorker.fetchGroupList(request: request)
         try Task.checkCancellation()
+        self.currentGroups = result
         let response = ManageGroup.FetchGroupList.Response(with: result)
         self.presenter?.presentFetchedGroupList(response: response)
       } catch let error {
