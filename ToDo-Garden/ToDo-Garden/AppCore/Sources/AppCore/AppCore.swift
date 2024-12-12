@@ -7,7 +7,7 @@ import Foundation
 public final class AppCore {
   public var dependency: Dependency
   public enum Destination {
-    case onboarding((Bool) -> Void)
+    case onboarding((Bool, Bool) -> Void)
     case home // Binding HomeInteractor
     // case login
     case none
@@ -26,11 +26,11 @@ public final class AppCore {
   // MARK: 앱시작시 무조건 먼저 호출해야하는 메소드
   public func getStarted() {
     self.destination = !dependency.userDefaults.hasShownFirstLaunchOnboarding
-    ? .onboarding { [weak self] flag in
-      if flag {
+    ? .onboarding { [weak self] isMember, isEventAndPromotionalAgreed in
+      if isMember {
         self?.destination = .home
       } else {
-        
+        _ = isEventAndPromotionalAgreed
       }
     }
     : .home

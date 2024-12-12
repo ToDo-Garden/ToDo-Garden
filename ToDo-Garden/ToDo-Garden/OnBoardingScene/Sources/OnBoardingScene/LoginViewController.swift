@@ -20,6 +20,9 @@ public final class LoginViewController: UIViewController {
   private let termAgreementView: TermsAgreementView
   
   private let loger = Logger()
+  
+  public var afterLoginAction: (() -> Void)?
+  public var doneButtonAction: ((Bool) -> Void)?
   // MARK: - Object lifecycle
   
   public init() {
@@ -109,7 +112,7 @@ extension LoginViewController {
     self.appleLoginManager?.delegate = self
   }
   
-  private func showTermAgreementView() {
+  public func showTermAgreementViewForRoutingToSignUpScene() {
     self.termAgreementView.isHidden = false
     UIView.animate(withDuration: 0.5) {
       self.dimmingView.alpha = 1
@@ -138,22 +141,14 @@ extension LoginViewController: ASAuthorizationControllerPresentationContextProvi
 }
 
 extension LoginViewController: AppleLoginManagerDelegate {
-  public func appleLoginDidComplete(with result: Result<ASAuthorizationAppleIDCredential, Error>) {
+  public func appleLoginDidComplete(with result: Result<Bool, Error>) {
     switch result {
-    case .success(let credential):
-      do {
-        try KeychainManager.shared.saveLoginData(
-          identifier: credential.user,
-          identifyToken: credential.identityToken ?? Data(),
-          email: credential.email
-        )
-        
-        // TODO: 신규회원인지 기존회원인지 판별
-        self.showTermAgreementView()
-      } catch {
-        self.loger.log("Keychain에 저장 실패: \(error)")
+    case .success(let isMember):
+      if isMember {
+        self.afterLoginAction?()
+      } else {
+        self.showTermAgreementViewForRoutingToSignUpScene()
       }
-      
     case .failure(let error):
       self.loger.log("Apple Login 실패: \(error)")
     }
@@ -187,18 +182,7 @@ extension LoginViewController: TermsAgreementViewDelegate {
     didTapDoneButton isEventAndPromotionalInformationAgreed: Bool
   ) {
     self.hideTermAgreementView()
-    do {
-      if let loginData = try KeychainManager.shared.getLoginData() {
-        //        self.router?.routeToSignUpScene(
-        //          userIdentifier: loginData.identifier,
-        //          userEmailAddress: loginData.email,
-        //          agreeOptionalCondition: isEventAndPromotionalInformationAgreed
-        //        )
-        // try KeychainManager.shared.clearLoginData()
-      }
-    } catch {
-      self.loger.log("Keychain에 저장된 데이터 뽑아오기 실패: \(error)")
-    }
+    self.doneButtonAction?(isEventAndPromotionalInformationAgreed)
   }
 }
 

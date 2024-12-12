@@ -22,7 +22,7 @@ public final class AppRouter {
     }
   }
   
-  private func buildOnBoardingFlows(_ completion: (Bool) -> Void) -> [UIViewController] {
+  private func buildOnBoardingFlows(_ completion: @escaping (Bool, Bool) -> Void) -> [UIViewController] {
     let onboarding = IntroOnBoardingViewController()
     let tutroial = TutorialOnBoardingViewController()
     let login = LoginViewController()
@@ -33,7 +33,12 @@ public final class AppRouter {
     tutroial.endAction = { [weak navigationController] in
       navigationController?.pushViewController(login, animated: true)
     }
-    // TODO: - Login Control Flow
+
+    login.afterLoginAction = { completion(true, false) }
+    
+    login.doneButtonAction = { isEventAndPromotionalInformationAgreed in
+      completion(false, isEventAndPromotionalInformationAgreed)
+    }
     
     return [onboarding]
   }

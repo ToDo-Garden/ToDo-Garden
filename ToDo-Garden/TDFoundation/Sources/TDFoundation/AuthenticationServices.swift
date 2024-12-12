@@ -8,7 +8,7 @@
 import AuthenticationServices
 
 public protocol AppleLoginManagerDelegate: AnyObject {
-  func appleLoginDidComplete(with result: Result<ASAuthorizationAppleIDCredential, Error>)
+  func appleLoginDidComplete(with result: Result<Bool, Error>)
 }
 
 public final class AppleLoginManager: NSObject {
@@ -44,11 +44,38 @@ extension AppleLoginManager: ASAuthorizationControllerDelegate {
     didCompleteWithAuthorization authorization: ASAuthorization
   ) {
     if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
-      self.delegate?.appleLoginDidComplete(with: .success(appleIDCredential))
+      do {
+        try KeychainManager.shared.saveLoginData(
+          identifier: appleIDCredential.user,
+          identifyToken: appleIDCredential.identityToken ?? Data(),
+          email: appleIDCredential.email
+        )
+        
+        Task {
+          let isMember = try await self.requestVerificationToSupabase()
+          self.delegate?.appleLoginDidComplete(with: .success(isMember))
+        }
+      } catch let error {
+        self.delegate?.appleLoginDidComplete(with: .failure(error))
+      }
     }
   }
   
   public func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
     self.delegate?.appleLoginDidComplete(with: .failure(error))
+  }
+}
+
+extension AppleLoginManager {
+  func requestVerificationToSupabase() async throws -> Bool {
+    if let token = try KeychainManager.shared.load(forKey: "identity_token") {
+      // HTTP 로그인 요청
+      // response에 기존 / 신규 유저 여부 포함
+    }
+    
+    // supaBase 인증 성공 && 기존유저 -> true
+    // supaBase 인증 성공 && 신규유저 -> false
+    // supaBase 인증 실패 -> throw Error
+    return true
   }
 }
