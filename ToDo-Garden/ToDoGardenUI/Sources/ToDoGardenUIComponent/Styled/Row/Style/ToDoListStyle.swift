@@ -43,6 +43,7 @@ extension Styled.Row {
   
   private func buildTextField(text: String?, color: UIColor, isSelected: Bool) -> UITextField {
     let textField = Styled.TextField(configuration: .groupEdit(.todoList(mainColor: color)))
+    textField.placeholder = "할 일을 입력해주세요."
     textField.text = text
     textField.font = UIFont.pretendardDetailLight
     textField.textColor = UIColor.toDoGardenGray
