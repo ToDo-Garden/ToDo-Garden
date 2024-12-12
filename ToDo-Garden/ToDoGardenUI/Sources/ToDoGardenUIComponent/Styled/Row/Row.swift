@@ -39,6 +39,8 @@ extension Styled {
     @Published public var isSelected: Bool = false
     var cancellables: Set<AnyCancellable> = []
     
+    private var stackView: UIStackView!
+    
     public init(configuration: Configuration) {
       self.configuration = configuration
       super.init(frame: CGRect.zero)
@@ -54,6 +56,14 @@ extension Styled {
     @available(*, unavailable)
     public required init?(coder: NSCoder) {
       fatalError("init(coder:) has not been implemented")
+    }
+    
+    public func resetState() {
+      self.cancellables = []
+      for subview in self.stackView.arrangedSubviews {
+        subview.removeFromSuperview()
+      }
+      // TODO: 동적으로 높이가 변하는 뷰가 재사용이 될 경우, 해당 케이스도 고려하는 코드가 추가되야합니다.
     }
     
     private func build() {
@@ -72,6 +82,7 @@ extension Styled {
       case let Configuration.repeatOtherDays(repeatOtherDaysModel):
         self.buildRepeatOtherDaysStyle(stack: stack, model: repeatOtherDaysModel, views: nil)
       }
+      self.stackView = stack
     }
     
     private func build(with views: [UIView]) {
@@ -83,6 +94,7 @@ extension Styled {
         self.buildRepeatOtherDaysStyle(stack: stack, model: repeatOtherDaysModel, views: views)
       default: break
       }
+      self.stackView = stack
     }
   }
 }
