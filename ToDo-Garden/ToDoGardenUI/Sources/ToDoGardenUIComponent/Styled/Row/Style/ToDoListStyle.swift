@@ -9,7 +9,7 @@ extension Styled.Row {
       edgeInsets: Constant.Styled.Row.ToDoList.stackEdgeInsets
     )
     let (zStack, zStackHandler) = self.buildZStack(model: model)
-    let checkBox = self.buildCheckBox(zStackHandler)
+    let checkBox = self.buildCheckBox(color: model.foregroundColor, zStackHandler)
     stack.addArrangedSubview(checkBox)
     self.setupCheckBoxConstraints(checkBox)
     
@@ -21,6 +21,7 @@ extension Styled.Row {
   private func buildZStack(model: Configuration.TodoListModel) -> (UIView, (Bool) -> Void) {
     let textField = self.buildTextField(
       text: model.text,
+      color: model.foregroundColor,
       isSelected: model.isSelected
     )
     self.setupTextFieldConstraints(textField)
@@ -40,11 +41,11 @@ extension Styled.Row {
     )
   }
   
-  private func buildTextField(text: String?, isSelected: Bool) -> UITextField {
-    let textField = Styled.TextField(configuration: .groupEdit(.todoList))
+  private func buildTextField(text: String?, color: UIColor, isSelected: Bool) -> UITextField {
+    let textField = Styled.TextField(configuration: .groupEdit(.todoList(mainColor: color)))
     textField.text = text
     textField.font = UIFont.pretendardDetailLight
-    textField.textColor = UIColor.toDoGardenGreenDark
+    textField.textColor = UIColor.toDoGardenGray
     textField.isHidden = isSelected
     let action = UIAction { [weak self] action in
       guard
@@ -79,7 +80,6 @@ extension Styled.Row {
   private func buildStrikethroughLabel(text: String?) -> StrikethroughView {
     let label = UILabel()
     label.text = text
-    label.textColor = UIColor.toDoGardenGray3
     label.font = UIFont.pretendardDetailLight
     let strikethrough = StrikethroughView(
       label: label,
@@ -97,8 +97,8 @@ extension Styled.Row {
     return imageView
   }
   
-  private func buildCheckBox(_ handler: @escaping (Bool) -> Void) -> UIView {
-    ToDoCheckBoxButton(
+  private func buildCheckBox(color: UIColor, _ handler: @escaping (Bool) -> Void) -> UIView {
+    let button = ToDoCheckBoxButton(
       action: UIAction { [weak self] action in
         guard
           let checkBox = action.sender as? ToDoCheckBoxButton
@@ -112,6 +112,9 @@ extension Styled.Row {
         }
       }
     )
+    button.updateMainColor(color)
+    
+    return button
   }
   
   private func setupCheckBoxConstraints(_ checkBox: UIView) {
@@ -124,5 +127,5 @@ extension Styled.Row {
 
 @available(iOS 17.0, *)
 #Preview {
-  Styled.Row(configuration: .todoList(.init(hasAlert: true)))
+  Styled.Row(configuration: .todoList(.init(foregroundColor: .orange, hasAlert: true)))
 }

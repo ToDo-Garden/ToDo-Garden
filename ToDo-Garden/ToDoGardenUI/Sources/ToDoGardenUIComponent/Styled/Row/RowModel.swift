@@ -89,15 +89,18 @@ extension Styled.Row.Configuration {
   public struct TodoListModel: Equatable {
     public static let empty = Self()
     public var text: String?
+    public var foregroundColor: UIColor
     public var isSelected: Bool
     public var hasAlert: Bool
     
     public init(
       text: String? = nil,
+      foregroundColor: UIColor = .black,
       isSelected: Bool = false,
       hasAlert: Bool = false
     ) {
       self.text = text
+      self.foregroundColor = foregroundColor
       self.isSelected = isSelected
       self.hasAlert = hasAlert
     }
