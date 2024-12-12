@@ -9,6 +9,7 @@ import UIKit.UIColor
 
 import ManageGroupSceneEntity
 
+@MainActor
 protocol ManageGroupPresentationLogic {
   func presentFetchedGroupList(response: ManageGroup.FetchGroupList.Response)
   func presentSavedGroupList(response: ManageGroup.SaveGroupList.Response)

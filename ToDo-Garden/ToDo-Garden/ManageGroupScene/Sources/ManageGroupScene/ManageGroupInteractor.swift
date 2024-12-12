@@ -7,15 +7,17 @@
 
 import Foundation
 
+import HTTPClientAPI
 import ManageGroupSceneAPI
 import ManageGroupSceneEntity
 
 protocol ManageGroupDataStore {
 }
 
+@MainActor
 protocol ManageGroupBusinessLogic {
-  func fetchGroupList(request: ManageGroup.FetchGroupList.Request) async
-  func saveGroupList(request: ManageGroup.SaveGroupList.Request) async
+  func fetchGroupList(request: ManageGroup.FetchGroupList.Request)
+  func saveGroupList(request: ManageGroup.SaveGroupList.Request)
   func deleteGroup(request: ManageGroup.DeleteGroup.Request)
   func addGroup(request: ManageGroup.AddGroup.Request)
   func editGroup(request: ManageGroup.EditGroup.Request)
@@ -24,7 +26,9 @@ protocol ManageGroupBusinessLogic {
 class ManageGroupInteractor: ManageGroupDataStore {
   var presenter: ManageGroupPresentationLogic?
   private let manageGroupWorker: ManageGroupWorkable
+  
   var currentGroups: [ManageGroup.ToDoGroup]
+  private var tasks: [TaskKey: Task<Void, Never>] = [:]
   
   init(
     worker: ManageGroupWorkable
@@ -32,32 +36,47 @@ class ManageGroupInteractor: ManageGroupDataStore {
     self.manageGroupWorker = worker
     self.currentGroups = []
   }
+  
+  func cancelTask(for key: TaskKey) {
+    self.tasks[key]?.cancel()
+    self.tasks[key] = nil
+  }
 }
 
 // MARK: - Request to worker
 
 extension ManageGroupInteractor: ManageGroupBusinessLogic {
-  func fetchGroupList(request: ManageGroup.FetchGroupList.Request) async {
-    let result = await self.manageGroupWorker.fetchGroupList(request: request)
-    switch result {
-    case .success(let groups):
-      self.currentGroups = groups
-      let response = ManageGroup.FetchGroupList.Response(with: groups)
-      self.presenter?.presentFetchedGroupList(response: response)
-    case .failure(let error):
-      print("Error fetching group list: \(error)")
+  func fetchGroupList(request: ManageGroup.FetchGroupList.Request) {
+    self.tasks[TaskKey.fetchGroups] = Task {
+      defer { self.tasks[TaskKey.fetchGroups] = nil }
+      
+      do {
+        try Task.checkCancellation()
+        let result = try await self.manageGroupWorker.fetchGroupList(request: request)
+        try Task.checkCancellation()
+        self.currentGroups = result
+        let response = ManageGroup.FetchGroupList.Response(with: result)
+        self.presenter?.presentFetchedGroupList(response: response)
+      } catch let error {
+        self.handleError(error, about: TaskKey.fetchGroups)
+      }
     }
   }
   
-  func saveGroupList(request: ManageGroupSceneEntity.ManageGroup.SaveGroupList.Request) async {
-    let result = await self.manageGroupWorker.saveGroupList(request: request)
-    switch result {
-    case .success(let groups):
-      self.currentGroups = groups
-      let response = ManageGroup.SaveGroupList.Response(with: groups)
-      self.presenter?.presentSavedGroupList(response: response)
-    case .failure(let error):
-      print("Error fetching group list: \(error)")
+  func saveGroupList(request: ManageGroupSceneEntity.ManageGroup.SaveGroupList.Request) {
+    self.tasks[TaskKey.saveGroups] = Task {
+      defer { self.tasks[TaskKey.saveGroups] = nil }
+      
+      do {
+        try Task.checkCancellation()
+        let result = try await self.manageGroupWorker.saveGroupList(request: request)
+        try Task.checkCancellation()
+        self.currentGroups = result
+        let response = ManageGroup.SaveGroupList.Response(with: result)
+        self.presenter?.presentSavedGroupList(response: response)
+      } catch let error {
+        self.handleError(error, about: TaskKey.saveGroups)
+      }
     }
   }
   
@@ -83,6 +102,24 @@ extension ManageGroupInteractor: ManageGroupBusinessLogic {
       
       let response = ManageGroup.EditGroup.Response(group: group, editedIndex: index)
       self.presenter?.presentEditedGroup(response: response)
+    } else {
+      return
+    }
+  }
+}
+
+extension ManageGroupInteractor {
+  enum TaskKey {
+    case fetchGroups
+    case saveGroups
+  }
+  
+  private func handleError(_ error: Error, about task: TaskKey) {
+    debugPrint("Error: \(error)")
+    if error is CancellationError {
+      return
+    } else if error is HTTPClientError {
+      return
     } else {
       return
     }
