@@ -1,6 +1,6 @@
 //
 //  MyStatsModels.swift
-//  
+//
 //
 //  Created by SONG on 11/13/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
@@ -56,7 +56,7 @@ public enum MyStats {
 }
 
 extension MyStats {
-  public struct ProfileViewModel: Sendable {
+  public struct ProfileViewModel: Sendable, Equatable {
     public let myName: String
     public let myImage: UIImage
     public let continuousRecordCount: Int
@@ -78,7 +78,7 @@ extension MyStats {
     }
   }
   
-  public struct GardenViewModel: Sendable {
+  public struct GardenViewModel: Sendable, Equatable {
     public let pomodoroCollection: PomodoroRecordCollection
     
     public init(pomodoroCollection: PomodoroRecordCollection) {
@@ -86,7 +86,7 @@ extension MyStats {
     }
   }
   
-  public struct LongestRecordViewModel: Sendable {
+  public struct LongestRecordViewModel: Sendable, Equatable {
     public let concentratedRecordGroupName: String
     public let concentratedRecordCount: Int
     public let concentratedRecordDate: String
@@ -111,8 +111,8 @@ extension MyStats {
       self.longestContinuousRecordEndDate = longestContinuousRecordEndDate
     }
   }
-
-  public struct SummaryViewModel: Sendable {
+  
+  public struct SummaryViewModel: Sendable, Equatable {
     public let concentratedTime: String
     public let completedCount: String
     
@@ -156,7 +156,7 @@ extension MyStats {
       self.continuousRecordEndDate = continuousRecordEndDate
     }
   }
-
+  
   public struct FetchedLongestRecordViewData: Sendable {
     public let concentratedRecordGroupName: String
     public let concentratedRecordCount: Int
@@ -182,7 +182,7 @@ extension MyStats {
       self.longestContinuousRecordEndDate = longestContinuousRecordEndDate
     }
   }
-
+  
   public struct FetchedSummaryViewData: Sendable {
     public let concentratedTime: Int
     public let completedCount: Double
@@ -194,5 +194,13 @@ extension MyStats {
       self.concentratedTime = concentratedTime
       self.completedCount = completedCount
     }
+  }
+}
+
+extension MyStats {
+  public enum MyStatsWorkerError: Error {
+    case fetchProfileDataFailed
+    case fetchLongestRecordDataFailed
+    case fetchSummaryDataFailed
   }
 }

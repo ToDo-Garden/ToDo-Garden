@@ -7,6 +7,7 @@
 
 import UIKit
 
+import HTTPClientAPI
 import MyStatsSceneAPI
 import MyStatsSceneEntity
 import ToDoGardenUIComponent // PomodoroRecordCollection 이관 예정
@@ -53,8 +54,11 @@ extension MyStatsInteractor: MyStatsBusinessLogic {
         self.presenter?.presentMyStatsViewData(response: response, with: payload)
       } catch is CancellationError {
         // 취소된 경우의 처리
-      } catch let error as MyStatsWorkerError {
-        self.handleWorkerError(error)
+      } catch let error as HTTPClientError {
+        // HTTPClientError case 별 처리
+        switch error {
+        default: break
+        }
       } catch {
         // 기타 예상치 못한 에러 처리
       }
@@ -79,17 +83,6 @@ extension MyStatsInteractor: MyStatsBusinessLogic {
       longestRecordViewData: try await longestRecordViewData,
       summaryViewData: try await summaryViewData
     )
-  }
-  
-  private func handleWorkerError(_ error: MyStatsWorkerError) {
-    switch error {
-    case MyStatsWorkerError.fetchProfileDataFailed:
-      break
-    case MyStatsWorkerError.fetchLongestRecordDataFailed:
-      break
-    case MyStatsWorkerError.fetchSummaryDataFailed:
-      break
-    }
   }
   
   func cancelLoadMyStatsViewData() {
