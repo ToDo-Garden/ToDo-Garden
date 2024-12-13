@@ -12,11 +12,14 @@ import ToDoGardenUIAPI
 import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
+/// 눌렀을 때 체크박스 애니메이션을 보여주는 버튼입니다.
+/// - 투두 체크박스, 약관 동의 버튼에 사용됩니다.
+/// - 사이즈는 반드시 가로:세로 비율이 1:1이어야 합니다.
 public final class ToDoCheckBoxButton: UIButton, HapticFeedbackable {
   private var mainColor: UIColor
   private var checkmarkDrawingLayer: CAShapeLayer
 
-  @ExecuteOnce private var setAnimation: (() -> Void)?
+  @ExecuteOnce private var setupUIForSize: (() -> Void)?
 
   public init() {
     self.mainColor = UIColor.toDoGardenGreenDark
@@ -32,8 +35,9 @@ public final class ToDoCheckBoxButton: UIButton, HapticFeedbackable {
 
   public override func draw(_ rect: CGRect) {
     super.draw(rect)
-    self.setAnimation = {
+    self.setupUIForSize = {
       self.setupAnimationPath()
+      self.setupCornerRadius()
     }
   }
 
@@ -92,13 +96,17 @@ extension ToDoCheckBoxButton {
   private func setupLayer() {
     self.layer.masksToBounds = true
     self.layer.borderWidth = Constant.ToDoCheckBoxButton.Layout.borderWidth
-    self.layer.cornerRadius = Constant.ToDoCheckBoxButton.Layout.cornerRadius
   }
 }
 
 // MARK: Set up Animation
 
 extension ToDoCheckBoxButton {
+  private func setupCornerRadius() {
+    let cornerRadius = Constant.ToDoCheckBoxButton.Layout.cornerRadiusRatio * self.bounds.width
+    self.layer.cornerRadius = cornerRadius
+  }
+
   private func setupAnimationLayerUI() {
     self.checkmarkDrawingLayer.lineWidth = Constant.ToDoCheckBoxButton.Layout.lineWidth
     self.checkmarkDrawingLayer.fillColor = UIColor.clear.cgColor
