@@ -37,9 +37,15 @@ extension Styled.Row {
     }
     /// textField가 resign될 경우, textField의 텍스트 여부에 따라서 textField를 숨길지, selectedView를 보여줄지 결정하게 됩니다.
     textField.resignHandler = { [weak self, weak textField, weak selectedView] in
-      textField?.isHidden = !(textField?.text?.isEmpty ?? true)
-      selectedView?.isHidden = (textField?.text?.isEmpty ?? true)
-      selecetdViewUpdateAction(textField?.text, self?.configuration.todoListModel?.isSelected ?? true)
+      let text = self?.configuration.todoListModel?.text
+      textField?.text = self?.configuration.todoListModel?.text
+      
+      let textIsEmpty = text?.isEmpty ?? true
+      textField?.isHidden = !textIsEmpty
+      selectedView?.isHidden = textIsEmpty
+      
+      let isSelected = self?.configuration.todoListModel?.isSelected ?? true
+      selecetdViewUpdateAction(text, isSelected)
     }
     
     return (
@@ -67,7 +73,11 @@ extension Styled.Row {
       guard
         let textField = action.sender as? UITextField
       else { return }
-      self?.configuration.todoListModel?.text = textField.text
+      let isSelected = self?.configuration.todoListModel?.isSelected ?? false
+      let isEmpty = textField.text?.isEmpty ?? true
+      if !isSelected || !isEmpty {
+        self?.configuration.todoListModel?.text = textField.text
+      }
     }
     textField.addAction(action, for: .editingChanged)
     
@@ -121,6 +131,10 @@ extension Styled.Row {
         else { return }
         if self?.configuration.todoListModel?.text?.isEmpty ?? true {
           checkBox.isActionBlocked = false
+          let flag = (self?.configuration.todoListModel?.isSelected ?? true)
+          if flag {
+            handler(false)
+          }
         } else {
           checkBox.isActionBlocked = true
           handler(checkBox.isSelected)
