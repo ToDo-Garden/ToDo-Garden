@@ -69,17 +69,17 @@ extension Styled.Row {
     textField.text = text
     textField.font = UIFont.pretendardDetailRegular12
     textField.isHidden = isSelected
-    let action = UIAction { [weak self] action in
-      guard
-        let textField = action.sender as? UITextField
-      else { return }
-      let isSelected = self?.configuration.todoListModel?.isSelected ?? false
-      let isEmpty = textField.text?.isEmpty ?? true
-      if !isSelected || !isEmpty {
-        self?.configuration.todoListModel?.text = textField.text
+    let task = Task {
+      for await text in textField.stream {
+        guard !Task.isCancelled else { return }
+        let isSelected = self.configuration.todoListModel?.isSelected ?? false
+        let isEmpty = text?.isEmpty ?? true
+        if !isSelected || !isEmpty {
+          self.configuration.todoListModel?.text = text
+        }
       }
     }
-    textField.addAction(action, for: .editingChanged)
+    self.tasks.append(task)
     
     return textField
   }
@@ -152,6 +152,17 @@ extension Styled.Row {
       checkBox.widthAnchor.constraint(equalToConstant: Constant.Styled.Row.ToDoList.buttonSize.width),
       checkBox.heightAnchor.constraint(equalToConstant: Constant.Styled.Row.ToDoList.buttonSize.height)
     ])
+  }
+}
+
+private extension UITextField {
+  var stream: AsyncStream<String?> {
+    NotificationCenter.default
+      .publisher(for: UITextField.textDidChangeNotification, object: self)
+      .debounce(for: 0.3, scheduler: DispatchQueue.main)
+      .compactMap { ($0.object as? UITextField)?.text }
+      .eraseToAnyPublisher()
+      .asyncStream
   }
 }
 
