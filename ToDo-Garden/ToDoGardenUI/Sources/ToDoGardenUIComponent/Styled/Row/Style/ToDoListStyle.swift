@@ -43,10 +43,13 @@ extension Styled.Row {
   
   private func buildTextField(text: String?, color: UIColor, isSelected: Bool) -> UITextField {
     let textField = Styled.TextField(configuration: .groupEdit(.todoList(mainColor: color)))
-    textField.placeholder = "할 일을 입력해주세요."
+    let placeholderText = " 할 일을 입력해주세요."
+    textField.attributedPlaceholder = NSAttributedString(
+      string: placeholderText,
+      attributes: [NSAttributedString.Key.foregroundColor: UIColor.toDoGardenGreenGray]
+    )
     textField.text = text
-    textField.font = UIFont.pretendardDetailLight
-    textField.textColor = UIColor.toDoGardenGray
+    textField.font = UIFont.pretendardDetailRegular12
     textField.isHidden = isSelected
     let action = UIAction { [weak self] action in
       guard
