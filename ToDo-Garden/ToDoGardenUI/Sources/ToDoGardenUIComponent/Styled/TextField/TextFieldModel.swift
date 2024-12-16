@@ -40,7 +40,9 @@ extension Styled.TextField.Configuration {
   
   public struct GroupEditModel: Equatable {
     public static let standard = Self(mainColor: UIColor.toDoGardenGreenDark, bottomLineDisplayMode: DisPlayMode.always)
-    public static let todoList = Self(mainColor: UIColor.toDoGardenRed, bottomLineDisplayMode: DisPlayMode.editing)
+    public static func todoList(mainColor: UIColor) -> Self {
+      Self(mainColor: mainColor, bottomLineDisplayMode: DisPlayMode.editing)
+    }
     
     var mainColor: UIColor
     var image: UIImage = UIImage(systemName: "xmark.circle.fill") ?? UIImage.searchIconImage

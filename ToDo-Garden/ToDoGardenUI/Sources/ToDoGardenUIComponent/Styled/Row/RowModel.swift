@@ -19,10 +19,16 @@ extension Styled.Row {
       return nil
     }
     var todoListModel: TodoListModel? {
-      if case let Self.todoList(model) = self {
-        return model
+      get {
+        if case let Self.todoList(model) = self {
+          return model
+        }
+        return nil
       }
-      return nil
+      set {
+        guard let newValue else { return }
+        self = .todoList(newValue)
+      }
     }
     var repeatOtherDaysModel: RepeatOtherDaysModel? {
       if case let Self.repeatOtherDays(model) = self {
@@ -83,15 +89,18 @@ extension Styled.Row.Configuration {
   public struct TodoListModel: Equatable {
     public static let empty = Self()
     public var text: String?
+    public var foregroundColor: UIColor
     public var isSelected: Bool
     public var hasAlert: Bool
     
     public init(
       text: String? = nil,
+      foregroundColor: UIColor = .black,
       isSelected: Bool = false,
       hasAlert: Bool = false
     ) {
       self.text = text
+      self.foregroundColor = foregroundColor
       self.isSelected = isSelected
       self.hasAlert = hasAlert
     }

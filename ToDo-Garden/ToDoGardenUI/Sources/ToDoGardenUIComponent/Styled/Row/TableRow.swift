@@ -23,6 +23,11 @@ public class TableRow: UITableViewCell {
     fatalError("init(coder:) has not been implemented")
   }
   
+  public override func prepareForReuse() {
+    super.prepareForReuse()
+    self.row.resetState()
+  }
+  
   public func update(configuration: Styled.Row.Configuration) {
     self.row.configuration = configuration
   }

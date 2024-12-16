@@ -128,7 +128,7 @@ extension Styled {
   textField2.placeholder = "아이디를 입력해주세요."
   stack.addArrangedSubview(textField2)
   
-  let textField3 = Styled.TextField(configuration: .groupEdit(.todoList))
+  let textField3 = Styled.TextField(configuration: .groupEdit(.todoList(mainColor: .red)))
   stack.addArrangedSubview(textField3)
   
   return stack

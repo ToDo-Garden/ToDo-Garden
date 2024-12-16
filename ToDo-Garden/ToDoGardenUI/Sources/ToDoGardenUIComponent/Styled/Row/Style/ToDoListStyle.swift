@@ -8,144 +8,125 @@ extension Styled.Row {
       stack: stack,
       edgeInsets: Constant.Styled.Row.ToDoList.stackEdgeInsets
     )
-    let (zStack, zStackHandler) = buildZStack(model: model)
-    self.buildButton(stack: stack, isSelecetd: model.isSelected, handler: zStackHandler)
+    let (zStack, zStackHandler) = self.buildZStack(model: model)
+    let checkBox = self.buildCheckBox(color: model.foregroundColor, zStackHandler)
+    stack.addArrangedSubview(checkBox)
+    self.setupCheckBoxConstraints(checkBox)
+    
     stack.addSpacing(Constant.Styled.Row.ToDoList.stackSpacing)
     stack.addArrangedSubview(zStack)
     stack.addSpacing()
   }
   
-  private func buildButton(stack: UIStackView, isSelecetd: Bool, handler: @escaping (Bool) -> Void) {
-    let button = ToDoCheckBoxButton()
-    let action = UIAction { [weak self, weak button] _ in
-      guard let button else { return }
-      self?.configuration.todoListModel
-        .map { model in
-          var copy = model
-          copy.isSelected = button.isSelected
-          self?.configuration = Configuration.todoList(copy)
+  private func buildZStack(model: Configuration.TodoListModel) -> (UIView, (Bool) -> Void) {
+    let textField = self.buildTextField(
+      text: model.text,
+      color: model.foregroundColor,
+      isSelected: model.isSelected
+    )
+    self.setupTextFieldConstraints(textField)
+    let zStack = UIStackView(arrangedSubviews: [textField])
+    let (selectedView, selecetdViewUpdateAction) = buildSelectedView(model: model)
+    zStack.addArrangedSubview(selectedView)
+    
+    return (
+      zStack,
+      { [weak textField, weak selectedView] isSelected in
+        textField?.isHidden = isSelected
+        selectedView?.isHidden = !isSelected
+        if isSelected {
+          selecetdViewUpdateAction(textField?.text)
         }
-    }
-    button.addAction(action, for: .touchUpInside)
-    builButtonLayout(button, stack: stack)
+      }
+    )
   }
   
-  private func builButtonLayout(_ button: UIButton, stack: UIStackView) {
-    button.usingAutolayout()
-    NSLayoutConstraint.activate([
-      button.widthAnchor.constraint(equalToConstant: Constant.Styled.Row.ToDoList.buttonSize.width),
-      button.heightAnchor.constraint(equalToConstant: Constant.Styled.Row.ToDoList.buttonSize.height)
-    ])
-    stack.addArrangedSubview(button)
-  }
-  
-  private func buildTextField(text: String?, isSelected: Bool) -> UITextField {
-    let textField = Styled.TextField(configuration: .groupEdit(.todoList))
+  private func buildTextField(text: String?, color: UIColor, isSelected: Bool) -> UITextField {
+    let textField = Styled.TextField(configuration: .groupEdit(.todoList(mainColor: color)))
+    textField.placeholder = "할 일을 입력해주세요."
     textField.text = text
     textField.font = UIFont.pretendardDetailLight
-    textField.textColor = UIColor.toDoGardenGreenDark
+    textField.textColor = UIColor.toDoGardenGray
     textField.isHidden = isSelected
     let action = UIAction { [weak self] action in
-      if let textField = action.sender as? UITextField {
-        self?.configuration.todoListModel
-          .map { model in
-            var copy = model
-            copy.text = textField.text
-            self?.configuration = .todoList(copy)
-          }
-      }
+      guard
+        let textField = action.sender as? UITextField
+      else { return }
+      self?.configuration.todoListModel?.text = textField.text
     }
     textField.addAction(action, for: .editingChanged)
-    textField.usingAutolayout()
-    NSLayoutConstraint.activate([
-      textField.widthAnchor.constraint(equalToConstant: Constant.Styled.Row.ToDoList.textFieldWidth)
-    ])
+    
     return textField
   }
   
-  private func buildZStack(model: Configuration.TodoListModel) -> (UIView, (Bool) -> Void) {
-    let textField = buildTextField(text: model.text, isSelected: model.isSelected)
-    let zStack = UIStackView(arrangedSubviews: [textField])
-    let (selectedView, selecetdViewUpdateAction) = buildSelectedView(
-      zStack: zStack,
-      model: model
-    )
-    zStack.addSubview(selectedView)
+  private func setupTextFieldConstraints(_ textField: UIView) {
+    textField.usingAutolayout()
+    textField.widthAnchor.constraint(equalToConstant: Constant.Styled.Row.ToDoList.textFieldWidth).isActive = true
+  }
+  
+  private func buildSelectedView(model: Configuration.TodoListModel) -> (UIView, (String?) -> Void) {
+    let strikeThroughLabel = self.buildStrikethroughLabel(text: model.text)
+    let imageView = self.buildAlarmImage(hasAlarm: model.hasAlert)
+    let stack = UIHStackView(arrangedSubviews: [strikeThroughLabel, imageView])
+    stack.isHidden = !model.isSelected
     
-    selectedView.equalToParent()
-    let action: (Bool) -> Void = { [weak textField, weak selectedView] isSelected in
-      textField?.isHidden = isSelected
-      selectedView?.isHidden = !isSelected
-      if let text = textField?.text, isSelected {
-        selecetdViewUpdateAction(text)
-      } else {
-        selecetdViewUpdateAction("")
+    return (
+      stack,
+      { [weak strikeThroughLabel] in
+        strikeThroughLabel?.update($0)
       }
-    }
-    
-    return (zStack, action)
+    )
   }
   
-  private func buildSelectedView(
-    zStack: UIStackView,
-    model: Configuration.TodoListModel
-  ) -> (UIView, (String) -> Void) {
-    let stack = UIStackView()
-    let label = buildSelecetdLabel(stack: zStack, text: model.text, isSelected: model.isSelected)
-    let imageView = buildAlarmImage(stack: zStack, isSelected: model.isSelected, hasAlarm: model.hasAlert)
-    zStack.addSubview(stack)
-    stack.equalToParent()
-    
-    let action: (String) -> Void = { [weak self, weak label, weak imageView] text in
-      self?.updateSelecetdView(
-        label: label,
-        imageView: imageView,
-        text: text
-      )
-    }
-    
-    return (stack, action)
-  }
-  
-  private func buildSelecetdLabel(stack: UIStackView, text: String?, isSelected: Bool) -> UILabel {
+  private func buildStrikethroughLabel(text: String?) -> StrikethroughView {
     let label = UILabel()
-    label.textColor = UIColor.toDoGardenGray3
+    label.text = text
     label.font = UIFont.pretendardDetailLight
-    stack.addArrangedSubview(label)
-    if isSelected {
-      label.attributedText = self.setAttributeText(text: text)
-    }
+    let strikethrough = StrikethroughView(
+      label: label,
+      foregroundColor: UIColor.toDoGardenGray3
+    )
     
-    return label
+    return strikethrough
   }
   
-  private func buildAlarmImage(stack: UIStackView, isSelected: Bool, hasAlarm: Bool) -> UIImageView {
+  private func buildAlarmImage(hasAlarm: Bool) -> UIImageView {
     let image = hasAlarm ? UIImage.alarmImage : nil
     let imageView = UIImageView(image: image)
     imageView.contentMode = UIView.ContentMode.scaleAspectFit
-    imageView.isHidden = !isSelected
-    stack.addArrangedSubview(imageView)
     
     return imageView
   }
   
-  private func updateSelecetdView(label: UILabel?, imageView: UIImageView?, text: String) {
-    label?.isHidden = text.isEmpty
-    imageView?.isHidden = text.isEmpty
-    label?.attributedText = text.isEmpty
-    ? nil
-    : self.setAttributeText(text: text)
+  private func buildCheckBox(color: UIColor, _ handler: @escaping (Bool) -> Void) -> UIView {
+    let button = ToDoCheckBoxButton(
+      action: UIAction { [weak self] action in
+        guard
+          let checkBox = action.sender as? ToDoCheckBoxButton
+        else { return }
+        if self?.configuration.todoListModel?.text?.isEmpty ?? true {
+          checkBox.isActionBlocked = false
+        } else {
+          checkBox.isActionBlocked = true
+          handler(checkBox.isSelected)
+          self?.configuration.todoListModel?.isSelected = checkBox.isSelected
+        }
+      }
+    )
+    button.updateMainColor(color)
+    
+    return button
   }
   
-  private func setAttributeText(text: String?) -> NSMutableAttributedString {
-    let attributeString = NSMutableAttributedString(string: text ?? "")
-    attributeString
-      .addAttribute(
-        NSAttributedString.Key.strikethroughStyle,
-        value: 1,
-        range: NSRange(location: 0, length: attributeString.length)
-      )
-    
-    return attributeString
+  private func setupCheckBoxConstraints(_ checkBox: UIView) {
+    NSLayoutConstraint.activate([
+      checkBox.widthAnchor.constraint(equalToConstant: Constant.Styled.Row.ToDoList.buttonSize.width),
+      checkBox.heightAnchor.constraint(equalToConstant: Constant.Styled.Row.ToDoList.buttonSize.height)
+    ])
   }
+}
+
+@available(iOS 17.0, *)
+#Preview {
+  Styled.Row(configuration: .todoList(.init(foregroundColor: .orange, hasAlert: true)))
 }

@@ -18,6 +18,7 @@ import ToDoGardenUIResource
 public final class ToDoCheckBoxButton: UIButton, HapticFeedbackable {
   private var mainColor: UIColor
   private var checkmarkDrawingLayer: CAShapeLayer
+  var isActionBlocked: Bool = false
 
   @ExecuteOnce private var setupUIForSize: (() -> Void)?
 
@@ -25,6 +26,14 @@ public final class ToDoCheckBoxButton: UIButton, HapticFeedbackable {
     self.mainColor = UIColor.toDoGardenGreenDark
     self.checkmarkDrawingLayer = CAShapeLayer()
     super.init(frame: CGRect.zero)
+    self.setup()
+  }
+  
+  public init(action: UIAction) {
+    self.mainColor = UIColor.toDoGardenGreenDark
+    self.checkmarkDrawingLayer = CAShapeLayer()
+    super.init(frame: CGRect.zero)
+    self.addAction(action, for: UIControl.Event.touchUpInside)
     self.setup()
   }
 
@@ -91,6 +100,15 @@ extension ToDoCheckBoxButton {
 
   private func setupToggle() {
     self.changesSelectionAsPrimaryAction = true
+    let action = UIAction { [weak self] _ in
+      guard let self, isActionBlocked else { return }
+      if self.isSelected {
+        self.setSelected()
+      } else {
+        self.setDeSelected()
+      }
+    }
+    self.addAction(action, for: UIControl.Event.touchUpInside)
   }
 
   private func setupLayer() {
