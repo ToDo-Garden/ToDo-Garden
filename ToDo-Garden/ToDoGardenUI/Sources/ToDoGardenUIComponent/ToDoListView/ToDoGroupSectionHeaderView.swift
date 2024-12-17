@@ -9,7 +9,7 @@ import UIKit
 import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
-final class ToDoGroupSectionHeaderView: UIView {
+final class ToDoGroupSectionHeaderView: UICollectionReusableView {
   typealias LayoutConstant = Constant.ToDoGroupSectionHeaderView.Layout
   
   private let contentView: UIView = {
