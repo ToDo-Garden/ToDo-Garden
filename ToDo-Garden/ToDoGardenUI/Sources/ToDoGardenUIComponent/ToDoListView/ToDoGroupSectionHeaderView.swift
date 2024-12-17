@@ -102,3 +102,22 @@ extension ToDoGroupSectionHeaderView {
     hStack.isLayoutMarginsRelativeArrangement = true
   }
 }
+
+@available(iOS 17.0, *)
+#Preview {
+  let view = ToDoGroupSectionHeaderView()
+  view.usingAutolayout()
+  
+  DispatchQueue.main.asyncAfter(
+    deadline: .now() + 0.5,
+    execute: {
+      view.update(
+        with: ToDoGroupSectionHeaderView.UIModel(
+          progressColor: UIColor.toDoGardenRed,
+          progressRate: 0.7,
+          groupTitle: "불어 독해"
+        )
+      )
+  })
+  return view
+}
