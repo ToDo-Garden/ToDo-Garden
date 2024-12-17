@@ -15,9 +15,9 @@ extension Constant.ToDoGroupSectionHeaderView {
 
 extension Constant.ToDoGroupSectionHeaderView.Layout {
   public static let progressViewLineWidth: CGFloat = 4
-  public static let progressViewSize: CGSize = CGSize(width: 24, height: 24)
+  public static let progressViewSize: CGSize = CGSize(width: 23, height: 23)
   public static let timerImageViewSize: CGSize = CGSize(width: 24, height: 24)
-  public static let progressViewSpacing: CGFloat = 4
+  public static let progressViewSpacing: CGFloat = 6
   public static let hStackLayoutMargins: UIEdgeInsets = UIEdgeInsets(
     top: CGFloat.zero,
     left: 31,
