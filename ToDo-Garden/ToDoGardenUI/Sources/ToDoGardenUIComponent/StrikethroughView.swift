@@ -31,10 +31,13 @@ final class StrikethroughView: UIView {
     self.strikethroughLayer.frame = self.bounds
   }
   
-  func update(_ text: String?) {
+  func update(text: String?, animated: Bool = true) {
     self.label.text = text
     self.invalidateIntrinsicContentSize()
-    self.strikethroughLayer.animate()
+    self.strikethroughLayer.isHidden = !animated
+    if animated {
+      self.strikethroughLayer.animate()
+    }
   }
   
   private func prepareView(_ color: UIColor) {

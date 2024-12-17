@@ -38,6 +38,7 @@ extension Styled {
     @Published public var configuration: Configuration
     @Published public var isSelected: Bool = false
     var cancellables: Set<AnyCancellable> = []
+    var tasks: [Task<Void, Never>] = []
     
     private var stackView: UIStackView!
     
@@ -60,6 +61,8 @@ extension Styled {
     
     public func resetState() {
       self.cancellables = []
+      self.tasks.forEach { $0.cancel() }
+      self.tasks = []
       for subview in self.stackView.arrangedSubviews {
         subview.removeFromSuperview()
       }

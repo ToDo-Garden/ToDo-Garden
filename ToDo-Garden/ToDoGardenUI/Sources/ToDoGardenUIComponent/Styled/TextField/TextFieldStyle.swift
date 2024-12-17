@@ -26,6 +26,8 @@ extension Styled {
     var bottomLine: UIProgressView!
     var cancellables: Set<AnyCancellable> = []
     
+    var resignHandler: (() -> Void)?
+    
     public init(configuration: Configuration) {
       self.configuration = configuration
       super.init(frame: CGRect.zero)
@@ -51,7 +53,7 @@ extension Styled {
     }
     
     public override func becomeFirstResponder() -> Bool {
-      configuration.groupEditModel.map { model in
+      self.configuration.groupEditModel.map { model in
         switch model.bottomLineDisplayMode {
         case Configuration.GroupEditModel.DisPlayMode.always,
           Configuration.GroupEditModel.DisPlayMode.editing:
@@ -71,7 +73,7 @@ extension Styled {
     }
 
     public override func resignFirstResponder() -> Bool {
-      configuration.groupEditModel.map { model in
+      self.configuration.groupEditModel.map { model in
         switch model.bottomLineDisplayMode {
         case Configuration.GroupEditModel.DisPlayMode.always:
           self.bottomLine.setProgress(0.0, animated: false)
@@ -80,6 +82,8 @@ extension Styled {
           self.bottomLine.setProgress(0.0, animated: false)
         }
       }
+      self.resignHandler?()
+
       return super.resignFirstResponder()
     }
 

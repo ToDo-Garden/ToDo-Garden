@@ -38,3 +38,24 @@ extension UIView {
     ])
   }
 }
+
+extension UIView {
+  func addTapGesture(_ action: @escaping () -> Void) {
+    self.addGestureRecognizer(_TapGesutureRecognizer(action: action))
+  }
+  
+  private final class _TapGesutureRecognizer: UITapGestureRecognizer {
+    private var _action: () -> Void
+    
+    init(action: @escaping () -> Void) {
+      self._action = action
+      super.init(target: nil, action: nil)
+      self.addTarget(self, action: #selector(self.action))
+    }
+    
+    @objc
+    private func action() {
+      self._action()
+    }
+  }
+}

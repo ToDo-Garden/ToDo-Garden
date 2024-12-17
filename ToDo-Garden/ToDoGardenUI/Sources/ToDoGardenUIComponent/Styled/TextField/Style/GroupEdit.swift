@@ -4,6 +4,7 @@ import ToDoGardenUIConstant
 
 extension Styled.TextField {
   func buildGroupEditStyle(model: Configuration.GroupEditModel) {
+    self.textColor = UIColor.toDoGardenGreenDark
     self.buildClearButton(model: model)
     self.buildBottomLine(color: model.mainColor)
   }
