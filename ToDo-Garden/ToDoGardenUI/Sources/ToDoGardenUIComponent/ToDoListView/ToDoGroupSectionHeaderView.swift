@@ -55,6 +55,22 @@ final class ToDoGroupSectionHeaderView: UICollectionReusableView {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+  
+  struct UIModel {
+    let progressColor: UIColor
+    let progressRate: Double
+    let groupTitle: String
+  }
+  
+  func update(with model: UIModel) {
+    self.progressView.setupProgressLayerStrokeColor(with: model.progressColor)
+    self.progressView.startAnimation(
+      duration: TimeInterval(0.5),
+      from: Float.zero,
+      to: Float(model.progressRate)
+    )
+    self.createToDoButton.updateTitle(with: model.groupTitle)
+  }
 }
 
 extension ToDoGroupSectionHeaderView {
