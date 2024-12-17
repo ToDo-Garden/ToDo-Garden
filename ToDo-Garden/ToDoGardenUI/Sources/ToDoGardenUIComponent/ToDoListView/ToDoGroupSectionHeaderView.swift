@@ -6,9 +6,12 @@
 //
 import UIKit
 
+import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
-final class ToDoGroupSectionHeaderView: UICollectionReusableView {
+final class ToDoGroupSectionHeaderView: UIView {
+  typealias LayoutConstant = Constant.ToDoGroupSectionHeaderView.Layout
+  
   private let contentView: UIView = {
     let contentView = UIView()
     contentView.backgroundColor = UIColor.white
@@ -20,12 +23,14 @@ final class ToDoGroupSectionHeaderView: UICollectionReusableView {
     let progressView = CircularProgressView(
       progressColor: UIColor.toDoGardenGray1,
       backgroundColor: UIColor.toDoGardenGray1,
-      lineWidth: 4.0
+      lineWidth: LayoutConstant.progressViewLineWidth
     )
     progressView.usingAutolayout()
+    
+    let progressViewSize = LayoutConstant.progressViewSize
     NSLayoutConstraint.activate([
-      progressView.widthAnchor.constraint(equalToConstant: 24),
-      progressView.heightAnchor.constraint(equalToConstant: 24)
+      progressView.widthAnchor.constraint(equalToConstant: progressViewSize.width),
+      progressView.heightAnchor.constraint(equalToConstant: progressViewSize.height)
     ])
     
     return progressView
@@ -38,9 +43,11 @@ final class ToDoGroupSectionHeaderView: UICollectionReusableView {
   private let timerImageView: UIImageView = {
     let timerImageView = UIImageView(image: UIImage.timerButtonImage)
     timerImageView.usingAutolayout()
+    
+    let timerImageViewSize = LayoutConstant.timerImageViewSize
     NSLayoutConstraint.activate([
-      timerImageView.widthAnchor.constraint(equalToConstant: 24),
-      timerImageView.heightAnchor.constraint(equalToConstant: 24)
+      timerImageView.widthAnchor.constraint(equalToConstant: timerImageViewSize.width),
+      timerImageView.heightAnchor.constraint(equalToConstant: timerImageViewSize.height)
     ])
     
     return timerImageView
@@ -95,10 +102,10 @@ extension ToDoGroupSectionHeaderView {
       ]
     )
     self.contentView.addSubview(hStack)
-    hStack.setCustomSpacing(4.0, after: self.progressView)
+    hStack.setCustomSpacing(LayoutConstant.progressViewSpacing, after: self.progressView)
     hStack.equalToParent()
     
-    hStack.layoutMargins = UIEdgeInsets(top: .zero, left: 31, bottom: .zero, right: 40)
+    hStack.layoutMargins = LayoutConstant.hStackLayoutMargins
     hStack.isLayoutMarginsRelativeArrangement = true
   }
 }
