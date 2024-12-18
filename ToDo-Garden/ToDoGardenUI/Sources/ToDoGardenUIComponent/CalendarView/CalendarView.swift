@@ -9,6 +9,10 @@ import UIKit
 
 import ToDoGardenUIConstant
 
+public protocol CalendarViewDateSelectionDelegate: AnyObject {
+  func didSelectDate(_ date: Date)
+}
+
 public class CalendarView: UIView {
   private let model: Model
   private var isLayoutSubviewsCalled: Bool
@@ -19,8 +23,10 @@ public class CalendarView: UIView {
   private var heightConstraint: NSLayoutConstraint
   
   let dateCollectionView: UICollectionView
-  var calendarViewDelegate: CalendarViewControllable
-  
+  var calendarViewDelegate: CalendarViewManager
+
+  public weak var dateSelectionDelegate: CalendarViewDateSelectionDelegate?
+
   public init(model: Model) {
     self.model = model
     self.isLayoutSubviewsCalled = false
@@ -66,10 +72,17 @@ extension CalendarView {
   private func setup() {
     self.setupUI()
     self.setupCollectionViewScrollDelegate()
+    self.setupDateSelectionDelegate()
   }
   
   func setupCollectionViewScrollDelegate() {
     self.calendarViewDelegate.scrollDelegate = self
+  }
+
+  private func setupDateSelectionDelegate() {
+    self.calendarViewDelegate.dateSelectionClosure = { (selectedDate: Date) in
+      self.dateSelectionDelegate?.didSelectDate(selectedDate)
+    }
   }
 }
 
@@ -105,6 +118,7 @@ extension CalendarView: CalendarScrollSendable {
 
 extension CalendarView {
   private func setupUI() {
+    self.backgroundColor = UIColor.toDoGardenWhite
     self.setupBorder()
     self.setupMonthLabel()
     self.setupBackButton()
