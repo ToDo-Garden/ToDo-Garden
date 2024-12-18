@@ -101,7 +101,7 @@ extension AppleLoginManager {
         }
         
         guard let data = response.body else {
-          throw HTTPClientError.badJSON
+          throw HTTPClientError.deserializationError
         }
         
         let loginResponse = try JSONDecoder().decode(LoginResponseDTO.self, from: data)
