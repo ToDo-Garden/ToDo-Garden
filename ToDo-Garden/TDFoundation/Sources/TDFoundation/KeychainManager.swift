@@ -13,10 +13,11 @@ public final class KeychainManager: Sendable {
   
   private init() {}
   
-  private enum KeychainKey {
+  public enum KeychainKey {
     static let userIdentifier = "user_identifier"
-    static let userEmail = "user_email"
     static let identifyToken = "identity_token"
+    static let accessToken = "access_token"
+    static let refreshToken = "refresh_token"
     // MARK: - 필요한 키값을 직접 추가하세요
   }
   
@@ -88,47 +89,48 @@ public final class KeychainManager: Sendable {
   }
 }
 
-// MARK: - Login 관련
+// MARK: - Login / 인증 관련
 
 extension KeychainManager {
-  public func saveLoginData(identifier: String, identifyToken: Data, email: String?) throws {
+  public func saveLoginData(identifier: String, identifyToken: Data) throws {
     try self.clearLoginData()
     
     try self.create(Data(identifier.utf8), forKey: KeychainKey.userIdentifier)
     try self.create(identifyToken, forKey: KeychainKey.identifyToken)
-    
-    if let email = email {
-      try self.create(Data(email.utf8), forKey: KeychainKey.userEmail)
-    } else {
-      try self.create(Data(), forKey: KeychainKey.userEmail)
-    }
   }
   
-  // swiftlint:disable large_tuple
-  public func getLoginData() throws -> (identifier: String, identifyToken: String, email: String?)? {
+  public func getLoginData() throws -> (identifier: String, identifyToken: String) {
     guard let identifierData = try self.load(forKey: KeychainKey.userIdentifier),
       let identifier = String(data: identifierData, encoding: String.Encoding.utf8),
       let tokenData = try self.load(forKey: KeychainKey.identifyToken),
       let identifyToken = String(data: tokenData, encoding: String.Encoding.utf8)
     else {
-      return nil
+      throw KeychainError.unknownError
     }
-    
-    let emailData = try self.load(forKey: KeychainKey.userEmail)
-    let email = emailData.flatMap { String(data: $0, encoding: String.Encoding.utf8) }
-    return (identifier, identifyToken, email)
+    return (identifier, identifyToken)
   }
-  // swiftlint:enable large_tuple
   
   public func clearLoginData() throws {
     try self.delete(forKey: KeychainKey.userIdentifier)
-    try self.delete(forKey: KeychainKey.userEmail)
     try self.delete(forKey: KeychainKey.identifyToken)
+  }
+  
+  public func saveAccessToken(accessToken: String, refreshToken: String) throws {
+    try self.clearLoginData()
+    
+    try self.create(Data(accessToken.utf8), forKey: KeychainKey.userIdentifier)
+    try self.create(Data(refreshToken.utf8), forKey: KeychainKey.identifyToken)
+  }
+  
+  public func clearAccessToken() throws {
+    try self.delete(forKey: KeychainKey.accessToken)
+    try self.delete(forKey: KeychainKey.refreshToken)
   }
 }
 
-enum KeychainError: Error {
+public enum KeychainError: Error {
   case nonExistentKey
   case alreadyExistentKey
   case unhandledError(status: OSStatus)
+  case unknownError
 }
