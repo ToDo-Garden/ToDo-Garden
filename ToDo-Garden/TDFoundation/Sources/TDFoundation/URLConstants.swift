@@ -16,9 +16,9 @@ public enum URLConstants {
   public enum Timer { }
 }
 
-//swiftlint:disable all
+// swiftlint:disable all
 extension URLConstants.Auth {
   public static let appleLoginURL = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/auth/v1/token?grant_type=id_token")!
   public static let signUpURL = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/signup")!
 }
-//swiftlint:enable all
+// swiftlint:enable all
