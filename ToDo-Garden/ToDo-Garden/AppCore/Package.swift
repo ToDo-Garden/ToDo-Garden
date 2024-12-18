@@ -31,6 +31,10 @@ let package = Package(
         Target.Dependency.product(
           name: "OnBoardingScene",
           package: "OnBoardingScene"
+        ),
+        Target.Dependency.product(
+          name: "HTTPClient",
+          package: "TDFoundation"
         )
       ]
     ),
