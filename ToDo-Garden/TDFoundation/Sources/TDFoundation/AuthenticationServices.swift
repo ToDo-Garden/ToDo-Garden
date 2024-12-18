@@ -12,11 +12,6 @@ public protocol AppleLoginManagerDelegate: AnyObject {
   func appleLoginDidComplete(with result: Result<Bool, Error>)
 }
 
-public protocol AppleLoginManagerAPI: AnyObject {
-  var delegate: AppleLoginManagerDelegate? { get set }
-  func performAppleLogin()
-}
-
 public final class AppleLoginManager: NSObject {
   private var authController: ASAuthorizationController?
   private weak var presentationContextProvider: ASAuthorizationControllerPresentationContextProviding?
