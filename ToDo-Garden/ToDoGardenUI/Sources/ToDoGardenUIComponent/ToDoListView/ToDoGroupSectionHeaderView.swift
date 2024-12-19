@@ -63,13 +63,7 @@ final class ToDoGroupSectionHeaderView: UICollectionReusableView {
     fatalError("init(coder:) has not been implemented")
   }
   
-  struct UIModel {
-    let progressColor: UIColor
-    let progressRate: Double
-    let groupTitle: String
-  }
-  
-  func update(with model: UIModel) {
+  func update(with model: ToDoListView.ToDoGroupUIModel) {
     self.progressView.setupProgressLayerStrokeColor(with: model.progressColor)
     self.progressView.startAnimation(
       duration: TimeInterval(0.5),
@@ -119,7 +113,7 @@ extension ToDoGroupSectionHeaderView {
     deadline: .now() + 0.5,
     execute: {
       view.update(
-        with: ToDoGroupSectionHeaderView.UIModel(
+        with: ToDoListView.ToDoGroupUIModel(
           progressColor: UIColor.toDoGardenRed,
           progressRate: 0.7,
           groupTitle: "불어 독해"
