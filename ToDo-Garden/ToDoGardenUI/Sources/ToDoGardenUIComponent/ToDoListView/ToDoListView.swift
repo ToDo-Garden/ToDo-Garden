@@ -38,6 +38,10 @@ public final class ToDoListView: UIView {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+  
+  public func apply(_ snapshot: Snapshot) {
+    self.dataSource.apply(snapshot)
+  }
 }
 
 // MARK: - Setup
