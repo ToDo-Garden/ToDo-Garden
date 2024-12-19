@@ -2,7 +2,7 @@ import UIKit
 
 import ToDoGardenUIConstant
 
-// swiftlint:disable function_body_length opening_brace
+// swiftlint:disable function_body_length
 extension Styled.Row {
   func buildTodoListStyle(stack: UIStackView, model: Configuration.TodoListModel) {
     self.buildStack(
@@ -48,15 +48,12 @@ extension Styled.Row {
       selecetdViewUpdateAction(text, isSelected)
     }
     
-    return (
-      zStack,
-      { [weak textField, weak selectedView] isSelected in
-        let flag = textField?.text?.isEmpty ?? true
-        textField?.isHidden = flag ? isSelected : true
-        selectedView?.isHidden = flag ? !isSelected : false
-        selecetdViewUpdateAction(textField?.text, isSelected)
-      }
-    )
+    return (zStack, { [weak textField, weak selectedView] isSelected in
+      let flag = textField?.text?.isEmpty ?? true
+      textField?.isHidden = flag ? isSelected : true
+      selectedView?.isHidden = flag ? !isSelected : false
+      selecetdViewUpdateAction(textField?.text, isSelected)
+    })
   }
   
   private func buildTextField(text: String?, color: UIColor, isSelected: Bool) -> Styled.TextField {
@@ -95,12 +92,9 @@ extension Styled.Row {
     let stack = UIHStackView(arrangedSubviews: [strikeThroughLabel, imageView])
     stack.isHidden = !model.isSelected
     
-    return (
-      stack,
-      { [weak strikeThroughLabel] in
-        strikeThroughLabel?.update(text: $0, animated: $1)
-      }
-    )
+    return (stack, { [weak strikeThroughLabel] in
+      strikeThroughLabel?.update(text: $0, animated: $1)
+    })
   }
   
   private func buildStrikethroughLabel(text: String?) -> StrikethroughView {
@@ -177,4 +171,4 @@ private extension UITextField {
   third.widthAnchor.constraint(equalTo: stack.widthAnchor).isActive = true
   return stack
 }
-// swiftlint:enable function_body_length opening_brace
+// swiftlint:enable function_body_length
