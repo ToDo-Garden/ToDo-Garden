@@ -7,6 +7,21 @@
 
 import UIKit
 
+struct ToDoContentViewContentConfiguration: UIContentConfiguration {
+  
+  let model: ToDoListView.ToDoUIModel
+  
+  func makeContentView() -> any UIView & UIContentView {
+    return ToDoContentView(configuration: self)
+  }
+  
+  func updated(
+    for state: any UIConfigurationState
+  ) -> ToDoContentViewContentConfiguration {
+    return self
+  }
+}
+
 final class ToDoContentView: UIView & UIContentView {
   private let contentView: Styled.Row
   
