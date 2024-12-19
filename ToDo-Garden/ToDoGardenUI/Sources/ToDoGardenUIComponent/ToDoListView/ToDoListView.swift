@@ -106,3 +106,34 @@ extension ToDoListView {
     return UICollectionViewCompositionalLayout.list(using: listConfiguration)
   }
 }
+
+@available(iOS 17.0, *)
+#Preview {
+  let toDoListView = ToDoListView()
+  var snapshot = ToDoListView.Snapshot()
+  
+  let section1 = ToDoListView.ToDoSection(
+    headerUIModel: .init(progressColor: .toDoGardenRed, progressRate: 0.6, groupTitle: "영어독해"),
+    toDoItems: [.init(toDoUIModel: .init(text: "프로폴리스", foregroundColor: .toDoGardenRed))]
+  )
+  
+  let section2 = ToDoListView.ToDoSection(
+    headerUIModel: .init(progressColor: .toDoGardenYellow, progressRate: 0.6, groupTitle: "영어독해"),
+    toDoItems: [
+      .init(toDoUIModel: .init(text: "비타민", foregroundColor: .toDoGardenYellow)),
+      .init(toDoUIModel: .init(text: "비타민", foregroundColor: .toDoGardenYellow)),
+      .init(toDoUIModel: .init(text: "비타민", foregroundColor: .toDoGardenYellow)),
+      .init(toDoUIModel: .init(text: "비타민", foregroundColor: .toDoGardenYellow))
+    ]
+  )
+  
+  snapshot.appendSections([section1, section2])
+  
+  snapshot.sectionIdentifiers.forEach { section in
+    snapshot.appendItems(section.toDoItems, toSection: section)
+  }
+  
+  toDoListView.apply(snapshot)
+  
+  return toDoListView
+}
