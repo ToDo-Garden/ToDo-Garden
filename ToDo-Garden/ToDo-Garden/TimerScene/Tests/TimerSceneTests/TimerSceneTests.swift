@@ -199,7 +199,7 @@ struct MockPresenter: TimerScenePresentationLogic {
   
   init(
     updateViewState: ((_: Bool) -> Void)? = { _ in XCTFail() },
-    configureTimerSettings: ((_: TimerSceneEntity.TimerScene.BottomSheetStatus, _: Double) -> Void)? =  { _, _ in XCTFail("configureTimerSettings") },
+    configureTimerSettings: ((_: TimerSceneEntity.TimerScene.BottomSheetStatus, _: Double) -> Void)? = { _, _ in XCTFail("configureTimerSettings") },
     updateTimeState: ((_: Double, _: TimerSceneEntity.TimerScene.CircularProgressRange) -> Void)? = { _, _ in XCTFail("updateTimeState") },
     showAlert: ((_: TimerSceneEntity.TimerScene.TimerAlertStatus) -> Void)? = { _ in XCTFail("showAlert") },
     presentBottomSheet: ((_: TimerSceneEntity.TimerScene.BottomSheetStatus) -> Void)? = { _ in XCTFail("presentBottomSheet") },

@@ -2,7 +2,7 @@ import UIKit
 
 import ToDoGardenUIConstant
 
-// swiftlint:disable function_body_length
+// swiftlint:disable function_body_length opening_brace
 extension Styled.Row {
   func buildTodoListStyle(stack: UIStackView, model: Configuration.TodoListModel) {
     self.buildStack(
@@ -177,4 +177,4 @@ private extension UITextField {
   third.widthAnchor.constraint(equalTo: stack.widthAnchor).isActive = true
   return stack
 }
-// swiftlint:enable function_body_length
+// swiftlint:enable function_body_length opening_brace
