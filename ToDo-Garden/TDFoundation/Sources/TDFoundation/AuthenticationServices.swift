@@ -56,9 +56,9 @@ extension AppleLoginManager: ASAuthorizationControllerDelegate {
           identifyToken: appleIDCredential.identityToken ?? Data()
         )
         
-        Task {
-          let isMember = try await self.requestVerificationToSupabase()
-          self.delegate?.appleLoginDidComplete(with: .success(isMember))
+        Task { [weak self] in
+          let isMember = try await self?.requestVerificationToSupabase()
+          self?.delegate?.appleLoginDidComplete(with: .success(isMember ?? false))
         }
       } catch let error {
         self.delegate?.appleLoginDidComplete(with: .failure(error))
