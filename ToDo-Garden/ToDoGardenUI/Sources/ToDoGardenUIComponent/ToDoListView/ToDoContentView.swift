@@ -8,7 +8,6 @@
 import UIKit
 
 struct ToDoContentViewContentConfiguration: UIContentConfiguration {
-  
   let model: ToDoListView.ToDoUIModel
   
   func makeContentView() -> any UIView & UIContentView {
