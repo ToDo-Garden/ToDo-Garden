@@ -15,6 +15,7 @@ public enum HTTPClientError: Error, Sendable {
   case notHTTPResponse(URLResponse)
   case transportFailed(any Error)
   case middlewareFailed(middlewareType: Any.Type, any Error)
+  case badStatusCode(Int)
   
   public var underlyingError: (any Error)? {
     switch self {

@@ -6,9 +6,9 @@
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
 import AuthenticationServices
-import OSLog
 import UIKit
 
+import HTTPClientAPI
 import TDFoundation
 import ToDoGardenUIComponent
 
@@ -19,17 +19,16 @@ public final class LoginViewController: UIViewController {
   private let dimmingView: UIView
   private let termAgreementView: TermsAgreementView
   
-  private let loger = Logger()
-  
   public var afterLoginAction: (() -> Void)?
   public var doneButtonAction: ((Bool) -> Void)?
   // MARK: - Object lifecycle
   
-  public init() {
+  public init(with httpClient: HTTPClientAPI) {
     self.appleLoginButton = AppleLoginButton()
     self.dimmingView = UIView()
     self.termAgreementView = TermsAgreementView()
     super.init(nibName: nil, bundle: nil)
+    self.setAppleLoginManager(with: httpClient)
   }
   
   @available(*, unavailable)
@@ -41,7 +40,6 @@ public final class LoginViewController: UIViewController {
   
   public override func viewDidLoad() {
     super.viewDidLoad()
-    self.setAppleLoginManager()
     self.setUI()
   }
   
@@ -107,8 +105,8 @@ extension LoginViewController {
     // TODO: 게스트 로그인
   }
   
-  private func setAppleLoginManager() {
-    self.appleLoginManager = AppleLoginManager(presentationContextProvider: self)
+  private func setAppleLoginManager(with httpClient: HTTPClientAPI) {
+    self.appleLoginManager = AppleLoginManager(presentationContextProvider: self, httpClient: httpClient)
     self.appleLoginManager?.delegate = self
   }
   
@@ -150,7 +148,7 @@ extension LoginViewController: AppleLoginManagerDelegate {
         self.showTermAgreementViewForRoutingToSignUpScene()
       }
     case .failure(let error):
-      self.loger.log("Apple Login 실패: \(error)")
+      self.handleError(error)
     }
   }
 }
@@ -186,10 +184,15 @@ extension LoginViewController: TermsAgreementViewDelegate {
   }
 }
 
-#if DEBUG
-@available(iOS 17.0, *)
-#Preview {
-  let view = LoginViewController()
-  return view
+extension LoginViewController {
+  private func handleError(_ error: Error) {
+    if error is KeychainError {
+      
+    } else if error is HTTPClientError {
+      
+    } else {
+      
+    }
+    self.showToast(message: error.localizedDescription)
+  }
 }
-#endif

@@ -6,6 +6,7 @@
 //
 
 import AuthenticationServices
+import HTTPClientAPI
 
 public protocol AppleLoginManagerDelegate: AnyObject {
   func appleLoginDidComplete(with result: Result<Bool, Error>)
@@ -15,8 +16,13 @@ public final class AppleLoginManager: NSObject {
   private var authController: ASAuthorizationController?
   private weak var presentationContextProvider: ASAuthorizationControllerPresentationContextProviding?
   public weak var delegate: AppleLoginManagerDelegate?
+  private let httpClient: HTTPClientAPI
   
-  public init(presentationContextProvider: ASAuthorizationControllerPresentationContextProviding) {
+  public init(
+    presentationContextProvider: ASAuthorizationControllerPresentationContextProviding,
+    httpClient: HTTPClientAPI
+  ) {
+    self.httpClient = httpClient
     super.init()
     self.presentationContextProvider = presentationContextProvider
     self.setupAuthController()
@@ -47,13 +53,12 @@ extension AppleLoginManager: ASAuthorizationControllerDelegate {
       do {
         try KeychainManager.shared.saveLoginData(
           identifier: appleIDCredential.user,
-          identifyToken: appleIDCredential.identityToken ?? Data(),
-          email: appleIDCredential.email
+          identifyToken: appleIDCredential.identityToken ?? Data()
         )
         
-        Task {
-          let isMember = try await self.requestVerificationToSupabase()
-          self.delegate?.appleLoginDidComplete(with: .success(isMember))
+        Task { [weak self] in
+          let isMember = try await self?.requestVerificationToSupabase()
+          self?.delegate?.appleLoginDidComplete(with: .success(isMember ?? false))
         }
       } catch let error {
         self.delegate?.appleLoginDidComplete(with: .failure(error))
@@ -66,16 +71,71 @@ extension AppleLoginManager: ASAuthorizationControllerDelegate {
   }
 }
 
+// swiftlint: disable function_body_length
 extension AppleLoginManager {
   func requestVerificationToSupabase() async throws -> Bool {
-    if let token = try KeychainManager.shared.load(forKey: "identity_token") {
-      // HTTP 로그인 요청
-      // response에 기존 / 신규 유저 여부 포함
-    }
+    guard let token = try String(data: KeychainManager.shared.load(
+      forKey: KeychainManager.KeychainKey.identifyToken) ?? Data(), encoding: .utf8
+    ) else { throw KeychainError.nonExistentKey }
     
+    let result = try await self.httpClient.send(
+      input: LoginRequestDTO(
+        id_token: token,
+        provider: "apple"
+      ),
+      serializer: { data in
+        let jsonData = try JSONEncoder().encode(data)
+        
+        return HTTPRequest(
+          method: .post,
+          endPoint: URLConstants.Auth.appleLoginURL,
+          header: [
+            "Content-Type": "application/json"
+          ],
+          body: jsonData
+        )
+      },
+      deserializer: { response in
+        guard response.statusCode >= 200 && response.statusCode < 400 else {
+          throw HTTPClientError.badStatusCode(response.statusCode)
+        }
+        
+        guard let data = response.body else {
+          throw HTTPClientError.deserializationError
+        }
+        
+        let loginResponse = try JSONDecoder().decode(LoginResponseDTO.self, from: data)
+        try KeychainManager.shared.saveAccessToken(
+          accessToken: loginResponse.accessToken,
+          refreshToken: loginResponse.refreshToken
+        )
+        
+        let isExistingUser = false
+        
+        return isExistingUser
+      }
+    )
     // supaBase 인증 성공 && 기존유저 -> true
     // supaBase 인증 성공 && 신규유저 -> false
     // supaBase 인증 실패 -> throw Error
-    return true
+    return result
   }
 }
+// swiftlint: enable function_body_length
+
+// swiftlint: disable identifier_name
+struct LoginRequestDTO: Sendable, Codable {
+  let id_token: String
+  let provider: String
+}
+
+struct LoginResponseDTO: Sendable, Codable {
+  let accessToken: String
+  let refreshToken: String
+  
+  enum CodingKeys: String, CodingKey {
+    case accessToken = "access_token"
+    case refreshToken = "refresh_token"
+  }
+}
+// swiftlint: enable identifier_name

@@ -1,7 +1,8 @@
+import Foundation
+
+import HTTPClient
 import OnBoardingScene
 import TDFoundation
-
-import Foundation
 
 @MainActor
 public final class AppCore {
@@ -14,9 +15,16 @@ public final class AppCore {
   }
   var destination: Destination {
     didSet {
-      self.dependency.router.switchTo(self.destination)
+      self.dependency.router.switchTo(
+        self.destination,
+        httpClient: self.httpClient
+      )
     }
   }
+  private let httpClient = HTTPClient(
+    transport: URLSessionTransport(urlSession: URLSession.shared),
+    middlewares: [AuthenticationMiddleWare()]
+  )
   
   public init(dependency: Dependency) {
     self.dependency = dependency
