@@ -86,7 +86,7 @@ extension Styled.Row.Configuration {
     }
   }
   
-  public struct TodoListModel: Equatable {
+  public struct TodoListModel: Equatable, Hashable {
     public static let empty = Self()
     public var text: String?
     public var foregroundColor: UIColor

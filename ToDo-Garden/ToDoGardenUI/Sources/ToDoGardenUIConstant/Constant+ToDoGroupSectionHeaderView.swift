@@ -21,7 +21,7 @@ extension Constant.ToDoGroupSectionHeaderView.Layout {
   public static let hStackLayoutMargins: UIEdgeInsets = UIEdgeInsets(
     top: CGFloat.zero,
     left: 31,
-    bottom: CGFloat.zero,
+    bottom: 11,
     right: 40
   )
 }
