@@ -1,4 +1,4 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 5.10
 import PackageDescription
 
 let package = Package(
@@ -18,6 +18,10 @@ let package = Package(
     Package.Dependency.package(
       name: "OnBoardingScene",
       path: "../OnBoardingScene"
+    ),
+    Package.Dependency.package(
+      name: "SignUpScene",
+      path: "../SignUpScene"
     )
   ],
   targets: [
@@ -35,6 +39,10 @@ let package = Package(
         Target.Dependency.product(
           name: "HTTPClient",
           package: "TDFoundation"
+        ),
+        Target.Dependency.product(
+          name: "SignUpScene",
+          package: "SignUpScene"
         )
       ]
     ),
