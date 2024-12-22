@@ -9,8 +9,6 @@ import Foundation
 
 /// 런타임에 전달받을 의존성을 선언한 구조체입니다.
 public protocol SignUpScenePayloadable {
-  var userIdentifier: String { get }
-  var userEmailAddress: String? { get }
   var agreeOptionalCondition: Bool { get }
 }
 

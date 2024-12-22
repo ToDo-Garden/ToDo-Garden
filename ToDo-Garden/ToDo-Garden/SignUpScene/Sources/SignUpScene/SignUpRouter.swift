@@ -10,7 +10,7 @@ import Foundation
 import SignUpSceneAPI
 
 protocol SignUpRoutingLogic {
-  func routeToSomewhere()
+  func exitSignUpScene()
 }
 
 protocol SignUpDataPassing {
@@ -20,27 +20,14 @@ protocol SignUpDataPassing {
 class SignUpRouter: SignUpDataPassing {
   weak var viewController: SignUpViewController?
   var dataStore: SignUpDataStore?
-  private let nextSceneBuilder: NextSceneBuildable
   
-  init(nextSceneBuilder: NextSceneBuildable) {
-    self.nextSceneBuilder = nextSceneBuilder
-  }
+  init() { }
 }
 
 // MARK: - Routing
 
 extension SignUpRouter: SignUpRoutingLogic {
-  func routeToSomewhere() {
-    let destinationViewController = self.nextSceneBuilder.build(with: NextScenePayload())
-    
-    self.viewController?.present(destinationViewController, animated: true)
-  }
-}
-
-// MARK: - Declare Payload for scene
-
-extension SignUpRouter {
-  struct NextScenePayload: NextScenePayloadable {
-    // var name: String
+  func exitSignUpScene() {
+    self.viewController?.navigationController?.popViewController(animated: true)
   }
 }

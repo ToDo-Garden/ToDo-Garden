@@ -26,6 +26,7 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
   private let signUpScrollView: SignUpScrollView
   private let bottomButton: ToDoGardenBoxButton
   
+  public var afterSignUpAction: (() -> Void)?
   // MARK: - Object lifecycle
   
   init() {
@@ -36,6 +37,11 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
     )
     super.init(nibName: nil, bundle: nil)
     self.setup()
+  }
+  
+  public override func viewIsAppearing(_ animated: Bool) {
+    super.viewIsAppearing(animated)
+    self.navigationController?.navigationBar.isHidden = false
   }
   
   @available(*, unavailable)
@@ -117,7 +123,7 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
   
   private func exitSignUpFlow() {
     // TODO: Router
-    self.navigationController?.popViewController(animated: true)
+    self.router?.exitSignUpScene()
   }
   
   private func backButtonTapped() {

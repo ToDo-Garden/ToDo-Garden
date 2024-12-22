@@ -8,4 +8,5 @@
 import ToDoGardenUIAPI
 
 public protocol SignUpViewControllable: ViewControllable {
+  var afterSignUpAction: (() -> Void)? { get set }
 }

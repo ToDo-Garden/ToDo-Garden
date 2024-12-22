@@ -13,12 +13,10 @@ import SignUpSceneEntity
 public struct SignUpSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
   public struct Dependency {
-    let someWorker: SignUpWorkable
-    let nextSceneBuilder: NextSceneBuildable
+    let signUpWorker: SignUpWorkable
     
-    public init(someWorker: SignUpWorkable, nextSceneBuilder: NextSceneBuildable) {
-      self.someWorker = someWorker
-      self.nextSceneBuilder = nextSceneBuilder
+    public init(signUpWorker: SignUpWorkable) {
+      self.signUpWorker = signUpWorker
     }
   }
   
@@ -46,9 +44,9 @@ extension SignUpSceneBuilder {
   /// - Parameter viewController: VIPCycle을 설정할 viewController입니다.
   /// - Returns: VIP Cycle 설정이 완료된 `ViewControllable` 프로토콜을 준수한 `ViewController` 인스턴스를 반환합니다.
   private func configureVIPCycle(for viewController: SignUpViewController) -> SignUpViewController {
-    let interactor = SignUpInteractor(someWorker: self.dependency.someWorker)
+    let interactor = SignUpInteractor(signUpWorker: self.dependency.signUpWorker)
     let presenter = SignUpPresenter()
-    let router = SignUpRouter(nextSceneBuilder: self.dependency.nextSceneBuilder)
+    let router = SignUpRouter()
     viewController.interactor = interactor
     viewController.router = router
     interactor.presenter = presenter
