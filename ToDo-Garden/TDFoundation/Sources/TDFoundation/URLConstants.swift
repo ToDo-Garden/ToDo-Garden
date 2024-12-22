@@ -19,6 +19,7 @@ public enum URLConstants {
 // swiftlint:disable all
 extension URLConstants.Auth {
   public static let appleLoginURL = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/auth/v1/token?grant_type=id_token")!
-  public static let signUpURL = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/signup")!
+  public static let signUpURL = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/sign_up")!
+  public static let isExitingUserURL = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/validate_user")!
 }
 // swiftlint:enable all
