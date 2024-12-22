@@ -14,10 +14,10 @@ public final class KeychainManager: Sendable {
   private init() {}
   
   public enum KeychainKey {
-    static let userIdentifier = "user_identifier"
-    static let identifyToken = "identity_token"
-    static let accessToken = "access_token"
-    static let refreshToken = "refresh_token"
+    public static let userIdentifier = "user_identifier"
+    public static let identifyToken = "identity_token"
+    public static let accessToken = "access_token"
+    public static let refreshToken = "refresh_token"
     // MARK: - 필요한 키값을 직접 추가하세요
   }
   
@@ -92,10 +92,9 @@ public final class KeychainManager: Sendable {
 // MARK: - Login / 인증 관련
 
 extension KeychainManager {
-  public func saveLoginData(identifier: String, identifyToken: Data) throws {
+  public func saveLoginData(identifyToken: Data) throws {
     try self.clearLoginData()
     
-    try self.create(Data(identifier.utf8), forKey: KeychainKey.userIdentifier)
     try self.create(identifyToken, forKey: KeychainKey.identifyToken)
   }
   
@@ -105,26 +104,27 @@ extension KeychainManager {
       let tokenData = try self.load(forKey: KeychainKey.identifyToken),
       let identifyToken = String(data: tokenData, encoding: String.Encoding.utf8)
     else {
-      throw KeychainError.unknownError
+      throw KeychainError.unknownKeyChainError
     }
     return (identifier, identifyToken)
   }
   
   public func clearLoginData() throws {
-    try self.delete(forKey: KeychainKey.userIdentifier)
     try self.delete(forKey: KeychainKey.identifyToken)
   }
   
-  public func saveAccessToken(accessToken: String, refreshToken: String) throws {
-    try self.clearLoginData()
+  public func saveAccessToken(accessToken: String, refreshToken: String, userIdentifier: String) throws {
+    try self.clearAccessToken()
     
-    try self.create(Data(accessToken.utf8), forKey: KeychainKey.userIdentifier)
-    try self.create(Data(refreshToken.utf8), forKey: KeychainKey.identifyToken)
+    try self.create(Data(accessToken.utf8), forKey: KeychainKey.accessToken)
+    try self.create(Data(refreshToken.utf8), forKey: KeychainKey.refreshToken)
+    try self.create(Data(userIdentifier.utf8), forKey: KeychainKey.userIdentifier)
   }
   
   public func clearAccessToken() throws {
     try self.delete(forKey: KeychainKey.accessToken)
     try self.delete(forKey: KeychainKey.refreshToken)
+    try self.delete(forKey: KeychainKey.userIdentifier)
   }
 }
 
@@ -132,5 +132,5 @@ public enum KeychainError: Error {
   case nonExistentKey
   case alreadyExistentKey
   case unhandledError(status: OSStatus)
-  case unknownError
+  case unknownKeyChainError
 }
