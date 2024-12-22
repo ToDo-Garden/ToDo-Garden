@@ -22,15 +22,9 @@ class SignUpInteractor: SignUpDataStore {
   var isEventAndPromotionalInformationAgreed: Bool = false
   var presenter: SignUpPresentationLogic?
   private let signUpWorker: SignUpWorkable
-  private var tasks: [TaskKey: Task<Void, Never>] = [:]
   
   init(signUpWorker: SignUpWorkable) {
     self.signUpWorker = signUpWorker
-  }
-  
-  func cancelTask(for key: TaskKey) {
-    self.tasks[key]?.cancel()
-    self.tasks[key] = nil
   }
 }
 
