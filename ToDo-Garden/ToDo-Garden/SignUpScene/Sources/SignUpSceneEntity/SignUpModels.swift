@@ -43,6 +43,55 @@ public enum SignUp {
       }
     }
   }
+  
+  public enum RegisterUser {
+    public struct Request {
+      public let customId: String
+      public let nickname: String
+      public let introduction: String?
+      
+      public init(customId: String, nickname: String, introduction: String?) {
+        self.customId = customId
+        self.nickname = nickname
+        self.introduction = introduction
+      }
+    }
+    
+    public struct Response {
+      public let isSuccess: Bool
+      
+      public init(isSuccess: Bool) {
+        self.isSuccess = isSuccess
+      }
+    }
+    public struct ViewModel {
+      public let isSuccess: Bool
+      
+      public init(isSuccess: Bool) {
+        self.isSuccess = isSuccess
+      }
+    }
+    
+    public struct RequestDTO: Codable {
+      public let customid: String
+      public let nickname: String
+      public let introduction: String
+      // TODO: 광고성 이벤트 동의여부 추가
+      public init(
+        customId: String,
+        nickname: String,
+        introduction: String
+      ) {
+        self.customid = customId
+        self.nickname = nickname
+        self.introduction = introduction
+      }
+    }
+    
+    public struct ResponseDTO: Codable {
+      public init() { }
+    }
+  }
 }
 
 extension SignUp {
