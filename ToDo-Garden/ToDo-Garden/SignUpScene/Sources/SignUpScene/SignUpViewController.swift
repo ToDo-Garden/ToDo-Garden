@@ -11,9 +11,12 @@ import SignUpSceneAPI
 import SignUpSceneEntity
 import ToDoGardenUIComponent
 
+@MainActor
 protocol SignUpDisplayLogic: AnyObject {
   func displayValid(viewModel: SignUp.CheckStringValidation.ViewModel)
   func displayInvalid(viewModel: SignUp.CheckStringValidation.ViewModel)
+  func displayUserRegistrationSuccess(viewModel: SignUp.RegisterUser.ViewModel)
+  func displayErrorInfoToast(error: Error)
 }
 
 final class SignUpViewController: UIViewController, SignUpViewControllable {
@@ -102,7 +105,11 @@ final class SignUpViewController: UIViewController, SignUpViewControllable {
     self.bottomButton.isEnabled = false
     self.bottomButton.usingAutolayout()
     self.bottomButton.addAction(UIAction { [weak self] _ in
-      self?.signUpScrollView.goToNextPage()
+      if self?.signUpScrollView.currentPageIndex == (self?.signUpScrollView.inputViews.count ?? 3) - 1 {
+        self?.registerUser()
+      } else {
+        self?.signUpScrollView.goToNextPage()
+      }
     }, for: UIControl.Event.touchUpInside)
     
     NSLayoutConstraint.activate(
@@ -212,6 +219,18 @@ extension SignUpViewController: SignUpDisplayLogic {
     textInputView.changeValidationText(viewModel.warningText)
     textInputView.showValidationText()
   }
+  
+  func displayUserRegistrationSuccess(viewModel: SignUp.RegisterUser.ViewModel) {
+    if viewModel.isSuccess {
+      self.router?.exitSignUpScene()
+      self.afterSignUpAction?()
+    }
+  }
+  
+  func displayErrorInfoToast(error: Error) {
+    self.signUpScrollView.setResignFirstResponder()
+    self.showToast(message: error.localizedDescription)
+  }
 }
 
 // MARK: - Request to interactor
@@ -223,6 +242,19 @@ extension SignUpViewController {
       currentPageIndex: self.signUpScrollView.currentPageIndex
     )
     self.interactor?.checkStringValidation(request: request)
+  }
+  
+  func registerUser() {
+    let texts = self.signUpScrollView.getCompletedTexts()
+    let customId = texts[0]
+    let introduction = texts[1]
+    let nickname = texts[2]
+    let request = SignUp.RegisterUser.Request(
+      customId: customId,
+      nickname: nickname,
+      introduction: introduction
+    )
+    self.interactor?.registerUser(request: request)
   }
 }
 
