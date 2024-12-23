@@ -136,7 +136,7 @@ extension AppleLoginManager {
       serializer: { _ in
         return HTTPRequest(
           method: .get,
-          endPoint: URLConstants.Auth.isExitingUserURL,
+          endPoint: URLConstants.Auth.validateUserURL,
           header: [
             "Content-Type": "application/json",
             "Authorization": "Bearer \(accessToken)",
