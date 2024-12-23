@@ -112,6 +112,10 @@ extension TextInputView {
   func setBecomeFirstResoponder() {
     _ = self.inputTextField.becomeFirstResponder()
   }
+  
+  func setResignFirstResponder() {
+    _ = self.inputTextField.resignFirstResponder()
+  }
 }
 
 // MARK: TextField Delegate Functions

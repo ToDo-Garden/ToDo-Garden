@@ -11,6 +11,7 @@ public final class AppCore {
     case onboarding((Bool, Bool) -> Void)
     case home // Binding HomeInteractor
     // case login
+    case signUp(Bool, () -> Void)
     case none
   }
   var destination: Destination {
@@ -38,7 +39,9 @@ public final class AppCore {
       if isMember {
         self?.destination = .home
       } else {
-        _ = isEventAndPromotionalAgreed
+        self?.destination = .signUp(isEventAndPromotionalAgreed) { [weak self] in
+          self?.destination = .home // 회원가입 완료하면 바로 홈으로
+        }
       }
     }
     : .home

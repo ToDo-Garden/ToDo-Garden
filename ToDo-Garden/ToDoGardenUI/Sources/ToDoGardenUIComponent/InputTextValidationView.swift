@@ -62,6 +62,10 @@ public final class InputTextValidationView: UIView {
   public func setBecomeFirstRespoder() {
     self.textInputView.setBecomeFirstResoponder()
   }
+  
+  public func setResignFirstResponder() {
+    self.textInputView.setResignFirstResponder()
+  }
 }
 
 // MARK: - Validation Text Moving Animation

@@ -141,6 +141,14 @@ final class SignUpScrollView: UIScrollView {
     return self.inputViews[self.currentPageIndex].textInputView.getEditingText()
   }
   
+  func getCompletedTexts() -> [String] {
+    var result = [String]()
+    for idx in 0 ..< self.inputViews.count {
+      result.append(self.inputViews[idx].textInputView.getEditingText() ?? "")
+    }
+    return result
+  }
+  
   // MARK: Page Controls
   func goToNextPage() {
     let nextPageIndex = self.currentPageIndex + 1
@@ -193,5 +201,13 @@ final class SignUpScrollView: UIScrollView {
     
     self.changeButtonDelegate?.changeButtonTitle(pageIndex: self.currentPageIndex)
     self.inputViews[self.currentPageIndex].textInputView.setBecomeFirstRespoder()
+  }
+  
+  func setBecomeFirstResponder() {
+    self.inputViews[self.currentPageIndex].textInputView.setBecomeFirstRespoder()
+  }
+  
+  func setResignFirstResponder() {
+    self.inputViews[self.currentPageIndex].textInputView.setResignFirstResponder()
   }
 }

@@ -11,7 +11,7 @@ import SignUpSceneAPI
 import SignUpSceneEntity
 
 protocol SignUpDataStore {
-  // var name: String { get set }
+  var isEventAndPromotionalInformationAgreed: Bool { get }
 }
 
 protocol SignUpBusinessLogic {
@@ -19,13 +19,12 @@ protocol SignUpBusinessLogic {
 }
 
 class SignUpInteractor: SignUpDataStore {
-  // var name: String = ""
+  var isEventAndPromotionalInformationAgreed: Bool = false
   var presenter: SignUpPresentationLogic?
   private let signUpWorker: SignUpWorkable
   
-  // TODO: 파라미터 명 바꾸기
-  init(someWorker: SignUpWorkable) {
-    self.signUpWorker = someWorker
+  init(signUpWorker: SignUpWorkable) {
+    self.signUpWorker = signUpWorker
   }
 }
 

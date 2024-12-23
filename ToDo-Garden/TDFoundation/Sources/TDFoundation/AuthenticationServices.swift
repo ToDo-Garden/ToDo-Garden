@@ -52,7 +52,6 @@ extension AppleLoginManager: ASAuthorizationControllerDelegate {
     if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
       do {
         try KeychainManager.shared.saveLoginData(
-          identifier: appleIDCredential.user,
           identifyToken: appleIDCredential.identityToken ?? Data()
         )
         
@@ -105,9 +104,11 @@ extension AppleLoginManager {
         }
         
         let loginResponse = try JSONDecoder().decode(LoginResponseDTO.self, from: data)
+        
         try KeychainManager.shared.saveAccessToken(
           accessToken: loginResponse.accessToken,
-          refreshToken: loginResponse.refreshToken
+          refreshToken: loginResponse.refreshToken,
+          userIdentifier: loginResponse.user.id
         )
         
         let isExistingUser = false
@@ -132,10 +133,20 @@ struct LoginRequestDTO: Sendable, Codable {
 struct LoginResponseDTO: Sendable, Codable {
   let accessToken: String
   let refreshToken: String
+  let user: UserDTO
   
   enum CodingKeys: String, CodingKey {
     case accessToken = "access_token"
     case refreshToken = "refresh_token"
+    case user
   }
+}
+
+struct UserDTO: Sendable, Codable {
+  let id: String
+}
+
+struct IsExistingUserRequestDTO: Sendable, Codable {
+
 }
 // swiftlint: enable identifier_name

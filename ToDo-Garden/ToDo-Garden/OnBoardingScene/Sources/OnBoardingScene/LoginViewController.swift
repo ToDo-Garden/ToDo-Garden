@@ -19,7 +19,7 @@ public final class LoginViewController: UIViewController {
   private let dimmingView: UIView
   private let termAgreementView: TermsAgreementView
   
-  public var afterLoginAction: (() -> Void)?
+  public var afterLoginAction: ((Bool) -> Void)?
   public var doneButtonAction: ((Bool) -> Void)?
   // MARK: - Object lifecycle
   
@@ -143,7 +143,7 @@ extension LoginViewController: AppleLoginManagerDelegate {
     switch result {
     case .success(let isMember):
       if isMember {
-        self.afterLoginAction?()
+        self.afterLoginAction?(isMember)
       } else {
         self.showTermAgreementViewForRoutingToSignUpScene()
       }
@@ -186,13 +186,7 @@ extension LoginViewController: TermsAgreementViewDelegate {
 
 extension LoginViewController {
   private func handleError(_ error: Error) {
-    if error is KeychainError {
-      
-    } else if error is HTTPClientError {
-      
-    } else {
-      
-    }
+    debugPrint("\(error) on LoginViewController")
     self.showToast(message: error.localizedDescription)
   }
 }
