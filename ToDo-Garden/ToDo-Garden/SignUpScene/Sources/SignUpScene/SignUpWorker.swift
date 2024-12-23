@@ -48,4 +48,62 @@ public struct SignUpWorker: SignUpWorkable {
       return SignUp.ValidationState.empty
     }
   }
+  
+  public func registerUser(request: SignUp.RegisterUser.Request) async throws -> SignUp.RegisterUser.Response {
+
+    let requestDTO = SignUp.RegisterUser.RequestDTO(
+      customId: request.customId,
+      nickname: request.nickname,
+      introduction: request.introduction ?? ""
+    )
+    let result = try await self.requestForRegistering(with: requestDTO)
+    
+    return SignUp.RegisterUser.Response(isSuccess: result)
+  }
 }
+
+// swiftlint:disable function_body_length
+extension SignUpWorker {
+  private func requestForCheckingExistedId() async throws -> Bool {
+    // TODO: 아이디 중복검사 로직
+    return true
+  }
+  
+  private func requestForRegistering(with dto: SignUp.RegisterUser.RequestDTO) async throws -> Bool {
+    guard let accessToken = try String(
+      data: KeychainManager.shared.load(forKey: KeychainManager.KeychainKey.accessToken) ?? Data(),
+      encoding: .utf8
+    ) else {
+      throw KeychainError.nonExistentKey
+    }
+    
+    let result = try await self.httpClient.send(
+      input: dto,
+      serializer: { data in
+        let jsonData = try JSONEncoder().encode(data)
+        
+        return HTTPRequest(
+          method: HTTPMethod.post,
+          endPoint: URLConstants.Auth.signUpURL,
+          header: [
+            "Content-Type": "application/json",
+            "Content-Profile": "todogarden",
+            "Authorization": "Bearer \(accessToken)"
+          ],
+          body: jsonData
+        )
+      },
+      deserializer: { response in
+        guard response.statusCode >= 200 && response.statusCode < 400 else {
+          throw HTTPClientError.badStatusCode(response.statusCode)
+        }
+
+        return true
+        // TODO: Response로 뭐가 오는지 확인 후 변경 가능성 있음
+        // throw 되지 않고 여기까지 도달하면 성공한거임.
+      }
+    )
+    return result
+  }
+}
+// swiftlint:enable function_body_length

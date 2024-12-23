@@ -11,4 +11,5 @@ import SignUpSceneEntity
 
 public protocol SignUpWorkable {
   func checkStringValidation(text: String?, currentPageIndex: Int) -> SignUp.ValidationState
+  func registerUser(request: SignUp.RegisterUser.Request) async throws -> SignUp.RegisterUser.Response
 }
