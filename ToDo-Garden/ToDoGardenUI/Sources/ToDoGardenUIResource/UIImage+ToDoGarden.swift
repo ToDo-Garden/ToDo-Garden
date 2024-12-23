@@ -71,6 +71,9 @@ extension UIImage {
   public static let editIconImage = UIImage(
     resource: .editIcon
   )
+  public static let deleteIconImage = UIImage(
+    resource: .deleteIcon
+  )
   public static let backwardButtonImage = UIImage(
     resource: .backwardButton
   )
