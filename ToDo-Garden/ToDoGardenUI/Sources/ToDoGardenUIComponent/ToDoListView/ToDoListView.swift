@@ -118,7 +118,16 @@ extension ToDoListView {
     deleteAction.image = UIImage(systemName: "trash")
     deleteAction.backgroundColor = UIColor.toDoGardenEditButtonRed
     
-    return UISwipeActionsConfiguration(actions: [deleteAction])
+    let editAction = UIContextualAction(
+      style: UIContextualAction.Style.normal,
+      title: nil
+    ) { _, _, _ in
+      // TODO: - add edit action
+    }
+    editAction.accessibilityLabel = "Edit"
+    editAction.image = UIImage(systemName: "pencil")
+    editAction.backgroundColor = UIColor.toDoGardenEditButtonOrange
+    return UISwipeActionsConfiguration(actions: [deleteAction, editAction])
   }
 }
 
