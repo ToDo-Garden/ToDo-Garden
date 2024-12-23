@@ -115,7 +115,7 @@ extension ToDoListView {
       // TODO: - add delete action
     }
     deleteAction.accessibilityLabel = "Delete"
-    deleteAction.image = UIImage(systemName: "trash")
+    deleteAction.image = UIImage.deleteIconImage
     deleteAction.backgroundColor = UIColor.toDoGardenEditButtonRed
     
     let editAction = UIContextualAction(
@@ -125,7 +125,7 @@ extension ToDoListView {
       // TODO: - add edit action
     }
     editAction.accessibilityLabel = "Edit"
-    editAction.image = UIImage(systemName: "pencil")
+    editAction.image = UIImage.editIconImage.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
     editAction.backgroundColor = UIColor.toDoGardenEditButtonOrange
     return UISwipeActionsConfiguration(actions: [deleteAction, editAction])
   }
