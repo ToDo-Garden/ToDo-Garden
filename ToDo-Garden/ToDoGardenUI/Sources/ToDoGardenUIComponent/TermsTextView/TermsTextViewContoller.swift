@@ -21,6 +21,11 @@ public final class TermsTextViewContoller: UIViewController {
     fatalError("init(coder:) has not been implemented")
   }
   
+  public override func viewIsAppearing(_ animated: Bool) {
+    super.viewIsAppearing(animated)
+    self.navigationController?.navigationBar.isHidden = false
+  }
+  
   public func update(title: String?, text: String?) {
     if let title = title {
       self.title = title
