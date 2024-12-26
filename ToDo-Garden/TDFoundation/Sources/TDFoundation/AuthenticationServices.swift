@@ -77,7 +77,7 @@ extension AppleLoginManager {
       forKey: KeychainManager.KeychainKey.identifyToken) ?? Data(), encoding: .utf8
     ) else { throw KeychainError.nonExistentKey }
     
-    let verificationResult = try await self.httpClient.send(
+    try await self.httpClient.send(
       input: LoginRequestDTO(
         id_token: token,
         provider: "apple"
@@ -110,17 +110,14 @@ extension AppleLoginManager {
           refreshToken: loginResponse.refreshToken,
           userIdentifier: loginResponse.user.id
         )
-        
-        let isSuccess = true
-        return isSuccess
       }
     )
     
-    let isExistingUser = try await requestIsExistingUser()
+    let isExistingUser = try await self.requestIsExistingUser()
     // supaBase 인증 성공 && 기존유저 -> true
     // supaBase 인증 성공 && 신규유저 -> false
     // supaBase 인증 실패 -> throw Error
-    return verificationResult && isExistingUser
+    return isExistingUser
   }
   
   func requestIsExistingUser() async throws -> Bool {
