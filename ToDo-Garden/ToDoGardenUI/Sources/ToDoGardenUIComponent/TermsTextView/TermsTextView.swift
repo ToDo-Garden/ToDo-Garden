@@ -42,7 +42,7 @@ final class TermsTextView: UIView {
     ])
   }
   
-  private func configure(with text: String) {
+  func configure(with text: String) {
     self.textView.text = text
   }
 }

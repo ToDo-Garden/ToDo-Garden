@@ -21,6 +21,16 @@ public final class TermsTextViewContoller: UIViewController {
     fatalError("init(coder:) has not been implemented")
   }
   
+  public func update(title: String?, text: String?) {
+    if let title = title {
+      self.title = title
+    }
+    
+    if let text = text {
+      self.termsTextView.configure(with: text)
+    }
+  }
+  
   private func setupUI(title: String) {
     self.title = title
     self.view.addSubview(self.termsTextView)
