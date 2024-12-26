@@ -102,8 +102,32 @@ extension ToDoListView {
     listConfiguration.showsSeparators = false
     listConfiguration.backgroundColor = UIColor.white
     listConfiguration.headerMode = UICollectionLayoutListConfiguration.HeaderMode.supplementary
+    listConfiguration.trailingSwipeActionsConfigurationProvider = self.makeSwipeAction
     
     return UICollectionViewCompositionalLayout.list(using: listConfiguration)
+  }
+  
+  private func makeSwipeAction(for indexPath: IndexPath?) -> UISwipeActionsConfiguration? {
+    let deleteAction = UIContextualAction(
+      style: UIContextualAction.Style.destructive,
+      title: nil
+    ) { _, _, _ in
+      // TODO: - add delete action
+    }
+    deleteAction.accessibilityLabel = "Delete"
+    deleteAction.image = UIImage.deleteIconImage
+    deleteAction.backgroundColor = UIColor.toDoGardenEditButtonRed
+    
+    let editAction = UIContextualAction(
+      style: UIContextualAction.Style.normal,
+      title: nil
+    ) { _, _, _ in
+      // TODO: - add edit action
+    }
+    editAction.accessibilityLabel = "Edit"
+    editAction.image = UIImage.editIconImage.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
+    editAction.backgroundColor = UIColor.toDoGardenEditButtonOrange
+    return UISwipeActionsConfiguration(actions: [deleteAction, editAction])
   }
 }
 
