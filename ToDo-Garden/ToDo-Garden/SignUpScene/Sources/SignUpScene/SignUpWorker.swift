@@ -70,10 +70,8 @@ extension SignUpWorker {
   }
   
   private func requestForRegistering(with dto: SignUp.RegisterUser.RequestDTO) async throws -> Bool {
-    guard let accessToken = try String(
-      data: KeychainManager.shared.load(forKey: KeychainManager.KeychainKey.accessToken) ?? Data(),
-      encoding: .utf8
-    ) else {
+    guard let accessToken = try KeychainManager.shared.load(forKey: KeychainManager.KeychainKey.accessToken),
+      let accessTokenString = String(data: accessToken, encoding: String.Encoding.utf8) else {
       throw KeychainError.nonExistentKey
     }
     
@@ -88,7 +86,7 @@ extension SignUpWorker {
           header: [
             "Content-Type": "application/json",
             "Content-Profile": "todogarden",
-            "Authorization": "Bearer \(accessToken)"
+            "Authorization": "Bearer \(accessTokenString)"
           ],
           body: jsonData
         )

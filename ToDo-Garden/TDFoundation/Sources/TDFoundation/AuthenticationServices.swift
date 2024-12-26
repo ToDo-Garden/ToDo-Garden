@@ -121,13 +121,11 @@ extension AppleLoginManager {
   }
   
   func requestIsExistingUser() async throws -> Bool {
-    guard let accessToken = try String(
-      data: KeychainManager.shared.load(forKey: KeychainManager.KeychainKey.accessToken) ?? Data(),
-      encoding: .utf8
-    ) else {
+    guard let accessToken = try KeychainManager.shared.load(forKey: KeychainManager.KeychainKey.accessToken),
+      let accessTokenString = String(data: accessToken, encoding: .utf8) else {
       throw KeychainError.nonExistentKey
     }
-
+    
     let result = try await self.httpClient.send(
       input: IsExistingUserRequestDTO(),
       serializer: { _ in
@@ -136,7 +134,7 @@ extension AppleLoginManager {
           endPoint: URLConstants.Auth.validateUserURL,
           header: [
             "Content-Type": "application/json",
-            "Authorization": "Bearer \(accessToken)",
+            "Authorization": "Bearer \(accessTokenString)",
             "Accept-Profile": "todogarden"
           ]
         )
