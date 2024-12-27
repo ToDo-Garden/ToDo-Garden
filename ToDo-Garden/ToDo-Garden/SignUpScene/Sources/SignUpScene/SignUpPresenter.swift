@@ -9,9 +9,12 @@ import Foundation
 
 import SignUpSceneEntity
 
+@MainActor
 protocol SignUpPresentationLogic {
   func presentValid(response: SignUp.CheckStringValidation.Response)
   func presentInvalid(response: SignUp.CheckStringValidation.Response)
+  func presentUserRegistrationSuccess(response: SignUp.RegisterUser.Response)
+  func presentError(error: Error)
 }
 
 class SignUpPresenter {
@@ -34,6 +37,17 @@ extension SignUpPresenter: SignUpPresentationLogic {
     self.viewController?.displayInvalid(viewModel: viewModel)
   }
   
+  func presentUserRegistrationSuccess(response: SignUp.RegisterUser.Response) {
+    let viewModel = SignUp.RegisterUser.ViewModel(isSuccess: response.isSuccess)
+    self.viewController?.displayUserRegistrationSuccess(viewModel: viewModel)
+  }
+  
+  func presentError(error: any Error) {
+    self.viewController?.displayErrorInfoToast(error: error)
+  }
+}
+
+extension SignUpPresenter {
   private func makeViewModel(
     response: SignUp.CheckStringValidation.Response
   ) -> SignUp.CheckStringValidation.ViewModel {

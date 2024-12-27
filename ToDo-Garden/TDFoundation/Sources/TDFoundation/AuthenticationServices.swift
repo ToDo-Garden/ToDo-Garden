@@ -77,7 +77,7 @@ extension AppleLoginManager {
       forKey: KeychainManager.KeychainKey.identifyToken) ?? Data(), encoding: .utf8
     ) else { throw KeychainError.nonExistentKey }
     
-    let result = try await self.httpClient.send(
+    try await self.httpClient.send(
       input: LoginRequestDTO(
         id_token: token,
         provider: "apple"
@@ -110,15 +110,48 @@ extension AppleLoginManager {
           refreshToken: loginResponse.refreshToken,
           userIdentifier: loginResponse.user.id
         )
-        
-        let isExistingUser = false
-        
-        return isExistingUser
       }
     )
+    
+    let isExistingUser = try await self.requestIsExistingUser()
     // supaBase 인증 성공 && 기존유저 -> true
     // supaBase 인증 성공 && 신규유저 -> false
     // supaBase 인증 실패 -> throw Error
+    return isExistingUser
+  }
+  
+  func requestIsExistingUser() async throws -> Bool {
+    guard let accessToken = try KeychainManager.shared.load(forKey: KeychainManager.KeychainKey.accessToken),
+      let accessTokenString = String(data: accessToken, encoding: .utf8) else {
+      throw KeychainError.nonExistentKey
+    }
+    
+    let result = try await self.httpClient.send(
+      input: IsExistingUserRequestDTO(),
+      serializer: { _ in
+        return HTTPRequest(
+          method: .get,
+          endPoint: URLConstants.Auth.validateUserURL,
+          header: [
+            "Content-Type": "application/json",
+            "Authorization": "Bearer \(accessTokenString)",
+            "Accept-Profile": "todogarden"
+          ]
+        )
+      },
+      deserializer: { response in
+        guard response.statusCode >= 200 && response.statusCode < 400 else {
+          throw HTTPClientError.badStatusCode(response.statusCode)
+        }
+        
+        guard let boolString = String(data: response.body ?? Data(), encoding: .utf8),
+          let bool = Bool(boolString) else {
+          throw HTTPClientError.deserializationError
+        }
+        
+        return bool
+      }
+    )
     return result
   }
 }
