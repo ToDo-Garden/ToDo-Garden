@@ -23,4 +23,9 @@ extension URLConstants.Auth {
   public static let validateUserURL = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/validate_user")!
   // ↑ 기존유저/신규유저 체크 URL
 }
+
+extension URLConstants.Group {
+  public static let fetchGroups = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/grouplist")!
+  public static let addGroup = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/make_group")!
+}
 // swiftlint:enable all
