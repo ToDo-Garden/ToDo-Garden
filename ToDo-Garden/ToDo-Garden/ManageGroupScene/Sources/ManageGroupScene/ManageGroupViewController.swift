@@ -67,13 +67,18 @@ open class ManageGroupViewController: UIViewController, ManageGroupViewControlla
     self.view.backgroundColor = UIColor.white
     self.setupTableView()
     self.setupNavigationBar()
+  }
+  
+  open override func viewIsAppearing(_ animated: Bool) {
+    super.viewIsAppearing(animated)
+    self.navigationController?.navigationBar.isHidden = false
     self.fetchGroupList()
   }
   
   // MARK: - Request to interactor
   func fetchGroupList() {
     let request = ManageGroup.FetchGroupList.Request()
-      self.interactor?.fetchGroupList(request: request)
+    self.interactor?.fetchGroupList(request: request)
   }
   
   func saveGroupList() {
@@ -130,7 +135,7 @@ extension ManageGroupViewController {
       ]
     )
     self.rightBarButton = UIBarButtonItem(customView: self.rightBarButtonCustomView)
-
+    
     self.navigationItem.setRightBarButton(self.rightBarButton, animated: true)
   }
   
@@ -142,6 +147,7 @@ extension ManageGroupViewController {
       self.cancelEditing()
     }
     self.rightBarButtonCustomView.isEnabled = true
+    self.interactor?.resetPendingChanges()
   }
   
   @objc private func saveAndOutEditingMode() {
@@ -151,6 +157,7 @@ extension ManageGroupViewController {
       self.saveGroupList()
     }
     self.rightBarButtonCustomView.isEnabled = true
+    self.interactor?.resetPendingChanges()
   }
   
   private func updateBarButtonItems(isEditingMode: Bool) {
@@ -439,15 +446,3 @@ extension ManageGroupViewController {
     self.router?.routeToPostGroupScene(groupInfo: groupInfo)
   }
 }
-
-#if DEBUG
-@available(iOS 17.0, *)
-#Preview {
-  let worker = ManageGroupWorker()
-  let sceneBuilder = ManageGroupSceneBuilder(
-    dependency: .init(manageGroupWorker: worker, postGroupSceneBuilder: nil)
-  )
-  let naviController = UINavigationController(rootViewController: sceneBuilder.build(with: nil))
-  return naviController
-}
-#endif

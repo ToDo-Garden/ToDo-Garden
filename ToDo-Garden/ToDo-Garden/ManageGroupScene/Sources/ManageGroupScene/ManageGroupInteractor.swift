@@ -24,7 +24,7 @@ protocol ManageGroupBusinessLogic {
   func addGroupDirectly(request: ManageGroup.AddGroup.Request)
   
   func cancelTask(for key: ManageGroupInteractor.TaskKey)
-  func resetPendingQueue()
+  func resetPendingChanges()
 }
 
 class ManageGroupInteractor: ManageGroupDataStore {
@@ -47,7 +47,7 @@ class ManageGroupInteractor: ManageGroupDataStore {
     self.tasks[key] = nil
   }
   
-  func resetPendingQueue() {
+  func resetPendingChanges() {
     self.pendingChanges = []
   }
 }
