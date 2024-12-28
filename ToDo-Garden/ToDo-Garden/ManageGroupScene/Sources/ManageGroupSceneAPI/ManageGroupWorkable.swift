@@ -7,6 +7,7 @@
 
 import Foundation
 
+import HTTPClientAPI
 import ManageGroupSceneEntity
 
 public protocol ManageGroupWorkable {
@@ -16,6 +17,10 @@ public protocol ManageGroupWorkable {
   func saveGroupList(
     request: ManageGroupSceneEntity.ManageGroup.SaveGroupList.Request
   ) async throws -> [ManageGroup.ToDoGroup]
-  func addGroup(request: ManageGroup.AddGroup.Request) -> ManageGroup.ToDoGroup
-  func editGroup(request: ManageGroup.EditGroup.Request, progressRate: Float) -> ManageGroup.ToDoGroup
+  func addGroup(request: ManageGroup.AddGroup.Request) -> (ManageGroup.ToDoGroup, ManageGroup.PendingItem)
+  func editGroup(
+    request: ManageGroup.EditGroup.Request,
+    progressRate: Float
+  ) -> (ManageGroup.ToDoGroup, ManageGroup.PendingItem)
+  func addGroupDirectly(request: ManageGroup.AddGroup.Request) async throws -> UUID
 }
