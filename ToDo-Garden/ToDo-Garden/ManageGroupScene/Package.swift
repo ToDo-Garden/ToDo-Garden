@@ -22,7 +22,9 @@ let package = Package(
   ],
   dependencies: [
     .package(name: "ToDoGardenUI", path: "../ToDoGardenUI"),
-    .package(name: "PostGroupScene", path: "./PostGroupScene")
+    .package(name: "PostGroupScene", path: "./PostGroupScene"),
+    .package(path: "../TDUtility"),
+    .package(path: "../TDFoundation")
   ],
   targets: [
     .target(
@@ -41,7 +43,9 @@ let package = Package(
         .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI"),
         .product(name: "PostGroupSceneAPI", package: "PostGroupScene"),
         "ManageGroupSceneAPI",
-        "ManageGroupSceneEntity"
+        "ManageGroupSceneEntity",
+        .product(name: "TDUtility", package: "TDUtility"),
+        .product(name: "TDFoundation", package: "TDFoundation")
       ]
     ),
     .testTarget(
