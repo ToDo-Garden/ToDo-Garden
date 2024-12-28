@@ -9,7 +9,7 @@ import UIKit.UIColor
 
 public enum ManageGroup {
   public struct ToDoGroup: Equatable {
-    public let groupID: UUID
+    public var groupID: UUID
     public let groupName: String
     public let progressColor: UIColor
     public let progressRate: Float
@@ -169,6 +169,78 @@ public enum ManageGroup {
         self.group = group
         self.editedIndex = editedIndex
       }
+    }
+  }
+}
+
+extension ManageGroup.FetchGroupList {
+  public struct RequestDTO: Sendable, Codable {
+    public init() { }
+  }
+  
+  public struct ResponseDTO: Sendable, Codable {
+    public let data: [GroupDataDTO]
+    public let isMoreGroupExist: Bool
+    
+    public struct GroupDataDTO: Sendable, Codable {
+      public let id: String
+      public let name: String
+      public let color: String
+      public let progressrate: Int
+      public let orderIdx: Int
+      
+      private enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case color
+        case progressrate
+        case orderIdx = "order_idx"
+      }
+    }
+  }
+}
+
+extension ManageGroup.AddGroup {
+  public struct RequestDTO: Sendable, Codable {
+    public let name: String
+    public let color: String
+    
+    public init(name: String, color: String) {
+      self.name = name
+      self.color = color
+    }
+  }
+}
+
+extension ManageGroup.EditGroup {
+  public struct RequestDTO: Sendable, Codable {
+    public let name: String
+    public let color: String
+    
+    public init(name: String, color: String) {
+      self.name = name
+      self.color = color
+    }
+  }
+}
+
+extension ManageGroup {
+  public enum TaskType: Sendable {
+    case add
+    case remove
+    case edit
+    case reorder
+  }
+  
+  public struct PendingItem: Sendable {
+    public let taskType: TaskType
+    public let groupID: UUID?
+    public let requestDTO: Sendable?
+    
+    public init(taskType: TaskType, groupID: UUID?, requestDTO: Sendable) {
+      self.taskType = taskType
+      self.groupID = groupID
+      self.requestDTO = requestDTO
     }
   }
 }
