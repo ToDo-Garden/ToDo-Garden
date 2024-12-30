@@ -11,15 +11,15 @@ import HTTPClientAPI
 
 public final class RefreshMiddleware: ClientMiddleware {
   private let keychainManager: KeychainManager
-  private let httpClient: HTTPClientAPI & Sendable
+  private let transport: ClientTransport & Sendable
   private let taskManager = RefreshTaskManager()
   
   public init(
     keychainManager: KeychainManager = .shared,
-    httpClient: HTTPClientAPI & Sendable
+    transport: ClientTransport & Sendable
   ) {
     self.keychainManager = keychainManager
-    self.httpClient = httpClient
+    self.transport = transport
   }
   
   public func intercept(
@@ -71,41 +71,36 @@ extension RefreshMiddleware {
   }
   
   private func refreshTokens() async throws -> (accessToken: String, refreshToken: String) {
-    let request = try self.makeHTTPRequest()
+    let jsonDecoder = JSONDecoder()
+    let request = try makeHTTPRequest()
     
-    let result = try await self.httpClient.send(
-      input: request,
-      serializer: { $0 },
-      deserializer: { response in
-        guard let data = response.body else {
-          throw HTTPClientError.deserializationError
-        }
-        
-        let tokens = try JSONDecoder().decode(RefreshDTO.Response.self, from: data)
-        return (tokens.accessToken, tokens.refreshToken)
-      }
-    )
+    // Transport를 직접 사용하여 요청 전송
+    let response = try await transport.send(request: request)
     
-    return result
+    // Response 처리
+    guard let data = response.body else {
+      throw HTTPClientError.deserializationError
+    }
+    
+    let tokens = try jsonDecoder.decode(RefreshDTO.Response.self, from: data)
+    return (tokens.accessToken, tokens.refreshToken)
   }
   
   private func makeHTTPRequest() throws -> HTTPRequest {
     guard let accessTokenData = try self.keychainManager.load(forKey: KeychainManager.KeychainKey.accessToken),
-      let accessToken = String(data: accessTokenData, encoding: .utf8) else {
-      throw KeychainError.nonExistentKey
-    }
-    
-    guard let refreshTokenData = try self.keychainManager.load(forKey: KeychainManager.KeychainKey.refreshToken),
+      let accessToken = String(data: accessTokenData, encoding: .utf8),
+      let refreshTokenData = try self.keychainManager.load(forKey: KeychainManager.KeychainKey.refreshToken),
       let refreshToken = String(data: refreshTokenData, encoding: .utf8) else {
       throw KeychainError.nonExistentKey
     }
-    
+
     return HTTPRequest(
       method: .post,
       endPoint: URLConstants.Auth.refreshTokenURL,
       header: [
         "Authorization": "Bearer \(accessToken)",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "apiKey" : try KeyConstants.supabaseAPIKey
       ],
       body: try JSONEncoder().encode(RefreshDTO.Request(refreshToken: refreshToken))
     )
