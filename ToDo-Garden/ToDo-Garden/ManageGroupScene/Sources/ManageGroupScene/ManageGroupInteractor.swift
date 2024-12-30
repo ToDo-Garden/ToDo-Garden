@@ -21,6 +21,10 @@ protocol ManageGroupBusinessLogic {
   func deleteGroup(request: ManageGroup.DeleteGroup.Request)
   func addGroup(request: ManageGroup.AddGroup.Request)
   func editGroup(request: ManageGroup.EditGroup.Request)
+  func addGroupDirectly(request: ManageGroup.AddGroup.Request)
+  
+  func cancelTask(for key: ManageGroupInteractor.TaskKey)
+  func resetPendingChanges()
 }
 
 class ManageGroupInteractor: ManageGroupDataStore {
@@ -28,7 +32,8 @@ class ManageGroupInteractor: ManageGroupDataStore {
   private let manageGroupWorker: ManageGroupWorkable
   
   var currentGroups: [ManageGroup.ToDoGroup]
-  private var tasks: [TaskKey: Task<Void, Never>] = [:]
+  private var tasks: [ManageGroupInteractor.TaskKey: Task<Void, Never>] = [:]
+  private var pendingChanges: [ManageGroup.PendingItem] = []
   
   init(
     worker: ManageGroupWorkable
@@ -37,9 +42,13 @@ class ManageGroupInteractor: ManageGroupDataStore {
     self.currentGroups = []
   }
   
-  func cancelTask(for key: TaskKey) {
+  func cancelTask(for key: ManageGroupInteractor.TaskKey) {
     self.tasks[key]?.cancel()
     self.tasks[key] = nil
+  }
+  
+  func resetPendingChanges() {
+    self.pendingChanges = []
   }
 }
 
@@ -80,6 +89,32 @@ extension ManageGroupInteractor: ManageGroupBusinessLogic {
     }
   }
   
+  func addGroupDirectly(request: ManageGroup.AddGroup.Request) {
+    self.tasks[TaskKey.addGroupDirectly] = Task {
+      defer { self.tasks[TaskKey.addGroupDirectly] = nil }
+      
+      do {
+        if self.isFull() { throw NSError(domain: "list is Full (less than 51)", code: 1) }
+        
+        try Task.checkCancellation()
+        let groupID = try await self.manageGroupWorker.addGroupDirectly(request: request)
+        try Task.checkCancellation()
+        
+        let group = ManageGroup.ToDoGroup(
+          groupID: groupID,
+          groupName: request.groupName,
+          progressColor: request.groupColor,
+          progressRate: Float.zero
+        )
+        self.currentGroups.append(group)
+        let response = ManageGroup.AddGroup.Response(group: group)
+        self.presenter?.presentAddedGroup(response: response)
+      } catch let error {
+        self.handleError(error, about: TaskKey.addGroupDirectly)
+      }
+    }
+  }
+  
   func deleteGroup(request: ManageGroup.DeleteGroup.Request) {
     self.currentGroups.remove(at: request.index)
     let response = ManageGroup.DeleteGroup.Response(groupID: request.groupID, index: request.index)
@@ -87,9 +122,15 @@ extension ManageGroupInteractor: ManageGroupBusinessLogic {
   }
   
   func addGroup(request: ManageGroup.AddGroup.Request) {
-    let group = self.manageGroupWorker.addGroup(request: request)
-    self.currentGroups.append(group)
+    if self.isFull() {
+      let error = NSError(domain: "list is Full (less than 51)", code: 1)
+      self.handleError(error, about: TaskKey.none)
+    }
     
+    let (group, pendingItem) = self.manageGroupWorker.addGroup(request: request)
+    
+    self.currentGroups.append(group)
+    self.pendingChanges.append(pendingItem)
     let response = ManageGroup.AddGroup.Response(group: group)
     self.presenter?.presentAddedGroup(response: response)
   }
@@ -97,8 +138,9 @@ extension ManageGroupInteractor: ManageGroupBusinessLogic {
   func editGroup(request: ManageGroup.EditGroup.Request) {
     if let index = self.currentGroups.firstIndex(where: { $0.groupID == request.groupID }) {
       let progressRate = self.currentGroups[index].progressRate
-      let group = self.manageGroupWorker.editGroup(request: request, progressRate: progressRate)
+      let (group, pendingItem) = self.manageGroupWorker.editGroup(request: request, progressRate: progressRate)
       self.currentGroups[index] = group
+      self.pendingChanges.append(pendingItem)
       
       let response = ManageGroup.EditGroup.Response(group: group, editedIndex: index)
       self.presenter?.presentEditedGroup(response: response)
@@ -112,6 +154,8 @@ extension ManageGroupInteractor {
   enum TaskKey {
     case fetchGroups
     case saveGroups
+    case addGroupDirectly
+    case none
   }
   
   private func handleError(_ error: Error, about task: TaskKey) {
@@ -123,5 +167,9 @@ extension ManageGroupInteractor {
     } else {
       return
     }
+  }
+  
+  private func isFull() -> Bool {
+    return self.currentGroups.count >= 50
   }
 }

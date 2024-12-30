@@ -19,7 +19,11 @@ extension ManageGroupViewController: PostGroupSceneDelegate {
       groupColor: group.groupColor
     )
     
-    self.interactor?.addGroup(request: request)
+    if self.groupListTableView.isEditing {
+      self.interactor?.addGroup(request: request)
+    } else {
+      self.interactor?.addGroupDirectly(request: request)
+    }
   }
   
   public func editGroup(group: PostGroup.ToDoGroup) {
