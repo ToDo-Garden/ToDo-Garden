@@ -28,10 +28,13 @@ public final class RefreshMiddleware: ClientMiddleware {
   ) async throws -> HTTPResponse {
     let response = try await next(request)
     
-    guard response.statusCode == 401 else {
+    guard response.statusCode == 401,
+      let body = response.body,
+      let decodedBody = try? JSONDecoder().decode(RefreshDTO.ErrorResponse.self, from: body),
+      decodedBody.code == "PGRST301" else {
       return response
     }
-    
+
     // Refresh token 작업 관리
     try await self.taskManager.performRefreshIfNeeded { [weak self] in
       guard let (newAccessToken, newRefreshToken) = try await self?.refreshTokens() else { return }
@@ -100,7 +103,7 @@ extension RefreshMiddleware {
       header: [
         "Authorization": "Bearer \(accessToken)",
         "Content-Type": "application/json",
-        "apiKey" : try KeyConstants.supabaseAPIKey
+        "apiKey": try KeyConstants.supabaseAPIKey
       ],
       body: try JSONEncoder().encode(RefreshDTO.Request(refreshToken: refreshToken))
     )

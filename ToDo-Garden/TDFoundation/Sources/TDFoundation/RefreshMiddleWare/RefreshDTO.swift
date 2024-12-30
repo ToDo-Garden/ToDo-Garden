@@ -26,5 +26,9 @@ enum RefreshDTO {
       case refreshToken = "refresh_token"
     }
   }
+  
+  struct ErrorResponse: Sendable, Decodable {
+    let code: String
+  }
 }
 // swiftlint: enable all
