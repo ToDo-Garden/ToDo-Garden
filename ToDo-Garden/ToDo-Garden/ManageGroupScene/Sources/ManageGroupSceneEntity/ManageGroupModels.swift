@@ -188,14 +188,6 @@ extension ManageGroup.FetchGroupList {
       public let color: String
       public let progressrate: Int
       public let orderIdx: Int
-      
-      private enum CodingKeys: String, CodingKey {
-        case id
-        case name
-        case color
-        case progressrate
-        case orderIdx = "order_idx"
-      }
     }
   }
 }
