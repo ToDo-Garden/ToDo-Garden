@@ -45,6 +45,7 @@ final class MyStatsView: UIView {
     self.setupGardenView()
     self.setupLongestRecordsStackView()
     self.setupPeriodicSummaryView()
+    self.setupShimmerable()
   }
   
   private func setupProfileView() {
@@ -139,9 +140,9 @@ final class MyStatsView: UIView {
 
 // MARK: Update
 extension MyStatsView {
-  func updateProfileView(userImage: UIImage, userName: String, dayCount: Int, dateRange: [Date]) {
-    let startDate = dateRange.first?.toStringDefaultFormat()
-    let endDate = dateRange.last?.toStringDefaultFormat()
+  func updateProfileView(userImage: UIImage, userName: String, dayCount: Int, dateRange: [String]) {
+    let startDate = dateRange.first
+    let endDate = dateRange.last
     
     var dateRangeString: String
     
@@ -165,11 +166,11 @@ extension MyStatsView {
     self.gardenView.configure(with: pomodoroRecordCollection)
   }
   
-  func updateLeftRecordStackView(groupName: String, recordCount: Int, dateRange: [Date]) {
+  func updateLeftRecordStackView(groupName: String, recordCount: Int, dateRange: [String]) {
     self.longestRecordStackView.updateLeftView(groupName: groupName, recordCount: recordCount, dateRange: dateRange)
   }
   
-  func updateRightRecordStackView(recordCount: Int, dateRange: [Date]) {
+  func updateRightRecordStackView(recordCount: Int, dateRange: [String]) {
     self.longestRecordStackView.updateRightView(recordCount: recordCount, dateRange: dateRange)
   }
   
@@ -193,13 +194,18 @@ extension MyStatsView {
     let fixedSentence = Constant.StringLiteral.keepingDesctription
     return "\(userName)\(fixedSuffix)\(fixedNextLine)\(dayCount)\(fixedSentence)"
   }
+  
+  private func setupShimmerable() {
+    self.profileView.isShimmering = true
+    self.longestRecordStackView.isShimmering = true
+    self.periodicSummaryView.isShimmering = true
+  }
 }
 
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
   let view = MyStatsView()
-
   view.usingAutolayout()
   NSLayoutConstraint.activate([
     view.widthAnchor.constraint(equalToConstant: 380),
