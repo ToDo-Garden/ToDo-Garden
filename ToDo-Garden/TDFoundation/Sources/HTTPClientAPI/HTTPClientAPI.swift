@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol HTTPClientAPI {
+public protocol HTTPClientAPI: Sendable {
   func send<OperationInput, OperationOutput>(
     input: OperationInput,
     serializer: @Sendable (OperationInput) throws -> HTTPRequest,
