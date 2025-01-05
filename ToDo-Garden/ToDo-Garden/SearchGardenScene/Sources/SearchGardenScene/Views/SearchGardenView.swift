@@ -79,18 +79,3 @@ extension SearchGardenView {
     )
   }
 }
-
-#if DEBUG
-@available(iOS 17.0, *)
-#Preview {
-  let view = SearchGardenView()
-  
-  view.usingAutolayout()
-  view.widthAnchor.constraint(equalToConstant: 395).isActive = true
-  view.heightAnchor.constraint(equalToConstant: 650).isActive = true
-  
-  view.tableView.updateData(with: MockData.preview)
-  
-  return view
-}
-#endif
