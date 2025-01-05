@@ -51,8 +51,8 @@ final public class SearchGardenTableView: UITableView {
         configuration: Styled.Row.Configuration.profile(
           .init(
             style: .searchRow,
-            title: userData.userNickname,
-            description: "@" + userData.userID,
+            title: userData.nickname,
+            description: "@" + userData.customId,
             image: userData.userImage
           )
         )
@@ -75,10 +75,12 @@ final public class SearchGardenTableView: UITableView {
   
   view.updateData(
     with: [
-      SearchGardenUser(userNickname: "흥민갓", userID: "hmzzang123", userImage: nil),
-      SearchGardenUser(userNickname: "인성맨", userID: "nomercy", userImage: nil),
-      SearchGardenUser(userNickname: "흥민갓", userID: "missyouharrykane", userImage: nil),
-      SearchGardenUser(userNickname: "초절정꽃미남", userID: "mrhandsome", userImage: nil)
+      SearchGardenUser(
+        id: UUID(),
+        nickname: "흥민갓",
+        customId: "hmzzang123",
+        userImage: nil
+      )
     ]
   )
   return view

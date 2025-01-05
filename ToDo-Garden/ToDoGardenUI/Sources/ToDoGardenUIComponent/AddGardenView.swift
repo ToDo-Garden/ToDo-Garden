@@ -69,7 +69,8 @@ public final class AddGardenView: UIView {
       Styled.Row.Configuration.ProfileModel(
         style: Styled.Row.Configuration.ProfileModel.Style.myStats,
         title: userNickname,
-        description: userIntroduction
+        description: userIntroduction,
+        image: userImage
       )
     )
     
