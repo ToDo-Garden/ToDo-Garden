@@ -13,25 +13,25 @@ public enum SearchGarden {
   
   // MARK: Use cases
   
-  public enum LoadUserDataForAddingGarden {
+  public enum LoadFriendGarden {
     public struct Request: Sendable {
-      public let userID: String
+      public let userID: UUID
       public let userImage: UIImage?
       
-      public init(userID: String, userImage: UIImage?) {
+      public init(userID: UUID, userImage: UIImage?) {
         self.userID = userID
         self.userImage = userImage
       }
     }
     public struct Response: Sendable {
-      public let userID: String
+      public let userID: UUID
       public let userImage: UIImage?
-      public let fetchedData: FetchedUserDataForAddingGarden
+      public let fetchedData: LoadFriendGardenDTO.Response
       
       public init(
-        userID: String,
+        userID: UUID,
         userImage: UIImage?,
-        fetchedData: FetchedUserDataForAddingGarden
+        fetchedData: LoadFriendGardenDTO.Response
       ) {
         self.userID = userID
         self.userImage = userImage
@@ -42,14 +42,14 @@ public enum SearchGarden {
       public let userImage: UIImage?
       public let userNickname: String
       public let userIntroduction: String?
-      public let userGarden: PomodoroRecordCollection
+      public let userGarden: [UserGarden]
       public let isButtonEnable: Bool
       
       public init(
         userImage: UIImage?,
         userNickname: String,
         userIntroduction: String?,
-        userGarden: PomodoroRecordCollection,
+        userGarden: [UserGarden],
         isButtonEnable: Bool
       ) {
         self.userImage = userImage
@@ -61,44 +61,22 @@ public enum SearchGarden {
     }
   }
   
-  public enum AddGarden {
-    public struct Request: Sendable {
-      public init() { }
-    }
-    public struct Response: Sendable {
-      public let result: ResultForAddingGarden
-      
-      public init(result: ResultForAddingGarden) {
-        self.result = result
-      }
-    }
-    public struct ViewModel: Sendable {
-      public let isSuccess: Bool
-      
-      public init(isSuccess: Bool) {
-        self.isSuccess = isSuccess
-      }
-    }
-  }
-  
   public enum LoadSearchedGarden {
     public struct Request: Sendable {
       public let inputText: String
-      public let isContinuous: Bool
-      public init(inputText: String, isContinuous: Bool) {
+      public init(inputText: String) {
         self.inputText = inputText
-        self.isContinuous = isContinuous
       }
     }
     public struct Response: Sendable {
-      public let fetchedData: FetchedGardenDataForSearching
-      public init(fetchedData: FetchedGardenDataForSearching) {
+      public let fetchedData: SearchedGardenList
+      public init(fetchedData: SearchedGardenList) {
         self.fetchedData = fetchedData
       }
     }
     public struct ViewModel: Sendable {
-      public let fetchedData: FetchedGardenDataForSearching
-      public init(fetchedData: FetchedGardenDataForSearching) {
+      public let fetchedData: SearchedGardenList
+      public init(fetchedData: SearchedGardenList) {
         self.fetchedData = fetchedData
       }
     }
@@ -106,34 +84,83 @@ public enum SearchGarden {
 }
 
 extension SearchGarden {
-  public struct FetchedUserDataForAddingGarden: Sendable {
-    public let userNickname: String
-    public let userIntroduction: String?
-    public let userGarden: PomodoroRecordCollection
-    public let isFriend: Bool
+  public enum LoadFriendGardenDTO {
+    public struct Response: Sendable, Codable {
+      public let data: FriendGardenInfo
+      public let isFriend: Bool
+    }
     
-    public init(
-      userNickname: String,
-      userIntroduction: String?,
-      userGarden: PomodoroRecordCollection,
-      isFriend: Bool
-    ) {
-      self.userNickname = userNickname
-      self.userIntroduction = userIntroduction
-      self.userGarden = userGarden
-      self.isFriend = isFriend
+    public struct FriendGardenInfo: Sendable, Codable {
+      public let nickname: String
+      public let introduction: String?
+      public let pomodoroRecords: [UserGarden]
+      
+      public init(
+        nickname: String,
+        introduction: String?,
+        pomodororecords: [UserGarden]
+      ) {
+        self.nickname = nickname
+        self.introduction = introduction
+        self.pomodoroRecords = pomodororecords
+      }
     }
   }
   
-  public struct ResultForAddingGarden: Sendable {
-    public let isSuccess: Bool
+  public struct UserGarden: Sendable, Codable {
+    public let date: String
+    public let pomodoroCount: Int
     
-    public init(isSuccess: Bool) {
-      self.isSuccess = isSuccess
+    public init(date: String, pomodoroCount: Int) {
+      self.date = date
+      self.pomodoroCount = pomodoroCount
+    }
+  }
+}
+
+extension SearchGarden {
+  public enum AddGardenDTO {
+    public struct Response: Sendable, Codable {
+      public let gardenId: String
+      
+      public init(gardenId: String) {
+        self.gardenId = gardenId
+      }
+      enum CodingKeys: String, CodingKey {
+        case gardenId = "garden_id"
+      }
     }
   }
   
-  public struct FetchedGardenDataForSearching: Sendable {
+  public enum SearchGardenUsersDTO {
+    public struct Response: Sendable, Decodable {
+      public let data: [User]?
+      public let isEndPage: Bool
+      public init(data: [User], isEndPage: Bool) {
+        self.data = data
+        self.isEndPage = isEndPage
+      }
+      
+      public struct User: Sendable, Decodable {
+        public let id: String
+        public let imageurl: String?
+        public let nickname: String
+        public let customId: String
+      }
+    }
+  }
+}
+
+extension SearchGarden {
+  public struct CurrentSelectedUser: Sendable {
+    public let userID: UUID
+    
+    public init(userID: UUID) {
+      self.userID = userID
+    }
+  }
+  
+  public struct SearchedGardenList: Sendable {
     public let searchedGardens: [SearchGardenUser]
     public let page: Int
     public let isEndPage: Bool
@@ -142,16 +169,6 @@ extension SearchGarden {
       self.searchedGardens = searchedGardens
       self.page = page
       self.isEndPage = isEndPage
-    }
-  }
-}
-
-extension SearchGarden {
-  public struct CurrentSelectedUser: Sendable {
-    public let userID: String
-    
-    public init(userID: String) {
-      self.userID = userID
     }
   }
 }
