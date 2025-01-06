@@ -267,12 +267,9 @@ extension SearchGardenViewController: UITableViewDelegate {
   }
   
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    guard let tableView = scrollView as? UITableView else { return }
-    
     let offsetY = scrollView.contentOffset.y
     let contentHeight = scrollView.contentSize.height
-    let tableViewHeight = tableView.frame.height
-    if offsetY > contentHeight - tableViewHeight/2 {
+    if offsetY > contentHeight * 0.5 {
       let request = SearchGarden.LoadSearchedGarden.Request(inputText: "")
       self.interactor?.loadSearchedGardenContinue(request: request)
     }
