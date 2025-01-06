@@ -11,9 +11,9 @@ import SearchGardenSceneEntity
 
 @MainActor
 protocol SearchGardenPresentationLogic {
-  func presentUserDataForAddingGarden(response: SearchGarden.LoadFriendGarden.Response)
-  func presentResultOfAddingGarden()
-  func presentGardenForSearchingGarden(response: SearchGarden.LoadSearchedGarden.Response)
+  func presentLoadFriendGarden(response: SearchGarden.LoadFriendGarden.Response)
+  func presentAddGarden()
+  func presentSearchedGarden(response: SearchGarden.LoadSearchedGarden.Response)
   func presentErrorInfoToast(error: Error)
 }
 
@@ -24,7 +24,7 @@ final class SearchGardenPresenter {
 // MARK: - Request to ViewController
 
 extension SearchGardenPresenter: SearchGardenPresentationLogic {
-  func presentUserDataForAddingGarden(response: SearchGarden.LoadFriendGarden.Response) {
+  func presentLoadFriendGarden(response: SearchGarden.LoadFriendGarden.Response) {
     let viewModel = SearchGarden.LoadFriendGarden.ViewModel(
       userImage: response.userImage,
       userNickname: response.fetchedData.data.nickname,
@@ -36,11 +36,11 @@ extension SearchGardenPresenter: SearchGardenPresentationLogic {
     self.viewController?.displayFriendGarden(viewModel: viewModel)
   }
   
-  func presentResultOfAddingGarden() {
+  func presentAddGarden() {
     self.viewController?.displayAddGarden()
   }
   
-  func presentGardenForSearchingGarden(response: SearchGarden.LoadSearchedGarden.Response) {
+  func presentSearchedGarden(response: SearchGarden.LoadSearchedGarden.Response) {
     let viewModel = SearchGarden.LoadSearchedGarden.ViewModel(
       fetchedData: response.fetchedData
     )

@@ -57,7 +57,7 @@ extension SearchGardenInteractor: SearchGardenBusinessLogic {
           userImage: request.userImage,
           fetchedData: fetchedData
         )
-        self.presenter?.presentUserDataForAddingGarden(response: response)
+        self.presenter?.presentLoadFriendGarden(response: response)
       } catch let error {
         self.handleError(error: error, task: TaskKey.loadUserDataForAddingGarden)
       }
@@ -73,7 +73,7 @@ extension SearchGardenInteractor: SearchGardenBusinessLogic {
         try Task.checkCancellation()
         try await self.searchGardenWorker.addGarden(userID: currentSelectedUser.userID)
         try Task.checkCancellation()
-        self.presenter?.presentResultOfAddingGarden()
+        self.presenter?.presentAddGarden()
       } catch let error {
         self.handleError(error: error, task: TaskKey.addGarden)
       }
@@ -94,7 +94,7 @@ extension SearchGardenInteractor: SearchGardenBusinessLogic {
         self.currentState.isEndPage = fetchedData.isEndPage
         try Task.checkCancellation()
         let response = SearchGarden.LoadSearchedGarden.Response(fetchedData: fetchedData)
-        self.presenter?.presentGardenForSearchingGarden(response: response)
+        self.presenter?.presentSearchedGarden(response: response)
       } catch is CancellationError {
         return // TODO: presenter에 error시 호출될 메서드 구현 예정
       } catch let error {
