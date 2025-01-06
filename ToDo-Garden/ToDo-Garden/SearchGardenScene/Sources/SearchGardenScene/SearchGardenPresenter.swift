@@ -11,9 +11,10 @@ import SearchGardenSceneEntity
 
 @MainActor
 protocol SearchGardenPresentationLogic {
-  func presentUserDataForAddingGarden(response: SearchGarden.LoadUserDataForAddingGarden.Response)
-  func presentResultOfAddingGarden(response: SearchGarden.AddGarden.Response)
+  func presentUserDataForAddingGarden(response: SearchGarden.LoadFriendGarden.Response)
+  func presentResultOfAddingGarden()
   func presentGardenForSearchingGarden(response: SearchGarden.LoadSearchedGarden.Response)
+  func presentErrorInfoToast(error: Error)
 }
 
 final class SearchGardenPresenter {
@@ -23,24 +24,20 @@ final class SearchGardenPresenter {
 // MARK: - Request to ViewController
 
 extension SearchGardenPresenter: SearchGardenPresentationLogic {
-  func presentUserDataForAddingGarden(response: SearchGarden.LoadUserDataForAddingGarden.Response) {
-    let viewModel = SearchGarden.LoadUserDataForAddingGarden.ViewModel(
+  func presentUserDataForAddingGarden(response: SearchGarden.LoadFriendGarden.Response) {
+    let viewModel = SearchGarden.LoadFriendGarden.ViewModel(
       userImage: response.userImage,
-      userNickname: response.fetchedData.userNickname,
-      userIntroduction: response.fetchedData.userIntroduction,
-      userGarden: response.fetchedData.userGarden,
+      userNickname: response.fetchedData.data.nickname,
+      userIntroduction: response.fetchedData.data.introduction,
+      userGarden: response.fetchedData.data.pomodoroRecords,
       isButtonEnable: !response.fetchedData.isFriend
     )
     
-    self.viewController?.displayUserDataForAddingGarden(viewModel: viewModel)
+    self.viewController?.displayFriendGarden(viewModel: viewModel)
   }
   
-  func presentResultOfAddingGarden(response: SearchGarden.AddGarden.Response) {
-    let viewModel = SearchGarden.AddGarden.ViewModel(
-      isSuccess: response.result.isSuccess
-    )
-    
-    self.viewController?.displayResultOfAddingGarden(viewModel: viewModel)
+  func presentResultOfAddingGarden() {
+    self.viewController?.displayAddGarden()
   }
   
   func presentGardenForSearchingGarden(response: SearchGarden.LoadSearchedGarden.Response) {
@@ -48,6 +45,10 @@ extension SearchGardenPresenter: SearchGardenPresentationLogic {
       fetchedData: response.fetchedData
     )
     
-    self.viewController?.displayGardenForSearchingGarden(viewModel: viewModel)
+    self.viewController?.displaySearchedGarden(viewModel: viewModel)
+  }
+  
+  func presentErrorInfoToast(error: any Error) {
+    self.viewController?.displayErrorInfoToast(error: error)
   }
 }
