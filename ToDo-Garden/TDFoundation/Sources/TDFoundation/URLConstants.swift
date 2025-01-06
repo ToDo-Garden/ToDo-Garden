@@ -28,4 +28,10 @@ extension URLConstants.Group {
   public static let fetchGroups = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/grouplist")!
   public static let addGroup = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/make_group")!
 }
+
+extension URLConstants.Garden {
+  public static let searchGarden = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/search_garden")!
+  public static let loadUserGarden = URL(string:"https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/friend")!
+  public static let addGarden = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/add_friend")!
+}
 // swiftlint:enable all

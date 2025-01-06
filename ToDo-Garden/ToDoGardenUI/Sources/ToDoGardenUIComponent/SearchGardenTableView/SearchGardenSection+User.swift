@@ -12,19 +12,25 @@ enum SearchGardenSection {
 }
 
 public struct SearchGardenUser: Sendable {
-  public let userNickname: String
-  public let userID: String
+  public let id: UUID
+  public let nickname: String
+  public let customId: String
   public let userImage: UIImage?
 
-  public init(userNickname: String, userID: String, userImage: UIImage?) {
-    self.userNickname = userNickname
-    self.userID = userID
+  public init(id: UUID, nickname: String, customId: String, userImage: UIImage?) {
+    self.id = id
+    self.nickname = nickname
+    self.customId = customId
     self.userImage = userImage
   }
 }
 
 extension SearchGardenUser: Hashable {
   public func hash(into hasher: inout Hasher) {
-    hasher.combine(self.userID)
+    hasher.combine(self.id)
+  }
+  
+  public static func == (lhs: SearchGardenUser, rhs: SearchGardenUser) -> Bool {
+    return lhs.id == rhs.id
   }
 }

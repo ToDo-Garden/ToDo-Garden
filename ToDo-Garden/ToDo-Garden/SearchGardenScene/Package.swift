@@ -48,7 +48,8 @@ let package = Package(
         .product(name: "TDUtility", package: "TDUtility"),
         .product(name: "ToDoGardenUIAPI", package: "ToDoGardenUI"),
         .product(name: "ToDoGardenUIResource", package: "ToDoGardenUI"),
-        .product(name: "HTTPClientAPI", package: "TDFoundation")
+        .product(name: "HTTPClientAPI", package: "TDFoundation"),
+        .product(name: "TDFoundation", package: "TDFoundation")
       ]
     ),
     .testTarget(
