@@ -128,7 +128,7 @@ extension SearchGardenInteractor {
   
   struct CurrentState: Sendable {
     var page: Int = 0
-    var isEndPage: Bool = false
+    var isEndPage: Bool = true
     var inputText: String = ""
   }
 }
