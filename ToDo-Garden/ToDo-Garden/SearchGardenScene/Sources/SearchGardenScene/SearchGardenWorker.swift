@@ -45,8 +45,6 @@ public struct SearchGardenWorker: SearchGardenWorkable {
 // TODO: ↓ 제거 예정
 extension SearchGardenWorker {
   private func getTextIncludedUser(inputText: String) -> [SearchGardenUser] {
-    return MockData.preview.filter { user in
-      user.userID.contains(inputText)
-    }
+    return []
   }
 }
