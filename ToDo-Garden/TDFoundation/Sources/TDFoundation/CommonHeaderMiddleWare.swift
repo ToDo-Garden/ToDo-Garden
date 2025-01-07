@@ -22,13 +22,13 @@ public struct CommonHeaderMiddleware: ClientMiddleware {
     }
 
     var updatedRequest = request
-    updatedRequest.header["Content-Type"] = "application/json"
     updatedRequest.header["Authorization"] = "Bearer \(accessTokenString)"
 
     switch updatedRequest.method {
     case .get:
       updatedRequest.header["Accept-Profile"] = "todogarden"
     default:
+      updatedRequest.header["Content-Type"] = "application/json"
       updatedRequest.header["Content-Profile"] = "todogarden"
     }
 
