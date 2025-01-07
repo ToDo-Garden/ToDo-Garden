@@ -223,16 +223,4 @@ extension ManageGroup {
     case edit
     case reorder
   }
-  
-  public struct PendingItem: Sendable {
-    public let taskType: TaskType
-    public let groupID: UUID?
-    public let requestDTO: Sendable?
-    
-    public init(taskType: TaskType, groupID: UUID?, requestDTO: Sendable) {
-      self.taskType = taskType
-      self.groupID = groupID
-      self.requestDTO = requestDTO
-    }
-  }
 }
