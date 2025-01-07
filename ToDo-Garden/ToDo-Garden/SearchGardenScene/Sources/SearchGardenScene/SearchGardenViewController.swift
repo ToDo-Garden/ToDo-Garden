@@ -104,7 +104,7 @@ extension SearchGardenViewController {
     self.searchGardenView.textField.delegate = self
     self.searchGardenView.textField.returnKeyType = .search
     self.searchGardenView.tableView.delegate = self
-    self.searchGardenView.tableView.updateData(with: MockData.preview) 
+    self.searchGardenView.tableView.updateData(with: [])
     // TODO: ↑ 제거예정
     self.view.addSubview(self.searchGardenView)
     self.searchGardenView.usingAutolayout()
@@ -249,7 +249,7 @@ extension SearchGardenViewController: UITableViewDelegate {
     }
     
     self.loadUserDataForAddingGarden(
-      userID: userData.userID,
+      userID: userData.id.uuidString,
       userImage: userData.userImage
     )
   }
