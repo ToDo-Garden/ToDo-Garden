@@ -147,7 +147,6 @@ extension ManageGroupViewController {
       self.cancelEditing()
     }
     self.rightBarButtonCustomView.isEnabled = true
-    self.interactor?.resetPendingChanges()
   }
   
   @objc private func saveAndOutEditingMode() {
@@ -157,7 +156,6 @@ extension ManageGroupViewController {
       self.saveGroupList()
     }
     self.rightBarButtonCustomView.isEnabled = true
-    self.interactor?.resetPendingChanges()
   }
   
   private func updateBarButtonItems(isEditingMode: Bool) {

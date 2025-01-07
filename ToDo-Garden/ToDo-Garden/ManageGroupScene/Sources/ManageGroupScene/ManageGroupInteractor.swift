@@ -22,9 +22,7 @@ protocol ManageGroupBusinessLogic {
   func addGroup(request: ManageGroup.AddGroup.Request)
   func editGroup(request: ManageGroup.EditGroup.Request)
   func addGroupDirectly(request: ManageGroup.AddGroup.Request)
-  
   func cancelTask(for key: ManageGroupInteractor.TaskKey)
-  func resetPendingChanges()
 }
 
 class ManageGroupInteractor: ManageGroupDataStore {
@@ -33,7 +31,6 @@ class ManageGroupInteractor: ManageGroupDataStore {
   
   var currentGroups: [ManageGroup.ToDoGroup]
   private var tasks: [ManageGroupInteractor.TaskKey: Task<Void, Never>] = [:]
-  private var pendingChanges: [ManageGroup.PendingItem] = []
   
   init(
     worker: ManageGroupWorkable
@@ -45,10 +42,6 @@ class ManageGroupInteractor: ManageGroupDataStore {
   func cancelTask(for key: ManageGroupInteractor.TaskKey) {
     self.tasks[key]?.cancel()
     self.tasks[key] = nil
-  }
-  
-  func resetPendingChanges() {
-    self.pendingChanges = []
   }
 }
 
@@ -127,10 +120,9 @@ extension ManageGroupInteractor: ManageGroupBusinessLogic {
       self.handleError(error, about: TaskKey.none)
     }
     
-    let (group, pendingItem) = self.manageGroupWorker.addGroup(request: request)
+    let group = self.manageGroupWorker.addGroup(request: request)
     
     self.currentGroups.append(group)
-    self.pendingChanges.append(pendingItem)
     let response = ManageGroup.AddGroup.Response(group: group)
     self.presenter?.presentAddedGroup(response: response)
   }
@@ -138,9 +130,8 @@ extension ManageGroupInteractor: ManageGroupBusinessLogic {
   func editGroup(request: ManageGroup.EditGroup.Request) {
     if let index = self.currentGroups.firstIndex(where: { $0.groupID == request.groupID }) {
       let progressRate = self.currentGroups[index].progressRate
-      let (group, pendingItem) = self.manageGroupWorker.editGroup(request: request, progressRate: progressRate)
+      let group = self.manageGroupWorker.editGroup(request: request, progressRate: progressRate)
       self.currentGroups[index] = group
-      self.pendingChanges.append(pendingItem)
       
       let response = ManageGroup.EditGroup.Response(group: group, editedIndex: index)
       self.presenter?.presentEditedGroup(response: response)
