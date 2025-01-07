@@ -72,7 +72,9 @@ open class ManageGroupViewController: UIViewController, ManageGroupViewControlla
   open override func viewIsAppearing(_ animated: Bool) {
     super.viewIsAppearing(animated)
     self.navigationController?.navigationBar.isHidden = false
-    self.fetchGroupList()
+    if !self.groupListTableView.isEditing {
+      self.fetchGroupList()
+    }
   }
   
   // MARK: - Request to interactor
@@ -330,7 +332,10 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
       at: [indexPath],
       with: UITableView.RowAnimation.fade
     )
-    self.groupListTableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+    
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+      self.groupListTableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+    }
   }
   
   func displayEditedGroup(viewModel: ManageGroup.EditGroup.ViewModel) {
