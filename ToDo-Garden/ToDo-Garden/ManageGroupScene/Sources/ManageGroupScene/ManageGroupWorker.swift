@@ -42,45 +42,27 @@ public class ManageGroupWorker: ManageGroupWorkable {
     }
   }
   
-  public func addGroup(request: ManageGroup.AddGroup.Request) -> (ManageGroup.ToDoGroup, ManageGroup.PendingItem) {
+  public func addGroup(request: ManageGroup.AddGroup.Request) -> ManageGroup.ToDoGroup {
     let group = ManageGroup.ToDoGroup(
       groupID: request.groupID,
       groupName: request.groupName,
       progressColor: request.groupColor,
       progressRate: Float.zero
     )
-    
-    let pendingItem = ManageGroup.PendingItem(
-      taskType: .add,
-      groupID: group.groupID,
-      requestDTO: ManageGroup.AddGroup.RequestDTO(
-        name: group.groupName,
-        color: group.progressColor.hexStringFromColor()
-      )
-    )
-    return (group, pendingItem)
+    return group
   }
   
   public func editGroup(
     request: ManageGroup.EditGroup.Request,
     progressRate: Float
-  ) -> (ManageGroup.ToDoGroup, ManageGroup.PendingItem) {
+  ) -> ManageGroup.ToDoGroup {
     let group = ManageGroup.ToDoGroup(
       groupID: request.groupID,
       groupName: request.groupName,
       progressColor: request.groupColor,
       progressRate: progressRate
     )
-
-    let pendingItem = ManageGroup.PendingItem(
-      taskType: .edit,
-      groupID: group.groupID,
-      requestDTO: ManageGroup.EditGroup.RequestDTO(
-        name: group.groupName,
-        color: group.progressColor.hexStringFromColor()
-      )
-    )
-    return (group, pendingItem)
+    return group
   }
   
   public func addGroupDirectly(request: ManageGroup.AddGroup.Request) async throws -> UUID {
