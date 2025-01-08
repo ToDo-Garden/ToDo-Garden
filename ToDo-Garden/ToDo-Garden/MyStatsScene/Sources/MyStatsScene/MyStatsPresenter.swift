@@ -40,9 +40,7 @@ extension MyStatsPresenter {
   private func makeViewModel(response: MyStats.LoadMyStatsViewData.Response, with payload: MyStats.Payload)
   -> MyStats.LoadMyStatsViewData.ViewModel {
     let profileViewModel = self.makeProfileViewModel(
-      fetchedData: response.profileViewData,
-      myName: payload.myName,
-      myImage: payload.myImage
+      fetchedData: response.profileViewData
     )
     let gardenViewModel = self.makeGardenViewModel(myGarden: payload.myGarden)
     let longestRecordViewModel = self.makeLongestRecordViewModel(fetchedData: response.longestRecordViewData)
@@ -58,16 +56,23 @@ extension MyStatsPresenter {
   }
   
   private func makeProfileViewModel(
-    fetchedData: MyStats.FetchedProfileViewData,
-    myName: String,
-    myImage: UIImage
+    fetchedData: MyStats.FetchedProfileViewData
   ) -> MyStats.ProfileViewModel {
+    var image: UIImage
+    if let imageData = fetchedData.profileImage, let profielImage = UIImage(data: imageData) {
+      image = profielImage
+    } else {
+      image = UIImage.defaultProfileImage
+    }
+    
     let viewModel = MyStats.ProfileViewModel(
-      myName: myName,
-      myImage: myImage,
+      myName: fetchedData.nickname,
+      myImage: image,
       continuousRecordCount: fetchedData.continuousRecordCount,
-      continuousRecordStartDate: fetchedData.continuousRecordStartDate.toStringDefaultFormat(),
-      continuousRecordEndDate: fetchedData.continuousRecordEndDate.toStringDefaultFormat()
+      continuousRecordStartDate:
+        fetchedData.continuousRecordStartDate.replacingOccurrences(of: "-", with: "."),
+      continuousRecordEndDate:
+        fetchedData.continuousRecordEndDate.replacingOccurrences(of: "-", with: ".")
     )
     return viewModel
   }
@@ -80,47 +85,23 @@ extension MyStatsPresenter {
   private func makeLongestRecordViewModel(
     fetchedData: MyStats.FetchedLongestRecordViewData
   ) -> MyStats.LongestRecordViewModel {
+    let convertedDate = fetchedData.maxPomodoroRecord.recordDate.toDateISO8601Format().toStringDefaultFormat()
     let viewModel = MyStats.LongestRecordViewModel(
-      concentratedRecordGroupName: fetchedData.concentratedRecordGroupName,
-      concentratedRecordCount: fetchedData.concentratedRecordCount,
-      concentratedRecordDate: fetchedData.concentratedRecordDate.toStringDefaultFormat(),
-      longestContinuousRecordCount: fetchedData.longestContinuousRecordCount,
-      longestContinuousRecordStartDate: fetchedData.longestContinuousRecordStartDate.toStringDefaultFormat(),
-      longestContinuousRecordEndDate: fetchedData.longestContinuousRecordEndDate.toStringDefaultFormat()
+      concentratedRecordGroupName: fetchedData.maxPomodoroRecord.groupName,
+      concentratedRecordCount: fetchedData.maxPomodoroRecord.maxPomodoroCount,
+      concentratedRecordDate: convertedDate,
+      longestContinuousRecordCount: fetchedData.maxContinuousDays?.maxCount ?? 0,
+      longestContinuousRecordStartDate: fetchedData.maxContinuousDays?.startDate ?? "",
+      longestContinuousRecordEndDate: fetchedData.maxContinuousDays?.endDate ?? ""
     )
     return viewModel
   }
   
   private func makeSummaryViewModel(fetchedData: MyStats.FetchedSummaryViewData) -> MyStats.SummaryViewModel {
     let viewModel = MyStats.SummaryViewModel(
-      concentratedTime: fetchedData.concentratedTime.toTimeString(),
-      completedCount: fetchedData.completedCount.toStringWithOneDecimal()
+      concentratedTime: "\(fetchedData.weeklyAverageFocusTime) 단위몰라",
+      completedCount: "\(fetchedData.weeklyAveragePomodoroCount) 개 목표"
     )
     return viewModel
-  }
-}
-
-// MARK: - 아래 코드는 API명세 / supaBase에서 어떤 데이터를 제공해 줄지에 따라 사용여부가 결정되므로, 일단 임시로 사용하고 있는 메서드입니다.
-
-extension Double {
-  func toStringWithOneDecimal() -> String {
-    return String(format: "%.1f개 목표", self)
-  }
-}
-
-extension Int {
-  func toTimeString() -> String {
-    let hours = self / 3600
-    let minutes = (self % 3600) / 60
-    var timeString = ""
-    
-    if hours > 0 {
-      timeString += "\(hours)시간"
-    }
-    if minutes > 0 {
-      timeString += " \(minutes)분"
-    }
-    
-    return timeString.trimmingCharacters(in: CharacterSet.whitespaces)
   }
 }
