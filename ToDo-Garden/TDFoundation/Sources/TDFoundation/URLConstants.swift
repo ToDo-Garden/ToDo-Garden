@@ -22,6 +22,7 @@ extension URLConstants.Auth {
   public static let signUpURL = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/sign_up")!
   public static let validateUserURL = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/validate_user")!
   // ↑ 기존유저/신규유저 체크 URL
+  public static let refreshTokenURL = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/auth/v1/token?grant_type=refresh_token")!
 }
 
 extension URLConstants.Group {
