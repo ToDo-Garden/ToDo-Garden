@@ -61,6 +61,7 @@ extension MyStatsInteractor: MyStatsBusinessLogic {
   }
   
   private func createPayload() -> MyStats.Payload {
+    // TODO: 화면 연결완료되면 제거 될 예정
     return MyStats.Payload(
       myGarden: self.myGarden
     )
