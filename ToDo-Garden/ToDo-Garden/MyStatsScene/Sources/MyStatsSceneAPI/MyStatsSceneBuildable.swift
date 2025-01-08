@@ -7,9 +7,11 @@
 
 import Foundation
 
+import ToDoGardenUIComponent
+
 /// 런타임에 전달받을 의존성을 선언한 구조체입니다.
 public protocol MyStatsScenePayloadable {
-  // var name: String { get }
+  var myGarden: PomodoroRecordCollection { get }
 }
 
 public protocol MyStatsSceneBuildable {
