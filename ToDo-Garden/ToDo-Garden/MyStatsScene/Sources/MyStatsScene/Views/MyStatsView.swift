@@ -146,10 +146,11 @@ extension MyStatsView {
     
     var dateRangeString: String
     
-    if startDate == nil || endDate == nil || startDate == endDate {
+    if startDate == nil || endDate == nil {
       dateRangeString = ""
     } else {
-      dateRangeString = "\(startDate ?? "") ~ \(endDate ?? "")"
+      dateRangeString =
+      "\(startDate ?? "") ~ \(endDate ?? "")"
     }
     
     self.profileView.configuration = .profile(
