@@ -126,13 +126,9 @@ extension MyStats {
   }
   
   public struct Payload {
-    public let myName: String
-    public let myImage: UIImage
     public let myGarden: PomodoroRecordCollection
     
-    public init(myName: String, myImage: UIImage, myGarden: PomodoroRecordCollection) {
-      self.myName = myName
-      self.myImage = myImage
+    public init(myGarden: PomodoroRecordCollection) {
       self.myGarden = myGarden
     }
   }
@@ -142,58 +138,40 @@ extension MyStats {
 
 extension MyStats {
   public struct FetchedProfileViewData: Sendable {
+    public let nickname: String
+    public let profileImage: Data? // TODO: 이미지 캐싱이 Data를 뱉는지, UIImage를 뱉는지에 따라 달라짐
     public let continuousRecordCount: Int
-    public let continuousRecordStartDate: Date
-    public let continuousRecordEndDate: Date
+    public let continuousRecordStartDate: String
+    public let continuousRecordEndDate: String
     
     public init(
+      nickname: String,
+      profileImage: Data?,
       continuousRecordCount: Int,
-      continuousRecordStartDate: Date,
-      continuousRecordEndDate: Date
+      continuousRecordStartDate: String,
+      continuousRecordEndDate: String
     ) {
+      self.nickname = nickname
+      self.profileImage = profileImage
       self.continuousRecordCount = continuousRecordCount
       self.continuousRecordStartDate = continuousRecordStartDate
       self.continuousRecordEndDate = continuousRecordEndDate
     }
   }
   
-  public struct FetchedLongestRecordViewData: Sendable {
-    public let concentratedRecordGroupName: String
-    public let concentratedRecordCount: Int
-    public let concentratedRecordDate: Date
-    
-    public let longestContinuousRecordCount: Int
-    public let longestContinuousRecordStartDate: Date
-    public let longestContinuousRecordEndDate: Date
-    
-    public init(
-      concentratedRecordGroupName: String,
-      concentratedRecordCount: Int,
-      concentratedRecordDate: Date,
-      longestContinuousRecordCount: Int,
-      longestContinuousRecordStartDate: Date,
-      longestContinuousRecordEndDate: Date
-    ) {
-      self.concentratedRecordGroupName = concentratedRecordGroupName
-      self.concentratedRecordCount = concentratedRecordCount
-      self.concentratedRecordDate = concentratedRecordDate
-      self.longestContinuousRecordCount = longestContinuousRecordCount
-      self.longestContinuousRecordStartDate = longestContinuousRecordStartDate
-      self.longestContinuousRecordEndDate = longestContinuousRecordEndDate
-    }
+  public struct FetchedLongestRecordViewData: Sendable, Codable {
+    public let maxPomodoroRecord: MaxPomodoroRecordDTO
+    public let maxContinuousDays: MaxContinuousDaysDTO?
   }
   
-  public struct FetchedSummaryViewData: Sendable {
-    public let concentratedTime: Int
-    public let completedCount: Double
+  public struct FetchedSummaryViewData: Sendable, Codable {
+    public let dailyAverageFocusTime: Int
+    public let weeklyAverageFocusTime: Int
+    public let monthlyAverageFocusTime: Int
     
-    public init(
-      concentratedTime: Int,
-      completedCount: Double
-    ) {
-      self.concentratedTime = concentratedTime
-      self.completedCount = completedCount
-    }
+    public let dailyAveragePomodoroCount: Int
+    public let weeklyAveragePomodoroCount: Int
+    public let monthlyAveragePomodoroCount: Int
   }
 }
 
@@ -202,5 +180,39 @@ extension MyStats {
     case fetchProfileDataFailed
     case fetchLongestRecordDataFailed
     case fetchSummaryDataFailed
+  }
+  
+  public struct ProfileViewDataDTO: Sendable, Codable {
+    public let nickname: String
+    public let imageUrl: String?
+    public let continuousRecordStartDate: String
+    public let continuousRecordEndDate: String
+    public let continuousRecordCount: Int
+    
+    public init(
+      nickname: String,
+      imageUrl: String?,
+      continuousRecordStartDate: String,
+      continuousRecordEndDate: String,
+      continuousRecordCount: Int
+    ) {
+      self.nickname = nickname
+      self.imageUrl = imageUrl
+      self.continuousRecordStartDate = continuousRecordStartDate
+      self.continuousRecordEndDate = continuousRecordEndDate
+      self.continuousRecordCount = continuousRecordCount
+    }
+  }
+  
+  public struct MaxPomodoroRecordDTO: Sendable, Codable {
+    public let groupName: String
+    public let recordDate: String
+    public let maxPomodoroCount: Int
+  }
+  
+  public struct MaxContinuousDaysDTO: Sendable, Codable {
+    public let startDate: String
+    public let endDate: String
+    public let maxCount: Int
   }
 }
