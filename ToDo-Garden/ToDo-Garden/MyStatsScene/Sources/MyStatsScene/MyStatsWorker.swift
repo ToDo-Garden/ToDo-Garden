@@ -109,7 +109,7 @@ extension MyStatsWorker {
   
   private func downloadImageData(urlString: String) async throws -> Data {
     guard let url = URL(string: urlString) else {
-      throw NSError(domain: "Failed to create URL from \(urlString)", code: 0)
+      throw URLError(.badURL)
     }
     
     let request = HTTPRequest(method: .get, endPoint: url)
