@@ -8,6 +8,7 @@
 import Foundation
 
 import SearchGardenSceneEntity
+import ToDoGardenUIComponent
 
 @MainActor
 protocol SearchGardenPresentationLogic {
@@ -29,7 +30,9 @@ extension SearchGardenPresenter: SearchGardenPresentationLogic {
       userImage: response.userImage,
       userNickname: response.fetchedData.data.nickname,
       userIntroduction: response.fetchedData.data.introduction,
-      userGarden: response.fetchedData.data.pomodoroRecords,
+      userGarden: self.convertToPomodoroRecord(
+        from: response.fetchedData.data.pomodoroRecords
+      ),
       isButtonEnable: !response.fetchedData.isFriend
     )
     
@@ -50,5 +53,15 @@ extension SearchGardenPresenter: SearchGardenPresentationLogic {
   
   func presentErrorInfoToast(error: any Error) {
     self.viewController?.displayErrorInfoToast(error: error)
+  }
+}
+
+extension SearchGardenPresenter {
+  private func convertToPomodoroRecord(from dtos: [SearchGarden.UserGarden]) -> [PomodoroRecord] {
+    var records: [PomodoroRecord] = []
+    for dto in dtos {
+      records.append(PomodoroRecord(date: dto.date.toDateISO8601Format(), pomodoroCount: dto.pomodoroCount))
+    }
+    return records
   }
 }

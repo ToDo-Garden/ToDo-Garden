@@ -42,14 +42,14 @@ public enum SearchGarden {
       public let userImage: UIImage?
       public let userNickname: String
       public let userIntroduction: String?
-      public let userGarden: [UserGarden]
+      public let userGarden: [PomodoroRecord]
       public let isButtonEnable: Bool
       
       public init(
         userImage: UIImage?,
         userNickname: String,
         userIntroduction: String?,
-        userGarden: [UserGarden],
+        userGarden: [PomodoroRecord],
         isButtonEnable: Bool
       ) {
         self.userImage = userImage

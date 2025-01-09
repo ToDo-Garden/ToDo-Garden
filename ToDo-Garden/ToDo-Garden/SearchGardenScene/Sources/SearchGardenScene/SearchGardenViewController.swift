@@ -194,12 +194,11 @@ extension SearchGardenViewController {
 
 extension SearchGardenViewController: SearchGardenDisplayLogic {
   func displayFriendGarden(viewModel: SearchGarden.LoadFriendGarden.ViewModel) {
-    let pomodoroRecords = self.convertToPomodoroRecord(from: viewModel.userGarden)
     self.addGardenView.update(
       userNickname: viewModel.userNickname,
       userIntroduction: viewModel.userIntroduction ?? "",
       userImage: viewModel.userImage,
-      pomodoroCollection: PomodoroRecordCollection(pomodoroRecords: pomodoroRecords)
+      pomodoroCollection: PomodoroRecordCollection(pomodoroRecords: viewModel.userGarden)
     )
     
     self.addGardenView.addButton.isEnabled = viewModel.isButtonEnable
