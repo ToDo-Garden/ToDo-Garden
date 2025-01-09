@@ -52,8 +52,8 @@ extension MyStatsInteractor: MyStatsBusinessLogic {
         try Task.checkCancellation()
         let payload = self.createPayload()
         let response = try await self.fetchViewData()
-        self.savePeriodicState(with: response)
         try Task.checkCancellation()
+        self.savePeriodicState(with: response)
         self.presenter?.presentMyStatsViewData(response: response, with: payload)
       } catch let error {
         debugPrint(error)
