@@ -47,6 +47,7 @@ class MyStatsInteractor: MyStatsDataStore {
 extension MyStatsInteractor: MyStatsBusinessLogic {
   func loadMyStatsViewData(request: MyStats.LoadMyStatsViewData.Request) {
     self.loadMyStatsViewDataTask = Task {
+      defer { self.loadMyStatsViewDataTask = nil }
       do {
         try Task.checkCancellation()
         let payload = self.createPayload()
