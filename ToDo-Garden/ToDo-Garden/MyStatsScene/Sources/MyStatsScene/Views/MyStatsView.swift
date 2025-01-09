@@ -22,8 +22,8 @@ final class MyStatsView: UIView {
     self.profileView = Styled.Row(configuration: .profile(
       .init(
         style: .myStats,
-        title: "asdasd\nasdasdasd",
-        description: "asdasd"
+        title: "Nickname님,\n0000일 연속으로 기록 유지중이에요",
+        description: "0000.00.00 ~ 0000.00.00"
         )
       )
     )
@@ -146,10 +146,11 @@ extension MyStatsView {
     
     var dateRangeString: String
     
-    if startDate == nil || endDate == nil || startDate == endDate {
+    if startDate == nil || endDate == nil {
       dateRangeString = ""
     } else {
-      dateRangeString = "\(startDate ?? "") ~ \(endDate ?? "")"
+      dateRangeString =
+      "\(startDate ?? "") ~ \(endDate ?? "")"
     }
     
     self.profileView.configuration = .profile(

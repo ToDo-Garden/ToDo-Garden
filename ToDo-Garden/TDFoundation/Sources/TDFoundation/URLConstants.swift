@@ -14,6 +14,7 @@ public enum URLConstants {
   public enum Garden { }
   public enum Profile { }
   public enum Timer { }
+  public enum Stats { }
 }
 
 // swiftlint:disable all
@@ -34,5 +35,11 @@ extension URLConstants.Garden {
   public static let searchGarden = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/search_garden")!
   public static let loadUserGarden = URL(string:"https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/friend")!
   public static let addGarden = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/add_friend")!
+}
+
+extension URLConstants.Stats {
+  public static let getCurrentContinuousDays = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/get_current_consecutive_days")!
+  public static let getMaxRecords = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/get_max_records")!
+  public static let getSummary = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/get_summary")!
 }
 // swiftlint:enable all

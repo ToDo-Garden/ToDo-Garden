@@ -13,8 +13,8 @@ import MyStatsSceneEntity
 import ToDoGardenUIComponent // PomodoroRecordCollection 이관 예정
 
 protocol MyStatsDataStore {
-  var myName: String { get set }
-  var myImage: UIImage { get set }
+//  var myName: String { get set }
+//  var myImage: UIImage { get set }
   var myGarden: PomodoroRecordCollection { get set }
 }
 
@@ -24,17 +24,18 @@ protocol MyStatsBusinessLogic {
 }
 
 class MyStatsInteractor: MyStatsDataStore {
-  var myName: String
-  var myImage: UIImage
   var myGarden: ToDoGardenUIComponent.PomodoroRecordCollection
   
   var presenter: MyStatsPresentationLogic?
   private let myStatsWorker: MyStatsWorkable
   private var loadMyStatsViewDataTask: Task<Void, Never>?
+  private var periodicState = PeriodicState.init(
+    daily: (focusTime: Int.zero, pomodoroCount: Int.zero),
+    weekly: (focusTime: Int.zero, pomodoroCount: Int.zero),
+    monthly: (focusTime: Int.zero, pomodoroCount: Int.zero)
+  )
   
   init(myStatsWorker: MyStatsWorkable) {
-    self.myName = "이인우"
-    self.myImage = UIImage.defaultProfileImage
     self.myGarden = ToDoGardenUIComponent.PomodoroRecordCollection.init(pomodoroRecords: [])
     // TODO: ↑ 세 라인 페이로드로 세팅될 예정 지금은 임시로 이니셜라이저에서 할당
     self.myStatsWorker = myStatsWorker
@@ -46,29 +47,23 @@ class MyStatsInteractor: MyStatsDataStore {
 extension MyStatsInteractor: MyStatsBusinessLogic {
   func loadMyStatsViewData(request: MyStats.LoadMyStatsViewData.Request) {
     self.loadMyStatsViewDataTask = Task {
+      defer { self.loadMyStatsViewDataTask = nil }
       do {
         try Task.checkCancellation()
         let payload = self.createPayload()
         let response = try await self.fetchViewData()
         try Task.checkCancellation()
+        self.savePeriodicState(with: response)
         self.presenter?.presentMyStatsViewData(response: response, with: payload)
-      } catch is CancellationError {
-        // 취소된 경우의 처리
-      } catch let error as HTTPClientError {
-        // HTTPClientError case 별 처리
-        switch error {
-        default: break
-        }
-      } catch {
-        // 기타 예상치 못한 에러 처리
+      } catch let error {
+        debugPrint(error)
       }
     }
   }
   
   private func createPayload() -> MyStats.Payload {
+    // TODO: 화면 연결완료되면 제거 될 예정
     return MyStats.Payload(
-      myName: self.myName,
-      myImage: self.myImage,
       myGarden: self.myGarden
     )
   }
@@ -91,32 +86,38 @@ extension MyStatsInteractor: MyStatsBusinessLogic {
   }
 }
 
-// swiftlint:disable all
-// TODO: ↓ 제거예정
 extension MyStatsInteractor {
-  private func makeRandomPomodoroRecords() -> [PomodoroRecord] {
-    var pomodoroRecords = [PomodoroRecord]()
+  private struct PeriodicState {
+    let daily: (focusTime: Int, pomodoroCount: Int)
+    let weekly: (focusTime: Int, pomodoroCount: Int)
+    let monthly: (focusTime: Int, pomodoroCount: Int)
     
-    let calendar = Calendar.current
-    
-    let startDateComponents = DateComponents(year: 2024, month: 6, day: 14)
-    let date = calendar.date(from: startDateComponents)!
-    
-    for i in 0..<140 {
-      let currentDate = calendar.date(byAdding: .day, value: i, to: date)!
-      let pomodoroCount = Int.random(in: 0...10) // Random pomodoro count between 0 and 10
-      let formattedDate = calendar.date(
-        from: DateComponents(
-          year: calendar.component(.year, from: currentDate),
-          month: calendar.component(.month, from: currentDate),
-          day: calendar.component(.day, from: currentDate)
-        )
-      )!
-      let pomodoroRecord = PomodoroRecord(date: formattedDate, pomodoroCount: pomodoroCount)
-      pomodoroRecords.append(pomodoroRecord)
+    init(
+      daily: (focusTime: Int, pomodoroCount: Int),
+      weekly: (focusTime: Int, pomodoroCount: Int),
+      monthly: (focusTime: Int, pomodoroCount: Int)
+    ) {
+      self.daily = daily
+      self.weekly = weekly
+      self.monthly = monthly
     }
-    
-    return pomodoroRecords
+  }
+  
+  private func savePeriodicState(with response: MyStats.LoadMyStatsViewData.Response) {
+    let dataSet = response.summaryViewData
+    self.periodicState = PeriodicState(
+      daily: (
+        focusTime: dataSet.dailyAverageFocusTime,
+        pomodoroCount: dataSet.dailyAveragePomodoroCount
+      ),
+      weekly: (
+        focusTime: dataSet.weeklyAverageFocusTime,
+        pomodoroCount: dataSet.weeklyAveragePomodoroCount
+      ),
+      monthly: (
+        focusTime: dataSet.monthlyAverageFocusTime,
+        pomodoroCount: dataSet.monthlyAveragePomodoroCount
+      )
+    )
   }
 }
-// swiftlint:enable all
