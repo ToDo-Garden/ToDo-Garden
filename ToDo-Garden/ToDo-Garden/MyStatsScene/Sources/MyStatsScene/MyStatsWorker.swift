@@ -17,7 +17,7 @@ public struct MyStatsWorker: MyStatsWorkable {
     
     var imageData: Data?
     if let imageUrlString = result.imageUrl {
-      imageData = try await self.downloadImage(urlString: imageUrlString)
+      imageData = try await self.downloadImageData(urlString: imageUrlString)
     } else {
       imageData = nil
     }
@@ -107,7 +107,7 @@ extension MyStatsWorker {
     return result
   }
   
-  private func downloadImage(urlString: String) async throws -> Data {
+  private func downloadImageData(urlString: String) async throws -> Data {
     guard let url = URL(string: urlString) else {
       throw NSError(domain: "Failed to create URL from \(urlString)", code: 0)
     }
