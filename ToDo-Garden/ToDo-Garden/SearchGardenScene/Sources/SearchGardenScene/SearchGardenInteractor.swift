@@ -21,7 +21,7 @@ protocol SearchGardenBusinessLogic {
   func addGarden()
   func cancelTask(for key: SearchGardenInteractor.TaskKey)
   func loadSearchedGarden(request: SearchGarden.LoadSearchedGarden.Request)
-  func loadSearchedGardenContinue(request: SearchGarden.LoadSearchedGarden.Request)
+  func loadSearchedGardenContinue()
 }
 
 final class SearchGardenInteractor: SearchGardenDataStore {
@@ -103,12 +103,14 @@ extension SearchGardenInteractor: SearchGardenBusinessLogic {
     }
   }
   
-  func loadSearchedGardenContinue(request: SearchGarden.LoadSearchedGarden.Request) {
+  func loadSearchedGardenContinue() {
     guard !self.currentState.isEndPage else { return }
     
     self.currentState.page += 1
     self.loadSearchedGarden(
-      request: SearchGarden.LoadSearchedGarden.Request(inputText: self.currentState.inputText)
+      request: SearchGarden.LoadSearchedGarden.Request(
+        inputText: self.currentState.inputText
+      )
     )
   }
   
