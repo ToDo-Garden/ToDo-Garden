@@ -29,6 +29,7 @@ extension URLConstants.Auth {
 extension URLConstants.Group {
   public static let fetchGroups = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/grouplist")!
   public static let addGroup = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/make_group")!
+  public static let saveEdittedGroup = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/edit_groups")!
 }
 
 extension URLConstants.Garden {
