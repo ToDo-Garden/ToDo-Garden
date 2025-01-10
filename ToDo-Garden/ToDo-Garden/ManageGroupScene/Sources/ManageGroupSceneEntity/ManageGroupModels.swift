@@ -204,14 +204,25 @@ extension ManageGroup.AddGroup {
   }
 }
 
-extension ManageGroup.EditGroup {
+extension ManageGroup.SaveGroupList {
   public struct RequestDTO: Sendable, Codable {
+    public let data: [EdittedGroupDTO]
+    public init(data: [EdittedGroupDTO]) {
+      self.data = data
+    }
+  }
+  
+  public struct EdittedGroupDTO: Sendable, Codable {
+    public let localId: String
     public let name: String
     public let color: String
+    public let orderIdx: Int
     
-    public init(name: String, color: String) {
+    public init(localId: String, name: String, color: String, orderIdx: Int) {
+      self.localId = localId
       self.name = name
       self.color = color
+      self.orderIdx = orderIdx
     }
   }
 }
