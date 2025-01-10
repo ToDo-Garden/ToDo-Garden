@@ -111,7 +111,7 @@ public class ManageGroupWorker: ManageGroupWorkable {
       guard let groupID = UUID(uuidString: item.id) else {
         throw NSError(domain: "Invalid GroupID", code: 0)
       }
-      print(item.progressrate)
+      
       groups.append(
         ManageGroup.ToDoGroup(
           groupID: groupID,
