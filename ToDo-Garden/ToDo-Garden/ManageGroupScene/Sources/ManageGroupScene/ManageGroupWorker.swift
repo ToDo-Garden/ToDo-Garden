@@ -71,6 +71,16 @@ public class ManageGroupWorker: ManageGroupWorkable {
   }
   
   private func saveGroupsInDatabase(groupList: [ManageGroup.ToDoGroup]) async throws -> [ManageGroup.ToDoGroup] {
+    let request = try self.makeSaveGroupHTTPResquest(groupList: groupList)
+    try await self.httpClient.send(
+      input: request,
+      serializer: { $0 },
+      deserializer: { response in
+        guard response.statusCode >= 200 && response.statusCode < 400 else {
+          throw HTTPClientError.badStatusCode(response.statusCode)
+        }
+      }
+    )
     return groupList
   }
   // swiftlint: disable all
@@ -167,6 +177,28 @@ public class ManageGroupWorker: ManageGroupWorkable {
     ) else { throw NSError(domain: "Invalid GroupID", code: 0) }
     
     return groupID
+  }
+  
+  private func makeSaveGroupHTTPResquest(groupList: [ManageGroup.ToDoGroup]) throws -> HTTPRequest {
+    var edittedGroupList: [ManageGroup.SaveGroupList.EdittedGroupDTO] = []
+    for (index, item) in groupList.enumerated() {
+      let group = ManageGroup.SaveGroupList.EdittedGroupDTO(
+        localId: item.groupID.uuidString,
+        name: item.groupName,
+        color: item.progressColor.hexStringFromColor(),
+        orderIdx: index
+      )
+      edittedGroupList.append(group)
+    }
+    let body = try JSONEncoder().encode(ManageGroup.SaveGroupList.RequestDTO(
+      data: edittedGroupList)
+    )
+    let request = HTTPRequest(
+      method: .post,
+      endPoint: URLConstants.Group.saveEdittedGroup,
+      body: body
+    )
+    return request
   }
 }
 // swiftlint: enable all
