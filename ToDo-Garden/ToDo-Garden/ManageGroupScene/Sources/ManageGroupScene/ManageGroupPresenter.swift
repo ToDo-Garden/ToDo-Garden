@@ -16,6 +16,7 @@ protocol ManageGroupPresentationLogic {
   func presentDeletedGroup(response: ManageGroup.DeleteGroup.Response)
   func presentAddedGroup(response: ManageGroup.AddGroup.Response)
   func presentEditedGroup(response: ManageGroup.EditGroup.Response)
+  func presentFailedToSaveGroupList()
 }
 
 class ManageGroupPresenter {
@@ -51,5 +52,9 @@ extension ManageGroupPresenter: ManageGroupPresentationLogic {
   func presentEditedGroup(response: ManageGroup.EditGroup.Response) {
     let viewModel = ManageGroup.EditGroup.ViewModel(group: response.group, editedIndex: response.editedIndex)
     self.viewController?.displayEditedGroup(viewModel: viewModel)
+  }
+  
+  func presentFailedToSaveGroupList() {
+    self.viewController?.displayFailToSaveGroupList()
   }
 }
