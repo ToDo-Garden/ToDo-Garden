@@ -15,9 +15,10 @@ import ToDoGardenUIResource
 
 @MainActor
 protocol SearchGardenDisplayLogic: AnyObject {
-  func displayUserDataForAddingGarden(viewModel: SearchGarden.LoadUserDataForAddingGarden.ViewModel)
-  func displayResultOfAddingGarden(viewModel: SearchGarden.AddGarden.ViewModel)
-  func displayGardenForSearchingGarden(viewModel: SearchGarden.LoadSearchedGarden.ViewModel)
+  func displayFriendGarden(viewModel: SearchGarden.LoadFriendGarden.ViewModel)
+  func displayAddGarden()
+  func displaySearchedGarden(viewModel: SearchGarden.LoadSearchedGarden.ViewModel)
+  func displayErrorInfoToast(error: Error)
 }
 
 final class SearchGardenViewController: UIViewController, SearchGardenViewControllable {
@@ -104,8 +105,6 @@ extension SearchGardenViewController {
     self.searchGardenView.textField.delegate = self
     self.searchGardenView.textField.returnKeyType = .search
     self.searchGardenView.tableView.delegate = self
-    self.searchGardenView.tableView.updateData(with: [])
-    // TODO: ↑ 제거예정
     self.view.addSubview(self.searchGardenView)
     self.searchGardenView.usingAutolayout()
     
@@ -181,54 +180,66 @@ extension SearchGardenViewController {
       self.dimmingView.isHidden = true
     }
   }
+  
+  private func convertToPomodoroRecord(from dtos: [SearchGarden.UserGarden]) -> [PomodoroRecord] {
+    var records: [PomodoroRecord] = []
+    for dto in dtos {
+      records.append(PomodoroRecord(date: dto.date.toDateISO8601Format(), pomodoroCount: dto.pomodoroCount))
+    }
+    return records
+  }
 }
 
 // MARK: - Confirm display logic protocol
 
 extension SearchGardenViewController: SearchGardenDisplayLogic {
-  func displayUserDataForAddingGarden(viewModel: SearchGarden.LoadUserDataForAddingGarden.ViewModel) {
+  func displayFriendGarden(viewModel: SearchGarden.LoadFriendGarden.ViewModel) {
     self.addGardenView.update(
       userNickname: viewModel.userNickname,
       userIntroduction: viewModel.userIntroduction ?? "",
       userImage: viewModel.userImage,
-      pomodoroCollection: viewModel.userGarden
+      pomodoroCollection: PomodoroRecordCollection(pomodoroRecords: viewModel.userGarden)
     )
     
     self.addGardenView.addButton.isEnabled = viewModel.isButtonEnable
+    self.searchGardenView.textField.resignFirstResponder()
     self.showAddGardenView()
   }
   
-  func displayResultOfAddingGarden(viewModel: SearchGarden.AddGarden.ViewModel) {
+  func displayAddGarden() {
     self.hideAddGardenView()
   }
   
-  func displayGardenForSearchingGarden(viewModel: SearchGarden.LoadSearchedGarden.ViewModel) {
+  func displaySearchedGarden(viewModel: SearchGarden.LoadSearchedGarden.ViewModel) {
     self.loadingIndicator.isHidden = true
     self.loadingIndicator.pauseAnimation()
     self.searchGardenView.tableView.updateData(with: viewModel.fetchedData.searchedGardens)
+  }
+  
+  func displayErrorInfoToast(error: any Error) {
+    self.showToast(message: error.localizedDescription)
   }
 }
 
 // MARK: - Request to interactor
 
 extension SearchGardenViewController {
-  func loadUserDataForAddingGarden(userID: String, userImage: UIImage?) {
-    let request = SearchGarden.LoadUserDataForAddingGarden.Request(
+  func loadFriendGarden(userID: UUID, userImage: UIImage?) {
+    let request = SearchGarden.LoadFriendGarden.Request(
       userID: userID,
       userImage: userImage
     )
-    self.interactor?.loadUserDataForAddingGarden(request: request)
+    self.interactor?.loadFriendGarden(request: request)
   }
   
   func addGarden() {
-    let requset = SearchGarden.AddGarden.Request()
-    self.interactor?.addGarden(request: requset)
+    self.interactor?.addGarden()
   }
   
-  func loadSearchGarden(inputText: String, isCountinuous: Bool) {
+  func loadSearchedGarden(inputText: String, isCountinuous: Bool) {
     self.loadingIndicator.isHidden = false
     self.loadingIndicator.startAnimation()
-    let request = SearchGarden.LoadSearchedGarden.Request(inputText: inputText, isContinuous: isCountinuous)
+    let request = SearchGarden.LoadSearchedGarden.Request(inputText: inputText)
     self.interactor?.loadSearchedGarden(request: request)
     
   }
@@ -248,10 +259,18 @@ extension SearchGardenViewController: UITableViewDelegate {
       return
     }
     
-    self.loadUserDataForAddingGarden(
-      userID: userData.id.uuidString,
+    self.loadFriendGarden(
+      userID: userData.id,
       userImage: userData.userImage
     )
+  }
+  
+  func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    let offsetY = scrollView.contentOffset.y
+    let contentHeight = scrollView.contentSize.height
+    if offsetY > contentHeight * 0.5 {
+      self.interactor?.loadSearchedGardenContinue()
+    }
   }
 }
 
@@ -262,7 +281,7 @@ extension SearchGardenViewController: UITextFieldDelegate {
     }
     
     self.interactor?.cancelTask(for: SearchGardenInteractor.TaskKey.loadSearchedGarden)
-    self.loadSearchGarden(inputText: inputText, isCountinuous: false)
+    self.loadSearchedGarden(inputText: inputText, isCountinuous: false)
     return true
   }
 }
@@ -271,13 +290,4 @@ extension SearchGardenViewController: DefaultModalNavigationBarDelegate {
   func didTapRightButton() {
     self.router?.dismissModal()
   }
-}
-
-@available(iOS 17.0, *)
-#Preview {
-  // 프로젝트 타겟에 SeachGardenScene 추가 필요.
-  // 앱루트 작업내용과 충돌할까봐 타겟에 포함시키지 않았음.
-  let viewController = SearchGardenViewController()
-  
-  return viewController
 }

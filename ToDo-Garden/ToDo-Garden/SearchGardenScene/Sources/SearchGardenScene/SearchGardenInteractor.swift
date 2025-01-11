@@ -17,10 +17,11 @@ protocol SearchGardenDataStore {
 
 @MainActor
 protocol SearchGardenBusinessLogic {
-  func loadUserDataForAddingGarden(request: SearchGarden.LoadUserDataForAddingGarden.Request)
-  func addGarden(request: SearchGarden.AddGarden.Request)
+  func loadFriendGarden(request: SearchGarden.LoadFriendGarden.Request)
+  func addGarden()
   func cancelTask(for key: SearchGardenInteractor.TaskKey)
   func loadSearchedGarden(request: SearchGarden.LoadSearchedGarden.Request)
+  func loadSearchedGardenContinue()
 }
 
 final class SearchGardenInteractor: SearchGardenDataStore {
@@ -28,7 +29,7 @@ final class SearchGardenInteractor: SearchGardenDataStore {
   private let searchGardenWorker: SearchGardenWorkable
   private var tasks: [TaskKey: Task<Void, Never>] = [:]
   private var currentSelectedUser: SearchGarden.CurrentSelectedUser?
-  private var recentPage: Int = 0
+  private var currentState = CurrentState()
   
   init(searchGardenWorker: SearchGardenWorkable) {
     self.searchGardenWorker = searchGardenWorker
@@ -43,76 +44,80 @@ final class SearchGardenInteractor: SearchGardenDataStore {
 // MARK: - Request to worker
 
 extension SearchGardenInteractor: SearchGardenBusinessLogic {
-  func loadUserDataForAddingGarden(request: SearchGarden.LoadUserDataForAddingGarden.Request) {
+  func loadFriendGarden(request: SearchGarden.LoadFriendGarden.Request) {
     self.tasks[TaskKey.loadUserDataForAddingGarden] = Task {
       defer { self.tasks[TaskKey.loadUserDataForAddingGarden] = nil }
       do {
         try Task.checkCancellation()
         self.currentSelectedUser = SearchGarden.CurrentSelectedUser(userID: request.userID)
-        let fetchedData = try await self.searchGardenWorker.fetchUserDataForAddingGarden(userID: request.userID)
+        let fetchedData = try await self.searchGardenWorker.loadFriendGarden(userID: request.userID)
         try Task.checkCancellation()
-        let response = SearchGarden.LoadUserDataForAddingGarden.Response(
+        let response = SearchGarden.LoadFriendGarden.Response(
           userID: request.userID,
           userImage: request.userImage,
           fetchedData: fetchedData
         )
-        self.presenter?.presentUserDataForAddingGarden(response: response)
-      } catch is CancellationError {
-        return
-      } catch let error as HTTPClientError {
-        switch error {
-        default: return
-        }
-      } catch { return }
+        self.presenter?.presentLoadFriendGarden(response: response)
+      } catch let error {
+        self.handleError(error: error, task: TaskKey.loadUserDataForAddingGarden)
+      }
     }
   }
   
-  func addGarden(request: SearchGarden.AddGarden.Request) {
+  func addGarden() {
     guard let currentSelectedUser else { return }
     
     self.tasks[TaskKey.addGarden] = Task {
       defer { self.tasks[TaskKey.addGarden] = nil }
       do {
         try Task.checkCancellation()
-        let result = try await self.searchGardenWorker.requestToAddGarden(userID: currentSelectedUser.userID)
+        try await self.searchGardenWorker.addGarden(userID: currentSelectedUser.userID)
         try Task.checkCancellation()
-        let response = SearchGarden.AddGarden.Response(result: result)
-        self.presenter?.presentResultOfAddingGarden(response: response)
-      } catch is CancellationError {
-        return // TODO: presenter에 error시 호출될 메서드 구현 예정 
-      } catch let error as HTTPClientError {
-        switch error {
-        default: return // TODO: presenter에 error시 호출될 메서드 구현 예정
-        }
-      } catch { return } // TODO: presenter에 error시 호출될 메서드 구현 예정
+        self.presenter?.presentAddGarden()
+      } catch let error {
+        self.handleError(error: error, task: TaskKey.addGarden)
+      }
     }
   }
   
   func loadSearchedGarden(request: SearchGarden.LoadSearchedGarden.Request) {
+    self.currentState.isEndPage = false
+    self.currentState.page = Int.zero
     self.tasks[TaskKey.loadSearchedGarden] = Task {
       defer { self.tasks[TaskKey.loadSearchedGarden] = nil }
       do {
         try Task.checkCancellation()
-        if request.isContinuous {
-          self.recentPage += 1
-        } else {
-          self.recentPage = Int.zero
-        }
-        let fetchedData = try await self.searchGardenWorker.fetchSearchedGardenData(
+        let fetchedData = try await self.searchGardenWorker.loadSearchedGardenList(
           inputText: request.inputText,
-          page: self.recentPage
+          page: self.currentState.page
         )
+        self.currentState.isEndPage = fetchedData.isEndPage
         try Task.checkCancellation()
         let response = SearchGarden.LoadSearchedGarden.Response(fetchedData: fetchedData)
-        self.presenter?.presentGardenForSearchingGarden(response: response)
+        self.presenter?.presentSearchedGarden(response: response)
       } catch is CancellationError {
         return // TODO: presenter에 error시 호출될 메서드 구현 예정
-      } catch let error as HTTPClientError {
-        switch error {
-        default: return // TODO: presenter에 error시 호출될 메서드 구현 예정
-        }
-      } catch { return }
+      } catch let error {
+        self.handleError(error: error, task: TaskKey.loadSearchedGarden)
+      }
     }
+  }
+  
+  func loadSearchedGardenContinue() {
+    guard !self.currentState.isEndPage else { return }
+    
+    self.currentState.page += 1
+    self.loadSearchedGarden(
+      request: SearchGarden.LoadSearchedGarden.Request(
+        inputText: self.currentState.inputText
+      )
+    )
+  }
+  
+  @MainActor
+  private func handleError(error: Error, task: TaskKey) {
+    debugPrint(error)
+    self.presenter?.presentErrorInfoToast(error: error)
   }
 }
 
@@ -121,5 +126,11 @@ extension SearchGardenInteractor {
     case loadUserDataForAddingGarden
     case addGarden
     case loadSearchedGarden
+  }
+  
+  struct CurrentState: Sendable {
+    var page: Int = 0
+    var isEndPage: Bool = true
+    var inputText: String = ""
   }
 }

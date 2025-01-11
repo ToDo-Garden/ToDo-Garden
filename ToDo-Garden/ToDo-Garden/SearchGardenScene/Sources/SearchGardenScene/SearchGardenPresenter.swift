@@ -8,12 +8,14 @@
 import Foundation
 
 import SearchGardenSceneEntity
+import ToDoGardenUIComponent
 
 @MainActor
 protocol SearchGardenPresentationLogic {
-  func presentUserDataForAddingGarden(response: SearchGarden.LoadUserDataForAddingGarden.Response)
-  func presentResultOfAddingGarden(response: SearchGarden.AddGarden.Response)
-  func presentGardenForSearchingGarden(response: SearchGarden.LoadSearchedGarden.Response)
+  func presentLoadFriendGarden(response: SearchGarden.LoadFriendGarden.Response)
+  func presentAddGarden()
+  func presentSearchedGarden(response: SearchGarden.LoadSearchedGarden.Response)
+  func presentErrorInfoToast(error: Error)
 }
 
 final class SearchGardenPresenter {
@@ -23,31 +25,43 @@ final class SearchGardenPresenter {
 // MARK: - Request to ViewController
 
 extension SearchGardenPresenter: SearchGardenPresentationLogic {
-  func presentUserDataForAddingGarden(response: SearchGarden.LoadUserDataForAddingGarden.Response) {
-    let viewModel = SearchGarden.LoadUserDataForAddingGarden.ViewModel(
+  func presentLoadFriendGarden(response: SearchGarden.LoadFriendGarden.Response) {
+    let viewModel = SearchGarden.LoadFriendGarden.ViewModel(
       userImage: response.userImage,
-      userNickname: response.fetchedData.userNickname,
-      userIntroduction: response.fetchedData.userIntroduction,
-      userGarden: response.fetchedData.userGarden,
+      userNickname: response.fetchedData.data.nickname,
+      userIntroduction: response.fetchedData.data.introduction,
+      userGarden: self.convertToPomodoroRecord(
+        from: response.fetchedData.data.pomodoroRecords
+      ),
       isButtonEnable: !response.fetchedData.isFriend
     )
     
-    self.viewController?.displayUserDataForAddingGarden(viewModel: viewModel)
+    self.viewController?.displayFriendGarden(viewModel: viewModel)
   }
   
-  func presentResultOfAddingGarden(response: SearchGarden.AddGarden.Response) {
-    let viewModel = SearchGarden.AddGarden.ViewModel(
-      isSuccess: response.result.isSuccess
-    )
-    
-    self.viewController?.displayResultOfAddingGarden(viewModel: viewModel)
+  func presentAddGarden() {
+    self.viewController?.displayAddGarden()
   }
   
-  func presentGardenForSearchingGarden(response: SearchGarden.LoadSearchedGarden.Response) {
+  func presentSearchedGarden(response: SearchGarden.LoadSearchedGarden.Response) {
     let viewModel = SearchGarden.LoadSearchedGarden.ViewModel(
       fetchedData: response.fetchedData
     )
     
-    self.viewController?.displayGardenForSearchingGarden(viewModel: viewModel)
+    self.viewController?.displaySearchedGarden(viewModel: viewModel)
+  }
+  
+  func presentErrorInfoToast(error: any Error) {
+    self.viewController?.displayErrorInfoToast(error: error)
+  }
+}
+
+extension SearchGardenPresenter {
+  private func convertToPomodoroRecord(from dtos: [SearchGarden.UserGarden]) -> [PomodoroRecord] {
+    var records: [PomodoroRecord] = []
+    for dto in dtos {
+      records.append(PomodoroRecord(date: dto.date.toDateISO8601Format(), pomodoroCount: dto.pomodoroCount))
+    }
+    return records
   }
 }
