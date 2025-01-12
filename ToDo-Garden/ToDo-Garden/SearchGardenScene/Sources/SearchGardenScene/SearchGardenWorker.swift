@@ -137,11 +137,6 @@ extension SearchGardenWorker {
 // - MARK: Make HTTPRequest
 extension SearchGardenWorker {
   private func makeHTTPRequestForFetchingGarden(inputText: String, page: Int) throws -> HTTPRequest {
-    guard let accessToken = try KeychainManager.shared.load(forKey: KeychainManager.KeychainKey.accessToken),
-      let accessTokenString = String(data: accessToken, encoding: .utf8) else {
-      throw KeychainError.nonExistentKey
-    }
-    
     return HTTPRequest(
       method: .get,
       endPoint: URLConstants.Garden.searchGarden,
@@ -153,11 +148,6 @@ extension SearchGardenWorker {
   }
   
   private func makeHTTPRequestForLoadingImage(url: URL) throws -> HTTPRequest {
-    guard let accessToken = try KeychainManager.shared.load(forKey: KeychainManager.KeychainKey.accessToken),
-      let accessTokenString = String(data: accessToken, encoding: .utf8) else {
-      throw KeychainError.nonExistentKey
-    }
-    
     return HTTPRequest(
       method: .get,
       endPoint: url
@@ -165,11 +155,6 @@ extension SearchGardenWorker {
   }
   
   private func makeHTTPRequestForLoadingFriendGarden(userID: UUID) throws -> HTTPRequest {
-    guard let accessToken = try KeychainManager.shared.load(forKey: KeychainManager.KeychainKey.accessToken),
-      let accessTokenString = String(data: accessToken, encoding: .utf8) else {
-      throw KeychainError.nonExistentKey
-    }
-    
     return HTTPRequest(
       method: .get,
       endPoint: URLConstants.Garden.loadUserGarden,
@@ -178,11 +163,6 @@ extension SearchGardenWorker {
   }
   
   private func makeHTTPRequestForAddingGarden(userID: UUID) throws -> HTTPRequest {
-    guard let accessToken = try KeychainManager.shared.load(forKey: KeychainManager.KeychainKey.accessToken),
-      let accessTokenString = String(data: accessToken, encoding: .utf8) else {
-      throw KeychainError.nonExistentKey
-    }
-    
     let body = try JSONEncoder().encode(SearchGarden.AddGardenDTO.Response(gardenId: userID.uuidString))
     
     return HTTPRequest(
