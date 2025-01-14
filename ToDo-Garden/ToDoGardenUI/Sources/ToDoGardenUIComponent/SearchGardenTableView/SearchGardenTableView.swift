@@ -9,10 +9,21 @@ import UIKit
 
 final public class SearchGardenTableView: UITableView {
   private var diffableDataSource: UITableViewDiffableDataSource<SearchGardenSection, SearchGardenUser>!
-  
+  private var snapshot: NSDiffableDataSourceSnapshot<SearchGardenSection, SearchGardenUser>!
+  private let dummyCellData = SearchGardenUser(
+    id: UUID(),
+    nickname: "Dummy",
+    customId: "@DummyID",
+    userImage: nil,
+    userImageURL: nil,
+    isDummyData: true
+  )
+
   public override init(frame: CGRect, style: UITableView.Style) {
     super.init(frame: frame, style: style)
     self.configureDataSource()
+    self.snapshot = NSDiffableDataSourceSnapshot<SearchGardenSection, SearchGardenUser>()
+    self.snapshot.appendSections([SearchGardenSection.main])
     self.backgroundColor = UIColor.white
     self.register(TableRow.self, forCellReuseIdentifier: TableRow.identifier)
     self.separatorStyle = UITableViewCell.SeparatorStyle.none
@@ -23,15 +34,39 @@ final public class SearchGardenTableView: UITableView {
     fatalError("init(coder:) has not been implemented")
   }
   
-  public func updateData(with users: [SearchGardenUser]) {
-    var snapshot = NSDiffableDataSourceSnapshot<SearchGardenSection, SearchGardenUser>()
-    snapshot.appendSections([SearchGardenSection.main])
-    snapshot.appendItems(users)
-    self.diffableDataSource.apply(snapshot, animatingDifferences: true)
+  public func appendData(with users: [SearchGardenUser]) {
+    if !self.snapshot.sectionIdentifiers.contains(SearchGardenSection.main) {
+      self.snapshot.appendSections([SearchGardenSection.main])
+    }
+    self.snapshot.appendItems(users)
+    self.diffableDataSource.apply(self.snapshot, animatingDifferences: true)
+  }
+    public func clearData() {
+    self.snapshot.deleteItems(snapshot.itemIdentifiers(inSection: SearchGardenSection.main))
+    self.diffableDataSource.apply(self.snapshot, animatingDifferences: false)
   }
   
   public func userForCell(at indexPath: IndexPath) -> SearchGardenUser? {
     return self.diffableDataSource.itemIdentifier(for: indexPath)
+  }
+  
+  public func updateData(of user: SearchGardenUser) {
+    self.snapshot.reconfigureItems([user])
+    self.diffableDataSource.apply(self.snapshot, animatingDifferences: false)
+  }
+  
+  public func appendDummyCell() {
+    self.snapshot.appendItems([self.dummyCellData])
+    self.diffableDataSource.apply(self.snapshot, animatingDifferences: false)
+  }
+  
+  public func deleteDummyCell() {
+    guard self.snapshot.itemIdentifiers.contains(self.dummyCellData) else {
+      return
+    }
+    
+    self.snapshot.deleteItems([self.dummyCellData])
+    self.diffableDataSource.apply(self.snapshot, animatingDifferences: false)
   }
   
   private func configureDataSource() {
@@ -45,20 +80,34 @@ final public class SearchGardenTableView: UITableView {
       ) as? TableRow else {
         return nil
       }
-      
       self.diffableDataSource.defaultRowAnimation = UITableView.RowAnimation.fade
-      tableRow.update(
-        configuration: Styled.Row.Configuration.profile(
-          .init(
-            style: .searchRow,
-            title: userData.nickname,
-            description: "@" + userData.customId,
-            image: userData.userImage
-          )
+      self.updateTableRow(userData: userData, tableRow: tableRow)
+      self.setDummyOrNot(userData: userData, tableRow: tableRow)
+      return tableRow
+    }
+  }
+  
+  private func updateTableRow(userData: SearchGardenUser, tableRow: TableRow) {
+    tableRow.update(
+      configuration: Styled.Row.Configuration.profile(
+        .init(
+          style: .searchRow,
+          title: userData.nickname,
+          description: "@" + userData.customId,
+          image: userData.userImage
         )
       )
-
-      return tableRow
+    )
+  }
+  
+  private func setDummyOrNot(userData: SearchGardenUser, tableRow: TableRow) {
+    if userData.isDummyData {
+      tableRow.contentView.subviews.forEach { $0.isShimmering = true }
+      tableRow.contentView.startShimmering()
+      tableRow.isUserInteractionEnabled = false
+    } else {
+      tableRow.contentView.stopShimmering()
+      tableRow.isUserInteractionEnabled = true
     }
   }
 }
@@ -73,13 +122,14 @@ final public class SearchGardenTableView: UITableView {
     view.heightAnchor.constraint(equalToConstant: 700)
   ])
   
-  view.updateData(
+  view.appendData(
     with: [
       SearchGardenUser(
         id: UUID(),
         nickname: "흥민갓",
         customId: "hmzzang123",
-        userImage: nil
+        userImage: nil,
+        userImageURL: nil
       )
     ]
   )
