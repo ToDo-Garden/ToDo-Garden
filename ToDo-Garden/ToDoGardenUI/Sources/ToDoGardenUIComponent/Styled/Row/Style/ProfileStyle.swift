@@ -13,7 +13,8 @@ extension Styled.Row {
     stack.addInnerPadding(model[style: \.innerPadding])
     
     if model.style == Configuration.ProfileModel.Style.shareProfile ||
-      model.style == Configuration.ProfileModel.Style.myStats {
+      model.style == Configuration.ProfileModel.Style.myStats ||
+      model.style == Configuration.ProfileModel.Style.searchRow {
       stack.isShimmering = true
     }
     
@@ -111,7 +112,8 @@ extension Styled.Row {
     }
     
     if model.style == Configuration.ProfileModel.Style.shareProfile ||
-      model.style == Configuration.ProfileModel.Style.myStats {
+      model.style == Configuration.ProfileModel.Style.myStats ||
+      model.style == Configuration.ProfileModel.Style.searchRow {
       self.setupShimmeringInnerStack(titleLabel, descriptionLabel, stack)
     }
     
@@ -129,7 +131,8 @@ extension Styled.Row {
     }
     
     if style == Configuration.ProfileModel.Style.shareProfile ||
-      style == Configuration.ProfileModel.Style.myStats {
+      style == Configuration.ProfileModel.Style.myStats ||
+      style == Configuration.ProfileModel.Style.searchRow {
       self.setupShimmeringProfileImageView(profileImageView)
     }
   }
