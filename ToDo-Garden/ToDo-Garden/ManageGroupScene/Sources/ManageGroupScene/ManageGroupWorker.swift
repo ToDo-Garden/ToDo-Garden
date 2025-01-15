@@ -71,26 +71,26 @@ public class ManageGroupWorker: ManageGroupWorkable {
   }
   
   private func saveGroupsInDatabase(groupList: [ManageGroup.ToDoGroup]) async throws -> [ManageGroup.ToDoGroup] {
+    let request = try self.makeSaveGroupHTTPResquest(groupList: groupList)
+    try await self.httpClient.send(
+      input: request,
+      serializer: { $0 },
+      deserializer: { response in
+        guard response.statusCode >= 200 && response.statusCode < 400 else {
+          throw HTTPClientError.badStatusCode(response.statusCode)
+        }
+      }
+    )
     return groupList
   }
   // swiftlint: disable all
   private func fetchGroupsFromDatabase() async throws -> [ManageGroup.ToDoGroup] {
-    guard let accessToken = try KeychainManager.shared.load(forKey: KeychainManager.KeychainKey.accessToken),
-          let accessTokenString = String(data: accessToken, encoding: .utf8) else {
-      throw KeychainError.nonExistentKey
-    }
-    
     let fetchedData = try await self.httpClient.send(
       input: ManageGroup.FetchGroupList.RequestDTO(),
       serializer: { data in
         return HTTPRequest(
           method: .get,
-          endPoint: URLConstants.Group.fetchGroups,
-          header: [
-            "Content-Type": "application/json",
-            "Authorization": "Bearer \(accessTokenString)",
-            "Accept-Profile": "todogarden"
-          ]
+          endPoint: URLConstants.Group.fetchGroups
         )
       },
       deserializer: { response in
@@ -126,11 +126,6 @@ public class ManageGroupWorker: ManageGroupWorkable {
   }
   
   private func addGroupDirectlyInDatabase(request: ManageGroup.AddGroup.Request) async throws -> UUID {
-    guard let accessToken = try KeychainManager.shared.load(forKey: KeychainManager.KeychainKey.accessToken),
-          let accessTokenString = String(data: accessToken, encoding: .utf8) else {
-      throw KeychainError.nonExistentKey
-    }
-    
     guard let groupID = try await self.httpClient.send(
       input: ManageGroup.AddGroup.RequestDTO(
         name: request.groupName,
@@ -140,11 +135,6 @@ public class ManageGroupWorker: ManageGroupWorkable {
         return HTTPRequest(
           method: .post,
           endPoint: URLConstants.Group.addGroup,
-          header: [
-            "Content-Type": "application/json",
-            "Authorization": "Bearer \(accessTokenString)",
-            "Accept-Profile": "todogarden"
-          ],
           body: try JSONEncoder().encode(data)
         )
       },
@@ -167,6 +157,28 @@ public class ManageGroupWorker: ManageGroupWorkable {
     ) else { throw NSError(domain: "Invalid GroupID", code: 0) }
     
     return groupID
+  }
+  
+  private func makeSaveGroupHTTPResquest(groupList: [ManageGroup.ToDoGroup]) throws -> HTTPRequest {
+    var edittedGroupList: [ManageGroup.SaveGroupList.EdittedGroupDTO] = []
+    for (index, item) in groupList.enumerated() {
+      let group = ManageGroup.SaveGroupList.EdittedGroupDTO(
+        localId: item.groupID.uuidString,
+        name: item.groupName,
+        color: item.progressColor.hexStringFromColor(),
+        orderIdx: index
+      )
+      edittedGroupList.append(group)
+    }
+    let body = try JSONEncoder().encode(ManageGroup.SaveGroupList.RequestDTO(
+      data: edittedGroupList)
+    )
+    let request = HTTPRequest(
+      method: .post,
+      endPoint: URLConstants.Group.saveEdittedGroup,
+      body: body
+    )
+    return request
   }
 }
 // swiftlint: enable all

@@ -21,6 +21,7 @@ protocol ManageGroupDisplayLogic: AnyObject {
   func displayDeletedGroup(viewModel: ManageGroup.DeleteGroup.ViewModel)
   func displayAddedGroup(viewModel: ManageGroup.AddGroup.ViewModel)
   func displayEditedGroup(viewModel: ManageGroup.EditGroup.ViewModel)
+  func displayFailToSaveGroupList()
 }
 
 open class ManageGroupViewController: UIViewController, ManageGroupViewControllable {
@@ -343,6 +344,11 @@ extension ManageGroupViewController: ManageGroupDisplayLogic {
     self.groupListTableView.reloadRows(
       at: [IndexPath(row: viewModel.editedIndex, section: Int.zero)],
       with: UITableView.RowAnimation.fade)
+  }
+  
+  func displayFailToSaveGroupList() {
+    self.showToast(message: "저장 실패")
+    self.cancelEditing()
   }
   
   private func updateTableViewWithAnimation(
