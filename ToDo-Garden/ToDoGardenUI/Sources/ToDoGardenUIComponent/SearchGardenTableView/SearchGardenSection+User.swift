@@ -11,17 +11,28 @@ enum SearchGardenSection {
   case main
 }
 
-public struct SearchGardenUser: Sendable {
+public final class SearchGardenUser {
   public let id: UUID
   public let nickname: String
   public let customId: String
-  public let userImage: UIImage?
+  public var userImage: UIImage?
+  public var userImageURL: URL?
+  public let isDummyData: Bool
 
-  public init(id: UUID, nickname: String, customId: String, userImage: UIImage?) {
+  public init(
+    id: UUID,
+    nickname: String,
+    customId: String,
+    userImage: UIImage?,
+    userImageURL: URL?,
+    isDummyData: Bool = false
+  ) {
     self.id = id
     self.nickname = nickname
     self.customId = customId
     self.userImage = userImage
+    self.userImageURL = userImageURL
+    self.isDummyData = isDummyData
   }
 }
 
@@ -33,4 +44,13 @@ extension SearchGardenUser: Hashable {
   public static func == (lhs: SearchGardenUser, rhs: SearchGardenUser) -> Bool {
     return lhs.id == rhs.id
   }
+  
+  public static let placeholderData = SearchGardenUser(
+    id: UUID(),
+    nickname: "Dummy",
+    customId: "@DummyID",
+    userImage: nil,
+    userImageURL: nil,
+    isDummyData: true
+  )
 }

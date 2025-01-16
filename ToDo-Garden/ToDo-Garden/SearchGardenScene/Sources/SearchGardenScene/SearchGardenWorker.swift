@@ -19,7 +19,7 @@ public struct SearchGardenWorker: SearchGardenWorkable {
   public init(httpclient: HTTPClientAPI) {
     self.httpclient = httpclient
   }
-
+  
   // swiftlint:disable function_body_length
   public func loadSearchedGardenList(
     inputText: String,
@@ -95,7 +95,7 @@ extension SearchGardenWorker {
       }
     )
   }
-
+  
   private func fetchSearchedGarden(
     inputText: String,
     page: Int
@@ -135,22 +135,11 @@ extension SearchGardenWorker {
 // swiftlint:enable function_body_length
 
 // - MARK: Make HTTPRequest
-// - TODO: apiKey 이외의 공통헤더 관련 작업하는 MiddleWare 도입예정
 extension SearchGardenWorker {
   private func makeHTTPRequestForFetchingGarden(inputText: String, page: Int) throws -> HTTPRequest {
-    guard let accessToken = try KeychainManager.shared.load(forKey: KeychainManager.KeychainKey.accessToken),
-      let accessTokenString = String(data: accessToken, encoding: .utf8) else {
-      throw KeychainError.nonExistentKey
-    }
-    
     return HTTPRequest(
       method: .get,
       endPoint: URLConstants.Garden.searchGarden,
-      header: [
-        "Content-Type": "application/json",
-        "Accept-Profile": "todogarden",
-        "Authorization": "Bearer \(accessTokenString)"
-      ],
       queryItems: [
         "pageindex": "\(page)",
         "search_id": inputText
@@ -159,57 +148,26 @@ extension SearchGardenWorker {
   }
   
   private func makeHTTPRequestForLoadingImage(url: URL) throws -> HTTPRequest {
-    guard let accessToken = try KeychainManager.shared.load(forKey: KeychainManager.KeychainKey.accessToken),
-      let accessTokenString = String(data: accessToken, encoding: .utf8) else {
-      throw KeychainError.nonExistentKey
-    }
-    
     return HTTPRequest(
       method: .get,
-      endPoint: url,
-      header: [
-        "Content-Type": "application/json",
-        "Accept-Profile": "todogarden",
-        "Authorization": "Bearer \(accessTokenString)"
-      ]
+      endPoint: url
     )
   }
   
   private func makeHTTPRequestForLoadingFriendGarden(userID: UUID) throws -> HTTPRequest {
-    guard let accessToken = try KeychainManager.shared.load(forKey: KeychainManager.KeychainKey.accessToken),
-      let accessTokenString = String(data: accessToken, encoding: .utf8) else {
-      throw KeychainError.nonExistentKey
-    }
-    
     return HTTPRequest(
       method: .get,
       endPoint: URLConstants.Garden.loadUserGarden,
-      header: [
-        "Content-Type": "application/json",
-        "Accept-Profile": "todogarden",
-        "Authorization": "Bearer \(accessTokenString)"
-      ],
       queryItems: ["garden_id": userID.uuidString]
     )
   }
   
   private func makeHTTPRequestForAddingGarden(userID: UUID) throws -> HTTPRequest {
-    guard let accessToken = try KeychainManager.shared.load(forKey: KeychainManager.KeychainKey.accessToken),
-      let accessTokenString = String(data: accessToken, encoding: .utf8) else {
-      throw KeychainError.nonExistentKey
-    }
-    
     let body = try JSONEncoder().encode(SearchGarden.AddGardenDTO.Response(gardenId: userID.uuidString))
     
     return HTTPRequest(
       method: .post,
       endPoint: URLConstants.Garden.addGarden,
-      header: [
-        "Content-Type": "application/json",
-        "Accept-Profile": "todogarden",
-        "Content-Profile": "todogarden",
-        "Authorization": "Bearer \(accessTokenString)"
-      ],
       body: body
     )
   }
