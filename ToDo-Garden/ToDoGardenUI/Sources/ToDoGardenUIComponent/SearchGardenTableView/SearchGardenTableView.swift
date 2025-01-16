@@ -41,7 +41,7 @@ final public class SearchGardenTableView: UITableView {
     self.snapshot.appendItems(users)
     self.diffableDataSource.apply(self.snapshot, animatingDifferences: true)
   }
-    public func clearData() {
+  public func clearItemsInMainSection() {
     self.snapshot.deleteItems(snapshot.itemIdentifiers(inSection: SearchGardenSection.main))
     self.diffableDataSource.apply(self.snapshot, animatingDifferences: false)
   }
