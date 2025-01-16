@@ -158,20 +158,17 @@ extension AddGardenView {
   
   private func setupGardenViewConstraints() {
     self.gardenView.usingAutolayout()
+    let intrinsicWidth = self.gardenView.intrinsicContentSize.width
+    let intrinsicHeight = self.gardenView.intrinsicContentSize.height
     NSLayoutConstraint.activate(
       [
-        self.gardenView.leadingAnchor.constraint(
-          equalTo: self.leadingAnchor,
-          constant: Constants.Layout.commonHorizontalMargin
-        ),
-        self.gardenView.trailingAnchor.constraint(
-          equalTo: self.trailingAnchor,
-          constant: -Constants.Layout.commonHorizontalMargin
-        ),
+        self.gardenView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
         self.gardenView.bottomAnchor.constraint(
           equalTo: self.addButton.topAnchor,
           constant: Constants.GardenView.Layout.verticalMargin
-        )
+        ),
+        self.gardenView.widthAnchor.constraint(equalToConstant: intrinsicWidth * 278 / 332 ),
+        self.gardenView.heightAnchor.constraint(equalToConstant: intrinsicHeight * 99.64 / 119 )
       ]
     )
   }
