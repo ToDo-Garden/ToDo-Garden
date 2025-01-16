@@ -10,14 +10,6 @@ import UIKit
 final public class SearchGardenTableView: UITableView {
   private var diffableDataSource: UITableViewDiffableDataSource<SearchGardenSection, SearchGardenUser>!
   private var snapshot: NSDiffableDataSourceSnapshot<SearchGardenSection, SearchGardenUser>!
-  private let dummyCellData = SearchGardenUser(
-    id: UUID(),
-    nickname: "Dummy",
-    customId: "@DummyID",
-    userImage: nil,
-    userImageURL: nil,
-    isDummyData: true
-  )
 
   public override init(frame: CGRect, style: UITableView.Style) {
     super.init(frame: frame, style: style)
@@ -55,17 +47,17 @@ final public class SearchGardenTableView: UITableView {
     self.diffableDataSource.apply(self.snapshot, animatingDifferences: false)
   }
   
-  public func appendDummyCell() {
-    self.snapshot.appendItems([self.dummyCellData])
+  public func appendPlaceholderCell() {
+    self.snapshot.appendItems([SearchGardenUser.placeholderData])
     self.diffableDataSource.apply(self.snapshot, animatingDifferences: false)
   }
   
-  public func deleteDummyCell() {
-    guard self.snapshot.itemIdentifiers.contains(self.dummyCellData) else {
+  public func deletePlaceholderCell() {
+    guard self.snapshot.itemIdentifiers.contains(SearchGardenUser.placeholderData) else {
       return
     }
     
-    self.snapshot.deleteItems([self.dummyCellData])
+    self.snapshot.deleteItems([SearchGardenUser.placeholderData])
     self.diffableDataSource.apply(self.snapshot, animatingDifferences: false)
   }
   

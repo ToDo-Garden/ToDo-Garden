@@ -44,4 +44,13 @@ extension SearchGardenUser: Hashable {
   public static func == (lhs: SearchGardenUser, rhs: SearchGardenUser) -> Bool {
     return lhs.id == rhs.id
   }
+  
+  public static let placeholderData = SearchGardenUser(
+    id: UUID(),
+    nickname: "Dummy",
+    customId: "@DummyID",
+    userImage: nil,
+    userImageURL: nil,
+    isDummyData: true
+  )
 }
