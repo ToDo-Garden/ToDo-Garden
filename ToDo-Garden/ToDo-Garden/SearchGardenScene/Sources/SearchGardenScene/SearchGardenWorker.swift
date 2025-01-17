@@ -43,20 +43,20 @@ public struct SearchGardenWorker: SearchGardenWorkable {
         throw HTTPClientError.deserializationError
       }
       
-      //      var userImage: UIImage?
-      //      if let urlString = user.imageurl, let url = URL(string: urlString) {
-      //        let imageData = try await self.downloadImage(imageURL: url)
-      //        userImage = UIImage(data: imageData)
-      //      } else {
-      //        userImage = nil
-      //      }
+      var userImageURL: URL?
+      if let urlString = user.imageurl, let url = URL(string: urlString) {
+        userImageURL = url
+      } else {
+        userImageURL = nil
+      }
       
       result.append(
         SearchGardenUser(
           id: id,
           nickname: user.nickname,
           customId: user.customId,
-          userImage: nil
+          userImage: nil,
+          userImageURL: userImageURL
         )
       )
     }
