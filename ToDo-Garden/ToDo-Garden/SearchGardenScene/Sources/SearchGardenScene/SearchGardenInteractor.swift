@@ -20,7 +20,7 @@ protocol SearchGardenBusinessLogic {
   func loadFriendGarden(request: SearchGarden.LoadFriendGarden.Request)
   func addGarden()
   func cancelTask(for key: SearchGardenInteractor.TaskKey)
-  func loadSearchedGarden(request: SearchGarden.LoadSearchedGarden.Request)
+  func loadSearchedGarden(request: SearchGarden.LoadSearchedGarden.Request, isContinuous: Bool)
   func loadSearchedGardenContinue()
 }
 
@@ -80,9 +80,12 @@ extension SearchGardenInteractor: SearchGardenBusinessLogic {
     }
   }
   
-  func loadSearchedGarden(request: SearchGarden.LoadSearchedGarden.Request) {
-    self.currentState.isEndPage = false
-    self.currentState.page = Int.zero
+  func loadSearchedGarden(request: SearchGarden.LoadSearchedGarden.Request, isContinuous: Bool = false) {
+    if !isContinuous {
+      self.currentState.isEndPage = false
+      self.currentState.page = Int.zero
+    }
+    
     self.tasks[TaskKey.loadSearchedGarden] = Task {
       defer { self.tasks[TaskKey.loadSearchedGarden] = nil }
       do {
@@ -95,8 +98,6 @@ extension SearchGardenInteractor: SearchGardenBusinessLogic {
         try Task.checkCancellation()
         let response = SearchGarden.LoadSearchedGarden.Response(fetchedData: fetchedData)
         self.presenter?.presentSearchedGarden(response: response)
-      } catch is CancellationError {
-        return // TODO: presenter에 error시 호출될 메서드 구현 예정
       } catch let error {
         self.handleError(error: error, task: TaskKey.loadSearchedGarden)
       }
@@ -110,7 +111,8 @@ extension SearchGardenInteractor: SearchGardenBusinessLogic {
     self.loadSearchedGarden(
       request: SearchGarden.LoadSearchedGarden.Request(
         inputText: self.currentState.inputText
-      )
+      ),
+      isContinuous: true
     )
   }
   
