@@ -1,0 +1,117 @@
+//
+//  ScrollPrefecher.swift
+//  SearchGardenScene
+//
+//  Created by SONG on 1/12/25.
+//
+
+import UIKit
+
+@objc public protocol PrefetcherDelegate: AnyObject, UITableViewDelegate, UICollectionViewDelegate {
+  func scrollDidReachBottom(_ prefetcher: ScrollPrefecher)
+  func prefetcher(_ prefetcher: ScrollPrefecher, didRequestPrefetchFor indexPaths: [IndexPath])
+  @objc optional func prefetcher(_ prefetcher: ScrollPrefecher, didCancelPrefetchFor indexPaths: [IndexPath])
+}
+
+@MainActor
+public final class ScrollPrefecher:
+  NSObject,
+  UITableViewDataSourcePrefetching,
+  UITableViewDelegate,
+  UICollectionViewDelegate,
+  UICollectionViewDataSourcePrefetching {
+  public static let shared = ScrollPrefecher()
+  
+  public weak var prefetchDelegate: PrefetcherDelegate?
+  public weak var tableViewDelegate: UITableViewDelegate? {
+    willSet {
+      if self.collectionViewDelegate != nil {
+        self.collectionViewDelegate = nil
+      }
+    }
+  }
+  public weak var collectionViewDelegate: UICollectionViewDelegate? {
+    willSet {
+      if self.tableViewDelegate != nil {
+        self.tableViewDelegate = nil
+      }
+    }
+  }
+  
+  private override init() {
+    super.init()
+  }
+  
+  public func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+    self.prefetchDelegate?.prefetcher(self, didRequestPrefetchFor: indexPaths)
+  }
+  
+  public func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]) {
+    self.prefetchDelegate?.prefetcher?(self, didCancelPrefetchFor: indexPaths)
+  }
+  
+  public func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+    self.prefetchDelegate?.prefetcher(self, didRequestPrefetchFor: indexPaths)
+  }
+  
+  public func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
+    self.prefetchDelegate?.prefetcher?(self, didCancelPrefetchFor: indexPaths)
+  }
+  
+  // MARK: - Scroll Handling
+  // swiftlint: disable function_body_length
+  public func scrollViewWillEndDragging(
+    _ scrollView: UIScrollView,
+    withVelocity velocity: CGPoint,
+    targetContentOffset: UnsafeMutablePointer<CGPoint>
+  ) {
+    let contentHeight = scrollView.contentSize.height
+    let scrollViewHeight = scrollView.bounds.height
+    let targetOffsetY = targetContentOffset.pointee.y
+    
+    if velocity.y > 2.0 {
+      let nearBottom = targetOffsetY + scrollViewHeight >= contentHeight - 300
+      if nearBottom {
+        self.prefetchDelegate?.scrollDidReachBottom(self)
+      }
+    } else {
+      let nearBottom = targetOffsetY + scrollViewHeight >= contentHeight - 100
+      if nearBottom {
+        self.prefetchDelegate?.scrollDidReachBottom(self)
+      }
+      
+      if let tableView = scrollView as? UITableView {
+        tableViewDelegate?.scrollViewWillEndDragging?(
+          tableView,
+          withVelocity: velocity,
+          targetContentOffset: targetContentOffset
+        )
+      } else if let collectionView = scrollView as? UICollectionView {
+        collectionViewDelegate?.scrollViewWillEndDragging?(
+          collectionView,
+          withVelocity: velocity,
+          targetContentOffset: targetContentOffset
+        )
+      }
+    }
+  }
+  // swiftlint: enable function_body_length
+
+  public override func responds(to aSelector: Selector!) -> Bool {
+    if let tableViewDelegate = self.tableViewDelegate, tableViewDelegate.responds(to: aSelector) {
+      return true
+    } else if let collectionViewDelegate = self.collectionViewDelegate, collectionViewDelegate.responds(to: aSelector) {
+      return true
+    }
+    return super.responds(to: aSelector)
+  }
+
+  public override func forwardingTarget(for aSelector: Selector!) -> Any? {
+    if self.tableViewDelegate?.responds(to: aSelector) == true {
+      return self.tableViewDelegate
+    } else if self.collectionViewDelegate?.responds(to: aSelector) == true {
+      return self.collectionViewDelegate
+    }
+    return nil
+  }
+}
