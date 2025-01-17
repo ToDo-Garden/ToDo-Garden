@@ -7,7 +7,7 @@
 
 import UIKit
 
-@objc public protocol PrefetcherDelegate: AnyObject, UITableViewDelegate, UICollectionViewDelegate {
+@objc public protocol ScrollPrefetcherDelegate: AnyObject, UITableViewDelegate, UICollectionViewDelegate {
   func scrollDidReachBottom(_ prefetcher: ScrollPrefecher)
   func prefetcher(_ prefetcher: ScrollPrefecher, didRequestPrefetchFor indexPaths: [IndexPath])
   @objc optional func prefetcher(_ prefetcher: ScrollPrefecher, didCancelPrefetchFor indexPaths: [IndexPath])
@@ -21,7 +21,7 @@ public final class ScrollPrefecher:
   UICollectionViewDataSourcePrefetching {
   public static let shared = ScrollPrefecher()
   
-  public weak var prefetchDelegate: PrefetcherDelegate?
+  public weak var prefetchDelegate: ScrollPrefetcherDelegate?
   public weak var tableViewDelegate: UITableViewDelegate? {
     willSet {
       if self.collectionViewDelegate != nil {
@@ -98,7 +98,6 @@ public final class ScrollPrefecher:
 
   @preconcurrency
   public override func responds(to aSelector: Selector!) -> Bool {
-    print(Thread.isMainThread)
     let result = MainActor.assumeIsolated {
       if let tableViewDelegate = self.tableViewDelegate, tableViewDelegate.responds(to: aSelector) {
         return true
@@ -113,7 +112,6 @@ public final class ScrollPrefecher:
 
   @preconcurrency
   public override func forwardingTarget(for aSelector: Selector!) -> Any? {
-    print(Thread.isMainThread)
     let result: UIScrollViewDelegate? = MainActor.assumeIsolated {
       if self.tableViewDelegate?.responds(to: aSelector) == true {
         return self.tableViewDelegate

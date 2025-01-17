@@ -306,7 +306,7 @@ extension SearchGardenViewController: DefaultModalNavigationBarDelegate {
   }
 }
 
-extension SearchGardenViewController: PrefetcherDelegate {
+extension SearchGardenViewController: ScrollPrefetcherDelegate {
   func scrollDidReachBottom(_ prefetcher: ScrollPrefecher) {
     self.interactor?.loadSearchedGardenContinue()
   }
