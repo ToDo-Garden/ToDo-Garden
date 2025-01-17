@@ -13,7 +13,6 @@ import UIKit
   @objc optional func prefetcher(_ prefetcher: ScrollPrefecher, didCancelPrefetchFor indexPaths: [IndexPath])
 }
 
-@MainActor
 public final class ScrollPrefecher:
   NSObject,
   UITableViewDataSourcePrefetching,
@@ -97,22 +96,33 @@ public final class ScrollPrefecher:
   }
   // swiftlint: enable function_body_length
 
+  @preconcurrency
   public override func responds(to aSelector: Selector!) -> Bool {
-    if let tableViewDelegate = self.tableViewDelegate, tableViewDelegate.responds(to: aSelector) {
-      return true
-    } else if let collectionViewDelegate = self.collectionViewDelegate, collectionViewDelegate.responds(to: aSelector) {
-      return true
+    print(Thread.isMainThread)
+    let result = MainActor.assumeIsolated {
+      if let tableViewDelegate = self.tableViewDelegate, tableViewDelegate.responds(to: aSelector) {
+        return true
+      } else if let collectionViewDelegate = self.collectionViewDelegate,
+        collectionViewDelegate.responds(to: aSelector) {
+        return true
+      }
+      return super.responds(to: aSelector)
     }
-    return super.responds(to: aSelector)
+    return result
   }
 
+  @preconcurrency
   public override func forwardingTarget(for aSelector: Selector!) -> Any? {
-    if self.tableViewDelegate?.responds(to: aSelector) == true {
-      return self.tableViewDelegate
-    } else if self.collectionViewDelegate?.responds(to: aSelector) == true {
-      return self.collectionViewDelegate
+    print(Thread.isMainThread)
+    let result: UIScrollViewDelegate? = MainActor.assumeIsolated {
+      if self.tableViewDelegate?.responds(to: aSelector) == true {
+        return self.tableViewDelegate
+      } else if self.collectionViewDelegate?.responds(to: aSelector) == true {
+        return self.collectionViewDelegate
+      }
+      return nil
     }
-    return nil
+    return result
   }
 }
 
