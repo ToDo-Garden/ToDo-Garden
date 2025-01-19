@@ -33,8 +33,8 @@ public final class UserPhotoWorker: PHPickerViewControllerDelegate {
   }
 
   func requestPhoto() async throws -> UIImage {
-    try await withCheckedThrowingContinuation { continuation in
-      self.selectedImagesHandler = { image, error in
+    try await withCheckedThrowingContinuation { [weak self] continuation in
+      self?.selectedImagesHandler = { image, error in
         if let image {
           continuation.resume(returning: image)
         } else {

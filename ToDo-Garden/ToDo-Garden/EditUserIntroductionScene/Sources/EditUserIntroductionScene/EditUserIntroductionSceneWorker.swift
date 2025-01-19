@@ -8,9 +8,34 @@
 import Foundation
 
 import EditUserIntroductionSceneAPI
+import EditUserIntroductionSceneEntity
+import HTTPClientAPI
+import TDFoundation
 
-struct EditUserIntroductionSceneWorker: EditUserIntroductionSceneWorkable {
-  func editUserIntroduction(_ introduction: String) async throws {
-    // TODO: 서버 구현이 완료되면 구현할 예정입니다.
+public struct EditUserIntroductionSceneWorker: EditUserIntroductionSceneWorkable {
+  private let httpClient: HTTPClientAPI
+  
+  public init(httpClient: HTTPClientAPI) {
+    self.httpClient = httpClient
+  }
+  public func editUserIntroduction(_ introduction: String) async throws {
+    let body = try JSONEncoder().encode(
+      EditUserIntroductionScene.ChangeIntroduction.RequestDTO(introduction: introduction)
+    )
+    let request = HTTPRequest(
+      method: HTTPMethod.post,
+      endPoint: URLConstants.Profile.changeIntroduction,
+      body: body
+    )
+    
+    try await self.httpClient.send(
+      input: request,
+      serializer: { $0 },
+      deserializer: { response in
+        guard response.statusCode >= 200 && response.statusCode < 400 else {
+          throw HTTPClientError.badStatusCode(response.statusCode)
+        }
+      }
+    )
   }
 }
