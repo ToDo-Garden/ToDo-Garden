@@ -100,7 +100,7 @@ extension EditUserIntroductionSceneViewController: EditUserIntroductionSceneDisp
   }
 
   func displayEditUserIntroductionFailure(_ errorMessage: String) {
-    // TODO: - 알럿을 띄울 예정이며, 알럿 디자인을 추가한 이후에 구현할 예정입니다.
+    self.showToast(message: errorMessage)
   }
 }
 
@@ -190,10 +190,3 @@ extension EditUserIntroductionSceneViewController {
     )
   }
 }
-
-#if DEBUG
-@available(iOS 17.0, *)
-#Preview {
-  return UINavigationController(rootViewController: EditUserIntroductionSceneBuilder.previewScene)
-}
-#endif
