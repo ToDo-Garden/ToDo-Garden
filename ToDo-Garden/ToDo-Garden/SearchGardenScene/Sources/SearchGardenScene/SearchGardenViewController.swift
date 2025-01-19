@@ -213,7 +213,7 @@ extension SearchGardenViewController: SearchGardenDisplayLogic {
   func displaySearchedGarden(viewModel: SearchGarden.LoadSearchedGarden.ViewModel) {
     self.loadingIndicator.isHidden = true
     self.loadingIndicator.pauseAnimation()
-    self.searchGardenView.tableView.updateData(with: viewModel.fetchedData.searchedGardens)
+    self.searchGardenView.tableView.updateData(of: viewModel.fetchedData.searchedGardens)
   }
   
   func displayErrorInfoToast(error: any Error) {
