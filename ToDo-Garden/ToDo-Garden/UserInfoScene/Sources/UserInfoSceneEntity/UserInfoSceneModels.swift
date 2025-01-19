@@ -114,6 +114,26 @@ public enum UserInfoScene {
       }
     }
   }
+  
+  public enum FetchProfileImage {
+    public struct Response {
+      public let image: UIImage?
+
+      public init(image: UIImage?) {
+        self.image = image
+      }
+    }
+
+    public struct ViewModel {
+      public let image: UIImage
+
+      public init(image: UIImage) {
+        self.image = image
+      }
+
+    }
+
+  }
 }
 
 // MARK: - Data Objects
@@ -149,6 +169,24 @@ public extension UserInfoScene {
       self.userInfo = userInfo
       self.title = title
       self.isRightImageExisted = isRightImageExisted
+    }
+  }
+}
+
+extension UserInfoScene {
+  public struct GetProfileResponseDTO: Decodable {
+    public let id: String
+    public let customId: String
+    public let introduction: String
+    public let nickname: String
+    public let email: String
+    
+    private enum CodingKeys: String, CodingKey {
+      case id
+      case customId = "custom_id"
+      case introduction
+      case nickname
+      case email
     }
   }
 }

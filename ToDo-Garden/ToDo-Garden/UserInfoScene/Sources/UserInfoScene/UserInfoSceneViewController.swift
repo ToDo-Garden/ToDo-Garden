@@ -27,6 +27,7 @@ protocol UserInfoSceneDisplayLogic: AnyObject {
   func displayChangedUserIntroduction(_ introduction: String)
   func displayEmptyUserIntroduction(_ placeholderText: String)
   func displayChangedUserName(_ userName: String)
+  func displayFetchedUserImage(viewModel: UserInfoScene.FetchProfileImage.ViewModel)
 }
 
 final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewControllable {
@@ -65,6 +66,11 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
     super.viewDidLoad()
     self.setup()
     self.interactor?.configureCollectionView()
+    self.interactor?.fetchProfileImage()
+  }
+  
+  override func viewIsAppearing(_ animated: Bool) {
+    super.viewIsAppearing(animated)
   }
 }
 
@@ -136,6 +142,10 @@ extension UserInfoSceneViewController: UserInfoSceneDisplayLogic {
   func displayChangedUserName(_ userName: String) {
     self.updateReloadedUserInfo(userName, isUserName: true)
   }
+  
+  func displayFetchedUserImage(viewModel: UserInfoScene.FetchProfileImage.ViewModel) {
+    self.profileInfoView.updateImage(viewModel.image)
+  }
 
   private func updateReloadedUserInfo(_ value: String, isUserName: Bool) {
     let row = isUserName ? 0 : 1
@@ -161,6 +171,10 @@ extension UserInfoSceneViewController: EditUserIntroductionDelegate, EditUserNam
 
   func didSelectEditProfileButton() {
     self.interactor?.fetchUserPhotoAccess()
+  }
+  
+  func fetchProfileImage() {
+    self.interactor?.fetchProfileImage()
   }
 }
 
@@ -247,6 +261,7 @@ extension UserInfoSceneViewController {
   }
 
   private func setupMainUI() {
+    self.navigationController?.navigationBar.isHidden = false
     self.title = UserInfoSceneTheme.StringLiteral.title
     self.view.backgroundColor = UIColor.toDoGardenWhite
   }
@@ -346,20 +361,3 @@ extension UserInfoSceneViewController {
 }
 
 struct SomePayload: UserInfoSceneScenePayloadable {}
-
-#if DEBUG
-@available(iOS 17.0, *)
-#Preview {
-  let userInfoScene = UserInfoSceneSceneBuilder(
-    dependency: UserInfoSceneSceneBuilder.Dependency(
-      photoPicker: PHPickerViewController(configuration: PHPickerConfiguration()),
-      appServiceWorker: AppServiceWorker(),
-      userPhotoWorker: UserPhotoWorker(),
-      userInfoWorker: UserInfoSceneWorker(),
-      editUserIntroductionSceneBuilder: nil,
-      editUserNameSceneBuilder: nil
-    )
-  ).build(with: SomePayload())
-  return userInfoScene
-}
-#endif
