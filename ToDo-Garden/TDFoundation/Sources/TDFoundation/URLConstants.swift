@@ -24,6 +24,8 @@ extension URLConstants.Auth {
   public static let validateUserURL = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/validate_user")!
   // ↑ 기존유저/신규유저 체크 URL
   public static let refreshTokenURL = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/auth/v1/token?grant_type=refresh_token")!
+  public static let withDrawURL = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/cancel_membership")!
+  public static let logoutURL = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/auth/v1/logout?scope=global")!
 }
 
 extension URLConstants.Group {
@@ -42,5 +44,13 @@ extension URLConstants.Stats {
   public static let getCurrentContinuousDays = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/get_current_consecutive_days")!
   public static let getMaxRecords = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/get_max_records")!
   public static let getSummary = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/get_summary")!
+}
+
+extension URLConstants.Profile {
+  public static let getUserProfile = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/get_my_info")!
+  public static let getProfileImage = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/storage/v1/object/authenticated/profileImages/")!
+  public static let changeProfileImage = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/storage/v1/object/profileImages/")!
+  public static let changeIntroduction = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/edit_introduction")!
+  public static let changeNickname = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/edit_nickname")!
 }
 // swiftlint:enable all
