@@ -189,10 +189,3 @@ extension EditUserNameSceneViewController {
     )
   }
 }
-
-#if DEBUG
-@available(iOS 17.0, *)
-#Preview {
-  return UINavigationController(rootViewController: EditUserNameSceneBuilder.previewScene)
-}
-#endif
