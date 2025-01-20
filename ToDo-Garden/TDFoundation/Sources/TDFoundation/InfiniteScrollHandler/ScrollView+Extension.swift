@@ -13,7 +13,7 @@ extension UIScrollView {
   private var onEndReachedKey: String {
     return "onEndReachedKey"
   }
-
+  
   public var onEndReached: (() -> Void)? {
     get {
       self.ao_get(key: self.onEndReachedKey) as? (() -> Void)
@@ -25,16 +25,18 @@ extension UIScrollView {
   }
   
   private func setEndReachedDelegate() {
-    InfiniteScrollHandler.shared.originalDelegate = self.delegate
+    InfiniteScrollHandler.shared.originalDelegates[self] = self.delegate
     self.delegate = InfiniteScrollHandler.shared
   }
 }
 
 final class InfiniteScrollHandler: NSObject, UIScrollViewDelegate {
   static let shared = InfiniteScrollHandler()
-  weak var originalDelegate: UIScrollViewDelegate?
+  var originalDelegates: [UIScrollView: UIScrollViewDelegate?] = [:]
   
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    guard self.originalDelegates.keys.contains(scrollView) else { return }
+    
     let height = scrollView.frame.size.height
     let contentYOffset = scrollView.contentOffset.y
     let distanceFromBottom = scrollView.contentSize.height - contentYOffset
@@ -44,21 +46,29 @@ final class InfiniteScrollHandler: NSObject, UIScrollViewDelegate {
       scrollView.onEndReached?()
     }
     
-    self.originalDelegate?.scrollViewDidScroll?(scrollView)
+    self.originalDelegates[scrollView]??.scrollViewDidScroll?(scrollView)
   }
   
   @preconcurrency
   override func responds(to aSelector: Selector!) -> Bool {
     MainActor.assumeIsolated {
-      return super.responds(to: aSelector) || self.originalDelegate?.responds(to: aSelector) == true
+      if let scrollView = self.originalDelegates.keys.first(where: { $0.delegate === self }),
+        let originalDelegate = self.originalDelegates[scrollView] {
+        return super.responds(to: aSelector) || originalDelegate?.responds(to: aSelector) == true
+      }
+      return super.responds(to: aSelector)
     }
   }
   
   @preconcurrency
   override func forwardingTarget(for aSelector: Selector!) -> Any? {
-    MainActor.assumeIsolated {
-      return self.originalDelegate
+    let target: UIScrollViewDelegate? = MainActor.assumeIsolated {
+      if let scrollView = self.originalDelegates.keys.first(where: { $0.delegate === self }) {
+        return self.originalDelegates[scrollView] ?? nil
+      }
+      return nil
     }
+    return target
   }
 }
 // TODO: ⬇️ 이미지캐시 객체 교체 예정
