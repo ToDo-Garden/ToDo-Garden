@@ -8,8 +8,35 @@
 import Foundation
 
 import EditUserNameSceneAPI
+import EditUserNameSceneEntity
+import HTTPClientAPI
+import TDFoundation
 
-struct EditUserNameSceneWorker: EditUserNameSceneWorkable {
-  // TODO: 서버에 닉네임 수정 요청을 하는 메서드로, 서버가 완성되면 구현할 예정입니다.
-  func requestEditUserName(_ userName: String) async throws {}
+public struct EditUserNameSceneWorker: EditUserNameSceneWorkable {
+  private let httpClient: HTTPClientAPI
+  
+  public init(httpClient: HTTPClientAPI) {
+    self.httpClient = httpClient
+  }
+
+  public func requestEditUserName(_ userName: String) async throws {
+    let body = try JSONEncoder().encode(
+      EditUserNameScene.ChangeNickname.RequestDTO(nickname: userName)
+    )
+    let request = HTTPRequest(
+      method: HTTPMethod.post,
+      endPoint: URLConstants.Profile.changeNickname,
+      body: body
+    )
+    
+    try await self.httpClient.send(
+      input: request,
+      serializer: { $0 },
+      deserializer: { response in
+        guard response.statusCode >= 200 && response.statusCode < 400 else {
+          throw HTTPClientError.badStatusCode(response.statusCode)
+        }
+      }
+    )
+  }
 }

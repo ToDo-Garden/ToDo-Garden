@@ -40,7 +40,7 @@ class UserInfoSceneRouter: UserInfoSceneDataPassing {
 
 extension UserInfoSceneRouter: UserInfoSceneRoutingLogic {
   func routeToLoginScene() {
-    // TODO: LoginSceneBuilder가 구현되면 해당 화면으로 라우팅할 예정입니다.
+    // TODO: AppRouter -> switchTo(login) 으로 가는 흐름
   }
 
   func routeToEditUserNameScene() {

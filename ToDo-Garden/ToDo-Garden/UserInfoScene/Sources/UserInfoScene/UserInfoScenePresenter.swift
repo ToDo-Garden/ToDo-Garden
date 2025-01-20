@@ -5,8 +5,9 @@
 //  Created by Wood on 8/28/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
-import Foundation
+import UIKit.UIImage
 
+import ToDoGardenUIResource
 import UserInfoSceneEntity
 
 @MainActor
@@ -20,6 +21,7 @@ protocol UserInfoScenePresentationLogic {
   func presentChangedUserIntroduction(_ userIntroduction: String)
   func presentEmptyUserIntroduction()
   func presentChangedUserName(_ userName: String)
+  func presentFetchedProfileImage(response: UserInfoScene.FetchProfileImage.Response)
 }
 
 final class UserInfoScenePresenter {
@@ -77,6 +79,11 @@ extension UserInfoScenePresenter: UserInfoScenePresentationLogic {
 
   func presentChangedUserName(_ userName: String) {
     self.viewController?.displayChangedUserName(userName)
+  }
+  
+  func presentFetchedProfileImage(response: UserInfoScene.FetchProfileImage.Response) {
+    let viewModel = UserInfoScene.FetchProfileImage.ViewModel(image: response.image ?? UIImage.defaultProfileImage)
+    self.viewController?.displayFetchedUserImage(viewModel: viewModel)
   }
 }
 
