@@ -9,7 +9,6 @@ import UIKit
 
 import TDUtility
 
-
 extension UIScrollView {
   private var onEndReachedKey: String {
     return "onEndReachedKey"
@@ -31,7 +30,7 @@ extension UIScrollView {
   }
 }
 
-fileprivate final class InfiniteScrollHandler: NSObject, UIScrollViewDelegate {
+final class InfiniteScrollHandler: NSObject, UIScrollViewDelegate {
   static let shared = InfiniteScrollHandler()
   weak var originalDelegate: UIScrollViewDelegate?
   
