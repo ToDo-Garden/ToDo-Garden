@@ -35,7 +35,6 @@ final class SearchGardenViewController: UIViewController, SearchGardenViewContro
   private let addGardenView: AddGardenView
   private let defaultModalNavigationBar: DefaultModalNavigationBar
   private let dimmingView: UIView
-  private let prefetcher = ScrollPrefecher.shared
   
   // MARK: - Object lifecycle
   
@@ -105,9 +104,11 @@ extension SearchGardenViewController {
   }
   
   private func setupSearchGardenView() {
-    self.prefetcher.prefetchDelegate = self
-    self.prefetcher.tableViewDelegate = self
-    self.searchGardenView.tableView.setPrefetcher(self.prefetcher)
+    self.searchGardenView.tableView.delegate = self
+    self.searchGardenView.tableView.onEndReached = {
+      self.interactor?.loadSearchedGardenContinue()
+    }
+    self.searchGardenView.tableView.prefetchDataSource = self
     self.searchGardenView.textField.delegate = self
     self.searchGardenView.textField.returnKeyType = .search
     self.view.addSubview(self.searchGardenView)
@@ -234,7 +235,7 @@ extension SearchGardenViewController: SearchGardenDisplayLogic {
           updatedUser.userImage = image
           self.searchGardenView.tableView.updateData(of: updatedUser)
         } catch {
-          print("Image download failed: \(error)")
+          debugPrint("ImageDownload Failed")
         }
       }
     }
@@ -261,11 +262,12 @@ extension SearchGardenViewController {
   }
   
   func loadSearchedGarden(inputText: String) {
-    self.searchGardenView.tableView.clearItemsInMainSection()
-    self.loadingIndicator.isHidden = false
-    self.loadingIndicator.startAnimation()
-    let request = SearchGarden.LoadSearchedGarden.Request(inputText: inputText)
-    self.interactor?.loadSearchedGarden(request: request, isContinuous: false)
+    self.searchGardenView.tableView.clearItemsInMainSection {
+      self.loadingIndicator.isHidden = false
+      self.loadingIndicator.startAnimation()
+      let request = SearchGarden.LoadSearchedGarden.Request(inputText: inputText)
+      self.interactor?.loadSearchedGarden(request: request, isContinuous: false)
+    }
   }
 }
 
@@ -292,9 +294,8 @@ extension SearchGardenViewController: UITextFieldDelegate {
     guard let inputText = textField.text else {
       return false
     }
-    
     self.interactor?.cancelTask(for: SearchGardenInteractor.TaskKey.loadSearchedGarden)
-    
+    self.searchGardenView.tableView.scrollToNearestSelectedRow(at: .none, animated: true)
     self.loadSearchedGarden(inputText: inputText)
     return true
   }
@@ -306,14 +307,12 @@ extension SearchGardenViewController: DefaultModalNavigationBarDelegate {
   }
 }
 
-extension SearchGardenViewController: ScrollPrefetcherDelegate {
-  func scrollDidReachBottom(_ prefetcher: ScrollPrefecher) {
-    self.interactor?.loadSearchedGardenContinue()
-  }
-  
-  func prefetcher(_ prefetcher: ScrollPrefecher, didRequestPrefetchFor indexPaths: [IndexPath]) {
+extension SearchGardenViewController: UITableViewDataSourcePrefetching {
+  func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
     let shouldLoadNextPage = indexPaths.contains { indexPath in
-      guard let user = self.searchGardenView.tableView.userForCell(at: indexPath) else { return false }
+      guard let user = self.searchGardenView.tableView.userForCell(at: indexPath) else {
+        return false
+      }
       return user.isDummyData
     }
     
