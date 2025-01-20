@@ -25,6 +25,7 @@ protocol UserInfoSceneBusinessLogic {
   func signOut()
   func reloadUserIntroduction(_ introduction: String?)
   func reloadUserName(_ userName: String)
+  func fetchProfileImage()
 }
 
 final class UserInfoSceneInteractor: UserInfoSceneDataStore {
@@ -73,8 +74,8 @@ extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
     self.requestUserPhotoTask = Task {
       do {
         let profileImageToChange = try await self.userPhotoWorker.requestPhoto()
-        if let imageData = profileImageToChange.pngData() {
-          try self.userInfoWorker.requestChangeProfileImage(with: imageData)
+        if let imageData = profileImageToChange.jpegData(compressionQuality: 0.7) {
+          try await self.userInfoWorker.requestChangeProfileImage(with: imageData)
           let response = UserInfoScene.ChangeProfileImage.Response(
             changeResult: Result.success(profileImageToChange)
           )
@@ -137,12 +138,25 @@ extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
     self.userName = userName
     self.presenter?.presentChangedUserName(userName)
   }
+  
+  func fetchProfileImage() {
+    Task {
+      let image = try await self.userInfoWorker.requestProfileImage()
+      let response = UserInfoScene.FetchProfileImage.Response(image: image)
+      self.presenter?.presentFetchedProfileImage(response: response)
+    }
+  }
 }
 
 extension UserInfoSceneInteractor: UserInfoLoadable {
   func requestDescription(for userInfo: UserInfoScene.UserInfo) async -> String {
-    let value = await self.userInfoWorker.requestUserProfile(urlString: userInfo.rawValue)
-    self.storeUserInfoData(of: userInfo, value: value)
+    var value: String = ""
+    do {
+      value = try await self.userInfoWorker.requestUserProfile(urlString: userInfo.rawValue)
+      self.storeUserInfoData(of: userInfo, value: value)
+    } catch let error {
+      debugPrint(error)
+    }
     return value
   }
 

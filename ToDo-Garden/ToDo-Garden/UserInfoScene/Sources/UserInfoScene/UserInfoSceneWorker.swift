@@ -5,38 +5,160 @@
 //  Created by Wood on 8/28/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
-import Foundation
+import UIKit.UIImage
 
+import HTTPClientAPI
+import TDFoundation
+import ToDoGardenUIResource
 import UserInfoSceneAPI
 import UserInfoSceneEntity
 
 public struct UserInfoSceneWorker: UserInfoSceneWorkable {
-  public init() {}
-
-  public func requestChangeProfileImage(with data: Data) throws {
-    return
+  private let httpClient: HTTPClientAPI
+  
+  public init(httpClient: HTTPClientAPI) {
+    self.httpClient = httpClient
   }
 
-  public func requestUserProfile(urlString: String) async -> String {
+  public func requestChangeProfileImage(with data: Data) async throws {
+    let userIDString = try self.getUserID()
+    let imageURLString = URLConstants.Profile.changeProfileImage.absoluteString + userIDString + "/image.jpeg"
+    
+    guard let url = URL(string: imageURLString) else {
+      throw NSError(domain: "URL decoding error", code: 0)
+    }
+    
+    let request = HTTPRequest(
+      method: .put,
+      endPoint: url,
+      header: [
+        "Content-Type": "image/jpeg"
+      ],
+      body: data
+    )
+    
+    try await self.httpClient.send(
+      input: request,
+      serializer: { $0 },
+      deserializer: { response in
+        guard response.statusCode >= 200 && response.statusCode < 400 else {
+          throw HTTPClientError.badStatusCode(response.statusCode)
+        }
+      }
+    )
+  }
+
+  // swiftlint: disable function_body_length
+  public func requestUserProfile(urlString: String) async throws -> String {
+    let request = HTTPRequest(
+      method: HTTPMethod.get,
+      endPoint: URLConstants.Profile.getUserProfile
+    )
+    
+    let result = try await self.httpClient.send(
+      input: request,
+      serializer: { $0 },
+      deserializer: { response in
+        guard response.statusCode >= 200 && response.statusCode < 400 else {
+          throw HTTPClientError.badStatusCode(response.statusCode)
+        }
+        
+        guard let body = response.body else {
+          throw HTTPClientError.deserializationError
+        }
+        
+        let result = try JSONDecoder().decode(UserInfoScene.GetProfileResponseDTO.self, from: body)
+        return result
+      }
+    )
+    
     let data = UserInfoScene.UserInfo.self
     if urlString == data.nickName.rawValue {
-      try? await Task.sleep(nanoseconds: 1_000_000_000)
-      return MockData.nickName
+      return result.nickname
     } else if urlString == data.introduction.rawValue {
-      try? await Task.sleep(nanoseconds: 1_000_000_000)
-      return MockData.introduction
+      return result.introduction
     } else if urlString == data.id.rawValue {
-      try? await Task.sleep(nanoseconds: 2_000_000_000)
-      return MockData.id
+      return result.customId
     } else {
-      try? await Task.sleep(nanoseconds: 3_000_000_000)
-      return MockData.email
+      return result.email
     }
   }
+  // swiftlint: enable function_body_length
 
-  public func requestWithdraw() async throws {}
+  public func requestWithdraw() async throws {
+    let request = HTTPRequest(
+      method: HTTPMethod.post,
+      endPoint: URLConstants.Auth.withDrawURL
+    )
+    
+    try await self.httpClient.send(
+      input: request,
+      serializer: { $0 },
+      deserializer: { response in
+        guard response.statusCode >= 200 && response.statusCode < 300 else {
+          throw HTTPClientError.badStatusCode(response.statusCode)
+        }
+      }
+    )
+  }
 
-  public func requestSignOut() async throws {}
+  public func requestSignOut() async throws {
+    let request = HTTPRequest(
+      method: HTTPMethod.post,
+      endPoint: URLConstants.Auth.logoutURL
+    )
+    
+    try await self.httpClient.send(
+      input: request,
+      serializer: { $0 },
+      deserializer: { response in
+        guard response.statusCode >= 200 && response.statusCode < 300 else {
+          throw HTTPClientError.badStatusCode(response.statusCode)
+        }
+      }
+    )
+  }
+  
+  public func requestProfileImage() async throws -> UIImage? {
+    let userIDString = try self.getUserID()
+    let imageURLString = URLConstants.Profile.changeProfileImage.absoluteString + userIDString + "/image.jpeg"
+    
+    guard let url = URL(string: imageURLString) else {
+      throw NSError(domain: "URL decoding error", code: 0)
+    }
+    
+    // TODO: 이미지 캐시 객체로 대체예정
+    
+    let request = HTTPRequest(
+      method: HTTPMethod.get,
+      endPoint: url
+    )
+    
+    let imageData = try await self.httpClient.send(
+      input: request,
+      serializer: { $0 },
+      deserializer: { response in
+        return response.body
+      }
+    )
+    
+    guard let result = imageData,
+      let image = UIImage(data: result) else {
+      return nil
+    }
+    
+    return image
+  }
+}
+
+extension UserInfoSceneWorker {
+  private func getUserID() throws -> String {
+    guard let userID = try KeychainManager.shared.load(forKey: KeychainManager.KeychainKey.userIdentifier),
+      let userIDString = String(data: userID, encoding: .utf8) else {
+      throw KeychainError.unknownKeyChainError
+    }
+    return userIDString
+  }
 }
 
 extension UserInfoSceneWorker {

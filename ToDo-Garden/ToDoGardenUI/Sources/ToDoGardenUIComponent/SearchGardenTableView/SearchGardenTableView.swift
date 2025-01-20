@@ -43,8 +43,8 @@ final public class SearchGardenTableView: UITableView {
     return self.diffableDataSource.itemIdentifier(for: indexPath)
   }
   
-  public func updateData(of user: SearchGardenUser) {
-    self.snapshot.reconfigureItems([user])
+  public func updateData(of user: [SearchGardenUser]) {
+    self.snapshot.reconfigureItems(user)
     self.diffableDataSource.apply(self.snapshot, animatingDifferences: false)
   }
   

@@ -23,3 +23,18 @@ public enum EditUserIntroductionScene {
     }
   }
 }
+
+extension EditUserIntroductionScene {
+  public enum ChangeIntroduction {
+    public struct RequestDTO: Sendable, Codable {
+      public let introduction: String
+      public init(introduction: String) {
+        self.introduction = introduction
+      }
+      
+      enum CodingKeys: String, CodingKey {
+        case introduction = "new_introduction"
+      }
+    }
+  }
+}

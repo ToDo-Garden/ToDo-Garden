@@ -72,21 +72,3 @@ extension EditUserIntroductionSceneBuilder {
     viewController.router?.delegate = payload.delegate
   }
 }
-
-// MARK: - Preview Builder
-
-#if DEBUG
-extension EditUserIntroductionSceneBuilder {
-  private struct PreviewPayload: EditUserIntroductionScenePayloadable {
-    var delegate: EditUserIntroductionDelegate?
-    var userIntroduction: String?
-  }
-
-  /// Preview에서 VIP 동작을 확인하기 위한 Builder입니다.
-  static let previewScene = Self(
-    dependency: Dependency(
-      someWorker: EditUserIntroductionSceneWorker()
-    )
-  ).build(with: PreviewPayload())
-}
-#endif

@@ -23,3 +23,18 @@ public enum EditUserNameScene {
     }
   }
 }
+
+extension EditUserNameScene {
+  public enum ChangeNickname {
+    public struct RequestDTO: Sendable, Codable {
+      public let nickname: String
+      public init(nickname: String) {
+        self.nickname = nickname
+      }
+      
+      enum CodingKeys: String, CodingKey {
+        case nickname = "new_nickname"
+      }
+    }
+  }
+}

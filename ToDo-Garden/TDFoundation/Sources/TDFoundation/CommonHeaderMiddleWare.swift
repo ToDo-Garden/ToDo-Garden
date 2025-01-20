@@ -27,6 +27,9 @@ public struct CommonHeaderMiddleware: ClientMiddleware {
     switch updatedRequest.method {
     case .get:
       updatedRequest.header["Accept-Profile"] = "todogarden"
+    case .put:
+      updatedRequest.header["Content-Type"] = "image/jpeg"
+      updatedRequest.header["Content-Profile"] = "todogarden"
     default:
       updatedRequest.header["Content-Type"] = "application/json"
       updatedRequest.header["Content-Profile"] = "todogarden"
