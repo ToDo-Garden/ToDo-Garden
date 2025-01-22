@@ -13,6 +13,8 @@ import TDUtility
 import ToDoGardenUIComponent
 import ToDoGardenUIResource
 
+import TDFoundation
+
 @MainActor
 protocol SearchGardenDisplayLogic: AnyObject {
   func displayFriendGarden(viewModel: SearchGarden.LoadFriendGarden.ViewModel)
@@ -102,9 +104,13 @@ extension SearchGardenViewController {
   }
   
   private func setupSearchGardenView() {
+    self.searchGardenView.tableView.delegate = self
+    self.searchGardenView.tableView.onEndReached = {
+      self.interactor?.loadSearchedGardenContinue()
+    }
+    self.searchGardenView.tableView.prefetchDataSource = self
     self.searchGardenView.textField.delegate = self
     self.searchGardenView.textField.returnKeyType = .search
-    self.searchGardenView.tableView.delegate = self
     self.view.addSubview(self.searchGardenView)
     self.searchGardenView.usingAutolayout()
     
@@ -123,7 +129,7 @@ extension SearchGardenViewController {
     self.addGardenView.alpha = CGFloat.zero
     self.view.addSubview(self.addGardenView)
     self.addGardenView.usingAutolayout()
-    self.addGardenView.addButton.addAction( 
+    self.addGardenView.addButton.addAction(
       UIAction { [weak self] _ in
         self?.addGarden()
       },
@@ -211,9 +217,28 @@ extension SearchGardenViewController: SearchGardenDisplayLogic {
   }
   
   func displaySearchedGarden(viewModel: SearchGarden.LoadSearchedGarden.ViewModel) {
+    self.searchGardenView.tableView.deletePlaceholderCell()
     self.loadingIndicator.isHidden = true
     self.loadingIndicator.pauseAnimation()
-    self.searchGardenView.tableView.updateData(of: viewModel.fetchedData.searchedGardens)
+    self.searchGardenView.tableView.appendData(with: viewModel.fetchedData.searchedGardens)
+    if !viewModel.fetchedData.isEndPage {
+      self.searchGardenView.tableView.appendPlaceholderCell()
+    }
+    
+    let users = viewModel.fetchedData.searchedGardens
+    for user in users {
+      guard let imageURL = user.userImageURL else { continue }
+      Task {
+        do {
+          let image = try await ImageCache.shared.loadImage(url: imageURL)
+          let updatedUser = user
+          updatedUser.userImage = image
+          self.searchGardenView.tableView.updateData(of: updatedUser)
+        } catch {
+          debugPrint("ImageDownload Failed")
+        }
+      }
+    }
   }
   
   func displayErrorInfoToast(error: any Error) {
@@ -236,12 +261,13 @@ extension SearchGardenViewController {
     self.interactor?.addGarden()
   }
   
-  func loadSearchedGarden(inputText: String, isCountinuous: Bool) {
-    self.loadingIndicator.isHidden = false
-    self.loadingIndicator.startAnimation()
-    let request = SearchGarden.LoadSearchedGarden.Request(inputText: inputText)
-    self.interactor?.loadSearchedGarden(request: request)
-    
+  func loadSearchedGarden(inputText: String) {
+    self.searchGardenView.tableView.clearItemsInMainSection {
+      self.loadingIndicator.isHidden = false
+      self.loadingIndicator.startAnimation()
+      let request = SearchGarden.LoadSearchedGarden.Request(inputText: inputText)
+      self.interactor?.loadSearchedGarden(request: request, isContinuous: false)
+    }
   }
 }
 
@@ -251,11 +277,8 @@ extension SearchGardenViewController: UITableViewDelegate {
   }
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    guard let tableView = tableView as? SearchGardenTableView else {
-      return
-    }
-    
-    guard let userData = tableView.userForCell(at: indexPath) else {
+    guard let tableView = tableView as? SearchGardenTableView,
+    let userData = tableView.userForCell(at: indexPath) else {
       return
     }
     
@@ -264,14 +287,6 @@ extension SearchGardenViewController: UITableViewDelegate {
       userImage: userData.userImage
     )
   }
-  
-  func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    let offsetY = scrollView.contentOffset.y
-    let contentHeight = scrollView.contentSize.height
-    if offsetY > contentHeight * 0.5 {
-      self.interactor?.loadSearchedGardenContinue()
-    }
-  }
 }
 
 extension SearchGardenViewController: UITextFieldDelegate {
@@ -279,9 +294,9 @@ extension SearchGardenViewController: UITextFieldDelegate {
     guard let inputText = textField.text else {
       return false
     }
-    
     self.interactor?.cancelTask(for: SearchGardenInteractor.TaskKey.loadSearchedGarden)
-    self.loadSearchedGarden(inputText: inputText, isCountinuous: false)
+    self.searchGardenView.tableView.scrollToNearestSelectedRow(at: .none, animated: true)
+    self.loadSearchedGarden(inputText: inputText)
     return true
   }
 }
@@ -289,5 +304,20 @@ extension SearchGardenViewController: UITextFieldDelegate {
 extension SearchGardenViewController: DefaultModalNavigationBarDelegate {
   func didTapRightButton() {
     self.router?.dismissModal()
+  }
+}
+
+extension SearchGardenViewController: UITableViewDataSourcePrefetching {
+  func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+    let shouldLoadNextPage = indexPaths.contains { indexPath in
+      guard let user = self.searchGardenView.tableView.userForCell(at: indexPath) else {
+        return false
+      }
+      return user.isDummyData
+    }
+    
+    if shouldLoadNextPage {
+      self.interactor?.loadSearchedGardenContinue()
+    }
   }
 }

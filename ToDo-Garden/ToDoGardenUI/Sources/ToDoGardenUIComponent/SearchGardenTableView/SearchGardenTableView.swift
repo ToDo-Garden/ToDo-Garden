@@ -33,9 +33,10 @@ final public class SearchGardenTableView: UITableView {
     self.snapshot.appendItems(users)
     self.diffableDataSource.apply(self.snapshot, animatingDifferences: true)
   }
-  public func clearItemsInMainSection() {
+  public func clearItemsInMainSection(completion: (() -> Void)? = nil) {
     self.snapshot.deleteItems(snapshot.itemIdentifiers(inSection: SearchGardenSection.main))
     self.diffableDataSource.apply(self.snapshot, animatingDifferences: false)
+    completion?()
   }
   
   public func userForCell(at indexPath: IndexPath) -> SearchGardenUser? {
