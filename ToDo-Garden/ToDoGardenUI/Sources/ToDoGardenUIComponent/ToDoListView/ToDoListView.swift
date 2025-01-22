@@ -27,6 +27,15 @@ public final class ToDoListView: UIView {
     
     return toDoListView
   }()
+  
+  var contentInset: UIEdgeInsets {
+    get {
+      return self.contentView.contentInset
+    } set {
+      self.contentView.contentInset = newValue
+    }
+  }
+  
   private lazy var dataSource: DataSource = self.makeDataSource()
   
   public override init(frame: CGRect) {
