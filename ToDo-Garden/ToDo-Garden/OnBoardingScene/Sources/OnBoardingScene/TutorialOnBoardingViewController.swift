@@ -45,6 +45,7 @@ public final class TutorialOnBoardingViewController: UIViewController {
     self.view.backgroundColor = UIColor.white
     self.setupCell()
     self.setupBubbleLabels()
+    self.setupGestureRecognizers()
   }
 }
 
@@ -158,6 +159,70 @@ extension TutorialOnBoardingViewController: BubbleLabelDelegate {
         self?.rightBubbleLabel.isHidden = true
       }
     )
+  }
+  
+  private func animateRightBubbleLabelAndEndAction() {
+    UIView.animate(
+      withDuration: 0.5,
+      animations: { [weak self] in
+        self?.rightBubbleLabel.alpha = 0
+      },
+      completion: { [weak self] _ in
+        self?.rightBubbleLabel.isHidden = true
+        self?.endAction?()
+      }
+    )
+  }
+  
+  private func animateRightBubbleLabelToLeft() {
+    UIView.animate(
+      withDuration: 0.5,
+      animations: { [weak self] in
+        self?.rightBubbleLabel.alpha = 0
+      },
+      completion: { [weak self] _ in
+        self?.rightBubbleLabel.isHidden = true
+        self?.leftBubbleLabel.isHidden = false
+        self?.showLeftBubbleLabel()
+      }
+    )
+  }
+  
+  private func showLeftBubbleLabel() {
+    UIView.animate(
+      withDuration: 0.5,
+      animations: { [weak self] in
+        self?.leftBubbleLabel.alpha = 1
+      }
+    )
+  }
+}
+
+extension TutorialOnBoardingViewController {
+  private func setupGestureRecognizers() {
+    let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture))
+    self.view.addGestureRecognizer(panGesture)
+  }
+  
+  @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
+    guard gesture.state == UIGestureRecognizer.State.ended else { return }
+    
+    let velocity = gesture.velocity(in: self.view)
+    let isHorizontal = abs(velocity.x) > abs(velocity.y)
+    
+    if isHorizontal {
+      if velocity.x > 0 {
+        if !self.rightBubbleLabel.isHidden {
+          self.animateRightBubbleLabelToLeft()
+        }
+      } else {
+        if !self.leftBubbleLabel.isHidden {
+          self.animateLeftBubbleLabel()
+        } else if !self.rightBubbleLabel.isHidden {
+          self.animateRightBubbleLabelAndEndAction()
+        }
+      }
+    }
   }
 }
 
