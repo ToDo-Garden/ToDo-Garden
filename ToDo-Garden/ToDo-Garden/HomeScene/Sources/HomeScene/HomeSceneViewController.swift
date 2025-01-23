@@ -42,3 +42,12 @@ extension HomeSceneViewController: HomeSceneDisplayLogic {
 
 extension HomeSceneViewController {
 }
+
+#if DEBUG
+@available(iOS 17.0, *)
+#Preview {
+  let homeSceneViewController = HomeSceneViewController()
+  
+  return homeSceneViewController
+}
+#endif
