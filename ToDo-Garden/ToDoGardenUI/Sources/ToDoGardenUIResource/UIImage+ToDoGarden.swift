@@ -152,4 +152,8 @@ extension UIImage {
   public static let homeHeaderSymbolImage = UIImage(
     resource: .homeHeaderSymbol
   )
+  
+  public static let homeManageGroupImage = UIImage(
+    resource: .homeMangeGroup
+  )
 }
