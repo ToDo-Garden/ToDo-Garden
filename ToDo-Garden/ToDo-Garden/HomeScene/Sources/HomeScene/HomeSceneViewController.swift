@@ -56,11 +56,13 @@ extension HomeSceneViewController {
     let toDoListViewContainer = ToDoListViewContainer()
     self.todoListView = toDoListViewContainer.toDoListView
     if let sheet = toDoListViewContainer.sheetPresentationController {
-      sheet.detents = [UISheetPresentationController.Detent.medium()]
+      sheet.detents = [
+        UISheetPresentationController.Detent.medium(),
+        UISheetPresentationController.Detent.large()
+      ]
       sheet.prefersGrabberVisible = true
       sheet.prefersScrollingExpandsWhenScrolledToEdge = false
       sheet.largestUndimmedDetentIdentifier = UISheetPresentationController.Detent.Identifier.medium
-      
     }
     toDoListViewContainer.isModalInPresentation = true
     
