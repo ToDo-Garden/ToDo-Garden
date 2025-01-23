@@ -148,4 +148,8 @@ extension UIImage {
   public static let magnifyingGlassImage = UIImage(
     systemName: "magnifyingglass"
   )
+  
+  public static let homeHeaderSymbolImage = UIImage(
+    resource: .homeHeaderSymbol
+  )
 }
