@@ -90,7 +90,7 @@ extension HomeSceneHeaderView {
     right: 30
   )
   headerView.manageGroupButtonTapped = UIAction { _ in
-      print("Hello")
+    print("Hello")
   }
   return headerView
 }
