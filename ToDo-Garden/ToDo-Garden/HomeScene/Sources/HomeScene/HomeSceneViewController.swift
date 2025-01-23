@@ -55,7 +55,6 @@ extension HomeSceneViewController {
   private func presentSheet() {
     let toDoListViewContainer = ToDoListViewContainer()
     self.todoListView = toDoListViewContainer.toDoListView
-    toDoListViewContainer.applySnapshotForPreview()
     if let sheet = toDoListViewContainer.sheetPresentationController {
       sheet.detents = [UISheetPresentationController.Detent.medium()]
       sheet.prefersGrabberVisible = true
