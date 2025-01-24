@@ -3,7 +3,7 @@ import UIKit.UIApplication
 
 import class TDUtility.LockIsolated
 
-// swiftlint:disable type_name
+// swiftlint:disable function_body_length
 public final class Cache<Request: Requestable>: Sendable {
   let request: Request
   let configuration: Configuration
@@ -181,7 +181,6 @@ extension Cache {
     let expiration: StorageExpiration
     let cleanupInterval: TimeInterval
     
-    
     public init(
       limit: Measurement<UnitInformationStorage> = .memoryLimit,
       expiration: StorageExpiration = .seconds(300),
@@ -222,7 +221,7 @@ extension Cache.RequestState: MemorySizeProvider {
       case Cache.RequestState.response(let response):
         return try response.estimatedMemory
         
-        //TODO: 배열 자체도 크기를 갖기 때문에 추후에 수정하면 좋을 거 같음.
+        // TODO: 배열 자체도 크기를 갖기 때문에 추후에 수정하면 좋을 거 같음.
       case Cache.RequestState.loading:
         return Measurement(value: .zero, unit: .bytes)
       }
@@ -268,4 +267,4 @@ extension Cache {
     }
   }
 }
-// swiftlint:enable type_name
+// swiftlint:enable function_body_length

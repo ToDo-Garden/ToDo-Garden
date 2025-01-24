@@ -1,7 +1,7 @@
 import Foundation
 
 // swiftlint:disable type_name
-public protocol Requestable<ID>: Sendable {
+public protocol Requestable: Sendable {
   associatedtype ID: Hashable, Sendable, CustomStringConvertible
   associatedtype Response: MemorySizeProvider
   func execute(id: ID) async throws -> Response

@@ -58,4 +58,3 @@ extension Cache.Storage: Sequence {
     }
   }
 }
-
