@@ -9,7 +9,7 @@ public struct ImageClient: Requestable {
   var request: @Sendable (URL) async throws -> Data
   
   public func execute(id: URL) async throws -> UIImage {
-    let data = try await request(id)
+    let data = try await self.request(id)
     guard let image = UIImage(data: data) else {
       throw CocoaError(.coderInvalidValue)
     }
@@ -27,14 +27,14 @@ extension UIImage: MemorySizeProvider {
   private var _renderedCGImage: CGImage? {
     let renderer = UIGraphicsImageRenderer(size: size)
     let renderedImage = renderer.image { _ in
-      draw(in: .init(origin: .zero, size: size))
+      draw(in: CGRect(origin: .zero, size: size))
     }
     return renderedImage.cgImage
   }
   
   public var estimatedMemory: Measurement<UnitInformationStorage> {
     get throws {
-      guard let cgImage = self.cgImage ?? _renderedCGImage else {
+      guard let cgImage = self.cgImage ?? self._renderedCGImage else {
         throw Internals.canNotEstimate
       }
       let channels = cgImage.bitsPerPixel / cgImage.bitsPerComponent
@@ -42,7 +42,7 @@ extension UIImage: MemorySizeProvider {
       
       return Measurement(
         value: Double(cgImage.width * cgImage.height * bytesPerPixel),
-        unit: .bytes
+        unit: UnitInformationStorage.bytes
       )
     }
   }

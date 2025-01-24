@@ -10,7 +10,7 @@ public enum StorageExpiration: Sendable {
   }
   
   var isExpired: Bool {
-    timeInterval <= 0
+    self.timeInterval <= 0
   }
   
   var timeInterval: TimeInterval {

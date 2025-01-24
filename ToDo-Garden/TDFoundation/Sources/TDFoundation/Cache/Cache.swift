@@ -54,7 +54,7 @@ public final class Cache<Request: Requestable>: Sendable {
   }
   
   private func removeExpired() {
-    storage.withValue { cache in
+    self.storage.withValue { cache in
       for (key, box) in cache where box.isExpired {
         box.loadingState?.task.cancel()
         cache.removeObject(forKey: key)
@@ -68,15 +68,15 @@ public final class Cache<Request: Requestable>: Sendable {
   ) async throws -> Request.Response {
     try await withTaskCancellationHandler {
       try await withCheckedThrowingContinuation { continuation in
-        storage.withValue { cache in
+        self.storage.withValue { cache in
           let key = id.description
           let box = cache.object(forKey: key)
           
           switch box?.value {
-          case .response(let response):
+          case RequestState.response(let response)?:
             continuation.resume(returning: response)
             
-          case .loading(var state):
+          case RequestState.loading(var state)?:
             if Task.isCancelled {
               continuation.resume(throwing: CancellationError())
               state.task.cancel()
@@ -90,11 +90,11 @@ public final class Cache<Request: Requestable>: Sendable {
               continuation.resume(throwing: CancellationError())
               return
             }
-            let expiration = expiration ?? configuration.expiration
-            let task = buildTask(id, expiration: expiration)
+            let expiration = expiration ?? self.configuration.expiration
+            let task = self.buildTask(id, expiration: expiration)
             let box = Box<RequestState>(
               key: key,
-              value: .loading(.init(task: task, continuations: [continuation])),
+              value: RequestState.loading(RequestState.LoadingState(task: task, continuations: [continuation])),
               expiration: expiration
             )
             cache.setObject(box, forKey: key)
@@ -106,7 +106,7 @@ public final class Cache<Request: Requestable>: Sendable {
         }
       }
     } onCancel: {
-      let task = storage.withValue { cache in
+      let task = self.storage.withValue { cache in
         cache.object(forKey: id.description)?.loadingState?.task
       }
       task?.cancel()
@@ -120,14 +120,14 @@ public final class Cache<Request: Requestable>: Sendable {
     Task {
       do {
         let response = try await self.request.execute(id: id)
-        let continuations: [Continuation] = try storage.withValue { cache  in
+        let continuations: [Continuation] = try self.storage.withValue { cache  in
           let key = id.description
           guard
             let loadingState = cache.object(forKey: key)?.loadingState
           else { return [] }
           let box = Box<RequestState>(
             key: key,
-            value: .response(response),
+            value: RequestState.response(response),
             expiration: expiration
           )
           cache.setObject(
@@ -202,12 +202,12 @@ extension Cache {
     }
     var loadingState: LoadingState? {
       get {
-        guard case .loading(let state) = self else { return nil }
+        guard case RequestState.loading(let state) = self else { return nil }
         return state
       }
       set {
         guard let newValue else { return }
-        self = .loading(newValue)
+        self = RequestState.loading(newValue)
       }
     }
     case loading(LoadingState)
