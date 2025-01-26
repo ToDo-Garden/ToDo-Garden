@@ -11,7 +11,8 @@ let package = Package(
     )
   ],
   dependencies: [
-    .package(path: "../ToDoGardenUI")
+    .package(path: "../ToDoGardenUI"),
+    .package(path: "../TDFoundation")
   ],
   targets: [
     .target(
@@ -19,7 +20,8 @@ let package = Package(
       dependencies: [
         "TimerSceneEntity",
         "TimerSceneAPI",
-        .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI")
+        .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI"),
+        .product(name: "TDFoundation", package: "TDFoundation")
       ],
       swiftSettings: [.enableExperimentalFeature("StrictConcurrency")]
     ),
