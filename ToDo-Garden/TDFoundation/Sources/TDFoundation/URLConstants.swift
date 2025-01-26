@@ -53,4 +53,8 @@ extension URLConstants.Profile {
   public static let changeIntroduction = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/edit_introduction")!
   public static let changeNickname = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/edit_nickname")!
 }
+
+extension URLConstants.Timer {
+  public static let postCompletedTimerItems = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/complete_timer")!
+}
 // swiftlint:enable all
