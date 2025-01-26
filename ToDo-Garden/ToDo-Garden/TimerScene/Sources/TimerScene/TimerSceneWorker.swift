@@ -1,8 +1,11 @@
 import CombineExtension
 import Foundation
 
+import TimerSceneEntity
+
 public struct TimerSceneWorker: TimerSceneWorkable, Sendable {
   public var countDownStream: @Sendable (Double) -> AsyncStream<Double>
+
   public init(
     countDownStream: @Sendable @escaping (Double) -> AsyncStream<Double>
   ) {
