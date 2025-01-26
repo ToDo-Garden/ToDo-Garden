@@ -7,38 +7,27 @@
 
 import Foundation
 
+import TimerSceneAPI
 import TimerSceneEntity
 
-final class TimerStorage: @unchecked Sendable {
+// TODO: GRDB로 대체될 예정입니다
+final class TimerStorage: TimerStorable, @unchecked Sendable {
   private let fileManager: FileManager
   private let documentsURL: URL
   private var storageURL: URL {
     self.documentsURL.appendingPathComponent("pomodoros.json")
   }
   
-  init() throws {
+  init() {
     self.fileManager = FileManager.default
-    self.documentsURL = try self.fileManager.url(
+    
+    guard let documentsURL = FileManager.default.urls(
       for: .documentDirectory,
-      in: .userDomainMask,
-      appropriateFor: nil,
-      create: true
-    )
-  }
-  
-  // MARK: - Load & Save Methods
-  private func loadPomodorosJSON() throws -> [TimerScene.PomodoroDTO] {
-    guard self.fileManager.fileExists(atPath: self.storageURL.path) else {
-      return []
+      in: .userDomainMask).first else {
+      fatalError("Can not access documents directory.")
     }
     
-    let data = try Data(contentsOf: self.storageURL)
-    return try JSONDecoder().decode([TimerScene.PomodoroDTO].self, from: data)
-  }
-  
-  private func savePomodorosAsJSON(_ pomodoros: [TimerScene.PomodoroDTO]) throws {
-    let data = try JSONEncoder().encode(pomodoros)
-    try data.write(to: self.storageURL)
+    self.documentsURL = documentsURL
   }
   
   func saveCompletedTimer(groupId: String, duration: Int) throws {
@@ -65,6 +54,23 @@ final class TimerStorage: @unchecked Sendable {
     let pomodoros = try self.loadPomodorosJSON()
     return TimerScene.FocusTimeRequestDTO(pomodoros: pomodoros)
   }
+}
+
+// MARK: - Private Methods
+extension TimerStorage {
+  private func loadPomodorosJSON() throws -> [TimerScene.PomodoroDTO] {
+    guard self.fileManager.fileExists(atPath: self.storageURL.path) else {
+      return []
+    }
+    
+    let data = try Data(contentsOf: self.storageURL)
+    return try JSONDecoder().decode([TimerScene.PomodoroDTO].self, from: data)
+  }
+  
+  private func savePomodorosAsJSON(_ pomodoros: [TimerScene.PomodoroDTO]) throws {
+    let data = try JSONEncoder().encode(pomodoros)
+    try data.write(to: self.storageURL)
+  }
   
   private func getCurrentDateString() -> String {
     let dateFormatter = DateFormatter()
@@ -90,4 +96,8 @@ final class TimerStorage: @unchecked Sendable {
     )
     pomodoros.append(newPomodoro)
   }
+}
+
+extension TimerStorage {
+  static let live = TimerStorage()
 }
