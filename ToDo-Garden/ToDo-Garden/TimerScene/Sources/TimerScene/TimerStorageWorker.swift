@@ -9,18 +9,20 @@ import Foundation
 
 import HTTPClientAPI
 import TDFoundation
+import TimerSceneAPI
 import TimerSceneEntity
 
-public struct TimerStorageWorker: TimerStorageWorkable, Sendable {
-  public let httpClient: HTTPClientAPI
-  private let timerStorage: TimerStorage
+public struct TimerStorageWorker: TimerStorageWorkable {
+  private var httpClient: HTTPClientAPI?
+  private let timerStorage: TimerStorable
   
-  public init(httpClient: HTTPClientAPI) throws {
-    self.httpClient = httpClient
-    self.timerStorage = try TimerStorage()
+  public init(
+    timerStorage: TimerStorable
+  ) {
+    self.timerStorage = timerStorage
   }
   
-  func postCompletedItem() async throws {
+  public func postCompletedItem() async throws {
     let body = try JSONEncoder().encode(self.getTimerItemsAsDTO())
     let request = HTTPRequest(
       method: HTTPMethod.post,
@@ -28,7 +30,7 @@ public struct TimerStorageWorker: TimerStorageWorkable, Sendable {
       body: body
     )
     
-    try await self.httpClient.send(
+    try await self.httpClient?.send(
       input: request,
       serializer: { $0 },
       deserializer: { response in
@@ -43,15 +45,19 @@ public struct TimerStorageWorker: TimerStorageWorkable, Sendable {
 
 // MARK: - Local Methods
 extension TimerStorageWorker {
-  func recordCompletedItemInLocal(groupId: String, duration: Int) throws {
+  public func recordCompletedItemInLocal(groupId: String, duration: Int) throws {
     try self.timerStorage.saveCompletedTimer(groupId: groupId, duration: duration)
   }
   
-  func deleteAllTimerItems() throws {
+  public func deleteAllTimerItems() throws {
     try self.timerStorage.deleteAllPomodoros()
   }
   
-  func getTimerItemsAsDTO() throws -> TimerScene.FocusTimeRequestDTO {
+  public func getTimerItemsAsDTO() throws -> TimerScene.FocusTimeRequestDTO {
     return try self.timerStorage.getAsDTO()
   }
+}
+
+extension TimerStorageWorker {
+  static let live = TimerStorageWorker(timerStorage: TimerStorage.live)
 }
