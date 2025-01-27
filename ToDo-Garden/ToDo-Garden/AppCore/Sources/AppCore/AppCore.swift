@@ -18,14 +18,10 @@ public final class AppCore {
     didSet {
       self.dependency.router.switchTo(
         self.destination,
-        httpClient: self.httpClient
+        httpClient: self.dependency.httpClient
       )
     }
   }
-  private let httpClient = HTTPClient(
-    transport: URLSessionTransport(urlSession: URLSession.shared),
-    middlewares: [AuthenticationMiddleWare()]
-  )
   
   public init(dependency: Dependency) {
     self.dependency = dependency
@@ -53,9 +49,11 @@ extension AppCore {
     @MainActor
     public static let live = Dependency(
       userDefaults: UserDefaultsClient.live,
-      router: AppRouter()
+      router: AppRouter(),
+      httpClient: HTTPClient.live
     )
     public let userDefaults: UserDefaultsClient
     public let router: AppRouter
+    public let httpClient: HTTPClient
   }
 }
