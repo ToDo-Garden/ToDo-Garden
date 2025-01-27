@@ -233,7 +233,7 @@ extension SearchGardenViewController: SearchGardenDisplayLogic {
           let image = try await ImageCache.shared.loadImage(url: imageURL)
           let updatedUser = user
           updatedUser.userImage = image
-          self.searchGardenView.tableView.updateData(of: updatedUser)
+          self.searchGardenView.tableView.updateData(of: [updatedUser])
         } catch {
           debugPrint("ImageDownload Failed")
         }
