@@ -9,26 +9,34 @@ import UIKit
 
 extension CalendarViewSingleSelectionDelegate {
   func makeDiffableDataSource(identifier: String)
-  -> UICollectionViewDiffableDataSource<CalendarSection, CalendarItem> {
-    return UICollectionViewDiffableDataSource<
-      CalendarSection,
-      CalendarItem
-    >(collectionView: self.collectionView) { (collectionView, indexPath, dayItem) in
-      guard let cell = collectionView.dequeueReusableCell(
-        withReuseIdentifier: identifier,
-        for: indexPath
-      ) as? CalendarCollectionViewCell
-      else { return UICollectionViewCell() }
-      
-      let dayString = self.makeDayString(from: dayItem.date)
-      cell.updateText(with: dayString)
-      let isThisMonth = dayItem.isThisMonth
-      cell.updateTextColor(with: isThisMonth)
-      
-      self.updateCellToSelected(with: self.selectedItem)
-      return cell
+    -> UICollectionViewDiffableDataSource<CalendarSection, CalendarItem> {
+      return UICollectionViewDiffableDataSource<
+        CalendarSection,
+        CalendarItem
+      >(collectionView: self.collectionView) { (collectionView, indexPath, dayItem) in
+        guard let cell = collectionView.dequeueReusableCell(
+          withReuseIdentifier: identifier,
+          for: indexPath
+        ) as? CalendarCollectionViewCell
+        else { return UICollectionViewCell() }
+        
+        let dayString = self.makeDayString(from: dayItem.date)
+        cell.updateText(with: dayString)
+        let isThisMonth = dayItem.isThisMonth
+        cell.updateTextColor(with: isThisMonth)
+        
+        if let cell = cell as? DateRangeCollectionViewCell {
+          cell.selectionType = dayItem.selectionType
+          if dayItem.selectionType != .none {
+            collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+          }
+          return cell
+        }
+        
+        self.updateCellToSelected(with: self.selectedItem)
+        return cell
+      }
     }
-  }
 
   private func makeDayString(from date: Date) -> String {
     let formattedDateString = self.dateFormatter.string(from: date).split(separator: " ")
