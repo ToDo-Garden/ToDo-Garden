@@ -11,7 +11,7 @@ import ToDoGardenUIConstant
 
 class CalendarCollectionViewCell: UICollectionViewCell, ReusableIdentifier {
   private var toDoExistenceView: UIView
-  private var isThisMonth: Bool
+  var isThisMonth: Bool
   var dayLabel: UILabel
 
   override var isSelected: Bool {
