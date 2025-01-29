@@ -1,60 +1,96 @@
 import Foundation
 
+enum Expiration {
+  @TaskLocal static var value: StorageExpiration = .expired
+}
+
 extension Cache {
-  final class Storage<Value: AnyObject>: NSObject, NSCacheDelegate {
-    let cache = NSCache<NSString, Value>()
-    var keys = Set<String>()
-    var removedContinuations: [String: [Continuation]] = [:]
+  class Storage: IterableCache<String, CacheItem<RequestState>>, NSCacheDelegate {
+    private(set) var removedContinuations: [String: [Continuation]] = [:]
     
-    init(totoalCostLimit: Int) {
-      self.cache.totalCostLimit = totoalCostLimit
-      super.init()
+    override init(totalCostLimit: Int) {
+      super.init(totalCostLimit: totalCostLimit)
       self.cache.delegate = self
     }
     
-    func object(forKey key: String) -> Value? {
-      self.cache.object(forKey: key as NSString)
+    override func removeObject(forKey key: String) {
+      super.removeObject(forKey: key)
+      self.removedContinuations[key] = nil
     }
     
-    func setObject(_ obj: Value, forKey key: String, cost: Int = 0) {
-      self.cache.setObject(obj, forKey: key as NSString, cost: cost)
-      self.keys.insert(key)
+    func setRequestState(
+      _ value: RequestState,
+      forKey key: String,
+      cost: Int = 0
+    ) {
+      let cacheItem = CacheItem<RequestState>(
+        key: key,
+        value: value,
+        expiration: Expiration.value
+      )
+      super.setObject(cacheItem, forKey: key, cost: cost)
     }
     
-    func removeObject(forKey key: String) {
-      self.cache.removeObject(forKey: key as NSString)
-      self.keys.remove(key)
+    func continuations(forKey key: String) -> [Continuation] {
+      self.lock.lock()
+      defer { self.lock.unlock() }
+      return self.object(forKey: key)?.value.loadingState?.continuations
+      ?? self.removedContinuations[key]
+      ?? []
     }
     
-    func removeAllObjects() {
-      self.cache.removeAllObjects()
-      self.keys.removeAll()
-    }
-    
+    // MARK: - NSCacheDelegate Protocol
+    /// loading 상태에서 캐시 정책에 의해서 제거될 경우, 값을 저장해서 전파하기 위해서.
     func cache(
       _ cache: NSCache<AnyObject, AnyObject>,
       willEvictObject obj: Any
     ) {
-      guard
-        let box = obj as? Box<RequestState>,
-        let loadingState = box.loadingState
-      else { return }
-      self.removedContinuations[box.key] = loadingState.continuations
-      self.keys.remove(box.key)
+      guard let item = obj as? CacheItem<RequestState> else { return }
+      let key = item.key
+      switch item.value {
+      case .response:
+        self.removedContinuations[key] = nil
+        self.keys.remove(key)
+      case .loading(let state):
+        self.removedContinuations[item.key] = state.continuations
+      }
     }
   }
 }
 
-extension Cache.Storage: Sequence {
-  func makeIterator() -> AnyIterator<(String, Value)> {
-    var iterator = self.keys.makeIterator()
-    return AnyIterator {
-      while let key = iterator.next() {
-        if let value = self.cache.object(forKey: key as NSString) {
-          return (key, value)
-        }
-      }
-      return nil
+@dynamicMemberLookup
+final class CacheItem<Value> {
+  let key: String
+  var value: Value
+  let expiration: StorageExpiration
+  
+  var isExpired: Bool {
+    Date().timeIntervalSince(self.estimatedExpiration) <= 0
+  }
+  private(set) var estimatedExpiration: Date
+  
+  init(
+    key: String,
+    value: Value,
+    expiration: StorageExpiration
+  ) {
+    self.key = key
+    self.value = value
+    self.expiration = expiration
+    self.estimatedExpiration = expiration.estimatedExpirationSinceNow
+  }
+  
+  func extendExpiration(_ extendingExpiration: ExpirationExtending = .cacheTime) {
+    switch extendingExpiration {
+    case .none: break
+    case .cacheTime:
+      self.estimatedExpiration = self.expiration.estimatedExpirationSinceNow
+    case .expirationTime(let expiration):
+      self.estimatedExpiration = expiration.estimatedExpirationSinceNow
     }
+  }
+  
+  public subscript<Member>(dynamicMember keyPath: KeyPath<Value, Member>) -> Member {
+    self.value[keyPath: keyPath]
   }
 }
