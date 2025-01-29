@@ -19,9 +19,15 @@ struct CalendarSection: Hashable {
   }
 }
 
-struct CalendarItem: Hashable {
+class CalendarItem: Hashable {
   let date: Date
   let isThisMonth: Bool
+  var selectionType: SelectionType = .none
+  
+  init(date: Date, isThisMonth: Bool) {
+    self.date = date
+    self.isThisMonth = isThisMonth
+  }
 
   static func == (lhs: CalendarItem, rhs: CalendarItem) -> Bool {
     return lhs.date == rhs.date && lhs.isThisMonth == rhs.isThisMonth
@@ -31,4 +37,12 @@ struct CalendarItem: Hashable {
     hasher.combine(self.date)
     hasher.combine(self.isThisMonth)
   }
+}
+
+enum SelectionType {
+  case none
+  case full
+  case left
+  case right
+  case single
 }
