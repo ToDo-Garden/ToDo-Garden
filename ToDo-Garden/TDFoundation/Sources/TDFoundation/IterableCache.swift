@@ -7,32 +7,32 @@ public class IterableCache<Key: Hashable, Value: AnyObject>: NSObject {
   let lock = NSLock()
   
   public init(totalCostLimit: Int) {
-    cache.totalCostLimit = totalCostLimit
+    self.cache.totalCostLimit = totalCostLimit
   }
   
   public func setObject(_ obj: Value, forKey key: Key, cost g: Int = 0) {
     let ref = Ref(key)
-    lock.work {
-      cache.setObject(obj, forKey: ref, cost: g)
-      keys.insert(key)
+    self.lock.work {
+      self.cache.setObject(obj, forKey: ref, cost: g)
+      self.keys.insert(key)
     }
   }
   
   public func object(forKey key: Key) -> Value? {
-    cache.object(forKey: Ref(key))
+    self.cache.object(forKey: Ref(key))
   }
   
   public func removeObject(forKey key: Key) {
-    lock.work {
-      cache.removeObject(forKey: Ref(key))
-      keys.remove(key)
+    self.lock.work {
+      self.cache.removeObject(forKey: Ref(key))
+      self.keys.remove(key)
     }
   }
   
   public func removeAllObjects() {
-    lock.work {
-      cache.removeAllObjects()
-      keys.removeAll()
+    self.lock.work {
+      self.cache.removeAllObjects()
+      self.keys.removeAll()
     }
   }
 }
@@ -40,7 +40,7 @@ public class IterableCache<Key: Hashable, Value: AnyObject>: NSObject {
 // MARK: - Sequence Protocol
 extension IterableCache: Sequence {
   public func makeIterator() -> AnyIterator<(Key, Value)> {
-    var iterator = keys.makeIterator()
+    var iterator = self.keys.makeIterator()
     return AnyIterator {
       while let key = iterator.next() {
         if let value = self.cache.object(forKey: Ref(key)) {
@@ -56,7 +56,7 @@ extension IterableCache: Sequence {
 extension IterableCache {
   final class Ref<T: Hashable>: NSObject {
     override var hash: Int {
-      key.hashValue
+      self.key.hashValue
     }
     let key: T
     
@@ -68,15 +68,15 @@ extension IterableCache {
       guard let other = object as? Ref<T> else {
         return false
       }
-      return key == other.key
+      return self.key == other.key
     }
   }
 }
 
 private extension NSLock {
   func work(_ work: () -> Void) {
-    lock()
-    defer { unlock() }
+    self.lock()
+    defer { self.unlock() }
     work()
   }
 }
