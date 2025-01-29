@@ -61,11 +61,13 @@ public class CalendarView: UIView {
 extension CalendarView {
   private func scrollToCurrentMonth() {
     if self.isLayoutSubviewsCalled == false {
-      self.calendarViewDelegate.scrollCalendar(
-        to: CalendarScrollDirection.current,
-        animated: false
-      )
-      self.isLayoutSubviewsCalled = true
+      Task {
+        await self.calendarViewDelegate.scrollCalendar(
+          to: CalendarScrollDirection.current,
+          animated: false
+        )
+        self.isLayoutSubviewsCalled = true
+      }
     }
   }
   
@@ -139,12 +141,18 @@ extension CalendarView {
     self.monthLabel.font = UIFont.pretendardHeadBold
     self.monthLabel.textColor = UIColor.toDoGardenGreenDark
   }
+  
+  private func scrollAction(to direction: CalendarScrollDirection) {
+    Task {
+      await self.calendarViewDelegate.scrollCalendar(to: direction, animated: true)
+    }
+  }
 
   private func setupBackButton() {
     self.leftScrollButton.setImage(UIImage.backwardButtonImage, for: UIControl.State.normal)
     
     let action = UIAction { [weak self] _ in
-      self?.calendarViewDelegate.scrollCalendar(to: CalendarScrollDirection.left, animated: true)
+      self?.scrollAction(to: CalendarScrollDirection.left)
     }
     self.leftScrollButton.addAction(action, for: UIControl.Event.touchUpInside)
   }
@@ -153,7 +161,7 @@ extension CalendarView {
     self.rightScrollButton.setImage(UIImage.forwardButtonImage, for: UIControl.State.normal)
     
     let action = UIAction { [weak self] _ in
-      self?.calendarViewDelegate.scrollCalendar(to: CalendarScrollDirection.right, animated: true)
+      self?.scrollAction(to: CalendarScrollDirection.right)
     }
     self.rightScrollButton.addAction(action, for: UIControl.Event.touchUpInside)
   }
