@@ -26,15 +26,9 @@ final class DateRangeSelectionDelegate: CalendarViewSingleSelectionDelegate {
       collectionViewLayoutModel: collectionViewLayoutModel,
       cellIdentifier: cellIdentifier
     )
-    self.afterReloadSection = { [weak self] in
-      self?.collectionView.layoutIfNeeded()
-      self?.updateVisibleSelection(isAfterReload: true)
-      
-    }
   }
   
   // MARK: - UICollectionViewDelegate Methods
-  
   func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
     guard let touchedItem = self.collectionViewDataSource.itemIdentifier(for: indexPath) else { return }
     
@@ -54,7 +48,7 @@ final class DateRangeSelectionDelegate: CalendarViewSingleSelectionDelegate {
     }
     
     self.updateSelectionState()
-    self.updateVisibleSelection()
+    self.updateSelectionSnapshot()
   }
   
   override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -73,6 +67,9 @@ final class DateRangeSelectionDelegate: CalendarViewSingleSelectionDelegate {
         self.clearSelection()
         self.startDate = selectedItem
         self.endDate = nil
+      } else if selectedItem.date == startDate.date {
+        self.startDate = nil
+        self.endDate = nil
       } else {
         self.endDate = selectedItem
       }
@@ -81,7 +78,7 @@ final class DateRangeSelectionDelegate: CalendarViewSingleSelectionDelegate {
     }
     
     self.updateSelectionState()
-    self.updateVisibleSelection()
+    self.updateSelectionSnapshot()
   }
   
   // MARK: - UIScrollViewDelegate Methods
@@ -89,9 +86,17 @@ final class DateRangeSelectionDelegate: CalendarViewSingleSelectionDelegate {
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
     let debounceInterval: TimeInterval = 0.07
     let currentTime = Date().timeIntervalSince1970
-    if currentTime - lastScrollTime >= debounceInterval {
-      self.updateVisibleSelection()
+    if currentTime - self.lastScrollTime >= debounceInterval {
+      self.updateSelectionSnapshot()
       self.lastScrollTime = currentTime
     }
+  }
+  
+  override func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+    return
+  }
+  
+  override func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    return
   }
 }
