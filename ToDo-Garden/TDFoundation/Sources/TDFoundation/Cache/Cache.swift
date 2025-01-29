@@ -94,7 +94,9 @@ public final class Cache<Request: Requestable>: Sendable {
               }
               let task = self.buildTask(id)
               cache.setRequestState(
-                .loading(RequestState.LoadingState(task: task, continuations: [continuation])),
+                RequestState.loading(
+                  RequestState.LoadingState(task: task, continuations: [continuation])
+                ),
                 forKey: key
               )
             }
@@ -121,8 +123,9 @@ public final class Cache<Request: Requestable>: Sendable {
         let continuations: [Continuation] = try self.storage.withValue { cache  in
           let key = id.description
           let continuations = cache.continuations(forKey: key)
+          cache.removeObject(forKey: key)
           cache.setRequestState(
-            .response(response),
+            RequestState.response(response),
             forKey: key,
             cost: try response.estimatedMemory.cost
           )
