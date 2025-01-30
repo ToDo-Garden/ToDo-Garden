@@ -16,13 +16,14 @@ public struct CommonHeaderMiddleware: ClientMiddleware {
     request: HTTPRequest,
     next: @Sendable (HTTPRequest) async throws -> HTTPResponse
   ) async throws -> HTTPResponse {
-    guard let accessTokenData = try? KeychainManager.shared.load(forKey: KeychainManager.KeychainKey.accessToken),
-      let accessTokenString = String(data: accessTokenData, encoding: .utf8) else {
-      throw KeychainError.nonExistentKey
-    }
-
     var updatedRequest = request
-    updatedRequest.header["Authorization"] = "Bearer \(accessTokenString)"
+    if request.endPoint != URLConstants.Auth.appleLoginURL {
+      guard let accessTokenData = try? KeychainManager.shared.load(forKey: KeychainManager.KeychainKey.accessToken),
+        let accessTokenString = String(data: accessTokenData, encoding: .utf8) else {
+        throw KeychainError.nonExistentKey
+      }
+      updatedRequest.header["Authorization"] = "Bearer \(accessTokenString)"
+    }
 
     switch updatedRequest.method {
     case .get:
