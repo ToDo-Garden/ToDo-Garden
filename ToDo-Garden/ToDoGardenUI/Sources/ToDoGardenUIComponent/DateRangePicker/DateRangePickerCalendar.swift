@@ -8,6 +8,7 @@
 import UIKit
 
 public final class DateRangePickerCalendar: CalendarView {
+  var actionAfterSelection: ((Date?, Date?) -> Void)?
   
   public override init(model: CalendarView.Model) {
     super.init(model: model)
@@ -29,6 +30,18 @@ public final class DateRangePickerCalendar: CalendarView {
   @available(*, deprecated)
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+  
+  func getStartDate() -> Date? {
+    (self.calendarViewDelegate as? DateRangeSelectionDelegate)?.startDate?.date
+  }
+  
+  func getEndDate() -> Date? {
+    (self.calendarViewDelegate as? DateRangeSelectionDelegate)?.endDate?.date
+  }
+  
+  func register(_ picker: DateRangePresentDelegate) {
+    (self.calendarViewDelegate as? DateRangeSelectionDelegate)?.dateRangePresentDelegate = picker
   }
 }
 

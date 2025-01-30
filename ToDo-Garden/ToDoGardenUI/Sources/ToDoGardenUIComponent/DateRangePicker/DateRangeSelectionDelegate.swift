@@ -11,6 +11,7 @@ final class DateRangeSelectionDelegate: CalendarViewSingleSelectionDelegate {
   var currentSelectionState: RangeSelectionState
   var startDate: CalendarItem?
   var endDate: CalendarItem?
+  var dateRangePresentDelegate: DateRangePresentDelegate?
   
   private var lastScrollTime: TimeInterval = 0
   
@@ -49,6 +50,10 @@ final class DateRangeSelectionDelegate: CalendarViewSingleSelectionDelegate {
     
     self.updateSelectionState()
     self.updateSelectionSnapshot()
+    self.dateRangePresentDelegate?.didTouchCell(
+      startDate: self.startDate?.date,
+      endDate: self.endDate?.date
+    )
   }
   
   override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -76,9 +81,9 @@ final class DateRangeSelectionDelegate: CalendarViewSingleSelectionDelegate {
     case RangeSelectionState.empty:
       self.startDate = selectedItem
     }
-    
     self.updateSelectionState()
     self.updateSelectionSnapshot()
+    self.dateRangePresentDelegate?.didTouchCell(startDate: self.startDate?.date, endDate: self.endDate?.date)
   }
   
   // MARK: - UIScrollViewDelegate Methods
