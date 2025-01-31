@@ -78,23 +78,24 @@ final class DateRangeCollectionViewCell: CalendarCollectionViewCell {
 }
 
 extension DateRangeCollectionViewCell {
-  enum SelectionType {
-    case none
-    case full
-    case left
-    case right
-  }
   
-  private func updateSelectionAppearance() {
+  func updateSelectionAppearance() {
     switch selectionType {
     case SelectionType.none:
+      super.isSelected = false
       self.deSelectWingViews()
     case SelectionType.full:
+      super.isSelected = true
       self.selectWingViews()
     case SelectionType.left:
+      super.isSelected = true
       self.selectLeftWingView()
     case SelectionType.right:
+      super.isSelected = true
       self.selectRightWingView()
+    case SelectionType.single:
+      super.isSelected = true
+      self.deSelectWingViews()
     }
   }
   
