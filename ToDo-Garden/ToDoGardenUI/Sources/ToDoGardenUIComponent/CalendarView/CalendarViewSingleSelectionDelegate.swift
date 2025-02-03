@@ -343,3 +343,7 @@ enum CalendarScrollDirection: Int {
 enum CalendarViewDelegateError: Error {
   case snapshotIsNotLoaded
 }
+
+extension Locale {
+  static let korea = Locale(identifier: "ko_KR")
+}
