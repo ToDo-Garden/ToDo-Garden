@@ -16,12 +16,17 @@ final class TimerSceneInteractor {
   public var bottomSheetStatus: TimerScene.BottomSheetStatus = .focus
   
   var presenter: TimerScenePresentationLogic?
-  private let worker: TimerSceneWorkable
+  private let timerWorker: TimerSceneWorkable
+  private let storageWorker: TimerStorageWorkable
   
   public var tasks: [AnyHashable: Task<Void, Never>] = [:]
   
-  init(worker: TimerSceneWorkable) {
-    self.worker = worker
+  init(
+    timerWorker: TimerSceneWorkable,
+    storageWorker: TimerStorageWorkable
+  ) {
+    self.timerWorker = timerWorker
+    self.storageWorker = storageWorker
   }
   
   private func run(
@@ -65,7 +70,7 @@ extension TimerSceneInteractor: TimerSceneBusinessLogic {
     run(id: CancelTaskID.countdown) {
       defer { self.isCountingDown = false }
       self.presenter?.configureTimerSettings(self.bottomSheetStatus, for: seconds)
-      for try await time in self.worker.countDownStream(seconds) {
+      for try await time in self.timerWorker.countDownStream(seconds) {
         let range = TimerScene.CircularProgressRange(1 - (time / seconds))
         self.presenter?.updateTimeState(time, range: range)
       }

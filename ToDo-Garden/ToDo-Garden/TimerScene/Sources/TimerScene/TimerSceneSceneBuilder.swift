@@ -39,7 +39,10 @@ extension TimerSceneSceneBuilder {
   /// - Parameter viewController: VIPCycle을 설정할 viewController입니다.
   /// - Returns: VIP Cycle 설정이 완료된 `ViewControllable` 프로토콜을 준수한 `ViewController` 인스턴스를 반환합니다.
   private func configureVIPCycle(for viewController: TimerSceneViewController) -> TimerSceneViewController {
-    let interactor = TimerSceneInteractor(worker: self.dependency.timerWorker)
+    let interactor = TimerSceneInteractor(
+      timerWorker: self.dependency.timerWorker,
+      storageWorker: self.dependency.storageWorker
+    )
     let presenter = TimerScenePresenter()
     viewController.interactor = interactor
     interactor.presenter = presenter
