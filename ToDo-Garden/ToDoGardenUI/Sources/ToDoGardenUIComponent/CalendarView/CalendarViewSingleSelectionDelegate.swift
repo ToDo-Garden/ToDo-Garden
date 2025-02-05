@@ -102,13 +102,7 @@ extension CalendarViewSingleSelectionDelegate {
   }
   
   private func setupDateFormatter() {
-    if let userPreferredIdentifier = Locale.preferredLanguages.first {
-      let userLocale = Locale(identifier: userPreferredIdentifier)
-      self.dateFormatter.locale = userLocale
-    } else {
-      self.dateFormatter.locale = Locale.autoupdatingCurrent
-    }
-    
+    self.dateFormatter.locale = Locale.korea
     self.dateFormatter.dateFormat = Constant.CalendarView.StringLiteral.dateFormat
   }
 
@@ -342,4 +336,8 @@ enum CalendarScrollDirection: Int {
 
 enum CalendarViewDelegateError: Error {
   case snapshotIsNotLoaded
+}
+
+extension Locale {
+  static let korea = Locale(identifier: "ko_KR")
 }

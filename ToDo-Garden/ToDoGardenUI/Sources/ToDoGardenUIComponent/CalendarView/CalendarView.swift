@@ -179,6 +179,7 @@ extension CalendarView {
   }
 
   private func setupDateCollectionView() {
+    self.dateCollectionView.backgroundColor = UIColor.toDoGardenWhite
     self.configureCollectionView(self.dateCollectionView)
     self.dateCollectionView.collectionViewLayout = self.makeCollectionViewLayout(with: self.model.collectionViewLayout)
     self.dateCollectionView.delegate = self.calendarViewDelegate
