@@ -309,19 +309,28 @@ extension TimerSceneViewController {
 }
 
 #if DEBUG
+import HTTPClient
 @available(iOS 17.0, *)
 #Preview {
   /// Navigation Title Not Displaying Correctly
   let timerWorker = TimerSceneWorker.live
-  let storageWorker = TimerStorageWorker(timerStorage: TimerStorage.live)
+  let storageWorker = TimerStorageWorker(
+    httpClient: HTTPClient(
+      transport: URLSessionTransport(
+        urlSession: URLSession.shared
+      ),
+      middlewares: []
+    ),
+    timerStorage: TimerStorage.live
+  )
   let viewController = TimerSceneSceneBuilder(
     dependency: .init(
       timerWorker: timerWorker,
       storageWorker: storageWorker
     )
   ).build()
-  viewController.title = "영어 독해"
+  
   let navigation = UINavigationController(rootViewController: viewController)
-  return navigation
+  navigation
 }
 #endif
