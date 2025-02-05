@@ -11,7 +11,7 @@ import TimerSceneAPI
 import TimerSceneEntity
 
 // TODO: GRDB로 대체될 예정입니다
-final class TimerStorage: TimerStorable, @unchecked Sendable {
+public final class TimerStorage: TimerStorable, @unchecked Sendable {
   private let fileManager: FileManager
   private let documentsURL: URL
   private var storageURL: URL {
@@ -30,7 +30,7 @@ final class TimerStorage: TimerStorable, @unchecked Sendable {
     self.documentsURL = documentsURL
   }
   
-  func saveCompletedTimer(groupId: String, duration: Int) throws {
+  public func saveCompletedTimer(groupId: String, duration: Int) throws {
     let today = self.getCurrentDateString()
     
     var pomodoros = try self.loadPomodorosJSON()
@@ -46,11 +46,11 @@ final class TimerStorage: TimerStorable, @unchecked Sendable {
     try self.savePomodorosAsJSON(pomodoros)
   }
   
-  func deleteAllPomodoros() throws {
+  public func deleteAllPomodoros() throws {
     try self.savePomodorosAsJSON([])
   }
   
-  func getAsDTO() throws -> TimerScene.FocusTimeRequestDTO {
+  public func getAsDTO() throws -> TimerScene.FocusTimeRequestDTO {
     let pomodoros = try self.loadPomodorosJSON()
     return TimerScene.FocusTimeRequestDTO(pomodoros: pomodoros)
   }
@@ -98,6 +98,6 @@ extension TimerStorage {
   }
 }
 
-extension TimerStorage {
+public extension TimerStorage {
   static let live = TimerStorage()
 }

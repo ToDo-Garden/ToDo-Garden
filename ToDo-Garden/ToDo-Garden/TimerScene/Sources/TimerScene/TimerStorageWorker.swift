@@ -17,8 +17,10 @@ public struct TimerStorageWorker: TimerStorageWorkable {
   private let timerStorage: TimerStorable
   
   public init(
+    httpClient: HTTPClientAPI,
     timerStorage: TimerStorable
   ) {
+    self.httpClient = httpClient
     self.timerStorage = timerStorage
   }
   
@@ -56,8 +58,4 @@ extension TimerStorageWorker {
   public func getTimerItemsAsDTO() throws -> TimerScene.FocusTimeRequestDTO {
     return try self.timerStorage.getAsDTO()
   }
-}
-
-extension TimerStorageWorker {
-  static let live = TimerStorageWorker(timerStorage: TimerStorage.live)
 }

@@ -36,5 +36,15 @@ extension AccessTokenManager {
 
 extension TimerSceneSceneBuilder.Dependency {
   @MainActor
-  public static let live = Self(worker: TimerSceneWorker.live)
+  public static let live = TimerSceneSceneBuilder.Dependency(
+    timerWorker: TimerSceneWorker.live,
+    storageWorker: TimerStorageWorker.live
+  )
+}
+
+extension TimerStorageWorker {
+  static let live = TimerStorageWorker(
+    httpClient: HTTPClient.live,
+    timerStorage: TimerStorage.live
+  )
 }
