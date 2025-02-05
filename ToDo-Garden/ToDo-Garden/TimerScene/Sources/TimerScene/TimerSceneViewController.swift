@@ -312,7 +312,14 @@ extension TimerSceneViewController {
 @available(iOS 17.0, *)
 #Preview {
   /// Navigation Title Not Displaying Correctly
-  let viewController = TimerSceneSceneBuilder(dependency: .live).build()
+  let timerWorker = TimerSceneWorker.live
+  let storageWorker = TimerStorageWorker(timerStorage: TimerStorage.live)
+  let viewController = TimerSceneSceneBuilder(
+    dependency: .init(
+      timerWorker: timerWorker,
+      storageWorker: storageWorker
+    )
+  ).build()
   viewController.title = "영어 독해"
   let navigation = UINavigationController(rootViewController: viewController)
   return navigation

@@ -6,10 +6,15 @@ import TimerSceneAPI
 public struct TimerSceneSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
   public struct Dependency {
-    let worker: TimerSceneWorkable
+    let timerWorker: TimerSceneWorkable
+    let storageWorker: TimerStorageWorkable
     
-    public init(worker: any TimerSceneWorkable) {
-      self.worker = worker
+    public init(
+      timerWorker: any TimerSceneWorkable,
+      storageWorker: any TimerStorageWorkable
+    ) {
+      self.timerWorker = timerWorker
+      self.storageWorker = storageWorker
     }
   }
   
@@ -18,11 +23,6 @@ public struct TimerSceneSceneBuilder {
   public init(dependency: Dependency) {
     self.dependency = dependency
   }
-}
-
-extension TimerSceneSceneBuilder.Dependency {
-  @MainActor
-  public static let live = Self(worker: TimerSceneWorker.live)
 }
 
 extension TimerSceneSceneBuilder: TimerSceneSceneBuildable {
@@ -39,7 +39,7 @@ extension TimerSceneSceneBuilder {
   /// - Parameter viewController: VIPCycle을 설정할 viewController입니다.
   /// - Returns: VIP Cycle 설정이 완료된 `ViewControllable` 프로토콜을 준수한 `ViewController` 인스턴스를 반환합니다.
   private func configureVIPCycle(for viewController: TimerSceneViewController) -> TimerSceneViewController {
-    let interactor = TimerSceneInteractor(worker: self.dependency.worker)
+    let interactor = TimerSceneInteractor(worker: self.dependency.timerWorker)
     let presenter = TimerScenePresenter()
     viewController.interactor = interactor
     interactor.presenter = presenter

@@ -37,3 +37,25 @@ public enum TimerScene {
     case rest
   }
 }
+
+extension TimerScene {
+  public struct FocusTimeRequestDTO: Codable, Sendable {
+    public let pomodoros: [PomodoroDTO]
+    
+    public init(pomodoros: [PomodoroDTO]) {
+      self.pomodoros = pomodoros
+    }
+  }
+
+  public struct PomodoroDTO: Codable, Sendable {
+    public let focusGroupId: String
+    public let focusDate: String
+    public var focusTime: [Int]
+    
+    public init(focusGroupId: String, focusDate: String, focusTime: [Int]) {
+      self.focusGroupId = focusGroupId
+      self.focusDate = focusDate
+      self.focusTime = focusTime
+    }
+  }
+}
