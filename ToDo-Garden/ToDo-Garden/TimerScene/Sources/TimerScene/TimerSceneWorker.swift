@@ -11,7 +11,7 @@ public struct TimerSceneWorker: TimerSceneWorkable, Sendable {
   }
 }
 
-extension TimerSceneWorker {
+public extension TimerSceneWorker {
   static let live = Self { seconds in
     return Timer
       .publish(every: 1, on: RunLoop.main, in: RunLoop.Mode.common)

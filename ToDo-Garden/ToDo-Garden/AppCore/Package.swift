@@ -22,6 +22,10 @@ let package = Package(
     Package.Dependency.package(
       name: "SignUpScene",
       path: "../SignUpScene"
+    ),
+    Package.Dependency.package(
+      name: "TimerScene",
+      path: "../TimerScene"
     )
   ],
   targets: [
@@ -43,6 +47,10 @@ let package = Package(
         Target.Dependency.product(
           name: "SignUpScene",
           package: "SignUpScene"
+        ),
+        Target.Dependency.product(
+          name: "TimerScene",
+          package: "TimerScene"
         )
       ]
     ),

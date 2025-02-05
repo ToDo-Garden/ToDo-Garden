@@ -9,6 +9,7 @@ import Foundation
 
 import HTTPClient
 import TDFoundation
+import TimerScene
 
 extension HTTPClient {
   static let live = HTTPClient(
@@ -31,4 +32,9 @@ extension AccessTokenManager {
       ]
     )
   )
+}
+
+extension TimerSceneSceneBuilder.Dependency {
+  @MainActor
+  public static let live = Self(worker: TimerSceneWorker.live)
 }
