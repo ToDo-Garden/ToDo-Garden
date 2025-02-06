@@ -26,7 +26,7 @@ public final class TimerStorage: TimerStorable, @unchecked Sendable {
       in: .userDomainMask).first else {
       fatalError("Can not access documents directory.")
     }
-    
+
     self.documentsURL = documentsURL
   }
   
@@ -100,4 +100,8 @@ extension TimerStorage {
 
 public extension TimerStorage {
   static let live = TimerStorage()
+}
+
+public enum TimerStorageError: Error {
+  case emptyData // "pomodoros.json"가 비어있을때 (POST요청 필요 없을 때)
 }

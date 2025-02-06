@@ -9,7 +9,7 @@ public protocol TimerSceneWorkable: Sendable {
 
 public protocol TimerStorageWorkable: Sendable {
   func postCompletedItem() async throws
-  func recordCompletedItemInLocal(groupId: String, duration: Int) throws
+  func recordCompletedItemInLocal(groupId: String, seconds: Int) throws
   func deleteAllTimerItems() throws
   func getTimerItemsAsDTO() throws -> TimerScene.FocusTimeRequestDTO
 }
