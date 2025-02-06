@@ -36,6 +36,21 @@ public enum TimerScene {
     case focus
     case rest
   }
+  
+  public struct CurrentGroup: Sendable {
+    public let groupId: String
+    public let groupName: String
+    public var seconds: Int = Int.zero
+    
+    public init(groupId: String, groupName: String) {
+      self.groupId = groupId
+      self.groupName = groupName
+    }
+    
+    public mutating func update(seconds: Int) {
+      self.seconds = seconds
+    }
+  }
 }
 
 extension TimerScene {
