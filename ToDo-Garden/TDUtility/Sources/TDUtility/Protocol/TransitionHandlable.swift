@@ -21,7 +21,9 @@ extension TransitionHandlable {
     )
   }
   
+  // swiftlint:disable notification_center_detachment
   public func unregisterBackgroundTransition() {
     NotificationCenter.default.removeObserver(self)
   }
+  // swiftlint:enable notification_center_detachment
 }
