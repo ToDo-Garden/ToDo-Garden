@@ -1,5 +1,6 @@
 import UIKit
 
+import TDUtility
 import TimerSceneAPI
 import TimerSceneEntity
 import ToDoGardenUIAPI
@@ -35,6 +36,11 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
   // MARK: - Object lifecycle
   public init() {
     super.init(nibName: nil, bundle: nil)
+    self.registerBackgroundTransitionObserver()
+  }
+  
+  deinit {
+    self.unregisterBackgroundTransition()
   }
   
   @available(*, unavailable)
@@ -49,6 +55,11 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
     self.layoutStack()
   }
   
+  public override func viewWillDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    self.interactor?.requestPOST()
+  }
+
   private func build() {
     self.view.backgroundColor = UIColor.toDoGardenWhite
     self.timerProgressView = TimerProgressView(
@@ -313,6 +324,12 @@ extension TimerSceneViewController {
     guard let payload = payload else { return }
     
     self.interactor?.setCurrentGroup(payload)
+  }
+}
+
+extension TimerSceneViewController: @preconcurrency TransitionHandlable {
+  public func handleBackgroundTransition() {
+    self.interactor?.requestPOST()
   }
 }
 
