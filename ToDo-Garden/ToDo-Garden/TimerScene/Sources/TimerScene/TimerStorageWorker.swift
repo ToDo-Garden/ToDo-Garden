@@ -36,6 +36,7 @@ public struct TimerStorageWorker: TimerStorageWorkable {
       input: request,
       serializer: { $0 },
       deserializer: { response in
+        // MARK: 현재 홈화면의 부재로 payload를 통해 들어오는 GroupID가 없어서, 실패 응답 옴
         guard response.statusCode == 204 else {
           throw HTTPClientError.badStatusCode(response.statusCode)
         }

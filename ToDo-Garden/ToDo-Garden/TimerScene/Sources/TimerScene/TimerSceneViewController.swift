@@ -308,6 +308,14 @@ extension TimerSceneViewController {
   }
 }
 
+extension TimerSceneViewController {
+  func setPayload(_ payload: TimerScenePayloadable?) {
+    guard let payload = payload else { return }
+    
+    self.interactor?.setCurrentGroup(payload)
+  }
+}
+
 #if DEBUG
 import HTTPClient
 @available(iOS 17.0, *)
@@ -328,7 +336,7 @@ import HTTPClient
       timerWorker: timerWorker,
       storageWorker: storageWorker
     )
-  ).build()
+  ).build(with: nil)
   
   let navigation = UINavigationController(rootViewController: viewController)
   navigation

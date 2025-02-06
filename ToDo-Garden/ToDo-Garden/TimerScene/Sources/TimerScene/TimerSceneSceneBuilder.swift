@@ -29,8 +29,10 @@ extension TimerSceneSceneBuilder: TimerSceneSceneBuildable {
   ///  VIP Cycle, 런타임 의존성이 설정된 ViewController 인스턴스를 반환하는 함수입니다.
   /// - Parameter payload: 런타임에 전달받아야 하는 의존성입니다.
   /// - Returns: 런타임 의존성, VIP Cycle이 설정된 ViewController를 반환합니다.
-  public func build() -> TimerSceneViewControllable {
-    return self.configureVIPCycle(for: TimerSceneViewController())
+  public func build(with payload: TimerScenePayloadable?) -> TimerSceneViewControllable {
+    let timerSceneViewController = self.configureVIPCycle(for: TimerSceneViewController())
+    self.setPayload(for: timerSceneViewController, with: payload)
+    return timerSceneViewController
   }
 }
 
@@ -47,7 +49,12 @@ extension TimerSceneSceneBuilder {
     viewController.interactor = interactor
     interactor.presenter = presenter
     presenter.viewController = viewController
-    
     return viewController
+  }
+  
+  // TODO: 조립할 때 TimerScenePayloadable? 에 걸린 옵셔널 풀어서 조립할 것. 지금은 홈화면이 없어서 옵셔널.
+  private func setPayload(for viewController: TimerSceneViewController, with payload: TimerScenePayloadable?) {
+    guard let payload = payload else { return }
+    viewController.setPayload(payload)
   }
 }
