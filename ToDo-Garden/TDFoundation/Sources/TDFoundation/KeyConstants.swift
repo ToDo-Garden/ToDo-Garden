@@ -1,5 +1,7 @@
 import Foundation
 
+import TDUtility
+
 public enum KeyConstants {
   static let storage: LockIsolated<[String: String]> = {
     guard
@@ -37,37 +39,4 @@ public enum KeyConstants {
     
     return LockIsolated(envData(url))
   }()
-}
-
-@dynamicMemberLookup
-final class LockIsolated<Value>: @unchecked Sendable {
-  private var _value: Value
-  private let lock = NSRecursiveLock()
-  
-  init(_ value: Value) {
-    self._value = value
-  }
-  
-  public subscript<Subject: Sendable>(dynamicMember keyPath: KeyPath<Value, Subject>) -> Subject {
-    self.lock.sync {
-      self._value[keyPath: keyPath]
-    }
-  }
-}
-
-extension LockIsolated where Value: Sendable {
-  var value: Value {
-    lock.sync {
-      self._value
-    }
-  }
-}
-
-extension NSRecursiveLock {
-  @inlinable @discardableResult
-  @_spi(Internals) public func sync<R>(work: () throws -> R) rethrows -> R {
-    self.lock()
-    defer { self.unlock() }
-    return try work()
-  }
 }
