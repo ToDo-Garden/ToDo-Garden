@@ -1,5 +1,6 @@
 import Foundation
 
+import TimerSceneAPI
 import TimerSceneEntity
 
 @MainActor
@@ -7,6 +8,8 @@ protocol TimerSceneBusinessLogic {
   func controlButtonTapped()
   func setTimer(for seconds: Double)
   func sendAlertAction(_ action: TimerScene.AlertAction)
+  func setCurrentGroup(_ payload: TimerScenePayloadable)
+  func requestPOST()
 }
 
 @MainActor
@@ -14,6 +17,7 @@ final class TimerSceneInteractor {
   public var isCountingDown: Bool = false
   public var alertStatus: TimerScene.TimerAlertStatus?
   public var bottomSheetStatus: TimerScene.BottomSheetStatus = .focus
+  public var currentGroup: TimerScene.CurrentGroup
   
   var presenter: TimerScenePresentationLogic?
   private let timerWorker: TimerSceneWorkable
@@ -27,6 +31,8 @@ final class TimerSceneInteractor {
   ) {
     self.timerWorker = timerWorker
     self.storageWorker = storageWorker
+    self.currentGroup = TimerScene.CurrentGroup(groupId: "", groupName: "")
+    // MARK: currentGroup은 Payload로 이전화면에서 전달받아 의미있는 값으로 대체됨
   }
   
   private func run(
@@ -48,6 +54,7 @@ final class TimerSceneInteractor {
   
   enum CancelTaskID: Hashable {
     case countdown
+    case postItems
   }
   private func cancel(_ id: AnyHashable) {
     self.tasks[id]?.cancel()
@@ -74,6 +81,7 @@ extension TimerSceneInteractor: TimerSceneBusinessLogic {
         let range = TimerScene.CircularProgressRange(1 - (time / seconds))
         self.presenter?.updateTimeState(time, range: range)
       }
+      self.didCompleteTimer(seconds: Int(seconds))
       try Task.checkCancellation()
       self.presenter?.clearPresentState()
       self.updateAndPresentAlertStatus(self.bottomSheetStatus.completionAlertStatus)
@@ -138,4 +146,38 @@ extension TimerScene.BottomSheetStatus {
       return .fullyCharged
     }
   }
+}
+
+extension TimerSceneInteractor {
+  func didCompleteTimer(seconds: Int) {
+    self.currentGroup.update(seconds: seconds)
+    
+    do {
+      try self.storageWorker.recordCompletedItemInLocal(
+        groupId: self.currentGroup.groupId,
+        seconds: self.currentGroup.seconds
+      )
+    } catch let error {
+      debugPrint(error)
+    }
+  }
+  
+  func setCurrentGroup(_ payload: TimerScenePayloadable) {
+    self.currentGroup = TimerScene.CurrentGroup(
+      groupId: payload.groupId,
+      groupName: payload.groupName
+    )
+  }
+}
+
+extension TimerSceneInteractor {
+  func requestPOST() {
+    self.run(id: CancelTaskID.postItems) {
+      try await self.storageWorker.postCompletedItem()
+      try Task.checkCancellation()
+    } errorHandler: { error in
+      debugPrint(error)
+    }
+  }
+    
 }
