@@ -48,8 +48,8 @@ public struct TimerStorageWorker: TimerStorageWorkable {
 
 // MARK: - Local Methods
 extension TimerStorageWorker {
-  public func recordCompletedItemInLocal(groupId: String, duration: Int) throws {
-    try self.timerStorage.saveCompletedTimer(groupId: groupId, duration: duration)
+  public func recordCompletedItemInLocal(groupId: String, seconds: Int) throws {
+    try self.timerStorage.saveCompletedTimer(groupId: groupId, duration: seconds)
   }
   
   public func deleteAllTimerItems() throws {
