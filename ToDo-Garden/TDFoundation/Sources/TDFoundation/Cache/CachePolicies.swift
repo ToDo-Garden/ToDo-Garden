@@ -1,4 +1,5 @@
-import Foundation
+import struct Foundation.TimeInterval
+import struct Foundation.Date
 
 public enum StorageExpiration: Sendable {
   var estimatedExpirationSinceNow: Date {
