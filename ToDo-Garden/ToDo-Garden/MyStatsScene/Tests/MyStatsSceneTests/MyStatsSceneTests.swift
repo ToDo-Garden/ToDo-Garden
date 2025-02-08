@@ -9,7 +9,6 @@ import MyStatsSceneEntity
 import ToDoGardenUIComponent // TODO: - PomodoroRecordCollection 이관 예정
 import ToDoGardenUIResource
 
-
 @MainActor
 private final class MyStatsViewSceneTests {
   private var worker: MyStatsWorkerStub
@@ -21,8 +20,6 @@ private final class MyStatsViewSceneTests {
   @Test func testLoadMyStatsViewData() async {
     self.resetWorker()
     let mockPayload = MyStats.Payload(
-      myName: "테스트유저",
-      myImage: UIImage.defaultProfileImage,
       myGarden: PomodoroRecordCollection(
         pomodoroRecords: [
           PomodoroRecord(date: Date.distantPast, pomodoroCount: 33)
@@ -32,25 +29,37 @@ private final class MyStatsViewSceneTests {
     
     self.worker.setProfileViewData(
       .init(
-        continuousRecordCount: 10,
-        continuousRecordStartDate: Date.distantPast,
-        continuousRecordEndDate: Date.distantFuture
+        nickname: "TestNickname",
+        profileImage: nil,
+        continuousRecordCount: 100,
+        continuousRecordStartDate: Date.distantPast.toStringDefaultFormat(),
+        continuousRecordEndDate: Date.distantFuture.toStringDefaultFormat()
       )
     )
+    
     self.worker.setSummaryViewData(
       .init(
-        concentratedTime: 7200,
-        completedCount: 5.5
+        dailyAverageFocusTime: 4000,
+        weeklyAverageFocusTime: 4100,
+        monthlyAverageFocusTime: 4200,
+        dailyAveragePomodoroCount: 43,
+        weeklyAveragePomodoroCount: 44,
+        monthlyAveragePomodoroCount: 45
       )
     )
+    
     self.worker.setLongestRecordViewData(
       .init(
-        concentratedRecordGroupName: "테스트그룹",
-        concentratedRecordCount: 15,
-        concentratedRecordDate: Date.distantPast,
-        longestContinuousRecordCount: 7,
-        longestContinuousRecordStartDate: Date.distantPast,
-        longestContinuousRecordEndDate: Date.distantFuture
+        maxPomodoroRecord: .init(
+          groupName: "TestGroupName",
+          recordDate: Date.distantPast.toStringDefaultFormatWithSpace(),
+          maxPomodoroCount: 16
+        ),
+        maxContinuousDays: .init(
+          startDate: Date.distantPast.toStringDefaultFormatWithSpace(),
+          endDate: Date.distantFuture.toStringDefaultFormatWithSpace(),
+          maxCount: 17
+        )
       )
     )
     
@@ -61,8 +70,6 @@ private final class MyStatsViewSceneTests {
     
     viewController.interactor = interactor
     interactor.presenter = presenter
-    interactor.myName = mockPayload.myName
-    interactor.myImage = mockPayload.myImage
     interactor.myGarden = mockPayload.myGarden
     
     presenter.viewController = mockDisplayLogic
@@ -70,9 +77,9 @@ private final class MyStatsViewSceneTests {
     // 테스트결과 판별에 사용할 데이터
     let expectedViewModel = MyStats.LoadMyStatsViewData.ViewModel(
       profileViewModel: MyStats.ProfileViewModel(
-        myName: "테스트유저",
+        myName: "TestNickname",
         myImage: UIImage.defaultProfileImage,
-        continuousRecordCount: 10,
+        continuousRecordCount: 100,
         continuousRecordStartDate: Date.distantPast.toStringDefaultFormat(),
         continuousRecordEndDate: Date.distantFuture.toStringDefaultFormat()
       ),
@@ -84,16 +91,16 @@ private final class MyStatsViewSceneTests {
         )
       ),
       longestRecordViewModel: MyStats.LongestRecordViewModel(
-        concentratedRecordGroupName: "테스트그룹",
-        concentratedRecordCount: 15,
-        concentratedRecordDate: Date.distantPast.toStringDefaultFormat(),
-        longestContinuousRecordCount: 7,
-        longestContinuousRecordStartDate: Date.distantPast.toStringDefaultFormat(),
-        longestContinuousRecordEndDate: Date.distantFuture.toStringDefaultFormat()
+        concentratedRecordGroupName: "TestGroupName",
+        concentratedRecordCount: 16,
+        concentratedRecordDate: Date().toStringDefaultFormat(),
+        longestContinuousRecordCount: 17,
+        longestContinuousRecordStartDate: Date.distantPast.toStringDefaultFormatWithSpace(),
+        longestContinuousRecordEndDate: Date.distantFuture.toStringDefaultFormatWithSpace()
       ),
       summaryViewModel: MyStats.SummaryViewModel(
-        concentratedTime: "2시간",
-        completedCount: "5.5개 목표"
+        concentratedTime: "1시간 8분",
+        completedCount: "44개 목표"
       )
     )
     viewController.loadMyStatsViewData()
@@ -112,57 +119,72 @@ private final class MyStatsViewSceneTests {
 extension MyStatsViewSceneTests {
   @Test func testSuccessfulProfileViewDataFetch() async throws {
     self.resetWorker()
-    let expectedProfileData = MyStats.FetchedProfileViewData(
-      continuousRecordCount: 42,
-      continuousRecordStartDate: Date.distantPast,
-      continuousRecordEndDate: Date.distantFuture
+    let expectedProfileData: MyStats.FetchedProfileViewData = .init(
+      nickname: "TestNickname",
+      profileImage: nil,
+      continuousRecordCount: 100,
+      continuousRecordStartDate: Date.distantPast.toStringDefaultFormatWithSpace(),
+      continuousRecordEndDate: Date.distantFuture.toStringDefaultFormatWithSpace()
     )
     
     self.worker.setProfileViewData(expectedProfileData)
     
     let profileData = try await self.worker.fetchProfileViewData()
     
-    #expect(profileData.continuousRecordCount == 42)
-    #expect(profileData.continuousRecordStartDate == Date.distantPast)
-    #expect(profileData.continuousRecordEndDate == Date.distantFuture)
+    #expect(profileData.continuousRecordCount == expectedProfileData.continuousRecordCount)
+    #expect(profileData.continuousRecordStartDate == expectedProfileData.continuousRecordStartDate)
+    #expect(profileData.continuousRecordEndDate == expectedProfileData.continuousRecordEndDate)
   }
   
   @Test func testSuccessfulLongestRecordsViewDataFetch() async throws {
     self.resetWorker()
-    let expectedLongestRecordData = MyStats.FetchedLongestRecordViewData(
-      concentratedRecordGroupName: "테스트그룹",
-      concentratedRecordCount: 15,
-      concentratedRecordDate: Date.distantPast,
-      longestContinuousRecordCount: 7,
-      longestContinuousRecordStartDate: Date.distantPast,
-      longestContinuousRecordEndDate: Date.distantFuture
+    let expectedLongestRecordData: MyStats.FetchedLongestRecordViewData = .init(
+      maxPomodoroRecord: .init(
+        groupName: "TestGroupName",
+        recordDate: Date.distantPast.toStringDefaultFormatWithSpace(),
+        maxPomodoroCount: 16
+      ),
+      maxContinuousDays: .init(
+        startDate: Date.distantPast.toStringDefaultFormatWithSpace(),
+        endDate: Date.distantFuture.toStringDefaultFormatWithSpace(),
+        maxCount: 17
+      )
     )
     
     self.worker.setLongestRecordViewData(expectedLongestRecordData)
     
     let longestRecordData = try await self.worker.fetchLongestRecordsViewData()
     
-    #expect(longestRecordData.concentratedRecordGroupName == "테스트그룹")
-    #expect(longestRecordData.concentratedRecordCount == 15)
-    #expect(longestRecordData.concentratedRecordDate == Date.distantPast)
-    #expect(longestRecordData.longestContinuousRecordCount == 7)
-    #expect(longestRecordData.longestContinuousRecordStartDate == Date.distantPast)
-    #expect(longestRecordData.longestContinuousRecordEndDate == Date.distantFuture)
+    #expect(longestRecordData.maxContinuousDays?.endDate == expectedLongestRecordData.maxContinuousDays?.endDate)
+    #expect(longestRecordData.maxContinuousDays?.maxCount == expectedLongestRecordData.maxContinuousDays?.maxCount)
+    #expect(longestRecordData.maxContinuousDays?.startDate == expectedLongestRecordData.maxContinuousDays?.startDate)
+    #expect(longestRecordData.maxPomodoroRecord.maxPomodoroCount == expectedLongestRecordData.maxPomodoroRecord.maxPomodoroCount)
+    #expect(longestRecordData.maxPomodoroRecord.groupName == expectedLongestRecordData.maxPomodoroRecord.groupName)
+    #expect(longestRecordData.maxPomodoroRecord.recordDate == expectedLongestRecordData.maxPomodoroRecord.recordDate)
   }
   
   @Test func testSuccessfulSummaryViewDataFetch() async throws {
     self.resetWorker()
-    let expectedSummaryData = MyStats.FetchedSummaryViewData(
-      concentratedTime: 7200,
-      completedCount: 5.5
-    )
+    let expectedSummaryData: MyStats.FetchedSummaryViewData =
+      .init(
+        dailyAverageFocusTime: 10,
+        weeklyAverageFocusTime: 11,
+        monthlyAverageFocusTime: 12,
+        dailyAveragePomodoroCount: 13,
+        weeklyAveragePomodoroCount: 14,
+        monthlyAveragePomodoroCount: 15
+      )
     
     self.worker.setSummaryViewData(expectedSummaryData)
     
     let summaryData = try await self.worker.fetchSummaryViewData()
     
-    #expect(summaryData.concentratedTime == 7200)
-    #expect(summaryData.completedCount == 5.5)
+    #expect(summaryData.dailyAverageFocusTime == expectedSummaryData.dailyAverageFocusTime)
+    #expect(summaryData.weeklyAverageFocusTime == expectedSummaryData.weeklyAverageFocusTime)
+    #expect(summaryData.monthlyAverageFocusTime == expectedSummaryData.monthlyAverageFocusTime)
+    #expect(summaryData.dailyAveragePomodoroCount == expectedSummaryData.dailyAveragePomodoroCount)
+    #expect(summaryData.weeklyAveragePomodoroCount == expectedSummaryData.weeklyAveragePomodoroCount)
+    #expect(summaryData.monthlyAveragePomodoroCount == expectedSummaryData.monthlyAveragePomodoroCount)
   }
   
   @Test func testFailedDataFetchByBadURL() async {
