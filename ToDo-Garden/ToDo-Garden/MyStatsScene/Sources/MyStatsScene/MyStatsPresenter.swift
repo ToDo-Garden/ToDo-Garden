@@ -98,9 +98,22 @@ extension MyStatsPresenter {
   }
   
   private func makeSummaryViewModel(fetchedData: MyStats.FetchedSummaryViewData) -> MyStats.SummaryViewModel {
+    let totalMinutes = fetchedData.weeklyAverageFocusTime / 60
+    let hours = totalMinutes / 60
+    let minutes = totalMinutes % 60
+    
+    let timeString: String
+    if hours > 0 && minutes > 0 {
+      timeString = "\(hours)시간 \(minutes)분"
+    } else if hours > 0 {
+      timeString = "\(hours)시간"
+    } else {
+      timeString = "\(minutes)분"
+    }
+    
     let viewModel = MyStats.SummaryViewModel(
-      concentratedTime: "\(fetchedData.weeklyAverageFocusTime) 단위몰라",
-      completedCount: "\(fetchedData.weeklyAveragePomodoroCount) 개 목표"
+      concentratedTime: timeString,
+      completedCount: "\(fetchedData.weeklyAveragePomodoroCount)개 목표"
     )
     return viewModel
   }

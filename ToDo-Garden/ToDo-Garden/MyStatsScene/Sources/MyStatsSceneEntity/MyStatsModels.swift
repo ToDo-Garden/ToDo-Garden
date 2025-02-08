@@ -162,6 +162,14 @@ extension MyStats {
   public struct FetchedLongestRecordViewData: Sendable, Codable {
     public let maxPomodoroRecord: MaxPomodoroRecordDTO
     public let maxContinuousDays: MaxContinuousDaysDTO?
+    
+    public init(
+      maxPomodoroRecord: MaxPomodoroRecordDTO,
+      maxContinuousDays: MaxContinuousDaysDTO?
+    ) {
+      self.maxPomodoroRecord = maxPomodoroRecord
+      self.maxContinuousDays = maxContinuousDays
+    }
   }
   
   public struct FetchedSummaryViewData: Sendable, Codable {
@@ -172,6 +180,22 @@ extension MyStats {
     public let dailyAveragePomodoroCount: Int
     public let weeklyAveragePomodoroCount: Int
     public let monthlyAveragePomodoroCount: Int
+    
+    public init(
+      dailyAverageFocusTime: Int,
+      weeklyAverageFocusTime: Int,
+      monthlyAverageFocusTime: Int,
+      dailyAveragePomodoroCount: Int,
+      weeklyAveragePomodoroCount: Int,
+      monthlyAveragePomodoroCount: Int
+    ) {
+      self.dailyAverageFocusTime = dailyAverageFocusTime
+      self.weeklyAverageFocusTime = weeklyAverageFocusTime
+      self.monthlyAverageFocusTime = monthlyAverageFocusTime
+      self.dailyAveragePomodoroCount = dailyAveragePomodoroCount
+      self.weeklyAveragePomodoroCount = weeklyAveragePomodoroCount
+      self.monthlyAveragePomodoroCount = monthlyAveragePomodoroCount
+    }
   }
 }
 
@@ -208,11 +232,23 @@ extension MyStats {
     public let groupName: String
     public let recordDate: String
     public let maxPomodoroCount: Int
+    
+    public init(groupName: String, recordDate: String, maxPomodoroCount: Int) {
+      self.groupName = groupName
+      self.recordDate = recordDate
+      self.maxPomodoroCount = maxPomodoroCount
+    }
   }
   
   public struct MaxContinuousDaysDTO: Sendable, Codable {
     public let startDate: String
     public let endDate: String
     public let maxCount: Int
+    
+    public init(startDate: String, endDate: String, maxCount: Int) {
+      self.startDate = startDate
+      self.endDate = endDate
+      self.maxCount = maxCount
+    }
   }
 }
