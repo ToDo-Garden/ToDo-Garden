@@ -1,156 +1,145 @@
 import Foundation
 import UIKit.UIApplication
 
-import TDUtility
-
 // swiftlint:disable function_body_length
-public final class Cache<Request: Requestable>: Sendable {
+public final actor Cache<Request: Requestable>: Sendable {
   let request: Request
   let configuration: Configuration
-  
-  let storage: LockIsolated<Storage>
-  
-  private let memoryWarningTask = LockIsolated<Task<Void, Never>?>(nil)
-  private let expireTask = LockIsolated<Task<Void, Never>?>(nil)
+  let storage: Storage
+  private var memoryWarningTask: Task<Void, Never>?
+  private var cleanupTask: Task<Void, Never>?
   
   public init(
     request: Request,
-    configuration: Configuration = Configuration()
+    configuration: Configuration = Configuration(),
+    dependency: Dependecny = Dependecny.liveValue
   ) {
     self.request = request
     self.configuration = configuration
-    self.storage = LockIsolated(Storage(totalCostLimit: configuration.limit.cost))
-    self.memoryWarningTask.setValue(self.buildMemoryWarningTask())
-    self.expireTask.setValue(self.buildExpireTask())
+    self.storage = Storage(totalCostLimit: configuration.limit.cost)
+    
+    Task {
+      await self.prepare(dependency: dependency)
+    }
   }
   
-  private func buildMemoryWarningTask() -> Task<Void, Never> {
-    Task {
-      let stream = NotificationCenter.default
-        .publisher(for: UIApplication.didReceiveMemoryWarningNotification)
+  private func prepare(dependency: Dependecny) {
+    self.memoryWarningTask = Task { [weak self] in
+      let stream = dependency
+        .memoryWarningStream()
         .values
       for await _ in stream {
-        storage.withValue { cache in
-          cache.removeAllObjects()
+        guard let self, !Task.isCancelled else {
+          break
         }
+        await self.removeAllObjects()
       }
     }
-  }
-  
-  private func buildExpireTask() -> Task<Void, Never> {
-    Task {
-      let stream = Timer
-        .publish(
-          every: self.configuration.cleanupInterval,
-          on: .main,
-          in: .common
-        )
-        .autoconnect()
+    
+    let cleanupInterval = self.configuration.cleanupInterval
+    self.cleanupTask = Task { [weak self] in
+      let stream = dependency
+        .cleanupTimerStream(cleanupInterval)
         .values
       for await _ in stream {
-        self.removeExpired()
+        guard let self, !Task.isCancelled else {
+          break
+        }
+        await self.removeExpiredCacheItem()
       }
     }
   }
   
-  private func removeExpired() {
-    self.storage.withValue { cache in
-      for (key, item) in cache where item.isExpired {
-        item.loadingState?.task.cancel()
-        cache.removeObject(forKey: key)
+  private func removeAllObjects() {
+    self.storage.removeAllObjects()
+  }
+  
+  private func removeExpiredCacheItem() {
+    for (key, item) in self.storage where item.isExpired {
+      if let loadingState = item.loadingState {
+        loadingState.task.cancel()
+      } else {
+        self.storage.removeObject(forKey: key)
       }
     }
+  }
+  
+  deinit {
+    self.memoryWarningTask?.cancel()
+    self.cleanupTask?.cancel()
   }
   
   public func execute(
-    _ id: Request.ID,
+    id: Request.ID,
     expiration: StorageExpiration? = nil
   ) async throws -> Request.Response {
-    try await withTaskCancellationHandler {
+    let task = self.storage.object(forKey: id.description)?.loadingState?.task
+    guard !Task.isCancelled else {
+      task?.cancel()
+      throw CancellationError()
+    }
+    
+    return try await withTaskCancellationHandler {
       try await withCheckedThrowingContinuation { continuation in
-        self.storage.withValue { cache in
-          let expiration = expiration ?? self.configuration.expiration
-          Expiration.$value.withValue(expiration) {
-            let key = id.description
-            let item = cache.object(forKey: key)
-            
-            switch item?.value {
-            case RequestState.response(let response)?:
-              continuation.resume(returning: response)
-              
-            case RequestState.loading(var state)?:
-              if Task.isCancelled {
-                continuation.resume(throwing: CancellationError())
-                state.task.cancel()
-                return
-              }
-              state.continuations.append(continuation)
-              item?.value.loadingState = state
-              
-            case .none:
-              if Task.isCancelled {
-                continuation.resume(throwing: CancellationError())
-                return
-              }
-              let task = self.buildTask(id)
-              cache.setRequestState(
-                RequestState.loading(
-                  RequestState.LoadingState(task: task, continuations: [continuation])
-                ),
-                forKey: key
-              )
-            }
-            
-            if let item, !item.isExpired {
-              item.extendExpiration()
-            }
+        let item = self.storage.object(forKey: id.description)
+        switch item?.boxedValue {
+        case RequestState.response(let response)?:
+          continuation.resume(returning: response)
+          
+        case RequestState.loading?:
+          item?.loadingState?.continuations.append(continuation)
+          
+        case nil:
+          ExpirationLocals.$value.withValue(expiration ?? configuration.expiration) {
+            self.storage.setRequestState(
+              .loading(.init(task: initialTask(id), continuations: [continuation])),
+              forKey: id.description
+            )
           }
         }
         
+        if let item, !item.isExpired {
+          item.extendExpiration()
+        }
       }
     } onCancel: {
-      let task = self.storage.withValue { cache in
-        cache.object(forKey: id.description)?.loadingState?.task
-      }
       task?.cancel()
     }
   }
   
-  private func buildTask(_ id: Request.ID) -> Task<Void, Never> {
+  private func initialTask(_ id: Request.ID) -> Task<Void, Never> {
     Task {
       do {
         let response = try await self.request.execute(id: id)
-        let continuations: [Continuation] = try self.storage.withValue { cache  in
-          let key = id.description
-          let continuations = cache.continuations(forKey: key)
-          cache.removeObject(forKey: key)
-          cache.setRequestState(
-            RequestState.response(response),
-            forKey: key,
-            cost: try response.estimatedMemory.cost
-          )
-          
-          return continuations
-        }
-        
         try Task.checkCancellation()
+        let key = id.description
+        let continuations = self.storage.continuations(forKey: key)
+        self.storage.removeObject(forKey: key)
+        self.storage.setRequestState(
+          RequestState.response(response),
+          forKey: key,
+          cost: try response.estimatedMemory.cost
+        )
+        
         for continuation in continuations {
           continuation.resume(returning: response)
           await Task.yield()
         }
       } catch {
-        self.cancel(for: id, error: error)
+        self._cancel(for: id, error: error)
       }
     }
   }
   
-  public func cancel(for id: Request.ID, error: any Error) {
-    let continuations: [Continuation] = self.storage.withValue { cache in
-      let continuations = cache.continuations(forKey: id.description)
-      cache.removeObject(forKey: id.description)
-      return continuations
+  public nonisolated func cancel(id: Request.ID) {
+    Task {
+      await self._cancel(for: id)
     }
-    
+  }
+  
+  private func _cancel(for id: Request.ID, error: any Error = CancellationError()) {
+    let continuations = self.storage.continuations(forKey: id.description)
+    self.storage.removeObject(forKey: id.description)
     Task {
       for continuation in continuations {
         continuation.resume(throwing: error)
@@ -158,7 +147,13 @@ public final class Cache<Request: Requestable>: Sendable {
       }
     }
   }
+  
+  public func isCached(id: Request.ID) -> Bool {
+    self.storage.contains(forKey: id.description)
+  }
 }
+
+import Combine
 
 extension Cache {
   public struct Configuration: Sendable {
@@ -178,7 +173,7 @@ extension Cache {
   }
   
   typealias Continuation = CheckedContinuation<Request.Response, any Error>
-  enum RequestState: Sendable {
+  enum RequestState {
     case response(Request.Response)
     
     struct LoadingState: Sendable {
@@ -187,15 +182,52 @@ extension Cache {
     }
     var loadingState: LoadingState? {
       get {
-        guard case RequestState.loading(let state) = self else { return nil }
+        guard case Self.loading(let state) = self else {
+          return nil
+        }
         return state
       }
       set {
-        guard let newValue else { return }
-        self = RequestState.loading(newValue)
+        guard let newValue else {
+          return
+        }
+        self = Self.loading(newValue)
       }
     }
     case loading(LoadingState)
+  }
+  
+  public struct Dependecny: Sendable {
+    public var memoryWarningStream: @Sendable () -> AnyPublisher<Void, Never>
+    public var cleanupTimerStream: @Sendable (Double) -> AnyPublisher<Void, Never>
+    
+    public init(
+      memoryWarningStream: @Sendable @escaping () -> AnyPublisher<Void, Never>,
+      cleanupTimerStream: @Sendable @escaping (Double) -> AnyPublisher<Void, Never>
+    ) {
+      self.memoryWarningStream = memoryWarningStream
+      self.cleanupTimerStream = cleanupTimerStream
+    }
+  }
+}
+
+extension Cache.Dependecny {
+  public static var liveValue: Self {
+    Self(
+      memoryWarningStream: {
+        NotificationCenter.default
+          .publisher(for: UIApplication.didReceiveMemoryWarningNotification)
+          .map { _ in () }
+          .eraseToAnyPublisher()
+      },
+      cleanupTimerStream: {
+        Timer
+          .publish(every: $0, on: .main, in: .common)
+          .autoconnect()
+          .map { _ in () }
+          .eraseToAnyPublisher()
+      }
+    )
   }
 }
 
@@ -211,6 +243,12 @@ extension Cache.RequestState: MemorySizeProvider {
         return Measurement(value: 0, unit: .bytes)
       }
     }
+  }
+}
+
+extension Measurement where UnitType == UnitInformationStorage {
+  var cost: Int {
+    Int(converted(to: .bytes).value)
   }
 }
 // swiftlint:enable function_body_length

@@ -1,54 +1,44 @@
 import Foundation
 
 // swiftlint:disable identifier_name
-public class IterableCache<Key: Hashable, Value: AnyObject>: NSObject {
+class IterableCache<Key: Hashable, Value: AnyObject>: NSObject {
   let cache = NSCache<Ref<Key>, Value>()
   var keys = Set<Key>()
   let lock = NSLock()
   
-  public init(totalCostLimit: Int) {
-    self.cache.totalCostLimit = totalCostLimit
+  init(totalCostLimit: Int) {
+    cache.totalCostLimit = totalCostLimit
   }
   
-  public func setObject(_ obj: Value, forKey key: Key, cost g: Int = 0) {
-    let ref = Ref(key)
-    self.lock.work {
-      self.cache.setObject(obj, forKey: ref, cost: g)
-      self.keys.insert(key)
+  func setObject(_ obj: Value, forKey key: Key, cost g: Int = 0) {
+    lock.withLock {
+      cache.setObject(obj, forKey: Ref(key), cost: g)
+      keys.insert(key)
     }
   }
   
-  public func object(forKey key: Key) -> Value? {
-    self.cache.object(forKey: Ref(key))
+  func object(forKey key: Key) -> Value? {
+    cache.object(forKey: Ref(key))
   }
   
-  public func removeObject(forKey key: Key) {
-    self.lock.work {
-      self.cache.removeObject(forKey: Ref(key))
-      self.keys.remove(key)
+  func removeObject(forKey key: Key) {
+    lock.withLock {
+      cache.removeObject(forKey: Ref(key))
+      keys.remove(key)
     }
   }
   
-  public func removeAllObjects() {
-    self.lock.work {
-      self.cache.removeAllObjects()
-      self.keys.removeAll()
+  func removeAllObjects() {
+    lock.withLock {
+      cache.removeAllObjects()
+      keys.removeAll()
     }
   }
-}
-
-// MARK: - Sequence Protocol
-extension IterableCache: Sequence {
-  public func makeIterator() -> AnyIterator<(Key, Value)> {
-    var iterator = self.keys.makeIterator()
-    return AnyIterator {
-      while let key = iterator.next() {
-        if let value = self.cache.object(forKey: Ref(key)) {
-          return (key, value)
-        }
-      }
-      
-      return nil
+  
+  func contains(forKey key: Key) -> Bool {
+    lock.withLock {
+      cache.object(forKey: Ref(key)) != nil
+      || keys.contains(key)
     }
   }
 }
@@ -56,7 +46,7 @@ extension IterableCache: Sequence {
 extension IterableCache {
   final class Ref<T: Hashable>: NSObject {
     override var hash: Int {
-      self.key.hashValue
+      key.hashValue
     }
     let key: T
     
@@ -68,16 +58,23 @@ extension IterableCache {
       guard let other = object as? Ref<T> else {
         return false
       }
-      return self.key == other.key
+      return key == other.key
     }
   }
 }
 
-private extension NSLock {
-  func work(_ work: () -> Void) {
-    self.lock()
-    defer { self.unlock() }
-    work()
+extension IterableCache: Sequence {
+  func makeIterator() -> AnyIterator<(Key, Value)> {
+    var iterator = keys.makeIterator()
+    return AnyIterator {
+      while let key = iterator.next() {
+        if let value = self.cache.object(forKey: Ref(key)) {
+          return (key, value)
+        }
+      }
+      
+      return nil
+    }
   }
 }
 // swiftlint:enable identifier_name

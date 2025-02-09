@@ -47,6 +47,10 @@ let package = Package(
         "HTTPClientAPI",
         "HTTPClient"
       ]
+    ),
+    Target.testTarget(
+      name: "CacheTests",
+      dependencies: ["TDFoundation"]
     )
   ]
 )
