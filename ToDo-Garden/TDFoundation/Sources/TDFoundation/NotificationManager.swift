@@ -36,6 +36,10 @@ public final class NotificationManager {
   public func makeRestNotification(after seconds: Double) {
     self.makeNotification(seconds: seconds, isFocus: false)
   }
+
+  public func clearPendingNotifications() {
+    UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+  }
 }
 
 // MARK: Private Functions
