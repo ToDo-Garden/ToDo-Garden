@@ -28,6 +28,31 @@ public final class NotificationManager {
       throw NotificationPermissionError.unknownError
     }
   }
+
+  public func makeFocusNotification(after seconds: Double) {
+    makeNotification(seconds: seconds, isFocus: true)
+  }
+
+  public func makeRestNotification(after seconds: Double) {
+    self.makeNotification(seconds: seconds, isFocus: false)
+  }
+}
+
+// MARK: Private Functions
+
+extension NotificationManager {
+  private func makeNotification(seconds: Double, isFocus: Bool) {
+    let notiContent = UNMutableNotificationContent()
+    let constant = NotificationManager.Constant.self
+    notiContent.title = constant.title
+    notiContent.body = isFocus ? constant.focusBody : constant.restBody
+
+    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: seconds, repeats: false)
+    let identifier = isFocus ? constant.focusIdentifier : constant.restIdentifier
+    let request = UNNotificationRequest(identifier: identifier, content: notiContent, trigger: trigger)
+
+    UNUserNotificationCenter.current().add(request)
+  }
 }
 
 public enum NotificationPermissionError: Error {
