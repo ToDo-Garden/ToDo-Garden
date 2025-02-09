@@ -33,3 +33,15 @@ public final class NotificationManager {
 public enum NotificationPermissionError: Error {
   case unknownError
 }
+
+// MARK: Constant
+
+extension NotificationManager {
+  enum Constant {
+    static let title = "ToDo Garden"
+    static let focusBody = "수고했어요! 오늘도 열심히 집중한 당신!"
+    static let restBody = "충전완료! 이제 다시 열심히 힘을 내볼까요?"
+    static let focusIdentifier = "focusComplete"
+    static let restIdentifier = "restComplete"
+  }
+}
