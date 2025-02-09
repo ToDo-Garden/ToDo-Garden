@@ -27,7 +27,7 @@ extension Styled.Row {
     )
     self.setupTextFieldConstraints(textField)
     let zStack = UIStackView(arrangedSubviews: [textField])
-    let (selectedView, selecetdViewUpdateAction) = buildSelectedView(model: model)
+    let (selectedView, selecetdViewUpdateAction) = self.buildSelectedView(model: model)
     zStack.addArrangedSubview(selectedView)
     /// selectedView를 누르게 되면 selectedView를 숨기고 textField를 노출시킵니다.
     selectedView.addTapGesture { [weak selectedView, weak textField] in
@@ -94,6 +94,9 @@ extension Styled.Row {
     
     return (stack, { [weak strikeThroughLabel] in
       strikeThroughLabel?.update(text: $0, animated: $1)
+      strikeThroughLabel?.label.textColor = $1
+      ? UIColor.toDoGardenGray3
+      : UIColor.toDoGardenGreenDark
     })
   }
   
