@@ -1,6 +1,9 @@
 import Foundation
 import UIKit
 
+import HTTPClient
+import HTTPClientAPI
+
 extension Cache where Request == ImageClient {
   public static let shared = Cache(request: ImageClient.live)
 }
@@ -19,7 +22,16 @@ public struct ImageClient: Requestable {
 
 extension ImageClient {
   public static let live = ImageClient { url in
-    try await URLSession.shared.data(from: url).0
+    try await HTTPClient.live.send(
+      input: url,
+      serializer: { HTTPRequest(method: HTTPMethod.get, endPoint: $0) },
+      deserializer: { response in
+        guard let data = response.body else {
+          throw HTTPClientError.deserializationError
+        }
+        return data
+      }
+    )
   }
 }
 
