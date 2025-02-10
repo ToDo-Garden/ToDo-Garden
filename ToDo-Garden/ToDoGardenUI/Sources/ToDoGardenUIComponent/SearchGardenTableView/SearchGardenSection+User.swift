@@ -11,7 +11,7 @@ enum SearchGardenSection {
   case main
 }
 
-public final class SearchGardenUser {
+public final class SearchGardenUser: @unchecked Sendable {
   public let id: UUID
   public let nickname: String
   public let customId: String

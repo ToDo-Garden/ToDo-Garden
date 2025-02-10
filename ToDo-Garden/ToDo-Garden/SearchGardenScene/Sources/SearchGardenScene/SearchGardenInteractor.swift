@@ -118,7 +118,6 @@ extension SearchGardenInteractor: SearchGardenBusinessLogic {
   
   @MainActor
   private func handleError(error: Error, task: TaskKey) {
-    debugPrint(error)
     self.presenter?.presentErrorInfoToast(error: error)
   }
 }
