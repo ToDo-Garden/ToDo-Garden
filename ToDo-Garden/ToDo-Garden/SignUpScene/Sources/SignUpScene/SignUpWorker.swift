@@ -78,8 +78,7 @@ extension SignUpWorker {
         guard response.statusCode >= 200 && response.statusCode < 400 else {
           if let data = response.body,
           let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
-             let errorMessage = json["message"] as? String {
-            
+          let errorMessage = json["message"] as? String {
             if errorMessage.contains("User already exists") {
               throw SignUp.SignUpError.userIDAlreadyExisted
             }
