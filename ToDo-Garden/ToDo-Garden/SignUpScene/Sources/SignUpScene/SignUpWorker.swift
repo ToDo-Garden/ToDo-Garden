@@ -27,7 +27,6 @@ public struct SignUpWorker: SignUpWorkable {
     switch currentPageIndex {
     case 0:
       if StringValidationChecker.isValidID(text) {
-        // TODO: 사용중인 아이디 체크
         return SignUp.ValidationState.valid
       } else {
         return SignUp.ValidationState.invalid
@@ -63,11 +62,6 @@ public struct SignUpWorker: SignUpWorkable {
 }
 
 extension SignUpWorker {
-  private func requestForCheckingExistedId() async throws -> Bool {
-    // TODO: 아이디 중복검사 로직
-    return true
-  }
-  
   private func requestForRegistering(with dto: SignUp.RegisterUser.RequestDTO) async throws -> Bool {
     let result = try await self.httpClient.send(
       input: dto,
@@ -82,14 +76,21 @@ extension SignUpWorker {
       },
       deserializer: { response in
         guard response.statusCode >= 200 && response.statusCode < 400 else {
+          if let data = response.body,
+          let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+             let errorMessage = json["message"] as? String {
+            
+            if errorMessage.contains("User already exists") {
+              throw SignUp.SignUpError.userIDAlreadyExisted
+            }
+          }
           throw HTTPClientError.badStatusCode(response.statusCode)
         }
-
         return true
-        // TODO: Response로 뭐가 오는지 확인 후 변경 가능성 있음
-        // throw 되지 않고 여기까지 도달하면 성공한거임.
       }
     )
+    // TODO: Response로 뭐가 오는지 확인 후 변경 가능성 있음
+    // throw 되지 않고 여기까지 도달하면 성공한거임.
     return result
   }
 }

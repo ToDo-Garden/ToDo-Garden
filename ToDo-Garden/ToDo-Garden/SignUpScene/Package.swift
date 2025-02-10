@@ -49,7 +49,11 @@ let package = Package(
     ),
     .testTarget(
       name: "SignUpSceneTests",
-      dependencies: ["SignUpScene"]
+      dependencies: [
+        "SignUpScene",
+        "SignUpSceneEntity",
+        .product(name: "TDUtility", package: "TDUtility")
+      ]
     )
   ]
 )
