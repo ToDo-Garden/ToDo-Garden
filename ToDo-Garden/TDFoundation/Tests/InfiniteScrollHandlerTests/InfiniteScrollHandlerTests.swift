@@ -15,6 +15,7 @@ import Testing
 final class ScrollViewTests {
   @Test("스크롤뷰가 하단에 도달했을 때 onEndReached가 호출되어야 한다")
   func testEndReachedCallback() async throws {
+    self.reset()
     let scrollView = UIScrollView(frame: CGRect(x: 0, y: 0, width: 300, height: 500))
     scrollView.contentSize = CGSize(width: 300, height: 1000)
     
@@ -31,6 +32,7 @@ final class ScrollViewTests {
   
   @Test("delegate 메서드가 정상적으로 포워딩되어야 한다")
   func testDelegateForwarding() async throws {
+    self.reset()
     let scrollView = UIScrollView(frame: CGRect(x: 0, y: 0, width: 300, height: 500))
     let mockDelegate = MockScrollViewDelegate()
     scrollView.delegate = mockDelegate
@@ -49,6 +51,7 @@ final class ScrollViewTests {
   
   @Test("여러 스크롤뷰가 독립적으로 동작해야 한다")
   func testMultipleScrollViews() async throws {
+    self.reset()
     let firstScrollView = UIScrollView(frame: CGRect(x: 0, y: 0, width: 300, height: 500))
     let secondScrollView = UIScrollView(frame: CGRect(x: 0, y: 0, width: 300, height: 500))
     firstScrollView.contentSize = CGSize(width: 300, height: 1000)
@@ -69,6 +72,7 @@ final class ScrollViewTests {
   
   @Test("스크롤뷰의 threshold 값이 제대로 적용되어야 한다")
   func testScrollThreshold() async throws {
+    self.reset()
     let scrollView = UIScrollView(frame: CGRect(x: 0, y: 0, width: 300, height: 500))
     scrollView.contentSize = CGSize(width: 300, height: 1000)
     
@@ -92,6 +96,7 @@ final class ScrollViewTests {
   
   @Test("InfiniteScrollHandler가 delegate 메서드 응답을 올바르게 처리해야 한다")
   func testDelegateResponding() async throws {
+    self.reset()
     let scrollView = UIScrollView(frame: CGRect(x: 0, y: 0, width: 300, height: 500))
     let mockDelegate = MockScrollViewDelegate()
     scrollView.delegate = mockDelegate
@@ -102,6 +107,12 @@ final class ScrollViewTests {
     
     let target = InfiniteScrollHandler.shared.forwardingTarget(for: selector) as? UIScrollViewDelegate
     #expect(target === mockDelegate)
+  }
+}
+
+extension ScrollViewTests {
+  private func reset() {
+    InfiniteScrollHandler.shared.originalDelegates.removeAll()
   }
 }
 // swiftlint:enable all
