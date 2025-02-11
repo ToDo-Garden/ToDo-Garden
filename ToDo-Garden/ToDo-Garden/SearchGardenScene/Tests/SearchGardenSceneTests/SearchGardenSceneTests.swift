@@ -109,7 +109,7 @@ extension SearchGardenSceneTests {
   
   private func wait() async {
     do {
-      try await Task.sleep(nanoseconds: 60000000)
+      try await Task.sleep(nanoseconds: 100000000)
     } catch {
       return
     }
