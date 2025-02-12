@@ -51,6 +51,10 @@ let package = Package(
     Target.testTarget(
       name: "CacheTests",
       dependencies: ["TDFoundation"]
+    ),
+    Target.testTarget(
+      name: "InfiniteScrollHandlerTests",
+      dependencies: ["TDFoundation"]
     )
   ]
 )

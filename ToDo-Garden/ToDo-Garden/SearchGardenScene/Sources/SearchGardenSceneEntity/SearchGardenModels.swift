@@ -88,6 +88,11 @@ extension SearchGarden {
     public struct Response: Sendable, Codable {
       public let data: FriendGardenInfo
       public let isFriend: Bool
+      
+      public init(data: FriendGardenInfo, isFriend: Bool) {
+        self.data = data
+        self.isFriend = isFriend
+      }
     }
     
     public struct FriendGardenInfo: Sendable, Codable {

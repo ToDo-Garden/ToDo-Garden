@@ -100,4 +100,9 @@ extension SignUp {
     case invalid
     case empty
   }
+  
+  public enum SignUpError: Sendable, Error {
+    case userIDAlreadyExisted
+    case unknownError
+  }
 }

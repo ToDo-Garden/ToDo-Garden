@@ -54,7 +54,10 @@ let package = Package(
     ),
     .testTarget(
       name: "SearchGardenSceneTests",
-      dependencies: ["SearchGardenScene"]
+      dependencies: [
+        "SearchGardenScene",
+        .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI")
+      ]
     )
   ]
 )

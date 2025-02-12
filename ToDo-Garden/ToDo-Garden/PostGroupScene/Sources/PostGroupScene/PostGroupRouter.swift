@@ -22,9 +22,7 @@ class PostGroupRouter: PostGroupDataPassing {
   
   init() {
   }
-  
-  // TODO: delegate 호출도 라우터에서 처리하자
-  
+
   func routeToManageGroupScene() {
     self.viewController?.navigationController?.popViewController(animated: true)
   }
