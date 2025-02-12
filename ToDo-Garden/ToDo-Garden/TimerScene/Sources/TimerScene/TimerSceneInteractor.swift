@@ -1,5 +1,6 @@
 import Foundation
 
+import TDFoundation
 import TimerSceneAPI
 import TimerSceneEntity
 
@@ -22,15 +23,18 @@ final class TimerSceneInteractor {
   var presenter: TimerScenePresentationLogic?
   private let timerWorker: TimerSceneWorkable
   private let storageWorker: TimerStorageWorkable
-  
+  private let notificationManager: NotificationManager
+
   public var tasks: [AnyHashable: Task<Void, Never>] = [:]
   
   init(
     timerWorker: TimerSceneWorkable,
-    storageWorker: TimerStorageWorkable
+    storageWorker: TimerStorageWorkable,
+    notificationManager: NotificationManager
   ) {
     self.timerWorker = timerWorker
     self.storageWorker = storageWorker
+    self.notificationManager = notificationManager
     self.currentGroup = TimerScene.CurrentGroup(groupId: "", groupName: "")
     // MARK: currentGroup은 Payload로 이전화면에서 전달받아 의미있는 값으로 대체됨
   }
