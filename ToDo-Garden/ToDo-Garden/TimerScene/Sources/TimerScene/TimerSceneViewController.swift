@@ -1,5 +1,6 @@
 import UIKit
 
+import TDFoundation
 import TDUtility
 import TimerSceneAPI
 import TimerSceneEntity
@@ -351,7 +352,8 @@ import HTTPClient
   let viewController = TimerSceneSceneBuilder(
     dependency: .init(
       timerWorker: timerWorker,
-      storageWorker: storageWorker
+      storageWorker: storageWorker,
+      notificationManager: NotificationManager()
     )
   ).build(with: nil)
   

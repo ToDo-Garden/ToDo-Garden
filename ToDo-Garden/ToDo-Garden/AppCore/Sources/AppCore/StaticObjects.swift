@@ -15,7 +15,8 @@ extension TimerSceneSceneBuilder.Dependency {
   @MainActor
   public static let live = TimerSceneSceneBuilder.Dependency(
     timerWorker: TimerSceneWorker.live,
-    storageWorker: TimerStorageWorker.live
+    storageWorker: TimerStorageWorker.live,
+    notificationManager: NotificationManager()
   )
 }
 
