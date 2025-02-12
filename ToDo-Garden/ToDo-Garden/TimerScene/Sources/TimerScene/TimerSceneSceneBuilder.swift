@@ -47,7 +47,8 @@ extension TimerSceneSceneBuilder {
   private func configureVIPCycle(for viewController: TimerSceneViewController) -> TimerSceneViewController {
     let interactor = TimerSceneInteractor(
       timerWorker: self.dependency.timerWorker,
-      storageWorker: self.dependency.storageWorker
+      storageWorker: self.dependency.storageWorker,
+      notificationManager: self.dependency.notificationManager
     )
     let presenter = TimerScenePresenter()
     viewController.interactor = interactor

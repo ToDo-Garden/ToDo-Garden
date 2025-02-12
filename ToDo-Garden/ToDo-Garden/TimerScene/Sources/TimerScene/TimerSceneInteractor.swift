@@ -89,6 +89,7 @@ extension TimerSceneInteractor: TimerSceneBusinessLogic {
       try Task.checkCancellation()
       self.presenter?.clearPresentState()
       self.updateAndPresentAlertStatus(self.bottomSheetStatus.completionAlertStatus)
+      self.makeNotification()
     }
   }
   
@@ -165,7 +166,18 @@ extension TimerSceneInteractor {
       debugPrint(error)
     }
   }
-  
+
+  private func makeNotification() {
+    switch alertStatus {
+    case .welldone:
+      self.notificationManager.makeFocusNotification(after: 0.1)
+    case .fullyCharged:
+      self.notificationManager.makeRestNotification(after: 0.1)
+    default:
+      break
+    }
+  }
+
   func setCurrentGroup(_ payload: TimerScenePayloadable) {
     self.currentGroup = TimerScene.CurrentGroup(
       groupId: payload.groupId,
