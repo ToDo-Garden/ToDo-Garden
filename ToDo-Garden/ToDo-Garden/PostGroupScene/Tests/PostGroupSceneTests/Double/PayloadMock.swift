@@ -10,8 +10,4 @@ import PostGroupSceneEntity
 
 struct PayloadMock: PostGroupScenePayloadable {
   var group: PostGroupSceneEntity.PostGroup.ToDoGroup
-  
-  init(group: PostGroupSceneEntity.PostGroup.ToDoGroup) {
-    self.group = group
-  }
 }
