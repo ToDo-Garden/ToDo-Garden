@@ -27,8 +27,18 @@ extension BaseContentsBuilder {
         ManageGroupViewControllerForGuide(isEditMode: true)
       ]
       
-      let navigationControllers = viewControllers.map { UINavigationController(rootViewController: $0) }
-      
+      let navigationControllers = viewControllers.map { viewController in
+        let naviController = UINavigationController(rootViewController: viewController)
+        naviController.view.preservesSuperviewLayoutMargins = true
+        naviController.additionalSafeAreaInsets = UIEdgeInsets(
+          top: Constants.safeAreaTopInset,
+          left: 0,
+          bottom: 0,
+          right: 0
+        )
+        
+        return naviController
+      }
       return [
         BaseContent(
           viewController: navigationControllers[0], 

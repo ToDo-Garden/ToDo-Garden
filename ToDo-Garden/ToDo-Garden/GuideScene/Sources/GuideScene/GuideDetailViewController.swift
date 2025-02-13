@@ -4,7 +4,7 @@ import ToDoGardenUIComponent
 import Combine
 import UIKit
 
-final class GuideDetailViewController: UIViewController {
+public final class GuideDetailViewController: UIViewController {
   private var scrollView: UIScrollView!
   private var scrollViewContentsView: UIStackView!
   private var bottomView: BottomView!
@@ -15,7 +15,7 @@ final class GuideDetailViewController: UIViewController {
   private var subscription: AnyCancellable?
   
   // MARK: - Object lifecycle
-  init(_ state: Guide.GuideState) {
+  public init(_ state: Guide.GuideState) {
     self.state = state
     super.init(nibName: nil, bundle: nil)
   }
@@ -27,13 +27,14 @@ final class GuideDetailViewController: UIViewController {
   
   // MARK: - View lifecycle
   
-  override func viewDidLoad() {
+  public override func viewDidLoad() {
     super.viewDidLoad()
     self.build()
   }
   
-  override func viewIsAppearing(_ animated: Bool) {
+  public override func viewIsAppearing(_ animated: Bool) {
     super.viewIsAppearing(animated)
+    self.navigationController?.navigationBar.isHidden = true
     self.updateContents(
       self.contensBuilder.baseContents(self.state)
     )
@@ -109,7 +110,7 @@ final class GuideDetailViewController: UIViewController {
 }
 
 extension GuideDetailViewController: UIScrollViewDelegate {
-  func scrollViewWillEndDragging(
+  public func scrollViewWillEndDragging(
     _ scrollView: UIScrollView,
     withVelocity velocity: CGPoint,
     targetContentOffset: UnsafeMutablePointer<CGPoint>

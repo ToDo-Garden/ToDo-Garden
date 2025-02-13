@@ -103,9 +103,7 @@ extension ManageGroupViewControllerForGuide {
   }
   
   private func calculateYOffset() -> CGFloat {
-    let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene
-    let statusBarHeight = scene?.statusBarManager?.statusBarFrame.height ?? 0
     let navigationBarHeight = self.navigationController?.navigationBar.frame(in: self.view).height ?? 0
-    return statusBarHeight + navigationBarHeight
+    return Constants.safeAreaTopInset + navigationBarHeight
   }
 }
