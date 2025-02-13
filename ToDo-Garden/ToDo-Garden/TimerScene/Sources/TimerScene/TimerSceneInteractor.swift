@@ -107,6 +107,7 @@ extension TimerSceneInteractor: TimerSceneBusinessLogic {
       self.keepConcentrationAction()
     
     case .goHome:
+      self.notificationManager.clearPendingNotifications()
       self.presenter?.dismiss()
     
     case .cancel:
