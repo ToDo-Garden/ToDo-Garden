@@ -7,6 +7,7 @@
 
 import UIKit
 
+import TDFoundation
 import ToDoGardenUIResource
 
 @main
@@ -16,7 +17,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
   ) -> Bool {
     registerCustomFonts()
-    UNUserNotificationCenter.current().delegate = self
+    UNUserNotificationCenter.current().delegate = NotificationManager.shared
     return true
   }
 }
@@ -25,14 +26,5 @@ extension AppDelegate {
   private func registerCustomFonts() {
     PretendardFont.register()
     GmarkSansFont.register()
-  }
-}
-
-extension AppDelegate: UNUserNotificationCenterDelegate {
-  func userNotificationCenter(
-    _ center: UNUserNotificationCenter,
-    willPresent notification: UNNotification
-  ) async -> UNNotificationPresentationOptions {
-    return [.badge, .banner, .sound]
   }
 }
