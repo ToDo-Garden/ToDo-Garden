@@ -7,6 +7,7 @@
 
 import UIKit
 
+import TDFoundation
 import ToDoGardenUIResource
 
 @main
@@ -16,6 +17,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
   ) -> Bool {
     registerCustomFonts()
+    UNUserNotificationCenter.current().delegate = NotificationManager.shared
     return true
   }
 }

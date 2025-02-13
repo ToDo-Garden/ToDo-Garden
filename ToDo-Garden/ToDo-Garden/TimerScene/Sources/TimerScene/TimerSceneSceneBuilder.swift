@@ -1,5 +1,6 @@
 import Foundation
 
+import TDFoundation
 import TimerSceneAPI
 
 @MainActor
@@ -8,13 +9,16 @@ public struct TimerSceneSceneBuilder {
   public struct Dependency {
     let timerWorker: TimerSceneWorkable
     let storageWorker: TimerStorageWorkable
-    
+    let notificationManager: NotificationManager
+
     public init(
       timerWorker: any TimerSceneWorkable,
-      storageWorker: any TimerStorageWorkable
+      storageWorker: any TimerStorageWorkable,
+      notificationManager: NotificationManager
     ) {
       self.timerWorker = timerWorker
       self.storageWorker = storageWorker
+      self.notificationManager = notificationManager
     }
   }
   
@@ -43,7 +47,8 @@ extension TimerSceneSceneBuilder {
   private func configureVIPCycle(for viewController: TimerSceneViewController) -> TimerSceneViewController {
     let interactor = TimerSceneInteractor(
       timerWorker: self.dependency.timerWorker,
-      storageWorker: self.dependency.storageWorker
+      storageWorker: self.dependency.storageWorker,
+      notificationManager: self.dependency.notificationManager
     )
     let presenter = TimerScenePresenter()
     viewController.interactor = interactor

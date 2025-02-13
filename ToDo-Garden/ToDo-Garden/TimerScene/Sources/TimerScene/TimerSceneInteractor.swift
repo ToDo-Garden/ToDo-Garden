@@ -1,5 +1,6 @@
 import Foundation
 
+import TDFoundation
 import TimerSceneAPI
 import TimerSceneEntity
 
@@ -22,15 +23,18 @@ final class TimerSceneInteractor {
   var presenter: TimerScenePresentationLogic?
   private let timerWorker: TimerSceneWorkable
   private let storageWorker: TimerStorageWorkable
-  
+  private let notificationManager: NotificationManager
+
   public var tasks: [AnyHashable: Task<Void, Never>] = [:]
   
   init(
     timerWorker: TimerSceneWorkable,
-    storageWorker: TimerStorageWorkable
+    storageWorker: TimerStorageWorkable,
+    notificationManager: NotificationManager
   ) {
     self.timerWorker = timerWorker
     self.storageWorker = storageWorker
+    self.notificationManager = notificationManager
     self.currentGroup = TimerScene.CurrentGroup(groupId: "", groupName: "")
     // MARK: currentGroup은 Payload로 이전화면에서 전달받아 의미있는 값으로 대체됨
   }
@@ -85,6 +89,7 @@ extension TimerSceneInteractor: TimerSceneBusinessLogic {
       try Task.checkCancellation()
       self.presenter?.clearPresentState()
       self.updateAndPresentAlertStatus(self.bottomSheetStatus.completionAlertStatus)
+      self.makeNotification()
     }
   }
   
@@ -102,6 +107,7 @@ extension TimerSceneInteractor: TimerSceneBusinessLogic {
       self.keepConcentrationAction()
     
     case .goHome:
+      self.notificationManager.clearPendingNotifications()
       self.presenter?.dismiss()
     
     case .cancel:
@@ -161,7 +167,18 @@ extension TimerSceneInteractor {
       debugPrint(error)
     }
   }
-  
+
+  private func makeNotification() {
+    switch alertStatus {
+    case .welldone:
+      self.notificationManager.makeFocusNotification(after: 0.1)
+    case .fullyCharged:
+      self.notificationManager.makeRestNotification(after: 0.1)
+    default:
+      break
+    }
+  }
+
   func setCurrentGroup(_ payload: TimerScenePayloadable) {
     self.currentGroup = TimerScene.CurrentGroup(
       groupId: payload.groupId,

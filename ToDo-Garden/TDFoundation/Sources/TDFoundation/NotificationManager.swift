@@ -8,8 +8,10 @@
 import Foundation
 import UserNotifications
 
-public final class NotificationManager {
-  public init() {}
+public final class NotificationManager: NSObject, Sendable, UNUserNotificationCenterDelegate {
+  public static let shared = NotificationManager()
+
+  private override init() {}
 
   /// 현재 사용자가 설정한 알림 설정 권한을 가져오는 메서드입니다.
   /// 권한이 허용되어있으면 true, 거부되어 있으면 false를 반환합니다.
@@ -39,6 +41,15 @@ public final class NotificationManager {
 
   public func clearPendingNotifications() {
     UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+  }
+}
+
+extension NotificationManager {
+  public func userNotificationCenter(
+    _ center: UNUserNotificationCenter,
+    willPresent notification: UNNotification
+  ) async -> UNNotificationPresentationOptions {
+    return [.badge, .banner, .sound]
   }
 }
 
