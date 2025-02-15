@@ -12,7 +12,6 @@ import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 public final class RepeatOtherDaysView: ToDoRepeatSelectionView {
-  public let ringToggleButton: UIButton
   public let dateButtonSet: DateButtonSet
   private let dividerView: UIView
   private let innerStackView: UIStackView
@@ -30,7 +29,6 @@ public final class RepeatOtherDaysView: ToDoRepeatSelectionView {
   public init(startDate: String?, endDate: String?) {
     self.viewModel = RepeatOtherDaysViewModel(startDate: startDate, endDate: endDate)
     self.heightConstraints = []
-    self.ringToggleButton = UIButton()
     self.innerStackView = UIStackView()
     self.dividerView = UIView()
     self.dateButtonSet = DateButtonSet()
@@ -52,19 +50,6 @@ extension RepeatOtherDaysView: RepeatOtherDaysViewAPI {
   public func updateDateButtonState(isSelected: Bool) {
     self.viewModel.dateButton.isSelected.value = isSelected
   }
-
-  public func updateRepeatEverydayButton(isSelected: Bool) {
-    self.viewModel.ringToggleButton.isSelected.value = isSelected
-  }
-
-  public func addActionToRingToggleButton(_ closure: @escaping (Bool) -> Void) {
-    let buttonAction = UIAction { _ in
-      let isRingToggleButtonSelected = self.ringToggleButton.isSelected
-      closure(isRingToggleButtonSelected)
-    }
-
-    self.ringToggleButton.addAction(buttonAction, for: UIControl.Event.touchUpInside)
-  }
 }
 
 // MARK: - Private functions
@@ -74,7 +59,6 @@ extension RepeatOtherDaysView {
     self.bindViewModel()
     self.usingAutolayout()
     self.setupInitialHeightConstraint()
-    self.applyRingToggleButton()
     self.buildStackView()
     self.setupButtonActions()
   }
@@ -104,15 +88,7 @@ extension RepeatOtherDaysView {
     }
   }
 
-  private func applyRingToggleButton() {
-    self.ringToggleButton.applyRingToggleButtonStyle()
-  }
-
   private func setupButtonActions() {
-    let ringToggleAction = UIAction { [weak self] _ in
-      self?.viewModel.ringToggleButtonTapped()
-    }
-
     let dateButtonAction = UIAction { [weak self] _ in
       guard let isDateButtonSelected = self?.dateButtonSet.isSelected else {
         return
@@ -120,8 +96,6 @@ extension RepeatOtherDaysView {
 
       self?.viewModel.dateButtonSetValueChanged(isSelected: isDateButtonSelected)
     }
-
-    self.ringToggleButton.addAction(ringToggleAction, for: UIControl.Event.touchUpInside)
 
     self.dateButtonSet.addAction(dateButtonAction, for: UIControl.Event.valueChanged)
   }
@@ -143,8 +117,8 @@ extension RepeatOtherDaysView {
 
     NSLayoutConstraint.activate(
       [
+        self.innerStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
         self.innerStackView.topAnchor.constraint(equalTo: self.topAnchor, constant: constants.CommonMargin.broad),
-        self.innerStackView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
         self.innerStackView.widthAnchor.constraint(equalToConstant: constants.InnerStackView.width)
       ]
     )
@@ -167,24 +141,7 @@ extension RepeatOtherDaysView {
   }
 
   private func buildRows() {
-    self.buildToggleRow()
-    self.innerStackView.addSpacing(
-      Constant.RepeatOtherDaysView.Layout.CommonMargin.broad
-    )
     self.buildDateRow()
-  }
-
-  private func buildToggleRow() {
-    let row = Styled.Row(
-      configuration: Styled.Row.Configuration.repeatOtherDays(
-        Styled.Row.Configuration.RepeatOtherDaysModel.init(
-          title: Constant.RepeatOtherDaysView.StringLiteral.everyday
-        )
-      ),
-      with: [self.ringToggleButton]
-    )
-
-    self.innerStackView.addArrangedSubview(row)
   }
 
   private func buildDateRow() {
@@ -194,17 +151,19 @@ extension RepeatOtherDaysView {
           title: Constant.RepeatOtherDaysView.StringLiteral.timeSet
         )
       ),
-      with: []
+      with: [self.dateButtonSet]
     )
     let constants = Constant.RepeatOtherDaysView.Layout.self
-    self.innerStackView.insertArrangedSubview(row, at: 2)
+
+    self.innerStackView.insertArrangedSubview(row, at: 0)
+    self.innerStackView.addSpacing(50.0)
     self.innerStackView.addSubview(self.dateButtonSet)
     self.dateButtonSet.usingAutolayout()
     NSLayoutConstraint.activate(
       [
         self.dateButtonSet.topAnchor.constraint(
           equalTo: row.topAnchor,
-          constant: constants.CommonMargin.narrow
+          constant: 20
         ),
         self.dateButtonSet.trailingAnchor.constraint(
           equalTo: row.trailingAnchor,
@@ -235,19 +194,8 @@ extension RepeatOtherDaysView {
       self.updateUI()
     }
 
-    self.viewModel.ringToggleButton.isSelected.bind { [weak self] isSelected in
-      self?.ringToggleButton.isSelected = isSelected
-      if isSelected == true {
-        self?.viewModel.dateButton.isSelected.value = false
-      }
-      self?.updateBackgroundColor()
-    }
-
     self.viewModel.dateButton.isSelected.bind { [weak self] isSelected in
       self?.dateButtonSet.isSelected = isSelected
-      if isSelected == true {
-        self?.viewModel.ringToggleButton.isSelected.value = false
-      }
     }
   }
 
@@ -295,7 +243,7 @@ extension RepeatOtherDaysView {
   }
 
   private func updateBackgroundColor() {
-    if self.viewModel.isSelected.value && self.viewModel.ringToggleButton.isSelected.value {
+    if self.viewModel.isSelected.value {
       self.backgroundColor = UIColor.toDoGardenGreenBackground
     } else {
       self.backgroundColor = UIColor.clear

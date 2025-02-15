@@ -10,6 +10,4 @@ import Foundation
 public protocol RepeatOtherDaysViewAPI: ToDoRepeatSelectionViewAPI {
   func updateDate(startDate: String, endDate: String)
   func updateDateButtonState(isSelected: Bool)
-  func updateRepeatEverydayButton(isSelected: Bool)
-  func addActionToRingToggleButton(_ closure: @escaping (Bool) -> Void)
 }

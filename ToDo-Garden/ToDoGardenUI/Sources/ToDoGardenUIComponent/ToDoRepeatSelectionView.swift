@@ -118,6 +118,7 @@ extension ToDoRepeatSelectionView {
 
 extension ToDoRepeatSelectionView {
   @objc func didTapView() {
+    // self.isSelected.toggle()
     self.selectionSender?(self.isSelected)
   }
 }

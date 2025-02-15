@@ -11,7 +11,6 @@ import ToDoGardenUIConstant
 
 final class RepeatOtherDaysViewModel {
   private(set) var dateButton: DateButtonState
-  private(set) var ringToggleButton: RingToggleButtonState
   private(set) var divider: DividerState
   private(set) var innerStackView: InnerStackViewState
   private(set) var title: TitleState
@@ -24,12 +23,6 @@ final class RepeatOtherDaysViewModel {
     endDate: String?
   ) {
     let today = RepeatOtherDaysViewModel.currentDateString()
-    
-    self.ringToggleButton = RepeatOtherDaysViewModel.initializeRingToggleButton(
-      startDate: startDate,
-      endDate: endDate
-    )
-    
     self.dateButton = RepeatOtherDaysViewModel.initializeDateButton(
       startDate: startDate,
       endDate: endDate,
@@ -49,19 +42,9 @@ final class RepeatOtherDaysViewModel {
   func toggleSelection() {
     self.updateState()
   }
-  
-  func ringToggleButtonTapped() {
-    self.ringToggleButton.isSelected.value.toggle()
-    if self.ringToggleButton.isSelected.value == true {
-      self.dateButton.isSelected.value = false
-    }
-  }
-  
+
   func dateButtonSetValueChanged(isSelected: Bool) {
     self.dateButton.isSelected.value = isSelected
-    if self.dateButton.isSelected.value == true {
-      self.ringToggleButton.isSelected.value = false
-    }
   }
   
   func updateDate(startDate: String, endDate: String) {
