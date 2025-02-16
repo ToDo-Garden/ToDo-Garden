@@ -244,7 +244,7 @@ extension RepeatOtherDaysView {
 
   private func updateBackgroundColor() {
     if self.viewModel.isSelected.value {
-      self.backgroundColor = UIColor.toDoGardenGreenBackground
+      self.backgroundColor = UIColor.clear
     } else {
       self.backgroundColor = UIColor.clear
     }
