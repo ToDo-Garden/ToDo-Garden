@@ -15,7 +15,7 @@ extension Constant.RepeatOtherDaysView {
 
 extension Constant.RepeatOtherDaysView.Layout {
   public static let heightUnselected: CGFloat = 31.0
-  public static let heightSelected: CGFloat = 159.0
+  public static let heightSelected: CGFloat = 130.0
   
   public enum Title {
     public static let topMargin: CGFloat = 13.0
@@ -30,7 +30,7 @@ extension Constant.RepeatOtherDaysView.Layout {
   }
   public enum DateButtonSet {
     public static let size: CGSize = CGSize(width: 140.0, height: 52)
-    public static let trailing: CGFloat = -17.0
+    public static let trailing: CGFloat = -27
     public static let buttonWidth: CGFloat = 93.0
     public static let spacing: CGFloat = 3.0
   }

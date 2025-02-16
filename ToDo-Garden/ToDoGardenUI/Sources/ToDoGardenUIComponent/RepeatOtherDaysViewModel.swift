@@ -11,7 +11,6 @@ import ToDoGardenUIConstant
 
 final class RepeatOtherDaysViewModel {
   private(set) var dateButton: DateButtonState
-  private(set) var ringToggleButton: RingToggleButtonState
   private(set) var divider: DividerState
   private(set) var innerStackView: InnerStackViewState
   private(set) var title: TitleState
@@ -24,12 +23,6 @@ final class RepeatOtherDaysViewModel {
     endDate: String?
   ) {
     let today = RepeatOtherDaysViewModel.currentDateString()
-    
-    self.ringToggleButton = RepeatOtherDaysViewModel.initializeRingToggleButton(
-      startDate: startDate,
-      endDate: endDate
-    )
-    
     self.dateButton = RepeatOtherDaysViewModel.initializeDateButton(
       startDate: startDate,
       endDate: endDate,
@@ -49,19 +42,9 @@ final class RepeatOtherDaysViewModel {
   func toggleSelection() {
     self.updateState()
   }
-  
-  func ringToggleButtonTapped() {
-    self.ringToggleButton.isSelected.value.toggle()
-    if self.ringToggleButton.isSelected.value == true {
-      self.dateButton.isSelected.value = false
-    }
-  }
-  
+
   func dateButtonSetValueChanged(isSelected: Bool) {
     self.dateButton.isSelected.value = isSelected
-    if self.dateButton.isSelected.value == true {
-      self.ringToggleButton.isSelected.value = false
-    }
   }
   
   func updateDate(startDate: String, endDate: String) {
@@ -77,11 +60,13 @@ extension RepeatOtherDaysViewModel {
     if self.isSelected.value {
       self.divider.isHidden.value = false
       self.innerStackView.isHidden.value = false
+      self.dateButton.isSelected.value = true
       self.height.value = constants.heightSelected
       self.title.topMargin.value = constants.Title.topMargin
     } else {
       self.divider.isHidden.value = true
       self.innerStackView.isHidden.value = true
+      self.dateButton.isSelected.value = false
       self.height.value = constants.heightUnselected
       self.title.topMargin.value =  Constant.ToDoRepeatSelectionView.Layout.RepetitionLabel.topMargin
     }
@@ -94,11 +79,6 @@ extension RepeatOtherDaysViewModel {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = Constant.RepeatOtherDaysView.StringLiteral.dateFormat
     return dateFormatter.string(from: Date())
-  }
-  
-  private static func initializeRingToggleButton(startDate: String?, endDate: String?) -> RingToggleButtonState {
-    let isDateUndecided = (startDate == nil) || (endDate == nil)
-    return RingToggleButtonState(isSelected: Observable(isDateUndecided))
   }
   
   private static func initializeDateButton(startDate: String?, endDate: String?, today: String) -> DateButtonState {

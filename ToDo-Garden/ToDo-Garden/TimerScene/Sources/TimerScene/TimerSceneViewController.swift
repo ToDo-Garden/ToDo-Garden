@@ -324,6 +324,7 @@ extension TimerSceneViewController {
   func setPayload(_ payload: TimerScenePayloadable?) {
     guard let payload = payload else { return }
     
+    self.title = payload.groupName
     self.interactor?.setCurrentGroup(payload)
   }
 }
@@ -353,7 +354,7 @@ import HTTPClient
     dependency: .init(
       timerWorker: timerWorker,
       storageWorker: storageWorker,
-      notificationManager: NotificationManager()
+      notificationManager: NotificationManager.shared
     )
   ).build(with: nil)
   
