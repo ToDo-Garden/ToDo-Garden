@@ -18,7 +18,8 @@ protocol EditToDoDisplayLogic: AnyObject {
   func displayFetchedToDo(viewModel: EditToDo.FetchToDo.ViewModel)
   func displayDeleteToDoResult(viewModel: EditToDo.DeleteToDo.ViewModel)
   func displayEditToDoResult(viewModel: EditToDo.CompleteEditToDo.ViewModel)
-  func displayChangedRepetition(viewModel: EditToDo.ChangeRepetition.ViewModel)
+  func displayRepeatOnlyToday()
+  func displayChangedRepetition(viewModel: EditToDo.ChangeRepetitionRange.ViewModel)
   func displayChangedAlarm(viewModel: EditToDo.ChangeAlarmActivation.ViewModel)
   func displayFetchedAlarmTime(viewModel: EditToDo.FetchAlarmTime.ViewModel)
   func displayChangedAlarmTime(viewModel: EditToDo.ChangeAlarmTime.ViewModel)
@@ -81,23 +82,15 @@ final class EditToDoViewController: UIViewController, EditToDoViewControllable {
 
 // MARK: - Request to interactor
 
-extension EditToDoViewController: EditToDoScheduleViewDelegate, ToDoAlarmTimeSettingModalDelegate {
+extension EditToDoViewController: ToDoAlarmTimeSettingModalDelegate, ToDoRepetitionSettingModalDelegate {}
+
+extension EditToDoViewController: EditToDoScheduleViewDelegate {
   func editToDo() {
     if let toDoNameForEdit = self.editToDoView.getEditingText(),
       let groupForEdit = self.editToDoView.getCurrentGroup() {
       let request = EditToDo.CompleteEditToDo.Request(toDoName: toDoNameForEdit, displayedGroup: groupForEdit)
       self.interactor?.editToDo(request: request)
     }
-  }
-
-  func didSelectOnlyTodayView(isOnlyToday: Bool) {
-    let request = EditToDo.ChangeRepetition.Request(isOnlyToday: isOnlyToday, isEveryday: nil)
-    self.interactor?.changeReptition(request: request)
-  }
-
-  func didSelectEverydayButton(isSelected: Bool) {
-    let request = EditToDo.ChangeRepetition.Request(isOnlyToday: false, isEveryday: isSelected)
-    self.interactor?.changeReptition(request: request)
   }
 
   func didToggleSwitch() {
@@ -112,6 +105,21 @@ extension EditToDoViewController: EditToDoScheduleViewDelegate, ToDoAlarmTimeSet
     let request = EditToDo.ChangeAlarmTime.Request(alarmTime: alarmTime)
     self.interactor?.changeAlarmTime(request: request)
   }
+
+  func didSelectOnlyTodayView(isOnlyToday: Bool) {
+    self.interactor?.changeRepetition(isOnlyToday: isOnlyToday)
+  }
+
+  func didSelectRepetitionDateButton() {
+    let repetitionSelectionModal = ToDoRepetitionSettingModal()
+    repetitionSelectionModal.delegate = self
+    self.present(repetitionSelectionModal, animated: true)
+  }
+
+  func didSelectRepetitionRange(_ startDate: Date, _ endDate: Date) {
+    let request = EditToDo.ChangeRepetitionRange.Request(startDate: startDate, endDate: endDate)
+    self.interactor?.changeReptitionRange(request: request)
+  }
 }
 
 // MARK: - Confirm display logic protocol
@@ -123,7 +131,6 @@ extension EditToDoViewController: EditToDoDisplayLogic {
       self.editToDoView.updateToDoName(displayedToDo.toDoName)
       self.editToDoView.updateGroup(current: displayedToDo.group, editableGroupList: displayedToDo.groupList)
       self.updateAlarmState(isAlarmOn: displayedToDo.isAlarmOn)
-      self.updateRepetitionViewState(displayedToDo.repetitionViewState)
       if let alarmTime = displayedToDo.alarmTime {
         self.editToDoScheduleView.updateAlarmTime(alarmTime: alarmTime)
       }
@@ -152,8 +159,14 @@ extension EditToDoViewController: EditToDoDisplayLogic {
     }
   }
 
-  func displayChangedRepetition(viewModel: EditToDo.ChangeRepetition.ViewModel) {
-    self.updateRepetitionViewState(viewModel.editToDoRepetitionViewState)
+  func displayRepeatOnlyToday() {
+    self.editToDoScheduleView.updateToRepeatOnlyToday()
+  }
+
+  func displayChangedRepetition(viewModel: EditToDo.ChangeRepetitionRange.ViewModel) {
+    let startDay = viewModel.startDay
+    let endDay = viewModel.endDay
+    self.editToDoScheduleView.updateToRepeatInRange(startDay: startDay, endDay: endDay)
   }
 
   func displayChangedAlarm(viewModel: EditToDo.ChangeAlarmActivation.ViewModel) {
@@ -255,22 +268,11 @@ extension EditToDoViewController {
       self.editToDoScheduleView.updateToAlarmOff()
     }
   }
-
-  private func updateRepetitionViewState(_ state: EditToDo.EditToDoRepetitionViewState) {
-    switch state {
-    case EditToDo.EditToDoRepetitionViewState.repeatOnlyToday:
-      self.editToDoScheduleView.updateToRepeatOnlyToday()
-    case EditToDo.EditToDoRepetitionViewState.repeatEveryday:
-      self.editToDoScheduleView.updateToRepeatEveryday()
-    case EditToDo.EditToDoRepetitionViewState.repeatInRange:
-      self.editToDoScheduleView.updateToRepeatInRange()
-    }
-  }
 }
 
 extension EditToDoViewController {
   struct EditToDoScenePayload: EditToDoScenePayloadable {
-    var toDoId: Int
+    var toDoId: UUID
   }
 
   class SomeViewController: UIViewController {
@@ -281,7 +283,7 @@ extension EditToDoViewController {
           toDoWorker: ToDoWorker(),
           groupWorker: GroupWorker()
         )
-      ).build(with: EditToDoViewController.EditToDoScenePayload(toDoId: 0))
+      ).build(with: EditToDoViewController.EditToDoScenePayload(toDoId: UUID()))
       self.navigationController?.pushViewController(editToDoViewController, animated: true)
     }
   }

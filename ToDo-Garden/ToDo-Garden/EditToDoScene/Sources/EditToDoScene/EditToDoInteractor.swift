@@ -15,7 +15,8 @@ protocol EditToDoDataStore {
 }
 
 protocol EditToDoBusinessLogic {
-  func changeReptition(request: EditToDo.ChangeRepetition.Request)
+  func changeRepetition(isOnlyToday: Bool)
+  func changeReptitionRange(request: EditToDo.ChangeRepetitionRange.Request)
   func changeAlarmActivation()
   func fetchAlarmTime()
   func changeAlarmTime(request: EditToDo.ChangeAlarmTime.Request)
@@ -69,14 +70,37 @@ extension EditToDoInteractor: EditToDoBusinessLogic {
     self.presenter?.presentChangedAlarmTime(response: response)
   }
 
+  func changeRepetition(isOnlyToday: Bool) {
+    self.toDo?.repetition.isOnlyToday = isOnlyToday
+    if isOnlyToday {
+      self.presenter?.presentRepeatOnlyToday()
+    } else {
+      let currentDate = Date()
+      let tomorrowDate = currentDate.addingTimeInterval(60 * 60 * 24)
+      let repetition = self.toDo?.repetition
+      if repetition?.startDate == nil && repetition?.endDate == nil {
+        self.toDo?.repetition.startDate = currentDate
+        self.toDo?.repetition.endDate = tomorrowDate
+      }
+
+      let response = EditToDo.ChangeRepetitionRange.Response(
+        startDate: self.toDo?.repetition.startDate ?? currentDate,
+        endDate: self.toDo?.repetition.endDate ?? tomorrowDate
+      )
+      self.presenter?.presentChangedRepetitionRange(response: response)
+    }
+  }
+
   /// 사용자가 투두 반복 설정 뷰를 선택했을 때 호출하는 메서드입니다.
-  /// ex) 사용자가 화면에서 (오늘만 or 다른날도 or 매일) 할래요 뷰를 눌렀음
-  func changeReptition(request: EditToDo.ChangeRepetition.Request) {
-    let isOnlyToday = request.isOnlyToday
-    let isEveryday = request.isEveryday
-    let repetitionViewState = self.makeRepetitionViewState(isOnlyToday: isOnlyToday, isEveryday: isEveryday)
-    let response = EditToDo.ChangeRepetition.Response(editToDoRepetitionViewState: repetitionViewState)
-    self.presenter?.presentChangedRepetition(response: response)
+  func changeReptitionRange(request: EditToDo.ChangeRepetitionRange.Request) {
+    self.toDo?.repetition.isOnlyToday = false
+    let startDate = request.startDate
+    let endDate = request.endDate
+    self.toDo?.repetition.startDate = startDate
+    self.toDo?.repetition.endDate = endDate
+
+    let response = EditToDo.ChangeRepetitionRange.Response(startDate: startDate, endDate: endDate)
+    self.presenter?.presentChangedRepetitionRange(response: response)
   }
 
   /// 서버로부터 수정할 투두의 정보를 받아오는 메서드입니다.
