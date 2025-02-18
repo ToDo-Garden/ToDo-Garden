@@ -11,7 +11,7 @@ import EditToDoSceneAPI
 import EditToDoSceneEntity
 
 protocol EditToDoDataStore {
-  var toDoId: Int? { get set }
+  var toDoId: UUID? { get set }
 }
 
 protocol EditToDoBusinessLogic {
@@ -25,7 +25,7 @@ protocol EditToDoBusinessLogic {
 }
 
 final class EditToDoInteractor: EditToDoDataStore {
-  var toDoId: Int?
+  var toDoId: UUID?
   var toDo: EditToDo.ToDo?
 
   // MARK: VIP Objects
