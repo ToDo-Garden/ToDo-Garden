@@ -16,7 +16,8 @@ protocol EditToDoPresentationLogic {
   func presentAlarmActivation(response: EditToDo.ChangeAlarmActivation.Response)
   func presentFetchedAlarmTime(response: EditToDo.FetchAlarmTime.Response)
   func presentChangedAlarmTime(response: EditToDo.ChangeAlarmTime.Response)
-  func presentChangedRepetition(response: EditToDo.ChangeRepetition.Response)
+  func presentRepeatOnlyToday()
+  func presentChangedRepetitionRange(response: EditToDo.ChangeRepetitionRange.Response)
 }
 
 final class EditToDoPresenter {
@@ -84,9 +85,14 @@ extension EditToDoPresenter: EditToDoPresentationLogic {
     self.viewController?.displayChangedAlarmTime(viewModel: viewModel)
   }
 
-  func presentChangedRepetition(response: EditToDo.ChangeRepetition.Response) {
-    let viewState = response.editToDoRepetitionViewState
-    let viewModel = EditToDo.ChangeRepetition.ViewModel(editToDoRepetitionViewState: viewState)
+  func presentRepeatOnlyToday() {
+    self.viewController?.displayRepeatOnlyToday()
+  }
+
+  func presentChangedRepetitionRange(response: EditToDo.ChangeRepetitionRange.Response) {
+    let startDay = self.dateFormatter.string(from: response.startDate)
+    let endDay = self.dateFormatter.string(from: response.endDate)
+    let viewModel = EditToDo.ChangeRepetitionRange.ViewModel(startDay: startDay, endDay: endDay)
     self.viewController?.displayChangedRepetition(viewModel: viewModel)
   }
 }

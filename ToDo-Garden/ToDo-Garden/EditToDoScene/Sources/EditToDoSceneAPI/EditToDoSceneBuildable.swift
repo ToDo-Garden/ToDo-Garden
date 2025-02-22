@@ -9,7 +9,7 @@ import Foundation
 
 /// 런타임에 전달받을 의존성을 선언한 구조체입니다.
 public protocol EditToDoScenePayloadable {
-  var toDoId: Int { get }
+  var toDoId: UUID { get }
 }
 
 public protocol EditToDoSceneBuildable {

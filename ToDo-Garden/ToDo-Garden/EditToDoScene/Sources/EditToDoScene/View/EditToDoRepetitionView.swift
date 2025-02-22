@@ -34,15 +34,8 @@ final class EditToDoRepetitionView: UIView {
     self.repeatOtherDaysView.setDeSelected()
   }
 
-  func setRepeatEverydaySelected() {
-    self.setRepeatOtherDaysViewSelected()
-    self.repeatOtherDaysView.ringToggleButton.isSelected = true
-    self.repeatOtherDaysView.updateDateButtonState(isSelected: false)
-  }
-
   func setRepeatRangeSelected() {
     self.setRepeatOtherDaysViewSelected()
-    self.repeatOtherDaysView.ringToggleButton.isSelected = false
     self.repeatOtherDaysView.updateDateButtonState(isSelected: true)
   }
 
@@ -55,7 +48,7 @@ final class EditToDoRepetitionView: UIView {
 
 protocol EditToDoRepetitionViewDelegate: AnyObject {
   func didSelectOnlyTodayView(isOnlyToday: Bool)
-  func didSelectEverydayButton(isSelected: Bool)
+  func didSelectRepetitionDateButton()
 }
 
 // MARK: Private Functions
@@ -69,7 +62,7 @@ extension EditToDoRepetitionView {
   private func setup() {
     self.setupRepetitionLabelUI()
     self.setupRepeatOnlyTodayViewDelegate()
-    self.setupRepeatEverydayButtonDelegate()
+    self.setupRepeatOtherDaysViewSelected()
     self.addSubviews()
     self.setupSubviewsLayout()
   }
@@ -93,13 +86,12 @@ extension EditToDoRepetitionView {
     }
   }
 
-  private func setupRepeatEverydayButtonDelegate() {
-    let buttonAction = UIAction { _ in
-      let isSelected = self.repeatOtherDaysView.ringToggleButton.isSelected
-      self.delegate?.didSelectEverydayButton(isSelected: isSelected)
+  private func setupRepeatOtherDaysViewSelected() {
+    let action = UIAction { [weak self] _ in
+      self?.delegate?.didSelectRepetitionDateButton()
     }
 
-    self.repeatOtherDaysView.ringToggleButton.addAction(buttonAction, for: UIControl.Event.touchUpInside)
+    self.repeatOtherDaysView.setupDateSelectionButtonAction(action)
   }
 }
 

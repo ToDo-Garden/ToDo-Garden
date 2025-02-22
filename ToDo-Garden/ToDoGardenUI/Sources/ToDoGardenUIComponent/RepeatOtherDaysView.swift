@@ -50,6 +50,10 @@ extension RepeatOtherDaysView: RepeatOtherDaysViewAPI {
   public func updateDateButtonState(isSelected: Bool) {
     self.viewModel.dateButton.isSelected.value = isSelected
   }
+
+  public func setupDateSelectionButtonAction(_ action: UIAction) {
+    self.dateButtonSet.addAction(action, for: UIControl.Event.touchUpInside)
+  }
 }
 
 // MARK: - Private functions

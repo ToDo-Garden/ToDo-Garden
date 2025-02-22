@@ -10,8 +10,8 @@ import UIKit.UIColor
 import EditToDoSceneEntity
 
 public protocol ToDoWorkLogic {
-  func fetchToDo(id: Int?) throws -> EditToDo.ToDo
-  func deleteToDo(id: Int?) throws
+  func fetchToDo(id: UUID?) throws -> EditToDo.ToDo
+  func deleteToDo(id: UUID?) throws
   func editToDo(_ toDo: EditToDo.ToDo) throws
 }
 
@@ -19,11 +19,11 @@ public protocol ToDoWorkLogic {
 public final class ToDoWorker: ToDoWorkLogic {
   public init() {}
 
-  public func fetchToDo(id: Int?) throws -> EditToDo.ToDo {
+  public func fetchToDo(id: UUID?) throws -> EditToDo.ToDo {
     return MockData.FetchToDo.firstData
   }
 
-  public func deleteToDo(id: Int?) throws {
+  public func deleteToDo(id: UUID?) throws {
 
   }
 
