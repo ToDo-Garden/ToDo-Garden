@@ -5,14 +5,17 @@
 //  Created by Wood on 6/29/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
-import Foundation
+import UIKit
 
 import EditToDoSceneEntity
 
+@MainActor
 protocol EditToDoPresentationLogic {
   func presentFetchedToDo(response: EditToDo.FetchToDo.Response)
   func presentDeleteResult(response: EditToDo.DeleteToDo.Response)
   func presentEditResult(response: EditToDo.CompleteEditToDo.Response)
+  func presentError(_ type: EditToDo.ErrorType)
+
   func presentAlarmActivation(response: EditToDo.ChangeAlarmActivation.Response)
   func presentFetchedAlarmTime(response: EditToDo.FetchAlarmTime.Response)
   func presentChangedAlarmTime(response: EditToDo.ChangeAlarmTime.Response)
@@ -34,15 +37,8 @@ final class EditToDoPresenter {
 
 extension EditToDoPresenter: EditToDoPresentationLogic {
   func presentFetchedToDo(response: EditToDo.FetchToDo.Response) {
-    switch response.fetchResult {
-    case Result.success(let fetchedToDo):
-      let displayedToDo = self.makeDisplayedToDo(from: fetchedToDo)
-      let viewModel = EditToDo.FetchToDo.ViewModel(fetchedToDoResult: Result.success(displayedToDo))
-      self.viewController?.displayFetchedToDo(viewModel: viewModel)
-    case Result.failure(let error):
-      let viewModel = EditToDo.FetchToDo.ViewModel(fetchedToDoResult: Result.failure(error))
-      self.viewController?.displayFetchedToDo(viewModel: viewModel)
-    }
+    let viewModel = EditToDo.FetchToDo.ViewModel(toDo: self.makeDisplayedToDo(from: response.toDo))
+    self.viewController?.displayFetchedToDo(viewModel: viewModel)
   }
   
   func presentDeleteResult(response: EditToDo.DeleteToDo.Response) {
@@ -95,6 +91,10 @@ extension EditToDoPresenter: EditToDoPresentationLogic {
     let viewModel = EditToDo.ChangeRepetitionRange.ViewModel(startDay: startDay, endDay: endDay)
     self.viewController?.displayChangedRepetition(viewModel: viewModel)
   }
+
+  func presentError(_ type: EditToDo.ErrorType) {
+    self.viewController?.showErrorAlert(type)
+  }
 }
 
 // MARK: Private Functions
@@ -106,20 +106,24 @@ extension EditToDoPresenter {
   }
 
   private func makeDisplayedToDo(
-    from fetchedToDo: EditToDo.FetchToDo.Response.FetchedToDo
+    from fetchedToDo: EditToDo.ToDo
   ) -> EditToDo.FetchToDo.ViewModel.DisplayedToDo {
-    let alarmTime = self.makeAlarmTime(of: fetchedToDo.toDo.alarm.alarmTime)
+    let displayedGroup = EditToDo.DisplayedGroup(
+      id: fetchedToDo.groupData.id,
+      name: fetchedToDo.groupData.name,
+      color: (try? UIColor().fromHex(fetchedToDo.groupData.color)) ?? UIColor.toDoGardenGreenDark
+    )
+    let alarmTime = self.makeAlarmTime(of: fetchedToDo.alarm.alarmTime)
     let alarmTimeString = String(format: "%02d:%02d", alarmTime.hour, alarmTime.minute)
-    let startDay = self.makeDayString(from: fetchedToDo.toDo.repetition.startDate)
-    let endDay = self.makeDayString(from: fetchedToDo.toDo.repetition.endDate)
+    let startDay = self.makeDayString(from: fetchedToDo.repetition.startDate)
+    let endDay = self.makeDayString(from: fetchedToDo.repetition.endDate)
 
     return EditToDo.FetchToDo.ViewModel.DisplayedToDo(
-      toDoName: fetchedToDo.toDo.name,
-      group: fetchedToDo.toDo.groupData,
-      groupList: fetchedToDo.groupList,
-      isAlarmOn: fetchedToDo.toDo.alarm.isAlarmOn,
+      toDoName: fetchedToDo.name,
+      group: displayedGroup,
+      isAlarmOn: fetchedToDo.alarm.isAlarmOn,
       alarmTime: alarmTimeString,
-      repetitionViewState: fetchedToDo.repetitionViewState,
+      isOnlyToday: fetchedToDo.repetition.isOnlyToday,
       startDay: startDay,
       endDay: endDay
     )
