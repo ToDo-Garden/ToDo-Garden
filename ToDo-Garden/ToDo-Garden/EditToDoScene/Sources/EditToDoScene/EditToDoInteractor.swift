@@ -11,7 +11,7 @@ import EditToDoSceneAPI
 import EditToDoSceneEntity
 
 protocol EditToDoDataStore {
-  var toDoId: UUID? { get set }
+  var toDoId: UUID { get set }
 }
 
 protocol EditToDoBusinessLogic {
@@ -26,20 +26,18 @@ protocol EditToDoBusinessLogic {
 }
 
 final class EditToDoInteractor: EditToDoDataStore {
-  var toDoId: UUID?
+  var toDoId: UUID
   var toDo: EditToDo.ToDo?
 
   // MARK: VIP Objects
   var presenter: EditToDoPresentationLogic?
-  private let toDoWorker: ToDoWorkLogic
-  private let groupWorker: GroupWorkLogic
+  private let editToDoWorker: EditToDoWorkable
 
-  public init(
-    toDoWorker: ToDoWorkLogic,
-    groupWorker: GroupWorkLogic
-  ) {
-    self.toDoWorker = toDoWorker
-    self.groupWorker = groupWorker
+  private var tasks: [EditToDoInteractor.TaskKey: Task<Void, Never>]
+
+  public init(editToDoWorker: EditToDoWorkable) {
+    self.editToDoWorker = editToDoWorker
+    self.tasks = [:]
   }
 }
 
@@ -205,4 +203,13 @@ extension EditToDoInteractor {
 
 enum EditToDoInteractorError: Error {
   case toDoDataNotExisted
+}
+
+extension EditToDoInteractor {
+  enum TaskKey {
+    case fetchToDo
+    case fetchGroup
+    case deleteToDo
+    case editToDo
+  }
 }

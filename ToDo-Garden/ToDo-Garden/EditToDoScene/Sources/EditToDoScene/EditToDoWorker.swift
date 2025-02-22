@@ -8,8 +8,22 @@
 import Foundation
 
 import EditToDoSceneAPI
+import EditToDoSceneEntity
 
-struct EditToDoWorker: EditToDoWorkable {
-  func doSomeWork() {
+public struct EditToDoWorker: EditToDoWorkable {
+  public func fetchToDo(id: UUID) async throws -> EditToDo.ToDo {
+    <#code#>
+  }
+  
+  public func fetchGroupList() async throws -> [EditToDo.Group] {
+    <#code#>
+  }
+  
+  public func editToDo(id: UUID) async throws {
+    <#code#>
+  }
+
+  public func deleteToDo(id: UUID) async throws {
+    <#code#>
   }
 }

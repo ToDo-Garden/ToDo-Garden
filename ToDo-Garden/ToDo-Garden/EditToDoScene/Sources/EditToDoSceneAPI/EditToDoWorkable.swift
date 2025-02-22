@@ -7,6 +7,11 @@
 
 import Foundation
 
+import EditToDoSceneEntity
+
 public protocol EditToDoWorkable {
-  func doSomeWork()
+  func fetchToDo(id: UUID) async throws -> EditToDo.ToDo
+  func fetchGroupList() async throws -> [EditToDo.Group]
+  func editToDo(id: UUID) async throws
+  func deleteToDo(id: UUID) async throws
 }
