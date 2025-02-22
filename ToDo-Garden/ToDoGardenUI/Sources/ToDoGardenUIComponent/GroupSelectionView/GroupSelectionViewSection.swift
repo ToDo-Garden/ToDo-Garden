@@ -30,9 +30,3 @@ extension GroupSelectionViewItem: Hashable {
     hasher.combine(self.groupId)
   }
 }
-
-//extension GroupSelectionViewItem: Comparable {
-//  public static func < (lhs: GroupSelectionViewItem, rhs: GroupSelectionViewItem) -> Bool {
-//    return lhs.groupId > rhs.groupId
-//  }
-//}

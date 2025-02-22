@@ -18,6 +18,8 @@ protocol EditToDoDisplayLogic: AnyObject {
   func displayFetchedToDo(viewModel: EditToDo.FetchToDo.ViewModel)
   func displayDeleteToDoResult(viewModel: EditToDo.DeleteToDo.ViewModel)
   func displayEditToDoResult(viewModel: EditToDo.CompleteEditToDo.ViewModel)
+  func showErrorAlert(_ type: EditToDo.ErrorType)
+
   func displayRepeatOnlyToday()
   func displayChangedRepetition(viewModel: EditToDo.ChangeRepetitionRange.ViewModel)
   func displayChangedAlarm(viewModel: EditToDo.ChangeAlarmActivation.ViewModel)
@@ -65,8 +67,8 @@ final class EditToDoViewController: UIViewController, EditToDoViewControllable {
     self.setup()
   }
 
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
+  override func viewIsAppearing(_ animated: Bool) {
+    super.viewIsAppearing(animated)
     self.interactor?.fetchToDo()
   }
 
@@ -126,37 +128,43 @@ extension EditToDoViewController: EditToDoScheduleViewDelegate {
 
 extension EditToDoViewController: EditToDoDisplayLogic {
   func displayFetchedToDo(viewModel: EditToDo.FetchToDo.ViewModel) {
-    switch viewModel.fetchedToDoResult {
-    case Result.success(let displayedToDo):
-      self.editToDoView.updateToDoName(displayedToDo.toDoName)
-      self.editToDoView.updateGroup(current: displayedToDo.group, editableGroupList: displayedToDo.groupList)
-      self.updateAlarmState(isAlarmOn: displayedToDo.isAlarmOn)
-      if let alarmTime = displayedToDo.alarmTime {
-        self.editToDoScheduleView.updateAlarmTime(alarmTime: alarmTime)
+    let toDo = viewModel.toDo
+    self.editToDoView.updateToDoName(toDo.toDoName)
+    self.editToDoView.updateGroup(current: toDo.group)
+    if toDo.isAlarmOn {
+      self.editToDoScheduleView.updateToAlarmOn()
+    } else {
+      self.editToDoScheduleView.updateToAlarmOff()
+    }
+    if let alarmTime = toDo.alarmTime {
+      self.editToDoScheduleView.updateAlarmTime(alarmTime: alarmTime)
+    }
+    self.editToDoView.updateToDoName(toDo.toDoName)
+    if toDo.isOnlyToday {
+      self.editToDoScheduleView.updateToRepeatOnlyToday()
+    } else {
+      if let startDay = toDo.startDay, let endDay = toDo.endDay {
+        self.editToDoScheduleView.updateToRepeatInRange(startDay: startDay, endDay: endDay)
       }
-    case Result.failure:
-      let failToFetchAlert = ToDoGardenAlertController(for: ToDoGardenAlertView.Configuration.failToFetchToDo)
-      failToFetchAlert.delegate = self
-      self.showAlert(failToFetchAlert)
     }
   }
 
   func displayDeleteToDoResult(viewModel: EditToDo.DeleteToDo.ViewModel) {
-    switch viewModel.deleteResult {
-    case Result.success:
-      self.router?.routeToToDoListScene()
-    case Result.failure(let error):
-      self.showErrorAlert(error)
-    }
+//    switch viewModel.deleteResult {
+//    case Result.success:
+//      self.router?.routeToToDoListScene()
+//    case Result.failure(let error):
+//      self.showErrorAlert(error)
+//    }
   }
 
   func displayEditToDoResult(viewModel: EditToDo.CompleteEditToDo.ViewModel) {
-    switch viewModel.editResult {
-    case Result.success:
-      self.router?.routeToToDoListScene()
-    case Result.failure(let error):
-      self.showErrorAlert(error)
-    }
+//    switch viewModel.editResult {
+//    case Result.success:
+//      self.router?.routeToToDoListScene()
+//    case Result.failure(let error):
+//      self.showErrorAlert(error)
+//    }
   }
 
   func displayRepeatOnlyToday() {
@@ -170,7 +178,11 @@ extension EditToDoViewController: EditToDoDisplayLogic {
   }
 
   func displayChangedAlarm(viewModel: EditToDo.ChangeAlarmActivation.ViewModel) {
-    self.updateAlarmState(isAlarmOn: viewModel.isAlarmOn)
+    if viewModel.isAlarmOn {
+      self.editToDoScheduleView.updateToAlarmOn()
+    } else {
+      self.editToDoScheduleView.updateToAlarmOff()
+    }
   }
 
   func displayFetchedAlarmTime(viewModel: EditToDo.FetchAlarmTime.ViewModel) {
@@ -207,13 +219,20 @@ extension EditToDoViewController: ToDoGardenAlertControllerDelegate {
     }
   }
 
-  private func showErrorAlert(_ error: Error) {
-    let errorMessage = (error as CustomStringConvertible).description
-    let errorOccurredAlert = ToDoGardenAlertController(
-      for: ToDoGardenAlertView.Configuration.errorOccurred(errorMessage)
-    )
-    errorOccurredAlert.delegate = self
-    self.showAlert(errorOccurredAlert)
+  func showErrorAlert(_ type: EditToDo.ErrorType) {
+    switch type {
+    case .temporary, .network:
+      let errorMessage = type.rawValue
+      let errorOccurredAlert = ToDoGardenAlertController(
+        for: ToDoGardenAlertView.Configuration.errorOccurred(errorMessage)
+      )
+      errorOccurredAlert.delegate = self
+      self.showAlert(errorOccurredAlert)
+    case .failToFetch:
+      let failToFetchAlert = ToDoGardenAlertController(for: ToDoGardenAlertView.Configuration.failToFetchToDo)
+      failToFetchAlert.delegate = self
+      self.showAlert(failToFetchAlert)
+    }
   }
 }
 
@@ -258,17 +277,7 @@ extension EditToDoViewController: UIScrollViewDelegate {
   }
 }
 
-// MARK: Private Functions
-
-extension EditToDoViewController {
-  private func updateAlarmState(isAlarmOn: Bool) {
-    if isAlarmOn {
-      self.editToDoScheduleView.updateToAlarmOn()
-    } else {
-      self.editToDoScheduleView.updateToAlarmOff()
-    }
-  }
-}
+import HTTPClient
 
 extension EditToDoViewController {
   struct EditToDoScenePayload: EditToDoScenePayloadable {
@@ -280,8 +289,7 @@ extension EditToDoViewController {
       super.viewDidAppear(animated)
       let editToDoViewController = EditToDoSceneBuilder(
         dependency: EditToDoSceneBuilder.Dependency(
-          toDoWorker: ToDoWorker(),
-          groupWorker: GroupWorker()
+          editToDoWorker: EditToDoWorker(httpClient: HTTPClient.live)
         )
       ).build(with: EditToDoViewController.EditToDoScenePayload(toDoId: UUID()))
       self.navigationController?.pushViewController(editToDoViewController, animated: true)
