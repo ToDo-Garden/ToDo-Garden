@@ -51,14 +51,12 @@ public final class GroupSelectionView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
 
-  public func updateGroup(
-    current: GroupSelectionViewItem,
-    editableList: [GroupSelectionViewItem]
-  ) {
-    self.groupListTableViewDelegate.updateGroup(
-      currentItem: current,
-      editableItems: editableList
-    )
+  public func updateGroup(current: GroupSelectionViewItem) {
+    self.groupListTableViewDelegate.updateGroup(currentItem: current)
+  }
+
+  public func updateGroupList(_ list: [GroupSelectionViewItem]) {
+    self.groupListTableViewDelegate.updateGroupList(list)
   }
 
   public func getCurrentGroup() -> GroupSelectionViewItem? {

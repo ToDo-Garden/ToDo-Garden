@@ -12,7 +12,7 @@ import ToDoGardenUIConstant
 
 final class GroupListTableViewDelegate: NSObject {
   private let cellHeight: CGFloat
-  private var editableGroupIndexDictionary: [Int: Int]
+  private var editableGroupIndexDictionary: [UUID: Int]
   private var tableViewDataSource: UITableViewDiffableDataSource<
     GroupSelectionViewSection,
     GroupSelectionViewItem
@@ -30,13 +30,13 @@ final class GroupListTableViewDelegate: NSObject {
     self.setupTableView(tableView)
   }
 
-  func updateGroup(
-    currentItem: GroupSelectionViewItem,
-    editableItems: [GroupSelectionViewItem]
-  ) {
+  func updateGroup(currentItem: GroupSelectionViewItem) {
     self.currentGroupItem = currentItem
-    self.storeEditableGroupIndex(groupItems: editableItems)
-    self.reloadNewEditableGroups(groupItems: editableItems)
+  }
+
+  func updateGroupList(_ items: [GroupSelectionViewItem]) {
+    self.storeEditableGroupIndex(groupItems: items)
+    self.reloadNewEditableGroups(groupItems: items)
   }
 }
 

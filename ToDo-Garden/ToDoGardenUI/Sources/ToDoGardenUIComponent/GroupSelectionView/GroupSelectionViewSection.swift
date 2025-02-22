@@ -14,11 +14,11 @@ enum GroupSelectionViewSection {
 }
 
 public struct GroupSelectionViewItem {
-  public let groupId: Int
+  public let groupId: UUID
   public let groupName: String
   public let groupColor: UIColor
 
-  public init(groupId: Int, groupName: String, groupColor: UIColor) {
+  public init(groupId: UUID, groupName: String, groupColor: UIColor) {
     self.groupId = groupId
     self.groupName = groupName
     self.groupColor = groupColor
@@ -31,8 +31,8 @@ extension GroupSelectionViewItem: Hashable {
   }
 }
 
-extension GroupSelectionViewItem: Comparable {
-  public static func < (lhs: GroupSelectionViewItem, rhs: GroupSelectionViewItem) -> Bool {
-    return lhs.groupId > rhs.groupId
-  }
-}
+//extension GroupSelectionViewItem: Comparable {
+//  public static func < (lhs: GroupSelectionViewItem, rhs: GroupSelectionViewItem) -> Bool {
+//    return lhs.groupId > rhs.groupId
+//  }
+//}

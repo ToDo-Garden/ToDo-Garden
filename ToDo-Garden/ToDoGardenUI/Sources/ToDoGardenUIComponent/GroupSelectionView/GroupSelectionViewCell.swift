@@ -101,7 +101,7 @@ extension GroupSelectionViewCell {
   let cell = GroupSelectionViewCell()
   cell.updateUI(
     groupItem: GroupSelectionViewItem(
-      groupId: 0, groupName: "영어독해", groupColor: UIColor.toDoGardenGreenDark
+      groupId: UUID(), groupName: "영어독해", groupColor: UIColor.toDoGardenGreenDark
     )
   )
   return cell
