@@ -46,12 +46,56 @@ public struct EditToDoWorker: EditToDoWorkable {
       }
     )
 
+    return self.makeToDo(from: fetchedToDo)
+  }
+
+  public func fetchGroupList() async throws -> [EditToDo.Group] {
+    let fetchedGroup = try await self.httpClient.send(
+      input: EditToDo.FetchGroupList.RequestDTO(),
+      serializer: { data in
+        return HTTPRequest(
+          method: .get,
+          endPoint: URLConstants.Group.fetchGroups
+        )
+      },
+      deserializer: { (response: HTTPResponse) in
+        guard response.statusCode >= 200 && response.statusCode < 400 else {
+          throw HTTPClientError.badStatusCode(response.statusCode)
+        }
+
+        guard let body = response.body else {
+          throw HTTPClientError.deserializationError
+        }
+
+        return try JSONDecoder().decode(EditToDo.FetchGroupList.ResponseDTO.self, from: body)
+      }
+    )
+
+    return fetchedGroup.data.map {
+      return EditToDo.Group(id: $0.id, name: $0.name, color: $0.color, orderIdx: $0.orderIdx)
+    }
+  }
+
+  public func editToDo(id: UUID) async throws {
+
+  }
+
+  public func deleteToDo(id: UUID) async throws {
+
+  }
+}
+
+extension EditToDoWorker {
+  private func makeToDo(
+    from fetchedToDo: EditToDo.FetchToDo.ResponseDTO
+  ) -> EditToDo.ToDo {
     return EditToDo.ToDo(
       name: fetchedToDo.name,
       groupData: EditToDo.Group(
         id: fetchedToDo.group.id,
         name: fetchedToDo.group.name,
-        color: fetchedToDo.group.color
+        color: fetchedToDo.group.color,
+        orderIdx: fetchedToDo.group.orderIdx
       ),
       alarm: EditToDo.ToDoAlarm(
         isAlarmOn: fetchedToDo.isAlarmOn,
@@ -64,17 +108,6 @@ public struct EditToDoWorker: EditToDoWorkable {
       )
     )
   }
-
-  public func fetchGroupList() async throws -> [EditToDo.Group] {
-    return []
-  }
-
-  public func editToDo(id: UUID) async throws {
-
-  }
-
-  public func deleteToDo(id: UUID) async throws {
-
-  }
 }
+
 // swiftlint: enable all

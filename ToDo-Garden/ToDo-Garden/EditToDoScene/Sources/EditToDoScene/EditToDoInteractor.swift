@@ -22,7 +22,8 @@ protocol EditToDoBusinessLogic {
   func changeAlarmActivation()
   func fetchAlarmTime()
   func changeAlarmTime(request: EditToDo.ChangeAlarmTime.Request)
-  func fetchToDo()
+
+  func prepareSceneData()
   func deleteToDo()
   func editToDo(request: EditToDo.CompleteEditToDo.Request)
 }
@@ -110,8 +111,13 @@ import HTTPClient
 import HTTPClientAPI
 
 extension EditToDoInteractor {
+  func prepareSceneData() {
+    self.fetchToDo()
+    self.fetchGroupList()
+  }
+
   /// 서버로부터 수정할 투두의 정보를 받아오는 메서드입니다.
-  func fetchToDo() {
+  private func fetchToDo() {
     guard let id = self.toDoId else {
       self.presenter?.presentError(.network)
       return
@@ -127,41 +133,26 @@ extension EditToDoInteractor {
         self.toDo = toDo
         let response = EditToDo.FetchToDo.Response(toDo: toDo)
         self.presenter?.presentFetchedToDo(response: response)
-      } catch let error as HTTPClientError {
-        debugPrint(error.underlyingError)
-        debugPrint(error.localizedDescription)
       } catch let error {
         debugPrint(error.localizedDescription)
         self.presenter?.presentError(.failToFetch)
       }
     }
+  }
 
-//    let fetchResult: Result<EditToDo.FetchToDo.Response.FetchedToDo, Error>
-//    do {
-//      guard let toDoId = self.toDoId
-//      else { throw EditToDoInteractorError.toDoDataNotExisted }
-//
-//      let toDo = try self.editToDoWorker.fetchToDo(id: toDoId)
-//      self.toDo = toDo
-//      let group = try self.groupWorker.fetchGroupList()
-//      let repetitionViewState = self.makeRepetitionViewState(
-//        isOnlyToday: toDo.repetition.isOnlyToday,
-//        isEveryday: toDo.repetition.isRepeatEveryday
-//      )
-//
-//      let fetchedToDo = EditToDo.FetchToDo.Response.FetchedToDo(
-//        toDo: toDo,
-//        groupList: group,
-//        repetitionViewState: repetitionViewState
-//      )
-//
-//      fetchResult = Result.success(fetchedToDo)
-//    } catch let error {
-//      fetchResult = Result.failure(error)
-//    }
-//
-//    let response = EditToDo.FetchToDo.Response(fetchResult: fetchResult)
-//    self.presenter?.presentFetchedToDo(response: response)
+  private func fetchGroupList() {
+    self.tasks[TaskKey.fetchGroup] = Task {
+      defer { self.tasks[TaskKey.fetchGroup] = nil }
+
+      do {
+        try Task.checkCancellation()
+        let groupList = try await self.editToDoWorker.fetchGroupList()
+        try Task.checkCancellation()
+        self.presenter?.presentFetchedGroupList(groupList: groupList)
+      } catch let error {
+        debugPrint(error.localizedDescription)
+      }
+    }
   }
 
   /// 서버에 투두의 삭제를 요청하는 메서드입니다.

@@ -16,6 +16,7 @@ import ToDoGardenUIConstant
 
 protocol EditToDoDisplayLogic: AnyObject {
   func displayFetchedToDo(viewModel: EditToDo.FetchToDo.ViewModel)
+  func displayFetchedGroupList(_ groupList: [EditToDo.DisplayedGroup])
   func displayDeleteToDoResult(viewModel: EditToDo.DeleteToDo.ViewModel)
   func displayEditToDoResult(viewModel: EditToDo.CompleteEditToDo.ViewModel)
   func showErrorAlert(_ type: EditToDo.ErrorType)
@@ -69,7 +70,7 @@ final class EditToDoViewController: UIViewController, EditToDoViewControllable {
 
   override func viewIsAppearing(_ animated: Bool) {
     super.viewIsAppearing(animated)
-    self.interactor?.fetchToDo()
+    self.interactor?.prepareSceneData()
   }
 
   override func viewDidLayoutSubviews() {
@@ -149,6 +150,10 @@ extension EditToDoViewController: EditToDoDisplayLogic {
     }
   }
 
+  func displayFetchedGroupList(_ groupList: [EditToDo.DisplayedGroup]) {
+    self.editToDoView.updateGroupList(groupList)
+  }
+
   func displayDeleteToDoResult(viewModel: EditToDo.DeleteToDo.ViewModel) {
 //    switch viewModel.deleteResult {
 //    case Result.success:
@@ -209,7 +214,7 @@ extension EditToDoViewController: ToDoGardenAlertControllerDelegate {
     self.closeAlert()
     switch buttonType {
     case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.retry:
-      self.interactor?.fetchToDo()
+      self.interactor?.prepareSceneData()
     case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.goHome:
       self.router?.routeToToDoListScene()
     case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.delete:

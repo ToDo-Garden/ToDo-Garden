@@ -28,6 +28,10 @@ extension URLConstants.Auth {
   public static let logoutURL = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/auth/v1/logout?scope=global")!
 }
 
+extension URLConstants.ToDo {
+  public static let fetchToDoDetail = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/detail")!
+}
+
 extension URLConstants.Group {
   public static let fetchGroups = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/grouplist")!
   public static let addGroup = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/make_group")!

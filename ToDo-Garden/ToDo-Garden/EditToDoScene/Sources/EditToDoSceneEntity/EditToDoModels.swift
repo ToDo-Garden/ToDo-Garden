@@ -59,6 +59,8 @@ public enum EditToDo {
     }
   }
 
+  public enum FetchGroupList {}
+
   public enum CompleteEditToDo {
     public struct Request {
       public struct DisplayedGroup {
@@ -261,11 +263,18 @@ extension EditToDo {
     public let id: UUID
     public let name: String
     public let color: String
+    public let orderIdx: Int
 
-    public init(id: UUID, name: String, color: String) {
+    public init(
+      id: UUID,
+      name: String,
+      color: String,
+      orderIdx: Int
+    ) {
       self.id = id
       self.name = name
       self.color = color
+      self.orderIdx = orderIdx
     }
   }
 
@@ -273,11 +282,18 @@ extension EditToDo {
     public let id: UUID
     public let name: String
     public let color: UIColor
+    public let orderIdx: Int
 
-    public init(id: UUID, name: String, color: UIColor) {
+    public init(
+      id: UUID, 
+      name: String,
+      color: UIColor,
+      orderIdx: Int
+    ) {
       self.id = id
       self.name = name
       self.color = color
+      self.orderIdx = orderIdx
     }
   }
 
@@ -322,11 +338,18 @@ extension EditToDo {
     public let id: UUID
     public let name: String
     public let color: String
+    public let orderIdx: Int
 
-    public init(id: UUID, name: String, color: String) {
+    public init(
+      id: UUID,
+      name: String, 
+      color: String,
+      orderIdx: Int
+    ) {
       self.id = id
       self.name = name
       self.color = color
+      self.orderIdx = orderIdx
     }
   }
 }
@@ -348,6 +371,17 @@ extension EditToDo.FetchToDo {
     public let isOnlyToday: Bool
     public let startDate: Date?
     public let endDate: Date?
+  }
+}
+
+extension EditToDo.FetchGroupList {
+  public struct RequestDTO: Sendable, Codable {
+    public init() {}
+  }
+
+  public struct ResponseDTO: Sendable, Codable {
+    public let data: [EditToDo.GroupDTO]
+    public let isMoreGroupExist: Bool
   }
 }
 

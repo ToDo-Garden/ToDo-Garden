@@ -12,6 +12,7 @@ import EditToDoSceneEntity
 @MainActor
 protocol EditToDoPresentationLogic {
   func presentFetchedToDo(response: EditToDo.FetchToDo.Response)
+  func presentFetchedGroupList(groupList: [EditToDo.Group])
   func presentDeleteResult(response: EditToDo.DeleteToDo.Response)
   func presentEditResult(response: EditToDo.CompleteEditToDo.Response)
   func presentError(_ type: EditToDo.ErrorType)
@@ -40,7 +41,19 @@ extension EditToDoPresenter: EditToDoPresentationLogic {
     let viewModel = EditToDo.FetchToDo.ViewModel(toDo: self.makeDisplayedToDo(from: response.toDo))
     self.viewController?.displayFetchedToDo(viewModel: viewModel)
   }
-  
+
+  func presentFetchedGroupList(groupList: [EditToDo.Group]) {
+    let displayedGroupList = groupList.map {
+      return EditToDo.DisplayedGroup(
+        id: $0.id,
+        name: $0.name,
+        color: (try? UIColor().fromHex($0.color)) ?? UIColor.toDoGardenGreenDark,
+        orderIdx: $0.orderIdx
+      )
+    }
+    self.viewController?.displayFetchedGroupList(displayedGroupList)
+  }
+
   func presentDeleteResult(response: EditToDo.DeleteToDo.Response) {
     switch response.deleteResult {
     case Result.success:
@@ -111,7 +124,8 @@ extension EditToDoPresenter {
     let displayedGroup = EditToDo.DisplayedGroup(
       id: fetchedToDo.groupData.id,
       name: fetchedToDo.groupData.name,
-      color: (try? UIColor().fromHex(fetchedToDo.groupData.color)) ?? UIColor.toDoGardenGreenDark
+      color: (try? UIColor().fromHex(fetchedToDo.groupData.color)) ?? UIColor.toDoGardenGreenDark,
+      orderIdx: fetchedToDo.groupData.orderIdx
     )
     let alarmTime = self.makeAlarmTime(of: fetchedToDo.alarm.alarmTime)
     let alarmTimeString = String(format: "%02d:%02d", alarmTime.hour, alarmTime.minute)
