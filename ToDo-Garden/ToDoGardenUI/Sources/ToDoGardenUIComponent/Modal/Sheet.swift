@@ -10,9 +10,11 @@ import UIKit
 public final class BottomSheet: UIView {
   private let grabber = Grabber()
   private var heightConstraint: NSLayoutConstraint?
+  private let size: Size
   
-  public override init(frame: CGRect) {
-    super.init(frame: frame)
+  public init(size: Size) {
+    self.size = size
+    super.init(frame: CGRect.zero)
     self.setup()
   }
   
@@ -55,14 +57,27 @@ extension BottomSheet {
     ])
     
     if self.heightConstraint == nil {
-      self.heightConstraint = self.heightAnchor.constraint(equalToConstant: 0)
+      self.heightConstraint = self.heightAnchor.constraint(equalToConstant: self.size.minHeight)
       self.heightConstraint?.isActive = true
     }
-    
     superview.layoutIfNeeded()
   }
 }
 
+extension BottomSheet {
+  public struct Size {
+    public let minHeight: CGFloat
+    public let maxHeight: CGFloat
+    
+    public init(
+      minHeight: CGFloat,
+      maxHeight: CGFloat
+    ) {
+      self.minHeight = minHeight
+      self.maxHeight = maxHeight
+    }
+  }
+}
 
 extension BottomSheet {
   final class Grabber: UIView {
@@ -99,7 +114,7 @@ extension BottomSheet {
 final class SomeViewController: UIViewController {
   override func viewIsAppearing(_ animated: Bool) {
     super.viewIsAppearing(animated)
-    let bottomSheet = BottomSheet()
+    let bottomSheet = BottomSheet(size: .init(minHeight: 400, maxHeight: 200))
     self.view.backgroundColor = .gray
     self.view.addSubview(bottomSheet)
   }
