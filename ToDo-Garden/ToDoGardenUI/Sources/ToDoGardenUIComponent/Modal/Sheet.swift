@@ -26,6 +26,7 @@ public final class BottomSheet: UIView {
   public override func layoutSubviews() {
     super.layoutSubviews()
     self.setupLayoutDependOnSuperView()
+    self.roundCorners([UIRectCorner.topLeft, UIRectCorner.topRight], radius: 20)
   }
 }
 
