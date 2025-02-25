@@ -8,6 +8,7 @@
 import UIKit
 
 public final class BottomSheet: UIView {
+  private let grabber = Grabber()
   private var heightConstraint: NSLayoutConstraint?
   
   public override init(frame: CGRect) {
@@ -31,6 +32,13 @@ public final class BottomSheet: UIView {
 extension BottomSheet {
   private func setup() {
     self.backgroundColor = .systemPink
+    self.addSubview(self.grabber)
+    self.grabber.usingAutolayout()
+    NSLayoutConstraint.activate([
+      self.grabber.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+      self.grabber.topAnchor.constraint(equalTo: self.topAnchor, constant: 10)
+    ])
+    
   }
 }
 
@@ -52,6 +60,31 @@ extension BottomSheet {
     }
     
     superview.layoutIfNeeded()
+  }
+}
+
+
+extension BottomSheet {
+  final class Grabber: UIView {
+    override init(frame: CGRect) {
+      super.init(frame: frame)
+      self.setup()
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+      fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setup() {
+      self.backgroundColor = UIColor.lightGray
+      self.layer.cornerRadius = 3
+      self.layer.masksToBounds = true
+      NSLayoutConstraint.activate([
+        self.widthAnchor.constraint(equalToConstant: 36),
+        self.heightAnchor.constraint(equalToConstant: 5)
+      ])
+    }
   }
 }
 
