@@ -90,7 +90,15 @@ extension EditToDoViewController: EditToDoScheduleViewDelegate {
   func editToDo() {
     if let toDoNameForEdit = self.editToDoView.getEditingText(),
       let groupForEdit = self.editToDoView.getCurrentGroup() {
-      let request = EditToDo.CompleteEditToDo.Request(toDoName: toDoNameForEdit, displayedGroup: groupForEdit)
+      let request = EditToDo.CompleteEditToDo.Request(
+        toDoName: toDoNameForEdit,
+        displayedGroup: EditToDo.DisplayedGroup(
+          id: groupForEdit.groupId,
+          name: groupForEdit.groupName,
+          color: groupForEdit.groupColor,
+          orderIdx: 0
+        )
+      )
       self.interactor?.editToDo(request: request)
     }
   }

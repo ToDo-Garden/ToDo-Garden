@@ -162,6 +162,14 @@ extension EditToDoInteractor {
       return
     }
 
+    self.toDo?.name = request.toDoName
+    self.toDo?.groupData = EditToDo.Group(
+      id: request.displayedGroup.id,
+      name: request.displayedGroup.name,
+      color: request.displayedGroup.color.hexStringFromColor(),
+      orderIdx: 0
+    )
+
     self.tasks[TaskKey.editToDo] = Task {
       defer { self.tasks[TaskKey.editToDo] = nil }
 
@@ -169,37 +177,35 @@ extension EditToDoInteractor {
         try Task.checkCancellation()
         try await self.editToDoWorker.editToDo(toDo)
         try Task.checkCancellation()
-
+        self.presenter?.presentDismiss()
       } catch let error {
         debugPrint(error.localizedDescription)
+        self.presenter?.presentError(.network)
       }
     }
   }
 
   /// 서버에 투두의 삭제를 요청하는 메서드입니다.
   func deleteToDo() {
-    
+    guard let toDoId else {
+      self.presenter?.presentError(.failToFetch)
+      return
+    }
+
+    self.tasks[TaskKey.deleteToDo] = Task {
+      defer { self.tasks[TaskKey.deleteToDo] = nil }
+
+      do {
+        try Task.checkCancellation()
+        try await self.editToDoWorker.deleteToDo(id: toDoId)
+        try Task.checkCancellation()
+        self.presenter?.presentDismiss()
+      } catch let error {
+        debugPrint(error.localizedDescription)
+        self.presenter?.presentError(.network)
+      }
+    }
   }
-}
-
-// MARK: Private Functions
-
-extension EditToDoInteractor {
-//  private func makeToDoForEdit(
-//    with request: EditToDo.CompleteEditToDo.Request
-//  ) throws -> EditToDo.ToDo {
-//    guard var editedToDo = self.toDo
-//    else { throw EditToDoInteractorError.toDoDataNotExisted }
-//
-//    editedToDo.name = request.toDoName
-//    editedToDo.groupData = EditToDo.Group(
-//      id: request.displayedGroup.id,
-//      name: request.displayedGroup.name,
-//      color: request.displayedGroup.color
-//    )
-//
-//    return editedToDo
-//  }
 }
 
 // MARK: Errors

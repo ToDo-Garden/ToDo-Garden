@@ -89,7 +89,21 @@ public struct EditToDoWorker: EditToDoWorkable {
   }
 
   public func deleteToDo(id: UUID) async throws {
-    
+    let body = try JSONEncoder().encode(EditToDo.DeleteToDo.RequestDTO(todoId: id.uuidString))
+
+    try await self.httpClient.send(
+      input: HTTPRequest(
+        method: .post,
+        endPoint: URLConstants.ToDo.deleteToDo,
+        body: body
+      ),
+      serializer: { $0 },
+      deserializer: { response in
+        guard response.statusCode >= 200 && response.statusCode < 400 else {
+          throw HTTPClientError.badStatusCode(response.statusCode)
+        }
+      }
+    )
   }
 }
 

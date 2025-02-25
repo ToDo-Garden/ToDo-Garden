@@ -64,7 +64,6 @@ public enum EditToDo {
 
   public enum CompleteEditToDo {
     public struct Request {
-
       public let toDoName: String
       public let displayedGroup: DisplayedGroup
 
@@ -395,6 +394,20 @@ extension EditToDo.CompleteEditToDo {
       self.startDay = startDay
       self.endDay = endDay
       self.groupId = groupId
+    }
+  }
+}
+
+extension EditToDo.DeleteToDo {
+  public struct RequestDTO: Sendable, Codable {
+    public let todoId: String
+
+    private enum CodingKeys: String, CodingKey {
+      case todoId = "todo_id"
+    }
+
+    public init(todoId: String) {
+      self.todoId = todoId
     }
   }
 }

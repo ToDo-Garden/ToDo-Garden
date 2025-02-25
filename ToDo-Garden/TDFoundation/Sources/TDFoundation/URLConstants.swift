@@ -31,6 +31,7 @@ extension URLConstants.Auth {
 extension URLConstants.ToDo {
   public static let fetchToDoDetail = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/detail")!
   public static let editToDo = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/todos")!
+  public static let deleteToDo = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/delete_todo")!
 }
 
 extension URLConstants.Group {
