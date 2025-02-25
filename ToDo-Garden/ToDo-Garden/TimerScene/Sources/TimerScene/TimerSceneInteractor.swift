@@ -1,5 +1,6 @@
 import Foundation
 
+import HTTPClientAPI
 import TDFoundation
 import TimerSceneAPI
 import TimerSceneEntity
@@ -24,18 +25,22 @@ final class TimerSceneInteractor {
   private let timerWorker: TimerSceneWorkable
   private let storageWorker: TimerStorageWorkable
   private let notificationManager: NotificationManager
-
+  private var networkRetryManager: NetworkRetryManagerAPI
+  
   public var tasks: [AnyHashable: Task<Void, Never>] = [:]
   
   init(
     timerWorker: TimerSceneWorkable,
     storageWorker: TimerStorageWorkable,
-    notificationManager: NotificationManager
+    notificationManager: NotificationManager,
+    networkRetryManager: NetworkRetryManagerAPI
   ) {
     self.timerWorker = timerWorker
     self.storageWorker = storageWorker
     self.notificationManager = notificationManager
+    self.networkRetryManager = networkRetryManager
     self.currentGroup = TimerScene.CurrentGroup(groupId: "", groupName: "")
+    self.setRetryTask()
     // MARK: currentGroup은 Payload로 이전화면에서 전달받아 의미있는 값으로 대체됨
   }
   
@@ -45,7 +50,9 @@ final class TimerSceneInteractor {
     @_implicitSelfCapture errorHandler: @escaping (any Error) -> Void = { _ in }
   ) {
     let task = Task {
-      defer { self.tasks[id] = nil }
+      defer {
+        self.tasks[id] = nil
+      }
       do {
         try await work()
       } catch {
@@ -75,7 +82,7 @@ extension TimerSceneInteractor: TimerSceneBusinessLogic {
       self.presenter?.presentBottomSheet(self.bottomSheetStatus)
     }
   }
-
+  
   func setTimer(for seconds: Double) {
     self.isCountingDown = true
     run(id: CancelTaskID.countdown) {
@@ -105,11 +112,11 @@ extension TimerSceneInteractor: TimerSceneBusinessLogic {
       
     case .keepConcentration:
       self.keepConcentrationAction()
-    
+      
     case .goHome:
       self.notificationManager.clearPendingNotifications()
       self.presenter?.dismiss()
-    
+      
     case .cancel:
       break
     }
@@ -158,7 +165,10 @@ extension TimerSceneInteractor {
   func didCompleteTimer(seconds: Int) {
     self.currentGroup.update(seconds: seconds)
     
+    guard self.bottomSheetStatus == .focus else { return }
+    
     do {
+      
       try self.storageWorker.recordCompletedItemInLocal(
         groupId: self.currentGroup.groupId,
         seconds: self.currentGroup.seconds
@@ -193,8 +203,27 @@ extension TimerSceneInteractor {
       try await self.storageWorker.postCompletedItem()
       try Task.checkCancellation()
     } errorHandler: { error in
-      debugPrint(error)
+      if let error = error as? HTTPClientErrorContext {
+        self.networkErrorHandler(error.underlyingError as NSError)
+      } else {
+        debugPrint(error)
+        // TODO: 네트워크 에러 이외의 에러처리
+      }
     }
   }
-    
+  
+  private func setRetryTask() {
+    self.networkRetryManager.retryTask = { [weak self] in
+      do {
+        try await self?.storageWorker.postCompletedItem()
+        await self?.networkRetryManager.cancelRetry()
+      }
+    }
+  }
+  
+  private func networkErrorHandler(_ error: NSError) {
+    guard error.domain == NSURLErrorDomain else { return }
+
+    self.networkRetryManager.execute()
+  }
 }
