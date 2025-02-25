@@ -76,12 +76,20 @@ public struct EditToDoWorker: EditToDoWorkable {
     }
   }
 
-  public func editToDo(id: UUID) async throws {
-
+  public func editToDo(_ todo: EditToDo.ToDo) async throws {
+    try await self.httpClient.send(
+      input: self.makeEditRequest(todo: todo),
+      serializer: { $0 },
+      deserializer: { response in
+        guard response.statusCode >= 200 && response.statusCode < 400 else {
+          throw HTTPClientError.badStatusCode(response.statusCode)
+        }
+      }
+    )
   }
 
   public func deleteToDo(id: UUID) async throws {
-
+    
   }
 }
 
@@ -105,6 +113,24 @@ extension EditToDoWorker {
         isOnlyToday: fetchedToDo.isOnlyToday,
         startDate: fetchedToDo.startDate,
         endDate: fetchedToDo.endDate
+      )
+    )
+  }
+
+  private func makeEditRequest(todo: EditToDo.ToDo) throws -> HTTPRequest {
+    return HTTPRequest(
+      method: HTTPMethod.patch,
+      endPoint: URLConstants.ToDo.editToDo,
+      body: try JSONEncoder().encode(
+        EditToDo.CompleteEditToDo.RequestDTO(
+          name: todo.name,
+          isAlarmOn: todo.alarm.isAlarmOn,
+          alarmTime: todo.alarm.alarmTime,
+          isOnlyToday: todo.repetition.isOnlyToday,
+          startDay: todo.repetition.startDate,
+          endDay: todo.repetition.endDate,
+          groupId: todo.groupData.id
+        )
       )
     )
   }

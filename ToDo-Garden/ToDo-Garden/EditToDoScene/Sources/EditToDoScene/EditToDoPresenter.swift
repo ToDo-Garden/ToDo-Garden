@@ -13,8 +13,7 @@ import EditToDoSceneEntity
 protocol EditToDoPresentationLogic {
   func presentFetchedToDo(response: EditToDo.FetchToDo.Response)
   func presentFetchedGroupList(groupList: [EditToDo.Group])
-  func presentDeleteResult(response: EditToDo.DeleteToDo.Response)
-  func presentEditResult(response: EditToDo.CompleteEditToDo.Response)
+  func presentDismiss()
   func presentError(_ type: EditToDo.ErrorType)
 
   func presentAlarmActivation(response: EditToDo.ChangeAlarmActivation.Response)
@@ -54,26 +53,8 @@ extension EditToDoPresenter: EditToDoPresentationLogic {
     self.viewController?.displayFetchedGroupList(displayedGroupList)
   }
 
-  func presentDeleteResult(response: EditToDo.DeleteToDo.Response) {
-    switch response.deleteResult {
-    case Result.success:
-      let viewModel = EditToDo.DeleteToDo.ViewModel(deleteResult: Result.success(()))
-      self.viewController?.displayDeleteToDoResult(viewModel: viewModel)
-    case Result.failure(let error):
-      let viewModel = EditToDo.DeleteToDo.ViewModel(deleteResult: Result.failure(error))
-      self.viewController?.displayDeleteToDoResult(viewModel: viewModel)
-    }
-  }
-
-  func presentEditResult(response: EditToDo.CompleteEditToDo.Response) {
-    switch response.editResult {
-    case Result.success:
-      let viewModel = EditToDo.CompleteEditToDo.ViewModel(editResult: Result.success(()))
-      self.viewController?.displayEditToDoResult(viewModel: viewModel)
-    case Result.failure(let error):
-      let viewModel = EditToDo.CompleteEditToDo.ViewModel(editResult: Result.failure(error))
-      self.viewController?.displayEditToDoResult(viewModel: viewModel)
-    }
+  func presentDismiss() {
+    self.viewController?.displayDismiss()
   }
 
   func presentAlarmActivation(response: EditToDo.ChangeAlarmActivation.Response) {

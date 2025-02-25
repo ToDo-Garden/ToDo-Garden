@@ -17,8 +17,7 @@ import ToDoGardenUIConstant
 protocol EditToDoDisplayLogic: AnyObject {
   func displayFetchedToDo(viewModel: EditToDo.FetchToDo.ViewModel)
   func displayFetchedGroupList(_ groupList: [EditToDo.DisplayedGroup])
-  func displayDeleteToDoResult(viewModel: EditToDo.DeleteToDo.ViewModel)
-  func displayEditToDoResult(viewModel: EditToDo.CompleteEditToDo.ViewModel)
+  func displayDismiss()
   func showErrorAlert(_ type: EditToDo.ErrorType)
 
   func displayRepeatOnlyToday()
@@ -154,22 +153,8 @@ extension EditToDoViewController: EditToDoDisplayLogic {
     self.editToDoView.updateGroupList(groupList)
   }
 
-  func displayDeleteToDoResult(viewModel: EditToDo.DeleteToDo.ViewModel) {
-//    switch viewModel.deleteResult {
-//    case Result.success:
-//      self.router?.routeToToDoListScene()
-//    case Result.failure(let error):
-//      self.showErrorAlert(error)
-//    }
-  }
-
-  func displayEditToDoResult(viewModel: EditToDo.CompleteEditToDo.ViewModel) {
-//    switch viewModel.editResult {
-//    case Result.success:
-//      self.router?.routeToToDoListScene()
-//    case Result.failure(let error):
-//      self.showErrorAlert(error)
-//    }
+  func displayDismiss() {
+    self.router?.routeToToDoListScene()
   }
 
   func displayRepeatOnlyToday() {

@@ -155,36 +155,30 @@ extension EditToDoInteractor {
     }
   }
 
-  /// 서버에 투두의 삭제를 요청하는 메서드입니다.
-  func deleteToDo() {
-//    let deleteResult: Result<Void, Error>
-//    do {
-//      guard let toDoId = self.toDoId
-//      else { throw EditToDoInteractorError.toDoDataNotExisted }
-//
-//      try self.editToDoWorker.deleteToDo(id: toDoId)
-//      deleteResult = Result.success(())
-//    } catch let error {
-//      deleteResult = Result.failure(error)
-//    }
-//
-//    let response = EditToDo.DeleteToDo.Response(deleteResult: deleteResult)
-//    self.presenter?.presentDeleteResult(response: response)
-  }
-
   /// 서버에 투두의 수정을 요청하는 메서드입니다.
   func editToDo(request: EditToDo.CompleteEditToDo.Request) {
-//    let editResult: Result<Void, Error>
-//    do {
-//      let editedToDo = try self.makeToDoForEdit(with: request)
-//      try self.editToDoWorker.editToDo(editedToDo)
-//      editResult = Result.success(())
-//    } catch let error {
-//      editResult = Result.failure(error)
-//    }
-//
-//    let response = EditToDo.CompleteEditToDo.Response(editResult: editResult)
-//    self.presenter?.presentEditResult(response: response)
+    guard let toDo else {
+      self.presenter?.presentError(.failToFetch)
+      return
+    }
+
+    self.tasks[TaskKey.editToDo] = Task {
+      defer { self.tasks[TaskKey.editToDo] = nil }
+
+      do {
+        try Task.checkCancellation()
+        try await self.editToDoWorker.editToDo(toDo)
+        try Task.checkCancellation()
+
+      } catch let error {
+        debugPrint(error.localizedDescription)
+      }
+    }
+  }
+
+  /// 서버에 투두의 삭제를 요청하는 메서드입니다.
+  func deleteToDo() {
+    
   }
 }
 
