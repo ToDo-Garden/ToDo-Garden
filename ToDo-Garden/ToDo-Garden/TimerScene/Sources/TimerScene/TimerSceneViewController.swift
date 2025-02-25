@@ -354,7 +354,8 @@ import HTTPClient
     dependency: .init(
       timerWorker: timerWorker,
       storageWorker: storageWorker,
-      notificationManager: NotificationManager.shared
+      notificationManager: NotificationManager.shared,
+      networkRetryManager: NetworkRetryManager()
     )
   ).build(with: nil)
   
