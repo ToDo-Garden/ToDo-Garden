@@ -7,6 +7,7 @@
 
 import UIKit.UIColor
 
+// swiftlint:disable file_length
 public enum EditToDo {
   // MARK: Use cases
   public enum FetchToDo {
@@ -15,105 +16,60 @@ public enum EditToDo {
     }
 
     public struct Response {
-      public struct FetchedToDo: Equatable {
-        public let toDo: ToDo
-        public let groupList: [Group]
-        public let repetitionViewState: EditToDoRepetitionViewState
+      public let toDo: ToDo
 
-        public init(
-          toDo: ToDo,
-          groupList: [Group],
-          repetitionViewState: EditToDoRepetitionViewState
-        ) {
-          self.toDo = toDo
-          self.groupList = groupList
-          self.repetitionViewState = repetitionViewState
-        }
-      }
-
-      public let fetchResult: Result<FetchedToDo, Error>
-
-      public init(fetchResult: Result<FetchedToDo, Error>) {
-        self.fetchResult = fetchResult
+      public init(toDo: ToDo) {
+        self.toDo = toDo
       }
     }
 
     public struct ViewModel {
       public struct DisplayedToDo {
         public let toDoName: String
-        public let group: Group
-        public let groupList: [Group]
+        public let group: DisplayedGroup
         public let isAlarmOn: Bool
         public let alarmTime: String?
-        public let repetitionViewState: EditToDoRepetitionViewState
+        public let isOnlyToday: Bool
         public let startDay: String?
         public let endDay: String?
 
         public init(
           toDoName: String,
-          group: Group,
-          groupList: [Group],
+          group: DisplayedGroup,
           isAlarmOn: Bool,
           alarmTime: String?,
-          repetitionViewState: EditToDoRepetitionViewState,
+          isOnlyToday: Bool,
           startDay: String?,
           endDay: String?
         ) {
           self.toDoName = toDoName
           self.group = group
-          self.groupList = groupList
           self.isAlarmOn = isAlarmOn
           self.alarmTime = alarmTime
-          self.repetitionViewState = repetitionViewState
+          self.isOnlyToday = isOnlyToday
           self.startDay = startDay
           self.endDay = endDay
         }
       }
 
-      public let fetchedToDoResult: Result<DisplayedToDo, Error>
+      public let toDo: DisplayedToDo
 
-      public init(fetchedToDoResult: Result<DisplayedToDo, Error>) {
-        self.fetchedToDoResult = fetchedToDoResult
+      public init(toDo: DisplayedToDo) {
+        self.toDo = toDo
       }
     }
   }
 
+  public enum FetchGroupList {}
+
   public enum CompleteEditToDo {
     public struct Request {
-      public struct DisplayedGroup {
-        public let id: Int
-        public let name: String
-        public let color: UIColor
-
-        public init(id: Int, name: String, color: UIColor) {
-          self.id = id
-          self.name = name
-          self.color = color
-        }
-      }
-
       public let toDoName: String
       public let displayedGroup: DisplayedGroup
 
       public init(toDoName: String, displayedGroup: DisplayedGroup) {
         self.toDoName = toDoName
         self.displayedGroup = displayedGroup
-      }
-    }
-
-    public struct Response {
-      public let editResult: Result<Void, Error>
-
-      public init(editResult: Result<Void, Error>) {
-        self.editResult = editResult
-      }
-    }
-
-    public struct ViewModel {
-      public let editResult: Result<Void, Error>
-
-      public init(editResult: Result<Void, Error>) {
-        self.editResult = editResult
       }
     }
   }
@@ -271,21 +227,46 @@ extension EditToDo {
       && lhs.alarm.isAlarmOn == rhs.alarm.isAlarmOn
       && lhs.alarm.alarmTime == rhs.alarm.alarmTime
       && lhs.repetition.isOnlyToday == rhs.repetition.isOnlyToday
-      && lhs.repetition.isRepeatEveryday == rhs.repetition.isRepeatEveryday
       && lhs.repetition.startDate == rhs.repetition.startDate
       && lhs.repetition.endDate == rhs.repetition.endDate
     }
   }
 
   public struct Group: Equatable {
-    public let id: Int
+    public let id: UUID
     public let name: String
-    public let color: UIColor
+    public let color: String
+    public let orderIdx: Int
 
-    public init(id: Int, name: String, color: UIColor) {
+    public init(
+      id: UUID,
+      name: String,
+      color: String,
+      orderIdx: Int
+    ) {
       self.id = id
       self.name = name
       self.color = color
+      self.orderIdx = orderIdx
+    }
+  }
+
+  public struct DisplayedGroup {
+    public let id: UUID
+    public let name: String
+    public let color: UIColor
+    public let orderIdx: Int
+
+    public init(
+      id: UUID, 
+      name: String,
+      color: UIColor,
+      orderIdx: Int
+    ) {
+      self.id = id
+      self.name = name
+      self.color = color
+      self.orderIdx = orderIdx
     }
   }
 
@@ -301,18 +282,15 @@ extension EditToDo {
 
   public struct ToDoRepetition {
     public var isOnlyToday: Bool
-    public var isRepeatEveryday: Bool
     public var startDate: Date?
     public var endDate: Date?
 
     public init(
       isOnlyToday: Bool,
-      isRepeatEveryday: Bool,
       startDate: Date? = nil,
       endDate: Date? = nil
     ) {
       self.isOnlyToday = isOnlyToday
-      self.isRepeatEveryday = isRepeatEveryday
       self.startDate = startDate
       self.endDate = endDate
     }
@@ -325,3 +303,120 @@ extension EditToDo {
     case repeatInRange
   }
 }
+
+// MARK: DTO Objects
+
+extension EditToDo {
+  public struct GroupDTO: Sendable, Codable {
+    public let id: UUID
+    public let name: String
+    public let color: String
+    public let orderIdx: Int
+
+    public init(
+      id: UUID,
+      name: String, 
+      color: String,
+      orderIdx: Int
+    ) {
+      self.id = id
+      self.name = name
+      self.color = color
+      self.orderIdx = orderIdx
+    }
+  }
+}
+
+extension EditToDo.FetchToDo {
+  public struct RequestDTO: Sendable, Codable {
+    public let id: UUID
+
+    public init(id: UUID) {
+      self.id = id
+    }
+  }
+
+  public struct ResponseDTO: Sendable, Codable {
+    public let name: String
+    public let group: EditToDo.GroupDTO
+    public let isAlarmOn: Bool
+    public let alarmTime: Double
+    public let isOnlyToday: Bool
+    public let startDate: Date?
+    public let endDate: Date?
+  }
+}
+
+extension EditToDo.FetchGroupList {
+  public struct RequestDTO: Sendable, Codable {
+    public init() {}
+  }
+
+  public struct ResponseDTO: Sendable, Codable {
+    public let data: [EditToDo.GroupDTO]
+    public let isMoreGroupExist: Bool
+  }
+}
+
+extension EditToDo.CompleteEditToDo {
+  public struct RequestDTO: Sendable, Codable {
+    public let name: String
+    public let isAlarmOn: Bool
+    public let alarmTime: Double?
+    public let isOnlyToday: Bool
+    public let startDay: Date?
+    public let endDay: Date?
+    public let groupId: UUID
+
+    private enum CodingKeys: String, CodingKey {
+      case name
+      case isAlarmOn = "is_alarm_on"
+      case alarmTime = "alarm_time"
+      case isOnlyToday = "is_only_today"
+      case startDay = "start_day"
+      case endDay = "end_day"
+      case groupId = "group_id"
+    }
+
+    public init(
+      name: String,
+      isAlarmOn: Bool,
+      alarmTime: Double? = nil,
+      isOnlyToday: Bool,
+      startDay: Date? = nil,
+      endDay: Date? = nil,
+      groupId: UUID
+    ) {
+      self.name = name
+      self.isAlarmOn = isAlarmOn
+      self.alarmTime = alarmTime
+      self.isOnlyToday = isOnlyToday
+      self.startDay = startDay
+      self.endDay = endDay
+      self.groupId = groupId
+    }
+  }
+}
+
+extension EditToDo.DeleteToDo {
+  public struct RequestDTO: Sendable, Codable {
+    public let todoId: String
+
+    private enum CodingKeys: String, CodingKey {
+      case todoId = "todo_id"
+    }
+
+    public init(todoId: String) {
+      self.todoId = todoId
+    }
+  }
+}
+
+extension EditToDo {
+  public enum ErrorType: String {
+    case temporary = "잠시 후\n다시 시도해주세요!"
+    case network = "네트워크 연결이\n불안정합니다"
+    case failToFetch
+  }
+}
+// swiftlint:enable file_length

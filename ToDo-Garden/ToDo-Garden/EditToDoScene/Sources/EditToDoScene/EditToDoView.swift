@@ -40,30 +40,23 @@ final class EditToDoView: UIView {
     self.toDoNameInputView.setBeginEditing(with: name)
   }
 
-  func updateGroup(
-    current: EditToDo.Group,
-    editableGroupList: [EditToDo.Group]
-  ) {
+  func updateGroup(current: EditToDo.DisplayedGroup) {
     self.toDoNameInputView.changeBottomLine(color: current.color)
     let currentItem = self.makeGroupSelectionViewItem(from: current)
-    let groupSelectionViewItemList = editableGroupList.map { self.makeGroupSelectionViewItem(from: $0) }
-    self.groupSelectionView.updateGroup(current: currentItem, editableList: groupSelectionViewItemList)
+    self.groupSelectionView.updateGroup(current: currentItem)
   }
 
-  func getCurrentGroup() -> EditToDo.CompleteEditToDo.Request.DisplayedGroup? {
-    if let currentGroup = self.groupSelectionView.getCurrentGroup() {
-      return EditToDo.CompleteEditToDo.Request.DisplayedGroup(
-        id: currentGroup.groupId,
-        name: currentGroup.groupName,
-        color: currentGroup.groupColor
-      )
-    } else {
-      return nil
-    }
+  func updateGroupList(_ list: [EditToDo.DisplayedGroup]) {
+    let groupList = list.map { self.makeGroupSelectionViewItem(from: $0) }
+    self.groupSelectionView.updateGroupList(groupList)
   }
 
   func getEditingText() -> String? {
     return self.toDoNameInputView.getEditingText()
+  }
+
+  public func getCurrentGroup() -> GroupSelectionViewItem? {
+    return self.groupSelectionView.getCurrentGroup()
   }
 }
 
@@ -170,7 +163,9 @@ extension EditToDoView {
     self.deleteToDoButton.addAction(deleteToDoAction, for: UIControl.Event.touchUpInside)
   }
 
-  private func makeGroupSelectionViewItem(from group: EditToDo.Group) -> GroupSelectionViewItem {
+  private func makeGroupSelectionViewItem(
+    from group: EditToDo.DisplayedGroup
+  ) -> GroupSelectionViewItem {
     return GroupSelectionViewItem(
       groupId: group.id,
       groupName: group.name,
@@ -293,24 +288,4 @@ extension EditToDoView {
       ]
     )
   }
-}
-
-@available(iOS 17.0, *)
-#Preview {
-  let editToDoView = EditToDoView()
-  editToDoView.updateGroup(
-    current: EditToDo.Group(id: 003, name: "국어", color: UIColor.toDoGardenBlue),
-    editableGroupList: [
-      EditToDo.Group(id: 001, name: "CS 지식", color: UIColor.toDoGardenBrown),
-      EditToDo.Group(id: 002, name: "영어", color: UIColor.toDoGardenRed),
-      EditToDo.Group(id: 003, name: "국어", color: UIColor.toDoGardenBlue),
-      EditToDo.Group(id: 004, name: "수학", color: UIColor.toDoGardenMint),
-      EditToDo.Group(id: 005, name: "Swift", color: UIColor.toDoGardenYellow),
-      EditToDo.Group(id: 006, name: "런닝", color: UIColor.toDoGardenPurple),
-      EditToDo.Group(id: 007, name: "지구과학", color: UIColor.toDoGardenGreenDark),
-      EditToDo.Group(id: 008, name: "물리", color: UIColor.toDoGardenOrange)
-    ]
-  )
-  editToDoView.widthAnchor.constraint(equalToConstant: 400).isActive = true
-  return editToDoView
 }
