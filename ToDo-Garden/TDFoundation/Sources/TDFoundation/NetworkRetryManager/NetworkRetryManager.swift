@@ -21,7 +21,7 @@ public final class NetworkRetryManager: NetworkRetryManagerAPI, @unchecked Senda
   
   private func setupNetworkMonitor() {
     let updateNetworkStatus = { @Sendable [weak self] in
-      guard let isConnected = self?.checkConnectionStatus() else { return }
+      guard let isConnected = self?.networkMonitor.currentPath.status.isConnected else { return }
       self?.networkStatusSubject.send(isConnected)
     }
     
@@ -54,7 +54,7 @@ public final class NetworkRetryManager: NetworkRetryManagerAPI, @unchecked Senda
     guard let retryTask = self.retryTask else { return }
     
     self.run(id: .networkReconnectionRetry) {
-      guard self.checkConnectionStatus() else { return }
+      guard self.networkMonitor.currentPath.status.isConnected else { return }
       try await retryTask()
     }
   }
@@ -70,7 +70,7 @@ public final class NetworkRetryManager: NetworkRetryManagerAPI, @unchecked Senda
       ).autoconnect().values
       
       for await _ in timer {
-        guard self.checkConnectionStatus() else {
+        guard self.networkMonitor.currentPath.status.isConnected else {
           continue
         }
         
@@ -121,9 +121,8 @@ enum RetryTaskKey: Hashable {
   case periodicRetry
 }
 
-extension NetworkRetryManager {
-  private func checkConnectionStatus() -> Bool {
-    let isConnected = self.networkMonitor.currentPath.status == .satisfied
-    return isConnected
+extension NWPath.Status {
+  var isConnected: Bool {
+    self == .satisfied
   }
 }
