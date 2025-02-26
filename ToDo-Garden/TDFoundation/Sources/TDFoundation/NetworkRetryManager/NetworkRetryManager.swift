@@ -93,12 +93,12 @@ public final class NetworkRetryManager: NetworkRetryManagerAPI, @unchecked Senda
         try await work()
       }
       
-      self?.lock.work {
+      self?.lock.withLock {
         self?.tasks[id] = nil
       }
     }
     
-    self.lock.work {
+    self.lock.withLock {
       self.tasks[id] = task
     }
   }
@@ -109,7 +109,7 @@ public final class NetworkRetryManager: NetworkRetryManagerAPI, @unchecked Senda
   }
   
   private func cancel(_ id: RetryTaskKey) {
-    self.lock.work {
+    self.lock.withLock {
       self.tasks[id]?.cancel()
       self.tasks[id] = nil
     }
@@ -119,14 +119,6 @@ public final class NetworkRetryManager: NetworkRetryManagerAPI, @unchecked Senda
 enum RetryTaskKey: Hashable {
   case networkReconnectionRetry
   case periodicRetry
-}
-
-private extension NSLock {
-  func work(_ work: () -> Void) {
-    self.lock()
-    defer { self.unlock() }
-    work()
-  }
 }
 
 extension NetworkRetryManager {
