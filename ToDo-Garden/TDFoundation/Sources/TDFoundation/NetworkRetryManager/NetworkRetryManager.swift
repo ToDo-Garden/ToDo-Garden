@@ -44,7 +44,7 @@ public final class NetworkRetryManager: NetworkRetryManagerAPI, @unchecked Senda
   }
   
   private func startRetrying() {
-    Task { 
+    Task {
       self.startNetworkReconnectionObserver()
       self.startPeriodicRetry()
     }
@@ -53,8 +53,9 @@ public final class NetworkRetryManager: NetworkRetryManagerAPI, @unchecked Senda
   private func startNetworkReconnectionObserver() {
     guard let retryTask = self.retryTask else { return }
     
-    self.run(id: .networkReconnectionRetry) {
+    self.tasks[.networkReconnectionRetry] = Task { @Sendable in
       guard self.networkMonitor.currentPath.status.isConnected else { return }
+      
       try await retryTask()
     }
   }
@@ -62,7 +63,7 @@ public final class NetworkRetryManager: NetworkRetryManagerAPI, @unchecked Senda
   private func startPeriodicRetry() {
     guard let retryTask = self.retryTask else { return }
 
-    self.run(id: .periodicRetry) {
+    self.tasks[.periodicRetry] = Task { @Sendable in
       let timer = Timer.publish(
         every: self.retryInterval,
         on: .main,
@@ -84,35 +85,11 @@ public final class NetworkRetryManager: NetworkRetryManagerAPI, @unchecked Senda
     }
   }
   
-  private func run(
-    id: RetryTaskKey,
-    work: @escaping @Sendable () async throws -> Void
-  ) {
-    let task = Task { @Sendable [weak self] in
-      do {
-        try await work()
-      }
-      
-      self?.lock.withLock {
-        self?.tasks[id] = nil
-      }
-    }
-    
-    self.lock.withLock {
-      self.tasks[id] = task
-    }
-  }
-  
   public func cancelRetry() {
-    self.cancel(.networkReconnectionRetry)
-    self.cancel(.periodicRetry)
-  }
-  
-  private func cancel(_ id: RetryTaskKey) {
-    self.lock.withLock {
-      self.tasks[id]?.cancel()
-      self.tasks[id] = nil
-    }
+    self.tasks[.networkReconnectionRetry]?.cancel()
+    self.tasks[.periodicRetry]?.cancel()
+    self.tasks[.networkReconnectionRetry] = nil
+    self.tasks[.periodicRetry] = nil
   }
 }
 
