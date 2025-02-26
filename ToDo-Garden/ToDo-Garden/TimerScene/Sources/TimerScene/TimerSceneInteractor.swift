@@ -214,10 +214,8 @@ extension TimerSceneInteractor {
   
   private func setRetryTask() {
     self.networkRetryManager.retryTask = { [weak self] in
-      do {
-        try await self?.storageWorker.postCompletedItem()
-        await self?.networkRetryManager.cancelRetry()
-      }
+      try await self?.storageWorker.postCompletedItem()
+      await self?.networkRetryManager.cancelRetry()
     }
   }
   
