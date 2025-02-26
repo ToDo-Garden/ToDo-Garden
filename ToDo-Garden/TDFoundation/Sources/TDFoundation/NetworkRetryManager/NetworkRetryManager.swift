@@ -26,7 +26,6 @@ public final class NetworkRetryManager: NetworkRetryManagerAPI, @unchecked Senda
     }
     
     self.networkMonitor.pathUpdateHandler = { _ in updateNetworkStatus() }
-    self.networkMonitor.start(queue: .global(qos: .background))
     updateNetworkStatus()
     self.networkStatusSubject
       .removeDuplicates()
@@ -40,6 +39,7 @@ public final class NetworkRetryManager: NetworkRetryManagerAPI, @unchecked Senda
   }
   
   public func execute() {
+    self.networkMonitor.start(queue: .global(qos: .background))
     self.startRetrying()
   }
   
