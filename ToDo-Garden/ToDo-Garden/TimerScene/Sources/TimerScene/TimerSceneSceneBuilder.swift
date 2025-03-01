@@ -10,15 +10,18 @@ public struct TimerSceneSceneBuilder {
     let timerWorker: TimerSceneWorkable
     let storageWorker: TimerStorageWorkable
     let notificationManager: NotificationManager
+    let networkRetryManager: NetworkRetryManagerAPI
 
     public init(
       timerWorker: any TimerSceneWorkable,
       storageWorker: any TimerStorageWorkable,
-      notificationManager: NotificationManager
+      notificationManager: NotificationManager,
+      networkRetryManager: NetworkRetryManagerAPI
     ) {
       self.timerWorker = timerWorker
       self.storageWorker = storageWorker
       self.notificationManager = notificationManager
+      self.networkRetryManager = networkRetryManager
     }
   }
   
@@ -48,7 +51,8 @@ extension TimerSceneSceneBuilder {
     let interactor = TimerSceneInteractor(
       timerWorker: self.dependency.timerWorker,
       storageWorker: self.dependency.storageWorker,
-      notificationManager: self.dependency.notificationManager
+      notificationManager: self.dependency.notificationManager,
+      networkRetryManager: self.dependency.networkRetryManager
     )
     let presenter = TimerScenePresenter()
     viewController.interactor = interactor

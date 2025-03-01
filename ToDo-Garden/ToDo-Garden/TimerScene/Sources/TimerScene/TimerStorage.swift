@@ -26,7 +26,7 @@ public final class TimerStorage: TimerStorable, @unchecked Sendable {
       in: .userDomainMask).first else {
       fatalError("Can not access documents directory.")
     }
-
+    
     self.documentsURL = documentsURL
   }
   
@@ -52,6 +52,9 @@ public final class TimerStorage: TimerStorable, @unchecked Sendable {
   
   public func getAsDTO() throws -> TimerScene.FocusTimeRequestDTO {
     let pomodoros = try self.loadPomodorosJSON()
+    if pomodoros.count == 0 {
+      throw TimerStorageError.emptyData
+    }
     return TimerScene.FocusTimeRequestDTO(pomodoros: pomodoros)
   }
 }
@@ -60,7 +63,7 @@ public final class TimerStorage: TimerStorable, @unchecked Sendable {
 extension TimerStorage {
   private func loadPomodorosJSON() throws -> [TimerScene.PomodoroDTO] {
     guard self.fileManager.fileExists(atPath: self.storageURL.path) else {
-      return []
+      throw TimerStorageError.nonExistentData
     }
     
     let data = try Data(contentsOf: self.storageURL)
@@ -96,12 +99,18 @@ extension TimerStorage {
     )
     pomodoros.append(newPomodoro)
   }
+  
+  private func isDataEmpty(_ data: Data) -> Bool {
+    return data.count == 2
+  }
 }
 
 public extension TimerStorage {
   static let live = TimerStorage()
 }
 
+// MARK: GRDB도입 후 변경될 가능성 O
 public enum TimerStorageError: Error {
   case emptyData // "pomodoros.json"가 비어있을때 (POST요청 필요 없을 때)
+  case nonExistentData // "pomodoros.json"가 없을 때
 }
