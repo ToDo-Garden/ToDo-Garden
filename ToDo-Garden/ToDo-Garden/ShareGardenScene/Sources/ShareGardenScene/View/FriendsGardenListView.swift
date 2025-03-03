@@ -189,7 +189,7 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
 }
 
 // MARK: - layout
-
+// swiftlint: disable function_body_length
 extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView {
   private func makeSwipeAction(for indexPath: IndexPath?) -> UISwipeActionsConfiguration? {
     guard let indexPath = indexPath,
@@ -205,16 +205,25 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
     let identifier = configuration.id
         
     let deleteAction = UIContextualAction(
-      style: UIContextualAction.Style.destructive,
+      style: .destructive,
       title: nil
     ) { _, _, _ in
-      self.friendsGardenStore?.delete(by: identifier)
+      self.friendsGardenStore?.delete(by: identifier) { [weak self] in
+        guard let self = self else { return }
+        
+        if let itemToDelete = self.findItem(with: identifier) {
+          var snapshot = self.friendsGardenListDataSource.snapshot()
+          snapshot.deleteItems([itemToDelete])
+          self.friendsGardenListDataSource.apply(snapshot)
+        }
+      }
     }
     deleteAction.accessibilityLabel = "Delete"
     deleteAction.image = UIImage(systemName: "trash")
     deleteAction.backgroundColor = UIColor.toDoGardenEditButtonRed
     return UISwipeActionsConfiguration(actions: [deleteAction])
   }
+  // swiftlint: enable function_body_length
   
   private func makeFriendsGardenListViewLayout() -> UICollectionViewCompositionalLayout {
     var listConfiguration = UICollectionLayoutListConfiguration(
@@ -240,6 +249,15 @@ extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView
 // MARK: - Data Source
 
 extension ShareGardenSceneViewController.FriendsGardenView.FriendsGardenListView {
+  private func findItem(with id: UUID) -> Item? {
+    return self.friendsGardenListDataSource.snapshot().itemIdentifiers.first {
+      if case let .friendsProfile(configuration) = $0 {
+        return configuration.id == id
+      }
+      return false
+    }
+  }
+  
   private func makeFriendsGardenProfileCellRegistration() -> FriendsGardenCellRegistration {
     return FriendsGardenCellRegistration { cell, _, item in
       guard case let Item.friendsProfile(configuration) = item

@@ -83,7 +83,7 @@ extension ShareGardenSceneInteractor: FriendsGardenStore {
     return self.friendsGardenDataStore.fetch(by: id)
   }
   
-  func delete(by id: ShareGardenScene.FriendsGarden.ID) {
+  func delete(by id: ShareGardenScene.FriendsGarden.ID, completion: @escaping () -> Void) {
     let rollback = self.friendsGardenDataStore.fetchAll()
     self.friendsGardenDataStore.delete(by: id)
     
@@ -93,6 +93,8 @@ extension ShareGardenSceneInteractor: FriendsGardenStore {
       do {
         try await self.shareGardenSceneWorker.delete(by: id)
         try Task.checkCancellation()
+        self.friendsGardenDataStore.delete(by: id)
+        completion()
       } catch {
         self.friendsGardenDataStore.update(to: rollback)
       }

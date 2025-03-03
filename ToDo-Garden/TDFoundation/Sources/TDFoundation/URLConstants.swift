@@ -44,6 +44,9 @@ extension URLConstants.Garden {
   public static let searchGarden = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/search_garden")!
   public static let loadUserGarden = URL(string:"https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/friend")!
   public static let addGarden = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/add_friend")!
+  public static let loadMyGarden = URL(string:"https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/my_garden")!
+  public static let loadMyFriendList = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/friends_garden_list")!
+  public static let deleteGarden = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/delete_friend")!
 }
 
 extension URLConstants.Stats {

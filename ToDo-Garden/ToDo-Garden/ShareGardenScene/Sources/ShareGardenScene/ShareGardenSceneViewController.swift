@@ -45,15 +45,10 @@ final class ShareGardenSceneViewController: UIViewController, ShareGardenSceneVi
   }
  
   // MARK: - View life cycle
-
-  override func viewIsAppearing(_ animated: Bool) {
-    super.viewIsAppearing(animated)
-    self.updateViewContents()
-  }
-  
   override func viewDidLoad() {
     super.viewDidLoad()
     self.setup()
+    self.updateViewContents()
   }
  
   override func viewDidDisappear(_ animated: Bool) {

@@ -91,3 +91,25 @@ public enum ShareGardenScene {
     }
   }
 }
+
+extension ShareGardenScene {
+  public struct MyGardenDTO: Sendable, Codable {
+    public let nickname: String
+    public let introduction: String
+    public let imageUrl: String?
+    public let pomodoroRecords: [UserGardenDTO]
+  }
+  
+  public struct UserGardenDTO: Sendable, Codable {
+    public let date: String
+    public let pomodoroCount: Int
+  }
+  
+  public struct FriendGardenDTO: Sendable, Codable {
+    public let id: String
+    public let nickname: String
+    public let imageUrl: String?
+    public let maxstreakcount: Int?
+    public let pomodororecords: [UserGardenDTO]?
+  }
+}
