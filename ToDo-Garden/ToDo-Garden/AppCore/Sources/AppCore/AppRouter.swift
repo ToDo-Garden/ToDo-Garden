@@ -5,7 +5,6 @@ import OnBoardingScene
 import SignUpScene
 import SignUpSceneAPI
 
-// swiftlint:disable function_body_length
 @MainActor
 public final class AppRouter {
   private let httpClient: HTTPClientAPI
@@ -25,30 +24,21 @@ public final class AppRouter {
       self.navigationController.viewControllers = []
       
     case Destination.onboarding:
-      let onboarding = IntroOnBoardingViewController()
-      onboarding.addAction = { [weak self] in
-        self?.switchTo(Destination.tutorial)
-      }
-      self.navigationController.viewControllers = [onboarding]
+      self.navigationController.viewControllers = [
+        self.buildIntroOnBoardingViewController()
+      ]
       
     case Destination.tutorial:
-      let tutroial = TutorialOnBoardingViewController()
-      tutroial.endAction = { [weak self] in
-        self?.switchTo(
-          Destination.login { $0 ? Destination.home : Destination.signUp($1) }
-        )
-      }
-      self.navigationController.pushViewController(tutroial, animated: true)
+      self.navigationController.pushViewController(
+        self.buildTutorialViewController(),
+        animated: true
+      )
       
     case Destination.login(let destination):
-      let login = LoginViewController(with: httpClient)
-      login.afterLoginAction = { [weak self] isExistingUser in
-        self?.switchTo(destination(isExistingUser, false))
-      }
-      login.doneButtonAction = { [weak self] isEventAndPromotionalInformationAgreed in
-        self?.switchTo(destination(false, isEventAndPromotionalInformationAgreed))
-      }
-      self.navigationController.pushViewController(login, animated: true)
+      self.navigationController.pushViewController(
+        self.buildLoginViewController(destination: destination),
+        animated: true
+      )
       
     case Destination.signUp(let isEventAndPromotionalInformationAgreed):
       self.navigationController.pushViewController(
@@ -61,10 +51,39 @@ public final class AppRouter {
     }
   }
   
+  private func buildIntroOnBoardingViewController() -> UIViewController {
+    let onboarding = IntroOnBoardingViewController()
+    onboarding.addAction = { [weak self] in
+      self?.switchTo(Destination.tutorial)
+    }
+    return onboarding
+  }
+  
+  private func buildTutorialViewController() -> UIViewController {
+    let tutroial = TutorialOnBoardingViewController()
+    tutroial.endAction = { [weak self] in
+      self?.switchTo(
+        Destination.login { $0 ? Destination.home : Destination.signUp($1) }
+      )
+    }
+    return tutroial
+  }
+  
+  private func buildLoginViewController(destination: @escaping (Bool, Bool) -> Destination) -> UIViewController {
+    let login = LoginViewController(with: self.httpClient)
+    login.afterLoginAction = { [weak self] isExistingUser in
+      self?.switchTo(destination(isExistingUser, false))
+    }
+    login.doneButtonAction = { [weak self] isEventAndPromotionalInformationAgreed in
+      self?.switchTo(destination(false, isEventAndPromotionalInformationAgreed))
+    }
+    return login
+  }
+  
   private func buildSignUpSecne(
     _ isEventAndPromotionalInformationAgreed: Bool
   ) -> UIViewController {
-    let worker = SignUpWorker(httpClient: httpClient)
+    let worker = SignUpWorker(httpClient: self.httpClient)
     let builder = SignUpSceneBuilder(dependency: .init(signUpWorker: worker))
     let signUp: SignUpViewControllable = builder.build(
       with: SignUpScenePayload(
@@ -88,4 +107,3 @@ extension AppRouter {
     }
   }
 }
-// swiftlint:enable function_body_length
