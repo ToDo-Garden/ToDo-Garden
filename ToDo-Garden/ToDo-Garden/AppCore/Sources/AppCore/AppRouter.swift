@@ -34,15 +34,15 @@ public final class AppRouter {
         animated: true
       )
       
-    case Destination.login(let destination):
+    case Destination.login:
       self.navigationController.pushViewController(
-        self.buildLoginViewController(destination: destination),
+        self.buildLoginViewController(),
         animated: true
       )
       
-    case Destination.signUp(let isEventAndPromotionalInformationAgreed):
+    case Destination.signUp:
       self.navigationController.pushViewController(
-        self.buildSignUpSecne(isEventAndPromotionalInformationAgreed),
+        self.buildSignUpSecne(),
         animated: false
       )
       
@@ -62,29 +62,32 @@ public final class AppRouter {
   private func buildTutorialViewController() -> UIViewController {
     let tutroial = TutorialOnBoardingViewController()
     tutroial.endAction = { [weak self] in
-      self?.switchTo(
-        Destination.login { $0 ? Destination.home : Destination.signUp($1) }
-      )
+      self?.switchTo(Destination.login)
     }
     return tutroial
   }
   
-  private func buildLoginViewController(destination: @escaping (Bool, Bool) -> Destination) -> UIViewController {
+  private func buildLoginViewController() -> UIViewController {
     let login = LoginViewController(with: self.httpClient)
     login.afterLoginAction = { [weak self] isExistingUser in
-      self?.switchTo(destination(isExistingUser, false))
+      self?.switchTo(
+        isExistingUser
+        ? Destination.home
+        : Destination.signUp
+      )
     }
-    login.doneButtonAction = { [weak self] isEventAndPromotionalInformationAgreed in
-      self?.switchTo(destination(false, isEventAndPromotionalInformationAgreed))
+    login.doneButtonAction = { [weak self] _ /*마케팅 정보 인자*/ in
+      self?.switchTo(Destination.signUp)
     }
     return login
   }
   
-  private func buildSignUpSecne(
-    _ isEventAndPromotionalInformationAgreed: Bool
-  ) -> UIViewController {
+  private func buildSignUpSecne() -> UIViewController {
     let worker = SignUpWorker(httpClient: self.httpClient)
     let builder = SignUpSceneBuilder(dependency: .init(signUpWorker: worker))
+    
+    // TODO: - 추후 마켓팅 정보를 대비한 값입니다.
+    let isEventAndPromotionalInformationAgreed = true
     let signUp: SignUpViewControllable = builder.build(
       with: SignUpScenePayload(
         agreeOptionalCondition: isEventAndPromotionalInformationAgreed
