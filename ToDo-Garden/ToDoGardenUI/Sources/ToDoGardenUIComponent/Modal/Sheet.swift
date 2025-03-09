@@ -8,6 +8,12 @@
 import UIKit
 
 public final class BottomSheet: UIView {
+  public var contentView: UIView? {
+    didSet {
+      self.setupContentViewLayout()
+    }
+  }
+  
   private let grabber = Grabber()
   
   private var topConstraint: NSLayoutConstraint!
@@ -164,6 +170,20 @@ extension BottomSheet {
       self.leadingAnchor.constraint(equalTo: superview.leadingAnchor),
       self.trailingAnchor.constraint(equalTo: superview.trailingAnchor),
       self.bottomAnchor.constraint(equalTo: superview.bottomAnchor)
+    ])
+  }
+  
+  private func setupContentViewLayout() {
+    guard let contentView else { return }
+    
+    self.addSubview(contentView)
+    contentView.usingAutolayout()
+    
+    NSLayoutConstraint.activate([
+      contentView.topAnchor.constraint(equalTo: self.grabber.bottomAnchor, constant: 40),
+      contentView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+      contentView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+      contentView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
     ])
   }
 }
