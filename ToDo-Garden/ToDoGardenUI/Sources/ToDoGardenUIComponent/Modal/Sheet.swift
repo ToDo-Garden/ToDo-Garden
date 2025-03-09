@@ -113,21 +113,13 @@ extension BottomSheet {
     case UIGestureRecognizer.State.changed:
       self.topConstraint.constant = self.initialTopConstant + translation.y
     case UIGestureRecognizer.State.ended, UIGestureRecognizer.State.cancelled:
-      if velocity.y < -300 {
-        self.animateBottomSheet(to: State.expanded)
+      if self.handleQuickSwipe(with: velocity) {
         return
       }
-      
-      if velocity.y > 300 {
-        self.animateBottomSheet()
-        return
-      }
-      
       let nearstValue = self.nearest(
         to: self.topConstraint.constant,
         inValues: [self.normalTopOffset, self.expandedTopOffset]
       )
-      
       if nearstValue == self.normalTopOffset {
         self.animateBottomSheet()
       } else if nearstValue == self.expandedTopOffset {
@@ -138,7 +130,18 @@ extension BottomSheet {
     }
   }
   
-  func animateBottomSheet(to state: State = .normal) {
+  private func handleQuickSwipe(with velocity: CGPoint) -> Bool {
+    if velocity.y < -300 {
+      self.animateBottomSheet(to: State.expanded)
+      return true
+    } else if velocity.y > 300 {
+      self.animateBottomSheet(to: State.normal)
+      return true
+    }
+    return false
+  }
+
+  private func animateBottomSheet(to state: State = .normal) {
     guard let superview = self.superview else { return }
     let finalConstant: CGFloat
     if state == .normal {
