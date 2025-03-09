@@ -9,11 +9,24 @@ import UIKit
 
 public final class BottomSheet: UIView {
   private let grabber = Grabber()
-  private var heightConstraint: NSLayoutConstraint?
-  private let size: Size
   
-  public init(size: Size) {
-    self.size = size
+  private var topConstraint: NSLayoutConstraint!
+  private var initialTopConstant: CGFloat = 0
+  
+  private var normalTopOffset: CGFloat! {
+    guard let superview else { return nil }
+    
+    return superview.frame.height * 0.45
+  }
+  private var expandedTopOffset: CGFloat! {
+    guard let superview else { return nil }
+    
+    return superview.frame.height * 0.1
+  }
+  
+  private var isLayoutSetup = false
+  
+  public init() {
     super.init(frame: CGRect.zero)
     self.setup()
   }
@@ -22,11 +35,19 @@ public final class BottomSheet: UIView {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+ 
   public override func layoutSubviews() {
     super.layoutSubviews()
-    self.setupLayoutDependOnSuperView()
-    self.roundCorners([UIRectCorner.topLeft, UIRectCorner.topRight], radius: 20)
+    if self.isLayoutSetup == false {
+      self.setupLayoutDependOnSuperView()
+      self.layer.cornerRadius = 20
+      self.layer.maskedCorners = [
+        CACornerMask.layerMinXMinYCorner,
+        CACornerMask.layerMaxXMinYCorner
+      ]
+      self.setupShadow()
+      self.isLayoutSetup = true
+    }
   }
 }
 
@@ -34,14 +55,95 @@ public final class BottomSheet: UIView {
 
 extension BottomSheet {
   private func setup() {
-    self.backgroundColor = .systemPink
+    self.backgroundColor = UIColor.white
+    self.setupGrabber()
+    self.setupPangestureRecognizer()
+  }
+  
+  private func setupGrabber() {
     self.addSubview(self.grabber)
     self.grabber.usingAutolayout()
     NSLayoutConstraint.activate([
       self.grabber.centerXAnchor.constraint(equalTo: self.centerXAnchor),
       self.grabber.topAnchor.constraint(equalTo: self.topAnchor, constant: 10)
     ])
+  }
     
+  private func setupPangestureRecognizer() {
+    let viewDragged = UIPanGestureRecognizer(target: self, action: #selector(self.viewDragged(_:)))
+    self.addGestureRecognizer(viewDragged)
+    viewDragged.delaysTouchesBegan = false
+    viewDragged.delaysTouchesEnded = false
+  }
+  
+  private func setupShadow() {
+    self.layer.masksToBounds = false
+    self.layer.shadowColor = UIColor.black.cgColor
+    self.layer.shadowOpacity = 0.3
+    self.layer.shadowOffset = CGSize(width: 0, height: 2)
+    self.layer.shadowRadius = 4
+  }
+}
+
+extension BottomSheet {
+  @objc
+  private func viewDragged(_ sender: UIPanGestureRecognizer) {
+    let translation = sender.translation(in: self)
+    let velocity = sender.velocity(in: self)
+    
+    switch sender.state {
+    case  UIGestureRecognizer.State.began:
+      self.initialTopConstant = self.topConstraint.constant
+    case UIGestureRecognizer.State.changed:
+      self.topConstraint.constant = self.initialTopConstant + translation.y
+    case UIGestureRecognizer.State.ended, UIGestureRecognizer.State.cancelled:
+      if velocity.y < -300 {
+        self.animateBottomSheet(to: State.expanded)
+        return
+      }
+      
+      let nearstValue = self.nearest(
+        to: self.topConstraint.constant,
+        inValues: [self.normalTopOffset, self.expandedTopOffset]
+      )
+      
+      if nearstValue == self.normalTopOffset {
+        self.animateBottomSheet()
+      } else if nearstValue == self.expandedTopOffset {
+        self.animateBottomSheet(to: State.expanded)
+      }
+    default:
+      break
+    }
+  }
+  
+  func animateBottomSheet(to state: State = .normal) {
+    guard let superview = self.superview else { return }
+    let finalConstant: CGFloat
+    if state == .normal {
+      finalConstant = self.normalTopOffset
+    } else {
+      finalConstant = self.expandedTopOffset
+    }
+    self.topConstraint.constant = finalConstant
+
+    UIView.animate(
+      withDuration: 0.5,
+      delay: 0,
+      usingSpringWithDamping: 0.8,
+      initialSpringVelocity: 0.0,
+      options: .curveEaseInOut,
+      animations: {
+        superview.layoutIfNeeded()
+      }
+    )
+  }
+  
+  private func nearest(to number: CGFloat, inValues values: [CGFloat]) -> CGFloat {
+    guard let nearestValue = values.min(by: { abs(number - $0) < abs(number - $1) })
+    else { return number }
+    
+    return nearestValue
   }
 }
 
@@ -51,32 +153,25 @@ extension BottomSheet {
   private func setupLayoutDependOnSuperView() {
     guard let superview else { return }
     self.usingAutolayout()
+    
+    self.topConstraint = self.topAnchor.constraint(
+      equalTo: superview.topAnchor,
+      constant: self.normalTopOffset
+    )
+    
     NSLayoutConstraint.activate([
+      self.topConstraint,
       self.leadingAnchor.constraint(equalTo: superview.leadingAnchor),
       self.trailingAnchor.constraint(equalTo: superview.trailingAnchor),
       self.bottomAnchor.constraint(equalTo: superview.bottomAnchor)
     ])
-    
-    if self.heightConstraint == nil {
-      self.heightConstraint = self.heightAnchor.constraint(equalToConstant: self.size.minHeight)
-      self.heightConstraint?.isActive = true
-    }
-    superview.layoutIfNeeded()
   }
 }
 
 extension BottomSheet {
-  public struct Size {
-    public let minHeight: CGFloat
-    public let maxHeight: CGFloat
-    
-    public init(
-      minHeight: CGFloat,
-      maxHeight: CGFloat
-    ) {
-      self.minHeight = minHeight
-      self.maxHeight = maxHeight
-    }
+  public enum State {
+    case expanded
+    case normal
   }
 }
 
@@ -115,7 +210,7 @@ extension BottomSheet {
 final class SomeViewController: UIViewController {
   override func viewIsAppearing(_ animated: Bool) {
     super.viewIsAppearing(animated)
-    let bottomSheet = BottomSheet(size: .init(minHeight: 400, maxHeight: 200))
+    let bottomSheet = BottomSheet()
     self.view.backgroundColor = .gray
     self.view.addSubview(bottomSheet)
   }
