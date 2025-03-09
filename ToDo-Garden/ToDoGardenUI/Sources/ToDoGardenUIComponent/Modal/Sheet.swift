@@ -19,10 +19,20 @@ public final class BottomSheet: UIView {
   private var topConstraint: NSLayoutConstraint!
   private var initialTopConstant: CGFloat = 0
   
-  private var normalTopOffset: CGFloat! {
-    guard let superview else { return nil }
+  private var normalTopOffset: CGFloat {
+    let screenHeight = UIScreen.main.bounds.height
+    let multiplier: CGFloat
     
-    return superview.frame.height * 0.45
+    switch screenHeight {
+    case 0 ... 667:
+      multiplier = 0.63
+    case 668 ... 860:
+      multiplier = 0.55
+    default:
+      multiplier = 0.5
+    }
+    
+    return screenHeight * multiplier
   }
   private var expandedTopOffset: CGFloat! {
     guard let superview else { return nil }
@@ -108,6 +118,11 @@ extension BottomSheet {
         return
       }
       
+      if velocity.y > 300 {
+        self.animateBottomSheet()
+        return
+      }
+      
       let nearstValue = self.nearest(
         to: self.topConstraint.constant,
         inValues: [self.normalTopOffset, self.expandedTopOffset]
@@ -180,7 +195,7 @@ extension BottomSheet {
     contentView.usingAutolayout()
     
     NSLayoutConstraint.activate([
-      contentView.topAnchor.constraint(equalTo: self.grabber.bottomAnchor, constant: 40),
+      contentView.topAnchor.constraint(equalTo: self.grabber.bottomAnchor),
       contentView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
       contentView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
       contentView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
