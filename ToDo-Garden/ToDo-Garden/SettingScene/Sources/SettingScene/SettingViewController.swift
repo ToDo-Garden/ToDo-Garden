@@ -304,12 +304,13 @@ extension SettingViewController {
   struct SomePayload: SettingScenePayloadable {}
 }
 
+import HTTPClient
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
   return SettingSceneBuilder(
     dependency: SettingSceneBuilder.Dependency(
-      settingWorker: SettingWorker(),
+      settingWorker: SettingWorker(httpClient: HTTPClient.live),
       appServiceWorker: ApplicationServiceWorker()
     )
   ).build(with: SettingViewController.SomePayload())
