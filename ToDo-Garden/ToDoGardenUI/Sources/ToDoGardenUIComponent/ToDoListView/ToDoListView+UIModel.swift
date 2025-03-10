@@ -8,7 +8,7 @@
 import UIKit
 
 extension ToDoListView {
-  public struct ToDoSection: Hashable {
+  public struct ToDoSection: Hashable, Sendable {
     public var id: UUID
     let headerUIModel: ToDoGroupUIModel
     public let toDoItems: [ToDoItem]
@@ -24,7 +24,7 @@ extension ToDoListView {
     }
   }
   
-  public struct ToDoItem: Hashable {
+  public struct ToDoItem: Hashable, Sendable {
     public var id: UUID
     let toDoUIModel: ToDoUIModel
     
@@ -37,7 +37,7 @@ extension ToDoListView {
     }
   }
   
-  public struct ToDoGroupUIModel: Hashable {
+  public struct ToDoGroupUIModel: Hashable, Sendable {
     let progressColor: UIColor
     let progressRate: Double
     let groupTitle: String
