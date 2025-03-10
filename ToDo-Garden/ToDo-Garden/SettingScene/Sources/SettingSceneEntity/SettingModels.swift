@@ -11,6 +11,8 @@ public enum Setting {
   
   // MARK: Use cases
 
+  public enum FetchUserInfo {}
+
   public enum FetchAppVersion {
     public struct Response {
       public let versionNumber: String?
@@ -21,5 +23,15 @@ public enum Setting {
         self.isLatestVersion = isLatestVersion
       }
     }
+  }
+}
+
+extension Setting.FetchUserInfo {
+  public struct RequestDTO: Sendable, Codable {
+    public init() {}
+  }
+
+  public struct ResponseDTO: Sendable, Codable {
+    public let nickname: String
   }
 }
