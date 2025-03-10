@@ -89,7 +89,6 @@ extension HomeSceneViewController {
     NSLayoutConstraint.activate(
       [
         self.homeHeaderView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-        self.homeHeaderView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
         self.homeHeaderView.leadingAnchor.constraint(
           equalTo: self.view.leadingAnchor,
           constant: Constant.HeaderView.leadingMargin
