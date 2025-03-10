@@ -7,14 +7,21 @@
 
 import Foundation
 
+import HTTPClientAPI
 import SettingSceneAPI
 
-struct SettingWorker: SettingWorkable {
-  func requestUserNickName() async -> String {
+public struct SettingWorker: SettingWorkable {
+  private let httpClient: HTTPClientAPI
+
+  public init(httpClient: HTTPClientAPI) {
+    self.httpClient = httpClient
+  }
+
+  public func requestUserNickName() async -> String {
     return MockData.nickName
   }
 
-  func requestUserProfileImage() async -> Data {
+  public func requestUserProfileImage() async -> Data {
     return MockData.imageData
   }
 }
