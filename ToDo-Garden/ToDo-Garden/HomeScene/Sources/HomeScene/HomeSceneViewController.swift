@@ -51,26 +51,19 @@ final class HomeSceneViewController: UIViewController, HomeSceneViewControllable
 }
 
 extension HomeSceneViewController {
-  private func presentSheet() {
+  private func setBottomSheet() {
     let toDoListViewContainer = ToDoListViewContainer()
     self.todoListView = toDoListViewContainer.toDoListView
-    if let sheet = toDoListViewContainer.sheetPresentationController {
-      sheet.detents = [
-        UISheetPresentationController.Detent.medium(),
-        UISheetPresentationController.Detent.large()
-      ]
-      sheet.prefersGrabberVisible = true
-      sheet.prefersScrollingExpandsWhenScrolledToEdge = false
-      sheet.largestUndimmedDetentIdentifier = UISheetPresentationController.Detent.Identifier.medium
-    }
-    toDoListViewContainer.isModalInPresentation = true
-    
-    self.present(toDoListViewContainer, animated: true)
+    let bottomSheet = BottomSheet()
+    bottomSheet.usingAutolayout()
+    self.view.addSubview(bottomSheet)
+    bottomSheet.contentView = self.todoListView
   }
   
   private func setupViews() {
     self.setHomeHeaderView()
     self.setCalendarView()
+    self.setBottomSheet()
   }
   
   private func setHomeHeaderView() {
