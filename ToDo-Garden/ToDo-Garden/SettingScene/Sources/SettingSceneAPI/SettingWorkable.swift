@@ -8,6 +8,6 @@
 import Foundation
 
 public protocol SettingWorkable {
-  func requestUserNickName() async -> String
+  func requestUserNickName() async throws -> String
   func requestUserProfileImage() async -> Data
 }
