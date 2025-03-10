@@ -59,9 +59,16 @@ extension SettingInteractor: SettingBusinessLogic {
 extension SettingInteractor {
   private func fetchUserNickname() {
     self.fetchUserNicknameTask = Task {
-      let nickName = await self.settingWorker.requestUserNickName()
-      self.nickName = nickName
-      await self.presenter?.presentUserNickName(nickName)
+      defer { self.fetchUserNicknameTask = nil }
+      
+      do {
+        try Task.checkCancellation()
+        let nickname = try await self.settingWorker.requestUserNickName()
+        try Task.checkCancellation()
+        await self.presenter?.presentUserNickName(nickname)
+      } catch let error {
+        debugPrint(error.localizedDescription)
+      }
     }
   }
 
