@@ -9,6 +9,7 @@ import UIKit
 
 import ToDoGardenUIConstant
 
+@MainActor
 public protocol CalendarViewDateSelectionDelegate: AnyObject {
   func didSelectDate(_ date: Date)
 }
@@ -26,6 +27,10 @@ public class CalendarView: UIView {
   var calendarViewDelegate: CalendarViewManager
 
   public weak var dateSelectionDelegate: CalendarViewDateSelectionDelegate?
+  
+  public func highlightToday() {
+    calendarViewDelegate.highlightToday()
+  }
 
   public init(model: Model) {
     self.model = model
@@ -352,6 +357,11 @@ extension CalendarView.Model {
 #Preview {
   let calendarView = CalendarView(model: .primary)
   calendarView.widthAnchor.constraint(equalToConstant: 323).isActive = true
+  calendarView.highlightToday()
+  Task {
+    try await Task.sleep(for: .seconds(3))
+    calendarView.highlightToday()
+  }
   return calendarView
 }
 #endif
