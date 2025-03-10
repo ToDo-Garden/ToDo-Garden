@@ -7,74 +7,96 @@ import SignUpSceneAPI
 
 @MainActor
 public final class AppRouter {
+  private let httpClient: HTTPClientAPI
+  
+  public init(httpClient: HTTPClientAPI) {
+    self.httpClient = httpClient
+  }
+  
   public var navigationController: UINavigationController = UINavigationController(
     rootViewController: UIViewController()
   )
   
-  func switchTo(_ destination: AppCore.Destination, httpClient: HTTPClientAPI) {
+  typealias Destination = AppCore.Destination
+  func switchTo(_ destination: Destination) {
     switch destination {
-    case .home:
+    case Destination.home:
+      self.navigationController.viewControllers = []
+      
+    case Destination.onboarding:
       self.navigationController.viewControllers = [
+        self.buildIntroOnBoardingViewController()
       ]
       
-    case .onboarding(let completion):
-      self.navigationController.viewControllers = self.buildOnBoardingFlows(completion, with: httpClient)
-      
-    case .signUp(let isEventAndPromotionalInformationAgreed, let completion):
+    case Destination.tutorial:
       self.navigationController.pushViewController(
-        self.buildSignUpSecne(
-          completion,
-          isEventAndPromotionalInformationAgreed,
-          with: httpClient
-        ),
+        self.buildTutorialViewController(),
+        animated: true
+      )
+      
+    case Destination.login:
+      self.navigationController.pushViewController(
+        self.buildLoginViewController(),
+        animated: true
+      )
+      
+    case Destination.signUp:
+      self.navigationController.pushViewController(
+        self.buildSignUpSecne(),
         animated: false
       )
-    case .none:
+      
+    case Destination.none:
       break
     }
   }
   
-  // completion 1번째 파라미터 == 기존유저인가? , 2번째 파라미터 == 광고성 알림 허용인가?
-  private func buildOnBoardingFlows(
-    _ completion: @escaping (Bool, Bool) -> Void,
-    with httpClient: HTTPClientAPI
-  ) -> [UIViewController] {
+  private func buildIntroOnBoardingViewController() -> UIViewController {
     let onboarding = IntroOnBoardingViewController()
-    let tutroial = TutorialOnBoardingViewController()
-    let login = LoginViewController(with: httpClient)
-    
-    onboarding.addAction = { [weak navigationController] in
-      navigationController?.pushViewController(tutroial, animated: true)
+    onboarding.addAction = { [weak self] in
+      self?.switchTo(Destination.tutorial)
     }
-    tutroial.endAction = { [weak navigationController] in
-      navigationController?.pushViewController(login, animated: true)
-    }
-    
-    login.afterLoginAction = { isExistingUser in
-      completion(isExistingUser, false)
-    }
-    
-    login.doneButtonAction = { isEventAndPromotionalInformationAgreed in
-      completion(false, isEventAndPromotionalInformationAgreed)
-    }
-    
-    return [onboarding]
+    return onboarding
   }
   
-  private func buildSignUpSecne(
-    _ completion: @escaping () -> Void,
-    _ isEventAndPromotionalInformationAgreed: Bool,
-    with httpClient: HTTPClientAPI
-  ) -> UIViewController {
-    let worker = SignUpWorker(httpClient: httpClient)
+  private func buildTutorialViewController() -> UIViewController {
+    let tutroial = TutorialOnBoardingViewController()
+    tutroial.endAction = { [weak self] in
+      self?.switchTo(Destination.login)
+    }
+    return tutroial
+  }
+  
+  private func buildLoginViewController() -> UIViewController {
+    let login = LoginViewController(with: self.httpClient)
+    login.afterLoginAction = { [weak self] isExistingUser in
+      self?.switchTo(
+        isExistingUser
+        ? Destination.home
+        : Destination.signUp
+      )
+    }
+    login.doneButtonAction = { [weak self] _ /*마케팅 정보 인자*/ in
+      self?.switchTo(Destination.signUp)
+    }
+    return login
+  }
+  
+  private func buildSignUpSecne() -> UIViewController {
+    let worker = SignUpWorker(httpClient: self.httpClient)
     let builder = SignUpSceneBuilder(dependency: .init(signUpWorker: worker))
+    
+    // TODO: - 추후 마켓팅 정보를 대비한 값입니다.
+    let isEventAndPromotionalInformationAgreed = true
     let signUp: SignUpViewControllable = builder.build(
       with: SignUpScenePayload(
         agreeOptionalCondition: isEventAndPromotionalInformationAgreed
       )
     )
     signUp.modalPresentationStyle = .overFullScreen
-    signUp.afterSignUpAction = completion
+    signUp.afterSignUpAction = { [weak self] in
+      self?.switchTo(Destination.home)
+    }
     return signUp
   }
 }
