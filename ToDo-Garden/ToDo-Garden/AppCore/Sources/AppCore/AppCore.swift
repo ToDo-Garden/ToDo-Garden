@@ -1,7 +1,11 @@
 import Foundation
 
+import HomeScene
+import HomeSceneAPI
 import HTTPClient
 import OnBoardingScene
+import SignUpScene
+import SignUpSceneAPI
 import TDFoundation
 
 @MainActor
@@ -15,7 +19,7 @@ public final class AppCore {
     case login
     case signUp
     
-    case home
+    case home(HomeSceneViewControllable)
   }
   var destination: Destination {
     didSet {
@@ -39,7 +43,7 @@ public final class AppCore {
       Task {
         let isLoggedIn = false
         self.destination = isLoggedIn
-        ? Destination.home
+        ? Destination.home(dependency.router.sceneBuilder.home.build())
         : Destination.login
       }
     }
@@ -54,7 +58,17 @@ extension AppCore {
       
       return Dependency(
         userDefaults: UserDefaultsClient.live,
-        router: AppRouter(httpClient: httpClient),
+        router: AppRouter(
+          httpClient: httpClient,
+          sceneBuilder: AppRouter.SceneBuilder(
+            home: HomeSceneBuilder(),
+            signup: SignUpSceneBuilder(
+              dependency: SignUpSceneBuilder.Dependency(
+                signUpWorker: SignUpWorker(httpClient: httpClient)
+              )
+            )
+          )
+        ),
         httpClient: httpClient
       )
     }()
