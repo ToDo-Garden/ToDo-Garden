@@ -18,7 +18,8 @@ protocol HomeSceneDisplayLogic: AnyObject {
 final class HomeSceneViewController: UIViewController, HomeSceneViewControllable {
   
   // MARK: - View Properties
-  
+  private let homeHeaderView: HomeSceneHeaderView
+  private let calendarView: CalendarView
   private var todoListView: ToDoListView?
   
   // MARK: - VIP Properties
@@ -33,7 +34,10 @@ final class HomeSceneViewController: UIViewController, HomeSceneViewControllable
   // MARK: - Object lifecycle
   
   init() {
+    self.homeHeaderView = HomeSceneHeaderView()
+    self.calendarView = CalendarView(model: CalendarView.Model.primary)
     super.init(nibName: nil, bundle: nil)
+    self.view.backgroundColor = UIColor.white
   }
   
   @available(*, unavailable)
@@ -42,6 +46,10 @@ final class HomeSceneViewController: UIViewController, HomeSceneViewControllable
   }
   
   // MARK: - View lifecycle
+  public override func viewDidLoad() {
+    super.viewDidLoad()
+    self.setupViews()
+  }
   
   public override func viewIsAppearing(_ animated: Bool) {
     super.viewIsAppearing(animated)
@@ -67,6 +75,54 @@ extension HomeSceneViewController {
     toDoListViewContainer.isModalInPresentation = true
     
     self.present(toDoListViewContainer, animated: true)
+  }
+  
+  private func setupViews() {
+    self.setHomeHeaderView()
+    self.setCalendarView()
+  }
+  
+  private func setHomeHeaderView() {
+    self.view.addSubview(self.homeHeaderView)
+    
+    self.homeHeaderView.usingAutolayout()
+    NSLayoutConstraint.activate(
+      [
+        self.homeHeaderView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+        self.homeHeaderView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+        self.homeHeaderView.leadingAnchor.constraint(
+          equalTo: self.view.leadingAnchor,
+          constant: Constant.HeaderView.leadingMargin
+        ),
+        self.homeHeaderView.trailingAnchor.constraint(
+          equalTo: self.view.trailingAnchor,
+          constant: -Constant.HeaderView.trailingMargin
+        )
+      ]
+    )
+  }
+  
+  private func setCalendarView() {
+    self.view.addSubview(self.calendarView)
+    
+    self.calendarView.usingAutolayout()
+    NSLayoutConstraint.activate(
+      [
+        self.calendarView.topAnchor.constraint(
+          equalTo: self.homeHeaderView.bottomAnchor,
+          constant: Constant.CalendarView.topMargin
+        ),
+        self.calendarView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+        self.calendarView.leadingAnchor.constraint(
+          equalTo: self.view.leadingAnchor,
+          constant: Constant.CalendarView.commonHorizontalMargin
+        ),
+        self.calendarView.trailingAnchor.constraint(
+          equalTo: self.view.trailingAnchor,
+          constant: -Constant.CalendarView.commonHorizontalMargin
+        )
+      ]
+    )
   }
 }
 
