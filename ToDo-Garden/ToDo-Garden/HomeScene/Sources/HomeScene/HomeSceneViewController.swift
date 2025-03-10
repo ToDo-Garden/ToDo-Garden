@@ -29,8 +29,6 @@ final class HomeSceneViewController: UIViewController, HomeSceneViewControllable
   
   // MARK: - Properties
   
-  @ExecuteOnce private var presentSheetIfNeeded: (() -> Void)?
-  
   // MARK: - Object lifecycle
   
   init() {
@@ -49,13 +47,6 @@ final class HomeSceneViewController: UIViewController, HomeSceneViewControllable
   public override func viewDidLoad() {
     super.viewDidLoad()
     self.setupViews()
-  }
-  
-  public override func viewIsAppearing(_ animated: Bool) {
-    super.viewIsAppearing(animated)
-    self.presentSheetIfNeeded = {
-      self.presentSheet()
-    }
   }
 }
 
