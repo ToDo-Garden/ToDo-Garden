@@ -30,6 +30,10 @@ let package = Package(
     Package.Dependency.package(
       name: "ShareGardenScene",
       path: "../ShareGardenScene"
+    ),
+    Package.Dependency.package(
+      name: "HomeScene",
+      path: "../HomeScene"
     )
   ],
   targets: [
@@ -59,6 +63,10 @@ let package = Package(
         Target.Dependency.product(
           name: "ShareGardenScene",
           package: "ShareGardenScene"
+        ),
+        Target.Dependency.product(
+          name: "HomeScene",
+          package: "HomeScene"
         )
       ]
     ),

@@ -10,7 +10,7 @@ import Foundation
 import HomeSceneAPI
 
 @MainActor
-public struct HomeSceneSceneBuilder {
+public struct HomeSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
   public struct Dependency {
     public init() {
@@ -19,24 +19,24 @@ public struct HomeSceneSceneBuilder {
   
   private let dependency: Dependency
   
-  public init(dependency: Dependency) {
+  public init(dependency: Dependency = Dependency()) {
     self.dependency = dependency
   }
 }
 
-extension HomeSceneSceneBuilder: HomeSceneSceneBuildable {
+extension HomeSceneBuilder: HomeSceneBuildable {
   ///  VIP Cycle, 런타임 의존성이 설정된 ViewController 인스턴스를 반환하는 함수입니다.
   /// - Parameter payload: 런타임에 전달받아야 하는 의존성입니다.
   /// - Returns: 런타임 의존성, VIP Cycle이 설정된 ViewController를 반환합니다.
-  public func build(with payload: HomeSceneScenePayloadable) -> HomeSceneViewControllable {
+  public func build() -> HomeSceneViewControllable {
     let homeViewController = self.configureVIPCycle(for: HomeSceneViewController())
-    self.setPayload(for: homeViewController, with: payload)
+    self.setPayload(for: homeViewController)
     
     return homeViewController
   }
 }
 
-extension HomeSceneSceneBuilder {
+extension HomeSceneBuilder {
   /// VIP Cycle을 설정합니다.
   /// - Parameter viewController: VIPCycle을 설정할 viewController입니다.
   /// - Returns: VIP Cycle 설정이 완료된 `ViewControllable` 프로토콜을 준수한 `ViewController` 인스턴스를 반환합니다.
@@ -59,7 +59,7 @@ extension HomeSceneSceneBuilder {
   /// - Parameters:
   ///   - viewController: 런타임 의존성을 설정할 ViewController 객체입니다.
   ///   - payload: 런타임에 전달할 의존성입니다.
-  private func setPayload(for viewController: HomeSceneViewController, with payload: HomeSceneScenePayloadable) {
+  private func setPayload(for viewController: HomeSceneViewController) {
     // viewController.router?.dataStore?.name = payload.name
   }
 }
