@@ -29,8 +29,6 @@ final class HomeSceneViewController: UIViewController, HomeSceneViewControllable
   
   // MARK: - Properties
   
-  @ExecuteOnce private var presentSheetIfNeeded: (() -> Void)?
-  
   // MARK: - Object lifecycle
   
   init() {
@@ -50,36 +48,22 @@ final class HomeSceneViewController: UIViewController, HomeSceneViewControllable
     super.viewDidLoad()
     self.setupViews()
   }
-  
-  public override func viewIsAppearing(_ animated: Bool) {
-    super.viewIsAppearing(animated)
-    self.presentSheetIfNeeded = {
-      self.presentSheet()
-    }
-  }
 }
 
 extension HomeSceneViewController {
-  private func presentSheet() {
+  private func setBottomSheet() {
     let toDoListViewContainer = ToDoListViewContainer()
     self.todoListView = toDoListViewContainer.toDoListView
-    if let sheet = toDoListViewContainer.sheetPresentationController {
-      sheet.detents = [
-        UISheetPresentationController.Detent.medium(),
-        UISheetPresentationController.Detent.large()
-      ]
-      sheet.prefersGrabberVisible = true
-      sheet.prefersScrollingExpandsWhenScrolledToEdge = false
-      sheet.largestUndimmedDetentIdentifier = UISheetPresentationController.Detent.Identifier.medium
-    }
-    toDoListViewContainer.isModalInPresentation = true
-    
-    self.present(toDoListViewContainer, animated: true)
+    let bottomSheet = BottomSheet()
+    bottomSheet.usingAutolayout()
+    self.view.addSubview(bottomSheet)
+    bottomSheet.contentView = self.todoListView
   }
   
   private func setupViews() {
     self.setHomeHeaderView()
     self.setCalendarView()
+    self.setBottomSheet()
   }
   
   private func setHomeHeaderView() {
@@ -89,7 +73,6 @@ extension HomeSceneViewController {
     NSLayoutConstraint.activate(
       [
         self.homeHeaderView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-        self.homeHeaderView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
         self.homeHeaderView.leadingAnchor.constraint(
           equalTo: self.view.leadingAnchor,
           constant: Constant.HeaderView.leadingMargin
