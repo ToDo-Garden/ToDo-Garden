@@ -44,8 +44,7 @@ final class SettingInteractor: SettingDataStore {
 
 extension SettingInteractor: SettingBusinessLogic {
   func prepareSettingSceneData() {
-    self.fetchUserNickname()
-    self.fetchUserProfileImage()
+    self.fetchUserInfo()
     self.fetchAppVersion()
   }
 
@@ -57,26 +56,18 @@ extension SettingInteractor: SettingBusinessLogic {
 // MARK: - Private Functions
 
 extension SettingInteractor {
-  private func fetchUserNickname() {
+  private func fetchUserInfo() {
     self.fetchUserNicknameTask = Task {
       defer { self.fetchUserNicknameTask = nil }
-      
+
       do {
         try Task.checkCancellation()
-        let nickname = try await self.settingWorker.requestUserNickName()
+        let userInfo = try await self.settingWorker.requestUserInfo()
         try Task.checkCancellation()
-        await self.presenter?.presentUserNickName(nickname)
+        await self.presenter?.presentUserInfo(userInfo.nickname, imageUrl: userInfo.imageUrl)
       } catch let error {
         debugPrint(error.localizedDescription)
       }
-    }
-  }
-
-  private func fetchUserProfileImage() {
-    self.fetchUserProfileImageTask = Task {
-      let profileImageData = await self.settingWorker.requestUserProfileImage()
-      self.profileImageData = profileImageData
-      await self.presenter?.presentUserProfileImage(profileImageData)
     }
   }
 

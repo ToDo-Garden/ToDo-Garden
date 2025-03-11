@@ -11,8 +11,7 @@ import SettingSceneEntity
 
 @MainActor
 protocol SettingPresentationLogic {
-  func presentUserNickName(_ nickName: String)
-  func presentUserProfileImage(_ profileImageData: Data)
+  func presentUserInfo(_ nickName: String, imageUrl: URL?)
   func presentAppVersion(response: Setting.FetchAppVersion.Response)
 }
 
@@ -23,12 +22,8 @@ final class SettingPresenter {
 // MARK: - Request to ViewController
 
 extension SettingPresenter: SettingPresentationLogic {
-  func presentUserNickName(_ nickName: String) {
-    self.viewController?.displayFetchedUserNickname(nickName)
-  }
-
-  func presentUserProfileImage(_ profileImageData: Data) {
-    self.viewController?.displayFetchedUserProfileImage(profileImageData)
+  func presentUserInfo(_ nickName: String, imageUrl: URL?) {
+    self.viewController?.displayFetchedUserInfo(nickName, imageUrl)
   }
 
   func presentAppVersion(response: Setting.FetchAppVersion.Response) {

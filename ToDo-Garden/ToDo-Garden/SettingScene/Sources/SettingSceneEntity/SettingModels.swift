@@ -26,12 +26,25 @@ public enum Setting {
   }
 }
 
+extension Setting {
+  public struct UserInfo {
+    public let imageUrl: URL?
+    public let nickname: String
+
+    public init(imageUrl: URL?, nickname: String) {
+      self.imageUrl = imageUrl
+      self.nickname = nickname
+    }
+  }
+}
+
 extension Setting.FetchUserInfo {
   public struct RequestDTO: Sendable, Codable {
     public init() {}
   }
 
   public struct ResponseDTO: Sendable, Codable {
+    public let id: String
     public let nickname: String
   }
 }

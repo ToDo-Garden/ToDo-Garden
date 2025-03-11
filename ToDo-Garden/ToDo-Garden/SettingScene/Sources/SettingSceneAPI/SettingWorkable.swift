@@ -7,7 +7,8 @@
 
 import Foundation
 
+import SettingSceneEntity
+
 public protocol SettingWorkable {
-  func requestUserNickName() async throws -> String
-  func requestUserProfileImage() async -> Data
+  func requestUserInfo() async throws -> Setting.UserInfo
 }

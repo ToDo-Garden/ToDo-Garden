@@ -5,7 +5,7 @@
 //  Created by Wood on 8/5/24.
 //  Copyright (c) 2024 ToDoGarden. All rights reserved.
 
-import Foundation
+import UIKit.UIImage
 
 import HTTPClientAPI
 import SettingSceneAPI
@@ -19,8 +19,8 @@ public struct SettingWorker: SettingWorkable {
     self.httpClient = httpClient
   }
 
-  public func requestUserNickName() async throws -> String {
-    return try await self.httpClient.send(
+  public func requestUserInfo() async throws -> Setting.UserInfo {
+    let data = try await self.httpClient.send(
       input: Setting.FetchUserInfo.RequestDTO(),
       serializer: { _ in
         return HTTPRequest(
@@ -36,14 +36,14 @@ public struct SettingWorker: SettingWorkable {
         guard let body = response.body else {
           throw HTTPClientError.deserializationError
         }
-
-        return try JSONDecoder().decode(Setting.FetchUserInfo.ResponseDTO.self, from: body).nickname
+        
+        return try JSONDecoder().decode(Setting.FetchUserInfo.ResponseDTO.self, from: body)
       }
     )
-  }
 
-  public func requestUserProfileImage() async -> Data {
-    return MockData.imageData
+    let imageUrlString = URLConstants.Profile.getProfileImage.absoluteString + data.id + "/image.jpeg"
+    let imageUrl = URL(string: imageUrlString)
+    return Setting.UserInfo(imageUrl: imageUrl, nickname: data.nickname)
   }
 }
 
