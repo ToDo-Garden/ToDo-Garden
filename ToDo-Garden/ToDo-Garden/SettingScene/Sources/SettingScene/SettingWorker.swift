@@ -9,12 +9,13 @@ import Foundation
 
 import SettingSceneAPI
 
-struct SettingWorker: SettingWorkable {
-  func requestUserNickName() async -> String {
+public struct SettingWorker: SettingWorkable {
+  public init() { }
+  public func requestUserNickName() async -> String {
     return MockData.nickName
   }
 
-  func requestUserProfileImage() async -> Data {
+  public func requestUserProfileImage() async -> Data {
     return MockData.imageData
   }
 }

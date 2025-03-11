@@ -32,9 +32,9 @@ extension SettingSceneBuilder: SettingSceneBuildable {
 	///  VIP Cycle, 런타임 의존성이 설정된 ViewController 인스턴스를 반환하는 함수입니다.
 	/// - Parameter payload: 런타임에 전달받아야 하는 의존성입니다.
 	/// - Returns: 런타임 의존성, VIP Cycle이 설정된 ViewController를 반환합니다.
-	public func build(with payload: SettingScenePayloadable) -> SettingViewControllable {
+	public func build() -> SettingViewControllable {
 		let someViewController = self.configureVIPCycle(for: SettingViewController())
-		self.setPayload(for: someViewController, with: payload)
+		self.setPayload(for: someViewController)
 		
 		return someViewController
 	}
@@ -65,7 +65,7 @@ extension SettingSceneBuilder {
 	/// - Parameters:
 	///   - viewController: 런타임 의존성을 설정할 ViewController 객체입니다.
 	///   - payload: 런타임에 전달할 의존성입니다.
-	private func setPayload(for viewController: SettingViewController, with payload: SettingScenePayloadable) {
+	private func setPayload(for viewController: SettingViewController) {
 		// viewController.router?.dataStore?.name = payload.name
 	}
 }
