@@ -41,7 +41,15 @@ public final class AppCore {
       }
     } else {
       Task {
-        let isLoggedIn = false
+        let isLoggedIn: Bool
+        do {
+          _ = try KeychainManager.shared.load(forKey: KeychainManager.KeychainKey.accessToken)
+          _ = try KeychainManager.shared.load(forKey: KeychainManager.KeychainKey.refreshToken)
+          isLoggedIn = true
+        } catch {
+          isLoggedIn = false
+        }
+        
         self.destination = isLoggedIn
         ? Destination.home(dependency.router.sceneBuilder.home.build())
         : Destination.login
