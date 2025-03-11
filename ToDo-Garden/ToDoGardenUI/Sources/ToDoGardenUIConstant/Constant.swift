@@ -50,4 +50,5 @@ public enum Constant {
   public enum AddGardenView { }
   public enum DefaultModalNavigationBar { }
   public enum ToDoGroupSectionHeaderView { }
+  public enum CheckBoxAlertView { }
 }
