@@ -4,9 +4,13 @@ import HomeScene
 import HomeSceneAPI
 import HTTPClientAPI
 import OnBoardingScene
+import RootTabBar
+import SettingScene
+import ShareGardenScene
 import SignUpScene
 import SignUpSceneAPI
 
+// swiftlint:disable function_body_length
 @MainActor
 public final class AppRouter {
   private let httpClient: HTTPClientAPI
@@ -27,8 +31,14 @@ public final class AppRouter {
   typealias Destination = AppCore.Destination
   func switchTo(_ destination: Destination) {
     switch destination {
-    case Destination.home:
-      self.navigationController.viewControllers = []
+    case Destination.home(let viewController):
+      self.navigationController.viewControllers = [
+        RootTabBarController(tabItems: [
+          RootTabBarController.RootTab.home(index: 0, viewController: viewController),
+          RootTabBarController.RootTab.share(index: 1, viewController: sceneBuilder.shareGarden.build()),
+          RootTabBarController.RootTab.settings(index: 2, viewController: sceneBuilder.setting.build())
+        ])
+      ]
       
     case Destination.onboarding:
       self.navigationController.viewControllers = [
@@ -117,5 +127,8 @@ extension AppRouter {
   public struct SceneBuilder {
     let home: HomeSceneBuilder
     let signup: SignUpSceneBuilder
+    let shareGarden: ShareGardenSceneBuilder
+    let setting: SettingSceneBuilder
   }
 }
+// swiftlint:enable function_body_length
