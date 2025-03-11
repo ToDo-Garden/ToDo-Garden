@@ -11,6 +11,7 @@ import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
 // swiftlint:disable function_body_length
+// MARK: dimmed 효과가 함께 적용되어 있습니다. 콜러측에서 addSubview하고 화면 전체로 레이아웃 맞춰주세요.
 final public class CheckBoxAlertView: UIView {
   public var leftTapped: ((Bool) -> Void)?
   public var rightTapped: ((Bool) -> Void)?
@@ -166,7 +167,7 @@ final public class CheckBoxAlertView: UIView {
     
     NSLayoutConstraint.activate([
       self.checkBoxRow.heightAnchor.constraint(equalToConstant: Layout.checkBoxHeight),
-      self.checkBoxRow.widthAnchor.constraint(equalToConstant: Layout.checkBoxWidth),
+      self.checkBoxRow.widthAnchor.constraint(greaterThanOrEqualToConstant: Layout.checkBoxWidth),
       self.checkBoxRow.topAnchor.constraint(equalTo: self.verticalStackView.bottomAnchor),
       self.checkBoxRow.leadingAnchor.constraint(
         equalTo: self.verticalStackView.leadingAnchor,
