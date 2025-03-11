@@ -182,9 +182,6 @@ final public class CheckBoxAlertView: UIView {
 @available(iOS 17.0, *)
 #Preview {
   let view = CheckBoxAlertView()
-  view.leftTapped = { isChecked in
-    print("Left tapped")
-  }
   return view
 }
 #endif
