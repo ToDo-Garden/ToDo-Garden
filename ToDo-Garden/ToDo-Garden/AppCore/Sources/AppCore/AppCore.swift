@@ -37,7 +37,7 @@ public final class AppCore {
       }
     } else {
       Task {
-        var isLoggedIn: Bool
+        let isLoggedIn: Bool
         do {
           _ = try KeychainManager.shared.load(forKey: KeychainManager.KeychainKey.accessToken)
           _ = try KeychainManager.shared.load(forKey: KeychainManager.KeychainKey.refreshToken)
