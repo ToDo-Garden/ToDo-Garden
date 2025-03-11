@@ -21,6 +21,7 @@ let package = Package(
     )
   ],
   dependencies: [
+    .package(name: "TDFoundation", path: "../TDFoundation"),
     .package(name: "ToDoGardenUI", path: "../ToDoGardenUI")
   ],
   targets: [
@@ -36,6 +37,8 @@ let package = Package(
       dependencies: [
         "SettingSceneAPI",
         "SettingSceneEntity",
+        .product(name: "HTTPClient", package: "TDFoundation"),
+        .product(name: "TDFoundation", package: "TDFoundation"),
         .product(name: "ToDoGardenUIAPI", package: "ToDoGardenUI"),
         .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI"),
         .product(name: "ToDoGardenUIResource", package: "ToDoGardenUI")
