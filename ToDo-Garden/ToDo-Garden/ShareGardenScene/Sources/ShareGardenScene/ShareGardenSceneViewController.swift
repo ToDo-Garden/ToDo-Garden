@@ -150,8 +150,7 @@ extension ShareGardenSceneViewController {
 
 extension ShareGardenSceneViewController {
   private func setupMyGardenViewLayoutConstraints() {
-    let topInsetRatio = Constant.Layout.myGardenViewTopInsetRatio
-    let topInset: CGFloat = self.view.bounds.height * topInsetRatio
+    let topInset = Constant.Layout.topInset
     
     self.myGardenView.usingAutolayout()
     
