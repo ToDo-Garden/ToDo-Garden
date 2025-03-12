@@ -30,6 +30,18 @@ let package = Package(
     Package.Dependency.package(
       name: "ShareGardenScene",
       path: "../ShareGardenScene"
+    ),
+    Package.Dependency.package(
+      name: "HomeScene",
+      path: "../HomeScene"
+    ),
+    Package.Dependency.package(
+      name: "RootTabBar",
+      path: "../RootTabBar"
+    ),
+    Package.Dependency.package(
+      name: "SettingScene",
+      path: "../SettingScene"
     )
   ],
   targets: [
@@ -59,6 +71,18 @@ let package = Package(
         Target.Dependency.product(
           name: "ShareGardenScene",
           package: "ShareGardenScene"
+        ),
+        Target.Dependency.product(
+          name: "HomeScene",
+          package: "HomeScene"
+        ),
+        Target.Dependency.product(
+          name: "RootTabBar",
+          package: "RootTabBar"
+        ),
+        Target.Dependency.product(
+          name: "SettingScene",
+          package: "SettingScene"
         )
       ]
     ),

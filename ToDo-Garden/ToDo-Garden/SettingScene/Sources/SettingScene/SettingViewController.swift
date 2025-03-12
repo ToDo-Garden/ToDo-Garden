@@ -328,6 +328,6 @@ import HTTPClient
       settingWorker: SettingWorker(httpClient: HTTPClient.live),
       appServiceWorker: ApplicationServiceWorker()
     )
-  ).build(with: SettingViewController.SomePayload())
+  ).build()
 }
 #endif

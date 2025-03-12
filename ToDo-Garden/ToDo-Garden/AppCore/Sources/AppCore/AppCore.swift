@@ -1,7 +1,13 @@
 import Foundation
 
+import HomeScene
+import HomeSceneAPI
 import HTTPClient
 import OnBoardingScene
+import SettingScene
+import ShareGardenScene
+import SignUpScene
+import SignUpSceneAPI
 import TDFoundation
 
 @MainActor
@@ -15,7 +21,7 @@ public final class AppCore {
     case login
     case signUp
     
-    case home
+    case home(HomeSceneViewControllable)
   }
   var destination: Destination {
     didSet {
@@ -30,6 +36,7 @@ public final class AppCore {
   
   // MARK: 앱시작시 무조건 먼저 호출해야하는 메소드
   public func getStarted() {
+    dependency.router.navigationController.navigationBar.isHidden = true
     if !self.dependency.userDefaults.hasShownFirstLaunchOnboarding {
       self.destination = Destination.onboarding
       Task {
@@ -37,9 +44,17 @@ public final class AppCore {
       }
     } else {
       Task {
-        let isLoggedIn = false
+        let isLoggedIn: Bool
+        do {
+          _ = try KeychainManager.shared.load(forKey: KeychainManager.KeychainKey.accessToken)
+          _ = try KeychainManager.shared.load(forKey: KeychainManager.KeychainKey.refreshToken)
+          isLoggedIn = true
+        } catch {
+          isLoggedIn = false
+        }
+        
         self.destination = isLoggedIn
-        ? Destination.home
+        ? Destination.home(dependency.router.sceneBuilder.home.build())
         : Destination.login
       }
     }
@@ -54,7 +69,24 @@ extension AppCore {
       
       return Dependency(
         userDefaults: UserDefaultsClient.live,
-        router: AppRouter(httpClient: httpClient),
+        router: AppRouter(
+          httpClient: httpClient,
+          sceneBuilder: AppRouter.SceneBuilder(
+            home: HomeSceneBuilder(),
+            signup: SignUpSceneBuilder(
+              dependency: SignUpSceneBuilder.Dependency(
+                signUpWorker: SignUpWorker(httpClient: httpClient)
+              )
+            ),
+            shareGarden: ShareGardenSceneBuilder(dependency: .live),
+            setting: SettingSceneBuilder(
+              dependency: SettingSceneBuilder.Dependency(
+                settingWorker: SettingWorker(),
+                appServiceWorker: ApplicationServiceWorker()
+              )
+            )
+          )
+        ),
         httpClient: httpClient
       )
     }()

@@ -1,16 +1,27 @@
 import UIKit
 
+import HomeScene
+import HomeSceneAPI
 import HTTPClientAPI
 import OnBoardingScene
+import RootTabBar
+import SettingScene
+import ShareGardenScene
 import SignUpScene
 import SignUpSceneAPI
 
+// swiftlint:disable function_body_length
 @MainActor
 public final class AppRouter {
   private let httpClient: HTTPClientAPI
+  let sceneBuilder: SceneBuilder
   
-  public init(httpClient: HTTPClientAPI) {
+  public init(
+    httpClient: HTTPClientAPI,
+    sceneBuilder: SceneBuilder
+  ) {
     self.httpClient = httpClient
+    self.sceneBuilder = sceneBuilder
   }
   
   public var navigationController: UINavigationController = UINavigationController(
@@ -20,8 +31,14 @@ public final class AppRouter {
   typealias Destination = AppCore.Destination
   func switchTo(_ destination: Destination) {
     switch destination {
-    case Destination.home:
-      self.navigationController.viewControllers = []
+    case Destination.home(let viewController):
+      self.navigationController.viewControllers = [
+        RootTabBarController(tabItems: [
+          RootTabBarController.RootTab.home(index: 0, viewController: viewController),
+          RootTabBarController.RootTab.share(index: 1, viewController: sceneBuilder.shareGarden.build()),
+          RootTabBarController.RootTab.settings(index: 2, viewController: sceneBuilder.setting.build())
+        ])
+      ]
       
     case Destination.onboarding:
       self.navigationController.viewControllers = [
@@ -72,7 +89,7 @@ public final class AppRouter {
     login.afterLoginAction = { [weak self] isExistingUser in
       self?.switchTo(
         isExistingUser
-        ? Destination.home
+        ? Destination.home(HomeSceneBuilder().build())
         : Destination.signUp
       )
     }
@@ -83,19 +100,16 @@ public final class AppRouter {
   }
   
   private func buildSignUpSecne() -> UIViewController {
-    let worker = SignUpWorker(httpClient: self.httpClient)
-    let builder = SignUpSceneBuilder(dependency: .init(signUpWorker: worker))
-    
     // TODO: - 추후 마켓팅 정보를 대비한 값입니다.
     let isEventAndPromotionalInformationAgreed = true
-    let signUp: SignUpViewControllable = builder.build(
+    let signUp: SignUpViewControllable = sceneBuilder.signup.build(
       with: SignUpScenePayload(
         agreeOptionalCondition: isEventAndPromotionalInformationAgreed
       )
     )
     signUp.modalPresentationStyle = .overFullScreen
     signUp.afterSignUpAction = { [weak self] in
-      self?.switchTo(Destination.home)
+      self?.switchTo(Destination.home(HomeSceneBuilder().build()))
     }
     return signUp
   }
@@ -109,4 +123,12 @@ extension AppRouter {
       self.agreeOptionalCondition = agreeOptionalCondition
     }
   }
+  
+  public struct SceneBuilder {
+    let home: HomeSceneBuilder
+    let signup: SignUpSceneBuilder
+    let shareGarden: ShareGardenSceneBuilder
+    let setting: SettingSceneBuilder
+  }
 }
+// swiftlint:enable function_body_length

@@ -17,6 +17,8 @@ protocol CalendarViewManager: UICollectionViewDelegate {
   func getCollectionViewHeight() -> CGFloat
   @MainActor func scrollCalendar(to scrollDirection: CalendarScrollDirection, animated: Bool) async
   func getDateString() -> String
+  
+  func highlightToday()
 }
 
 class CalendarViewSingleSelectionDelegate: NSObject {
@@ -87,6 +89,29 @@ extension CalendarViewSingleSelectionDelegate: CalendarViewManager {
 
   func getSelectedItem() -> CalendarItem? {
     return self.selectedItem
+  }
+  
+  func highlightToday() {
+    let snapshot = self.collectionViewDataSource.snapshot()
+    let currentSection = snapshot.sectionIdentifiers[self.currentIndexPath.section]
+    let dates = snapshot.itemIdentifiers(inSection: currentSection)
+    let target = dates
+      .first { Calendar.localeUpdated.isDate($0.date, inSameDayAs: .now) }
+    
+    if let target {
+      if
+        let selectedItem,
+        target != selectedItem,
+        let indexPath = collectionViewDataSource.indexPath(for: selectedItem) {
+        self.selectedItem = target
+        self.collectionView.deselectItem(at: indexPath, animated: true)
+      }
+      
+      self.dateSelectionClosure?(target.date)
+      if let indexPath = self.collectionViewDataSource.indexPath(for: target) {
+        collectionView(collectionView, didSelectItemAt: indexPath)
+      }
+    }
   }
 }
 
