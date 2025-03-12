@@ -15,7 +15,7 @@ import HomeSceneAPI
 protocol HomeSceneDisplayLogic: AnyObject {
 }
 
-final class HomeSceneViewController: UIViewController, HomeSceneViewControllable {
+open class HomeSceneViewController: UIViewController, HomeSceneViewControllable {
   
   // MARK: - View Properties
   private let homeHeaderView: HomeSceneHeaderView
@@ -31,7 +31,7 @@ final class HomeSceneViewController: UIViewController, HomeSceneViewControllable
   
   // MARK: - Object lifecycle
   
-  init() {
+  public init() {
     self.homeHeaderView = HomeSceneHeaderView()
     self.calendarView = CalendarView(model: CalendarView.Model.primary)
     super.init(nibName: nil, bundle: nil)
@@ -39,19 +39,17 @@ final class HomeSceneViewController: UIViewController, HomeSceneViewControllable
   }
   
   @available(*, unavailable)
-  required init?(coder: NSCoder) {
+  required public init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
   
   // MARK: - View lifecycle
-  public override func viewDidLoad() {
+  open override func viewDidLoad() {
     super.viewDidLoad()
     self.setupViews()
   }
-}
-
-extension HomeSceneViewController {
-  private func setBottomSheet() {
+  
+  open func setBottomSheet() {
     let toDoListViewContainer = ToDoListViewContainer()
     self.todoListView = toDoListViewContainer.toDoListView
     let bottomSheet = BottomSheet()
