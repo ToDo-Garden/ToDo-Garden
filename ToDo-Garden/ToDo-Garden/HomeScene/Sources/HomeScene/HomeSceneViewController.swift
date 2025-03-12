@@ -58,6 +58,13 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
     bottomSheet.contentView = self.todoListView
   }
   
+  open func setUserInteractionDisable() {
+    self.calendarView.isUserInteractionEnabled = false
+    self.homeHeaderView.isUserInteractionEnabled = false
+  }
+}
+
+extension HomeSceneViewController {
   private func setupViews() {
     self.setHomeHeaderView()
     self.setCalendarView()
