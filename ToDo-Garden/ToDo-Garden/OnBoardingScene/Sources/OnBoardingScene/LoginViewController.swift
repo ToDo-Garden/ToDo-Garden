@@ -109,7 +109,8 @@ extension LoginViewController {
     self.appleLoginManager = AppleLoginManager(presentationContextProvider: self, httpClient: httpClient)
     self.appleLoginManager?.delegate = self
   }
-  
+
+  @MainActor
   public func showTermAgreementViewForRoutingToSignUpScene() {
     self.termAgreementView.isHidden = false
     UIView.animate(withDuration: 0.5) {

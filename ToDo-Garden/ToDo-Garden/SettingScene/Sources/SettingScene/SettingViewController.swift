@@ -9,15 +9,17 @@ import UIKit
 
 import SettingSceneAPI
 import SettingSceneEntity
+import TDFoundation
 import ToDoGardenUIComponent
 
+@MainActor
 protocol SettingDisplayLogic: AnyObject {
-  func displayFetchedUserNickname(_ nickName: String)
-  func displayFetchedUserProfileImage(_ profileImageData: Data)
+  func displayFetchedUserInfo(_ nickName: String, _ imageUrl: URL?)
   func displayOutdatedAppVersion(_ versionNumber: String)
   func displayLatestAppVersion(_ versionNumber: String)
 }
 
+@MainActor
 final class SettingViewController: UIViewController, SettingViewControllable {
   private let settingLabel: UILabel
   private let profileRow: Styled.Row
@@ -73,7 +75,7 @@ final class SettingViewController: UIViewController, SettingViewControllable {
 // MARK: - Confirm display logic protocol
 
 extension SettingViewController: SettingDisplayLogic {
-  func displayFetchedUserNickname(_ nickName: String) {
+  func displayFetchedUserInfo(_ nickName: String, _ imageUrl: URL?) {
     let rowConfiguration = Styled.Row.Configuration.self
     self.profileRow.configuration = rowConfiguration.profile(
       rowConfiguration.ProfileModel(
@@ -82,10 +84,17 @@ extension SettingViewController: SettingDisplayLogic {
         description: SettingSceneTheme.StringLiteral.ProfileRow.description
       )
     )
-  }
 
-  func displayFetchedUserProfileImage(_ profileImageData: Data) {
-    self.profileRow.iconImage = UIImage(data: profileImageData)
+    guard let imageUrl else { return }
+
+    Task {
+      do {
+        let image = try await ImageClient.live.execute(id: imageUrl)
+        self.profileRow.iconImage = image
+      } catch {
+        debugPrint("SettingScene: Image Download failed")
+      }
+    }
   }
 
   func displayOutdatedAppVersion(_ versionNumber: String) {
@@ -127,6 +136,12 @@ extension SettingViewController {
     self.profileRow.layer.cornerRadius = Constant.ProfileRow.Layer.cornerRadius
     self.profileRow.layer.borderWidth = Constant.ProfileRow.Layer.borderWidth
     self.profileRow.layer.borderColor = UIColor.toDoGardenGreenBackground.cgColor
+
+    if let imageView = self.profileRow.subviews.first?.subviews.first as? UIImageView {
+      imageView.clipsToBounds = true
+      imageView.layer.cornerRadius = 28
+      imageView.contentMode = .scaleAspectFill
+    }
   }
 
   private func setupSubviewDeleagte() {
@@ -304,12 +319,13 @@ extension SettingViewController {
   struct SomePayload: SettingScenePayloadable {}
 }
 
+import HTTPClient
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
   return SettingSceneBuilder(
     dependency: SettingSceneBuilder.Dependency(
-      settingWorker: SettingWorker(),
+      settingWorker: SettingWorker(httpClient: HTTPClient.live),
       appServiceWorker: ApplicationServiceWorker()
     )
   ).build()

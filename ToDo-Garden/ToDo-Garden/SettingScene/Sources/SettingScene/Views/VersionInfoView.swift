@@ -40,6 +40,7 @@ final class VersionInfoView: UIView {
   }
 }
 
+@MainActor
 protocol VersionInfoViewDelegate: AnyObject {
   func didSelectUpdateButton()
 }
