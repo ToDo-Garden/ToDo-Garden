@@ -81,7 +81,7 @@ extension AppCore {
             shareGarden: ShareGardenSceneBuilder(dependency: .live),
             setting: SettingSceneBuilder(
               dependency: SettingSceneBuilder.Dependency(
-                settingWorker: SettingWorker(),
+                settingWorker: SettingWorker(httpClient: HTTPClient.live),
                 appServiceWorker: ApplicationServiceWorker()
               )
             )
