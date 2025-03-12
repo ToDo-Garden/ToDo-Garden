@@ -10,6 +10,12 @@ extension KeyConstants {
       try generate("SUPABASE_API_KEY")
     }
   }
+  
+  public static var appBundleID: String {
+    get throws {
+      try generate("APP_BUNDLE_ID")
+    }
+  }
 }
 
 private func generate(_ key: String) throws -> String {
