@@ -29,8 +29,8 @@ extension TimerStorageWorker {
   )
 }
 
-extension ShareGardenSceneSceneBuilder.Dependency {
-  public static let live = ShareGardenSceneSceneBuilder.Dependency.init(
+extension ShareGardenSceneBuilder.Dependency {
+  public static let live = ShareGardenSceneBuilder.Dependency.init(
     shareGardenSceneWorker: ShareGardenSceneWorker.live
   )
 }

@@ -312,6 +312,6 @@ extension SettingViewController {
       settingWorker: SettingWorker(),
       appServiceWorker: ApplicationServiceWorker()
     )
-  ).build(with: SettingViewController.SomePayload())
+  ).build()
 }
 #endif

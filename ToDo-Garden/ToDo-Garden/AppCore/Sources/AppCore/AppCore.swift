@@ -4,6 +4,8 @@ import HomeScene
 import HomeSceneAPI
 import HTTPClient
 import OnBoardingScene
+import SettingScene
+import ShareGardenScene
 import SignUpScene
 import SignUpSceneAPI
 import TDFoundation
@@ -34,6 +36,7 @@ public final class AppCore {
   
   // MARK: 앱시작시 무조건 먼저 호출해야하는 메소드
   public func getStarted() {
+    dependency.router.navigationController.navigationBar.isHidden = true
     if !self.dependency.userDefaults.hasShownFirstLaunchOnboarding {
       self.destination = Destination.onboarding
       Task {
@@ -73,6 +76,13 @@ extension AppCore {
             signup: SignUpSceneBuilder(
               dependency: SignUpSceneBuilder.Dependency(
                 signUpWorker: SignUpWorker(httpClient: httpClient)
+              )
+            ),
+            shareGarden: ShareGardenSceneBuilder(dependency: .live),
+            setting: SettingSceneBuilder(
+              dependency: SettingSceneBuilder.Dependency(
+                settingWorker: SettingWorker(),
+                appServiceWorker: ApplicationServiceWorker()
               )
             )
           )

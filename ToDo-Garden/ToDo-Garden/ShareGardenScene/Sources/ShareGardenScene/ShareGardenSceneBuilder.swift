@@ -10,7 +10,7 @@ import Foundation
 import ShareGardenSceneAPI
 
 @MainActor
-public struct ShareGardenSceneSceneBuilder {
+public struct ShareGardenSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
   public struct Dependency {
     let shareGardenSceneWorker: ShareGardenSceneWorkable
@@ -29,14 +29,14 @@ public struct ShareGardenSceneSceneBuilder {
   }
 }
 
-extension ShareGardenSceneSceneBuilder.Dependency {
+extension ShareGardenSceneBuilder.Dependency {
 #if DEBUG
   @MainActor
   public static let preview = Self(shareGardenSceneWorker: ShareGardenSceneWorkerStub())
 #endif
 }
 
-extension ShareGardenSceneSceneBuilder: ShareGardenSceneSceneBuildable {
+extension ShareGardenSceneBuilder: ShareGardenSceneBuildable {
   ///  VIP Cycle, 런타임 의존성이 설정된 ViewController 인스턴스를 반환하는 함수입니다.
   /// - Returns: 런타임 의존성, VIP Cycle이 설정된 ViewController를 반환합니다.
   public func build() -> ShareGardenSceneViewControllable {
@@ -46,7 +46,7 @@ extension ShareGardenSceneSceneBuilder: ShareGardenSceneSceneBuildable {
   }
 }
 
-extension ShareGardenSceneSceneBuilder {
+extension ShareGardenSceneBuilder {
   /// VIP Cycle을 설정합니다.
   /// - Returns: VIP Cycle 설정이 완료된 `ViewControllable` 프로토콜을 준수한 `ViewController` 인스턴스를 반환합니다.
   private func configuredVIPCycleShareGardenScene() -> ShareGardenSceneViewController {
