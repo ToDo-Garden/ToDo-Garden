@@ -16,6 +16,12 @@ enum Constant {
     static let bubbleLabelMargin: CGFloat = 5.0
     static let leftBubbleLabelLeading: CGFloat = -44.0
     static let rightBubbleLabelTrailing: CGFloat = 39.0
+    
+    static let tabBarHeight: CGFloat = 87.0
+    static let cellHeight: CGFloat = 30.0
+    static let cellLeading: CGFloat = 20.0
+    static let cellTopMargin1: CGFloat = 65.0
+    static let cellTopMargin2: CGFloat = 20.0
   }
   enum StringLiteral {
     static let buttonTitle: String = "시작하기"
@@ -32,6 +38,11 @@ enum Constant {
     static let leftBubbleTitle: String = "를 눌러 ToDo를 추가할 수 있어요"
     static let rightBubbleTitle: String = "뽀모도로 타이머를 이용하여\n집중력을 향상시킬 수 있어요"
     
-    static let groupName: String = "그룹 1"
+    static let groupName1: String = "그룹 1"
+    static let groupName2: String = "그룹 2"
+    
+    static let tabBarHome: String = "홈"
+    static let tabBarShare: String = "공유"
+    static let tabBarSettings: String = "설정"
   }
 }

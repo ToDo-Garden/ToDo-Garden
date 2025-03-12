@@ -10,23 +10,23 @@ import UIKit
 import ToDoGardenUIResource
 
 extension RootTabBarController {
-  final class RootTabBar: UITabBar {
+  final public class RootTabBar: UITabBar {
     private let topSeparatorLineLayer: CALayer = {
       let topSeparatorLineLayer = CALayer()
       topSeparatorLineLayer.backgroundColor = UIColor.toDoGardenGreenBackground.cgColor
       return topSeparatorLineLayer
     }()
     
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
       super.init(frame: frame)
       self.setupTabBarAppearance()
     }
     
-    required init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
       fatalError("init(coder:) has not been implemented")
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
       super.layoutSubviews()
       self.topSeparatorLineLayer.frame.size = CGSize(width: self.bounds.width, height: 1)
       self.adjustTabBarItemImageInsets()

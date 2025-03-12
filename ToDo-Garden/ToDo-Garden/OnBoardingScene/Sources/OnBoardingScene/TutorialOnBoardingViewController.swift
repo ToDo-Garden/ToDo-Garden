@@ -7,18 +7,27 @@
 
 import UIKit
 
+import HomeScene
+import RootTabBar
 import ToDoGardenUIComponent
 import ToDoGardenUIResource
 
-public final class TutorialOnBoardingViewController: UIViewController {
-  private let cell: ManageGroupTableViewCell
+public final class TutorialOnBoardingViewController: HomeSceneViewController {
+  private let cell1: ManageGroupTableViewCell
+  private let cell2: ManageGroupTableViewCell
   private let leftBubbleLabel: BubbleLabel
   private let rightBubbleLabel: BubbleLabel
+  private let bottomSheet: BottomSheet
+  private let tabBar: RootTabBarController.RootTabBar
   
   public var endAction: (() -> Void)?
   
-  public init() {
-    self.cell = ManageGroupTableViewCell(
+  public override init() {
+    self.cell1 = ManageGroupTableViewCell(
+      style: UITableViewCell.CellStyle.default,
+      reuseIdentifier: ManageGroupTableViewCell.identifier
+    )
+    self.cell2 = ManageGroupTableViewCell(
       style: UITableViewCell.CellStyle.default,
       reuseIdentifier: ManageGroupTableViewCell.identifier
     )
@@ -32,7 +41,9 @@ public final class TutorialOnBoardingViewController: UIViewController {
       iconImage: UIImage.timerButtonImage,
       text: Constant.StringLiteral.rightBubbleTitle
     )
-    super.init(nibName: nil, bundle: nil)
+    self.bottomSheet = BottomSheet()
+    self.tabBar = RootTabBarController.RootTabBar()
+    super.init()
   }
   
   @available(*, unavailable)
@@ -46,30 +57,92 @@ public final class TutorialOnBoardingViewController: UIViewController {
     self.setupCell()
     self.setupBubbleLabels()
     self.setupGestureRecognizers()
+    self.setUserInteractionDisable()
+    self.setupTabBar()
+  }
+  
+  override public func setBottomSheet() {
+    self.bottomSheet.usingAutolayout()
+    self.view.addSubview(self.bottomSheet)
+    self.bottomSheet.isUserInteractionEnabled = false
   }
 }
 
 extension TutorialOnBoardingViewController {
+  private func setupTabBar() {
+    self.tabBar.items = self.makeTabBarItems()
+    self.tabBar.barTintColor = .white
+    self.tabBar.tintColor = .toDoGardenGreenDark
+    self.tabBar.selectedItem = self.tabBar.items?[0]
+    self.tabBar.isUserInteractionEnabled = false
+    self.view.addSubview(self.tabBar)
+    self.tabBar.usingAutolayout()
+    
+    NSLayoutConstraint.activate([
+      self.tabBar.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+      self.tabBar.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+      self.tabBar.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+      self.tabBar.heightAnchor.constraint(equalToConstant: Constant.Layout.tabBarHeight)
+    ])
+  }
+
+  private func makeTabBarItems() -> [UITabBarItem] {
+    return [
+      (Constant.StringLiteral.tabBarHome, UIImage.homeTabBarItemImage, 0),
+      (Constant.StringLiteral.tabBarShare, UIImage.shareTabBarItemImage, 1),
+      (Constant.StringLiteral.tabBarSettings, UIImage.settingsTabBarItemImage, 2)
+    ].map { UITabBarItem(title: $0.0, image: $0.1, tag: $0.2) }
+  }
+
+  // swiftlint:disable function_body_length
   private func setupCell() {
-    self.cell.isUserInteractionEnabled = false
-    self.cell.applyModelSecondary(
+    self.cell1.isUserInteractionEnabled = false
+    self.cell1.applyModelSecondary(
       id: UUID(),
-      groupName: Constant.StringLiteral.groupName,
-      progressColor: UIColor.red,
+      groupName: Constant.StringLiteral.groupName1,
+      progressColor: UIColor.toDoGardenYellow,
       progressRate: 0.5
     )
-    self.cell.usingAutolayout()
-    self.view.addSubview(self.cell)
+    self.cell1.usingAutolayout()
+    self.view.addSubview(self.cell1)
     
-    NSLayoutConstraint.activate(
-      [
-        self.cell.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-        self.cell.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
-        self.cell.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-        self.cell.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
-      ]
+    self.cell2.isUserInteractionEnabled = false
+    self.cell2.applyModelSecondary(
+      id: UUID(),
+      groupName: Constant.StringLiteral.groupName2,
+      progressColor: UIColor.red,
+      progressRate: 1.0
     )
+    self.cell2.usingAutolayout()
+    self.view.addSubview(self.cell2)
+    
+    NSLayoutConstraint.activate([
+      self.cell1.heightAnchor.constraint(equalToConstant: Constant.Layout.cellHeight),
+      self.cell1.centerXAnchor.constraint(equalTo: self.bottomSheet.centerXAnchor),
+      self.cell1.leadingAnchor.constraint(
+        equalTo: self.bottomSheet.leadingAnchor,
+        constant: Constant.Layout.cellLeading
+      ),
+      self.cell1.trailingAnchor.constraint(equalTo: self.bottomSheet.trailingAnchor),
+      self.cell1.topAnchor.constraint(
+        equalTo: self.bottomSheet.topAnchor,
+        constant: Constant.Layout.cellTopMargin1
+      ),
+
+      self.cell2.heightAnchor.constraint(equalToConstant: Constant.Layout.cellHeight),
+      self.cell2.centerXAnchor.constraint(equalTo: self.bottomSheet.centerXAnchor),
+      self.cell2.leadingAnchor.constraint(
+        equalTo: self.bottomSheet.leadingAnchor,
+        constant: Constant.Layout.cellLeading
+      ),
+      self.cell2.trailingAnchor.constraint(equalTo: self.bottomSheet.trailingAnchor),
+      self.cell2.topAnchor.constraint(
+        equalTo: self.cell1.bottomAnchor,
+        constant: Constant.Layout.cellTopMargin2
+      )
+    ])
   }
+  // swiftlint:enable function_body_length
   
   private func setupBubbleLabels() {
     self.leftBubbleLabel.delegate = self
@@ -88,8 +161,8 @@ extension TutorialOnBoardingViewController {
   }
   
   private func setBubbleConstraints() {
-    guard let groupNameButton = self.cell.groupNameButton,
-      let rightImageButton = self.cell.rightImageButton else {
+    guard let groupNameButton = self.cell2.groupNameButton,
+      let rightImageButton = self.cell2.rightImageButton else {
       return
     }
     
