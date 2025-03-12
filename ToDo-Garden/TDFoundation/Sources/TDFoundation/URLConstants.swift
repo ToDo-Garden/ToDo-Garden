@@ -15,6 +15,8 @@ public enum URLConstants {
   public enum Profile { }
   public enum Timer { }
   public enum Stats { }
+  public enum Itunes { }
+  public enum Apps { }
 }
 
 // swiftlint:disable all
@@ -65,5 +67,14 @@ extension URLConstants.Profile {
 
 extension URLConstants.Timer {
   public static let postCompletedTimerItems = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/complete_timer")!
+}
+
+extension URLConstants.Itunes {
+  public static let lookup = URL(string: "https://itunes.apple.com/lookup")!
+}
+
+extension URLConstants.Apps {
+  //TODO: - app id 넣어야합니다.
+  public static let appstore = URL(string: "https://apps.apple.com/app/id/여기에")!
 }
 // swiftlint:enable all
