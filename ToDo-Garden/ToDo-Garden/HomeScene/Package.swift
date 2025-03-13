@@ -19,7 +19,10 @@ let package = Package(
   ],
   dependencies: [
     Package.Dependency.package(path: "../ToDoGardenUI"),
-    Package.Dependency.package(path: "../TDUtility")
+    Package.Dependency.package(path: "../TDUtility"),
+    Package.Dependency.package(path: "../ManageGroupScene"),
+    Package.Dependency.package(path: "../EditToDoScene"),
+    Package.Dependency.package(path: "../TimerScene")
   ],
   targets: [
     Target.target(
@@ -54,6 +57,18 @@ let package = Package(
         Target.Dependency.product(
           name: "ToDoGardenUIResource",
           package: "ToDoGardenUI"
+        ),
+        Target.Dependency.product(
+          name: "ManageGroupScene",
+          package: "ManageGroupScene"
+        ),
+        Target.Dependency.product(
+          name: "EditToDoScene",
+          package: "EditToDoScene"
+        ),
+        Target.Dependency.product(
+          name: "TimerScene",
+          package: "TimerScene"
         )
       ]
     )
