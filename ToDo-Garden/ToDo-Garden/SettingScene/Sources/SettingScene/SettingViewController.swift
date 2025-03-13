@@ -136,12 +136,6 @@ extension SettingViewController {
     self.profileRow.layer.cornerRadius = Constant.ProfileRow.Layer.cornerRadius
     self.profileRow.layer.borderWidth = Constant.ProfileRow.Layer.borderWidth
     self.profileRow.layer.borderColor = UIColor.toDoGardenGreenBackground.cgColor
-
-    if let imageView = self.profileRow.subviews.first?.subviews.first as? UIImageView {
-      imageView.clipsToBounds = true
-      imageView.layer.cornerRadius = 28
-      imageView.contentMode = .scaleAspectFill
-    }
   }
 
   private func setupSubviewDeleagte() {

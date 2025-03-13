@@ -16,6 +16,7 @@ extension Styled {
         if var model = self.configuration.profileModel, let newValue {
           model.image = newValue
           self.configuration = Configuration.profile(model)
+          self.updateProfileImageView(with: newValue)
         }
       }
     }
@@ -98,6 +99,16 @@ extension Styled {
       default: break
       }
       self.stackView = stack
+    }
+    
+    private func updateProfileImageView(with image: UIImage) {
+      guard let imageView = self.stackView.arrangedSubviews
+        .compactMap({ $0 as? UIImageView })
+        .first else { return }
+      
+      imageView.image = image
+      imageView.layer.cornerRadius = imageView.frame.width / 2
+      imageView.layer.masksToBounds = true
     }
   }
 }
