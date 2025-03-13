@@ -49,7 +49,14 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
     self.setupViews()
   }
   
-  open func setBottomSheet() {
+  override func viewIsAppearing(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    self.navigationController?.navigationBar.isHidden = true
+  }
+}
+
+extension HomeSceneViewController {
+  private func setBottomSheet() {
     let toDoListViewContainer = ToDoListViewContainer()
     self.todoListView = toDoListViewContainer.toDoListView
     let bottomSheet = BottomSheet()
@@ -69,6 +76,7 @@ extension HomeSceneViewController {
     self.setHomeHeaderView()
     self.setCalendarView()
     self.setBottomSheet()
+    self.setManageGroupButtonTapped()
   }
   
   private func setHomeHeaderView() {
@@ -111,6 +119,12 @@ extension HomeSceneViewController {
         )
       ]
     )
+  }
+  
+  private func setManageGroupButtonTapped() {
+    self.homeHeaderView.manageGroupButtonTapped = UIAction(handler: { [weak self] _ in
+      self?.router?.routeToManageGroupScene()
+    })
   }
 }
 
