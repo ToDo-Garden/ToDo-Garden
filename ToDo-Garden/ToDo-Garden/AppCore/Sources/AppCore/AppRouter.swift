@@ -89,7 +89,7 @@ public final class AppRouter {
     login.afterLoginAction = { [weak self] isExistingUser in
       self?.switchTo(
         isExistingUser
-        ? Destination.home(HomeSceneBuilder().build())
+        ? Destination.home(HomeSceneBuilder(dependency: .live).build())
         : Destination.signUp
       )
     }
@@ -109,7 +109,7 @@ public final class AppRouter {
     )
     signUp.modalPresentationStyle = .overFullScreen
     signUp.afterSignUpAction = { [weak self] in
-      self?.switchTo(Destination.home(HomeSceneBuilder().build()))
+      self?.switchTo(Destination.home(HomeSceneBuilder(dependency: .live).build()))
     }
     return signUp
   }
