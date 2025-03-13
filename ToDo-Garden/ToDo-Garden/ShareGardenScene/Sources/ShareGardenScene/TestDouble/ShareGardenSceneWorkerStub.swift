@@ -73,7 +73,8 @@ actor ShareGardenSceneWorkerStub: ShareGardenSceneWorkable {
     let myGarden = ShareGardenScene.MyGarden(
       nickname: UUID().uuidString,
       description: UUID().uuidString,
-      pomodoroRecords: PomodoroRecordCollection(pomodoroRecords: pomodoroRecords)
+      pomodoroRecords: PomodoroRecordCollection(pomodoroRecords: pomodoroRecords),
+      imageURL: nil
     )
     
     try await Task.sleep(nanoseconds: 2_000_000_000)

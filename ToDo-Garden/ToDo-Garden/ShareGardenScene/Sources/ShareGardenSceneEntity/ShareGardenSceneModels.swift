@@ -33,15 +33,18 @@ public enum ShareGardenScene {
     public let nickname: String
     public let description: String
     public let pomodoroRecords: PomodoroRecordCollection
+    public let imageURL: URL?
     
     public init(
       nickname: String,
       description: String,
-      pomodoroRecords: PomodoroRecordCollection
+      pomodoroRecords: PomodoroRecordCollection,
+      imageURL: URL?
     ) {
       self.nickname = nickname
       self.description = description
       self.pomodoroRecords = pomodoroRecords
+      self.imageURL = imageURL
     }
   }
   
@@ -78,15 +81,18 @@ public enum ShareGardenScene {
       public let nickname: String
       public let description: String
       public let pomodoroRecords: PomodoroRecordCollection
+      public let imageURL: URL?
       
       public init(
         nickname: String,
         description: String,
-        pomodoroRecords: PomodoroRecordCollection
+        pomodoroRecords: PomodoroRecordCollection,
+        imageURL: URL?
       ) {
         self.nickname = nickname
         self.description = description
         self.pomodoroRecords = pomodoroRecords
+        self.imageURL = imageURL
       }
     }
   }
