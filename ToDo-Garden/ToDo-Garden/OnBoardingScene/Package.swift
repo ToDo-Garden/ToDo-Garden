@@ -11,7 +11,9 @@ let package = Package(
   ],
   dependencies: [
     Package.Dependency.package(path: "../ToDoGardenUI"),
-    Package.Dependency.package(path: "../TDFoundation")
+    Package.Dependency.package(path: "../TDFoundation"),
+    Package.Dependency.package(path: "../HomeScene"),
+    Package.Dependency.package(path: "../RootTabBar")
   ],
   targets: [
     .target(
@@ -28,6 +30,14 @@ let package = Package(
         Target.Dependency.product(
           name: "ToDoGardenUIResource",
           package: "ToDoGardenUI"
+        ),
+        Target.Dependency.product(
+          name: "HomeScene",
+          package: "HomeScene"
+        ),
+        Target.Dependency.product(
+          name: "RootTabBar",
+          package: "RootTabBar"
         )
       ]
     )
