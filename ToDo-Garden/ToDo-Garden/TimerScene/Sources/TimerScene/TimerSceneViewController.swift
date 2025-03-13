@@ -350,7 +350,7 @@ import HTTPClient
     ),
     timerStorage: TimerStorage.live
   )
-  let viewController = TimerSceneSceneBuilder(
+  let viewController = TimerSceneBuilder(
     dependency: .init(
       timerWorker: timerWorker,
       storageWorker: storageWorker,

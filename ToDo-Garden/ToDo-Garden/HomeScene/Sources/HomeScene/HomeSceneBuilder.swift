@@ -7,19 +7,33 @@
 
 import Foundation
 
+import EditToDoSceneAPI
 import HomeSceneAPI
+import ManageGroupSceneAPI
+import TimerSceneAPI
 
 @MainActor
 public struct HomeSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
   public struct Dependency {
-    public init() {
+    let manageGroupSceneBuilder: ManageGroupSceneBuildable
+    let editToDoSceneBuilder: EditToDoSceneBuildable
+    let timerSceneBuilder: TimerSceneBuildable
+    
+    public init(
+      manageGroupSceneBuilder: ManageGroupSceneBuildable,
+      editToDoSceneBuilder: EditToDoSceneBuildable,
+      timerSceneBuilder: TimerSceneBuildable
+    ) {
+      self.manageGroupSceneBuilder = manageGroupSceneBuilder
+      self.editToDoSceneBuilder = editToDoSceneBuilder
+      self.timerSceneBuilder = timerSceneBuilder
     }
   }
   
   private let dependency: Dependency
   
-  public init(dependency: Dependency = Dependency()) {
+  public init(dependency: Dependency) {
     self.dependency = dependency
   }
 }
@@ -44,7 +58,11 @@ extension HomeSceneBuilder {
   private func configureVIPCycle(for viewController: HomeSceneViewController) -> HomeSceneViewController {
     let interactor = HomeSceneInteractor()
     let presenter = HomeScenePresenter()
-    let router = HomeSceneRouter()
+    let router = HomeSceneRouter(
+      manageGroupSceneBuilder: self.dependency.manageGroupSceneBuilder,
+      editToDoSceneBuilder: self.dependency.editToDoSceneBuilder,
+      timerSceneBuilder: self.dependency.timerSceneBuilder
+    )
     viewController.interactor = interactor
     viewController.router = router
     interactor.presenter = presenter

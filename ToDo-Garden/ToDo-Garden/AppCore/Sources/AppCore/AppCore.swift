@@ -72,7 +72,7 @@ extension AppCore {
         router: AppRouter(
           httpClient: httpClient,
           sceneBuilder: AppRouter.SceneBuilder(
-            home: HomeSceneBuilder(),
+            home: HomeSceneBuilder(dependency: .live),
             signup: SignUpSceneBuilder(
               dependency: SignUpSceneBuilder.Dependency(
                 signUpWorker: SignUpWorker(httpClient: httpClient)
