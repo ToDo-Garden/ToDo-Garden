@@ -29,7 +29,8 @@ extension ShareGardenScenePresenter: ShareGardenScenePresentationLogic {
     let viewModel = ShareGardenScene.RequestMyGarden.ViewModel(
       nickname: response.myGarden.nickname,
       description: response.myGarden.description,
-      pomodoroRecords: response.myGarden.pomodoroRecords
+      pomodoroRecords: response.myGarden.pomodoroRecords,
+      imageURL: response.myGarden.imageURL
     )
     
     self.viewController?.displayMyGarden(viewModel)

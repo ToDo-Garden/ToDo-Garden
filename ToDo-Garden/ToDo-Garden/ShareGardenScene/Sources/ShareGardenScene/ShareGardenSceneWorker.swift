@@ -80,11 +80,13 @@ public struct ShareGardenSceneWorker: ShareGardenSceneWorkable {
         try self.checkStatusCode(response: response)
         let decodedBody: [ShareGardenScene.MyGardenDTO] = try self.decodeBody(response: response)
         guard let myInfo = decodedBody.first else { throw HTTPClientError.deserializationError }
+        let imageURL = myInfo.imageUrl.flatMap(URL.init)
         
         let result = ShareGardenScene.MyGarden(
           nickname: myInfo.nickname,
           description: myInfo.introduction,
-          pomodoroRecords: self.makePomodoroCollection(from: myInfo.pomodoroRecords)
+          pomodoroRecords: self.makePomodoroCollection(from: myInfo.pomodoroRecords),
+          imageURL: imageURL
         )
         return result
       }

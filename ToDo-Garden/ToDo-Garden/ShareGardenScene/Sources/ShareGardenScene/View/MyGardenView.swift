@@ -7,6 +7,7 @@
 
 import UIKit
 
+import TDFoundation
 import TDUtility
 import ToDoGardenUIComponent
 import ToDoGardenUIResource
@@ -105,7 +106,11 @@ extension ShareGardenSceneViewController {
     
     func update(viewModel: ShareGardenScene.RequestMyGarden.ViewModel) {
       self.updateGardenView(with: viewModel.pomodoroRecords)
-      self.updateProfileInfoView(with: viewModel.nickname, viewModel.description)
+      self.updateProfileInfoView(
+        with: viewModel.nickname,
+        viewModel.description,
+        imageURL: viewModel.imageURL
+      )
       self.stopShimmeringAnimation()
     }
     
@@ -167,7 +172,7 @@ extension ShareGardenSceneViewController.MyGardenView {
     self.addArrangedSubview(spacer)
   }
   
-  private func updateProfileInfoView(with nickname: String, _ description: String) {
+  private func updateProfileInfoView(with nickname: String, _ description: String, imageURL: URL?) {
     self.profileInfoView.configuration = Styled.Row.Configuration.profile(
       Styled.Row.Configuration.ProfileModel(
         style: Styled.Row.Configuration.ProfileModel.Style.shareProfile,
@@ -175,6 +180,13 @@ extension ShareGardenSceneViewController.MyGardenView {
         description: description
       )
     )
+    
+    Task {
+      guard let imageURL = imageURL else { return }
+      
+      let image = try await Cache.shared.execute(id: imageURL)
+      self.profileInfoView.iconImage = try await Cache.shared.execute(id: imageURL)
+    }
   }
   
   private func updateGardenView(with pomodoroRecordCollection: PomodoroRecordCollection) {
