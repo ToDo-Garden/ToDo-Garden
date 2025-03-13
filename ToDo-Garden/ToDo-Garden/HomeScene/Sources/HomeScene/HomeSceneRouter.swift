@@ -66,18 +66,9 @@ extension HomeSceneRouter: HomeSceneRoutingLogic {
 // MARK: - Declare Payload for scene
 struct EditToDoScenePayload: EditToDoScenePayloadable {
   var toDoId: UUID
-  
-  init(toDoId: UUID) {
-    self.toDoId = toDoId
-  }
 }
 
 struct TimerScenePayload: TimerScenePayloadable {
   var groupId: String
   var groupName: String
-  
-  init(groupId: String, groupName: String) {
-    self.groupId = groupId
-    self.groupName = groupName
-  }
 }
