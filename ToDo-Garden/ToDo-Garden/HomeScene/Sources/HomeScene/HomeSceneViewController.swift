@@ -49,14 +49,12 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
     self.setupViews()
   }
   
-  override func viewIsAppearing(_ animated: Bool) {
+  open override func viewIsAppearing(_ animated: Bool) {
     super.viewWillAppear(animated)
     self.navigationController?.navigationBar.isHidden = true
   }
-}
-
-extension HomeSceneViewController {
-  private func setBottomSheet() {
+  
+  open func setBottomSheet() {
     let toDoListViewContainer = ToDoListViewContainer()
     self.todoListView = toDoListViewContainer.toDoListView
     let bottomSheet = BottomSheet()
