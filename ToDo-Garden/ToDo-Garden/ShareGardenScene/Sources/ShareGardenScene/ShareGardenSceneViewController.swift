@@ -9,6 +9,7 @@ import UIKit
 
 import ShareGardenSceneAPI
 import ShareGardenSceneEntity
+import ToDoGardenUIComponent
 
 @MainActor
 protocol ShareGardenSceneDisplayLogic: AnyObject {
@@ -19,7 +20,7 @@ protocol ShareGardenSceneDisplayLogic: AnyObject {
   func stopShimmeringFriendsGardenList()
 }
 
-final class ShareGardenSceneViewController: UIViewController, ShareGardenSceneViewControllable {
+final public class ShareGardenSceneViewController: UIViewController, ShareGardenSceneViewControllable {
   
   // MARK: - VIP Properties
   
@@ -33,25 +34,25 @@ final class ShareGardenSceneViewController: UIViewController, ShareGardenSceneVi
   
   // MARK: - Object lifecycle
   
-  init(friendsGardenStore: FriendsGardenStore) {
+  public init(friendsGardenStore: FriendsGardenStore) {
     self.myGardenView = MyGardenView()
     self.friendsGardenView = FriendsGardenView(friendsGardenStore: friendsGardenStore)
     super.init(nibName: nil, bundle: nil)
   }
   
   @available(*, unavailable)
-  required init?(coder: NSCoder) {
+  required public init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
  
   // MARK: - View life cycle
-  override func viewDidLoad() {
+  public override func viewDidLoad() {
     super.viewDidLoad()
     self.setup()
     self.updateViewContents()
   }
  
-  override func viewDidDisappear(_ animated: Bool) {
+  public override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
     self.cleanUpViewResources()
   }
@@ -170,6 +171,30 @@ extension ShareGardenSceneViewController {
       self.friendsGardenView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
       self.friendsGardenView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
     ])
+  }
+}
+
+extension ShareGardenSceneViewController {
+  public func setForGuide() {
+    self.view.isShimmering = false
+    let myGardenView = ShareGardenScene.RequestMyGarden.ViewModel(
+      nickname: "홍길동",
+      description: "형을 형이라 부르지 못한다.",
+      pomodoroRecords: PomodoroRecordCollection.fixedGardenView,
+      imageURL: nil
+    )
+    
+    self.myGardenView.update(viewModel: myGardenView)
+    self.friendsGardenView.displayFriendsGardenList([UUID()])
+    self.myGardenView.stopShimmeringAnimation()
+  }
+  
+  public func getMyProfileView() -> UIView {
+    return self.myGardenView.getMyProfileViewView()
+  }
+  
+  public func getShareButton() -> UIView {
+    return self.myGardenView.getShareButton()
   }
 }
 

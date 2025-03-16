@@ -9,9 +9,9 @@ import Foundation
 import struct UIKit.NSDirectionalEdgeInsets
 
 extension ShareGardenSceneViewController {
-  enum Constant {
+  public enum Constant {
     enum StringLiteral { }
-    enum Layout { }
+    public enum Layout { }
   }
 }
 
@@ -36,7 +36,7 @@ extension ShareGardenSceneViewController.Constant.StringLiteral {
 // MARK: - Layout
 
 extension ShareGardenSceneViewController.Constant.Layout {
-  static let topInset: CGFloat = 21
+  public static let topInset: CGFloat = 21
   
   enum SectionHeaderView {
     static let spacingRatio: CGFloat = 100 / 323
