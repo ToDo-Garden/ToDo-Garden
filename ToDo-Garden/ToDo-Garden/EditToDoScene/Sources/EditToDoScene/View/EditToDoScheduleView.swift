@@ -140,6 +140,17 @@ extension EditToDoScheduleView {
   }
 }
 
+extension EditToDoScheduleView {
+  func setForGuide() {
+    self.editToDoAlarmView.setForGuide()
+    self.editToDoRepetitionView.setForGuide()
+  }
+  
+  func getAlarmTimeView() -> UIView {
+    return self.editToDoAlarmView.getAlarmTimeView()
+  }
+}
+
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
