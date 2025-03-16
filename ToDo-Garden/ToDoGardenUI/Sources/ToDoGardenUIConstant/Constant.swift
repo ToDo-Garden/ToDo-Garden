@@ -51,4 +51,5 @@ public enum Constant {
   public enum DefaultModalNavigationBar { }
   public enum ToDoGroupSectionHeaderView { }
   public enum CheckBoxAlertView { }
+  public enum TermsTextView { }
 }
