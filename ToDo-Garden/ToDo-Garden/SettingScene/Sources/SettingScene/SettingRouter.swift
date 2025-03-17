@@ -9,8 +9,14 @@ import Foundation
 
 import GuideScene
 import SettingSceneAPI
+import ToDoGardenUIComponent
+import ToDoGardenUIConstant
 
 protocol SettingRoutingLogic {
+  func routeToNotice()
+  func routeToTermsOfService()
+  func routeToPrivacyPolicy()
+  func routeToSendingFeedback()
   func routeToGuideScene()
 }
 
@@ -21,12 +27,42 @@ protocol SettingDataPassing {
 class SettingRouter: SettingDataPassing {
 	weak var viewController: SettingViewController?
 	var dataStore: SettingDataStore?
-  
+  let termsTextView: TermsTextViewController = TermsTextViewController(title: "", text: "")
 }
 
 // MARK: - Routing
 
 extension SettingRouter: SettingRoutingLogic {
+  func routeToNotice() {
+    self.termsTextView.update(
+      title: Constant.TermsTextView.noticeTitle,
+      text: Constant.TermsTextView.noticeContent
+    )
+    
+    self.viewController?.navigationController?.pushViewController(self.termsTextView, animated: true)
+  }
+  
+  func routeToTermsOfService() {
+    self.termsTextView.update(
+      title: Constant.TermsTextView.termsOfServiceTitle,
+      text: Constant.TermsTextView.termsOfServiceContent
+    )
+    
+    self.viewController?.navigationController?.pushViewController(self.termsTextView, animated: true)
+  }
+  
+  func routeToPrivacyPolicy() {
+    self.termsTextView.update(
+      title: Constant.TermsTextView.privacyPolicyTitle,
+      text: Constant.TermsTextView.privacyPolicyContent
+    )
+    
+    self.viewController?.navigationController?.pushViewController(self.termsTextView, animated: true)
+  }
+  
+  func routeToSendingFeedback() {
+    self.viewController?.showToast(message: "준비중인 기능입니다. 앱스토어 리뷰를 이용해주세요.")
+
   func routeToGuideScene() {
     // TODO: GuideDetailViewController는 임시로 연결해놓았고, GuideDetailViewController로 진입할 수 있는 VC로 연결되어야함
     let guideSceneViewController = GuideDetailViewController(.todoEdit)

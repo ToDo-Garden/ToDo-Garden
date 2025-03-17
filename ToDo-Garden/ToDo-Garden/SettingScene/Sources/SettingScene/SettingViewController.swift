@@ -68,6 +68,7 @@ final class SettingViewController: UIViewController, SettingViewControllable {
 
   override func viewIsAppearing(_ animated: Bool) {
     super.viewIsAppearing(animated)
+    self.navigationController?.navigationBar.isHidden = true
     self.interactor?.prepareSettingSceneData()
   }
 }
@@ -146,6 +147,7 @@ extension SettingViewController {
   private func setupSettingCollectionView() {
     self.settingCollectionView.backgroundColor = UIColor.toDoGardenWhite
     self.setupSettingCollectionViewRegistration()
+    self.settingCollectionView.delegate = self
     self.settingCollectionView.isScrollEnabled = false
     self.settingCollectionViewDataSource = self.makeDiffableDataSource(with: self.settingCollectionView)
     self.settingCollectionView.dataSource = self.settingCollectionViewDataSource
@@ -195,7 +197,7 @@ extension SettingViewController {
       image: UIImage.leafImage,
       title: sectionTitle.appSupport,
       items: [
-        Item(title: itemTitle.announcement, isShowingModal: false, position: SettingCollectionViewCell.Position.top),
+        Item(title: itemTitle.announcement, isShowingModal: true, position: SettingCollectionViewCell.Position.top),
         Item(title: itemTitle.privacyPolicy, isShowingModal: true, position: SettingCollectionViewCell.Position.middle),
         Item(title: itemTitle.termsOfUse, isShowingModal: true, position: SettingCollectionViewCell.Position.middle),
         Item(title: itemTitle.sendFeedback, isShowingModal: true, position: SettingCollectionViewCell.Position.bottom)
@@ -316,6 +318,25 @@ extension SettingViewController {
   }
 }
 
+extension SettingViewController: UICollectionViewDelegate {
+  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    if indexPath.section == 1 {
+      switch indexPath.item {
+      case 0:
+        self.router?.routeToNotice()
+      case 1:
+        self.router?.routeToPrivacyPolicy()
+      case 2:
+        self.router?.routeToTermsOfService()
+      case 3:
+        self.router?.routeToSendingFeedback()
+      default:
+        break
+      }
+    }
+  }
+}
+
 extension SettingViewController {
   struct SomePayload: SettingScenePayloadable {}
 }
@@ -324,11 +345,14 @@ import HTTPClient
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  return SettingSceneBuilder(
+  let settingVC = SettingSceneBuilder(
     dependency: SettingSceneBuilder.Dependency(
       settingWorker: SettingWorker(httpClient: HTTPClient.live),
       appServiceWorker: ApplicationServiceWorker()
     )
   ).build()
+  
+  let navi = UINavigationController(rootViewController: settingVC)
+  return navi
 }
 #endif
