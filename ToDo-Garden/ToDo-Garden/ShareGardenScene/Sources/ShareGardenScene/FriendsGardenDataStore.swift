@@ -10,7 +10,7 @@ import Foundation
 import ShareGardenSceneEntity
 
 @MainActor
-final class FriendsGardenDataStore {
+final public class FriendsGardenDataStore {
   private var friendsGardens: [ShareGardenScene.FriendsGarden] {
     didSet {
       self.continuation.yield(self.friendsGardens)
@@ -22,7 +22,7 @@ final class FriendsGardenDataStore {
     bufferingPolicy: AsyncStream.Continuation.BufferingPolicy.bufferingNewest(1)
   )
 
-  nonisolated init() {
+  nonisolated public init() {
     self.friendsGardens = []
   }
 

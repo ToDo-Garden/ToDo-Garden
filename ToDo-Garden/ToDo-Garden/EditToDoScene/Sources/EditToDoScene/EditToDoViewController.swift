@@ -27,7 +27,7 @@ protocol EditToDoDisplayLogic: AnyObject {
   func displayChangedAlarmTime(viewModel: EditToDo.ChangeAlarmTime.ViewModel)
 }
 
-final class EditToDoViewController: UIViewController, EditToDoViewControllable {
+final public class EditToDoViewController: UIViewController, EditToDoViewControllable {
   private(set) var editToDoSegmentedControl: EditToDoSegmentedControl
   private(set) var editModeScrollView: UIScrollView
   private(set) var editToDoView: EditToDoView
@@ -43,7 +43,7 @@ final class EditToDoViewController: UIViewController, EditToDoViewControllable {
 
   // MARK: - Object lifecycle
 
-  init() {
+  public init() {
     self.editToDoSegmentedControl = EditToDoSegmentedControl()
     self.editModeScrollView = UIScrollView()
     self.editToDoView = EditToDoView()
@@ -56,23 +56,23 @@ final class EditToDoViewController: UIViewController, EditToDoViewControllable {
   }
 
   @available(*, unavailable)
-  required init?(coder: NSCoder) {
+  public required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
   // MARK: - View lifecycle
 
-  override func viewDidLoad() {
+  public override func viewDidLoad() {
     super.viewDidLoad()
     self.setup()
   }
 
-  override func viewIsAppearing(_ animated: Bool) {
+  public override func viewIsAppearing(_ animated: Bool) {
     super.viewIsAppearing(animated)
     self.interactor?.prepareSceneData()
   }
 
-  override func viewDidLayoutSubviews() {
+  public override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
     // MARK: 투두 수정화면 진입시 투두 수정 모드로 변경합니다.
     self.scrollToEditToDoMode = {
@@ -201,7 +201,7 @@ extension EditToDoViewController: EditToDoDisplayLogic {
 // MARK: ToDoGardenAlertController Delegate Functions
 
 extension EditToDoViewController: ToDoGardenAlertControllerDelegate {
-  func handleButtonAction(
+  public func handleButtonAction(
     _ buttonType: ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType
   ) {
     self.closeAlert()
@@ -256,7 +256,7 @@ extension EditToDoViewController: EditToDoView.EditToDoViewDelegate {
 // MARK: ScrollView Delegate Functions
 
 extension EditToDoViewController: UIScrollViewDelegate {
-  func scrollViewWillEndDragging(
+  public func scrollViewWillEndDragging(
     _ scrollView: UIScrollView,
     withVelocity velocity: CGPoint,
     targetContentOffset: UnsafeMutablePointer<CGPoint>
@@ -292,6 +292,37 @@ extension EditToDoViewController {
       ).build(with: EditToDoViewController.EditToDoScenePayload(toDoId: UUID()))
       self.navigationController?.pushViewController(editToDoViewController, animated: true)
     }
+  }
+}
+
+extension EditToDoViewController {
+  public func setForGuide(index: Int) {
+    switch index {
+    case 1:
+      self.editToDoSegmentedControl.selectedSegmentIndex = 1
+      self.editToDoView.setForGuide()
+    case 2:
+      self.editToDoSegmentedControl.selectedSegmentIndex = 0
+      self.editToDoScheduleView.setForGuide()
+    default:
+      break
+    }
+  }
+  
+  public func getToDoNameInputView() -> UIView {
+    return self.editToDoView.getToDoNameInputView()
+  }
+  
+  public func getGroupSelectionView() -> UIView {
+    return self.editToDoView.getGroupSelectionView()
+  }
+  
+  public func getSegmentedControl() -> UIView {
+    return self.editToDoSegmentedControl
+  }
+  
+  public func getAlarmTimeView() -> UIView {
+    return self.editToDoScheduleView.getAlarmTimeView()
   }
 }
 

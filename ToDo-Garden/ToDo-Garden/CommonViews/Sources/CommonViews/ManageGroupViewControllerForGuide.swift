@@ -76,34 +76,15 @@ final class ManageGroupViewControllerForGuide: ManageGroupViewController {
 
 // MARK: - Regions with Offset
 extension ManageGroupViewControllerForGuide {
-  func getTableViewTransparentRegion() -> DimmingView.TransparentRegion {
-    let yOffset = self.calculateYOffset()
-    let rect = self.groupListTableView.rect(forSection: .zero)
-      .offsetBy(dx: 5.0, dy: yOffset)
-      .insetBy(dx: 0, dy: 25.0)
+  func getTableViewCell() -> UIView {
+    guard let cell = self.groupListTableView.cellForRow(at: IndexPath(row: 0, section: 0)) else { return UIView() }
     
-    return DimmingView.TransparentRegion(rect: rect, cornerRadius: 18.0)
+    return cell
   }
   
-  func getFooterViewTransparentRegion() -> DimmingView.TransparentRegion {
-    let yOffset = self.calculateYOffset()
-    let rect = self.footerView.frame(in: self.view).offsetBy(dx: 0.0, dy: yOffset)
-    return DimmingView.TransparentRegion(rect: rect, cornerRadius: 15.0)
-  }
-  
-  func getRightBarButtonTransparentRegion() -> DimmingView.TransparentRegion {
-    let navigationBarHeight = self.navigationController?.navigationBar.frame(in: self.view).height ?? 0
-    let yOffset = self.calculateYOffset() - navigationBarHeight
-    let rect = self.rightBarButton.customView?
-      .frame(in: self.view)
-      .offsetBy(dx: -16.5, dy: yOffset)
-      .insetBy(dx: -10, dy: -5)
+  func getRightBarButton() -> UIView {
+    guard let button = self.rightBarButton.customView else { return UIView() }
     
-    return DimmingView.TransparentRegion(rect: rect ?? CGRect.zero, cornerRadius: 10.0)
-  }
-  
-  private func calculateYOffset() -> CGFloat {
-    let navigationBarHeight = self.navigationController?.navigationBar.frame(in: self.view).height ?? 0
-    return Constants.safeAreaTopInset + navigationBarHeight
+    return button
   }
 }

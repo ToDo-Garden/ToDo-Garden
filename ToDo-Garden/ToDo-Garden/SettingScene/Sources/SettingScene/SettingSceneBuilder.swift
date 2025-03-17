@@ -7,6 +7,7 @@
 
 import Foundation
 
+import GuideScene
 import SettingSceneAPI
 
 @MainActor

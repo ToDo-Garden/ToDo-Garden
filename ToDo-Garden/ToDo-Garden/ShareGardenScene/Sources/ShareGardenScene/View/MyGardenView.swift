@@ -185,16 +185,12 @@ extension ShareGardenSceneViewController.MyGardenView {
       guard let imageURL = imageURL else { return }
       
       let image = try await Cache.shared.execute(id: imageURL)
-      self.profileInfoView.iconImage = try await Cache.shared.execute(id: imageURL)
+      self.profileInfoView.iconImage = image
     }
   }
   
   private func updateGardenView(with pomodoroRecordCollection: PomodoroRecordCollection) {
     self.gardenView.configure(with: pomodoroRecordCollection)
-  }
-  
-  private func stopShimmeringAnimation() {
-    self.profileInfoView.stopShimmering()
   }
 }
 
@@ -232,6 +228,20 @@ extension ShareGardenSceneViewController.MyGardenView {
       self.profileInfoView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
       self.profileInfoView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
     ])
+  }
+}
+
+extension ShareGardenSceneViewController.MyGardenView {
+  func stopShimmeringAnimation() {
+    self.profileInfoView.stopShimmering()
+  }
+  
+  func getMyProfileViewView() -> UIView {
+    return self.profileInfoView
+  }
+  
+  func getShareButton() -> UIView {
+    return self.sectionHeaderView.getShareButton()
   }
 }
 
