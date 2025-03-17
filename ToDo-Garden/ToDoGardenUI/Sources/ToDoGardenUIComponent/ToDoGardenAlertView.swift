@@ -261,6 +261,10 @@ extension ToDoGardenAlertView.Configuration {
     contents: Constant.ToDoGardenAlertView.Content.welldone.viewState
   )
   
+  public static let deleteToDoRepeat: Self = ToDoGardenAlertView.Configuration.init(
+    contents: Constant.ToDoGardenAlertView.Content.deleteToDoRepeat.viewState
+  )
+  
   public static let askToStop: Self = ToDoGardenAlertView.Configuration.init(
     contents: Constant.ToDoGardenAlertView.Content.askToStop.viewState
   )
