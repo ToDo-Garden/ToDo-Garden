@@ -111,7 +111,9 @@ extension ToDoListView {
     listConfiguration.showsSeparators = false
     listConfiguration.backgroundColor = UIColor.white
     listConfiguration.headerMode = UICollectionLayoutListConfiguration.HeaderMode.supplementary
-    listConfiguration.trailingSwipeActionsConfigurationProvider = self.makeSwipeAction
+    listConfiguration.trailingSwipeActionsConfigurationProvider = { [weak self] in
+      self?.makeSwipeAction(for: $0)
+    }
     
     return UICollectionViewCompositionalLayout.list(using: listConfiguration)
   }
