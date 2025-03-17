@@ -5,6 +5,7 @@ import ToDoGardenUIComponent
 // swiftlint:disable function_body_length
 extension GuideDetailViewController {
   final class ToDoListView: UIView {
+    private var header: ToDoGroupSectionHeaderView!
     private var row: UIView!
     private var arrow: UIView!
     private var actionStack: UIView!
@@ -32,6 +33,17 @@ extension GuideDetailViewController {
     }
     
     private func setupViews() {
+      self.header = ToDoGroupSectionHeaderView()
+      self.header.update(
+        with: .init(
+          progressColor: UIColor.toDoGardenYellow,
+          progressRate: 0.5,
+          groupTitle: "그룹 1"
+        )
+      )
+      self.header.usingAutolayout()
+      self.addSubview(self.header)
+      
       self.row = Styled.Row(
         configuration: .todoList(
           .init(
@@ -58,7 +70,7 @@ extension GuideDetailViewController {
       self.addSubview(leftView)
       NSLayoutConstraint.activate([
         leftView.leadingAnchor.constraint(equalTo: leadingAnchor),
-        leftView.topAnchor.constraint(equalTo: topAnchor),
+        leftView.topAnchor.constraint(equalTo: header.bottomAnchor),
         leftView.bottomAnchor.constraint(equalTo: bottomAnchor),
         leftView.widthAnchor.constraint(equalToConstant: 20)
       ])
@@ -84,24 +96,30 @@ extension GuideDetailViewController {
     }
     
     private func setupConstraints() {
+      NSLayoutConstraint.activate([
+        header.topAnchor.constraint(equalTo: self.topAnchor),
+        header.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+        header.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+      ])
+      
       self.rowLeading = self.row.leadingAnchor.constraint(equalTo: self.leadingAnchor)
       NSLayoutConstraint.activate([
         self.rowLeading,
-        self.row.topAnchor.constraint(equalTo: self.topAnchor),
+        self.row.topAnchor.constraint(equalTo: self.header.bottomAnchor),
         self.row.bottomAnchor.constraint(equalTo: self.bottomAnchor),
         self.row.widthAnchor.constraint(equalTo: self.widthAnchor, constant: -156)
       ])
       
       NSLayoutConstraint.activate([
         self.actionStack.leadingAnchor.constraint(equalTo: self.row.trailingAnchor, constant: 30),
-        self.actionStack.topAnchor.constraint(equalTo: self.topAnchor),
+        self.actionStack.topAnchor.constraint(equalTo: self.header.bottomAnchor),
         self.actionStack.bottomAnchor.constraint(equalTo: self.bottomAnchor)
       ])
       
       self.arrowCenter = self.arrow.centerXAnchor.constraint(equalTo: self.centerXAnchor)
       NSLayoutConstraint.activate([
         self.arrowCenter,
-        self.arrow.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+        self.arrow.centerYAnchor.constraint(equalTo: self.row.centerYAnchor)
       ])
     }
   }

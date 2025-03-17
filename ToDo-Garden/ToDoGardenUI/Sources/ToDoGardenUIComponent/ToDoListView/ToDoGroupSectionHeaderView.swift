@@ -9,7 +9,7 @@ import UIKit
 import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
-final class ToDoGroupSectionHeaderView: UICollectionReusableView {
+public final class ToDoGroupSectionHeaderView: UICollectionReusableView {
   typealias LayoutConstant = Constant.ToDoGroupSectionHeaderView.Layout
   
   private let contentView: UIView = {
@@ -53,17 +53,17 @@ final class ToDoGroupSectionHeaderView: UICollectionReusableView {
     return timerImageView
   }()
   
-  override init(frame: CGRect) {
+  public override init(frame: CGRect) {
     super.init(frame: frame)
     self.setup()
   }
   
   @available(*, unavailable)
-  required init?(coder: NSCoder) {
+  public required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
   
-  func update(with model: ToDoListView.ToDoGroupUIModel) {
+  public func update(with model: ToDoListView.ToDoGroupUIModel) {
     self.progressView.setupProgressLayerStrokeColor(with: model.progressColor)
     self.progressView.startAnimation(
       duration: TimeInterval(0.5),
