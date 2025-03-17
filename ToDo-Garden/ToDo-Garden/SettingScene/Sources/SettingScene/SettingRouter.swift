@@ -7,6 +7,7 @@
 
 import Foundation
 
+import GuideScene
 import SettingSceneAPI
 import ToDoGardenUIComponent
 import ToDoGardenUIConstant
@@ -16,6 +17,7 @@ protocol SettingRoutingLogic {
   func routeToTermsOfService()
   func routeToPrivacyPolicy()
   func routeToSendingFeedback()
+  func routeToGuideScene()
 }
 
 protocol SettingDataPassing {
@@ -60,6 +62,12 @@ extension SettingRouter: SettingRoutingLogic {
   
   func routeToSendingFeedback() {
     self.viewController?.showToast(message: "준비중인 기능입니다. 앱스토어 리뷰를 이용해주세요.")
+
+  func routeToGuideScene() {
+    // TODO: GuideDetailViewController는 임시로 연결해놓았고, GuideDetailViewController로 진입할 수 있는 VC로 연결되어야함
+    let guideSceneViewController = GuideDetailViewController(.todoEdit)
+    guideSceneViewController.modalPresentationStyle = .fullScreen
+    self.viewController?.present(guideSceneViewController, animated: true)
   }
 }
 

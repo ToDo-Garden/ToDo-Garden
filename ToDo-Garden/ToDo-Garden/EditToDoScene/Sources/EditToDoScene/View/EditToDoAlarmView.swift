@@ -170,6 +170,17 @@ extension EditToDoAlarmView {
   }
 }
 
+extension EditToDoAlarmView {
+  func setForGuide() {
+    self.enableAlarm()
+    self.alarmTimeSettingView.updateAlarmTime(with: "20:00")
+  }
+  
+  func getAlarmTimeView() -> UIView {
+    return self.alarmTimeSettingView
+  }
+}
+
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {

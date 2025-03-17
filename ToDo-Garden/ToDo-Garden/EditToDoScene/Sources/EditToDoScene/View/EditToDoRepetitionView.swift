@@ -163,3 +163,10 @@ extension EditToDoRepetitionView {
     )
   }
 }
+
+extension EditToDoRepetitionView {
+  func setForGuide() {
+    self.repeatOnlyTodayView.setDeSelected()
+    self.repeatOtherDaysView.updateDate(startDate: "2025.05.21", endDate: "2025.07.10")
+  }
+}

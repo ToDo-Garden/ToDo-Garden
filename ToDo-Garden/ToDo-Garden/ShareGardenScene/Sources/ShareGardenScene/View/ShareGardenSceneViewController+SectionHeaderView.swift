@@ -110,3 +110,9 @@ extension ShareGardenSceneViewController.SectionHeaderView {
     self.spacing = self.bounds.width * spacingRatio
   }
 }
+
+extension ShareGardenSceneViewController.SectionHeaderView {
+  func getShareButton() -> UIView {
+    return self.rightActionButton
+  }
+}

@@ -12,14 +12,18 @@ let package = Package(
   ],
   dependencies: [
     .package(path: "../ToDoGardenUI"),
-    .package(name: "ManageGroupScene", path: "./ManageGroupScene")
+    .package(name: "ManageGroupScene", path: "./ManageGroupScene"),
+    .package(name: "ShareGardenScene", path: "./ShareGardenScene"),
+    .package(name: "EditToDoScene", path: "./EditToDoScene")
   ],
   targets: [
     .target(
       name: "CommonViews",
       dependencies: [
         .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI"),
-        .product(name: "ManageGroupScene", package: "ManageGroupScene")
+        .product(name: "ManageGroupScene", package: "ManageGroupScene"),
+        .product(name: "ShareGardenScene", package: "ShareGardenScene"),
+        .product(name: "EditToDoScene", package: "EditToDoScene")
       ]
     )
   ]

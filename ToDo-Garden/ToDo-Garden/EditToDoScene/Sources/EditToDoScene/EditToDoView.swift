@@ -289,3 +289,26 @@ extension EditToDoView {
     )
   }
 }
+
+extension EditToDoView {
+  func setForGuide() {
+    let text = "영어독해"
+    self.toDoNameInputView.setBeginEditing(with: text)
+    self.toDoNameInputView.changeBottomLine(color: UIColor.toDoGardenYellow)
+    self.groupSelectionView.updateGroup(
+      current: GroupSelectionViewItem(
+        groupId: UUID(),
+        groupName: text,
+        groupColor: UIColor.toDoGardenYellow
+      )
+    )
+  }
+  
+  func getToDoNameInputView() -> UIView {
+    return self.toDoNameInputView
+  }
+  
+  func getGroupSelectionView() -> UIView {
+    return self.groupSelectionView
+  }
+}

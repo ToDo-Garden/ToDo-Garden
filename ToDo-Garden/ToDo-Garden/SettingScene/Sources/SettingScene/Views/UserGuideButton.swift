@@ -10,6 +10,8 @@ import UIKit
 import ToDoGardenUIResource
 
 final class UserGuideButton: UIStackView {
+  var touchAction: (() -> Void)?
+  
   init() {
     super.init(frame: CGRect.zero)
     self.setupUI()
@@ -29,6 +31,7 @@ extension UserGuideButton {
     self.setupToDoGardenLogoImageView()
     self.setupUserGuideLabel()
     self.setupRightForwardImage()
+    self.setupGestureRecognizer()
   }
 
   private func setupStackViewUI() {
@@ -83,6 +86,17 @@ extension UserGuideButton {
       for: NSLayoutConstraint.Axis.horizontal
     )
     self.addArrangedSubview(rightForwardImageView)
+  }
+  
+  private func setupGestureRecognizer() {
+    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleTap))
+    self.addGestureRecognizer(tapGesture)
+  }
+}
+
+extension UserGuideButton {
+  @objc private func handleTap() {
+    self.touchAction?()
   }
 }
 

@@ -125,6 +125,7 @@ extension SettingViewController {
     self.setupSubviewDeleagte()
     self.setupSettingCollectionView()
     self.setupSubviewsLayout()
+    self.setupButtonActions()
   }
 
   private func setupSettingLabel() {
@@ -204,6 +205,12 @@ extension SettingViewController {
     )
 
     return [userSettingSection, appSupportSection]
+  }
+  
+  private func setupButtonActions() {
+    self.userGuideButton.touchAction = { [weak self] in
+      self?.router?.routeToGuideScene()
+    }
   }
 }
 
