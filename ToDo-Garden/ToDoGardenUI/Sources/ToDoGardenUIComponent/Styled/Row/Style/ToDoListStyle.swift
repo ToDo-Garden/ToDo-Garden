@@ -10,7 +10,11 @@ extension Styled.Row {
       edgeInsets: Constant.Styled.Row.ToDoList.stackEdgeInsets
     )
     let (zStack, checkBoxAction) = self.buildZStack(model: model)
-    let checkBox = self.buildCheckBox(color: model.foregroundColor, checkBoxAction)
+    let checkBox = self.buildCheckBox(
+      color: model.foregroundColor,
+      isSelected: model.isSelected,
+      checkBoxAction
+    )
     stack.addArrangedSubview(checkBox)
     self.setupCheckBoxConstraints(checkBox)
     
@@ -120,7 +124,7 @@ extension Styled.Row {
     return imageView
   }
   
-  private func buildCheckBox(color: UIColor, _ handler: @escaping (Bool) -> Void) -> UIView {
+  private func buildCheckBox(color: UIColor, isSelected: Bool, _ handler: @escaping (Bool) -> Void) -> UIView {
     let button = ToDoCheckBoxButton(
       action: UIAction { [weak self] action in
         guard
@@ -140,6 +144,9 @@ extension Styled.Row {
       }
     )
     button.updateMainColor(color)
+    if isSelected {
+      button.setSelected()
+    }
     
     return button
   }
@@ -165,7 +172,16 @@ private extension UITextField {
 
 @available(iOS 17.0, *)
 #Preview {
-  let first = Styled.Row(configuration: .todoList(.init(foregroundColor: .orange, hasAlert: true)))
+  let first = Styled.Row(
+    configuration: .todoList(
+      .init(
+        text: "완료",
+        foregroundColor: .orange,
+        isSelected: true,
+        hasAlert: true
+      )
+    )
+  )
   let second = Styled.Row(configuration: .todoList(.init(foregroundColor: .toDoGardenGreenDark, hasAlert: false)))
   let third = Styled.Row(configuration: .todoList(.init(foregroundColor: .blue, hasAlert: false)))
   let stack = UIVStackView(arrangedSubviews: [first, second, third])

@@ -156,4 +156,8 @@ extension UIImage {
   public static let homeManageGroupImage = UIImage(
     resource: .homeMangeGroup
   )
+  
+  public static let leftArrow = UIImage(
+    resource: .leftArrow
+  )
 }
