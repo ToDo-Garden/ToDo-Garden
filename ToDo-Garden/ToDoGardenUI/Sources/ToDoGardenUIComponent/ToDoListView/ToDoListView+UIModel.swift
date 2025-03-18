@@ -22,6 +22,10 @@ extension ToDoListView {
       self.headerUIModel = headerUIModel
       self.toDoItems = toDoItems
     }
+    
+    public func getGroupTitle() -> String {
+      return self.headerUIModel.groupTitle
+    }
   }
   
   public struct ToDoItem: Hashable, Sendable {
