@@ -235,7 +235,7 @@ private func createEditToDoGuideTransparentRegionsTask(for viewController: UIVie
       let homeVC = topVC as? HomeSceneViewController else { return [] }
     let swipedCell = homeVC.getSwipedCell()
     let regionTask = {
-      let rect = swipedCell.frame(in: homeVC.view).offsetBy(dx: 9.5, dy: -2.0).insetBy(dx: 5.0, dy: 0.0)
+      let rect = swipedCell.frame(in: homeVC.view).offsetBy(dx: 9.5, dy: -2.0).insetBy(dx: 5.0, dy: -5.0)
       return DimmingView.TransparentRegion(rect: rect, cornerRadius: 10.0)
     }
     
