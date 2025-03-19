@@ -142,6 +142,20 @@ extension ToDoListView {
   }
 }
 
+extension ToDoListView {
+  public func getToDoListGroup() -> UIView {
+    return self.contentView.supplementaryView(
+      forElementKind: UICollectionView.elementKindSectionHeader,
+      at: IndexPath(item: 0, section: 0)
+    ) ?? UIView()
+  }
+  
+  public func getToDoListToDo() -> UIView {
+    guard let cell = self.contentView.cellForItem(at: IndexPath(item: 0, section: 0)) else { return UIView()}
+    return cell
+  }
+}
+
 @available(iOS 17.0, *)
 #Preview {
   let toDoListView = ToDoListView()
