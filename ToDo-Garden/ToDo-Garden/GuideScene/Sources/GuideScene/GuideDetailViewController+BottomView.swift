@@ -14,6 +14,7 @@ extension GuideDetailViewController {
     @Published var currentIndex: Int = 0
     private var subscription: AnyCancellable?
     private var subviewCount: Int = 0
+    var backButtonAction: (() -> Void)?
     
     override init(frame: CGRect) {
       super.init(frame: frame)
@@ -113,8 +114,8 @@ extension GuideDetailViewController {
     }
     
     private func buildCloseButton() -> UIButton {
-      let action = UIAction { _ in
-        
+      let action = UIAction { [weak self] _ in
+        self?.backButtonAction?()
       }
       let button = UIButton(primaryAction: action)
       button.configuration = .plain()
