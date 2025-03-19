@@ -38,6 +38,8 @@ public final class ToDoListView: UIView {
   
   private lazy var dataSource: DataSource = self.makeDataSource()
   
+  public weak var buttonActionDelegate: ToDoListButtonActionDelegate?
+  
   public override init(frame: CGRect) {
     super.init(frame: frame)
     self.setup()
@@ -77,6 +79,8 @@ extension ToDoListView {
       let section = snapshot.sectionIdentifiers[indexPath.section]
       
       supplementaryView.update(with: section.headerUIModel)
+      supplementaryView.section = indexPath.section
+      supplementaryView.delegate = self
     }
     
     let dataSource = DataSource(collectionView: self.contentView) { collectionView, indexPath, item in
@@ -118,12 +122,16 @@ extension ToDoListView {
     return UICollectionViewCompositionalLayout.list(using: listConfiguration)
   }
   
-  private func makeSwipeAction(for indexPath: IndexPath?) -> UISwipeActionsConfiguration? {
+  private func makeSwipeAction(for indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+    guard let todo = self.getItemForIndexPath(indexPath),
+      let group = self.getGroupForIndexPath(indexPath)
+    else { return nil }
+    
     let deleteAction = UIContextualAction(
       style: UIContextualAction.Style.destructive,
       title: nil
     ) { _, _, _ in
-      // TODO: - add delete action
+      self.buttonActionDelegate?.didDeleteButtonTapped(group: group, todo: todo)
     }
     deleteAction.accessibilityLabel = "Delete"
     deleteAction.image = UIImage.deleteIconImage
@@ -133,7 +141,7 @@ extension ToDoListView {
       style: UIContextualAction.Style.normal,
       title: nil
     ) { _, _, _ in
-      // TODO: - add edit action
+      self.buttonActionDelegate?.didEditButtonTapped(group: group, todo: todo)
     }
     editAction.accessibilityLabel = "Edit"
     editAction.image = UIImage.editIconImage.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
@@ -153,6 +161,38 @@ extension ToDoListView {
   public func getToDoListToDo() -> UIView {
     guard let cell = self.contentView.cellForItem(at: IndexPath(item: 0, section: 0)) else { return UIView()}
     return cell
+  }
+  
+  private func getItemForIndexPath(_ indexPath: IndexPath) -> ToDoItem? {
+    let snapshot = self.dataSource.snapshot()
+    guard indexPath.section < snapshot.sectionIdentifiers.count else {
+      return nil
+    }
+    
+    return snapshot.sectionIdentifiers[indexPath.section].toDoItems[indexPath.item]
+  }
+  
+  private func getGroupForIndexPath(_ indexPath: IndexPath) -> ToDoSection? {
+    let snapshot = self.dataSource.snapshot()
+    guard indexPath.section < snapshot.sectionIdentifiers.count else {
+      return nil
+    }
+    
+    return snapshot.sectionIdentifiers[indexPath.section]
+  }
+}
+
+extension ToDoListView: ToDoGroupSectionHeaderViewDelegate {
+  func createToDo(in section: Int) {
+    guard let group = self.getGroupForIndexPath(IndexPath(item: 0, section: section)) else { return }
+
+    self.buttonActionDelegate?.didCreateToDoButtonTapped(group: group)
+  }
+  
+  func goTimer(in section: Int) {
+    guard let group = self.getGroupForIndexPath(IndexPath(item: 0, section: section)) else { return }
+
+    self.buttonActionDelegate?.didTimerButtonTapped(group: group)
   }
 }
 

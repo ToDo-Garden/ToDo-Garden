@@ -56,6 +56,11 @@ public final class TimerSceneViewController: UIViewController, TimerSceneViewCon
     self.layoutStack()
   }
   
+  public override func viewIsAppearing(_ animated: Bool) {
+    super.viewIsAppearing(animated)
+    self.navigationController?.navigationBar.isHidden = false
+  }
+  
   public override func viewWillDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
     self.interactor?.requestPOST()

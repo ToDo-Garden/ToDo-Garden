@@ -40,20 +40,24 @@ public final class ToDoGroupSectionHeaderView: UICollectionReusableView {
     model: CreateToDoButton.Model.primary
   )
   
-  private let timerImageView: UIImageView = {
-    let timerImageView = UIImageView(image: UIImage.timerButtonImage)
-    timerImageView.usingAutolayout()
+  private let timerButton: UIButton = {
+    let timerButton = UIButton()
+    timerButton.setImage(UIImage.timerButtonImage, for: UIControl.State.normal)
+    timerButton.usingAutolayout()
     
     let timerImageViewSize = LayoutConstant.timerImageViewSize
     NSLayoutConstraint.activate([
-      timerImageView.widthAnchor.constraint(equalToConstant: timerImageViewSize.width),
-      timerImageView.heightAnchor.constraint(equalToConstant: timerImageViewSize.height)
+      timerButton.widthAnchor.constraint(equalToConstant: timerImageViewSize.width),
+      timerButton.heightAnchor.constraint(equalToConstant: timerImageViewSize.height)
     ])
     
-    return timerImageView
+    return timerButton
   }()
   
-  public override init(frame: CGRect) {
+  weak var delegate: ToDoGroupSectionHeaderViewDelegate?
+  var section: Int = Int.zero
+  
+  override init(frame: CGRect) {
     super.init(frame: frame)
     self.setup()
   }
@@ -77,6 +81,7 @@ public final class ToDoGroupSectionHeaderView: UICollectionReusableView {
 extension ToDoGroupSectionHeaderView {
   private func setup() {
     self.setupLayout()
+    self.setupButtonAction()
   }
   
   private func setupLayout() {
@@ -92,7 +97,7 @@ extension ToDoGroupSectionHeaderView {
         self.progressView,
         self.createToDoButton,
         spacer,
-        self.timerImageView
+        self.timerButton
       ]
     )
     self.contentView.addSubview(hStack)
@@ -101,6 +106,20 @@ extension ToDoGroupSectionHeaderView {
     
     hStack.layoutMargins = LayoutConstant.hStackLayoutMargins
     hStack.isLayoutMarginsRelativeArrangement = true
+  }
+  
+  private func setupButtonAction() {
+    self.createToDoButton.addAction(UIAction { [weak self] _ in
+      guard let self = self else { return }
+
+      self.delegate?.createToDo(in: self.section)
+    }, for: UIControl.Event.touchUpInside)
+    
+    self.timerButton.addAction(UIAction { [weak self] _ in
+      guard let self = self else { return }
+      
+      self.delegate?.goTimer(in: self.section)
+    }, for: UIControl.Event.touchUpInside)
   }
 }
 
