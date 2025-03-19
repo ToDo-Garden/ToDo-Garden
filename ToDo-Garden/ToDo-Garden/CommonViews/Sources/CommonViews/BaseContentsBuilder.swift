@@ -1,6 +1,7 @@
 import UIKit
 
 import EditToDoScene
+import HomeScene
 import ShareGardenScene
 import ShareGardenSceneAPI
 
@@ -23,7 +24,7 @@ extension BaseContentsBuilder {
   @MainActor
   public static let live = BaseContentsBuilder(
     todoCreate: {
-      []
+      return createHomeContents()
     },
     groupManagement: {
       return createGroupManagementContents()
@@ -35,6 +36,56 @@ extension BaseContentsBuilder {
       return createShareTabContents()
     }
   )
+}
+
+// MARK: - Home
+private func createHomeContents() -> [BaseContent] {
+  let viewControllers = createHomeViewControllers()
+  let tasks = [
+    createToDoListCellRegionTask(for: viewControllers[0]),
+    createToDoListCellRegionTask(for: viewControllers[1], isHighlightToDo: true),
+    createToDoListCellRegionTask(for: viewControllers[2])
+  ]
+  
+  return [
+    BaseContent(viewController: viewControllers[0], transparentRegionsTask: [tasks[0]]),
+    BaseContent(viewController: viewControllers[1], transparentRegionsTask: [tasks[1]]),
+    BaseContent(viewController: viewControllers[2], transparentRegionsTask: [tasks[2]])
+  ]
+}
+
+private func createHomeViewControllers() -> [UIViewController] {
+  let home1 = HomeSceneViewController()
+  let home2 = HomeSceneViewController()
+  let home3 = HomeSceneViewController()
+  let navi1 = UINavigationController(rootViewController: home1)
+  let navi2 = UINavigationController(rootViewController: home2)
+  let navi3 = UINavigationController(rootViewController: home3)
+  home1.setForHomeGuide()
+  home2.setForHomeGuide(isToDoItemVisible: true)
+  home3.setForHomeGuide()
+
+  return [navi1, navi2, navi3]
+}
+
+private func createToDoListCellRegionTask(for viewController: UIViewController, isHighlightToDo: Bool = false) -> () -> DimmingView.TransparentRegion {
+  guard let navi = viewController as? UINavigationController,
+      let homeVC = navi.topViewController as? HomeSceneViewController else {
+    return { DimmingView.TransparentRegion(rect: .zero, cornerRadius: .zero)}
+  }
+  
+  return {
+    let rect: CGRect
+    if isHighlightToDo {
+      let frame = homeVC.getToDoListToDo().frame(in: homeVC.view)
+      rect = frame.insetBy(dx: 10.0, dy: 5.0)
+    } else {
+      let frame = homeVC.getToDoListGroup().frame(in: homeVC.view)
+      rect = frame.offsetBy(dx: 0.0, dy: -5.0).insetBy(dx: 10.0, dy: 0.0)
+    }
+    
+    return DimmingView.TransparentRegion(rect: rect, cornerRadius: 10.0)
+  }
 }
 
 // MARK: - Group Management
@@ -71,7 +122,6 @@ private func createNormalTableViewRegionTask(for viewController: ManageGroupView
       width: Int(cellRect.width),
       height: Int(cellRect.height) * 3
     ).offsetBy(dx: 0.0, dy: Constants.safeAreaTopInset + calculateYOffset(vc: viewController))
-    
     
     return DimmingView.TransparentRegion(rect: rect, cornerRadius: 18.0)
   }
@@ -111,8 +161,12 @@ private func createEditTableViewRegionTask(for viewController: ManageGroupViewCo
 
 // MARK: - Todo Edit
 private func createTodoEditContents() -> [BaseContent] {
+  let home = HomeSceneViewController()
+  let homeNavigationController = UINavigationController(rootViewController: home)
+  home.setForEditToDoGuide(swipedCell: ToDoListViewForGuide())
+  homeNavigationController.navigationBar.isHidden = true
   let viewControllers = [
-    UINavigationController(rootViewController: UIViewController(nibName: nil, bundle: nil)),
+    homeNavigationController,
     UINavigationController(rootViewController: EditToDoViewController()),
     UINavigationController(rootViewController: EditToDoViewController())
   ]
@@ -120,7 +174,7 @@ private func createTodoEditContents() -> [BaseContent] {
   var transparentRegionsTasks: [[() -> DimmingView.TransparentRegion]] = []
   
   viewControllers.enumerated().forEach { (index, viewController) in
-    let task = createTransparentRegionsTask(for: viewController, index: index)
+    let task = createEditToDoGuideTransparentRegionsTask(for: viewController, index: index)
     transparentRegionsTasks.append(task)
   }
   
@@ -173,23 +227,30 @@ private func createNavigationControllers(from viewControllers: [UIViewController
   }
 }
 
-private func createTransparentRegionsTask(for viewController: UIViewController, index: Int) -> [() -> DimmingView.TransparentRegion] {
-  guard let topVC = (viewController as? UINavigationController)?.topViewController else {
-    return []
-  }
+private func createEditToDoGuideTransparentRegionsTask(for viewController: UIViewController, index: Int) -> [() -> DimmingView.TransparentRegion] {
   
   switch index {
   case 0:
-    return [] // TODO: 홈화면 빵꾸영역 클로저 삽입
+    guard let topVC = (viewController as? UINavigationController)?.topViewController,
+      let homeVC = topVC as? HomeSceneViewController else { return [] }
+    let swipedCell = homeVC.getSwipedCell()
+    let regionTask = {
+      let rect = swipedCell.frame(in: homeVC.view).offsetBy(dx: 9.5, dy: -2.0).insetBy(dx: 5.0, dy: 0.0)
+      return DimmingView.TransparentRegion(rect: rect, cornerRadius: 10.0)
+    }
+    
+    return [regionTask]
   case 1:
-    guard let editToDoVC = topVC as? EditToDoViewController else { return [] }
+    guard let topVC = (viewController as? UINavigationController)?.topViewController,
+      let editToDoVC = topVC as? EditToDoViewController else { return [] }
     editToDoVC.setForGuide(index: index)
     return [
       createTodoNameInputViewRegionTask(for: editToDoVC, in: topVC),
       createGroupSelectionViewRegionTask(for: editToDoVC, in: topVC)
     ]
   case 2:
-    guard let editToDoVC = topVC as? EditToDoViewController else { return [] }
+    guard let topVC = (viewController as? UINavigationController)?.topViewController,
+      let editToDoVC = topVC as? EditToDoViewController else { return [] }
     editToDoVC.setForGuide(index: index)
     return [
       createSegmentedControlRegionTask(for: editToDoVC, in: topVC),
