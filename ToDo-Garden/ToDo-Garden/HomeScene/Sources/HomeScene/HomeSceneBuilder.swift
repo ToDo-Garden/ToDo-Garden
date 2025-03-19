@@ -16,15 +16,18 @@ import TimerSceneAPI
 public struct HomeSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
   public struct Dependency {
+    let homeSceneWorker: HomeSceneWorkable
     let manageGroupSceneBuilder: ManageGroupSceneBuildable
     let editToDoSceneBuilder: EditToDoSceneBuildable
     let timerSceneBuilder: TimerSceneBuildable
     
     public init(
+      homeSceneWorker: HomeSceneWorkable,
       manageGroupSceneBuilder: ManageGroupSceneBuildable,
       editToDoSceneBuilder: EditToDoSceneBuildable,
       timerSceneBuilder: TimerSceneBuildable
     ) {
+      self.homeSceneWorker = homeSceneWorker
       self.manageGroupSceneBuilder = manageGroupSceneBuilder
       self.editToDoSceneBuilder = editToDoSceneBuilder
       self.timerSceneBuilder = timerSceneBuilder
@@ -56,7 +59,7 @@ extension HomeSceneBuilder {
   /// - Returns: VIP Cycle 설정이 완료된 `ViewControllable` 프로토콜을 준수한 `ViewController` 인스턴스를 반환합니다.
   @MainActor
   private func configureVIPCycle(for viewController: HomeSceneViewController) -> HomeSceneViewController {
-    let interactor = HomeSceneInteractor()
+    let interactor = HomeSceneInteractor(homeSceneWorker: self.dependency.homeSceneWorker)
     let presenter = HomeScenePresenter()
     let router = HomeSceneRouter(
       manageGroupSceneBuilder: self.dependency.manageGroupSceneBuilder,

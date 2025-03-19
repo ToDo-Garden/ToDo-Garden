@@ -11,10 +11,16 @@ import TDUtility
 import ToDoGardenUIComponent
 
 import HomeSceneAPI
+import HomeSceneEntity
 
+@MainActor
 protocol HomeSceneDisplayLogic: AnyObject {
+  func displayFetchedToDoList(snapshot: ToDoListView.Snapshot)
+  func displayCreateToDo()
+  func displayDeleteToDo() 
 }
 
+@MainActor
 open class HomeSceneViewController: UIViewController, HomeSceneViewControllable {
   
   // MARK: - View Properties
@@ -47,6 +53,7 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
   open override func viewDidLoad() {
     super.viewDidLoad()
     self.setupViews()
+    self.fetchToDoList()
   }
   
   open override func viewIsAppearing(_ animated: Bool) {
@@ -57,6 +64,7 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
   open func setBottomSheet() {
     let toDoListViewContainer = ToDoListViewContainer()
     self.todoListView = toDoListViewContainer.toDoListView
+    self.todoListView?.buttonActionDelegate = self
     let bottomSheet = BottomSheet()
     bottomSheet.usingAutolayout()
     self.view.addSubview(bottomSheet)
@@ -126,14 +134,63 @@ extension HomeSceneViewController {
   }
 }
 
+extension HomeSceneViewController {
+  private func fetchToDoList() {
+    Task {
+      await self.interactor?.fetchToDoList()
+    }
+  }
+}
+
 // MARK: - Confirm display logic protocol
 
 extension HomeSceneViewController: HomeSceneDisplayLogic {
+  func displayFetchedToDoList(snapshot: ToDoListView.Snapshot) {
+    self.todoListView?.apply(snapshot)
+  }
+  
+  func displayCreateToDo() {
+    debugPrint("CREATE TODO")
+  }
+  
+  func displayDeleteToDo() {
+    debugPrint("DELETE TODO")
+  }
 }
 
 // MARK: - Request to interactor
 
 extension HomeSceneViewController {
+}
+
+// MARK: - ToDoList Button Actions
+
+extension HomeSceneViewController: ToDoListButtonActionDelegate {
+  public func didEditButtonTapped(
+    group: ToDoListView.ToDoSection,
+    todo: ToDoListView.ToDoItem
+  ) {
+    self.router?.routeToEditToDoScene(toDoId: todo.id)
+  }
+  
+  public func didDeleteButtonTapped(
+    group: ToDoListView.ToDoSection,
+    todo: ToDoListView.ToDoItem
+  ) {
+    Task {
+      await self.interactor?.deleteToDo()
+    }
+  }
+  
+  public func didCreateToDoButtonTapped(group: ToDoListView.ToDoSection) {
+    Task {
+      await self.interactor?.createToDo()
+    }
+  }
+  
+  public func didTimerButtonTapped(group: ToDoListView.ToDoSection) {
+    self.router?.routeToTimerScene(groupId: group.id.uuidString, groupName: group.getGroupTitle())
+  }
 }
 
 #if DEBUG
