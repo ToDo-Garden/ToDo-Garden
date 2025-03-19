@@ -39,6 +39,7 @@ extension BaseContentsBuilder {
 }
 
 // MARK: - Home
+@MainActor
 private func createHomeContents() -> [BaseContent] {
   let viewControllers = createHomeViewControllers()
   let tasks = [
@@ -54,6 +55,7 @@ private func createHomeContents() -> [BaseContent] {
   ]
 }
 
+@MainActor
 private func createHomeViewControllers() -> [UIViewController] {
   let home1 = HomeSceneViewController()
   let home2 = HomeSceneViewController()
@@ -68,6 +70,7 @@ private func createHomeViewControllers() -> [UIViewController] {
   return [navi1, navi2, navi3]
 }
 
+@MainActor
 private func createToDoListCellRegionTask(for viewController: UIViewController, isHighlightToDo: Bool = false) -> () -> DimmingView.TransparentRegion {
   guard let navi = viewController as? UINavigationController,
       let homeVC = navi.topViewController as? HomeSceneViewController else {
@@ -160,6 +163,7 @@ private func createEditTableViewRegionTask(for viewController: ManageGroupViewCo
 }
 
 // MARK: - Todo Edit
+@MainActor
 private func createTodoEditContents() -> [BaseContent] {
   let home = HomeSceneViewController()
   let homeNavigationController = UINavigationController(rootViewController: home)
@@ -227,6 +231,7 @@ private func createNavigationControllers(from viewControllers: [UIViewController
   }
 }
 
+@MainActor
 private func createEditToDoGuideTransparentRegionsTask(for viewController: UIViewController, index: Int) -> [() -> DimmingView.TransparentRegion] {
   
   switch index {

@@ -221,6 +221,7 @@ extension HomeSceneViewController {
   public func getSwipedCell() -> UIView {
     return self.bottomSheet.contentView?.subviews.last ?? UIView()
   }
+}
 // MARK: - ToDoList Button Actions
 
 extension HomeSceneViewController: ToDoListButtonActionDelegate {
