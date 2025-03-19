@@ -66,7 +66,7 @@ extension SettingRouter: SettingRoutingLogic {
   
   func routeToGuideScene() {
     // TODO: GuideDetailViewController는 임시로 연결해놓았고, GuideDetailViewController로 진입할 수 있는 VC로 연결되어야함
-    let guideSceneViewController = GuideDetailViewController(.todoEdit)
+    let guideSceneViewController = GuideDetailViewController(.todoCreate)
     guideSceneViewController.modalPresentationStyle = .fullScreen
     self.viewController?.present(guideSceneViewController, animated: true)
   }
