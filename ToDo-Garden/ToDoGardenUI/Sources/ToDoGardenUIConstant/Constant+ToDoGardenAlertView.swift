@@ -126,7 +126,11 @@ extension Constant.ToDoGardenAlertView.Content {
         ),
         buttons: [
           ButtonLabelState(text: "삭제하기", isRed: false, buttonActionType: ButtonActionType.deleteEntireToDoRepeat),
-          ButtonLabelState(text: "미완료 투두만 삭제하기", isRed: false, buttonActionType: ButtonActionType.deleteUncompletedToDoRepeat),
+          ButtonLabelState(
+            text: "미완료 투두만 삭제하기",
+            isRed: false,
+            buttonActionType: ButtonActionType.deleteUncompletedToDoRepeat
+          ),
           ButtonLabelState(text: "취소", isRed: true, buttonActionType: ButtonActionType.cancel)
         ],
         stackView: StackViewState(isHorizontal: false, height: layoutConstant.stackviewHeightForVertical)
