@@ -5,6 +5,7 @@
 //  Created by Noah on 2/28/24.
 //
 
+import struct SwiftUI.Font
 import UIKit.UIFont
 
 extension UIFont {
@@ -94,6 +95,13 @@ extension UIFont {
     name: GmarkSansFont.bold.name,
     size: 27
   ) ?? UIFont.systemFont(ofSize: 27, weight: .bold)
+}
+
+extension Font {
+  public static let pretendardBodySemiBold13: Font = Font.custom(
+    PretendardFont.semibold.name,
+    size: 13
+  )
 }
 
 public enum PretendardFont: String, CaseIterable {

@@ -1,7 +1,9 @@
+import SwiftUI
 import UIKit
 
 import TDFoundation
 import ToDoGardenUIComponent
+import ToDoGardenUIResource
 
 // swiftlint:disable function_body_length
 final class DailyToDoAlertViewController: UIViewController {
@@ -102,21 +104,19 @@ final class DailyToDoAlertViewController: UIViewController {
   }
   
   private func setupAddTimerButton() {
-    let action = UIAction { [weak self] _ in
+    let button = UnderlineButton(text: "시간 추가하기") { [weak self] in
       self?.presentSettingTimeView()
     }
-    let button = UIButton(frame: CGRect.zero, primaryAction: action)
-    button.setTitle("시간 추가하기", for: .normal)
-    button.setImage(UIImage.addButton, for: .normal)
-    button.titleLabel?.textColor = UIColor.toDoGardenGreenDark
-    button.titleLabel?.font = UIFont.pretendardBodySemiBold13
-    button.usingAutolayout()
-    self.view.addSubview(button)
+    let controller = UIHostingController(rootView: button)
+    controller.view.usingAutolayout()
+    self.addChild(controller)
+    self.view.addSubview(controller.view)
+    controller.didMove(toParent: self)
     
     NSLayoutConstraint.activate([
-      button.topAnchor.constraint(equalTo: self.tableView.bottomAnchor, constant: 12),
-      button.leadingAnchor.constraint(equalTo: self.tableView.leadingAnchor, constant: 4),
-      button.heightAnchor.constraint(equalToConstant: 34)
+      controller.view.topAnchor.constraint(equalTo: self.tableView.bottomAnchor, constant: 12),
+      controller.view.leadingAnchor.constraint(equalTo: self.tableView.leadingAnchor, constant: 4),
+      controller.view.heightAnchor.constraint(equalToConstant: 34)
     ])
   }
   
@@ -157,6 +157,32 @@ final class DailyToDoAlertViewController: UIViewController {
   }
 }
 
+extension DailyToDoAlertViewController {
+  struct UnderlineButton: View {
+    let text: String
+    let action: () -> Void
+    
+    var body: some View {
+      Button(
+        action: action,
+        label: {
+          HStack(spacing: 4) {
+            Image(uiImage: UIImage.addButton)
+            VStack(spacing: 3) {
+              Text(text)
+                .font(Font.pretendardBodySemiBold13)
+                .foregroundColor(Color(UIColor.toDoGardenGreenDark))
+              
+              Color(UIColor.toDoGardenGreenDark)
+                .frame(height: 1)
+            }
+          }
+        }
+      )
+    }
+  }
+}
+
 private extension UITableView {
   func heightStream(maxAvailableHeight: CGFloat) -> AsyncStream<CGFloat> {
     AsyncStream { continuation in
@@ -182,7 +208,7 @@ private extension UITableView {
 @available(iOS 17.0, *)
 #Preview {
   NavigationBarUIUpdator.update()
-  
+  PretendardFont.register()
   return UINavigationController(
     rootViewController: DailyToDoAlertViewController()
   )
