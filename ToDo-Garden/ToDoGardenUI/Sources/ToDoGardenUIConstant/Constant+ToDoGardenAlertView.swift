@@ -85,6 +85,8 @@ extension Constant.ToDoGardenAlertView.Content {
     case keepConcentration
     case goHome
     case delete
+    case deleteEntireToDoRepeat
+    case deleteUncompletedToDoRepeat
     case unsubscribe
     case logout
     case stopConcentration
@@ -123,9 +125,9 @@ extension Constant.ToDoGardenAlertView.Content {
           topMargin: layoutConstant.descriptionTopMarginForVertical
         ),
         buttons: [
-          ButtonLabelState(text: "삭제하기", isRed: false, buttonActionType: ButtonActionType.stopConcentration),
-          ButtonLabelState(text: "미완료 투두만 삭제하기", isRed: false, buttonActionType: ButtonActionType.keepConcentration),
-          ButtonLabelState(text: "취소", isRed: true, buttonActionType: ButtonActionType.goHome)
+          ButtonLabelState(text: "삭제하기", isRed: false, buttonActionType: ButtonActionType.deleteEntireToDoRepeat),
+          ButtonLabelState(text: "미완료 투두만 삭제하기", isRed: false, buttonActionType: ButtonActionType.deleteUncompletedToDoRepeat),
+          ButtonLabelState(text: "취소", isRed: true, buttonActionType: ButtonActionType.cancel)
         ],
         stackView: StackViewState(isHorizontal: false, height: layoutConstant.stackviewHeightForVertical)
       )
