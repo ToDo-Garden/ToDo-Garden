@@ -27,6 +27,7 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
   private let homeHeaderView: HomeSceneHeaderView
   private let calendarView: CalendarView
   private var todoListView: ToDoListView?
+  private let bottomSheet: BottomSheet = BottomSheet()
   
   // MARK: - VIP Properties
   
@@ -65,10 +66,9 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
     let toDoListViewContainer = ToDoListViewContainer()
     self.todoListView = toDoListViewContainer.toDoListView
     self.todoListView?.buttonActionDelegate = self
-    let bottomSheet = BottomSheet()
-    bottomSheet.usingAutolayout()
-    self.view.addSubview(bottomSheet)
-    bottomSheet.contentView = self.todoListView
+    self.bottomSheet.usingAutolayout()
+    self.view.addSubview(self.bottomSheet)
+    self.bottomSheet.contentView = self.todoListView
   }
   
   open func setUserInteractionDisable() {
@@ -163,6 +163,65 @@ extension HomeSceneViewController: HomeSceneDisplayLogic {
 extension HomeSceneViewController {
 }
 
+// MARK: - For Guide Scene
+extension HomeSceneViewController {
+  public func setForHomeGuide(isToDoItemVisible: Bool = false) {
+    self.navigationController?.navigationBar.isHidden = true
+    var snapshotForGuide = ToDoListView.Snapshot()
+    let color = UIColor.toDoGardenYellow
+    let groupForGuide = ToDoListView.ToDoSection(
+      headerUIModel: .init(progressColor: color, progressRate: 0.5, groupTitle: "그룹1"),
+      toDoItems: [
+        ToDoListView.ToDoItem(
+          toDoUIModel: .init(text: "오늘의 투두", foregroundColor: color, isSelected: true)
+        )
+      ]
+    )
+    
+    if isToDoItemVisible == false {
+      snapshotForGuide.appendSections([groupForGuide])
+    } else {
+      snapshotForGuide.appendSections([groupForGuide])
+      snapshotForGuide.sectionIdentifiers.forEach { section in
+        snapshotForGuide.appendItems(section.toDoItems, toSection: section)
+      }
+    }
+    self.todoListView?.apply(snapshotForGuide)
+  }
+  
+  public func setForEditToDoGuide(swipedCell: UIView) {
+    self.navigationController?.navigationBar.isHidden = true
+    
+    guard let contentView = self.bottomSheet.contentView else { return }
+    
+    contentView.addSubview(swipedCell)
+    swipedCell.usingAutolayout()
+    NSLayoutConstraint.activate(
+      [
+        swipedCell.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: -9),
+        swipedCell.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -9),
+        swipedCell.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15),
+        swipedCell.heightAnchor.constraint(equalToConstant: 80)
+      ]
+    )
+  }
+  
+  public func getToDoListGroup() -> UIView {
+    guard let headerView = self.todoListView?.getToDoListGroup() else {
+      return UIView()
+    }
+    return headerView
+  }
+  
+  public func getToDoListToDo() -> UIView {
+    guard let cell = self.todoListView?.getToDoListToDo() else { return UIView()}
+    return cell
+  }
+  
+  public func getSwipedCell() -> UIView {
+    return self.bottomSheet.contentView?.subviews.last ?? UIView()
+  }
+}
 // MARK: - ToDoList Button Actions
 
 extension HomeSceneViewController: ToDoListButtonActionDelegate {
@@ -197,7 +256,6 @@ extension HomeSceneViewController: ToDoListButtonActionDelegate {
 @available(iOS 17.0, *)
 #Preview {
   let homeSceneViewController = HomeSceneViewController()
-  
   return homeSceneViewController
 }
 #endif

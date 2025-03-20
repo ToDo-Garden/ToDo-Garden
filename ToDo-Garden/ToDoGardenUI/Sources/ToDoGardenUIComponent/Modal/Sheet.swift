@@ -27,7 +27,7 @@ public final class BottomSheet: UIView {
     case 0 ... 667:
       multiplier = 0.63
     case 668 ... 860:
-      multiplier = 0.55
+      multiplier = 0.52
     default:
       multiplier = 0.5
     }

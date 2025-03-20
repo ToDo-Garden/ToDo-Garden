@@ -14,7 +14,8 @@ let package = Package(
     .package(path: "../ToDoGardenUI"),
     .package(name: "ManageGroupScene", path: "./ManageGroupScene"),
     .package(name: "ShareGardenScene", path: "./ShareGardenScene"),
-    .package(name: "EditToDoScene", path: "./EditToDoScene")
+    .package(name: "EditToDoScene", path: "./EditToDoScene"),
+    .package(name: "HomeScene", path: "./HomeScene")
   ],
   targets: [
     .target(
@@ -23,7 +24,8 @@ let package = Package(
         .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI"),
         .product(name: "ManageGroupScene", package: "ManageGroupScene"),
         .product(name: "ShareGardenScene", package: "ShareGardenScene"),
-        .product(name: "EditToDoScene", package: "EditToDoScene")
+        .product(name: "EditToDoScene", package: "EditToDoScene"),
+        .product(name: "HomeScene", package: "HomeScene")
       ]
     )
   ]

@@ -151,6 +151,18 @@ extension ToDoListView {
 }
 
 extension ToDoListView {
+  public func getToDoListGroup() -> UIView {
+    return self.contentView.supplementaryView(
+      forElementKind: UICollectionView.elementKindSectionHeader,
+      at: IndexPath(item: 0, section: 0)
+    ) ?? UIView()
+  }
+  
+  public func getToDoListToDo() -> UIView {
+    guard let cell = self.contentView.cellForItem(at: IndexPath(item: 0, section: 0)) else { return UIView()}
+    return cell
+  }
+  
   private func getItemForIndexPath(_ indexPath: IndexPath) -> ToDoItem? {
     let snapshot = self.dataSource.snapshot()
     guard indexPath.section < snapshot.sectionIdentifiers.count else {
