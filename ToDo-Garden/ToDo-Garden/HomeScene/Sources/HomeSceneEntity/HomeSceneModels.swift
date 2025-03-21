@@ -7,21 +7,16 @@
 
 import Foundation
 
+// swiftlint:disable all
 public enum HomeScene {
   // MARK: Use cases
-  public enum FetchToDoList {
-    public struct Request {
-      
-      public init() {
-      }
-    }
-    
+  public enum FetchToDoList {    
     public struct Response: Codable, Sendable {
-      public let groups: [Group]?
-      public let list: [DailyTodoList]?
+      public let date: String
+      public let list: [TodoListGroup]
       
-      public init(groups: [Group]?, list: [DailyTodoList]?) {
-        self.groups = groups
+      public init(date: String, list: [TodoListGroup]) {
+        self.date = date
         self.list = list
       }
     }
@@ -33,35 +28,24 @@ public enum HomeScene {
     }
   }
   
+  public enum BatchUpdate {
+    public struct TodoBatchRequest: Codable, Sendable {
+      public let data: [TodoBatchItem]
+    }
+
+  }
 }
 
 // MARK: DTO
 extension HomeScene {
-  public struct Todo: Codable, Sendable {
-    public let id: String
-    public let name: String
-    public let isDone: Bool
-    public let orderIdx: Int
-    public let isAlarmOn: Bool
-    
-    public init(id: String, name: String, isDone: Bool, orderIdx: Int, isAlarmOn: Bool) {
-      self.id = id
-      self.name = name
-      self.isDone = isDone
-      self.orderIdx = orderIdx
-      self.isAlarmOn = isAlarmOn
-    }
-  }
-
-  // 그룹
-  public struct Group: Codable, Sendable {
+  public struct TodoListGroup: Codable, Sendable {
     public let id: String
     public let name: String
     public let color: String
-    public let todoList: [Todo]?
-    public let progressRate: Float
+    public let todoList: [TodoListItem]?
+    public let progressRate: Double
     
-    public init(id: String, name: String, color: String, todoList: [Todo]?, progressRate: Float) {
+    public init(id: String, name: String, color: String, todoList: [TodoListItem]?, progressRate: Double) {
       self.id = id
       self.name = name
       self.color = color
@@ -69,15 +53,62 @@ extension HomeScene {
       self.progressRate = progressRate
     }
   }
-
-  // 특정 날짜에 해당하는 일정 목록
-  public struct DailyTodoList: Codable, Sendable {
-    public let date: String
-    public let list: [Group]
+  
+  public struct TodoListItem: Codable, Sendable {
+    public let name: String
+    public let endDay: String?
+    public let isDone: Bool
+    public let localID: String
+    public let startDay: String?
+    public let alarmTime: Int?
+    public let isAlarmOn: Bool
+    public let isOnlyToday: Bool
+    public let repeatToDoId: String?
     
-    public init(date: String, list: [Group]) {
-      self.date = date
-      self.list = list
+    enum CodingKeys: String, CodingKey {
+      case name, endDay, isDone, startDay, alarmTime, isAlarmOn, isOnlyToday, repeatToDoId
+      case localID = "local_id"
+    }
+    
+    public init(name: String, endDay: String?, isDone: Bool, localID: String, startDay: String?, alarmTime: Int?, isAlarmOn: Bool, isOnlyToday: Bool, repeatToDoId: String?) {
+      self.name = name
+      self.endDay = endDay
+      self.isDone = isDone
+      self.localID = localID
+      self.startDay = startDay
+      self.alarmTime = alarmTime
+      self.isAlarmOn = isAlarmOn
+      self.isOnlyToday = isOnlyToday
+      self.repeatToDoId = repeatToDoId
+    }
+  }
+  
+  public struct TodoBatchItem: Codable, Sendable {
+    public let localId: String
+    public let name: String
+    public let isDone: Bool
+    public let createdAt: String 
+    public let isAlarmOn: Bool
+    public let alarmTime: Double
+    public let isOnlyToday: Bool
+    public let startDay: String?
+    public let endDay: String?
+    public let groupId: String
+    public let isDelete: Bool
+    
+    public init(localId: String, name: String, isDone: Bool, createdAt: String, isAlarmOn: Bool, alarmTime: Double, isOnlyToday: Bool, startDay: String?, endDay: String?, groupId: String, isDelete: Bool) {
+      self.localId = localId
+      self.name = name
+      self.isDone = isDone
+      self.createdAt = createdAt
+      self.isAlarmOn = isAlarmOn
+      self.alarmTime = alarmTime
+      self.isOnlyToday = isOnlyToday
+      self.startDay = startDay
+      self.endDay = endDay
+      self.groupId = groupId
+      self.isDelete = isDelete
     }
   }
 }
+// swiftlint:enable all
