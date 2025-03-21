@@ -8,6 +8,7 @@
 import Foundation
 
 import HomeSceneAPI
+import HomeSceneEntity
 
 protocol HomeSceneDataStore {
 }
@@ -17,15 +18,19 @@ protocol HomeSceneBusinessLogic {
   func fetchToDoList() async
   func createToDo() async
   func deleteToDo() async
+  func setMonthlyData(_ monthlyData: [String: [HomeScene.TodoListGroup]]) async
+  func loadDailyToDoList(date: String) async
 }
 
 @MainActor
 final class HomeSceneInteractor: HomeSceneDataStore {
   var presenter: (any HomeScenePresentationLogic)?
   private var homeSceneWorker: HomeSceneWorkable
+  private var monthlyData: [String: [HomeScene.TodoListGroup]]
   
   init(homeSceneWorker: HomeSceneWorkable) {
     self.homeSceneWorker = homeSceneWorker
+    self.monthlyData = [:]
   }
 }
 
@@ -34,10 +39,15 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
   func fetchToDoList() async {
     do {
       let fetchedToDoList = try await self.homeSceneWorker.fetchToDoList()
-      self.presenter?.presentFetchedToDoList(response: fetchedToDoList)
+      self.presenter?.presentFetchedToDoList(monthlyData: fetchedToDoList)
     } catch let error {
       self.handleErrors(error)
     }
+  }
+  
+  func loadDailyToDoList(date: String) async {
+    let dailyToDoList: [HomeScene.TodoListGroup] = self.monthlyData[date] ?? []
+    self.presenter?.presentDailyToDoList(dailyData: dailyToDoList)
   }
   
   func createToDo() async {
@@ -56,6 +66,10 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
     } catch let error {
       self.handleErrors(error)
     }
+  }
+  
+  func setMonthlyData(_ monthlyData: [String: [HomeScene.TodoListGroup]]) async {
+    self.monthlyData = monthlyData
   }
 }
 
