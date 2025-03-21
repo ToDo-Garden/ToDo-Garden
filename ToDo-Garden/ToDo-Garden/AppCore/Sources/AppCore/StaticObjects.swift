@@ -16,6 +16,7 @@ import ShareGardenScene
 import SignUpScene
 import TDFoundation
 import TimerScene
+import TimerSceneEntity
 
 // MARK: HOME SCENE
 extension HomeSceneBuilder.Dependency {
@@ -42,7 +43,7 @@ extension TimerSceneBuilder.Dependency {
 extension TimerStorageWorker {
   static let live = TimerStorageWorker(
     httpClient: HTTPClient.live,
-    timerStorage: TimerStorage.live
+    timerStorage: JSONStorage<TimerScene.PomodoroDTO>(fileName: "pomodoros.json")
   )
 }
 

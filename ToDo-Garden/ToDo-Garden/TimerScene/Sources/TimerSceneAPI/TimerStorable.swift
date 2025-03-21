@@ -10,5 +10,5 @@ import TimerSceneEntity
 public protocol TimerStorable: Sendable {
   func saveCompletedTimer(groupId: String, duration: Int) throws
   func deleteAllPomodoros() throws
-  func getAsDTO() throws -> TimerScene.FocusTimeRequestDTO
+  func getAsDTO() throws -> [TimerScene.PomodoroDTO]
 }
