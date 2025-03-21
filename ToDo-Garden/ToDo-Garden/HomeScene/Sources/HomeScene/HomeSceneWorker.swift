@@ -15,11 +15,11 @@ import TDFoundationExtension
 
 public struct HomeSceneWorker: HomeSceneWorkable, Sendable {
   private let httpClient: HTTPClientAPI
-  private let homeStorage: any JSONStorable<HomeScene.BatchUpdate.TodoBatchRequest>
+  private let homeStorage: any JSONStorable<HomeScene.TodoBatchItem>
   
   public init(
     httpClient: HTTPClientAPI,
-    homeStorage: some JSONStorable<HomeScene.BatchUpdate.TodoBatchRequest>
+    homeStorage: some JSONStorable<HomeScene.TodoBatchItem>
   ) {
     self.httpClient = httpClient
     self.homeStorage = homeStorage

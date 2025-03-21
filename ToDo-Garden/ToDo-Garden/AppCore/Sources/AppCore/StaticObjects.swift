@@ -9,6 +9,7 @@ import Foundation
 
 import EditToDoScene
 import HomeScene
+import HomeSceneEntity
 import HTTPClient
 import ManageGroupScene
 import PostGroupScene
@@ -24,7 +25,7 @@ extension HomeSceneBuilder.Dependency {
   public static let live = HomeSceneBuilder.Dependency.init(
     homeSceneWorker: HomeSceneWorker(
       httpClient: HTTPClient.live,
-      homeStorage: JSONStorage(fileName: "todolistBatch.json")
+      homeStorage: JSONStorage<HomeScene.TodoBatchItem>(fileName: "todolistBatch.json")
     ),
     manageGroupSceneBuilder: ManageGroupSceneBuilder.init(dependency: .live),
     editToDoSceneBuilder: EditToDoSceneBuilder(dependency: .live),
