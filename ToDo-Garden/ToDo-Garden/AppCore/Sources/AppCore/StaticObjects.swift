@@ -22,7 +22,10 @@ import TimerSceneEntity
 extension HomeSceneBuilder.Dependency {
   @MainActor
   public static let live = HomeSceneBuilder.Dependency.init(
-    homeSceneWorker: HomeSceneWorker(httpClient: HTTPClient.live),
+    homeSceneWorker: HomeSceneWorker(
+      httpClient: HTTPClient.live,
+      homeStorage: JSONStorage(fileName: "todolistBatch.json")
+    ),
     manageGroupSceneBuilder: ManageGroupSceneBuilder.init(dependency: .live),
     editToDoSceneBuilder: EditToDoSceneBuilder(dependency: .live),
     timerSceneBuilder: TimerSceneBuilder(dependency: .live)
