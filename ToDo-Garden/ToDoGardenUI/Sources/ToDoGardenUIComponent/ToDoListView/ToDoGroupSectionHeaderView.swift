@@ -71,7 +71,7 @@ public final class ToDoGroupSectionHeaderView: UICollectionReusableView {
     self.progressView.setupProgressLayerStrokeColor(with: model.progressColor)
     self.progressView.startAnimation(
       duration: TimeInterval(0.5),
-      from: Float.zero,
+      from: self.progressView.currentProgress,
       to: Float(model.progressRate)
     )
     self.createToDoButton.updateTitle(with: model.groupTitle)
