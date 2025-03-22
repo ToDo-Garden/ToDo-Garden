@@ -7,6 +7,7 @@
 
 import UIKit
 
+import TDUtility
 import ToDoGardenUIConstant
 
 extension ManageGroupTableViewCell {
@@ -92,8 +93,8 @@ extension ManageGroupTableViewCell {
     ) -> Model.ProgressCircle {
       let constants = Constant.ManageGroupListTableViewCell.self
       return Model.ProgressCircle(
-        progressColor: Observable(progressColor),
-        progressRate: Observable(progressRate),
+        progressColor: ObservingValue(progressColor),
+        progressRate: ObservingValue(progressRate),
         backgroundColor: UIColor.toDoGardenGray1,
         lineWidth: constants.ProgressCircle.lineWidth,
         size: constants.CommonSize.size,
@@ -107,7 +108,7 @@ extension ManageGroupTableViewCell {
     ) -> Model.GroupNameButton {
       let constants = Constant.ManageGroupListTableViewCell.self
       return Model.GroupNameButton(
-        groupName: Observable(groupName),
+        groupName: ObservingValue(groupName),
         cornerRadius: constants.GroupNameButton.cornerRadius,
         isCreateToDoButton: isCreateToDoButton,
         leading: constants.GroupNameButton.leading,
@@ -129,7 +130,7 @@ extension ManageGroupTableViewCell {
     ) -> Model.RightImageView {
       let constants = Constant.ManageGroupListTableViewCell.self
       return Model.RightImageView(
-        isHidden: Observable(isHidden),
+        isHidden: ObservingValue(isHidden),
         image: image,
         size: constants.CommonSize.size,
         trailing: trailing
@@ -170,8 +171,8 @@ extension ManageGroupTableViewCell {
 
 extension ManageGroupTableViewCell.Configuration.Model {
   struct ProgressCircle {
-    var progressColor: Observable<UIColor>
-    var progressRate: Observable<Float>
+    var progressColor: ObservingValue<UIColor>
+    var progressRate: ObservingValue<Float>
     let backgroundColor: UIColor
     let lineWidth: CGFloat
     let size: CGSize
@@ -179,7 +180,7 @@ extension ManageGroupTableViewCell.Configuration.Model {
   }
   
   struct GroupNameButton {
-    var groupName: Observable<String>
+    var groupName: ObservingValue<String>
     let cornerRadius: CGFloat
     let isCreateToDoButton: Bool
     let leading: CGFloat
@@ -189,7 +190,7 @@ extension ManageGroupTableViewCell.Configuration.Model {
   }
   
   struct RightImageView {
-    var isHidden: Observable<Bool>
+    var isHidden: ObservingValue<Bool>
     let image: UIImage
     let size: CGSize
     let trailing: CGFloat
