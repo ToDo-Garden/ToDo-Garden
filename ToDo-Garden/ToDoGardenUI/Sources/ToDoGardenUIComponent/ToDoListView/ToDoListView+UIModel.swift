@@ -43,7 +43,7 @@ extension ToDoListView {
   
   public struct ToDoGroupUIModel: Hashable, Sendable {
     let progressColor: UIColor
-    let progressRate: Double
+    var progressRate: Double
     let groupTitle: String
     
     public init(
