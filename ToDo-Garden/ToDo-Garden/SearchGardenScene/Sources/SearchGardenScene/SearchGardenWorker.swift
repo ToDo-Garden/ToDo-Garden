@@ -77,8 +77,8 @@ extension SearchGardenWorker {
       input: request,
       serializer: { $0 },
       deserializer: { response in
-        try self.checkStatusCode(response: response)
-        let decodedBody: SearchGarden.LoadFriendGardenDTO.Response = try self.decodeBody(response: response)
+        try response.validateStatusCode()
+        let decodedBody: SearchGarden.LoadFriendGardenDTO.Response = try response.decode()
         return decodedBody
       }
     )
@@ -91,7 +91,7 @@ extension SearchGardenWorker {
       input: request,
       serializer: { $0 },
       deserializer: { response in
-        try self.checkStatusCode(response: response)
+        try response.validateStatusCode()
       }
     )
   }
@@ -106,8 +106,8 @@ extension SearchGardenWorker {
       input: httpRequest,
       serializer: { $0 },
       deserializer: { response in
-        try self.checkStatusCode(response: response)
-        let decodedBody: SearchGarden.SearchGardenUsersDTO.Response = try self.decodeBody(response: response)
+        try response.validateStatusCode()
+        let decodedBody: SearchGarden.SearchGardenUsersDTO.Response = try response.decode()
         return decodedBody
       }
     )
@@ -121,7 +121,7 @@ extension SearchGardenWorker {
       input: httpRequest,
       serializer: { $0 },
       deserializer: { response in
-        try self.checkStatusCode(response: response)
+        try response.validateStatusCode()
         guard let data = response.body else {
           throw HTTPClientError.deserializationError
         }
@@ -170,21 +170,5 @@ extension SearchGardenWorker {
       endPoint: URLConstants.Garden.addGarden,
       body: body
     )
-  }
-}
-
-extension SearchGardenWorker {
-  private func checkStatusCode(response: HTTPResponse) throws {
-    guard response.statusCode >= 200 && response.statusCode < 400 else {
-      throw HTTPClientError.badStatusCode(response.statusCode)
-    }
-  }
-  
-  private func decodeBody<T: Decodable>(response: HTTPResponse) throws -> T {
-    guard let data = response.body else {
-      throw HTTPClientError.deserializationError
-    }
-    
-    return try JSONDecoder().decode(T.self, from: data)
   }
 }
