@@ -23,7 +23,9 @@ let package = Package(
   dependencies: [
     .package(name: "TDFoundation", path: "../TDFoundation"),
     .package(name: "ToDoGardenUI", path: "../ToDoGardenUI"),
-    .package(name: "GuideScene", path: "../GuideScene")
+    .package(name: "GuideScene", path: "../GuideScene"),
+    .package(path: "../TDFoundation"),
+    .package(path: "../HTTPClient")
   ],
   targets: [
     .target(
@@ -43,7 +45,9 @@ let package = Package(
         .product(name: "ToDoGardenUIAPI", package: "ToDoGardenUI"),
         .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI"),
         .product(name: "ToDoGardenUIResource", package: "ToDoGardenUI"),
-        .product(name: "GuideScene", package: "GuideScene")
+        .product(name: "GuideScene", package: "GuideScene"),
+        .product(name: "TDFoundation", package: "TDFoundation"),
+        .product(name: "HTTPClient", package: "HTTPClient")
       ]
     ),
     .testTarget(

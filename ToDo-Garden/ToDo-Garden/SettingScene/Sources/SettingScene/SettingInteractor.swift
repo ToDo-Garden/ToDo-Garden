@@ -73,13 +73,17 @@ extension SettingInteractor {
 
   private func fetchAppVersion() {
     self.fetchAppVersionTask = Task {
-      let versionNumber = self.appServiceWorker.fetchCurrentAppVersion()
-      let isUpdateAvailable = await self.appServiceWorker.isUpdateAvailable()
-      let response = Setting.FetchAppVersion.Response(
-        versionNumber: versionNumber,
-        isLatestVersion: !isUpdateAvailable
-      )
-      await self.presenter?.presentAppVersion(response: response)
+      do {
+        let versionNumber = self.appServiceWorker.currentAppVersion()
+        let isUpdateAvailable = try await self.appServiceWorker.isUpdateAvailable()
+        let response = Setting.FetchAppVersion.Response(
+          versionNumber: versionNumber,
+          isLatestVersion: !isUpdateAvailable
+        )
+        await self.presenter?.presentAppVersion(response: response)
+      } catch {
+        /// 추가적인 제어가 필요하다면 구현해주세요.
+      }
     }
   }
 }
