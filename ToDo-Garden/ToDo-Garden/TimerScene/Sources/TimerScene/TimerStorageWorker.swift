@@ -14,11 +14,11 @@ import TimerSceneEntity
 
 public struct TimerStorageWorker: TimerStorageWorkable {
   private var httpClient: HTTPClientAPI?
-  private let timerStorage: TimerStorable
+  private let timerStorage: any JSONStorable<TimerScene.PomodoroDTO>
   
   public init(
     httpClient: HTTPClientAPI,
-    timerStorage: TimerStorable
+    timerStorage: some JSONStorable<TimerScene.PomodoroDTO>
   ) {
     self.httpClient = httpClient
     self.timerStorage = timerStorage
@@ -49,14 +49,51 @@ public struct TimerStorageWorker: TimerStorageWorkable {
 // MARK: - Local Methods
 extension TimerStorageWorker {
   public func recordCompletedItemInLocal(groupId: String, seconds: Int) throws {
-    try self.timerStorage.saveCompletedTimer(groupId: groupId, duration: seconds)
+    let today = self.getCurrentDateString()
+    
+    try self.timerStorage.updateOrAddItem(
+      where: { $0.focusGroupId == groupId && $0.focusDate == today },
+      update: { pomodoro in
+        var updatedFocusTime = pomodoro.focusTime
+        updatedFocusTime.append(seconds)
+        updatedFocusTime.sort()
+        pomodoro.focusTime = updatedFocusTime
+      },
+      new: {
+        return TimerScene.PomodoroDTO(
+          focusGroupId: groupId,
+          focusDate: today,
+          focusTime: [seconds]
+        )
+      }
+    )
   }
   
   public func deleteAllTimerItems() throws {
-    try self.timerStorage.deleteAllPomodoros()
+    try self.timerStorage.deleteAllItems()
   }
   
   public func getTimerItemsAsDTO() throws -> TimerScene.FocusTimeRequestDTO {
-    return try self.timerStorage.getAsDTO()
+    let pomodoros = try self.timerStorage.getItems()
+    let dto = TimerScene.FocusTimeRequestDTO(pomodoros: pomodoros)
+    return dto
+  }
+  
+  private func getCurrentDateString() -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd"
+    return dateFormatter.string(from: Date())
+  }
+}
+
+public extension TimerStorageWorker {
+  static func live(
+    httpClient: HTTPClientAPI,
+    timerStorage: any JSONStorable<TimerScene.PomodoroDTO>
+  ) -> TimerStorageWorker {
+    return TimerStorageWorker(
+      httpClient: httpClient,
+      timerStorage: timerStorage
+    )
   }
 }

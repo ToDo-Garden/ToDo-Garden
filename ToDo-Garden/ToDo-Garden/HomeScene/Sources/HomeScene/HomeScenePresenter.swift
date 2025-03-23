@@ -12,7 +12,8 @@ import ToDoGardenUIComponent
 
 @MainActor
 protocol HomeScenePresentationLogic {
-  func presentFetchedToDoList(response: HomeScene.FetchToDoList.Response)
+  func presentFetchedToDoList(monthlyData: [HomeScene.FetchToDoList.Response])
+  func presentDailyToDoList(dailyData: [HomeScene.TodoListGroup])
   func presentCreateToDo()
   func presentDeleteToDo()
 }
@@ -25,9 +26,14 @@ final class HomeScenePresenter {
 // MARK: - Request to ViewController
 
 extension HomeScenePresenter: HomeScenePresentationLogic {
-  func presentFetchedToDoList(response: HomeScene.FetchToDoList.Response) {
-    let snapshot = self.makeNewSnapshotSections(response: response)
-    self.viewController?.displayFetchedToDoList(snapshot: snapshot)
+  func presentFetchedToDoList(monthlyData: [HomeScene.FetchToDoList.Response]) {
+    let hashTable = self.makeHashTable(monthlyData: monthlyData)
+    self.viewController?.displayFetchedToDoList(fetchedData: hashTable)
+  }
+  
+  func presentDailyToDoList(dailyData: [HomeScene.TodoListGroup]) {
+    let snapshot = self.makeNewSnapshotSections(dailyToDoList: dailyData)
+    self.viewController?.displayDailyToDoList(snapshot: snapshot)
   }
   
   func presentCreateToDo() {
@@ -40,39 +46,52 @@ extension HomeScenePresenter: HomeScenePresentationLogic {
 }
 
 extension HomeScenePresenter {
-  private func makeNewSnapshotSections(response: HomeScene.FetchToDoList.Response) -> ToDoListView.Snapshot {
-    var snapshot = ToDoListView.Snapshot()
+  private func makeHashTable(monthlyData: [HomeScene.FetchToDoList.Response]) -> [String: [HomeScene.TodoListGroup]] {
+    var hashTable: [String: [HomeScene.TodoListGroup]] = [:]
     
-    // 요청한 날짜의 DailyToDoList만 generateSections으로 넘기도록 수정해야함.
-    if let firstDailyTodoList = response.list?.first {
-      snapshot.appendSections(self.generateSections(from: firstDailyTodoList))
-      snapshot.sectionIdentifiers.forEach { section in
+    for data in monthlyData {
+      let date = data.date
+      if hashTable[date] == nil {
+        hashTable[date] = []
+      }
+      
+      hashTable[date]?.append(contentsOf: data.list)
+    }
+    
+    return hashTable
+  }
+  
+  private func makeNewSnapshotSections(dailyToDoList: [HomeScene.TodoListGroup]) -> ToDoListView.Snapshot {
+    var snapshot = ToDoListView.Snapshot()
+    dailyToDoList.forEach { group in
+      let sections = self.generateSections(from: group)
+      
+      sections.forEach { section in
+        snapshot.appendSections([section])
         snapshot.appendItems(section.toDoItems, toSection: section)
       }
     }
     
     return snapshot
   }
-  
-  func generateSections(from dailyTodoList: HomeScene.DailyTodoList) -> [ToDoListView.ToDoSection] {
-    let sections = dailyTodoList.list.map { group in
-      let toDoItems = (group.todoList ?? []).map { todo in
-        ToDoListView.ToDoItem(
-          toDoUIModel: .init(text: todo.name, foregroundColor: self.getColor(for: group.color))
-        )
-      }
 
-      return ToDoListView.ToDoSection(
-        headerUIModel: .init(
-          progressColor: self.getColor(for: group.color),
-          progressRate: Double(group.progressRate),
-          groupTitle: group.name
-        ),
-        toDoItems: toDoItems
+  func generateSections(from group: HomeScene.TodoListGroup) -> [ToDoListView.ToDoSection] {
+    let toDoItems = group.todoList?.map { todo in
+      ToDoListView.ToDoItem(
+        toDoUIModel: .init(text: todo.name, foregroundColor: self.getColor(for: group.color))
       )
-    }
-
-    return sections
+    } ?? []
+    
+    let section = ToDoListView.ToDoSection(
+      headerUIModel: .init(
+        progressColor: self.getColor(for: group.color),
+        progressRate: group.progressRate,
+        groupTitle: group.name
+      ),
+      toDoItems: toDoItems
+    )
+    
+    return [section]
   }
   
   private func getColor(for hex: String) -> UIColor {

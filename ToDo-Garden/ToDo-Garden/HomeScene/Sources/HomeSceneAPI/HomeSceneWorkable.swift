@@ -10,7 +10,7 @@ import Foundation
 import HomeSceneEntity
 
 public protocol HomeSceneWorkable: Sendable {
-  func fetchToDoList() async throws -> HomeScene.FetchToDoList.Response
+  func fetchToDoList() async throws -> [HomeScene.FetchToDoList.Response]
   func createToDo() async throws
   func deleteToDo() async throws
 }

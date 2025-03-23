@@ -353,7 +353,7 @@ import HTTPClient
       ),
       middlewares: []
     ),
-    timerStorage: TimerStorage.live
+    timerStorage: JSONStorage(fileName: "pomodoros.json")
   )
   let viewController = TimerSceneBuilder(
     dependency: .init(

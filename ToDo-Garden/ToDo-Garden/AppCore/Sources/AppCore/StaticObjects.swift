@@ -9,6 +9,7 @@ import Foundation
 
 import EditToDoScene
 import HomeScene
+import HomeSceneEntity
 import HTTPClient
 import ManageGroupScene
 import PostGroupScene
@@ -16,12 +17,16 @@ import ShareGardenScene
 import SignUpScene
 import TDFoundation
 import TimerScene
+import TimerSceneEntity
 
 // MARK: HOME SCENE
 extension HomeSceneBuilder.Dependency {
   @MainActor
   public static let live = HomeSceneBuilder.Dependency.init(
-    homeSceneWorker: HomeSceneWorker(httpClient: HTTPClient.live),
+    homeSceneWorker: HomeSceneWorker(
+      httpClient: HTTPClient.live,
+      homeStorage: JSONStorage<HomeScene.TodoBatchItem>(fileName: "todolistBatch.json")
+    ),
     manageGroupSceneBuilder: ManageGroupSceneBuilder.init(dependency: .live),
     editToDoSceneBuilder: EditToDoSceneBuilder(dependency: .live),
     timerSceneBuilder: TimerSceneBuilder(dependency: .live)
@@ -42,7 +47,7 @@ extension TimerSceneBuilder.Dependency {
 extension TimerStorageWorker {
   static let live = TimerStorageWorker(
     httpClient: HTTPClient.live,
-    timerStorage: TimerStorage.live
+    timerStorage: JSONStorage<TimerScene.PomodoroDTO>(fileName: "pomodoros.json")
   )
 }
 

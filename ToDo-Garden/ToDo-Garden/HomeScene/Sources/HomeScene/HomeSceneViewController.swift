@@ -7,15 +7,16 @@
 
 import UIKit
 
+import HomeSceneAPI
+import HomeSceneEntity
+import TDFoundationExtension
 import TDUtility
 import ToDoGardenUIComponent
 
-import HomeSceneAPI
-import HomeSceneEntity
-
 @MainActor
 protocol HomeSceneDisplayLogic: AnyObject {
-  func displayFetchedToDoList(snapshot: ToDoListView.Snapshot)
+  func displayFetchedToDoList(fetchedData: [String: [HomeScene.TodoListGroup]])
+  func displayDailyToDoList(snapshot: ToDoListView.Snapshot)
   func displayCreateToDo()
   func displayDeleteToDo() 
 }
@@ -145,7 +146,15 @@ extension HomeSceneViewController {
 // MARK: - Confirm display logic protocol
 
 extension HomeSceneViewController: HomeSceneDisplayLogic {
-  func displayFetchedToDoList(snapshot: ToDoListView.Snapshot) {
+  func displayFetchedToDoList(fetchedData: [String: [HomeScene.TodoListGroup]]) {
+    Task {
+      await self.interactor?.setMonthlyData(fetchedData)
+      await self.interactor?.loadDailyToDoList(date: Date.now.toStringDateFormatWithDash())
+    }
+  }
+  
+  func displayDailyToDoList(snapshot: ToDoListView.Snapshot) {
+    self.todoListView?.stopShimmering()
     self.todoListView?.apply(snapshot)
   }
   
