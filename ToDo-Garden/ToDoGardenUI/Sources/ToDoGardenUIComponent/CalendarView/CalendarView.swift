@@ -29,7 +29,17 @@ public class CalendarView: UIView {
   public weak var dateSelectionDelegate: CalendarViewDateSelectionDelegate?
   
   public func highlightToday() {
-    calendarViewDelegate.highlightToday()
+    self.calendarViewDelegate.highlightToday()
+  }
+  
+  public func getCurrentMonth() -> String {
+    return self.calendarViewDelegate.getDateString()
+  }
+  
+  public func getSelectedDate() -> Date? {
+    guard let item = self.calendarViewDelegate.getSelectedItem() else { return nil }
+    
+    return item.date
   }
 
   public init(model: Model) {
