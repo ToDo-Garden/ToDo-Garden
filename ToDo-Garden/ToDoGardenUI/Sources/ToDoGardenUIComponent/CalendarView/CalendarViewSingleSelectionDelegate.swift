@@ -17,7 +17,7 @@ protocol CalendarViewManager: UICollectionViewDelegate {
   func getCollectionViewHeight() -> CGFloat
   @MainActor func scrollCalendar(to scrollDirection: CalendarScrollDirection, animated: Bool) async
   func getDateString() -> String
-  
+  func getSelectedItem() -> CalendarItem?
   func highlightToday()
 }
 
