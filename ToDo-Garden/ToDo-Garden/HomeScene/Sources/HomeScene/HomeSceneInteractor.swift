@@ -5,48 +5,53 @@
 //  Created by Noah on 1/9/25.
 //  Copyright (c) 2025 ToDoGarden. All rights reserved.
 
-import Foundation
+import UIKit
 
+import FoundationExtension
 import HomeSceneAPI
 import HomeSceneEntity
+import ToDoGardenUIComponent
 
 protocol HomeSceneDataStore {
 }
 
 @MainActor
 protocol HomeSceneBusinessLogic {
-  func fetchToDoList() async
+  func fetchToDoList(request: HomeScene.FetchToDoList.Request) async
   func createToDo() async
   func deleteToDo() async
   func setMonthlyData(_ monthlyData: [String: [HomeScene.TodoListGroup]]) async
-  func loadDailyToDoList(date: String) async
+  func loadDailyToDoList(targetDate: String) async
 }
 
 @MainActor
 final class HomeSceneInteractor: HomeSceneDataStore {
   var presenter: (any HomeScenePresentationLogic)?
   private var homeSceneWorker: HomeSceneWorkable
-  private var monthlyData: [String: [HomeScene.TodoListGroup]]
+  private var monthlyData: [String: [HomeScene.TodoListGroup]] // ex) key = "20250302"
+  private var itemsForBatch: [String: HomeScene.TodoBatchItem] // ex) key = UUIDSring(ToDo-localId)
   
   init(homeSceneWorker: HomeSceneWorkable) {
     self.homeSceneWorker = homeSceneWorker
     self.monthlyData = [:]
+    self.itemsForBatch = [:]
   }
 }
 
 // MARK: - Request to worker
 extension HomeSceneInteractor: HomeSceneBusinessLogic {
-  func fetchToDoList() async {
+  func fetchToDoList(request: HomeScene.FetchToDoList.Request) async {
     do {
-      let fetchedToDoList = try await self.homeSceneWorker.fetchToDoList()
+      let fetchedToDoList = try await self.homeSceneWorker.fetchToDoList(dateString: request.dateString)
       self.presenter?.presentFetchedToDoList(monthlyData: fetchedToDoList)
     } catch let error {
       self.handleErrors(error)
     }
   }
   
-  func loadDailyToDoList(date: String) async {
-    let dailyToDoList: [HomeScene.TodoListGroup] = self.monthlyData[date] ?? []
+  func loadDailyToDoList(targetDate: String) async {
+    let formattedDate = targetDate.toYYYYMMDDStringFromISO8601Space()
+    let dailyToDoList: [HomeScene.TodoListGroup] = self.monthlyData[formattedDate] ?? []
     self.presenter?.presentDailyToDoList(dailyData: dailyToDoList)
   }
   
@@ -73,6 +78,43 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
   }
 }
 
+// swiftlint: disable all
+extension HomeSceneInteractor {
+  private func makeItemForCreateToDo(group: ToDoListView.ToDoSection) -> HomeScene.TodoBatchItem {
+    let newToDoID = UUID()
+    let groupID = group.id.uuidString
+    let newItem = HomeScene.TodoBatchItem(
+      localId: newToDoID.uuidString,
+      name: "New ToDo",
+      isDone: false,
+      createdAt: Date.now.toISOString(),
+      isAlarmOn: false,
+      alarmTime: 0, // 기본값 뭐임?
+      isOnlyToday: true,
+      startDay: nil,
+      endDay: nil,
+      groupId: groupID,
+      isDelete: false
+    )
+    return newItem
+  }
+  
+  private func makeToDoListItem(batchItem: HomeScene.TodoBatchItem) -> HomeScene.TodoListItem {
+    let todoListItem = HomeScene.TodoListItem(
+      name: batchItem.name,
+      endDay: nil,
+      isDone: false,
+      localID: batchItem.localId,
+      startDay: nil,
+      alarmTime: nil,
+      isAlarmOn: false,
+      isOnlyToday: true,
+      repeatToDoId: nil
+    )
+    return todoListItem
+  }
+}
+
 // MARK: - HandleErrors
 
 extension HomeSceneInteractor {
@@ -83,3 +125,4 @@ extension HomeSceneInteractor {
     }
   }
 }
+// swiftlint: enable all

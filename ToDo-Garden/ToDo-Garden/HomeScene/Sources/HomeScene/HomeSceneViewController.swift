@@ -18,7 +18,7 @@ protocol HomeSceneDisplayLogic: AnyObject {
   func displayFetchedToDoList(fetchedData: [String: [HomeScene.TodoListGroup]])
   func displayDailyToDoList(snapshot: ToDoListView.Snapshot)
   func displayCreateToDo()
-  func displayDeleteToDo() 
+  func displayDeleteToDo()
 }
 
 @MainActor
@@ -29,6 +29,7 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
   private let calendarView: CalendarView
   private var todoListView: ToDoListView?
   private let bottomSheet: BottomSheet = BottomSheet()
+  private let loadingIndicator: AnimationImageView = AnimationImageView(jsonURL: .loadingIndicatorURL)
   
   // MARK: - VIP Properties
   
@@ -55,12 +56,12 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
   open override func viewDidLoad() {
     super.viewDidLoad()
     self.setupViews()
-    self.fetchToDoList()
   }
   
   open override func viewIsAppearing(_ animated: Bool) {
     super.viewWillAppear(animated)
     self.navigationController?.navigationBar.isHidden = true
+    self.fetchToDoList()
   }
   
   open func setBottomSheet() {
@@ -84,6 +85,7 @@ extension HomeSceneViewController {
     self.setCalendarView()
     self.setBottomSheet()
     self.setManageGroupButtonTapped()
+    self.setLoadingIndicator()
   }
   
   private func setHomeHeaderView() {
@@ -107,7 +109,7 @@ extension HomeSceneViewController {
   
   private func setCalendarView() {
     self.view.addSubview(self.calendarView)
-    
+    self.calendarView.highlightToday()
     self.calendarView.usingAutolayout()
     NSLayoutConstraint.activate(
       [
@@ -133,12 +135,29 @@ extension HomeSceneViewController {
       self?.router?.routeToManageGroupScene()
     })
   }
+  
+  private func setLoadingIndicator() {
+    self.loadingIndicator.isHidden = true
+    self.loadingIndicator.pauseAnimation()
+    self.view.addSubview(self.loadingIndicator)
+    self.loadingIndicator.usingAutolayout()
+    
+    NSLayoutConstraint.activate(
+      [
+        self.loadingIndicator.centerXAnchor.constraint(equalTo: self.bottomSheet.centerXAnchor),
+        self.loadingIndicator.centerYAnchor.constraint(equalTo: self.bottomSheet.centerYAnchor)
+      ]
+    )
+  }
 }
 
 extension HomeSceneViewController {
   private func fetchToDoList() {
+    let targetMonth = self.calendarView.getCurrentMonth().toYYYYMMDDStringFromYYYYMM()
+    self.loadingIndicator.isHidden = false
+    self.loadingIndicator.startAnimation()
     Task {
-      await self.interactor?.fetchToDoList()
+      await self.interactor?.fetchToDoList(request: HomeScene.FetchToDoList.Request(dateString: targetMonth))
     }
   }
 }
@@ -148,17 +167,23 @@ extension HomeSceneViewController {
 extension HomeSceneViewController: HomeSceneDisplayLogic {
   func displayFetchedToDoList(fetchedData: [String: [HomeScene.TodoListGroup]]) {
     Task {
+      let date = self.calendarView.getSelectedDate() ?? Date.now
       await self.interactor?.setMonthlyData(fetchedData)
-      await self.interactor?.loadDailyToDoList(date: Date.now.toStringDateFormatWithDash())
+      await self.interactor?.loadDailyToDoList(targetDate: date.description)
     }
   }
   
   func displayDailyToDoList(snapshot: ToDoListView.Snapshot) {
-    self.todoListView?.stopShimmering()
+    self.loadingIndicator.isHidden = true
+    self.loadingIndicator.pauseAnimation()
     self.todoListView?.apply(snapshot)
   }
   
   func displayCreateToDo() {
+    Task {
+      guard let targetDate = self.calendarView.getSelectedDate()?.description else { return }
+      await self.interactor?.loadDailyToDoList(targetDate: targetDate)
+    }
     debugPrint("CREATE TODO")
   }
   
@@ -252,6 +277,8 @@ extension HomeSceneViewController: ToDoListButtonActionDelegate {
   
   public func didCreateToDoButtonTapped(group: ToDoListView.ToDoSection) {
     Task {
+      // guard let selectedDate = self.calendarView.getSelectedDate() else { return }
+      
       await self.interactor?.createToDo()
     }
   }

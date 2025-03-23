@@ -45,12 +45,13 @@ extension HomeScenePresenter: HomeScenePresentationLogic {
   }
 }
 
+// swiftlint: disable all
 extension HomeScenePresenter {
   private func makeHashTable(monthlyData: [HomeScene.FetchToDoList.Response]) -> [String: [HomeScene.TodoListGroup]] {
     var hashTable: [String: [HomeScene.TodoListGroup]] = [:]
     
     for data in monthlyData {
-      let date = data.date
+      let date = data.date.toYYYYMMDDStringFromISO8601()
       if hashTable[date] == nil {
         hashTable[date] = []
       }
@@ -76,13 +77,16 @@ extension HomeScenePresenter {
   }
 
   func generateSections(from group: HomeScene.TodoListGroup) -> [ToDoListView.ToDoSection] {
+    guard let id = UUID(uuidString: group.localId) else { return [] }
+    
     let toDoItems = group.todoList?.map { todo in
       ToDoListView.ToDoItem(
-        toDoUIModel: .init(text: todo.name, foregroundColor: self.getColor(for: group.color))
+        toDoUIModel: .init(text: todo.name, foregroundColor: self.getColor(for: group.color), isSelected: todo.isDone, hasAlert: todo.isAlarmOn)
       )
     } ?? []
     
     let section = ToDoListView.ToDoSection(
+      id: id,
       headerUIModel: .init(
         progressColor: self.getColor(for: group.color),
         progressRate: group.progressRate,
@@ -103,3 +107,4 @@ extension HomeScenePresenter {
     }
   }
 }
+// swiftlint: enable all
