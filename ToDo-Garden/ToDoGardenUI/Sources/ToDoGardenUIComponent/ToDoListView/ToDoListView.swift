@@ -86,14 +86,15 @@ extension ToDoListView {
 // swiftlint: disable all
 extension ToDoListView {
   private func makeDataSource() -> DataSource {
-    let toDoCellRegistration = ToDoCellRegistration { cell, _, toDoItem in
-      
+    let toDoCellRegistration = ToDoCellRegistration { cell, indexPath , toDoItem in
       toDoItem.toDoUIModel.isSelected.bind { [weak self] _ in
+        guard let self = self else { return }
+        
         Task { @MainActor in
-          await self?.updateHeaderUI(for: toDoItem)
+          let currentIndexPath = indexPath
+          await self.updateHeaderUI(indexPath: currentIndexPath)
         }
       }
-      
       cell.contentConfiguration = ToDoContentViewContentConfiguration(model: toDoItem.toDoUIModel)
       cell.indentationLevel = Int.zero
     }
@@ -221,39 +222,34 @@ extension ToDoListView: ToDoGroupSectionHeaderViewDelegate {
     self.buttonActionDelegate?.didTimerButtonTapped(group: group)
   }
   
-  private func updateHeaderUI(for toDoItem: ToDoItem) async {
-    guard let section = self.getSection(for: toDoItem) else { return }
+  private func updateHeaderUI(indexPath: IndexPath) async {
+    guard let section = self.getSection(for: indexPath) else { return }
     
     let newProgressRate = self.calculateProgressRate(for: section)
-    
+
     guard let headerView = self.contentView.supplementaryView(
       forElementKind: UICollectionView.elementKindSectionHeader,
-      at: IndexPath(item: 0, section: self.getSectionIndex(for: section))
+      at: IndexPath(item: 0, section: indexPath.section)
     ) as? ToDoGroupSectionHeaderView else {
       return
     }
-    
-    var updatedModel = section.headerUIModel
+
+    let updatedModel = section.headerUIModel
     updatedModel.progressRate = newProgressRate
     headerView.update(with: updatedModel)
   }
   
-  // swiftlint: disable for_where
-  private func getSection(for toDoItem: ToDoItem) -> ToDoSection? {
+  private func getSection(for indexPath: IndexPath) -> ToDoSection? {
     let snapshot = self.dataSource.snapshot()
-    for section in snapshot.sectionIdentifiers {
-      if section.toDoItems.contains(where: { $0 == toDoItem }) {
-        return section
-      }
-    }
-    return nil
+    let section = snapshot.sectionIdentifiers[indexPath.section]
+    return section
   }
-  // swiftlint: enable for_where
   
   private func calculateProgressRate(for section: ToDoSection) -> CGFloat {
     let selected = section.toDoItems.filter { item in
-      item.toDoUIModel.isSelected.value
+      return item.toDoUIModel.isSelected.value
     }.count
+    
     return CGFloat(selected) / CGFloat(section.toDoItems.count)
   }
   
