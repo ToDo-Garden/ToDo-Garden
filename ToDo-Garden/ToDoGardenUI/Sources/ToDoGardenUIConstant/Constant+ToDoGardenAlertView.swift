@@ -12,6 +12,7 @@ extension Constant.ToDoGardenAlertView {
   
   public enum Content {
     case welldone
+    case deleteToDoRepeat
     case askToStop
     case fullyCharged
     case askToDeleteToDo
@@ -84,6 +85,8 @@ extension Constant.ToDoGardenAlertView.Content {
     case keepConcentration
     case goHome
     case delete
+    case deleteEntireToDoRepeat
+    case deleteUncompletedToDoRepeat
     case unsubscribe
     case logout
     case stopConcentration
@@ -109,6 +112,29 @@ extension Constant.ToDoGardenAlertView.Content {
     let layoutConstant = Constant.ToDoGardenAlertView.Content.Layout.self
     
     switch self {
+    case .deleteToDoRepeat:
+      return ViewState(
+        backPlane: BackPlaneState(
+          width: layoutConstant.commonWidth,
+          height: layoutConstant.heightForVertical,
+          cornerRadius: layoutConstant.cornerRadius
+        ),
+        title: TitleViewState(text: "반복을 삭제할까요?", topMargin: layoutConstant.titleTopMarginForVertical),
+        description: DescriptionViewState(
+          text: "반복을 삭제할 때, \n 반복과 관련된 투두를 삭제할까요?",
+          topMargin: layoutConstant.descriptionTopMarginForVertical
+        ),
+        buttons: [
+          ButtonLabelState(text: "삭제하기", isRed: false, buttonActionType: ButtonActionType.deleteEntireToDoRepeat),
+          ButtonLabelState(
+            text: "미완료 투두만 삭제하기",
+            isRed: false,
+            buttonActionType: ButtonActionType.deleteUncompletedToDoRepeat
+          ),
+          ButtonLabelState(text: "취소", isRed: true, buttonActionType: ButtonActionType.cancel)
+        ],
+        stackView: StackViewState(isHorizontal: false, height: layoutConstant.stackviewHeightForVertical)
+      )
     case .welldone:
       return ViewState(
         backPlane: BackPlaneState(
