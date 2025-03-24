@@ -22,9 +22,13 @@ struct ToDoContentViewContentConfiguration: UIContentConfiguration {
 }
 
 final class ToDoContentView: UIView & UIContentView {
-  private let contentView: Styled.Row
+  private var contentView: Styled.Row
   
-  var configuration: any UIContentConfiguration
+  var configuration: any UIContentConfiguration {
+    didSet {
+      self.updateContentView()
+    }
+  }
   
   @available(*, unavailable)
   required init?(coder: NSCoder) {
@@ -50,5 +54,16 @@ extension ToDoContentView {
     self.backgroundColor = UIColor.white
     self.addSubview(self.contentView)
     self.contentView.equalToParent()
+  }
+  
+  private func updateContentView() {
+    guard let configuration = self.configuration as? ToDoContentViewContentConfiguration
+    else { return }
+    
+    self.contentView.removeFromSuperview()
+    self.contentView = Styled.Row(
+      configuration: Styled.Row.Configuration.todoList(configuration.model)
+    )
+    self.setup()
   }
 }
