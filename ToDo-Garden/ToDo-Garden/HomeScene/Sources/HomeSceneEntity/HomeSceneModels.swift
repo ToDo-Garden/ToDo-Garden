@@ -53,18 +53,6 @@ extension HomeScene {
       self.todoList = todoList
       self.progressRate = progressRate
     }
-    
-    public func appendAtToDoList(newToDo: TodoListItem) {
-      let lock = NSLock()
-      lock.lock()
-      defer { lock.unlock() }
-      
-      if self.todoList == nil {
-        self.todoList = [newToDo]
-      } else {
-        self.todoList?.append(newToDo)
-      }
-    }
   }
   
   public final class TodoListItem: Codable, Sendable {
