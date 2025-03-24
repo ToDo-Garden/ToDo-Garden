@@ -1,3 +1,4 @@
+import Combine
 import SwiftUI
 import UIKit
 
@@ -5,18 +6,28 @@ import TDFoundation
 import ToDoGardenUIComponent
 import ToDoGardenUIResource
 
-// swiftlint:disable function_body_length
+import SharingGRDB
+
+// swiftlint:disable force_try identifier_name
 final class DailyToDoAlertViewController: UIViewController {
   private let noticeLabel = UILabel()
   private let tableView = UITableView()
   private var tableViewHeightConstraint: NSLayoutConstraint!
   
-  enum Section {
-    case main
+  enum Section { case main }
+  private var dataSource: UITableViewDiffableDataSource<Section, DailyToDoAlert>!
+  
+  @Dependency(\.defaultDatabase) private var database
+  
+  struct DailyToDoAlerts: FetchKeyRequest {
+    func fetch(_ db: Database) throws -> [DailyToDoAlert] {
+      try DailyToDoAlert
+        .all()
+        .order(Column("alertTime"))
+        .fetchAll(db)
+    }
   }
-  // TODO: preview를 위한 데이터입니다
-  var items: [String] = (1...10).map(String.init)
-  private var dataSource: UITableViewDiffableDataSource<Section, String>!
+  @SharedReader(.fetch(DailyToDoAlerts())) private var dailyToDoAlerts: [DailyToDoAlert]
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -38,7 +49,7 @@ final class DailyToDoAlertViewController: UIViewController {
   
   private func setupNavigationItem() {
     let leftAction = UIAction { [weak self] _ in
-      self?.dismiss(animated: true)
+      self?.navigationController?.popViewController(animated: true)
     }
     self.navigationItem.leftBarButtonItem = UIBarButtonItem(
       image: UIImage.backwardButtonImage,
@@ -73,12 +84,12 @@ final class DailyToDoAlertViewController: UIViewController {
     self.tableView.register(type: UITableViewCell.self)
     self.tableView.usingAutolayout()
     self.view.addSubview(self.tableView)
-    
-    self.dataSource = UITableViewDiffableDataSource<Section, String>(
+    self.dataSource = UITableViewDiffableDataSource<Section, DailyToDoAlert>(
       tableView: self.tableView
-    ) { tableView, indexPath, itemIdentifier in
+    ) { tableView, indexPath, item in
       let cell = tableView.dequeueReusableCell(type: UITableViewCell.self, for: indexPath)
-      cell?.textLabel?.text = itemIdentifier
+      cell?.textLabel?.text = "\(item.alertTime)"
+      
       return cell
     }
     
@@ -89,18 +100,6 @@ final class DailyToDoAlertViewController: UIViewController {
       self.tableView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
       self.tableViewHeightConstraint
     ])
-    
-    /// 릴리즈 되나 확인 필요.
-    Task {
-      let maxAvailableHeight = self.view.bounds.height - self.noticeLabel.frame.maxY - 100
-      let stream = self.tableView.heightStream(maxAvailableHeight: maxAvailableHeight)
-      for await height in stream {
-        self.tableViewHeightConstraint.constant = height
-        UIView.animate(withDuration: 0.3) {
-          self.view.layoutIfNeeded()
-        }
-      }
-    }
   }
   
   private func setupAddTimerButton() {
@@ -130,14 +129,14 @@ final class DailyToDoAlertViewController: UIViewController {
       for: SettingTimeView.Configuration.alarmTimeSetting
     )
     button.addAction(
-      UIAction { [weak self] _ in
-        guard let self else { return }
+      UIAction { [weak self, weak timeView] _ in
+        guard let self, let timeView else { return }
+        do {
+          try self.addDailyTodo(timeView.seconds)
+        } catch {
+          // TODO: 에러를 어떻게 처리할지 논의가 필요.
+        }
         self.dismiss(animated: true)
-        self.items.append("New Item \(self.items.count)")
-        var snapshot = NSDiffableDataSourceSnapshot<Section, String>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(self.items, toSection: .main)
-        self.dataSource.apply(snapshot, animatingDifferences: true)
       },
       for: UIControl.Event.touchUpInside
     )
@@ -150,14 +149,33 @@ final class DailyToDoAlertViewController: UIViewController {
   }
   
   private func prepare() {
-    var snapshot = dataSource.snapshot()
-    snapshot.appendSections([.main])
-    snapshot.appendItems(items)
-    dataSource.apply(snapshot)
+    let maxAvailableHeight = self.view.bounds.height - self.noticeLabel.frame.maxY - 100
+    let tableHeightStream = self.tableView.heightStream(maxAvailableHeight: maxAvailableHeight)
+    Task { [weak self] in
+      for await height in tableHeightStream {
+        guard let self else { return }
+        self.tableViewHeightConstraint.constant = height
+        UIView.animate(withDuration: 0.3) {
+          self.view.layoutIfNeeded()
+        }
+      }
+    }
+    
+    let dailyToDoAlertStream = self.$dailyToDoAlerts.publisher.asyncStream
+    Task { [weak self] in
+      for await alerts in dailyToDoAlertStream {
+        guard let self else { return }
+        var snapshot = NSDiffableDataSourceSnapshot<Section, DailyToDoAlert>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(alerts)
+        let shouldAnimateDifferences = self.dataSource.snapshot().itemIdentifiers.count != alerts.count
+        await self.dataSource.apply(snapshot, animatingDifferences: shouldAnimateDifferences)
+      }
+    }
   }
 }
 
-extension DailyToDoAlertViewController {
+private extension DailyToDoAlertViewController {
   struct UnderlineButton: View {
     let text: String
     let action: () -> Void
@@ -179,6 +197,28 @@ extension DailyToDoAlertViewController {
           }
         }
       )
+    }
+  }
+}
+
+extension DailyToDoAlertViewController {
+  func addDailyTodo(_ seconds: Double) throws {
+    let todoAlert = DailyToDoAlert(alertTime: seconds)
+    _ = try self.database.write { db in
+      try todoAlert.inserted(db)
+    }
+  }
+  
+  func updateDailyTodo(todoAlert: DailyToDoAlert) throws {
+    try database.write { db in
+      try todoAlert.update(db)
+    }
+  }
+  
+  @discardableResult
+  func deleteDailyTodo(todoAlert: DailyToDoAlert) throws -> Bool {
+    try database.write { db in
+      try todoAlert.delete(db)
     }
   }
 }
@@ -209,10 +249,13 @@ private extension UITableView {
 #Preview {
   NavigationBarUIUpdator.update()
   PretendardFont.register()
+  prepareDependencies {
+    $0.defaultDatabase = try! appDatabase()
+  }
+  
   return UINavigationController(
     rootViewController: DailyToDoAlertViewController()
   )
 }
 #endif
-
-// swiftlint:enable function_body_length
+// swiftlint:enable force_try identifier_name
