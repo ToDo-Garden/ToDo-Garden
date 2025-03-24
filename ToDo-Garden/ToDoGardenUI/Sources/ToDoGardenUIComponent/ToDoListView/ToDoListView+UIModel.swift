@@ -105,7 +105,9 @@ extension ToDoListView {
     }
     
     public static func == (lhs: ToDoGroupUIModel, rhs: ToDoGroupUIModel) -> Bool {
-      return lhs.groupTitle == rhs.groupTitle && lhs.progressRate == rhs.progressRate && lhs.progressColor == rhs.progressColor
+      return lhs.groupTitle == rhs.groupTitle &&
+        lhs.progressRate == rhs.progressRate &&
+        lhs.progressColor == rhs.progressColor
     }
     
     public func hash(into hasher: inout Hasher) {
