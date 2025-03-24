@@ -1,5 +1,6 @@
 import UIKit
 
+import TDUtility
 import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
@@ -90,7 +91,7 @@ extension Styled.Row.Configuration {
     public static let empty = Self()
     public var text: String?
     public var foregroundColor: UIColor
-    public var isSelected: Bool
+    public var isSelected: ObservingValue<Bool>
     public var hasAlert: Bool
     
     public init(
@@ -101,7 +102,7 @@ extension Styled.Row.Configuration {
     ) {
       self.text = text
       self.foregroundColor = foregroundColor
-      self.isSelected = isSelected
+      self.isSelected = ObservingValue(isSelected)
       self.hasAlert = hasAlert
     }
   }

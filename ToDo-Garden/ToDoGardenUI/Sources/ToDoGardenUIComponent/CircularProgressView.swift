@@ -13,6 +13,7 @@ public final class CircularProgressView: UIView {
   public var isAnimating: Bool = false
   private let progressLayer: CAShapeLayer
   private let progressBackgroundLayer: CAShapeLayer
+  public var currentProgress: Float = 0
   
   public init(progressColor: UIColor, backgroundColor: UIColor, lineWidth: CGFloat) {
     self.progressLayer = CAShapeLayer()
@@ -78,6 +79,7 @@ extension CircularProgressView {
   }
   
   private func setProgress(duration: TimeInterval, from: Float, to value: Float) {
+    self.currentProgress = value
     let animationKeyPath = Constant.CircularProgressView.StringLiteral.Animation.keyPath
     let animation = CABasicAnimation(keyPath: animationKeyPath)
     animation.duration = duration

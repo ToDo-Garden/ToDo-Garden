@@ -7,6 +7,7 @@
 
 import Foundation
 
+import TDUtility
 import ToDoGardenUIConstant
 
 final class RepeatOtherDaysViewModel {
@@ -15,8 +16,8 @@ final class RepeatOtherDaysViewModel {
   private(set) var innerStackView: InnerStackViewState
   private(set) var title: TitleState
   
-  private(set) var isSelected: Observable<Bool>
-  private(set) var height: Observable<CGFloat>
+  private(set) var isSelected: ObservingValue<Bool>
+  private(set) var height: ObservingValue<CGFloat>
   
   init(
     startDate: String?,
@@ -29,14 +30,16 @@ final class RepeatOtherDaysViewModel {
       today: today
     )
     
-    self.isSelected = Observable(false)
-    self.divider = DividerState(isHidden: Observable(true))
+    self.isSelected = ObservingValue(false)
+    self.divider = DividerState(isHidden: ObservingValue(true))
     self.innerStackView = InnerStackViewState(
-      isHidden: Observable(true),
-      height: Observable(Constant.RepeatOtherDaysView.Layout.InnerStackView.height)
+      isHidden: ObservingValue(true),
+      height: ObservingValue(Constant.RepeatOtherDaysView.Layout.InnerStackView.height)
     )
-    self.height = Observable(Constant.RepeatOtherDaysView.Layout.heightUnselected)
-    self.title = TitleState(topMargin: Observable(Constant.ToDoRepeatSelectionView.Layout.RepetitionLabel.topMargin))
+    self.height = ObservingValue(Constant.RepeatOtherDaysView.Layout.heightUnselected)
+    self.title = TitleState(
+      topMargin: ObservingValue(Constant.ToDoRepeatSelectionView.Layout.RepetitionLabel.topMargin)
+    )
   }
   
   func toggleSelection() {
@@ -84,53 +87,34 @@ extension RepeatOtherDaysViewModel {
   private static func initializeDateButton(startDate: String?, endDate: String?, today: String) -> DateButtonState {
     let isDateUndecided = (startDate == nil) || (endDate == nil)
     return DateButtonState(
-      startDate: Observable(startDate ?? today),
-      endDate: Observable(endDate ?? today),
-      isSelected: Observable(!isDateUndecided)
+      startDate: ObservingValue(startDate ?? today),
+      endDate: ObservingValue(endDate ?? today),
+      isSelected: ObservingValue(!isDateUndecided)
     )
   }
 }
 
 extension RepeatOtherDaysViewModel {
   struct DateButtonState {
-    var startDate: Observable<String>
-    var endDate: Observable<String>
-    var isSelected: Observable<Bool>
+    var startDate: ObservingValue<String>
+    var endDate: ObservingValue<String>
+    var isSelected: ObservingValue<Bool>
   }
   
   struct RingToggleButtonState {
-    var isSelected: Observable<Bool>
+    var isSelected: ObservingValue<Bool>
   }
   
   struct DividerState {
-    var isHidden: Observable<Bool>
+    var isHidden: ObservingValue<Bool>
   }
   
   struct InnerStackViewState {
-    var isHidden: Observable<Bool>
-    var height: Observable<CGFloat>
+    var isHidden: ObservingValue<Bool>
+    var height: ObservingValue<CGFloat>
   }
   
   struct TitleState {
-    var topMargin: Observable<CGFloat>
-  }
-}
-
-final class Observable<T> {
-  var value: T {
-    didSet {
-      self.listener?(value)
-    }
-  }
-  
-  private var listener: ((T) -> Void)?
-  
-  init(_ value: T) {
-    self.value = value
-  }
-  
-  func bind(_ listener: @escaping (T) -> Void) {
-    self.listener = listener
-    listener(value)
+    var topMargin: ObservingValue<CGFloat>
   }
 }

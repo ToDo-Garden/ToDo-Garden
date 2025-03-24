@@ -12,7 +12,7 @@ extension Styled.Row {
     let (zStack, checkBoxAction) = self.buildZStack(model: model)
     let checkBox = self.buildCheckBox(
       color: model.foregroundColor,
-      isSelected: model.isSelected,
+      isSelected: model.isSelected.value,
       checkBoxAction
     )
     stack.addArrangedSubview(checkBox)
@@ -27,7 +27,7 @@ extension Styled.Row {
     let textField = self.buildTextField(
       text: model.text,
       color: model.foregroundColor,
-      isSelected: model.isSelected
+      isSelected: model.isSelected.value
     )
     self.setupTextFieldConstraints(textField)
     let zStack = UIStackView(arrangedSubviews: [textField])
@@ -48,7 +48,7 @@ extension Styled.Row {
       textField?.isHidden = !textIsEmpty
       selectedView?.isHidden = textIsEmpty
       
-      let isSelected = self?.configuration.todoListModel?.isSelected ?? true
+      let isSelected = self?.configuration.todoListModel?.isSelected.value ?? true
       selecetdViewUpdateAction(text, isSelected)
     }
     
@@ -73,7 +73,7 @@ extension Styled.Row {
     let task = Task {
       for await text in textField.stream {
         guard !Task.isCancelled else { return }
-        let isSelected = self.configuration.todoListModel?.isSelected ?? false
+        let isSelected = self.configuration.todoListModel?.isSelected.value ?? false
         let isEmpty = text?.isEmpty ?? true
         if !isSelected || !isEmpty {
           self.configuration.todoListModel?.text = text
@@ -94,7 +94,7 @@ extension Styled.Row {
     let strikeThroughLabel = self.buildStrikethroughLabel(text: model.text)
     let imageView = self.buildAlarmImage(hasAlarm: model.hasAlert)
     let stack = UIHStackView(arrangedSubviews: [strikeThroughLabel, imageView])
-    stack.isHidden = !model.isSelected
+    stack.isHidden = !model.isSelected.value
     
     return (stack, { [weak strikeThroughLabel] in
       strikeThroughLabel?.update(text: $0, animated: $1)
@@ -132,14 +132,14 @@ extension Styled.Row {
         else { return }
         if self?.configuration.todoListModel?.text?.isEmpty ?? true {
           checkBox.isActionBlocked = false
-          let flag = (self?.configuration.todoListModel?.isSelected ?? true)
+          let flag = (self?.configuration.todoListModel?.isSelected.value ?? true)
           if flag {
             handler(false)
           }
         } else {
           checkBox.isActionBlocked = true
           handler(checkBox.isSelected)
-          self?.configuration.todoListModel?.isSelected = checkBox.isSelected
+          self?.configuration.todoListModel?.isSelected.value = checkBox.isSelected
         }
       }
     )
