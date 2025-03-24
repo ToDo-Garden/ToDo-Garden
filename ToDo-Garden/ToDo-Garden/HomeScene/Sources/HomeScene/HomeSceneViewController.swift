@@ -108,6 +108,7 @@ extension HomeSceneViewController {
   }
   
   private func setCalendarView() {
+    self.calendarView.dateSelectionDelegate = self
     self.view.addSubview(self.calendarView)
     self.calendarView.highlightToday()
     self.calendarView.usingAutolayout()
@@ -223,6 +224,18 @@ extension HomeSceneViewController: HomeSceneDisplayLogic {
 // MARK: - Request to interactor
 
 extension HomeSceneViewController {
+}
+
+extension HomeSceneViewController: CalendarViewDateSelectionDelegate {
+  public func didSelectDate(_ date: Date) {
+    Task {
+      await self.interactor?.loadDailyToDoList(targetDate: date.description)
+    }
+  }
+  
+  public func didChangeMonth() {
+    self.fetchToDoList()
+  }
 }
 
 // MARK: - For Guide Scene

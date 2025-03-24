@@ -12,6 +12,7 @@ import ToDoGardenUIConstant
 @MainActor
 public protocol CalendarViewDateSelectionDelegate: AnyObject {
   func didSelectDate(_ date: Date)
+  func didChangeMonth()
 }
 
 public class CalendarView: UIView {
@@ -113,6 +114,7 @@ extension CalendarView: CalendarScrollSendable {
   func didScroll() {
     self.updateCollectionViewHeight()
     self.updateMonthLabelText()
+    self.dateSelectionDelegate?.didChangeMonth()
   }
 
   private func updateCollectionViewHeight() {
