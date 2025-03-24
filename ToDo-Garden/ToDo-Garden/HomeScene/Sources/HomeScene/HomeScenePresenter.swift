@@ -16,6 +16,7 @@ protocol HomeScenePresentationLogic {
   func presentDailyToDoList(dailyData: [HomeScene.TodoListGroup])
   func presentCreateToDo(newToDo: HomeScene.TodoBatchItem)
   func presentDeleteToDo(groupID: UUID, deletedToDo: ToDoListView.ToDoItem)
+  func presentErrorToast(error: Error)
 }
 
 @MainActor
@@ -42,6 +43,10 @@ extension HomeScenePresenter: HomeScenePresentationLogic {
   
   func presentDeleteToDo(groupID: UUID, deletedToDo: ToDoListView.ToDoItem) {
     self.viewController?.displayDeleteToDo(groupID: groupID, deletedToDo: deletedToDo)
+  }
+  
+  func presentErrorToast(error: any Error) {
+    self.viewController?.displayErrorToast(error: error)
   }
 }
 

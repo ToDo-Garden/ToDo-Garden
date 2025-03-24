@@ -167,7 +167,7 @@ extension HomeSceneInteractor {
       alarmTime: nil,
       isAlarmOn: false,
       isOnlyToday: true,
-      repeatToDoId: nil // 이건 어떻게 특정하지?
+      repeatToDoId: nil // TODO: 이건 어떻게 특정하지?
     )
     return todoListItem
   }
@@ -179,7 +179,7 @@ extension HomeSceneInteractor {
   private func handleErrors(_ error: Error) {
     switch error {
     default:
-      break
+      self.presenter?.presentErrorToast(error: error)
     }
   }
 }

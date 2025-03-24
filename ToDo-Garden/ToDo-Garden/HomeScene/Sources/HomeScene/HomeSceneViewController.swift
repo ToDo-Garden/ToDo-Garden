@@ -19,6 +19,7 @@ protocol HomeSceneDisplayLogic: AnyObject {
   func displayDailyToDoList(snapshot: ToDoListView.Snapshot)
   func displayCreateToDo(newToDo: HomeScene.TodoBatchItem)
   func displayDeleteToDo(groupID: UUID, deletedToDo: ToDoListView.ToDoItem)
+  func displayErrorToast(error: Error)
 }
 
 @MainActor
@@ -218,6 +219,12 @@ extension HomeSceneViewController: HomeSceneDisplayLogic {
     snapshot.deleteItems([deletedToDo])
     self.todoListView?.apply(snapshot)
     self.todoListView?.updateHeaderUIAfterDeleteTodo(section: section)
+  }
+  
+  func displayErrorToast(error: any Error) {
+    self.loadingIndicator.isHidden = true
+    self.loadingIndicator.pauseAnimation()
+    self.showToast(message: error.localizedDescription)
   }
 }
 
