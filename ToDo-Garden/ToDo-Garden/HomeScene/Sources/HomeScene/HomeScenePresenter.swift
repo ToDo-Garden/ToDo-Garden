@@ -14,8 +14,8 @@ import ToDoGardenUIComponent
 protocol HomeScenePresentationLogic {
   func presentFetchedToDoList(monthlyData: [HomeScene.FetchToDoList.Response])
   func presentDailyToDoList(dailyData: [HomeScene.TodoListGroup])
-  func presentCreateToDo()
-  func presentDeleteToDo()
+  func presentCreateToDo(newToDo: HomeScene.TodoBatchItem)
+  func presentDeleteToDo(groupID: UUID, deletedToDo: ToDoListView.ToDoItem)
 }
 
 @MainActor
@@ -36,12 +36,12 @@ extension HomeScenePresenter: HomeScenePresentationLogic {
     self.viewController?.displayDailyToDoList(snapshot: snapshot)
   }
   
-  func presentCreateToDo() {
-    self.viewController?.displayCreateToDo()
+  func presentCreateToDo(newToDo: HomeScene.TodoBatchItem) {
+    self.viewController?.displayCreateToDo(newToDo: newToDo)
   }
   
-  func presentDeleteToDo() {
-    self.viewController?.displayDeleteToDo()
+  func presentDeleteToDo(groupID: UUID, deletedToDo: ToDoListView.ToDoItem) {
+    self.viewController?.displayDeleteToDo(groupID: groupID, deletedToDo: deletedToDo)
   }
 }
 

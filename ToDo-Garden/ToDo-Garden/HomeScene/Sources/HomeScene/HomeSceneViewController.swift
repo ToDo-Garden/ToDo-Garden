@@ -17,8 +17,8 @@ import ToDoGardenUIComponent
 protocol HomeSceneDisplayLogic: AnyObject {
   func displayFetchedToDoList(fetchedData: [String: [HomeScene.TodoListGroup]])
   func displayDailyToDoList(snapshot: ToDoListView.Snapshot)
-  func displayCreateToDo()
-  func displayDeleteToDo()
+  func displayCreateToDo(newToDo: HomeScene.TodoBatchItem)
+  func displayDeleteToDo(groupID: UUID, deletedToDo: ToDoListView.ToDoItem)
 }
 
 @MainActor
@@ -168,7 +168,7 @@ extension HomeSceneViewController: HomeSceneDisplayLogic {
   func displayFetchedToDoList(fetchedData: [String: [HomeScene.TodoListGroup]]) {
     Task {
       let date = self.calendarView.getSelectedDate() ?? Date.now
-      await self.interactor?.setMonthlyData(fetchedData)
+      await self.interactor?.setMonthlyData(fetchedData) // 지금은 연동 안되어서 화면 이동하면 추가한 투두 안보임
       await self.interactor?.loadDailyToDoList(targetDate: date.description)
     }
   }
@@ -179,16 +179,44 @@ extension HomeSceneViewController: HomeSceneDisplayLogic {
     self.todoListView?.apply(snapshot)
   }
   
-  func displayCreateToDo() {
-    Task {
-      guard let targetDate = self.calendarView.getSelectedDate()?.description else { return }
-      await self.interactor?.loadDailyToDoList(targetDate: targetDate)
-    }
-    debugPrint("CREATE TODO")
+  func displayCreateToDo(newToDo: HomeScene.TodoBatchItem) {
+    guard var snapshot = self.todoListView?.getSnapShot(),
+      let newToDoUUID = UUID(uuidString: newToDo.localId),
+      let newToDoGroupUUID = UUID(uuidString: newToDo.groupId),
+      let section = snapshot.sectionIdentifiers.first(
+        where: { $0.id == newToDoGroupUUID }
+      ) else { return }
+ 
+    let item = ToDoListView.ToDoItem(
+      id: newToDoUUID,
+      toDoUIModel: ToDoListView.ToDoUIModel(
+        text: newToDo.name,
+        foregroundColor: section.getColor(),
+        isSelected: false,
+        hasAlert: false
+      )
+    )
+    
+    snapshot.appendItems([item], toSection: section)
+    section.toDoItems.append(item)
+    self.todoListView?.apply(snapshot)
   }
   
-  func displayDeleteToDo() {
-    debugPrint("DELETE TODO")
+  func displayDeleteToDo(groupID: UUID, deletedToDo: ToDoListView.ToDoItem) {
+    guard var snapshot = self.todoListView?.getSnapShot(),
+      let section = snapshot.sectionIdentifiers.first(
+        where: { $0.id == groupID }
+      ) else { return }
+
+    if let deletedIndex = section.toDoItems.firstIndex(
+      where: { $0.id == deletedToDo.id }
+    ) {
+      section.toDoItems.remove(at: deletedIndex)
+    }
+
+    snapshot.deleteItems([deletedToDo])
+    self.todoListView?.apply(snapshot)
+    self.todoListView?.updateHeaderUIAfterDeleteTodo(section: section)
   }
 }
 
@@ -271,15 +299,17 @@ extension HomeSceneViewController: ToDoListButtonActionDelegate {
     todo: ToDoListView.ToDoItem
   ) {
     Task {
-      await self.interactor?.deleteToDo()
+      guard let selectedDate = self.calendarView.getSelectedDate() else { return }
+      
+      await self.interactor?.deleteToDo(group: group, todo: todo, date: selectedDate)
     }
   }
   
   public func didCreateToDoButtonTapped(group: ToDoListView.ToDoSection) {
     Task {
-      // guard let selectedDate = self.calendarView.getSelectedDate() else { return }
-      
-      await self.interactor?.createToDo()
+      guard let selectedDate = self.calendarView.getSelectedDate() else { return }
+  
+      await self.interactor?.createToDo(group: group, date: selectedDate)
     }
   }
   
