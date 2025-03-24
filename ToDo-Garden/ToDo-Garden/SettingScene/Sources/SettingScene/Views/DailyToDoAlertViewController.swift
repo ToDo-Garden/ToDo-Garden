@@ -16,6 +16,8 @@ final class DailyToDoAlertViewController: UIViewController {
   
   enum Section { case main }
   private var dataSource: UITableViewDiffableDataSource<Section, DailyToDoAlert>!
+  private var tableViewTask: Task<Void, Never>?
+  private var dailyToDoAlertsTask: Task<Void, Never>?
   
   @Dependency(\.defaultDatabase) private var database
   
@@ -33,6 +35,11 @@ final class DailyToDoAlertViewController: UIViewController {
     super.viewDidLoad()
     self.setup()
     self.prepare()
+  }
+  
+  deinit {
+    tableViewTask?.cancel()
+    dailyToDoAlertsTask?.cancel()
   }
   
   override func setEditing(_ editing: Bool, animated: Bool) {
@@ -151,9 +158,8 @@ final class DailyToDoAlertViewController: UIViewController {
   private func prepare() {
     let maxAvailableHeight = self.view.bounds.height - self.noticeLabel.frame.maxY - 100
     let tableHeightStream = self.tableView.heightStream(maxAvailableHeight: maxAvailableHeight)
-    Task { [weak self] in
+    self.tableViewTask = Task {
       for await height in tableHeightStream {
-        guard let self else { return }
         self.tableViewHeightConstraint.constant = height
         UIView.animate(withDuration: 0.3) {
           self.view.layoutIfNeeded()
@@ -162,9 +168,8 @@ final class DailyToDoAlertViewController: UIViewController {
     }
     
     let dailyToDoAlertStream = self.$dailyToDoAlerts.publisher.asyncStream
-    Task { [weak self] in
+    self.dailyToDoAlertsTask = Task {
       for await alerts in dailyToDoAlertStream {
-        guard let self else { return }
         var snapshot = NSDiffableDataSourceSnapshot<Section, DailyToDoAlert>()
         snapshot.appendSections([.main])
         snapshot.appendItems(alerts)
