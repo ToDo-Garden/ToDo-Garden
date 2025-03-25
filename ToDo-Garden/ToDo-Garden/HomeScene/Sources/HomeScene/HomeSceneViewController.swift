@@ -154,6 +154,7 @@ extension HomeSceneViewController {
   }
 }
 
+// MARK: - Request to interactor
 extension HomeSceneViewController {
   private func fetchToDoList() {
     let targetMonth = self.calendarView.getCurrentMonth().toYYYYMMDDStringFromYYYYMM()
@@ -169,6 +170,7 @@ extension HomeSceneViewController {
 
 extension HomeSceneViewController: HomeSceneDisplayLogic {
   func displayFetchedToDoList(fetchedData: [String: [HomeScene.TodoListGroup]]) {
+    self.hideToDoList()
     Task {
       let date = self.calendarView.getSelectedDate() ?? Date.now
       await self.interactor?.setMonthlyData(fetchedData) // 지금은 연동 안되어서 화면 이동하면 추가한 투두 안보임
@@ -179,6 +181,7 @@ extension HomeSceneViewController: HomeSceneDisplayLogic {
   func displayDailyToDoList(snapshot: ToDoListView.Snapshot) {
     self.loadingIndicator.isHidden = true
     self.loadingIndicator.pauseAnimation()
+    self.showToDoList()
     self.todoListView?.apply(snapshot)
   }
   
@@ -229,9 +232,21 @@ extension HomeSceneViewController: HomeSceneDisplayLogic {
   }
 }
 
-// MARK: - Request to interactor
-
+// MARK: - Animation
 extension HomeSceneViewController {
+  func showToDoList() {
+    self.todoListView?.isHidden = false
+    UIView.animate(withDuration: 0.5) {
+      self.todoListView?.alpha = 1
+    }
+  }
+  
+  func hideToDoList() {
+    UIView.animate(withDuration: 0.5) {
+      self.todoListView?.alpha = 0.0
+      self.todoListView?.isHidden = true
+    }
+  }
 }
 
 // MARK: - Update Cell
@@ -255,6 +270,7 @@ extension HomeSceneViewController: ToDoListViewCellUpdatingDelegate {
 
 extension HomeSceneViewController: CalendarViewDateSelectionDelegate {
   public func didSelectDate(_ date: Date) {
+    self.hideToDoList()
     Task {
       await self.interactor?.loadDailyToDoList(targetDate: date.description)
     }
