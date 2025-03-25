@@ -124,6 +124,7 @@ extension ShareGardenSceneViewController {
   private func setupActions() {
     self.setupMyGardenViewRetryAction()
     self.setupFriendsGardenViewRetryAction()
+    self.setupShareButtonAction()
   }
 }
 
@@ -144,6 +145,15 @@ extension ShareGardenSceneViewController {
       self?.friendsGardenView.showFriendsGardenListView()
       self?.interactor?.requestFriendsGardenList()
     }
+  }
+  
+  private func setupShareButtonAction() {
+    self.myGardenView.delegate = self
+  }
+}
+
+extension ShareGardenSceneViewController: MyGardenViewDelegate {
+  func shareButtonTapped() {
   }
 }
 
