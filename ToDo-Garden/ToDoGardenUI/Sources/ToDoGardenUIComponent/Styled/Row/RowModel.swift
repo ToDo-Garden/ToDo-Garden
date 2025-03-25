@@ -89,7 +89,7 @@ extension Styled.Row.Configuration {
   
   public struct TodoListModel: Equatable, Hashable, Sendable {
     public static let empty = Self()
-    public var text: String?
+    public var text: ObservingValue<String>
     public var foregroundColor: UIColor
     public var isSelected: ObservingValue<Bool>
     public var hasAlert: Bool
@@ -100,7 +100,7 @@ extension Styled.Row.Configuration {
       isSelected: Bool = false,
       hasAlert: Bool = false
     ) {
-      self.text = text
+      self.text = ObservingValue(text ?? "")
       self.foregroundColor = foregroundColor
       self.isSelected = ObservingValue(isSelected)
       self.hasAlert = hasAlert

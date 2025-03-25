@@ -55,10 +55,10 @@ extension HomeScene {
     }
   }
   
-  public final class TodoListItem: Codable, Sendable {
-    public let name: String
+  public final class TodoListItem: Codable, @unchecked Sendable {
+    public var name: String
     public let endDay: String?
-    public let isDone: Bool
+    public var isDone: Bool
     public let localID: String
     public let startDay: String?
     public let alarmTime: Int?
