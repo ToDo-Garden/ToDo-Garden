@@ -7,6 +7,7 @@
 
 import UIKit
 
+import GuideScene
 import ToDoGardenUIComponent
 
 // swiftlint: disable all
@@ -31,10 +32,17 @@ final class EnterGuideSceneViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    self.setup()
+    self.view.backgroundColor = UIColor.white
+    self.setupUI()
+    self.setupButtonAction()
   }
   
-  private func setup() {
+  override func viewIsAppearing(_ animated: Bool) {
+    super.viewIsAppearing(animated)
+    self.navigationController?.navigationBar.isHidden = false
+  }
+  
+  private func setupUI() {
     self.title = Constant.StringLiteral.mainTitle
     let stackView = UIStackView(
       arrangedSubviews: [
@@ -44,6 +52,7 @@ final class EnterGuideSceneViewController: UIViewController {
         self.shareGardenButton
       ]
     )
+    stackView.isUserInteractionEnabled = true
     stackView.axis = .vertical
     stackView.distribution = .fillEqually
     stackView.spacing = Constant.Layout.commonSpacing
@@ -66,6 +75,51 @@ final class EnterGuideSceneViewController: UIViewController {
       ),
       stackView.heightAnchor.constraint(equalToConstant: Constant.Layout.height)
     ])
+  }
+}
+
+extension EnterGuideSceneViewController {
+  private func setupButtonAction() {
+    self.homeGuideButton.addAction(UIAction { [weak self] _ in
+      guard let self = self else { return }
+      
+      self.navigationController?.present(
+        self.withFullScreenModal(GuideDetailViewController.todoCreate),
+        animated: true
+      )
+    }, for: UIControl.Event.touchUpInside)
+    
+    self.groupManagementButton.addAction(UIAction { [weak self] _ in
+      guard let self = self else { return }
+      
+      self.navigationController?.present(
+        self.withFullScreenModal(GuideDetailViewController.groupManagement),
+        animated: true
+      )
+    }, for: UIControl.Event.touchUpInside)
+    
+    self.editToDoButton.addAction(UIAction { [weak self] _ in
+      guard let self = self else { return }
+      
+      self.navigationController?.present(
+        self.withFullScreenModal(GuideDetailViewController.todoEdit),
+        animated: true
+      )
+    }, for: UIControl.Event.touchUpInside)
+    
+    self.shareGardenButton.addAction(UIAction { [weak self] _ in
+      guard let self = self else { return }
+      
+      self.navigationController?.present(
+        self.withFullScreenModal(GuideDetailViewController.shareTab),
+        animated: true
+      )
+    }, for: UIControl.Event.touchUpInside)
+  }
+  
+  private func withFullScreenModal(_ vc: UIViewController) -> UIViewController {
+    vc.modalPresentationStyle = .fullScreen
+    return vc
   }
 }
 // swiftlint: enable all
