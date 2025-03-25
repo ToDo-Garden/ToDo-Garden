@@ -261,6 +261,30 @@ extension ShareGardenSceneViewController.MyGardenView {
   }
 }
 
+extension ShareGardenSceneViewController.MyGardenView {
+  private func makeCircularImage(image: UIImage?) -> UIImage? {
+    guard let image else { return nil }
+    
+    let diameter = min(image.size.width, image.size.height)
+    let rect = CGRect(x: 0, y: 0, width: diameter, height: diameter)
+    UIGraphicsBeginImageContextWithOptions(rect.size, false, image.scale)
+    let path = UIBezierPath(ovalIn: rect)
+    path.addClip()
+    image.draw(
+      in: CGRect(
+        x: -(image.size.width - diameter) / 2,
+        y: -(image.size.height - diameter) / 2,
+        width: image.size.width,
+        height: image.size.height
+      )
+    )
+    let circularImage = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+    
+    return circularImage
+  }
+}
+
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
