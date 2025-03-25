@@ -61,6 +61,7 @@ extension ToDoContentView {
     else { return }
     
     self.contentView.removeFromSuperview()
+    self.contentView.resetState()
     self.contentView = Styled.Row(
       configuration: Styled.Row.Configuration.todoList(configuration.model)
     )
