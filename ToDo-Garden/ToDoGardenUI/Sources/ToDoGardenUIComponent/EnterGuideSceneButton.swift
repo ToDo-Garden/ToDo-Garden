@@ -30,16 +30,17 @@ public final class EnterGuideSceneButton: UIButton {
     
     let titleLabel = UILabel()
     titleLabel.attributedText = attributedTitle
-    titleLabel.translatesAutoresizingMaskIntoConstraints = false
+    titleLabel.usingAutolayout()
     
     self.layer.cornerRadius = 10.0
     self.layer.borderWidth = 2.0
     self.layer.borderColor = UIColor.toDoGardenGreenGray.cgColor
+    self.backgroundColor = UIColor.white
     
     let chevronImage = UIImage(systemName: "chevron.right")?.withRenderingMode(.alwaysTemplate)
     let chevronImageView = UIImageView(image: chevronImage)
     chevronImageView.tintColor = UIColor.toDoGardenGreenDark
-    chevronImageView.translatesAutoresizingMaskIntoConstraints = false
+    chevronImageView.usingAutolayout()
     
     self.addSubview(titleLabel)
     self.addSubview(chevronImageView)
