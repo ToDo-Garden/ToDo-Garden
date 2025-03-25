@@ -86,6 +86,7 @@ public struct ShareGardenSceneWorker: ShareGardenSceneWorkable {
           nickname: myInfo.nickname,
           description: myInfo.introduction,
           pomodoroRecords: self.makePomodoroCollection(from: myInfo.pomodoroRecords),
+          streakCount: myInfo.streakCount,
           imageURL: imageURL
         )
         return result
