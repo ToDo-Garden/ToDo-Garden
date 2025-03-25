@@ -148,7 +148,7 @@ extension HomeSceneViewController {
     NSLayoutConstraint.activate(
       [
         self.loadingIndicator.centerXAnchor.constraint(equalTo: self.bottomSheet.centerXAnchor),
-        self.loadingIndicator.centerYAnchor.constraint(equalTo: self.bottomSheet.centerYAnchor)
+        self.loadingIndicator.centerYAnchor.constraint(equalTo: self.bottomSheet.centerYAnchor, constant: -20)
       ]
     )
   }
