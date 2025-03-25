@@ -130,6 +130,7 @@ extension Styled.Row {
         guard
           let checkBox = action.sender as? ToDoCheckBoxButton
         else { return }
+        
         if self?.configuration.todoListModel?.text.value.isEmpty ?? true {
           checkBox.isActionBlocked = false
           let flag = (self?.configuration.todoListModel?.isSelected.value ?? true)
@@ -138,7 +139,6 @@ extension Styled.Row {
           }
         } else {
           checkBox.isActionBlocked = true
-          print(checkBox.isSelected)
           handler(checkBox.isSelected)
           self?.configuration.todoListModel?.isSelected.value = checkBox.isSelected
         }
