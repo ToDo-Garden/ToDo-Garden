@@ -26,4 +26,17 @@ public extension Date {
     dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul")
     return dateFormatter.string(from: self)
   }
+  
+  func toStringYYYYMMDD() -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyyMMdd"
+    dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul")
+    return dateFormatter.string(from: self)
+  }
+  
+  func toISOString() -> String {
+    let dateFormatter = ISO8601DateFormatter()
+    dateFormatter.formatOptions = [.withInternetDateTime]
+    return dateFormatter.string(from: self)
+  }
 }

@@ -17,8 +17,9 @@ import ToDoGardenUIComponent
 protocol HomeSceneDisplayLogic: AnyObject {
   func displayFetchedToDoList(fetchedData: [String: [HomeScene.TodoListGroup]])
   func displayDailyToDoList(snapshot: ToDoListView.Snapshot)
-  func displayCreateToDo()
-  func displayDeleteToDo() 
+  func displayCreateToDo(newToDo: HomeScene.TodoBatchItem)
+  func displayDeleteToDo(groupID: UUID, deletedToDo: ToDoListView.ToDoItem)
+  func displayErrorToast(error: Error)
 }
 
 @MainActor
@@ -29,6 +30,7 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
   private let calendarView: CalendarView
   private var todoListView: ToDoListView?
   private let bottomSheet: BottomSheet = BottomSheet()
+  private let loadingIndicator: AnimationImageView = AnimationImageView(jsonURL: .loadingIndicatorURL)
   
   // MARK: - VIP Properties
   
@@ -55,18 +57,19 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
   open override func viewDidLoad() {
     super.viewDidLoad()
     self.setupViews()
-    self.fetchToDoList()
   }
   
   open override func viewIsAppearing(_ animated: Bool) {
     super.viewWillAppear(animated)
     self.navigationController?.navigationBar.isHidden = true
+    self.fetchToDoList()
   }
   
   open func setBottomSheet() {
     let toDoListViewContainer = ToDoListViewContainer()
     self.todoListView = toDoListViewContainer.toDoListView
     self.todoListView?.buttonActionDelegate = self
+    self.todoListView?.cellUpdatingDelegate = self
     self.bottomSheet.usingAutolayout()
     self.view.addSubview(self.bottomSheet)
     self.bottomSheet.contentView = self.todoListView
@@ -84,6 +87,7 @@ extension HomeSceneViewController {
     self.setCalendarView()
     self.setBottomSheet()
     self.setManageGroupButtonTapped()
+    self.setLoadingIndicator()
   }
   
   private func setHomeHeaderView() {
@@ -106,8 +110,9 @@ extension HomeSceneViewController {
   }
   
   private func setCalendarView() {
+    self.calendarView.dateSelectionDelegate = self
     self.view.addSubview(self.calendarView)
-    
+    self.calendarView.highlightToday()
     self.calendarView.usingAutolayout()
     NSLayoutConstraint.activate(
       [
@@ -133,12 +138,30 @@ extension HomeSceneViewController {
       self?.router?.routeToManageGroupScene()
     })
   }
+  
+  private func setLoadingIndicator() {
+    self.loadingIndicator.isHidden = true
+    self.loadingIndicator.pauseAnimation()
+    self.view.addSubview(self.loadingIndicator)
+    self.loadingIndicator.usingAutolayout()
+    
+    NSLayoutConstraint.activate(
+      [
+        self.loadingIndicator.centerXAnchor.constraint(equalTo: self.bottomSheet.centerXAnchor),
+        self.loadingIndicator.centerYAnchor.constraint(equalTo: self.bottomSheet.centerYAnchor, constant: -20)
+      ]
+    )
+  }
 }
 
+// MARK: - Request to interactor
 extension HomeSceneViewController {
   private func fetchToDoList() {
+    let targetMonth = self.calendarView.getCurrentMonth().toYYYYMMDDStringFromYYYYMM()
+    self.loadingIndicator.isHidden = false
+    self.loadingIndicator.startAnimation()
     Task {
-      await self.interactor?.fetchToDoList()
+      await self.interactor?.fetchToDoList(request: HomeScene.FetchToDoList.Request(dateString: targetMonth))
     }
   }
 }
@@ -147,29 +170,115 @@ extension HomeSceneViewController {
 
 extension HomeSceneViewController: HomeSceneDisplayLogic {
   func displayFetchedToDoList(fetchedData: [String: [HomeScene.TodoListGroup]]) {
+    self.hideToDoList()
     Task {
-      await self.interactor?.setMonthlyData(fetchedData)
-      await self.interactor?.loadDailyToDoList(date: Date.now.toStringDateFormatWithDash())
+      let date = self.calendarView.getSelectedDate() ?? Date.now
+      await self.interactor?.setMonthlyData(fetchedData) // 지금은 연동 안되어서 화면 이동하면 추가한 투두 안보임
+      await self.interactor?.loadDailyToDoList(targetDate: date.description)
     }
   }
   
   func displayDailyToDoList(snapshot: ToDoListView.Snapshot) {
-    self.todoListView?.stopShimmering()
+    self.loadingIndicator.isHidden = true
+    self.loadingIndicator.pauseAnimation()
+    self.showToDoList()
     self.todoListView?.apply(snapshot)
   }
   
-  func displayCreateToDo() {
-    debugPrint("CREATE TODO")
+  func displayCreateToDo(newToDo: HomeScene.TodoBatchItem) {
+    guard var snapshot = self.todoListView?.getSnapShot(),
+      let newToDoUUID = UUID(uuidString: newToDo.localId),
+      let newToDoGroupUUID = UUID(uuidString: newToDo.groupId),
+      let section = snapshot.sectionIdentifiers.first(
+        where: { $0.id == newToDoGroupUUID }
+      ) else { return }
+ 
+    let item = ToDoListView.ToDoItem(
+      id: newToDoUUID,
+      toDoUIModel: ToDoListView.ToDoUIModel(
+        text: newToDo.name,
+        foregroundColor: section.getColor(),
+        isSelected: false,
+        hasAlert: false
+      )
+    )
+    
+    snapshot.appendItems([item], toSection: section)
+    section.toDoItems.append(item)
+    self.todoListView?.apply(snapshot)
   }
   
-  func displayDeleteToDo() {
-    debugPrint("DELETE TODO")
+  func displayDeleteToDo(groupID: UUID, deletedToDo: ToDoListView.ToDoItem) {
+    guard var snapshot = self.todoListView?.getSnapShot(),
+      let section = snapshot.sectionIdentifiers.first(
+        where: { $0.id == groupID }
+      ) else { return }
+
+    if let deletedIndex = section.toDoItems.firstIndex(
+      where: { $0.id == deletedToDo.id }
+    ) {
+      section.toDoItems.remove(at: deletedIndex)
+    }
+
+    snapshot.deleteItems([deletedToDo])
+    self.todoListView?.apply(snapshot)
+    self.todoListView?.updateHeaderUIAfterDeleteTodo(section: section)
+  }
+  
+  func displayErrorToast(error: any Error) {
+    self.loadingIndicator.isHidden = true
+    self.loadingIndicator.pauseAnimation()
+    self.showToast(message: error.localizedDescription)
   }
 }
 
-// MARK: - Request to interactor
-
+// MARK: - Animation
 extension HomeSceneViewController {
+  func showToDoList() {
+    self.todoListView?.isHidden = false
+    UIView.animate(withDuration: 0.5) {
+      self.todoListView?.alpha = 1
+    }
+  }
+  
+  func hideToDoList() {
+    UIView.animate(withDuration: 0.5) {
+      self.todoListView?.alpha = 0.0
+      self.todoListView?.isHidden = true
+    }
+  }
+}
+
+// MARK: - Update Cell
+extension HomeSceneViewController: ToDoListViewCellUpdatingDelegate {
+  public func updateSelection(
+    isSelected: Bool,
+    todo: ToDoGardenUIComponent.ToDoListView.ToDoItem,
+    at indexPath: IndexPath
+  ) {
+    guard let targetDate = self.calendarView.getSelectedDate() else { return }
+    
+    self.interactor?.updateSelection(isSelected: isSelected, indexPath: indexPath, date: targetDate)
+  }
+  
+  public func updateText(text: String, todo: ToDoGardenUIComponent.ToDoListView.ToDoItem, at indexPath: IndexPath) {
+    guard let targetDate = self.calendarView.getSelectedDate() else { return }
+    
+    self.interactor?.updateText(text: text, indexPath: indexPath, date: targetDate)
+  }
+}
+
+extension HomeSceneViewController: CalendarViewDateSelectionDelegate {
+  public func didSelectDate(_ date: Date) {
+    self.hideToDoList()
+    Task {
+      await self.interactor?.loadDailyToDoList(targetDate: date.description)
+    }
+  }
+  
+  public func didChangeMonth() {
+    self.fetchToDoList()
+  }
 }
 
 // MARK: - For Guide Scene
@@ -246,13 +355,17 @@ extension HomeSceneViewController: ToDoListButtonActionDelegate {
     todo: ToDoListView.ToDoItem
   ) {
     Task {
-      await self.interactor?.deleteToDo()
+      guard let selectedDate = self.calendarView.getSelectedDate() else { return }
+      
+      await self.interactor?.deleteToDo(group: group, todo: todo, date: selectedDate)
     }
   }
   
   public func didCreateToDoButtonTapped(group: ToDoListView.ToDoSection) {
     Task {
-      await self.interactor?.createToDo()
+      guard let selectedDate = self.calendarView.getSelectedDate() else { return }
+  
+      await self.interactor?.createToDo(group: group, date: selectedDate)
     }
   }
   

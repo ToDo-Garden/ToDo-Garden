@@ -24,3 +24,18 @@ public struct HTTPResponse: Sendable, Equatable {
     self.body = body
   }
 }
+
+extension HTTPResponse {
+  public func validateStatusCode() throws {
+    guard statusCode >= 200 && statusCode < 400 else {
+      throw HTTPClientError.badStatusCode(statusCode)
+    }
+  }
+  
+  public func decode<T: Decodable>() throws -> T {
+    guard let data = body else {
+      throw HTTPClientError.deserializationError
+    }
+    return try JSONDecoder().decode(T.self, from: data)
+  }
+}

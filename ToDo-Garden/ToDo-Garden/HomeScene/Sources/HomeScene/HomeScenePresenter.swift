@@ -14,8 +14,9 @@ import ToDoGardenUIComponent
 protocol HomeScenePresentationLogic {
   func presentFetchedToDoList(monthlyData: [HomeScene.FetchToDoList.Response])
   func presentDailyToDoList(dailyData: [HomeScene.TodoListGroup])
-  func presentCreateToDo()
-  func presentDeleteToDo()
+  func presentCreateToDo(newToDo: HomeScene.TodoBatchItem)
+  func presentDeleteToDo(groupID: UUID, deletedToDo: ToDoListView.ToDoItem)
+  func presentErrorToast(error: Error)
 }
 
 @MainActor
@@ -36,21 +37,26 @@ extension HomeScenePresenter: HomeScenePresentationLogic {
     self.viewController?.displayDailyToDoList(snapshot: snapshot)
   }
   
-  func presentCreateToDo() {
-    self.viewController?.displayCreateToDo()
+  func presentCreateToDo(newToDo: HomeScene.TodoBatchItem) {
+    self.viewController?.displayCreateToDo(newToDo: newToDo)
   }
   
-  func presentDeleteToDo() {
-    self.viewController?.displayDeleteToDo()
+  func presentDeleteToDo(groupID: UUID, deletedToDo: ToDoListView.ToDoItem) {
+    self.viewController?.displayDeleteToDo(groupID: groupID, deletedToDo: deletedToDo)
+  }
+  
+  func presentErrorToast(error: any Error) {
+    self.viewController?.displayErrorToast(error: error)
   }
 }
 
+// swiftlint: disable all
 extension HomeScenePresenter {
   private func makeHashTable(monthlyData: [HomeScene.FetchToDoList.Response]) -> [String: [HomeScene.TodoListGroup]] {
     var hashTable: [String: [HomeScene.TodoListGroup]] = [:]
     
     for data in monthlyData {
-      let date = data.date
+      let date = data.date.toYYYYMMDDStringFromISO8601()
       if hashTable[date] == nil {
         hashTable[date] = []
       }
@@ -76,13 +82,16 @@ extension HomeScenePresenter {
   }
 
   func generateSections(from group: HomeScene.TodoListGroup) -> [ToDoListView.ToDoSection] {
+    guard let id = UUID(uuidString: group.localId) else { return [] }
+    
     let toDoItems = group.todoList?.map { todo in
       ToDoListView.ToDoItem(
-        toDoUIModel: .init(text: todo.name, foregroundColor: self.getColor(for: group.color))
+        toDoUIModel: .init(text: todo.name, foregroundColor: self.getColor(for: group.color), isSelected: todo.isDone, hasAlert: todo.isAlarmOn)
       )
     } ?? []
     
     let section = ToDoListView.ToDoSection(
+      id: id,
       headerUIModel: .init(
         progressColor: self.getColor(for: group.color),
         progressRate: group.progressRate,
@@ -103,3 +112,4 @@ extension HomeScenePresenter {
     }
   }
 }
+// swiftlint: enable all

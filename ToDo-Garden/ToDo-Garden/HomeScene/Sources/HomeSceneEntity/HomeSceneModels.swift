@@ -10,7 +10,14 @@ import Foundation
 // swiftlint:disable all
 public enum HomeScene {
   // MARK: Use cases
-  public enum FetchToDoList {    
+  public enum FetchToDoList {
+    public struct Request: Sendable {
+      public let dateString: String
+      public init(dateString: String) {
+        self.dateString = dateString
+      }
+    }
+    
     public struct Response: Codable, Sendable {
       public let date: String
       public let list: [TodoListGroup]
@@ -20,33 +27,27 @@ public enum HomeScene {
         self.list = list
       }
     }
-    
-    public struct ViewModel {
-      
-      public init() {
-      }
-    }
   }
   
   public enum BatchUpdate {
     public struct TodoBatchRequest: Codable, Sendable {
       public let data: [TodoBatchItem]
     }
-
+    
   }
 }
 
 // MARK: DTO
 extension HomeScene {
-  public struct TodoListGroup: Codable, Sendable {
-    public let id: String
+  public final class TodoListGroup: Codable, @unchecked Sendable {
+    public let localId: String
     public let name: String
     public let color: String
-    public let todoList: [TodoListItem]?
+    public var todoList: [TodoListItem]?
     public let progressRate: Double
     
-    public init(id: String, name: String, color: String, todoList: [TodoListItem]?, progressRate: Double) {
-      self.id = id
+    public init(localId: String, name: String, color: String, todoList: [TodoListItem]?, progressRate: Double) {
+      self.localId = localId
       self.name = name
       self.color = color
       self.todoList = todoList
@@ -54,10 +55,10 @@ extension HomeScene {
     }
   }
   
-  public struct TodoListItem: Codable, Sendable {
-    public let name: String
+  public final class TodoListItem: Codable, @unchecked Sendable {
+    public var name: String
     public let endDay: String?
-    public let isDone: Bool
+    public var isDone: Bool
     public let localID: String
     public let startDay: String?
     public let alarmTime: Int?
@@ -83,18 +84,18 @@ extension HomeScene {
     }
   }
   
-  public struct TodoBatchItem: Codable, Sendable {
+  public final class TodoBatchItem: Codable, @unchecked Sendable {
     public let localId: String
-    public let name: String
-    public let isDone: Bool
-    public let createdAt: String 
-    public let isAlarmOn: Bool
-    public let alarmTime: Double
-    public let isOnlyToday: Bool
-    public let startDay: String?
-    public let endDay: String?
+    public var name: String
+    public var isDone: Bool
+    public let createdAt: String
+    public var isAlarmOn: Bool
+    public var alarmTime: Double
+    public var isOnlyToday: Bool
+    public var startDay: String?
+    public var endDay: String?
     public let groupId: String
-    public let isDelete: Bool
+    public var isDelete: Bool
     
     public init(localId: String, name: String, isDone: Bool, createdAt: String, isAlarmOn: Bool, alarmTime: Double, isOnlyToday: Bool, startDay: String?, endDay: String?, groupId: String, isDelete: Bool) {
       self.localId = localId
@@ -108,6 +109,29 @@ extension HomeScene {
       self.endDay = endDay
       self.groupId = groupId
       self.isDelete = isDelete
+    }
+
+    public func setDelete(_ isDelete: Bool) {
+      self.isDelete = isDelete
+    }
+
+    public func setDone(_ isDone: Bool) {
+      self.isDone = isDone
+    }
+
+    public func setName(_ newName: String) {
+      self.name = newName
+    }
+
+    public func setAlarm(isOn: Bool, time: Double) {
+      self.isAlarmOn = isOn
+      self.alarmTime = time
+    }
+
+    public func setPeriod(start: String, end: String) {
+      self.isOnlyToday = false
+      self.startDay = start
+      self.endDay = end
     }
   }
 }

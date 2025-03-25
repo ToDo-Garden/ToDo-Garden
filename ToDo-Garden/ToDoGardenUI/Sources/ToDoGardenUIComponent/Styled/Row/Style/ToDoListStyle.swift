@@ -25,7 +25,7 @@ extension Styled.Row {
   
   private func buildZStack(model: Configuration.TodoListModel) -> (UIView, (Bool) -> Void) {
     let textField = self.buildTextField(
-      text: model.text,
+      text: model.text.value,
       color: model.foregroundColor,
       isSelected: model.isSelected.value
     )
@@ -42,14 +42,14 @@ extension Styled.Row {
     /// textField가 resign될 경우, textField의 텍스트 여부에 따라서 textField를 숨길지, selectedView를 보여줄지 결정하게 됩니다.
     textField.resignHandler = { [weak self, weak textField, weak selectedView] in
       let text = self?.configuration.todoListModel?.text
-      textField?.text = self?.configuration.todoListModel?.text
+      textField?.text = self?.configuration.todoListModel?.text.value
       
-      let textIsEmpty = text?.isEmpty ?? true
+      let textIsEmpty = text?.value.isEmpty ?? true
       textField?.isHidden = !textIsEmpty
       selectedView?.isHidden = textIsEmpty
       
       let isSelected = self?.configuration.todoListModel?.isSelected.value ?? true
-      selecetdViewUpdateAction(text, isSelected)
+      selecetdViewUpdateAction(text?.value, isSelected)
     }
     
     return (zStack, { [weak textField, weak selectedView] isSelected in
@@ -76,7 +76,7 @@ extension Styled.Row {
         let isSelected = self.configuration.todoListModel?.isSelected.value ?? false
         let isEmpty = text?.isEmpty ?? true
         if !isSelected || !isEmpty {
-          self.configuration.todoListModel?.text = text
+          self.configuration.todoListModel?.text.value = text ?? ""
         }
       }
     }
@@ -91,7 +91,7 @@ extension Styled.Row {
   }
   
   private func buildSelectedView(model: Configuration.TodoListModel) -> (UIView, (String?, Bool) -> Void) {
-    let strikeThroughLabel = self.buildStrikethroughLabel(text: model.text)
+    let strikeThroughLabel = self.buildStrikethroughLabel(text: model.text.value)
     let imageView = self.buildAlarmImage(hasAlarm: model.hasAlert)
     let stack = UIHStackView(arrangedSubviews: [strikeThroughLabel, imageView])
     stack.isHidden = !model.isSelected.value
@@ -130,7 +130,8 @@ extension Styled.Row {
         guard
           let checkBox = action.sender as? ToDoCheckBoxButton
         else { return }
-        if self?.configuration.todoListModel?.text?.isEmpty ?? true {
+        
+        if self?.configuration.todoListModel?.text.value.isEmpty ?? true {
           checkBox.isActionBlocked = false
           let flag = (self?.configuration.todoListModel?.isSelected.value ?? true)
           if flag {

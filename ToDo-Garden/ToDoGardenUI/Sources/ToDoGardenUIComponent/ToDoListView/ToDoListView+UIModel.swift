@@ -8,10 +8,24 @@
 import UIKit
 
 extension ToDoListView {
-  public struct ToDoSection: Hashable, Sendable {
-    public var id: UUID
+  public final class ToDoSection: Hashable, @unchecked Sendable {
+    public let id: UUID
     let headerUIModel: ToDoGroupUIModel
-    public let toDoItems: [ToDoItem]
+    private var _toDoItems: [ToDoItem]
+    private let lock = NSLock()
+    
+    public var toDoItems: [ToDoItem] {
+      get {
+        self.lock.lock()
+        defer { self.lock.unlock() }
+        return self._toDoItems
+      }
+      set {
+        self.lock.lock()
+        self._toDoItems = newValue
+        self.lock.unlock()
+      }
+    }
     
     public init(
       id: UUID = UUID(),
@@ -20,17 +34,29 @@ extension ToDoListView {
     ) {
       self.id = id
       self.headerUIModel = headerUIModel
-      self.toDoItems = toDoItems
+      self._toDoItems = toDoItems
     }
     
     public func getGroupTitle() -> String {
       return self.headerUIModel.groupTitle
     }
+    
+    public func getColor() -> UIColor {
+      return self.headerUIModel.progressColor
+    }
+    
+    public static func == (lhs: ToDoSection, rhs: ToDoSection) -> Bool {
+      return lhs.id == rhs.id
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+      hasher.combine(id)
+    }
   }
   
-  public struct ToDoItem: Hashable, Sendable {
-    public var id: UUID
-    let toDoUIModel: ToDoUIModel
+  public class ToDoItem: Hashable, @unchecked Sendable {
+    public let id: UUID
+    public let toDoUIModel: ToDoUIModel
     
     public init(
       id: UUID = UUID(),
@@ -39,12 +65,34 @@ extension ToDoListView {
       self.id = id
       self.toDoUIModel = toDoUIModel
     }
+    
+    public static func == (lhs: ToDoItem, rhs: ToDoItem) -> Bool {
+      return lhs.id == rhs.id
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+      hasher.combine(id)
+    }
   }
   
-  public struct ToDoGroupUIModel: Hashable, Sendable {
+  public final class ToDoGroupUIModel: Hashable, @unchecked Sendable {
     let progressColor: UIColor
-    var progressRate: Double
+    private var _progressRate: Double
+    private let lock = NSLock()
     let groupTitle: String
+    
+    public var progressRate: Double {
+      get {
+        self.lock.lock()
+        defer { self.lock.unlock() }
+        return self._progressRate
+      }
+      set {
+        self.lock.lock()
+        self._progressRate = newValue
+        self.lock.unlock()
+      }
+    }
     
     public init(
       progressColor: UIColor,
@@ -52,8 +100,20 @@ extension ToDoListView {
       groupTitle: String
     ) {
       self.progressColor = progressColor
-      self.progressRate = progressRate
+      self._progressRate = progressRate
       self.groupTitle = groupTitle
+    }
+    
+    public static func == (lhs: ToDoGroupUIModel, rhs: ToDoGroupUIModel) -> Bool {
+      return lhs.groupTitle == rhs.groupTitle &&
+        lhs.progressRate == rhs.progressRate &&
+        lhs.progressColor == rhs.progressColor
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+      hasher.combine(groupTitle)
+      hasher.combine(progressRate)
+      hasher.combine(progressColor)
     }
   }
 }

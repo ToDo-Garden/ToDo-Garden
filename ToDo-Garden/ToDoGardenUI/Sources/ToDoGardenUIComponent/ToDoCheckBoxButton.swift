@@ -58,12 +58,14 @@ public final class ToDoCheckBoxButton: UIButton, HapticFeedbackable {
   }
 
   public func setSelected() {
+    self.isSelected = true
     self.backgroundColor = self.mainColor
     self.drawCompleteToDoAnimation()
     self.makeVibration()
   }
 
   public func setDeSelected() {
+    self.isSelected = false
     self.backgroundColor = UIColor.toDoGardenWhite
   }
 }
