@@ -14,6 +14,11 @@ import ToDoGardenUIResource
 
 import ShareGardenSceneEntity
 
+@MainActor
+protocol MyGardenViewDelegate: AnyObject {
+  func shareButtonTapped()
+}
+
 extension ShareGardenSceneViewController {
   final class MyGardenView: UIStackView {
     
@@ -21,6 +26,7 @@ extension ShareGardenSceneViewController {
     
     private let retryRequestView: RetryRequestView = RetryRequestView()
     private let contentView: UIStackView
+    weak var delegate: MyGardenViewDelegate?
     
     private let sectionHeaderView: SectionHeaderView = {
       let shareButtonSize = MyGardenView.layoutConstant.shareButtonSize
@@ -143,6 +149,7 @@ extension ShareGardenSceneViewController.MyGardenView {
   private func setup() {
     self.setupStackView()
     self.addSubviews()
+    self.setupAction()
   }
   
   private func setupStackView() {
@@ -191,6 +198,12 @@ extension ShareGardenSceneViewController.MyGardenView {
   
   private func updateGardenView(with pomodoroRecordCollection: PomodoroRecordCollection) {
     self.gardenView.configure(with: pomodoroRecordCollection)
+  }
+  
+  private func setupAction() {
+    self.sectionHeaderView.setupRightActionButton(action: UIAction { [weak self] _ in
+      self?.delegate?.shareButtonTapped()
+    })
   }
 }
 
