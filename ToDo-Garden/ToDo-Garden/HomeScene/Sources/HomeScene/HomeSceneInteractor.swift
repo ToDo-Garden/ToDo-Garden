@@ -22,6 +22,8 @@ protocol HomeSceneBusinessLogic {
   func deleteToDo(group: ToDoListView.ToDoSection, todo: ToDoListView.ToDoItem, date: Date) async
   func setMonthlyData(_ monthlyData: [String: [HomeScene.TodoListGroup]]) async
   func loadDailyToDoList(targetDate: String) async
+  func updateText(text: String, indexPath: IndexPath, date: Date)
+  func updateSelection(isSelected: Bool, indexPath: IndexPath, date: Date)
 }
 
 @MainActor
@@ -57,6 +59,7 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
   func loadDailyToDoList(targetDate: String) async {
     let formattedDate = targetDate.toYYYYMMDDStringFromISO8601Space()
     let dailyToDoList: [HomeScene.TodoListGroup] = self.monthlyData[formattedDate] ?? []
+    
     self.presenter?.presentDailyToDoList(dailyData: dailyToDoList)
   }
   
@@ -101,6 +104,44 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
   
   func setMonthlyData(_ monthlyData: [String: [HomeScene.TodoListGroup]]) async {
     self.monthlyData = monthlyData
+  }
+  
+  func updateText(text: String, indexPath: IndexPath, date: Date) {
+    let targetDate = date.description.toYYYYMMDDStringFromISO8601Space()
+    guard let targetGroup = self.monthlyData[targetDate]?[indexPath.section],
+      let targetToDo = targetGroup.todoList?[indexPath.item] else { return }
+    
+    targetToDo.name = text
+    if let batchItem = self.itemsForBatch[targetToDo.localID] {
+      batchItem.setName(text)
+    } else {
+      let alarmTime = Double(targetToDo.alarmTime ?? 0)
+      self.itemsForBatch[targetToDo.localID] = HomeScene.TodoBatchItem(
+        localId: targetToDo.localID, name: text, isDone: targetToDo.isDone,
+        createdAt: Date.now.toISOString(), isAlarmOn: targetToDo.isAlarmOn, alarmTime: alarmTime,
+        isOnlyToday: targetToDo.isOnlyToday, startDay: targetToDo.startDay, endDay: targetToDo.endDay,
+        groupId: targetGroup.localId, isDelete: false
+      )
+    }
+  }
+  
+  func updateSelection(isSelected: Bool, indexPath: IndexPath, date: Date) {
+    let targetDate = date.description.toYYYYMMDDStringFromISO8601Space()
+    guard let targetGroup = self.monthlyData[targetDate]?[indexPath.section],
+      let targetToDo = targetGroup.todoList?[indexPath.item] else { return }
+    
+    targetToDo.isDone = isSelected
+    if let batchItem = self.itemsForBatch[targetToDo.localID] {
+      batchItem.setDone(isSelected)
+    } else {
+      let alarmTime = Double(targetToDo.alarmTime ?? 0)
+      self.itemsForBatch[targetToDo.localID] = HomeScene.TodoBatchItem(
+        localId: targetToDo.localID, name: targetToDo.name, isDone: isSelected,
+        createdAt: Date.now.toISOString(), isAlarmOn: targetToDo.isAlarmOn, alarmTime: alarmTime,
+        isOnlyToday: targetToDo.isOnlyToday, startDay: targetToDo.startDay, endDay: targetToDo.endDay,
+        groupId: targetGroup.localId, isDelete: false
+      )
+    }
   }
 }
 

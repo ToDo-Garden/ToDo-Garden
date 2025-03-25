@@ -69,6 +69,7 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
     let toDoListViewContainer = ToDoListViewContainer()
     self.todoListView = toDoListViewContainer.toDoListView
     self.todoListView?.buttonActionDelegate = self
+    self.todoListView?.cellUpdatingDelegate = self
     self.bottomSheet.usingAutolayout()
     self.view.addSubview(self.bottomSheet)
     self.bottomSheet.contentView = self.todoListView
@@ -231,6 +232,25 @@ extension HomeSceneViewController: HomeSceneDisplayLogic {
 // MARK: - Request to interactor
 
 extension HomeSceneViewController {
+}
+
+// MARK: - Update Cell
+extension HomeSceneViewController: ToDoListViewCellUpdatingDelegate {
+  public func updateSelection(
+    isSelected: Bool,
+    todo: ToDoGardenUIComponent.ToDoListView.ToDoItem,
+    at indexPath: IndexPath
+  ) {
+    guard let targetDate = self.calendarView.getSelectedDate() else { return }
+    
+    self.interactor?.updateSelection(isSelected: isSelected, indexPath: indexPath, date: targetDate)
+  }
+  
+  public func updateText(text: String, todo: ToDoGardenUIComponent.ToDoListView.ToDoItem, at indexPath: IndexPath) {
+    guard let targetDate = self.calendarView.getSelectedDate() else { return }
+    
+    self.interactor?.updateText(text: text, indexPath: indexPath, date: targetDate)
+  }
 }
 
 extension HomeSceneViewController: CalendarViewDateSelectionDelegate {

@@ -39,6 +39,7 @@ public final class ToDoListView: UIView {
   private lazy var dataSource: DataSource = self.makeDataSource()
   
   public weak var buttonActionDelegate: ToDoListButtonActionDelegate?
+  public weak var cellUpdatingDelegate: ToDoListViewCellUpdatingDelegate?
   
   public override init(frame: CGRect) {
     super.init(frame: frame)
@@ -87,16 +88,24 @@ extension ToDoListView {
 extension ToDoListView {
   private func makeDataSource() -> DataSource {
     let toDoCellRegistration = ToDoCellRegistration { cell, indexPath , toDoItem in
-      toDoItem.toDoUIModel.isSelected.bind { [weak self] _ in
+      cell.contentConfiguration = ToDoContentViewContentConfiguration(model: toDoItem.toDoUIModel)
+      cell.indentationLevel = Int.zero
+
+      toDoItem.toDoUIModel.isSelected.bind { [weak self] bool in
         guard let self = self else { return }
         
+        self.cellUpdatingDelegate?.updateSelection(isSelected: bool, todo: toDoItem, at: indexPath)
         Task { @MainActor in
           let currentIndexPath = indexPath
           await self.updateHeaderUI(indexPath: currentIndexPath)
         }
       }
-      cell.contentConfiguration = ToDoContentViewContentConfiguration(model: toDoItem.toDoUIModel)
-      cell.indentationLevel = Int.zero
+      
+      toDoItem.toDoUIModel.text.bind { [weak self] text in
+        guard let self = self else { return }
+        
+        self.cellUpdatingDelegate?.updateText(text: text, todo: toDoItem, at: indexPath)
+      }
     }
     
     let toDoGroupHeaderRegistration = ToDoGroupHeaderRegistration(
