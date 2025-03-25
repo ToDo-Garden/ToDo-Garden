@@ -27,6 +27,9 @@ extension ShareGardenSceneViewController {
     private let retryRequestView: RetryRequestView = RetryRequestView()
     private let contentView: UIStackView
     weak var delegate: MyGardenViewDelegate?
+    var profileImage: UIImage? {
+      return self.makeCircularImage(image: self.profileInfoView.iconImage)
+    }
     
     private let sectionHeaderView: SectionHeaderView = {
       let shareButtonSize = MyGardenView.layoutConstant.shareButtonSize

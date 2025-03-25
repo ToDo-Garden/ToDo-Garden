@@ -154,6 +154,12 @@ extension ShareGardenSceneViewController {
 
 extension ShareGardenSceneViewController: MyGardenViewDelegate {
   func shareButtonTapped() {
+    if let profileImage = self.myGardenView.profileImage {
+      self.router?.routeToInstaShareClient(icon: profileImage)
+      return
+    }
+    
+    self.router?.routeToInstaShareClient(icon: UIImage.defaultProfileImage)
   }
 }
 
