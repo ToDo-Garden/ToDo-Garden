@@ -119,6 +119,7 @@ extension EnterGuideSceneViewController {
   
   private func withFullScreenModal(_ vc: UIViewController) -> UIViewController {
     vc.modalPresentationStyle = .fullScreen
+    vc.modalTransitionStyle = .crossDissolve
     return vc
   }
 }
