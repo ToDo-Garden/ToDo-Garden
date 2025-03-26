@@ -10,6 +10,9 @@ import UIKit
 import TDFoundation
 import ToDoGardenUIResource
 
+import SharingGRDB
+
+// swiftlint:disable force_try
 @main
 final class AppDelegate: UIResponder, UIApplicationDelegate {
   func application(
@@ -18,6 +21,10 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
   ) -> Bool {
     registerCustomFonts()
     UNUserNotificationCenter.current().delegate = NotificationManager.shared
+    prepareDependencies {
+      $0.defaultDatabase = try! appDatabase()
+    }
+    
     return true
   }
 }
@@ -28,3 +35,4 @@ extension AppDelegate {
     GmarkSansFont.register()
   }
 }
+// swiftlint:enable force_try

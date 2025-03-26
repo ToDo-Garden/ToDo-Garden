@@ -1,6 +1,4 @@
-// swift-tools-version: 5.10
-// The swift-tools-version declares the minimum version of Swift required to build this package.
-
+// swift-tools-version: 6.0
 import PackageDescription
 
 let package = Package(
@@ -21,7 +19,8 @@ let package = Package(
     )
   ],
   dependencies: [
-    Package.Dependency.package(path: "../ToDoGardenUI")
+    Package.Dependency.package(path: "../ToDoGardenUI"),
+    Package.Dependency.package(url: "https://github.com/pointfreeco/sharing-grdb", from: "0.1.0")
   ],
   targets: [
     Target.target(
@@ -34,6 +33,10 @@ let package = Package(
     Target.target(
       name: "TDFoundation",
       dependencies: [
+        Target.Dependency.product(
+          name: "SharingGRDB",
+          package: "sharing-grdb"
+        ),
         Target.Dependency.product(
           name: "ToDoGardenUIComponent",
           package: "ToDoGardenUI"
