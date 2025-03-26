@@ -14,6 +14,11 @@ import ToDoGardenUIResource
 
 import ShareGardenSceneEntity
 
+@MainActor
+protocol MyGardenViewDelegate: AnyObject {
+  func shareButtonTapped()
+}
+
 extension ShareGardenSceneViewController {
   final class MyGardenView: UIStackView {
     
@@ -21,6 +26,10 @@ extension ShareGardenSceneViewController {
     
     private let retryRequestView: RetryRequestView = RetryRequestView()
     private let contentView: UIStackView
+    weak var delegate: MyGardenViewDelegate?
+    var profileImage: UIImage? {
+      return self.makeCircularImage(image: self.profileInfoView.iconImage)
+    }
     
     private let sectionHeaderView: SectionHeaderView = {
       let shareButtonSize = MyGardenView.layoutConstant.shareButtonSize
@@ -143,6 +152,7 @@ extension ShareGardenSceneViewController.MyGardenView {
   private func setup() {
     self.setupStackView()
     self.addSubviews()
+    self.setupAction()
   }
   
   private func setupStackView() {
@@ -191,6 +201,12 @@ extension ShareGardenSceneViewController.MyGardenView {
   
   private func updateGardenView(with pomodoroRecordCollection: PomodoroRecordCollection) {
     self.gardenView.configure(with: pomodoroRecordCollection)
+  }
+  
+  private func setupAction() {
+    self.sectionHeaderView.setupRightActionButton(action: UIAction { [weak self] _ in
+      self?.delegate?.shareButtonTapped()
+    })
   }
 }
 
@@ -242,6 +258,30 @@ extension ShareGardenSceneViewController.MyGardenView {
   
   func getShareButton() -> UIView {
     return self.sectionHeaderView.getShareButton()
+  }
+}
+
+extension ShareGardenSceneViewController.MyGardenView {
+  private func makeCircularImage(image: UIImage?) -> UIImage? {
+    guard let image else { return nil }
+    
+    let diameter = min(image.size.width, image.size.height)
+    let rect = CGRect(x: 0, y: 0, width: diameter, height: diameter)
+    UIGraphicsBeginImageContextWithOptions(rect.size, false, image.scale)
+    let path = UIBezierPath(ovalIn: rect)
+    path.addClip()
+    image.draw(
+      in: CGRect(
+        x: -(image.size.width - diameter) / 2,
+        y: -(image.size.height - diameter) / 2,
+        width: image.size.width,
+        height: image.size.height
+      )
+    )
+    let circularImage = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+    
+    return circularImage
   }
 }
 

@@ -74,6 +74,7 @@ actor ShareGardenSceneWorkerStub: ShareGardenSceneWorkable {
       nickname: UUID().uuidString,
       description: UUID().uuidString,
       pomodoroRecords: PomodoroRecordCollection(pomodoroRecords: pomodoroRecords),
+      streakCount: 0,
       imageURL: nil
     )
     

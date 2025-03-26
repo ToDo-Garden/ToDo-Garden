@@ -33,17 +33,20 @@ public enum ShareGardenScene {
     public let nickname: String
     public let description: String
     public let pomodoroRecords: PomodoroRecordCollection
+    public let streakCount: Int
     public let imageURL: URL?
     
     public init(
       nickname: String,
       description: String,
       pomodoroRecords: PomodoroRecordCollection,
+      streakCount: Int,
       imageURL: URL?
     ) {
       self.nickname = nickname
       self.description = description
       self.pomodoroRecords = pomodoroRecords
+      self.streakCount = streakCount
       self.imageURL = imageURL
     }
   }
@@ -103,6 +106,7 @@ extension ShareGardenScene {
     public let nickname: String
     public let introduction: String
     public let imageUrl: String?
+    public let streakCount: Int
     public let pomodoroRecords: [UserGardenDTO]
   }
   
