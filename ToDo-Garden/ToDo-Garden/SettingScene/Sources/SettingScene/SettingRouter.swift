@@ -7,7 +7,6 @@
 
 import Foundation
 
-import GuideScene
 import SettingSceneAPI
 import ToDoGardenUIComponent
 import ToDoGardenUIConstant
@@ -28,6 +27,7 @@ class SettingRouter: SettingDataPassing {
 	weak var viewController: SettingViewController?
 	var dataStore: SettingDataStore?
   let termsTextView: TermsTextViewController = TermsTextViewController(title: "", text: "")
+  let enterGuideSceneViewController: EnterGuideSceneViewController = EnterGuideSceneViewController()
 }
 
 // MARK: - Routing
@@ -65,10 +65,9 @@ extension SettingRouter: SettingRoutingLogic {
   }
   
   func routeToGuideScene() {
-    // TODO: GuideDetailViewController는 임시로 연결해놓았고, GuideDetailViewController로 진입할 수 있는 VC로 연결되어야함
-    let guideSceneViewController = GuideDetailViewController(.todoCreate)
+    let guideSceneViewController = self.enterGuideSceneViewController
     guideSceneViewController.modalPresentationStyle = .fullScreen
-    self.viewController?.present(guideSceneViewController, animated: true)
+    self.viewController?.navigationController?.pushViewController(guideSceneViewController, animated: true)
   }
 }
 
