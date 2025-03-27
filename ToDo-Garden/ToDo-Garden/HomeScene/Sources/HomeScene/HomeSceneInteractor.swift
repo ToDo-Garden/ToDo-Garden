@@ -24,6 +24,8 @@ protocol HomeSceneBusinessLogic {
   func loadDailyToDoList(targetDate: String) async
   func updateText(text: String, indexPath: IndexPath, date: Date)
   func updateSelection(isSelected: Bool, indexPath: IndexPath, date: Date)
+  func writeJSONFile() async
+  func requestBatchUpdateToServer() async
 }
 
 @MainActor
@@ -32,10 +34,10 @@ final class HomeSceneInteractor: HomeSceneDataStore {
   private var homeSceneWorker: HomeSceneWorkable
   private var monthlyData: [String: [HomeScene.TodoListGroup]]
   // ⬆️ 서버에서 받아오는 1달짜리 데이터입니다. ex) key = "20250302"
-  private var itemsForBatch: [String: HomeScene.TodoBatchItem]
+  private var itemsForBatch: [String: HomeScene.TodoBatchItem] 
   // ⬆️ JSONStorage가 매번 fileWrite를 하기엔 부담스러워서 모아놨다가 적절한 순간에 fileWrite를 진행하기 위한 데이터입니다.
   // 즉, 서버에게 배치처리를 요청하기 위한 배치처리 과정이라고 볼 수 있습니다.
-  // ex) key = "20250302"
+  // ex) key = ToDo의 UUIDString
   
   init(homeSceneWorker: HomeSceneWorkable) {
     self.homeSceneWorker = homeSceneWorker
@@ -65,7 +67,7 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
   
   func createToDo(group: ToDoListView.ToDoSection, date: Date) async {
     let dateString = date.description.toYYYYMMDDStringFromISO8601Space()
-    let newToDo = self.makeItemForCreateToDo(group: group)
+    let newToDo = self.makeItemForCreateToDo(group: group, date: date)
     self.addBatchItem(newToDo: newToDo)
     
     if let targetGroupIndex = self.monthlyData[dateString]?.firstIndex(
@@ -96,7 +98,7 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
     }
     
     if deletedToDo != nil {
-      let batchItem = self.makeItemForDeleteToDo(group: group, todo: deletedToDo!)
+      let batchItem = self.makeItemForDeleteToDo(group: group, todo: deletedToDo!, date: date)
       self.removeBatchItem(deletedToDo: batchItem)
     }
     self.presenter?.presentDeleteToDo(groupID: group.id, deletedToDo: todo)
@@ -111,6 +113,8 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
     guard let targetGroup = self.monthlyData[targetDate]?[indexPath.section],
       let targetToDo = targetGroup.todoList?[indexPath.item] else { return }
     
+    if targetToDo.name == text { return } // 텍스트에 변경사항이 없으면 그냥 리턴
+    
     targetToDo.name = text
     if let batchItem = self.itemsForBatch[targetToDo.localID] {
       batchItem.setName(text)
@@ -118,10 +122,31 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
       let alarmTime = Double(targetToDo.alarmTime ?? 0)
       self.itemsForBatch[targetToDo.localID] = HomeScene.TodoBatchItem(
         localId: targetToDo.localID, name: text, isDone: targetToDo.isDone,
-        createdAt: Date.now.toISOString(), isAlarmOn: targetToDo.isAlarmOn, alarmTime: alarmTime,
+        createdAt: date.toISOString(), isAlarmOn: targetToDo.isAlarmOn, alarmTime: alarmTime,
         isOnlyToday: targetToDo.isOnlyToday, startDay: targetToDo.startDay, endDay: targetToDo.endDay,
         groupId: targetGroup.localId, isDelete: false
       )
+    }
+  }
+  
+  func writeJSONFile() async {
+    guard !self.itemsForBatch.values.isEmpty else { return }
+    
+    do {
+      let data = Array(self.itemsForBatch.values)
+      try await self.homeSceneWorker.writeJSONFile(data: data)
+      self.itemsForBatch.removeAll()
+    } catch let error {
+      self.handleErrors(error)
+    }
+  }
+  
+  func requestBatchUpdateToServer() async {
+    do {
+      try await self.homeSceneWorker.requestBatchUpdateToServer()
+      self.itemsForBatch.removeAll()
+    } catch let error {
+      self.handleErrors(error)
     }
   }
   
@@ -130,6 +155,7 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
     guard let targetGroup = self.monthlyData[targetDate]?[indexPath.section],
       let targetToDo = targetGroup.todoList?[indexPath.item] else { return }
     
+    if isSelected == targetToDo.isDone { return }
     targetToDo.isDone = isSelected
     if let batchItem = self.itemsForBatch[targetToDo.localID] {
       batchItem.setDone(isSelected)
@@ -137,7 +163,7 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
       let alarmTime = Double(targetToDo.alarmTime ?? 0)
       self.itemsForBatch[targetToDo.localID] = HomeScene.TodoBatchItem(
         localId: targetToDo.localID, name: targetToDo.name, isDone: isSelected,
-        createdAt: Date.now.toISOString(), isAlarmOn: targetToDo.isAlarmOn, alarmTime: alarmTime,
+        createdAt: date.toISOString(), isAlarmOn: targetToDo.isAlarmOn, alarmTime: alarmTime,
         isOnlyToday: targetToDo.isOnlyToday, startDay: targetToDo.startDay, endDay: targetToDo.endDay,
         groupId: targetGroup.localId, isDelete: false
       )
@@ -154,18 +180,18 @@ extension HomeSceneInteractor {
     if self.itemsForBatch[deletedToDo.localId] == nil {
       self.itemsForBatch[deletedToDo.localId] = deletedToDo
     } else {
-      self.itemsForBatch[deletedToDo.localId] = nil
+      self.itemsForBatch[deletedToDo.localId]?.isDelete = true
     }
   }
   
-  private func makeItemForCreateToDo(group: ToDoListView.ToDoSection) -> HomeScene.TodoBatchItem {
+  private func makeItemForCreateToDo(group: ToDoListView.ToDoSection, date: Date) -> HomeScene.TodoBatchItem {
     let newToDoID = UUID()
     let groupID = group.id.uuidString
     let newItem = HomeScene.TodoBatchItem(
       localId: newToDoID.uuidString,
       name: "New ToDo",
       isDone: false,
-      createdAt: Date.now.toISOString(),
+      createdAt: date.toISOString(),
       isAlarmOn: false,
       alarmTime: 0, // 기본값 뭐임?
       isOnlyToday: true,
@@ -177,7 +203,7 @@ extension HomeSceneInteractor {
     return newItem
   }
   
-  private func makeItemForDeleteToDo(group: ToDoListView.ToDoSection, todo: HomeScene.TodoListItem) -> HomeScene.TodoBatchItem {
+  private func makeItemForDeleteToDo(group: ToDoListView.ToDoSection, todo: HomeScene.TodoListItem, date: Date) -> HomeScene.TodoBatchItem {
     
     let groupID = group.id.uuidString
     let alarmTime = Double(todo.alarmTime ?? 0)
@@ -186,7 +212,7 @@ extension HomeSceneInteractor {
       localId: todo.localID,
       name: todo.name,
       isDone: todo.isDone,
-      createdAt: Date.now.toISOString(),
+      createdAt: date.toISOString(),
       isAlarmOn: todo.isAlarmOn,
       alarmTime: alarmTime,
       isOnlyToday: todo.isOnlyToday,
