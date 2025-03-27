@@ -26,7 +26,8 @@ let package = Package(
     Package.Dependency.package(
       url: "https://github.com/pointfreeco/sharing-grdb",
       from: "0.1.0"
-    )
+    ),
+    .package(name: "UserInfoScene", path: "../UserInfoScene")
   ],
   targets: [
     .target(
@@ -49,6 +50,7 @@ let package = Package(
         .product(name: "ToDoGardenUIAPI", package: "ToDoGardenUI"),
         .product(name: "ToDoGardenUIComponent", package: "ToDoGardenUI"),
         .product(name: "ToDoGardenUIResource", package: "ToDoGardenUI"),
+        .product(name: "UserInfoSceneAPI", package: "UserInfoScene"),
         .product(name: "GuideScene", package: "GuideScene")
       ]
     ),

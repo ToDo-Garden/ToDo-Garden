@@ -18,6 +18,7 @@ protocol SettingRoutingLogic {
   func routeToPrivacyPolicy()
   func routeToSendingFeedback()
   func routeToGuideScene()
+  func routeToUserInfoScene()
 }
 
 protocol SettingDataPassing {
@@ -76,9 +77,9 @@ extension SettingRouter: SettingRoutingLogic {
     guideSceneViewController.modalPresentationStyle = .fullScreen
     self.viewController?.navigationController?.pushViewController(guideSceneViewController, animated: true)
   }
-}
-
-// MARK: - Declare Payload for scene
-
-extension SettingRouter {
+  
+  func routeToUserInfoScene() {
+    let userInfoScene = self.userInfoSceneBuilder.build()
+    self.viewController?.navigationController?.pushViewController(userInfoScene, animated: true)
+  }
 }
