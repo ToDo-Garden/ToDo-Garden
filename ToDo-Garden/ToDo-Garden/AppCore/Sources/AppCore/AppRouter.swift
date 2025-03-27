@@ -33,11 +33,18 @@ public final class AppRouter {
     switch destination {
     case Destination.home(let viewController):
       self.navigationController.viewControllers = [
-        RootTabBarController(tabItems: [
-          RootTabBarController.RootTab.home(index: 0, viewController: viewController),
-          RootTabBarController.RootTab.share(index: 1, viewController: UINavigationController(rootViewController: sceneBuilder.shareGarden.build())),
-          RootTabBarController.RootTab.settings(index: 2, viewController: sceneBuilder.setting.build())
-        ])
+        RootTabBarController(
+          tabItems: [
+            RootTabBarController.RootTab.home(index: 0, viewController: viewController),
+            RootTabBarController.RootTab.share(
+              index: 1,
+              viewController: UINavigationController(
+                rootViewController: sceneBuilder.shareGarden.build()
+              )
+            ),
+            RootTabBarController.RootTab.settings(index: 2, viewController: sceneBuilder.setting.build())
+          ]
+        )
       ]
       
     case Destination.onboarding:

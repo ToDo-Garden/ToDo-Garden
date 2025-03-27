@@ -12,13 +12,13 @@ import HomeScene
 import HomeSceneEntity
 import HTTPClient
 import ManageGroupScene
+import MyStatsScene
 import PostGroupScene
 import ShareGardenScene
 import SignUpScene
 import TDFoundation
 import TimerScene
 import TimerSceneEntity
-import MyStatsScene
 
 // MARK: HOME SCENE
 extension HomeSceneBuilder.Dependency {
@@ -56,7 +56,9 @@ extension TimerStorageWorker {
 extension ShareGardenSceneBuilder.Dependency {
   public static let live = ShareGardenSceneBuilder.Dependency.init(
     shareGardenSceneWorker: ShareGardenSceneWorker(httpClient: HTTPClient.live),
-    myStatsSceneBuilder: MyStatsSceneBuilder.init(dependency: .init(myStatsWorker: MyStatsWorker(httpClient: HTTPClient.live)))
+    myStatsSceneBuilder: MyStatsSceneBuilder.init(
+      dependency: .init(myStatsWorker: MyStatsWorker(httpClient: HTTPClient.live))
+    )
   )
 }
 
