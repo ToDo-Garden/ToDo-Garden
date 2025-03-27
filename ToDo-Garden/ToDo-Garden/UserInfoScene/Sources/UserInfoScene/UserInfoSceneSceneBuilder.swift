@@ -10,6 +10,7 @@ import UIKit.UIApplication
 
 import EditUserIntroductionSceneAPI
 import EditUserNameSceneAPI
+import HTTPClient
 import UserInfoSceneAPI
 import UserInfoSceneEntity
 
@@ -45,6 +46,17 @@ public struct UserInfoSceneSceneBuilder {
   public init(dependency: Dependency) {
     self.dependency = dependency
   }
+}
+
+extension UserInfoSceneSceneBuilder {
+  public static let live = Self(dependency: Dependency(
+    photoPicker: PHPickerViewController(configuration: PHPickerConfiguration()),
+    appServiceWorker: AppServiceWorker(),
+    userPhotoWorker: UserPhotoWorker(),
+    userInfoWorker: UserInfoSceneWorker(httpClient: HTTPClient.live),
+    editUserIntroductionSceneBuilder: nil,
+    editUserNameSceneBuilder: nil)
+  )
 }
 
 extension UserInfoSceneSceneBuilder: UserInfoSceneSceneBuildable {
