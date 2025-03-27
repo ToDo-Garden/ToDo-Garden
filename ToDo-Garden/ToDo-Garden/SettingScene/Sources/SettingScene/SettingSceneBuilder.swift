@@ -9,6 +9,7 @@ import Foundation
 
 import GuideScene
 import SettingSceneAPI
+import UserInfoSceneAPI
 
 @MainActor
 public struct SettingSceneBuilder {
@@ -16,10 +17,16 @@ public struct SettingSceneBuilder {
 	public struct Dependency {
     let settingWorker: SettingWorkable
     let appServiceWorker: ApplicationServiceWorker
+    let userInfoSceneBuilder: UserInfoSceneSceneBuildable
 
-    public init(settingWorker: SettingWorkable, appServiceWorker: ApplicationServiceWorker) {
+    public init(
+      settingWorker: SettingWorkable,
+      appServiceWorker: ApplicationServiceWorker,
+      userInfoSceneBuilder: UserInfoSceneSceneBuildable
+    ) {
 			self.settingWorker = settingWorker
       self.appServiceWorker = appServiceWorker
+      self.userInfoSceneBuilder = userInfoSceneBuilder
 		}
 	}
 	
@@ -52,7 +59,7 @@ extension SettingSceneBuilder {
       appServiceWorker: self.dependency.appServiceWorker
     )
 		let presenter = SettingPresenter()
-		let router = SettingRouter()
+    let router = SettingRouter(userInfoSceneBuilder: self.dependency.userInfoSceneBuilder)
 		viewController.interactor = interactor
 		viewController.router = router
 		interactor.presenter = presenter
