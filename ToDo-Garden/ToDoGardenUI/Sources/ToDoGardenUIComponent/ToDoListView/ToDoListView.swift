@@ -59,15 +59,13 @@ public final class ToDoListView: UIView {
     return self.dataSource.snapshot()
   }
   
-  public func updateHeaderUIAfterDeleteTodo(section: ToDoSection) {
+  public func updateHeaderUIAfterUpdatingToDo(section: ToDoSection) {
     let newProgressRate = self.calculateProgressRate(for: section)
     
     guard let headerView = self.contentView.supplementaryView(
       forElementKind: UICollectionView.elementKindSectionHeader,
       at: IndexPath(item: 0, section: self.getSectionIndex(for: section))
-    ) as? ToDoGroupSectionHeaderView else {
-      return
-    }
+    ) as? ToDoGroupSectionHeaderView else { return }
     
     let updatedModel = section.headerUIModel
     updatedModel.progressRate = newProgressRate
