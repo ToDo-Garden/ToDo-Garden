@@ -9,6 +9,7 @@ import ShareGardenScene
 import SignUpScene
 import SignUpSceneAPI
 import TDFoundation
+import UserInfoScene
 
 @MainActor
 public final class AppCore {
@@ -82,7 +83,8 @@ extension AppCore {
             setting: SettingSceneBuilder(
               dependency: SettingSceneBuilder.Dependency(
                 settingWorker: SettingWorker(httpClient: HTTPClient.live),
-                appServiceWorker: ApplicationServiceWorker()
+                appServiceWorker: ApplicationServiceWorker(),
+                userInfoSceneBuilder: UserInfoSceneSceneBuilder.live
               )
             )
           )
