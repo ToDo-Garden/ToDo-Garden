@@ -51,8 +51,8 @@ public final class ToDoListView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
   
-  public func apply(_ snapshot: Snapshot) {
-    self.dataSource.apply(snapshot)
+  public func apply(_ snapshot: Snapshot, completion: (() -> Void)? = nil) {
+    self.dataSource.apply(snapshot, completion: completion)
   }
   
   public func getSnapShot() -> Snapshot {

@@ -181,8 +181,15 @@ extension HomeSceneViewController: HomeSceneDisplayLogic {
   func displayDailyToDoList(snapshot: ToDoListView.Snapshot) {
     self.loadingIndicator.isHidden = true
     self.loadingIndicator.pauseAnimation()
-    self.showToDoList()
-    self.todoListView?.apply(snapshot)
+    for section in snapshot.sectionIdentifiers {
+      self.todoListView?.updateHeaderUIAfterUpdatingToDo(section: section)
+    }
+    self.todoListView?.apply(
+      snapshot,
+      completion: { [weak self] in
+        self?.showToDoList()
+      }
+    )
   }
   
   func displayCreateToDo(newToDo: HomeScene.TodoBatchItem) {
