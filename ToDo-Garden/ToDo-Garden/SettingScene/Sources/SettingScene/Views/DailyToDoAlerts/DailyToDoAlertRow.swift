@@ -1,10 +1,12 @@
 import UIKit
 
 import TDFoundation
+import TDUtility
+import ToDoGardenUIAPI
 import ToDoGardenUIComponent
 import ToDoGardenUIResource
 
-class DailyToDoAlertRow: UITableViewCell {
+class DailyToDoAlertRow: UITableViewCell, HapticFeedbackable {
   private let timeLabel = UILabel()
   private let editImage = UIImageView(image: UIImage.forwardButtonImage)
   private let toggleSwitch = UISwitch()
@@ -77,6 +79,8 @@ class DailyToDoAlertRow: UITableViewCell {
   }
   
   @objc func deleteImageTapped() {
+    let style = UIImpactFeedbackGenerator.FeedbackStyle.medium
+    self.triggerHapticFeedback(type: HapticFeedbackType.impact(style: style))
     self.action?(Operation.delete)
   }
   
