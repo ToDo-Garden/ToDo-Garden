@@ -11,6 +11,7 @@ import HomeSceneEntity
 
 public protocol HomeSceneWorkable: Sendable {
   func fetchToDoList(dateString: String) async throws -> [HomeScene.FetchToDoList.Response]
-  func createToDo() async throws
+  func writeJSONFile(data: [HomeScene.TodoBatchItem]) async throws
   func deleteToDo() async throws
+  func requestBatchUpdateToServer() async throws
 }
