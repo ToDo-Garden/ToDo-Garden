@@ -67,7 +67,7 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
   
   func createToDo(group: ToDoListView.ToDoSection, date: Date) async {
     let dateString = date.description.toYYYYMMDDStringFromISO8601Space()
-    let newToDo = self.makeItemForCreateToDo(group: group)
+    let newToDo = self.makeItemForCreateToDo(group: group, date: date)
     self.addBatchItem(newToDo: newToDo)
     
     if let targetGroupIndex = self.monthlyData[dateString]?.firstIndex(
@@ -98,7 +98,7 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
     }
     
     if deletedToDo != nil {
-      let batchItem = self.makeItemForDeleteToDo(group: group, todo: deletedToDo!)
+      let batchItem = self.makeItemForDeleteToDo(group: group, todo: deletedToDo!, date: date)
       self.removeBatchItem(deletedToDo: batchItem)
     }
     self.presenter?.presentDeleteToDo(groupID: group.id, deletedToDo: todo)
@@ -122,7 +122,7 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
       let alarmTime = Double(targetToDo.alarmTime ?? 0)
       self.itemsForBatch[targetToDo.localID] = HomeScene.TodoBatchItem(
         localId: targetToDo.localID, name: text, isDone: targetToDo.isDone,
-        createdAt: Date.now.toISOString(), isAlarmOn: targetToDo.isAlarmOn, alarmTime: alarmTime,
+        createdAt: date.toISOString(), isAlarmOn: targetToDo.isAlarmOn, alarmTime: alarmTime,
         isOnlyToday: targetToDo.isOnlyToday, startDay: targetToDo.startDay, endDay: targetToDo.endDay,
         groupId: targetGroup.localId, isDelete: false
       )
@@ -146,7 +146,6 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
       try await self.homeSceneWorker.requestBatchUpdateToServer()
       self.itemsForBatch.removeAll()
     } catch let error {
-      print(error)
       self.handleErrors(error)
     }
   }
@@ -164,7 +163,7 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
       let alarmTime = Double(targetToDo.alarmTime ?? 0)
       self.itemsForBatch[targetToDo.localID] = HomeScene.TodoBatchItem(
         localId: targetToDo.localID, name: targetToDo.name, isDone: isSelected,
-        createdAt: Date.now.toISOString(), isAlarmOn: targetToDo.isAlarmOn, alarmTime: alarmTime,
+        createdAt: date.toISOString(), isAlarmOn: targetToDo.isAlarmOn, alarmTime: alarmTime,
         isOnlyToday: targetToDo.isOnlyToday, startDay: targetToDo.startDay, endDay: targetToDo.endDay,
         groupId: targetGroup.localId, isDelete: false
       )
@@ -185,14 +184,14 @@ extension HomeSceneInteractor {
     }
   }
   
-  private func makeItemForCreateToDo(group: ToDoListView.ToDoSection) -> HomeScene.TodoBatchItem {
+  private func makeItemForCreateToDo(group: ToDoListView.ToDoSection, date: Date) -> HomeScene.TodoBatchItem {
     let newToDoID = UUID()
     let groupID = group.id.uuidString
     let newItem = HomeScene.TodoBatchItem(
       localId: newToDoID.uuidString,
       name: "New ToDo",
       isDone: false,
-      createdAt: Date.now.toISOString(),
+      createdAt: date.toISOString(),
       isAlarmOn: false,
       alarmTime: 0, // 기본값 뭐임?
       isOnlyToday: true,
@@ -204,7 +203,7 @@ extension HomeSceneInteractor {
     return newItem
   }
   
-  private func makeItemForDeleteToDo(group: ToDoListView.ToDoSection, todo: HomeScene.TodoListItem) -> HomeScene.TodoBatchItem {
+  private func makeItemForDeleteToDo(group: ToDoListView.ToDoSection, todo: HomeScene.TodoListItem, date: Date) -> HomeScene.TodoBatchItem {
     
     let groupID = group.id.uuidString
     let alarmTime = Double(todo.alarmTime ?? 0)
@@ -213,7 +212,7 @@ extension HomeSceneInteractor {
       localId: todo.localID,
       name: todo.name,
       isDone: todo.isDone,
-      createdAt: Date.now.toISOString(),
+      createdAt: date.toISOString(),
       isAlarmOn: todo.isAlarmOn,
       alarmTime: alarmTime,
       isOnlyToday: todo.isOnlyToday,
