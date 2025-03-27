@@ -57,7 +57,7 @@ extension DatabaseWriter {
   }
 }
 
-public struct DailyToDoAlert: Equatable {
+public struct DailyToDoAlert: Identifiable {
   public var id: Int64?
   public var alertTime: Double
   public var isRepeating: Bool

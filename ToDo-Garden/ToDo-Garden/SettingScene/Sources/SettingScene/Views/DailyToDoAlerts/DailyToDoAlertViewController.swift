@@ -1,4 +1,3 @@
-import Combine
 import SwiftUI
 import UIKit
 
@@ -13,12 +12,13 @@ import SharingGRDB
 public final class DailyToDoAlertViewController: UIViewController {
   private let noticeLabel = UILabel()
   private let tableView = UITableView()
+  private var addTimerButton: UIView!
   private var tableViewHeightConstraint: NSLayoutConstraint!
   
-  enum Section { case main }
   private var dataSource: UITableViewDiffableDataSource<Int, RowModel>!
+  private var scrollID: DailyToDoAlert.ID?
+
   private var tableViewHeightViewTask: Task<Void, Never>?
-  private var tableViewDataSourceTask: Task<Void, Never>?
   private var dailyToDoAlertsTask: Task<Void, Never>?
   
   @Dependency(\.defaultDatabase) private var database
@@ -31,18 +31,20 @@ public final class DailyToDoAlertViewController: UIViewController {
     }
   }
   @SharedReader(.fetch(DailyToDoAlerts())) private var dailyToDoAlerts: [DailyToDoAlert]
-  private var listModel = PassthroughSubject<[RowModel], Never>()
-  
+    
   public override func viewDidLoad() {
     super.viewDidLoad()
     self.setup()
     self.prepare()
-    self.tableView.delegate = self
+  }
+  
+  public override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+    self.configureTableViewHeight()
   }
   
   deinit {
     self.tableViewHeightViewTask?.cancel()
-    self.tableViewDataSourceTask?.cancel()
     self.dailyToDoAlertsTask?.cancel()
   }
   
@@ -91,6 +93,8 @@ public final class DailyToDoAlertViewController: UIViewController {
   }
   
   private func setupTableView() {
+    self.tableView.delegate = self
+    self.tableView.showsVerticalScrollIndicator = false
     self.tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
     self.tableView.sectionHeaderTopPadding = 0
     self.tableView.register(type: DailyToDoAlertRow.self)
@@ -111,17 +115,32 @@ public final class DailyToDoAlertViewController: UIViewController {
     
     self.tableViewHeightConstraint = self.tableView.heightAnchor.constraint(equalToConstant: 0)
     NSLayoutConstraint.activate([
-      self.tableView.topAnchor.constraint(equalTo: self.noticeLabel.bottomAnchor, constant: 15),
+      self.tableView.topAnchor.constraint(equalTo: self.noticeLabel.bottomAnchor, constant: 30),
       self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 28),
       self.tableView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
       self.tableViewHeightConstraint
     ])
   }
   
+  private func configureTableViewHeight() {
+    let safeAreaFrame = self.view.safeAreaLayoutGuide.layoutFrame
+    let maxAvailableHeight = safeAreaFrame.maxY - self.noticeLabel.frame.maxY - (self.addTimerButton.frame.height + 40)
+    let tableHeightStream = self.tableView.heightStream(maxAvailableHeight: maxAvailableHeight)
+    self.tableViewHeightViewTask = Task {
+      for await height in tableHeightStream {
+        self.tableViewHeightConstraint.constant = height
+        UIView.animate(withDuration: 0.3) {
+          self.view.layoutIfNeeded()
+        }
+      }
+    }
+  }
+  
   private func setupAddTimerButton() {
     let button = UnderlineButton(text: "시간 추가하기") { [weak self] in
-      self?.presentSettingTimeView(seconds: 0) {
-        try? self?.addDailyTodo($0)
+      self?.presentSettingTimeView(alertTime: Date().asDouble()) {
+        let item = try? self?.addDailyTodo($0)
+        self?.scrollID = item?.id
       }
     }
     let controller = UIHostingController(rootView: button)
@@ -129,6 +148,7 @@ public final class DailyToDoAlertViewController: UIViewController {
     self.addChild(controller)
     self.view.addSubview(controller.view)
     controller.didMove(toParent: self)
+    self.addTimerButton = controller.view
     
     NSLayoutConstraint.activate([
       controller.view.topAnchor.constraint(equalTo: self.tableView.bottomAnchor, constant: 12),
@@ -137,7 +157,10 @@ public final class DailyToDoAlertViewController: UIViewController {
     ])
   }
   
-  private func presentSettingTimeView(seconds: Double, action: @escaping (Double) -> Void) {
+  private func presentSettingTimeView(
+    alertTime: Double,
+    action: @escaping (Double) -> Void
+  ) {
     let button = ToDoGardenBoxButton(
       title: "완료",
       buttonType: ToDoGardenBoxButton.Configuration.primaryRoundRectButton
@@ -146,8 +169,10 @@ public final class DailyToDoAlertViewController: UIViewController {
       with: button,
       for: SettingTimeView.Configuration.alarmTimeSetting
     )
-    let hour = seconds / 60.0
-    timeView.updateSelectedTime(hour: Int(hour), minute: Int(seconds - hour * 60))
+    timeView.updateSelectedTime(
+      hour: Int(alertTime.hour),
+      minute: Int(alertTime.minute())
+    )
     button.addAction(
       UIAction { [weak self, weak timeView] _ in
         guard let self, let timeView else { return }
@@ -165,38 +190,32 @@ public final class DailyToDoAlertViewController: UIViewController {
   }
   
   private func prepare() {
-    let maxAvailableHeight = self.view.bounds.height - self.noticeLabel.frame.maxY - 100
-    let tableHeightStream = self.tableView.heightStream(maxAvailableHeight: maxAvailableHeight)
-    self.tableViewHeightViewTask = Task {
-      for await height in tableHeightStream {
-        self.tableViewHeightConstraint.constant = height
-        UIView.animate(withDuration: 0.3) {
-          self.view.layoutIfNeeded()
-        }
-      }
-    }
-    
-    self.tableViewDataSourceTask = Task {
-      for await models in self.listModel.values {
-        var snapshot = NSDiffableDataSourceSnapshot<Int, RowModel>()
-        for (index, alert) in models.enumerated() {
-          snapshot.appendSections([index])
-          snapshot.appendItems([alert], toSection: index)
-        }
-        await self.dataSource.apply(snapshot, animatingDifferences: true)
-      }
-    }
-    
     let dailyToDoAlertStream = self.$dailyToDoAlerts
       .publisher
-      .debounce(for: 0.3, scheduler: DispatchQueue.main)
       .map { $0.map(\.rowModel) }
       .removeDuplicates()
       .asyncStream
     
-    self.dailyToDoAlertsTask = Task {
+    self.dailyToDoAlertsTask = Task { @MainActor in
       for await models in dailyToDoAlertStream {
-        self.listModel.send(models)
+        var snapshot = NSDiffableDataSourceSnapshot<Int, RowModel>()
+        var indexPath: IndexPath?
+        for (index, alert) in models.enumerated() {
+          if alert.id == self.scrollID {
+            indexPath = IndexPath(row: 0, section: index)
+          }
+          snapshot.appendSections([index])
+          snapshot.appendItems([alert], toSection: index)
+        }
+        await self.dataSource.apply(snapshot, animatingDifferences: true)
+        if let indexPath {
+          self.tableView.scrollToRow(
+            at: indexPath,
+            at: UITableView.ScrollPosition.middle,
+            animated: true
+          )
+          self.scrollID = nil
+        }
       }
     }
   }
@@ -264,7 +283,7 @@ extension DailyToDoAlertViewController: UITableViewDelegate {
   
   public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
     let view = UIView()
-    view.backgroundColor = .clear
+    view.backgroundColor = UIColor.clear
     return view
   }
   
@@ -272,7 +291,8 @@ extension DailyToDoAlertViewController: UITableViewDelegate {
     _ tableView: UITableView,
     heightForHeaderInSection section: Int
   ) -> CGFloat {
-    return section == 0 ? 0 : 0.001
+    // 0을 적용할 때, 시스템에서 기본값을 적용하는 경우가 있기 때문에 0.001을 반환하도록 구현했습니다.
+    return 0.001
   }
   
   public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -283,7 +303,7 @@ extension DailyToDoAlertViewController: UITableViewDelegate {
     _ tableView: UITableView,
     editingStyleForRowAt indexPath: IndexPath
   ) -> UITableViewCell.EditingStyle {
-    return .none
+    return UITableViewCell.EditingStyle.none
   }
   
   public func tableView(
@@ -302,7 +322,7 @@ private extension DailyToDoAlertViewController {
         try? self?.deleteDailyTodo(todoAlert: model)
         
       case .editAlertTime:
-        self?.presentSettingTimeView(seconds: model.alertTime) {
+        self?.presentSettingTimeView(alertTime: model.alertTime) {
           var copy = model
           copy.alertTime = $0
           try? self?.updateDailyTodo(todoAlert: copy)
@@ -316,9 +336,9 @@ private extension DailyToDoAlertViewController {
     }
   }
   
-  func addDailyTodo(_ seconds: Double) throws {
+  func addDailyTodo(_ seconds: Double) throws -> DailyToDoAlert {
     let todoAlert = DailyToDoAlert(alertTime: seconds, isRepeating: true)
-    _ = try self.database.write { db in
+    return try self.database.write { db in
       try todoAlert.inserted(db)
     }
   }
