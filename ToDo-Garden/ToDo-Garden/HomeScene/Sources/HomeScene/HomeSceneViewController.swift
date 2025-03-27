@@ -13,6 +13,8 @@ import TDFoundationExtension
 import TDUtility
 import ToDoGardenUIComponent
 
+// swiftlint: disable file_length
+
 @MainActor
 protocol HomeSceneDisplayLogic: AnyObject {
   func displayFetchedToDoList(fetchedData: [String: [HomeScene.TodoListGroup]])
@@ -165,12 +167,14 @@ extension HomeSceneViewController {
 // MARK: - Request to interactor
 extension HomeSceneViewController {
   private func fetchToDoList() {
+    guard let interactor = self.interactor else { return }
+    
     let targetMonth = self.calendarView.getCurrentMonth().toYYYYMMDDStringFromYYYYMM()
     self.hideToDoList()
     self.loadingIndicator.isHidden = false
     self.loadingIndicator.startAnimation()
     Task {
-      await self.interactor?.fetchToDoList(request: HomeScene.FetchToDoList.Request(dateString: targetMonth))
+      await interactor.fetchToDoList(request: HomeScene.FetchToDoList.Request(dateString: targetMonth))
     }
   }
 }
@@ -401,3 +405,4 @@ extension HomeSceneViewController {
   return homeSceneViewController
 }
 #endif
+// swiftlint: enable file_length
