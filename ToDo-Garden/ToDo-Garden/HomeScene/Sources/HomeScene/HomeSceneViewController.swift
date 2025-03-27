@@ -196,7 +196,7 @@ extension HomeSceneViewController: HomeSceneDisplayLogic {
     guard var snapshot = self.todoListView?.getSnapShot(),
       let newToDoUUID = UUID(uuidString: newToDo.localId),
       let newToDoGroupUUID = UUID(uuidString: newToDo.groupId),
-      let section = snapshot.sectionIdentifiers.first(
+      var section = snapshot.sectionIdentifiers.first(
         where: { $0.id == newToDoGroupUUID }
       ) else { return }
  
@@ -211,20 +211,20 @@ extension HomeSceneViewController: HomeSceneDisplayLogic {
     )
     
     snapshot.appendItems([item], toSection: section)
-    section.toDoItems.append(item)
+    section.appendToDoItems(item)
     self.todoListView?.apply(snapshot)
   }
   
   func displayDeleteToDo(groupID: UUID, deletedToDo: ToDoListView.ToDoItem) {
     guard var snapshot = self.todoListView?.getSnapShot(),
-      let section = snapshot.sectionIdentifiers.first(
+      var section = snapshot.sectionIdentifiers.first(
         where: { $0.id == groupID }
       ) else { return }
 
-    if let deletedIndex = section.toDoItems.firstIndex(
+    if let deletedIndex = section.getToDoItems().firstIndex(
       where: { $0.id == deletedToDo.id }
     ) {
-      section.toDoItems.remove(at: deletedIndex)
+      section.removeToDoItems(at: deletedIndex)
     }
 
     snapshot.deleteItems([deletedToDo])
@@ -346,7 +346,7 @@ extension HomeSceneViewController {
     } else {
       snapshotForGuide.appendSections([groupForGuide])
       snapshotForGuide.sectionIdentifiers.forEach { section in
-        snapshotForGuide.appendItems(section.toDoItems, toSection: section)
+        snapshotForGuide.appendItems(section.getToDoItems(), toSection: section)
       }
     }
     self.todoListView?.apply(snapshotForGuide)

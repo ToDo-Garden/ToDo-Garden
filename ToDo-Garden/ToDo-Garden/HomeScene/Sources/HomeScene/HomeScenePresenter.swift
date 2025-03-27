@@ -74,7 +74,7 @@ extension HomeScenePresenter {
       
       sections.forEach { section in
         snapshot.appendSections([section])
-        snapshot.appendItems(section.toDoItems, toSection: section)
+        snapshot.appendItems(section.getToDoItems(), toSection: section)
       }
     }
     
