@@ -7,10 +7,11 @@
 //
 
 #if DEBUG
-import Foundation
+import UIKit
 
 import ToDoGardenUIComponent
 
+import SearchGardenSceneAPI
 import ShareGardenSceneAPI
 import ShareGardenSceneEntity
 
@@ -112,6 +113,12 @@ extension ShareGardenSceneWorkerStub {
     }
     
     return pomodoroRecords
+  }
+}
+
+class SearchGardenBuilderStub: @preconcurrency SearchGardenSceneBuildable {
+  @MainActor func build() -> any SearchGardenViewControllable {
+    return UIViewController() as! SearchGardenViewControllable
   }
 }
 #endif
