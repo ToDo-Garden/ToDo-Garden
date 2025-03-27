@@ -44,6 +44,11 @@ class MyStatsViewController: UIViewController, MyStatsViewControllable {
     self.setupMyStatsView()
     self.loadMyStatsViewData()
   }
+  
+  override func viewIsAppearing(_ animated: Bool) {
+    super.viewIsAppearing(animated)
+    self.navigationController?.isNavigationBarHidden = false
+  }
 }
 
 // MARK: - Confirm display logic protocol
