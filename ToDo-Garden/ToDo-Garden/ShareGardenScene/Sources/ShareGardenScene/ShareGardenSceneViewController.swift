@@ -161,6 +161,10 @@ extension ShareGardenSceneViewController: MyGardenViewDelegate {
     
     self.router?.routeToInstaShareClient(icon: UIImage.defaultProfileImage)
   }
+  
+  func myGardenProfileTapped() {
+    self.router?.routeToMyStatsScene()
+  }
 }
 
 // MARK: - Layout constraints
