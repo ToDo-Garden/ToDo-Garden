@@ -59,6 +59,14 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
     self.setupViews()
   }
   
+  open override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    Task {
+      await self.interactor?.writeJSONFile()
+      await self.interactor?.requestBatchUpdateToServer()
+    }
+  }
+  
   open override func viewIsAppearing(_ animated: Bool) {
     super.viewWillAppear(animated)
     self.navigationController?.navigationBar.isHidden = true
