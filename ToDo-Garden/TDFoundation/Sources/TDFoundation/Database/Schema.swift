@@ -49,7 +49,6 @@ extension DatabaseWriter {
         t.autoIncrementedPrimaryKey("id")
         t.column("alertTime", .double)
           .notNull()
-          .unique()
         t.column("isRepeating", .boolean)
           .defaults(to: true)
           .notNull()
@@ -64,9 +63,11 @@ public struct DailyToDoAlert: Equatable {
   public var isRepeating: Bool
   
   public init(
+    id: Int64? = nil,
     alertTime: Double,
-    isRepeating: Bool = true
+    isRepeating: Bool
   ) {
+    self.id = id
     self.alertTime = alertTime
     self.isRepeating = isRepeating
   }
