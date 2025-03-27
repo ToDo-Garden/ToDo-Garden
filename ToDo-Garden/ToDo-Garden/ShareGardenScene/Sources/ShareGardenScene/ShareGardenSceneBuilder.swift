@@ -9,16 +9,22 @@ import Foundation
 
 import ShareGardenSceneAPI
 
+import MyStatsSceneAPI
+import UIKit
+
 @MainActor
 public struct ShareGardenSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
   public struct Dependency {
     let shareGardenSceneWorker: ShareGardenSceneWorkable
+    let myStatsSceneBuilder: MyStatsSceneBuildable
     
     public init(
-      shareGardenSceneWorker: ShareGardenSceneWorkable
+      shareGardenSceneWorker: ShareGardenSceneWorkable,
+      myStatsSceneBuilder: MyStatsSceneBuildable
     ) {
       self.shareGardenSceneWorker = shareGardenSceneWorker
+      self.myStatsSceneBuilder = myStatsSceneBuilder
     }
   }
   
@@ -31,8 +37,19 @@ public struct ShareGardenSceneBuilder {
 
 extension ShareGardenSceneBuilder.Dependency {
 #if DEBUG
+  final class MyStatsViewControllerStub: UIViewController, MyStatsViewControllable { }
+  
+  struct MyStatsSceneBuilderStub: MyStatsSceneBuildable {
+    func build(with payload: any MyStatsScenePayloadable) -> any MyStatsViewControllable {
+      return MyStatsViewControllerStub()
+    }
+  }
+  
   @MainActor
-  public static let preview = Self(shareGardenSceneWorker: ShareGardenSceneWorkerStub())
+  public static let preview = Self(
+    shareGardenSceneWorker: ShareGardenSceneWorkerStub(),
+    myStatsSceneBuilder: MyStatsSceneBuilderStub()
+  )
 #endif
 }
 
@@ -53,7 +70,7 @@ extension ShareGardenSceneBuilder {
     let interactor = ShareGardenSceneInteractor(shareGardenSceneWorker: self.dependency.shareGardenSceneWorker)
     let viewController = ShareGardenSceneViewController(friendsGardenStore: interactor)
     let presenter = ShareGardenScenePresenter()
-    let router = ShareGardenSceneRouter()
+    let router = ShareGardenSceneRouter(myStatsSceneBuilder: self.dependency.myStatsSceneBuilder)
     viewController.interactor = interactor
     viewController.router = router
     interactor.presenter = presenter
