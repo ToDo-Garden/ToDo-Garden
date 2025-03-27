@@ -158,6 +158,7 @@ extension HomeSceneViewController {
 extension HomeSceneViewController {
   private func fetchToDoList() {
     let targetMonth = self.calendarView.getCurrentMonth().toYYYYMMDDStringFromYYYYMM()
+    self.hideToDoList()
     self.loadingIndicator.isHidden = false
     self.loadingIndicator.startAnimation()
     Task {
@@ -170,10 +171,9 @@ extension HomeSceneViewController {
 
 extension HomeSceneViewController: HomeSceneDisplayLogic {
   func displayFetchedToDoList(fetchedData: [String: [HomeScene.TodoListGroup]]) {
-    self.hideToDoList()
     Task {
       let date = self.calendarView.getSelectedDate() ?? Date.now
-      await self.interactor?.setMonthlyData(fetchedData) // 지금은 연동 안되어서 화면 이동하면 추가한 투두 안보임
+      await self.interactor?.setMonthlyData(fetchedData)
       await self.interactor?.loadDailyToDoList(targetDate: date.description)
     }
   }
@@ -229,7 +229,7 @@ extension HomeSceneViewController: HomeSceneDisplayLogic {
 
     snapshot.deleteItems([deletedToDo])
     self.todoListView?.apply(snapshot)
-    self.todoListView?.updateHeaderUIAfterDeleteTodo(section: section)
+    self.todoListView?.updateHeaderUIAfterUpdatingToDo(section: section)
   }
   
   func displayErrorToast(error: any Error) {
@@ -275,6 +275,7 @@ extension HomeSceneViewController: ToDoListViewCellUpdatingDelegate {
   }
 }
 
+// MARK: - Calendar Actions
 extension HomeSceneViewController: CalendarViewDateSelectionDelegate {
   public func didSelectDate(_ date: Date) {
     self.hideToDoList()
@@ -282,9 +283,46 @@ extension HomeSceneViewController: CalendarViewDateSelectionDelegate {
       await self.interactor?.loadDailyToDoList(targetDate: date.description)
     }
   }
-  
+
   public func didChangeMonth() {
-    self.fetchToDoList()
+    Task {
+      await self.interactor?.writeJSONFile()
+      await self.interactor?.requestBatchUpdateToServer()
+      self.fetchToDoList()
+    }
+  }
+}
+
+// MARK: - ToDoList Button Actions
+extension HomeSceneViewController: ToDoListButtonActionDelegate {
+  public func didEditButtonTapped(
+    group: ToDoListView.ToDoSection,
+    todo: ToDoListView.ToDoItem
+  ) {
+    self.router?.routeToEditToDoScene(toDoId: todo.id)
+  }
+  
+  public func didDeleteButtonTapped(
+    group: ToDoListView.ToDoSection,
+    todo: ToDoListView.ToDoItem
+  ) {
+    Task {
+      guard let selectedDate = self.calendarView.getSelectedDate() else { return }
+      
+      await self.interactor?.deleteToDo(group: group, todo: todo, date: selectedDate)
+    }
+  }
+  
+  public func didCreateToDoButtonTapped(group: ToDoListView.ToDoSection) {
+    Task {
+      guard let selectedDate = self.calendarView.getSelectedDate() else { return }
+  
+      await self.interactor?.createToDo(group: group, date: selectedDate)
+    }
+  }
+  
+  public func didTimerButtonTapped(group: ToDoListView.ToDoSection) {
+    self.router?.routeToTimerScene(groupId: group.id.uuidString, groupName: group.getGroupTitle())
   }
 }
 
@@ -345,39 +383,6 @@ extension HomeSceneViewController {
   
   public func getSwipedCell() -> UIView {
     return self.bottomSheet.contentView?.subviews.last ?? UIView()
-  }
-}
-// MARK: - ToDoList Button Actions
-
-extension HomeSceneViewController: ToDoListButtonActionDelegate {
-  public func didEditButtonTapped(
-    group: ToDoListView.ToDoSection,
-    todo: ToDoListView.ToDoItem
-  ) {
-    self.router?.routeToEditToDoScene(toDoId: todo.id)
-  }
-  
-  public func didDeleteButtonTapped(
-    group: ToDoListView.ToDoSection,
-    todo: ToDoListView.ToDoItem
-  ) {
-    Task {
-      guard let selectedDate = self.calendarView.getSelectedDate() else { return }
-      
-      await self.interactor?.deleteToDo(group: group, todo: todo, date: selectedDate)
-    }
-  }
-  
-  public func didCreateToDoButtonTapped(group: ToDoListView.ToDoSection) {
-    Task {
-      guard let selectedDate = self.calendarView.getSelectedDate() else { return }
-  
-      await self.interactor?.createToDo(group: group, date: selectedDate)
-    }
-  }
-  
-  public func didTimerButtonTapped(group: ToDoListView.ToDoSection) {
-    self.router?.routeToTimerScene(groupId: group.id.uuidString, groupName: group.getGroupTitle())
   }
 }
 

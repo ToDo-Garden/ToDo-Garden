@@ -82,16 +82,18 @@ extension HomeScenePresenter {
   }
 
   func generateSections(from group: HomeScene.TodoListGroup) -> [ToDoListView.ToDoSection] {
-    guard let id = UUID(uuidString: group.localId) else { return [] }
+    guard let groupID = UUID(uuidString: group.localId) else { return [] }
     
-    let toDoItems = group.todoList?.map { todo in
-      ToDoListView.ToDoItem(
-        toDoUIModel: .init(text: todo.name, foregroundColor: self.getColor(for: group.color), isSelected: todo.isDone, hasAlert: todo.isAlarmOn)
-      )
-    } ?? []
+    let toDoItems: [ToDoListView.ToDoItem] = group.todoList?.map { todo in
+      let todoID = UUID(uuidString: todo.localID)
+        return ToDoListView.ToDoItem(
+          id: todoID ?? UUID(),
+          toDoUIModel: .init(text: todo.name, foregroundColor: self.getColor(for: group.color), isSelected: todo.isDone, hasAlert: todo.isAlarmOn)
+        )
+    } ?? [] 
     
     let section = ToDoListView.ToDoSection(
-      id: id,
+      id: groupID,
       headerUIModel: .init(
         progressColor: self.getColor(for: group.color),
         progressRate: group.progressRate,

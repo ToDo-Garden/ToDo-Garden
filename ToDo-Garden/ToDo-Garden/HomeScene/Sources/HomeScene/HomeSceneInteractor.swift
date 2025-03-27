@@ -24,6 +24,8 @@ protocol HomeSceneBusinessLogic {
   func loadDailyToDoList(targetDate: String) async
   func updateText(text: String, indexPath: IndexPath, date: Date)
   func updateSelection(isSelected: Bool, indexPath: IndexPath, date: Date)
+  func writeJSONFile() async
+  func requestBatchUpdateToServer() async
 }
 
 @MainActor
@@ -32,10 +34,10 @@ final class HomeSceneInteractor: HomeSceneDataStore {
   private var homeSceneWorker: HomeSceneWorkable
   private var monthlyData: [String: [HomeScene.TodoListGroup]]
   // ⬆️ 서버에서 받아오는 1달짜리 데이터입니다. ex) key = "20250302"
-  private var itemsForBatch: [String: HomeScene.TodoBatchItem]
+  private var itemsForBatch: [String: HomeScene.TodoBatchItem] 
   // ⬆️ JSONStorage가 매번 fileWrite를 하기엔 부담스러워서 모아놨다가 적절한 순간에 fileWrite를 진행하기 위한 데이터입니다.
   // 즉, 서버에게 배치처리를 요청하기 위한 배치처리 과정이라고 볼 수 있습니다.
-  // ex) key = "20250302"
+  // ex) key = ToDo의 UUIDString
   
   init(homeSceneWorker: HomeSceneWorkable) {
     self.homeSceneWorker = homeSceneWorker
@@ -111,6 +113,8 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
     guard let targetGroup = self.monthlyData[targetDate]?[indexPath.section],
       let targetToDo = targetGroup.todoList?[indexPath.item] else { return }
     
+    if targetToDo.name == text { return } // 텍스트에 변경사항이 없으면 그냥 리턴
+    
     targetToDo.name = text
     if let batchItem = self.itemsForBatch[targetToDo.localID] {
       batchItem.setName(text)
@@ -125,11 +129,34 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
     }
   }
   
+  func writeJSONFile() async {
+    guard !self.itemsForBatch.values.isEmpty else { return }
+    
+    do {
+      let data = Array(self.itemsForBatch.values)
+      try await self.homeSceneWorker.writeJSONFile(data: data)
+      self.itemsForBatch.removeAll()
+    } catch let error {
+      self.handleErrors(error)
+    }
+  }
+  
+  func requestBatchUpdateToServer() async {
+    do {
+      try await self.homeSceneWorker.requestBatchUpdateToServer()
+      self.itemsForBatch.removeAll()
+    } catch let error {
+      print(error)
+      self.handleErrors(error)
+    }
+  }
+  
   func updateSelection(isSelected: Bool, indexPath: IndexPath, date: Date) {
     let targetDate = date.description.toYYYYMMDDStringFromISO8601Space()
     guard let targetGroup = self.monthlyData[targetDate]?[indexPath.section],
       let targetToDo = targetGroup.todoList?[indexPath.item] else { return }
     
+    if isSelected == targetToDo.isDone { return }
     targetToDo.isDone = isSelected
     if let batchItem = self.itemsForBatch[targetToDo.localID] {
       batchItem.setDone(isSelected)
@@ -154,7 +181,7 @@ extension HomeSceneInteractor {
     if self.itemsForBatch[deletedToDo.localId] == nil {
       self.itemsForBatch[deletedToDo.localId] = deletedToDo
     } else {
-      self.itemsForBatch[deletedToDo.localId] = nil
+      self.itemsForBatch[deletedToDo.localId]?.isDelete = true
     }
   }
   
