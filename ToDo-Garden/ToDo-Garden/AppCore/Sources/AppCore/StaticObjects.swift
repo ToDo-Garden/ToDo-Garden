@@ -13,6 +13,7 @@ import HomeSceneEntity
 import HTTPClient
 import ManageGroupScene
 import PostGroupScene
+import SearchGardenScene
 import ShareGardenScene
 import SignUpScene
 import TDFoundation
@@ -54,7 +55,10 @@ extension TimerStorageWorker {
 // MARK: SHARE GARDEN SCENE
 extension ShareGardenSceneBuilder.Dependency {
   public static let live = ShareGardenSceneBuilder.Dependency.init(
-    shareGardenSceneWorker: ShareGardenSceneWorker(httpClient: HTTPClient.live)
+    shareGardenSceneWorker: ShareGardenSceneWorker(httpClient: HTTPClient.live),
+    searchGardenSceneBuilder: SearchGardenSceneBuilder(
+      dependency: .init(searchGardenWorker: SearchGardenWorker(httpclient: HTTPClient.live))
+    )
   )
 }
 
