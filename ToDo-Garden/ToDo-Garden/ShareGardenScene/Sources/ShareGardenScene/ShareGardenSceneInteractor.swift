@@ -7,6 +7,8 @@
 
 import Foundation
 
+import ToDoGardenUIComponent
+
 import ShareGardenSceneAPI
 import ShareGardenSceneEntity
 
@@ -14,6 +16,7 @@ import ShareGardenSceneEntity
 protocol ShareGardenSceneDataStore {
   var nickname: String? { get set }
   var streakCount: Int? { get set }
+  var pomodoroRecords: PomodoroRecordCollection? { get set }
 }
 
 @MainActor
@@ -28,6 +31,7 @@ final class ShareGardenSceneInteractor: ShareGardenSceneDataStore {
   var presenter: ShareGardenScenePresentationLogic?
   var nickname: String?
   var streakCount: Int?
+  var pomodoroRecords: PomodoroRecordCollection?
   private let shareGardenSceneWorker: ShareGardenSceneWorkable
   private let friendsGardenDataStore: FriendsGardenDataStore
   
@@ -56,6 +60,7 @@ extension ShareGardenSceneInteractor: ShareGardenSceneBusinessLogic {
         let myGarden = try await self.shareGardenSceneWorker.requestMyGarden()
         self.nickname = myGarden.nickname
         self.streakCount = myGarden.streakCount
+        self.pomodoroRecords = myGarden.pomodoroRecords
         try Task.checkCancellation()
         let response = ShareGardenScene.RequestMyGarden.Response(myGarden: myGarden)
         self.presenter?.presentMyGarden(response: response)

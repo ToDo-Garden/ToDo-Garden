@@ -8,12 +8,16 @@
 import UIKit
 
 import TDFoundation
+import ToDoGardenUIComponent
 
 import ShareGardenSceneAPI
+
+import MyStatsSceneAPI
 
 @MainActor
 protocol ShareGardenSceneRoutingLogic {
   func routeToInstaShareClient(icon: UIImage)
+  func routeToMyStatsScene()
 }
 
 @MainActor
@@ -25,7 +29,10 @@ final class ShareGardenSceneRouter: ShareGardenSceneDataPassing {
   weak var viewController: ShareGardenSceneViewController?
   var dataStore: ShareGardenSceneDataStore?
   
-  init() {
+  private let myStatsSceneBuilder: MyStatsSceneBuildable
+  
+  init(myStatsSceneBuilder: MyStatsSceneBuildable) {
+    self.myStatsSceneBuilder = myStatsSceneBuilder
   }
 }
 
@@ -48,7 +55,21 @@ extension ShareGardenSceneRouter: ShareGardenSceneRoutingLogic {
       )
       alertController.addAction(UIAlertAction(title: "OK", style: .default))
       self.viewController?.present(alertController, animated: true)
-      
     }
+  }
+  
+  func routeToMyStatsScene() {
+    guard let myGarden = self.dataStore?.pomodoroRecords
+    else { return }
+    
+    let myGardenScenePayload = MyStatsScenePayload(myGarden: myGarden)
+    let myStatsScene = self.myStatsSceneBuilder.build(with: myGardenScenePayload)
+    self.viewController?.navigationController?.pushViewController(myStatsScene, animated: true)
+  }
+}
+
+extension ShareGardenSceneRouter {
+  struct MyStatsScenePayload: MyStatsScenePayloadable {
+    let myGarden: PomodoroRecordCollection
   }
 }
