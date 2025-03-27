@@ -33,12 +33,19 @@ class DailyToDoAlertRow: UITableViewCell, HapticFeedbackable {
     fatalError("init(coder:) has not been implemented")
   }
   
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    timeLabel.text = "0:00"
+    action = nil
+  }
+  
   func configure(
     seconds: Double,
     isOn: Bool,
     action: ((Operation) -> Void)?
   ) {
-    self.timeLabel.text = "\(seconds)"
+    let minute = String(format: "%02d", Int(seconds.minute()))
+    self.timeLabel.text = "\(Int(seconds.hour)):" + minute
     self.toggleSwitch.isOn = isOn
     self.action = action
   }
