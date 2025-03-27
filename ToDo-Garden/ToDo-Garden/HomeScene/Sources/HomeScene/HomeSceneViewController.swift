@@ -75,6 +75,20 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
     self.bottomSheet.contentView = self.todoListView
   }
   
+  open func setLoadingIndicator() {
+    self.loadingIndicator.isHidden = true
+    self.loadingIndicator.pauseAnimation()
+    self.view.addSubview(self.loadingIndicator)
+    self.loadingIndicator.usingAutolayout()
+    
+    NSLayoutConstraint.activate(
+      [
+        self.loadingIndicator.centerXAnchor.constraint(equalTo: self.bottomSheet.centerXAnchor),
+        self.loadingIndicator.centerYAnchor.constraint(equalTo: self.bottomSheet.centerYAnchor, constant: -20)
+      ]
+    )
+  }
+  
   open func setUserInteractionDisable() {
     self.calendarView.isUserInteractionEnabled = false
     self.homeHeaderView.isUserInteractionEnabled = false
@@ -137,20 +151,6 @@ extension HomeSceneViewController {
     self.homeHeaderView.manageGroupButtonTapped = UIAction(handler: { [weak self] _ in
       self?.router?.routeToManageGroupScene()
     })
-  }
-  
-  private func setLoadingIndicator() {
-    self.loadingIndicator.isHidden = true
-    self.loadingIndicator.pauseAnimation()
-    self.view.addSubview(self.loadingIndicator)
-    self.loadingIndicator.usingAutolayout()
-    
-    NSLayoutConstraint.activate(
-      [
-        self.loadingIndicator.centerXAnchor.constraint(equalTo: self.bottomSheet.centerXAnchor),
-        self.loadingIndicator.centerYAnchor.constraint(equalTo: self.bottomSheet.centerYAnchor, constant: -20)
-      ]
-    )
   }
 }
 

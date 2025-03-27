@@ -66,6 +66,8 @@ public final class TutorialOnBoardingViewController: HomeSceneViewController {
     self.view.addSubview(self.bottomSheet)
     self.bottomSheet.isUserInteractionEnabled = false
   }
+  
+  override public func setLoadingIndicator() {}
 }
 
 extension TutorialOnBoardingViewController {
