@@ -14,6 +14,7 @@ import HTTPClient
 import ManageGroupScene
 import MyStatsScene
 import PostGroupScene
+import SearchGardenScene
 import ShareGardenScene
 import SignUpScene
 import TDFoundation
@@ -57,7 +58,11 @@ extension ShareGardenSceneBuilder.Dependency {
   public static let live = ShareGardenSceneBuilder.Dependency.init(
     shareGardenSceneWorker: ShareGardenSceneWorker(httpClient: HTTPClient.live),
     myStatsSceneBuilder: MyStatsSceneBuilder.init(
-      dependency: .init(myStatsWorker: MyStatsWorker(httpClient: HTTPClient.live))
+      dependency: 
+      .init(
+        searchGardenWorker: SearchGardenWorker(httpclient: HTTPClient.live),
+        myStatsWorker: MyStatsWorker(httpClient: HTTPClient.live)
+      )
     )
   )
 }

@@ -7,6 +7,7 @@
 
 import UIKit
 
+import SearchGardenSceneAPI
 import ShareGardenSceneAPI
 import ShareGardenSceneEntity
 import ToDoGardenUIComponent
@@ -131,6 +132,7 @@ extension ShareGardenSceneViewController {
     self.setupMyGardenViewRetryAction()
     self.setupFriendsGardenViewRetryAction()
     self.setupShareButtonAction()
+    self.setupFriendGardenViewSearchAction()
   }
 }
 
@@ -143,6 +145,12 @@ extension ShareGardenSceneViewController {
         self?.myGardenView.showMyGardenView()
         self?.interactor?.requestMyGarden()
       }
+    }
+  }
+  
+  private func setupFriendGardenViewSearchAction() {
+    self.friendsGardenView.searchButtonAction = UIAction { [weak self] _ in
+      self?.router?.routeToSearchGardenScene()
     }
   }
   
@@ -227,7 +235,7 @@ extension ShareGardenSceneViewController {
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  let shareGardenScene = ShareGardenSceneBuilder(dependency: .preview).build()
+  let shareGardenScene = ShareGardenSceneBuilder(dependency: .preview ).build()
   return shareGardenScene
 }
 #endif

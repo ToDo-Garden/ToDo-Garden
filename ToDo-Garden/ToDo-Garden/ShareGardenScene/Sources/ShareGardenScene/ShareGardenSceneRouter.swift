@@ -11,13 +11,16 @@ import TDFoundation
 import ToDoGardenUIComponent
 
 import ShareGardenSceneAPI
+import TDFoundation
 
 import MyStatsSceneAPI
+import SearchGardenSceneAPI
 
 @MainActor
 protocol ShareGardenSceneRoutingLogic {
   func routeToInstaShareClient(icon: UIImage)
   func routeToMyStatsScene()
+  func routeToSearchGardenScene()
 }
 
 @MainActor
@@ -28,10 +31,14 @@ protocol ShareGardenSceneDataPassing {
 final class ShareGardenSceneRouter: ShareGardenSceneDataPassing {
   weak var viewController: ShareGardenSceneViewController?
   var dataStore: ShareGardenSceneDataStore?
-  
+  let searchGardenViewController: SearchGardenViewControllable
   private let myStatsSceneBuilder: MyStatsSceneBuildable
   
-  init(myStatsSceneBuilder: MyStatsSceneBuildable) {
+  init(
+    searchGardenSceneBuilder: SearchGardenSceneBuildable,
+    myStatsSceneBuilder: MyStatsSceneBuildable
+  ) {
+    self.searchGardenViewController = searchGardenSceneBuilder.build()
     self.myStatsSceneBuilder = myStatsSceneBuilder
   }
 }
@@ -39,6 +46,10 @@ final class ShareGardenSceneRouter: ShareGardenSceneDataPassing {
 // MARK: - Routing
 
 extension ShareGardenSceneRouter: ShareGardenSceneRoutingLogic {
+  func routeToSearchGardenScene() {
+    self.viewController?.present(self.searchGardenViewController, animated: true)
+  }
+  
   func routeToInstaShareClient(icon: UIImage) {
     guard let nickname = self.dataStore?.nickname,
       let streakCount = self.dataStore?.streakCount

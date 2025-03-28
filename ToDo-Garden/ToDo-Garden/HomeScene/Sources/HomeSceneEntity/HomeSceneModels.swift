@@ -32,8 +32,11 @@ public enum HomeScene {
   public enum BatchUpdate {
     public struct TodoBatchRequest: Codable, Sendable {
       public let data: [TodoBatchItem]
+      
+      public init(data: [TodoBatchItem]) {
+        self.data = data
+      }
     }
-    
   }
 }
 

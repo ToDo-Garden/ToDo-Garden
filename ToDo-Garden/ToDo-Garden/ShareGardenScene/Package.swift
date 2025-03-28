@@ -29,7 +29,8 @@ let package = Package(
     Package.Dependency.package(path: "../ToDoGardenUI"),
     Package.Dependency.package(path: "../TDUtility"),
     Package.Dependency.package(path: "../TDFoundation"),
-    Package.Dependency.package(path: "../MyStatsScene")
+    Package.Dependency.package(path: "../MyStatsScene"),
+    Package.Dependency.package(path: "../SearchGardenScene")
   ],
   targets: [
     .target(
@@ -75,6 +76,10 @@ let package = Package(
         Target.Dependency.product(
           name: "MyStatsSceneAPI",
           package: "MyStatsScene"
+        ),
+        Target.Dependency.product(
+          name: "SearchGardenSceneAPI",
+          package: "SearchGardenScene"
         )
       ]
     ),

@@ -7,6 +7,7 @@
 
 import Foundation
 
+import SearchGardenSceneAPI
 import ShareGardenSceneAPI
 
 import MyStatsSceneAPI
@@ -17,14 +18,17 @@ public struct ShareGardenSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
   public struct Dependency {
     let shareGardenSceneWorker: ShareGardenSceneWorkable
+    let searchGardenSceneBuilder: SearchGardenSceneBuildable
     let myStatsSceneBuilder: MyStatsSceneBuildable
     
     public init(
       shareGardenSceneWorker: ShareGardenSceneWorkable,
+      searchGardenSceneBuilder: SearchGardenSceneBuildable,
       myStatsSceneBuilder: MyStatsSceneBuildable
     ) {
       self.shareGardenSceneWorker = shareGardenSceneWorker
       self.myStatsSceneBuilder = myStatsSceneBuilder
+      self.searchGardenSceneBuilder = searchGardenSceneBuilder
     }
   }
   
@@ -33,24 +37,6 @@ public struct ShareGardenSceneBuilder {
   public init(dependency: Dependency) {
     self.dependency = dependency
   }
-}
-
-extension ShareGardenSceneBuilder.Dependency {
-#if DEBUG
-  final class MyStatsViewControllerStub: UIViewController, MyStatsViewControllable { }
-  
-  struct MyStatsSceneBuilderStub: MyStatsSceneBuildable {
-    func build(with payload: any MyStatsScenePayloadable) -> any MyStatsViewControllable {
-      return MyStatsViewControllerStub()
-    }
-  }
-  
-  @MainActor
-  public static let preview = Self(
-    shareGardenSceneWorker: ShareGardenSceneWorkerStub(),
-    myStatsSceneBuilder: MyStatsSceneBuilderStub()
-  )
-#endif
 }
 
 extension ShareGardenSceneBuilder: ShareGardenSceneBuildable {
@@ -70,7 +56,10 @@ extension ShareGardenSceneBuilder {
     let interactor = ShareGardenSceneInteractor(shareGardenSceneWorker: self.dependency.shareGardenSceneWorker)
     let viewController = ShareGardenSceneViewController(friendsGardenStore: interactor)
     let presenter = ShareGardenScenePresenter()
-    let router = ShareGardenSceneRouter(myStatsSceneBuilder: self.dependency.myStatsSceneBuilder)
+    let router = ShareGardenSceneRouter(
+      myStatsSceneBuilder: self.dependency.myStatsSceneBuilder,
+      searchGardenSceneBuilder: self.dependency.searchGardenSceneBuilder
+    )
     viewController.interactor = interactor
     viewController.router = router
     interactor.presenter = presenter
@@ -81,3 +70,13 @@ extension ShareGardenSceneBuilder {
     return viewController
   }
 }
+
+// extension ShareGardenSceneBuilder.Dependency {
+// #if DEBUG
+//   @MainActor
+//   public static let preview = Self(
+//     shareGardenSceneWorker: ShareGardenSceneWorkerStub(),
+//     searchGardenSceneBuilder: SearchGardenBuilderStub()
+//   )
+// #endif
+// }

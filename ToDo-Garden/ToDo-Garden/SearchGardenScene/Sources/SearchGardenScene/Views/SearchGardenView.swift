@@ -25,6 +25,10 @@ final class SearchGardenView: UIVStackView {
     self.backgroundColor = UIColor.white
     self.setupSubViews()
   }
+  
+  func clear() {
+    self.tableView.clearItemsInMainSection()
+  }
 }
 
 extension SearchGardenView {
