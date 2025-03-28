@@ -76,6 +76,10 @@ public final class AddGardenView: UIView {
     
     self.gardenView.configure(with: pomodoroCollection)
   }
+  
+  public func clear() {
+    self.profileView.resetState()
+  }
 }
 
 extension AddGardenView {
