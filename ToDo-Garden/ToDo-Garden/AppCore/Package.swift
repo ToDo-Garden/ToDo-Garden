@@ -50,6 +50,10 @@ let package = Package(
     Package.Dependency.package(
       name: "MyStatsScene",
       path: "../MyStatsScene"
+    ),
+    Package.Dependency.package(
+      name: "SearchGardenScene",
+      path: "../SearchGardenScene"
     )
   ],
   targets: [
@@ -99,6 +103,10 @@ let package = Package(
         Target.Dependency.product(
           name: "MyStatsScene",
           package: "MyStatsScene"
+        ),
+        Target.Dependency.product(
+          name: "SearchGardenScene",
+          package: "SearchGardenScene"
         )
       ]
     ),

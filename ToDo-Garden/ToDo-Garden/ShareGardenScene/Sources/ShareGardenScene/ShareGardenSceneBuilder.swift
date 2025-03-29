@@ -57,8 +57,8 @@ extension ShareGardenSceneBuilder {
     let viewController = ShareGardenSceneViewController(friendsGardenStore: interactor)
     let presenter = ShareGardenScenePresenter()
     let router = ShareGardenSceneRouter(
-      myStatsSceneBuilder: self.dependency.myStatsSceneBuilder,
-      searchGardenSceneBuilder: self.dependency.searchGardenSceneBuilder
+      searchGardenSceneBuilder: self.dependency.searchGardenSceneBuilder,
+      myStatsSceneBuilder: self.dependency.myStatsSceneBuilder
     )
     viewController.interactor = interactor
     viewController.router = router
@@ -71,12 +71,30 @@ extension ShareGardenSceneBuilder {
   }
 }
 
-// extension ShareGardenSceneBuilder.Dependency {
-// #if DEBUG
-//   @MainActor
-//   public static let preview = Self(
-//     shareGardenSceneWorker: ShareGardenSceneWorkerStub(),
-//     searchGardenSceneBuilder: SearchGardenBuilderStub()
-//   )
-// #endif
-// }
+// swiftlint: disable all
+extension ShareGardenSceneBuilder.Dependency {
+#if DEBUG
+  @MainActor
+  public static let preview = Self(
+    shareGardenSceneWorker: ShareGardenSceneWorkerStub(),
+    searchGardenSceneBuilder: SearchGardenBuilderStub(),
+    myStatsSceneBuilder: MyStatsBuilderStub()
+  )
+  
+  class SearchGardenBuilderStub: @preconcurrency SearchGardenSceneBuildable {
+    @MainActor func build() -> any SearchGardenViewControllable {
+      return StubViewController()
+    }
+  }
+  
+  class MyStatsBuilderStub: MyStatsSceneBuildable {
+    func build(with payload: any MyStatsSceneAPI.MyStatsScenePayloadable) -> any MyStatsSceneAPI.MyStatsViewControllable {
+      return StubViewController()
+    }
+  }
+  
+  class StubViewController: UIViewController, SearchGardenViewControllable, MyStatsViewControllable {
+  }
+#endif
+}
+// swiftlint: enable all

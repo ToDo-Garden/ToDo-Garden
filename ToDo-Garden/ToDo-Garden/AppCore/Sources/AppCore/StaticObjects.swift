@@ -55,14 +55,15 @@ extension TimerStorageWorker {
 
 // MARK: SHARE GARDEN SCENE
 extension ShareGardenSceneBuilder.Dependency {
+  @MainActor
   public static let live = ShareGardenSceneBuilder.Dependency.init(
     shareGardenSceneWorker: ShareGardenSceneWorker(httpClient: HTTPClient.live),
+    searchGardenSceneBuilder: SearchGardenSceneBuilder(
+      dependency: .init(
+        searchGardenWorker: SearchGardenWorker.init(httpclient: HTTPClient.live))
+    ),
     myStatsSceneBuilder: MyStatsSceneBuilder.init(
-      dependency: 
-      .init(
-        searchGardenWorker: SearchGardenWorker(httpclient: HTTPClient.live),
-        myStatsWorker: MyStatsWorker(httpClient: HTTPClient.live)
-      )
+      dependency: .init(myStatsWorker: MyStatsWorker(httpClient: HTTPClient.live))
     )
   )
 }

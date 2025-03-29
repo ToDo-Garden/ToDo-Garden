@@ -10,11 +10,9 @@ import UIKit
 import TDFoundation
 import ToDoGardenUIComponent
 
-import ShareGardenSceneAPI
-import TDFoundation
-
 import MyStatsSceneAPI
 import SearchGardenSceneAPI
+import ShareGardenSceneAPI
 
 @MainActor
 protocol ShareGardenSceneRoutingLogic {
