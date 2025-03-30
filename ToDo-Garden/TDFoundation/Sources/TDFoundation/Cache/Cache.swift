@@ -110,7 +110,7 @@ public final actor Cache<Request: Requestable>: Sendable {
   private func initialTask(_ id: Request.ID) -> Task<Void, Never> {
     Task {
       do {
-        let response = try await self.request.execute(id: id)
+        let response = try await self.request.execute(id: id, isDownsample: false)
         try Task.checkCancellation()
         let key = id.description
         let continuations = self.storage.continuations(forKey: key)

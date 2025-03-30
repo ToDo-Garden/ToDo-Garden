@@ -234,7 +234,7 @@ extension SearchGardenViewController: SearchGardenDisplayLogic {
       guard let imageURL = user.userImageURL else { continue }
       Task {
         do {
-          let image = try await ImageClient.live.execute(id: imageURL)
+          let image = try await ImageClient.live.execute(id: imageURL, isDownsample: true)
           let updatedUser = user
           
           updatedUser.userImage = image
