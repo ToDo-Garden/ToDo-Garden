@@ -9,10 +9,13 @@ import ToDoGardenUIResource
 class DailyToDoAlertRow: UITableViewCell, HapticFeedbackable {
   private let timeLabel = UILabel()
   private let editImage = UIImageView(image: UIImage.forwardButtonImage)
+  private var leftStack: UIStackView!
   private let toggleSwitch = UISwitch()
   private let deleteImage = UIImageView(image: UIImage.btnDelete)
   
   private var leadingConstraint: NSLayoutConstraint!
+  private var toggleSwitchTrailing: NSLayoutConstraint!
+  private var deleteImageTrailing: NSLayoutConstraint!
   
   private var editImageTrailing: NSLayoutConstraint!
   private var chevronWidth: CGFloat = 16
@@ -49,19 +52,30 @@ class DailyToDoAlertRow: UITableViewCell, HapticFeedbackable {
     self.toggleSwitch.isOn = isOn
     self.action = action
   }
-
+  
   private func setup() {
+    self.setupContentView()
+    self.setupLeftStack()
+    self.setupToggleSwitch()
+    self.setupEditImage()
+  }
+  
+  private func setupContentView() {
+    self.backgroundColor = UIColor.toDoGardenWhite
     self.selectionStyle = .none
     self.contentView.layer.borderWidth = 1
     self.contentView.layer.borderColor = UIColor.toDoGardenGreenGray.cgColor
     self.contentView.layer.cornerRadius = 10
-        
-    self.setupLeftStack()
-    self.setupRightStack()
+    let gesture = UITapGestureRecognizer(target: self, action: #selector(self.tapped))
+    self.addGestureRecognizer(gesture)
+  }
+  
+  @objc func tapped() {
+    guard self.isEditing else { return }
+    self.action?(Operation.editAlertTime)
   }
   
   private func setupLeftStack() {
-    self.deleteImage.alpha = 0
     let gesture = UITapGestureRecognizer(target: self, action: #selector(self.deleteImageTapped))
     self.deleteImage.addGestureRecognizer(gesture)
     self.deleteImage.isUserInteractionEnabled = true
@@ -69,16 +83,16 @@ class DailyToDoAlertRow: UITableViewCell, HapticFeedbackable {
     self.timeLabel.font = UIFont.pretendardHeadBold
     self.timeLabel.textColor = UIColor.toDoGardenGreenDark
     
-    let stack = UIHStackView(
+    self.leftStack = UIHStackView(
       spacing: 10,
       arrangedSubviews: [self.deleteImage, self.timeLabel]
     )
-    self.contentView.addSubview(stack)
-    stack.usingAutolayout()
-    self.leadingConstraint = stack.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 17)
+    self.contentView.addSubview(leftStack)
+    self.leftStack.usingAutolayout()
+    self.leadingConstraint = leftStack.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 17)
     NSLayoutConstraint.activate([
       self.leadingConstraint,
-      stack.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
+      self.leftStack.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
       
       self.deleteImage.widthAnchor.constraint(equalToConstant: 21),
       self.deleteImage.heightAnchor.constraint(equalToConstant: 21)
@@ -91,45 +105,46 @@ class DailyToDoAlertRow: UITableViewCell, HapticFeedbackable {
     self.action?(Operation.delete)
   }
   
-  private func setupRightStack() {
+  private func setupToggleSwitch() {
     self.toggleSwitch.onTintColor = UIColor.toDoGardenGreenDark
     self.toggleSwitch.addAction(
-      .init { [weak self] _ in
+      UIAction { [weak self] _ in
         guard let self else { return }
         self.action?(Operation.editRepeating(self.toggleSwitch.isOn))
       },
       for: .valueChanged
     )
-    self.editImage.alpha = 0
-    self.editImage.isUserInteractionEnabled = true
-    let gesture = UITapGestureRecognizer(target: self, action: #selector(self.editImageTapped))
-    self.editImage.addGestureRecognizer(gesture)
-    
-    let stack = UIHStackView(arrangedSubviews: [self.toggleSwitch, self.editImage])
-    self.contentView.addSubview(stack)
-    stack.usingAutolayout()
+    self.toggleSwitch.usingAutolayout()
+    self.addSubview(toggleSwitch)
+    self.toggleSwitchTrailing = self.toggleSwitch.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -17)
     NSLayoutConstraint.activate([
-      stack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -13),
-      stack.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+      self.toggleSwitchTrailing,
+      self.toggleSwitch.centerYAnchor.constraint(equalTo: self.centerYAnchor)
     ])
   }
   
-  @objc func editImageTapped() {
-    self.action?(Operation.editAlertTime)
+  private func setupEditImage() {
+    self.editImage.isUserInteractionEnabled = true
+    self.editImage.usingAutolayout()
+    self.addSubview(editImage)
+    self.editImageTrailing = editImage.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 25)
+    NSLayoutConstraint.activate([
+      self.editImageTrailing,
+      self.editImage.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+    ])
   }
   
   override func setEditing(_ editing: Bool, animated: Bool) {
     super.setEditing(editing, animated: animated)
-    UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
-      self.leadingConstraint.constant = editing ? 9 : 17
-      self.deleteImage.isHidden = !editing
+    UIView.animate(withDuration: 0.3) {
+      self.leftStack.spacing = editing ? 10 : 17
       self.deleteImage.alpha = editing ? 1 : 0
+      self.leadingConstraint.constant = editing ? 9 : -25
       
       self.toggleSwitch.alpha = editing ? 0 : 1
-      self.toggleSwitch.isHidden = editing
-      
+      self.toggleSwitchTrailing.constant = editing ? 25 : -17
       self.editImage.alpha = editing ? 1 : 0
-      self.editImage.isHidden = !editing
+      self.editImageTrailing.constant = editing ? -17 : 25
       self.layoutIfNeeded()
     }
   }
