@@ -320,20 +320,26 @@ extension SettingViewController {
 
 extension SettingViewController: UICollectionViewDelegate {
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    if indexPath.section == 1 {
-      switch indexPath.item {
-      case 0:
-        self.router?.routeToNotice()
-      case 1:
-        self.router?.routeToPrivacyPolicy()
-      case 2:
-        self.router?.routeToTermsOfService()
-      case 3:
-        self.router?.routeToSendingFeedback()
-      default:
-        break
-      }
+    switch indexPath {
+    case IndexPath(row: 1, section: 0):
+      self.router?.routeToRemind()
+    default:
+      break
     }
+//    if indexPath.section == 1 {
+//      switch indexPath.item {
+//      case 0:
+//        self.router?.routeToNotice()
+//      case 1:
+//        self.router?.routeToPrivacyPolicy()
+//      case 2:
+//        self.router?.routeToTermsOfService()
+//      case 3:
+//        self.router?.routeToSendingFeedback()
+//      default:
+//        break
+//      }
+//    }
   }
 }
 

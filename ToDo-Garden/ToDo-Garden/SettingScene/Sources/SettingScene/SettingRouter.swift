@@ -13,6 +13,7 @@ import ToDoGardenUIConstant
 
 protocol SettingRoutingLogic {
   func routeToNotice()
+  func routeToRemind()
   func routeToTermsOfService()
   func routeToPrivacyPolicy()
   func routeToSendingFeedback()
@@ -40,6 +41,12 @@ extension SettingRouter: SettingRoutingLogic {
     )
     
     self.viewController?.navigationController?.pushViewController(self.termsTextView, animated: true)
+  }
+  
+  func routeToRemind() {
+    let alertViewController = DailyToDoAlertViewController()
+    self.viewController?.navigationController?
+      .pushViewController(alertViewController, animated: true)
   }
   
   func routeToTermsOfService() {
