@@ -52,6 +52,11 @@ final public class ShareGardenSceneViewController: UIViewController, ShareGarden
     self.setup()
     self.updateViewContents()
   }
+  
+  public override func viewIsAppearing(_ animated: Bool) {
+    super.viewIsAppearing(animated)
+    self.setupViewAppearance()
+  }
  
   public override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
@@ -110,6 +115,7 @@ extension ShareGardenSceneViewController {
   
   private func setupViewAppearance() {
     self.view.backgroundColor = UIColor.white
+    self.navigationController?.isNavigationBarHidden = true
   }
   
   private func addSubviews() {
@@ -168,6 +174,10 @@ extension ShareGardenSceneViewController: MyGardenViewDelegate {
     }
     
     self.router?.routeToInstaShareClient(icon: UIImage.defaultProfileImage)
+  }
+  
+  func myGardenProfileTapped() {
+    self.router?.routeToMyStatsScene()
   }
 }
 

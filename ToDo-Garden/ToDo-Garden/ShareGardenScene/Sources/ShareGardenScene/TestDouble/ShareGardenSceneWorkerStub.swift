@@ -115,12 +115,6 @@ extension ShareGardenSceneWorkerStub {
     return pomodoroRecords
   }
 }
-
-class SearchGardenBuilderStub: @preconcurrency SearchGardenSceneBuildable {
-  @MainActor func build() -> any SearchGardenViewControllable {
-    return UIViewController() as! SearchGardenViewControllable
-  }
-}
 #endif
 
 // swiftlint:enable all
