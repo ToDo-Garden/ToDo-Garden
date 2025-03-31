@@ -9,7 +9,7 @@ import ToDoGardenUIResource
 import SharingGRDB
 
 // swiftlint:disable force_try identifier_name function_body_length
-public final class DailyToDoAlertViewController: UIViewController {
+final class DailyToDoAlertViewController: UIViewController {
   private let noticeLabel = UILabel()
   private let tableView = UITableView()
   private var addTimerButton: UIView!
@@ -17,7 +17,7 @@ public final class DailyToDoAlertViewController: UIViewController {
   
   private var dataSource: UITableViewDiffableDataSource<Int, RowModel>!
   private var scrollID: DailyToDoAlert.ID?
-
+  
   private var tableViewHeightViewTask: Task<Void, Never>?
   private var dailyToDoAlertsTask: Task<Void, Never>?
   
@@ -31,14 +31,24 @@ public final class DailyToDoAlertViewController: UIViewController {
     }
   }
   @SharedReader(.fetch(DailyToDoAlerts())) private var dailyToDoAlerts: [DailyToDoAlert]
-    
-  public override func viewDidLoad() {
+  
+  override func viewDidLoad() {
     super.viewDidLoad()
     self.setup()
     self.prepare()
   }
   
-  public override func viewDidLayoutSubviews() {
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    self.navigationController?.navigationBar.isHidden = false
+  }
+  
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    self.navigationController?.navigationBar.isHidden = true
+  }
+  
+  override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
     self.configureTableViewHeight()
   }
@@ -48,13 +58,14 @@ public final class DailyToDoAlertViewController: UIViewController {
     self.dailyToDoAlertsTask?.cancel()
   }
   
-  public override func setEditing(_ editing: Bool, animated: Bool) {
+  override func setEditing(_ editing: Bool, animated: Bool) {
     super.setEditing(editing, animated: animated)
     self.navigationItem.rightBarButtonItem?.title = editing ? "완료" : "편집"
     self.tableView.setEditing(editing, animated: animated)
   }
   
   private func setup() {
+    self.view.backgroundColor = UIColor.toDoGardenWhite
     self.setupNavigationItem()
     self.setupNoticeLabel()
     self.setupTableView()
@@ -69,14 +80,18 @@ public final class DailyToDoAlertViewController: UIViewController {
       image: UIImage.backwardButtonImage,
       primaryAction: leftAction
     )
+    self.navigationItem.leftBarButtonItem?.tintColor = UIColor.toDoGardenGreenDark
     self.navigationItem.title = "데일리 ToDo 알림"
     let rightAction = UIAction { [weak self] _ in
-      self?.isEditing.toggle()
+      var copy = self?.isEditing ?? true
+      copy.toggle()
+      self?.setEditing(copy, animated: true)
     }
     self.navigationItem.rightBarButtonItem = UIBarButtonItem(
       title: "편집",
       primaryAction: rightAction
     )
+    self.navigationItem.rightBarButtonItem?.tintColor = UIColor.toDoGardenGreenDark
   }
   
   private func setupNoticeLabel() {
@@ -94,9 +109,9 @@ public final class DailyToDoAlertViewController: UIViewController {
   
   private func setupTableView() {
     self.tableView.delegate = self
+    self.tableView.backgroundColor = UIColor.toDoGardenWhite
     self.tableView.showsVerticalScrollIndicator = false
     self.tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
-    self.tableView.sectionHeaderTopPadding = 0
     self.tableView.register(type: DailyToDoAlertRow.self)
     self.tableView.usingAutolayout()
     self.view.addSubview(self.tableView)
@@ -115,7 +130,7 @@ public final class DailyToDoAlertViewController: UIViewController {
     
     self.tableViewHeightConstraint = self.tableView.heightAnchor.constraint(equalToConstant: 0)
     NSLayoutConstraint.activate([
-      self.tableView.topAnchor.constraint(equalTo: self.noticeLabel.bottomAnchor, constant: 30),
+      self.tableView.topAnchor.constraint(equalTo: self.noticeLabel.bottomAnchor, constant: 20),
       self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 28),
       self.tableView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
       self.tableViewHeightConstraint
@@ -139,12 +154,12 @@ public final class DailyToDoAlertViewController: UIViewController {
   private func setupAddTimerButton() {
     let button = UnderlineButton(text: "시간 추가하기") { [weak self] in
       self?.presentSettingTimeView(alertTime: Date().asDouble()) {
-        let item = try? self?.addDailyTodo($0)
-        self?.scrollID = item?.id
+        try? self?.addDailyTodo($0).id
       }
     }
     let controller = UIHostingController(rootView: button)
     controller.view.usingAutolayout()
+    controller.view.backgroundColor = UIColor.toDoGardenWhite
     self.addChild(controller)
     self.view.addSubview(controller.view)
     controller.didMove(toParent: self)
@@ -159,7 +174,7 @@ public final class DailyToDoAlertViewController: UIViewController {
   
   private func presentSettingTimeView(
     alertTime: Double,
-    action: @escaping (Double) -> Void
+    action: @escaping (Double) -> DailyToDoAlert.ID?
   ) {
     let button = ToDoGardenBoxButton(
       title: "완료",
@@ -176,7 +191,7 @@ public final class DailyToDoAlertViewController: UIViewController {
     button.addAction(
       UIAction { [weak self, weak timeView] _ in
         guard let self, let timeView else { return }
-        action(timeView.seconds)
+        self.scrollID = action(timeView.seconds)
         self.dismiss(animated: true)
       },
       for: UIControl.Event.touchUpInside
@@ -207,7 +222,10 @@ public final class DailyToDoAlertViewController: UIViewController {
           snapshot.appendSections([index])
           snapshot.appendItems([alert], toSection: index)
         }
-        await self.dataSource.apply(snapshot, animatingDifferences: true)
+        await self.dataSource.apply(
+          snapshot,
+          animatingDifferences: true
+        )
         if let indexPath {
           self.tableView.scrollToRow(
             at: indexPath,
@@ -277,17 +295,17 @@ private extension DailyToDoAlertViewController {
 
 // MARK: - DailyToDoAlertViewController + UITableViewDelegate
 extension DailyToDoAlertViewController: UITableViewDelegate {
-  public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+  func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
     return 12
   }
   
-  public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+  func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
     let view = UIView()
     view.backgroundColor = UIColor.clear
     return view
   }
   
-  public func tableView(
+  func tableView(
     _ tableView: UITableView,
     heightForHeaderInSection section: Int
   ) -> CGFloat {
@@ -295,18 +313,18 @@ extension DailyToDoAlertViewController: UITableViewDelegate {
     return 0.001
   }
   
-  public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return 58
   }
   
-  public func tableView(
+  func tableView(
     _ tableView: UITableView,
     editingStyleForRowAt indexPath: IndexPath
   ) -> UITableViewCell.EditingStyle {
     return UITableViewCell.EditingStyle.none
   }
   
-  public func tableView(
+  func tableView(
     _ tableView: UITableView,
     shouldIndentWhileEditingRowAt indexPath: IndexPath
   ) -> Bool {
@@ -326,6 +344,7 @@ private extension DailyToDoAlertViewController {
           var copy = model
           copy.alertTime = $0
           try? self?.updateDailyTodo(todoAlert: copy)
+          return copy.id
         }
         
       case .editRepeating(let value):
@@ -363,6 +382,12 @@ private extension DailyToDoAlertViewController {
   PretendardFont.register()
   prepareDependencies {
     $0.defaultDatabase = try! appDatabase()
+    _ = try! $0.defaultDatabase.write { db in
+      for value in 1...5 {
+        _ = try! DailyToDoAlert(id: nil, alertTime: Double(value * 60), isRepeating: true)
+          .inserted(db)
+      }
+    }
   }
   
   return UINavigationController(
