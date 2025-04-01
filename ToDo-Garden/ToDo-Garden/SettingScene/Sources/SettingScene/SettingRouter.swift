@@ -32,9 +32,11 @@ class SettingRouter: SettingDataPassing {
   let enterGuideSceneViewController: EnterGuideSceneViewController = EnterGuideSceneViewController()
 
   private let userInfoSceneBuilder: UserInfoSceneSceneBuildable
+  private let userInfoScene: UserInfoSceneViewControllable
 
   public init(userInfoSceneBuilder: UserInfoSceneSceneBuildable) {
     self.userInfoSceneBuilder = userInfoSceneBuilder
+    self.userInfoScene = self.userInfoSceneBuilder.build()
   }
 }
 
@@ -79,7 +81,6 @@ extension SettingRouter: SettingRoutingLogic {
   }
   
   func routeToUserInfoScene() {
-    let userInfoScene = self.userInfoSceneBuilder.build()
-    self.viewController?.navigationController?.pushViewController(userInfoScene, animated: true)
+    self.viewController?.navigationController?.pushViewController(self.userInfoScene, animated: true)
   }
 }
