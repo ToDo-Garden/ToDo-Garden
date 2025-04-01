@@ -211,7 +211,7 @@ extension HomeSceneViewController: HomeSceneDisplayLogic {
     guard var snapshot = self.todoListView?.getSnapShot(),
       let newToDoUUID = UUID(uuidString: newToDo.localId),
       let newToDoGroupUUID = UUID(uuidString: newToDo.groupId),
-      var section = snapshot.sectionIdentifiers.first(
+      let section = snapshot.sectionIdentifiers.first(
         where: { $0.id == newToDoGroupUUID }
       ) else { return }
  
@@ -232,7 +232,7 @@ extension HomeSceneViewController: HomeSceneDisplayLogic {
   
   func displayDeleteToDo(groupID: UUID, deletedToDo: ToDoListView.ToDoItem) {
     guard var snapshot = self.todoListView?.getSnapShot(),
-      var section = snapshot.sectionIdentifiers.first(
+      let section = snapshot.sectionIdentifiers.first(
         where: { $0.id == groupID }
       ) else { return }
 

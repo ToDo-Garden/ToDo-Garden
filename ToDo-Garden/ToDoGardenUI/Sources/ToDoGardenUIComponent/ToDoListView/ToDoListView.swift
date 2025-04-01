@@ -67,7 +67,7 @@ public final class ToDoListView: UIView {
       at: IndexPath(item: 0, section: self.getSectionIndex(for: section))
     ) as? ToDoGroupSectionHeaderView else { return }
     
-    var updatedModel = section.headerUIModel
+    let updatedModel = section.headerUIModel
     updatedModel.updateProgressRate(newProgressRate)
     headerView.update(with: updatedModel)
   }
@@ -241,7 +241,7 @@ extension ToDoListView: ToDoGroupSectionHeaderViewDelegate {
       return
     }
 
-    var updatedModel = section.headerUIModel
+    let updatedModel = section.headerUIModel
     updatedModel.updateProgressRate(newProgressRate)
     headerView.update(with: updatedModel)
   }

@@ -8,7 +8,7 @@
 import UIKit
 
 extension ToDoListView {
-  public struct ToDoSection: Hashable, Sendable {
+  public final class ToDoSection: Hashable, @unchecked Sendable {
     public let id: UUID
     let headerUIModel: ToDoGroupUIModel
     private(set) var toDoItems: [ToDoItem]
@@ -35,15 +35,15 @@ extension ToDoListView {
       return self.toDoItems
     }
     
-    public mutating func updateToDoItems(_ newToDoItems: [ToDoItem]) {
+    public func updateToDoItems(_ newToDoItems: [ToDoItem]) {
       self.toDoItems = newToDoItems
     }
     
-    public mutating func appendToDoItems(_ newToDoItem: ToDoItem) {
+    public func appendToDoItems(_ newToDoItem: ToDoItem) {
       self.toDoItems.append(newToDoItem)
     }
     
-    public mutating func removeToDoItems(at index: Int) {
+    public func removeToDoItems(at index: Int) {
       self.toDoItems.remove(at: index)
     }
     
@@ -56,7 +56,7 @@ extension ToDoListView {
     }
   }
   
-  public struct ToDoItem: Hashable, Sendable {
+  public final class ToDoItem: Hashable, @unchecked Sendable {
     public let id: UUID
     public let toDoUIModel: ToDoUIModel
     
@@ -77,7 +77,7 @@ extension ToDoListView {
     }
   }
   
-  public struct ToDoGroupUIModel: Hashable, Sendable {
+  public final class ToDoGroupUIModel: Hashable, @unchecked Sendable {
     let progressColor: UIColor
     private(set) var progressRate: Double
     let groupTitle: String
@@ -92,7 +92,7 @@ extension ToDoListView {
       self.groupTitle = groupTitle
     }
     
-    public mutating func updateProgressRate(_ newRate: Double) {
+    public func updateProgressRate(_ newRate: Double) {
       self.progressRate = newRate
     }
     
