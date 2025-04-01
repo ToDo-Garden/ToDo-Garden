@@ -22,6 +22,8 @@ public final class AppCore {
     }
   }
   
+  private var notificationTask: Task<Void, any Error>?
+  
   public init(dependency: Dependency) {
     self.dependency = dependency
     self.destination = .none
@@ -47,10 +49,17 @@ public final class AppCore {
   private func switchToHome() {
     let builder = self.dependency.router.sceneBuilder.home
     self.destination = Destination.home(builder.build())
-    
-    // 앱의 생명주기를 같이하는 작업이기 때문에 관리할 필요없습니다.
-    Task {
-      for await _ in self.dependency.scheduledAlertClient.stream() {
+  }
+  
+  public func didBecomeActive() {
+    self.notificationTask?.cancel()
+    self.notificationTask = Task {
+      let manager = self.dependency.notificationManager
+      let isAuthorized = try await manager.fetchPermission()
+      if isAuthorized {
+        for await _ in self.dependency.scheduledAlertClient.stream() {
+          manager.pushDailyToDoReminder(count: 5)
+        }
       }
     }
   }

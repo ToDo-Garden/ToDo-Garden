@@ -45,7 +45,8 @@ extension AppCore {
           let refreshToken = try? manager.load(forKey: KeychainManager.KeychainKey.refreshToken)
           return accessToken != nil && refreshToken != nil
         },
-        scheduledAlertClient: ScheduledAlertClient.live
+        scheduledAlertClient: ScheduledAlertClient.live,
+        notificationManager: NotificationManager.shared
       )
     }()
     public let router: AppRouter
@@ -53,5 +54,6 @@ extension AppCore {
     public let httpClient: HTTPClient
     public let isLoggedIn: () -> Bool
     public let scheduledAlertClient: ScheduledAlertClient
+    public let notificationManager: NotificationManager
   }
 }

@@ -32,7 +32,7 @@ extension ScheduledAlertClient {
       let (stream, continuation) = AsyncStream<Void>.makeStream()
       let task = Task {
         while true {
-          try await Task.sleep(nanoseconds: 5 * NSEC_PER_SEC)
+          try await Task.sleep(nanoseconds: 60 * NSEC_PER_SEC)
           let key = Date().asDouble()
           if let isRepeating = alertSchedule[key], isRepeating {
             continuation.yield(())
