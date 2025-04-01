@@ -160,4 +160,8 @@ extension UIImage {
   public static let leftArrow = UIImage(
     resource: .leftArrow
   )
+  
+  public static let btnDelete = UIImage(
+    resource: .btnDelete
+  )
 }
