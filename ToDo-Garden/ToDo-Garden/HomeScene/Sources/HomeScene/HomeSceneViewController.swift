@@ -443,7 +443,6 @@ extension HomeSceneViewController: @preconcurrency TransitionHandlable {
     Task {
       await self.interactor?.writeBatchItemsToGRDB()
       await self.interactor?.requestBatchUpdateToServer()
-      print("백그라운드 이동시 요청할 작업 완료")
     }
   }
 }
