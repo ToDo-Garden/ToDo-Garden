@@ -414,40 +414,6 @@ extension HomeSceneViewController {
   }
 }
 
-// MARK: - ToDoList Button Actions
-
-extension HomeSceneViewController: ToDoListButtonActionDelegate {
-  public func didEditButtonTapped(
-    group: ToDoListView.ToDoSection,
-    todo: ToDoListView.ToDoItem
-  ) {
-    self.interactor?.prepareDataForEditTodoScene(todoId: todo.id)
-  }
-  
-  public func didDeleteButtonTapped(
-    group: ToDoListView.ToDoSection,
-    todo: ToDoListView.ToDoItem
-  ) {
-    Task {
-      guard let selectedDate = self.calendarView.getSelectedDate() else { return }
-      
-      await self.interactor?.deleteToDo(group: group, todo: todo, date: selectedDate)
-    }
-  }
-  
-  public func didCreateToDoButtonTapped(group: ToDoListView.ToDoSection) {
-    Task {
-      guard let selectedDate = self.calendarView.getSelectedDate() else { return }
-  
-      await self.interactor?.createToDo(group: group, date: selectedDate)
-    }
-  }
-  
-  public func didTimerButtonTapped(group: ToDoListView.ToDoSection) {
-    self.router?.routeToTimerScene(groupId: group.id.uuidString, groupName: group.getGroupTitle())
-  }
-}
-
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {

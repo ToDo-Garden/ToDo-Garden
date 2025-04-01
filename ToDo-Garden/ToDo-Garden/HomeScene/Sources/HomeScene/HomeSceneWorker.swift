@@ -44,7 +44,7 @@ public struct HomeSceneWorker: HomeSceneWorkable, Sendable {
     return fetchedToDoList
   }
   
-  public func writeJSONFile(data: [HomeScene.TodoBatchItem]) async throws {
+  public func writeJSONFile(data: [SharedEntity.TodoBatchItem]) async throws {
     var storedItems = (try? self.homeStorage.getItems()) ?? []
     
     for item in data {

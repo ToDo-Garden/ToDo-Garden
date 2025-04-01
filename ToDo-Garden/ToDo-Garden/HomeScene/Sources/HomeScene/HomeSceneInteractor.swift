@@ -35,9 +35,6 @@ protocol HomeSceneBusinessLogic {
 
 @MainActor
 final class HomeSceneInteractor: HomeSceneDataStore {
-  var toDo: SharedEntity.TodoBatchItem?
-  var groups: [SharedEntity.TodoListGroup]?
-
   var presenter: (any HomeScenePresentationLogic)?
   private var homeSceneWorker: HomeSceneWorkable
   private var monthlyData: [String: [SharedEntity.TodoListGroup]]
