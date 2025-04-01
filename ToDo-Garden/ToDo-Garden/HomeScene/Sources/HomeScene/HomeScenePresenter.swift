@@ -14,7 +14,7 @@ import ToDoGardenUIComponent
 @MainActor
 protocol HomeScenePresentationLogic {
   func presentFetchedToDoList(monthlyData: [HomeScene.FetchToDoList.Response])
-  func presentDailyToDoList(dailyData: [HomeScene.TodoListGroup])
+  func presentDailyToDoList(dailyData: [SharedEntity.TodoListGroup])
   func presentCreateToDo(newToDo: SharedEntity.TodoBatchItem)
   func presentDeleteToDo(groupID: UUID, deletedToDo: ToDoListView.ToDoItem)
   func presentErrorToast(error: Error)
@@ -33,7 +33,7 @@ extension HomeScenePresenter: HomeScenePresentationLogic {
     self.viewController?.displayFetchedToDoList(fetchedData: hashTable)
   }
   
-  func presentDailyToDoList(dailyData: [HomeScene.TodoListGroup]) {
+  func presentDailyToDoList(dailyData: [SharedEntity.TodoListGroup]) {
     let snapshot = self.makeNewSnapshotSections(dailyToDoList: dailyData)
     self.viewController?.displayDailyToDoList(snapshot: snapshot)
   }
@@ -53,9 +53,9 @@ extension HomeScenePresenter: HomeScenePresentationLogic {
 
 // swiftlint: disable all
 extension HomeScenePresenter {
-  private func makeHashTable(monthlyData: [HomeScene.FetchToDoList.Response]) -> [String: [HomeScene.TodoListGroup]] {
-    var hashTable: [String: [HomeScene.TodoListGroup]] = [:]
-    
+  private func makeHashTable(monthlyData: [HomeScene.FetchToDoList.Response]) -> [String: [SharedEntity.TodoListGroup]] {
+    var hashTable: [String: [SharedEntity.TodoListGroup]] = [:]
+
     for data in monthlyData {
       let date = data.date.toYYYYMMDDStringFromISO8601()
       if hashTable[date] == nil {
@@ -68,7 +68,7 @@ extension HomeScenePresenter {
     return hashTable
   }
   
-  private func makeNewSnapshotSections(dailyToDoList: [HomeScene.TodoListGroup]) -> ToDoListView.Snapshot {
+  private func makeNewSnapshotSections(dailyToDoList: [SharedEntity.TodoListGroup]) -> ToDoListView.Snapshot {
     var snapshot = ToDoListView.Snapshot()
     dailyToDoList.forEach { group in
       let sections = self.generateSections(from: group)
@@ -82,9 +82,9 @@ extension HomeScenePresenter {
     return snapshot
   }
 
-  func generateSections(from group: HomeScene.TodoListGroup) -> [ToDoListView.ToDoSection] {
+  func generateSections(from group: SharedEntity.TodoListGroup) -> [ToDoListView.ToDoSection] {
     guard let groupID = UUID(uuidString: group.localId) else { return [] }
-    
+
     let toDoItems: [ToDoListView.ToDoItem] = group.todoList?.map { todo in
       let todoID = UUID(uuidString: todo.localID)
         return ToDoListView.ToDoItem(

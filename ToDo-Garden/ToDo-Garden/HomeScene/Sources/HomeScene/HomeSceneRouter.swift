@@ -9,6 +9,7 @@ import Foundation
 
 import EditToDoSceneAPI
 import ManageGroupSceneAPI
+import SharedEntity
 import TimerSceneAPI
 
 protocol HomeSceneRoutingLogic {
@@ -49,7 +50,10 @@ extension HomeSceneRouter: HomeSceneRoutingLogic {
   }
   
   func routeToEditToDoScene(toDoId: UUID) {
-    let payload = EditToDoScenePayload(toDoId: toDoId)
+    guard let todo = self.dataStore?.toDo, let groups = self.dataStore?.groups
+    else { return }
+
+    let payload = EditToDoScenePayload(toDo: todo, groups: groups)
     let destinationViewController = self.editToDoSceneBuilder.build(with: payload)
     
     self.viewController?.navigationController?.pushViewController(destinationViewController, animated: true)
@@ -65,7 +69,8 @@ extension HomeSceneRouter: HomeSceneRoutingLogic {
 
 // MARK: - Declare Payload for scene
 struct EditToDoScenePayload: EditToDoScenePayloadable {
-  var toDoId: UUID
+  var toDo: SharedEntity.TodoBatchItem
+  var groups: [SharedEntity.TodoListGroup]
 }
 
 struct TimerScenePayload: TimerScenePayloadable {

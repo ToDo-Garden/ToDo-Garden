@@ -18,7 +18,7 @@ import ToDoGardenUIComponent
 
 @MainActor
 protocol HomeSceneDisplayLogic: AnyObject {
-  func displayFetchedToDoList(fetchedData: [String: [HomeScene.TodoListGroup]])
+  func displayFetchedToDoList(fetchedData: [String: [SharedEntity.TodoListGroup]])
   func displayDailyToDoList(snapshot: ToDoListView.Snapshot)
   func displayCreateToDo(newToDo: SharedEntity.TodoBatchItem)
   func displayDeleteToDo(groupID: UUID, deletedToDo: ToDoListView.ToDoItem)
@@ -183,7 +183,8 @@ extension HomeSceneViewController {
 // MARK: - Confirm display logic protocol
 
 extension HomeSceneViewController: HomeSceneDisplayLogic {
-  func displayFetchedToDoList(fetchedData: [String: [HomeScene.TodoListGroup]]) {
+  func displayFetchedToDoList(fetchedData: [String: [SharedEntity.TodoListGroup]]) {
+    self.hideToDoList()
     Task {
       let date = self.calendarView.getSelectedDate() ?? Date.now
       await self.interactor?.setMonthlyData(fetchedData)

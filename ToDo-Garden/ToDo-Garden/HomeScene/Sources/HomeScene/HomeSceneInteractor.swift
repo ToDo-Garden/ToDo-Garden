@@ -13,7 +13,10 @@ import HomeSceneEntity
 import SharedEntity
 import ToDoGardenUIComponent
 
+@MainActor
 protocol HomeSceneDataStore {
+  var toDo: SharedEntity.TodoBatchItem? { get set }
+  var groups: [SharedEntity.TodoListGroup]? { get set }
 }
 
 @MainActor
@@ -21,7 +24,7 @@ protocol HomeSceneBusinessLogic {
   func fetchToDoList(request: HomeScene.FetchToDoList.Request) async
   func createToDo(group: ToDoListView.ToDoSection, date: Date) async
   func deleteToDo(group: ToDoListView.ToDoSection, todo: ToDoListView.ToDoItem, date: Date) async
-  func setMonthlyData(_ monthlyData: [String: [HomeScene.TodoListGroup]]) async
+  func setMonthlyData(_ monthlyData: [String: [SharedEntity.TodoListGroup]]) async
   func loadDailyToDoList(targetDate: String) async
   func updateText(text: String, indexPath: IndexPath, date: Date)
   func updateSelection(isSelected: Bool, indexPath: IndexPath, date: Date)
@@ -31,9 +34,12 @@ protocol HomeSceneBusinessLogic {
 
 @MainActor
 final class HomeSceneInteractor: HomeSceneDataStore {
+  var toDo: SharedEntity.TodoBatchItem?
+  var groups: [SharedEntity.TodoListGroup]?
+
   var presenter: (any HomeScenePresentationLogic)?
   private var homeSceneWorker: HomeSceneWorkable
-  private var monthlyData: [String: [HomeScene.TodoListGroup]]
+  private var monthlyData: [String: [SharedEntity.TodoListGroup]]
   // ⬆️ 서버에서 받아오는 1달짜리 데이터입니다. ex) key = "20250302"
   private var itemsForBatch: [String: SharedEntity.TodoBatchItem]
   // ⬆️ JSONStorage가 매번 fileWrite를 하기엔 부담스러워서 모아놨다가 적절한 순간에 fileWrite를 진행하기 위한 데이터입니다.
@@ -61,7 +67,7 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
   
   func loadDailyToDoList(targetDate: String) async {
     let formattedDate = targetDate.toYYYYMMDDStringFromISO8601Space()
-    let dailyToDoList: [HomeScene.TodoListGroup] = self.monthlyData[formattedDate] ?? []
+    let dailyToDoList: [SharedEntity.TodoListGroup] = self.monthlyData[formattedDate] ?? []
     
     self.presenter?.presentDailyToDoList(dailyData: dailyToDoList)
   }
@@ -84,8 +90,8 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
   
   func deleteToDo(group:ToDoListView.ToDoSection, todo: ToDoListView.ToDoItem, date: Date) async {
     let dateString = date.description.toYYYYMMDDStringFromISO8601Space()
-    var deletedToDo: HomeScene.TodoListItem? = nil
-    
+    var deletedToDo: SharedEntity.TodoListItem? = nil
+
     if let targetGroupIndex = self.monthlyData[dateString]?.firstIndex(
       where: { UUID(uuidString: $0.localId) == group.id }
     ) {
@@ -105,7 +111,7 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
     self.presenter?.presentDeleteToDo(groupID: group.id, deletedToDo: todo)
   }
   
-  func setMonthlyData(_ monthlyData: [String: [HomeScene.TodoListGroup]]) async {
+  func setMonthlyData(_ monthlyData: [String: [SharedEntity.TodoListGroup]]) async {
     self.monthlyData = monthlyData
   }
   
@@ -204,7 +210,7 @@ extension HomeSceneInteractor {
     return newItem
   }
   
-    private func makeItemForDeleteToDo(group: ToDoListView.ToDoSection, todo: HomeScene.TodoListItem, date: Date) -> SharedEntity.TodoBatchItem {
+  private func makeItemForDeleteToDo(group: ToDoListView.ToDoSection, todo: SharedEntity.TodoListItem, date: Date) -> SharedEntity.TodoBatchItem {
     let groupID = group.id.uuidString
     let alarmTime = Double(todo.alarmTime ?? 0)
     
@@ -224,8 +230,8 @@ extension HomeSceneInteractor {
     return deletedItem
   }
   
-  private func makeToDoListItem(batchItem: SharedEntity.TodoBatchItem) -> HomeScene.TodoListItem {
-    let todoListItem = HomeScene.TodoListItem(
+  private func makeToDoListItem(batchItem: SharedEntity.TodoBatchItem) -> SharedEntity.TodoListItem {
+    let todoListItem = SharedEntity.TodoListItem(
       name: batchItem.name,
       endDay: nil,
       isDone: false,
