@@ -8,14 +8,24 @@
 import UIKit
 
 import HomeSceneEntity
+<<<<<<< HEAD
 import SharedEntity
+=======
+import TDFoundation
+>>>>>>> fc930727 (#907: 변경사항 반영)
 import ToDoGardenUIComponent
 
 @MainActor
 protocol HomeScenePresentationLogic {
+<<<<<<< HEAD
   func presentFetchedToDoList(monthlyData: [HomeScene.FetchToDoList.Response])
   func presentDailyToDoList(dailyData: [SharedEntity.TodoListGroup])
   func presentCreateToDo(newToDo: SharedEntity.TodoBatchItem)
+=======
+  func presentFetchedToDoList(monthlyData: [DailyToDoListData])
+  func presentDailyToDoList(dailyData: [TodoListGroup])
+  func presentCreateToDo(newToDo: TodoBatchItem)
+>>>>>>> fc930727 (#907: 변경사항 반영)
   func presentDeleteToDo(groupID: UUID, deletedToDo: ToDoListView.ToDoItem)
   func presentErrorToast(error: Error)
   func presentDataForEditToDoScene()
@@ -29,17 +39,25 @@ final class HomeScenePresenter {
 // MARK: - Request to ViewController
 
 extension HomeScenePresenter: HomeScenePresentationLogic {
-  func presentFetchedToDoList(monthlyData: [HomeScene.FetchToDoList.Response]) {
+  func presentFetchedToDoList(monthlyData: [DailyToDoListData]) {
     let hashTable = self.makeHashTable(monthlyData: monthlyData)
     self.viewController?.displayFetchedToDoList(fetchedData: hashTable)
   }
   
+<<<<<<< HEAD
   func presentDailyToDoList(dailyData: [SharedEntity.TodoListGroup]) {
+=======
+  func presentDailyToDoList(dailyData: [TodoListGroup]) {
+>>>>>>> fc930727 (#907: 변경사항 반영)
     let snapshot = self.makeNewSnapshotSections(dailyToDoList: dailyData)
     self.viewController?.displayDailyToDoList(snapshot: snapshot)
   }
   
+<<<<<<< HEAD
   func presentCreateToDo(newToDo: SharedEntity.TodoBatchItem) {
+=======
+  func presentCreateToDo(newToDo: TodoBatchItem) {
+>>>>>>> fc930727 (#907: 변경사항 반영)
     self.viewController?.displayCreateToDo(newToDo: newToDo)
   }
   
@@ -58,9 +76,15 @@ extension HomeScenePresenter: HomeScenePresentationLogic {
 
 // swiftlint: disable all
 extension HomeScenePresenter {
+<<<<<<< HEAD
   private func makeHashTable(monthlyData: [HomeScene.FetchToDoList.Response]) -> [String: [SharedEntity.TodoListGroup]] {
     var hashTable: [String: [SharedEntity.TodoListGroup]] = [:]
 
+=======
+  private func makeHashTable(monthlyData: [DailyToDoListData]) -> [String: [TodoListGroup]] {
+    var hashTable: [String: [TodoListGroup]] = [:]
+    
+>>>>>>> fc930727 (#907: 변경사항 반영)
     for data in monthlyData {
       let date = data.date.toYYYYMMDDStringFromISO8601()
       if hashTable[date] == nil {
@@ -73,7 +97,11 @@ extension HomeScenePresenter {
     return hashTable
   }
   
+<<<<<<< HEAD
   private func makeNewSnapshotSections(dailyToDoList: [SharedEntity.TodoListGroup]) -> ToDoListView.Snapshot {
+=======
+  private func makeNewSnapshotSections(dailyToDoList: [TodoListGroup]) -> ToDoListView.Snapshot {
+>>>>>>> fc930727 (#907: 변경사항 반영)
     var snapshot = ToDoListView.Snapshot()
     dailyToDoList.forEach { group in
       let sections = self.generateSections(from: group)
@@ -87,7 +115,11 @@ extension HomeScenePresenter {
     return snapshot
   }
 
+<<<<<<< HEAD
   func generateSections(from group: SharedEntity.TodoListGroup) -> [ToDoListView.ToDoSection] {
+=======
+  func generateSections(from group: TodoListGroup) -> [ToDoListView.ToDoSection] {
+>>>>>>> fc930727 (#907: 변경사항 반영)
     guard let groupID = UUID(uuidString: group.localId) else { return [] }
 
     let toDoItems: [ToDoListView.ToDoItem] = group.todoList?.map { todo in

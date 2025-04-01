@@ -7,7 +7,11 @@
 
 import Foundation
 
+<<<<<<< HEAD
 import SharedEntity
+=======
+import TDFoundation
+>>>>>>> fc930727 (#907: 변경사항 반영)
 
 // swiftlint:disable all
 public enum HomeScene {
@@ -19,6 +23,7 @@ public enum HomeScene {
         self.dateString = dateString
       }
     }
+<<<<<<< HEAD
     
     public struct Response: Codable, Sendable {
       public let date: String
@@ -29,6 +34,8 @@ public enum HomeScene {
         self.list = list
       }
     }
+=======
+>>>>>>> fc930727 (#907: 변경사항 반영)
   }
   
   public enum BatchUpdate {
@@ -41,6 +48,7 @@ public enum HomeScene {
     }
   }
 
+<<<<<<< HEAD
   public enum PrepareDataForEditToDoScene {
     public struct Request: Sendable {
       public let todoId: UUID
@@ -55,4 +63,6 @@ public enum HomeScene {
     }
   }
 }
+=======
+>>>>>>> fc930727 (#907: 변경사항 반영)
 // swiftlint:enable all

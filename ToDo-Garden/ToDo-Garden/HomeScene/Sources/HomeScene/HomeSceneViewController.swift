@@ -9,7 +9,11 @@ import UIKit
 
 import HomeSceneAPI
 import HomeSceneEntity
+<<<<<<< HEAD
 import SharedEntity
+=======
+import TDFoundation
+>>>>>>> fc930727 (#907: 변경사항 반영)
 import TDFoundationExtension
 import TDUtility
 import ToDoGardenUIComponent
@@ -18,9 +22,15 @@ import ToDoGardenUIComponent
 
 @MainActor
 protocol HomeSceneDisplayLogic: AnyObject {
+<<<<<<< HEAD
   func displayFetchedToDoList(fetchedData: [String: [SharedEntity.TodoListGroup]])
   func displayDailyToDoList(snapshot: ToDoListView.Snapshot)
   func displayCreateToDo(newToDo: SharedEntity.TodoBatchItem)
+=======
+  func displayFetchedToDoList(fetchedData: [String: [TodoListGroup]])
+  func displayDailyToDoList(snapshot: ToDoListView.Snapshot)
+  func displayCreateToDo(newToDo: TodoBatchItem)
+>>>>>>> fc930727 (#907: 변경사항 반영)
   func displayDeleteToDo(groupID: UUID, deletedToDo: ToDoListView.ToDoItem)
   func displayErrorToast(error: Error)
   func routeToEditToDoScene()
@@ -66,7 +76,7 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
   open override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
     Task {
-      await self.interactor?.writeJSONFile()
+      await self.interactor?.writeBatchItemsToGRDB()
       await self.interactor?.requestBatchUpdateToServer()
     }
   }
@@ -176,6 +186,7 @@ extension HomeSceneViewController {
     self.loadingIndicator.isHidden = false
     self.loadingIndicator.startAnimation()
     Task {
+      await interactor.requestBatchUpdateToServer()
       await interactor.fetchToDoList(request: HomeScene.FetchToDoList.Request(dateString: targetMonth))
     }
   }
@@ -184,8 +195,12 @@ extension HomeSceneViewController {
 // MARK: - Confirm display logic protocol
 
 extension HomeSceneViewController: HomeSceneDisplayLogic {
+<<<<<<< HEAD
   func displayFetchedToDoList(fetchedData: [String: [SharedEntity.TodoListGroup]]) {
     self.hideToDoList()
+=======
+  func displayFetchedToDoList(fetchedData: [String: [TodoListGroup]]) {
+>>>>>>> fc930727 (#907: 변경사항 반영)
     Task {
       let date = self.calendarView.getSelectedDate() ?? Date.now
       await self.interactor?.setMonthlyData(fetchedData)
@@ -207,7 +222,11 @@ extension HomeSceneViewController: HomeSceneDisplayLogic {
     )
   }
   
+<<<<<<< HEAD
   func displayCreateToDo(newToDo: SharedEntity.TodoBatchItem) {
+=======
+  func displayCreateToDo(newToDo: TodoBatchItem) {
+>>>>>>> fc930727 (#907: 변경사항 반영)
     guard var snapshot = self.todoListView?.getSnapShot(),
       let newToDoUUID = UUID(uuidString: newToDo.localId),
       let newToDoGroupUUID = UUID(uuidString: newToDo.groupId),
@@ -305,7 +324,7 @@ extension HomeSceneViewController: CalendarViewDateSelectionDelegate {
 
   public func didChangeMonth() {
     Task {
-      await self.interactor?.writeJSONFile()
+      await self.interactor?.writeBatchItemsToGRDB()
       await self.interactor?.requestBatchUpdateToServer()
       self.fetchToDoList()
     }
