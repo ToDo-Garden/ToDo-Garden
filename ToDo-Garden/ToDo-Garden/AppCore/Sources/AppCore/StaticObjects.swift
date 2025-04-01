@@ -53,6 +53,7 @@ extension TimerStorageWorker {
 
 // MARK: SHARE GARDEN SCENE
 extension ShareGardenSceneBuilder.Dependency {
+  @MainActor
   public static let live = ShareGardenSceneBuilder.Dependency.init(
     shareGardenSceneWorker: ShareGardenSceneWorker(httpClient: HTTPClient.live)
   )
@@ -60,6 +61,7 @@ extension ShareGardenSceneBuilder.Dependency {
 
 // MARK: MANAGE GROUP SCENE
 extension ManageGroupSceneBuilder.Dependency {
+  @MainActor
   static let live = ManageGroupSceneBuilder.Dependency.init(
     manageGroupWorker: ManageGroupWorker(httpClient: HTTPClient.live),
     postGroupSceneBuilder: PostGroupSceneBuilder.init(dependency: .live)
@@ -68,15 +70,18 @@ extension ManageGroupSceneBuilder.Dependency {
 
 // MARK: POST GROUP SCENE
 extension PostGroupSceneBuilder.Dependency {
+  @MainActor
   static let live = PostGroupSceneBuilder.Dependency.init(postGroupWorker: PostGroupWorker())
 }
 
 // MARK: EDIT TODO SCENE
 extension EditToDoSceneBuilder.Dependency {
+  @MainActor
   static let live = EditToDoSceneBuilder.Dependency.init(editToDoWorker: EditToDoWorker(httpClient: HTTPClient.live))
 }
 
 // MARK: SIGN UP SCENE
 extension SignUpSceneBuilder.Dependency {
+  @MainActor
   static let live = SignUpSceneBuilder.Dependency.init(signUpWorker: SignUpWorker(httpClient: HTTPClient.live))
 }
