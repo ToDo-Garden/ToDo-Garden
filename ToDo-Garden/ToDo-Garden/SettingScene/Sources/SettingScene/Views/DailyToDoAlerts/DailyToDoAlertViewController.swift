@@ -22,7 +22,7 @@ final class DailyToDoAlertViewController: UIViewController {
   private var dailyToDoAlertsTask: Task<Void, Never>?
   
   @Dependency(\.defaultDatabase) private var database
-
+  
   @SharedReader(.fetch(DailyToDoAlerts())) private var dailyToDoAlerts: [DailyToDoAlert]
   
   override func viewDidLoad() {
@@ -134,8 +134,10 @@ final class DailyToDoAlertViewController: UIViewController {
     let safeAreaFrame = self.view.safeAreaLayoutGuide.layoutFrame
     let maxAvailableHeight = safeAreaFrame.maxY - self.noticeLabel.frame.maxY - (self.addTimerButton.frame.height + 40)
     let tableHeightStream = self.tableView.heightStream(maxAvailableHeight: maxAvailableHeight)
-    self.tableViewHeightViewTask = Task {
+    self.tableViewHeightViewTask?.cancel()
+    self.tableViewHeightViewTask = Task { [weak self] in
       for await height in tableHeightStream {
+        guard let self else { return }
         self.tableViewHeightConstraint.constant = height
         UIView.animate(withDuration: 0.3) {
           self.view.layoutIfNeeded()
@@ -202,10 +204,11 @@ final class DailyToDoAlertViewController: UIViewController {
       .publisher
       .map { $0.map(\.rowModel) }
       .removeDuplicates()
-      .asyncStream
+      .values
     
-    self.dailyToDoAlertsTask = Task { @MainActor in
+    self.dailyToDoAlertsTask = Task { @MainActor [weak self] in
       for await models in dailyToDoAlertStream {
+        guard let self else { return }
         var snapshot = NSDiffableDataSourceSnapshot<Int, RowModel>()
         var indexPath: IndexPath?
         for (index, alert) in models.enumerated() {
