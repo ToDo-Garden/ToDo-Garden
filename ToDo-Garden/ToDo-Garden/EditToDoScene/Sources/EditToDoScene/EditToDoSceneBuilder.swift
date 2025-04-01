@@ -62,6 +62,7 @@ extension EditToDoSceneBuilder {
   ///   - viewController: 런타임 의존성을 설정할 ViewController 객체입니다.
   ///   - payload: 런타임에 전달할 의존성입니다.
   private func setPayload(for viewController: EditToDoViewController, with payload: EditToDoScenePayloadable) {
-    viewController.router?.dataStore?.toDoId = payload.toDoId
+    viewController.router?.dataStore?.toDo = payload.toDo
+    viewController.router?.dataStore?.groups = payload.groups
   }
 }

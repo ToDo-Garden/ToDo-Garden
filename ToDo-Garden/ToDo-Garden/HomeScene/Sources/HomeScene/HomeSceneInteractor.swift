@@ -30,6 +30,7 @@ protocol HomeSceneBusinessLogic {
   func updateSelection(isSelected: Bool, indexPath: IndexPath, date: Date)
   func writeJSONFile() async
   func requestBatchUpdateToServer() async
+  func prepareDataForEditTodoScene(todoId: UUID)
 }
 
 @MainActor
@@ -45,7 +46,12 @@ final class HomeSceneInteractor: HomeSceneDataStore {
   // ⬆️ JSONStorage가 매번 fileWrite를 하기엔 부담스러워서 모아놨다가 적절한 순간에 fileWrite를 진행하기 위한 데이터입니다.
   // 즉, 서버에게 배치처리를 요청하기 위한 배치처리 과정이라고 볼 수 있습니다.
   // ex) key = ToDo의 UUIDString
-  
+  // ex) key = "20250302"
+
+  var toDo: SharedEntity.TodoBatchItem?
+  var groups: [SharedEntity.TodoListGroup]?
+  // ⬆️ 투두 수정화면에서 필요한 데이터입니다.
+
   init(homeSceneWorker: HomeSceneWorkable) {
     self.homeSceneWorker = homeSceneWorker
     self.monthlyData = [:]
@@ -175,6 +181,16 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
         groupId: targetGroup.localId, isDelete: false
       )
     }
+  }
+
+  // EditToDoScene으로 넘겨주기 위한 데이터를 준비하는 작업입니다.
+  func prepareDataForEditTodoScene(todoId: UUID) {
+    let today = Date().description.toYYYYMMDDStringFromISO8601Space()
+    guard let groups = self.monthlyData[today]?.first
+    else { return }
+
+    self.toDo = itemsForBatch[todoId.uuidString]
+    self.presenter?.presentDataForEditToDoScene()
   }
 }
 

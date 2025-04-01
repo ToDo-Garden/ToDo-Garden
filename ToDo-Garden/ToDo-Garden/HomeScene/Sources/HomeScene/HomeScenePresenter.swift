@@ -18,6 +18,7 @@ protocol HomeScenePresentationLogic {
   func presentCreateToDo(newToDo: SharedEntity.TodoBatchItem)
   func presentDeleteToDo(groupID: UUID, deletedToDo: ToDoListView.ToDoItem)
   func presentErrorToast(error: Error)
+  func presentDataForEditToDoScene()
 }
 
 @MainActor
@@ -48,6 +49,10 @@ extension HomeScenePresenter: HomeScenePresentationLogic {
   
   func presentErrorToast(error: any Error) {
     self.viewController?.displayErrorToast(error: error)
+  }
+
+  func presentDataForEditToDoScene() {
+    self.viewController?.routeToEditToDoScene()
   }
 }
 

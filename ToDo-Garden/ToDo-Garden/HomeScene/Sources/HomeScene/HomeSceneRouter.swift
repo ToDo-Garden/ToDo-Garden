@@ -14,7 +14,7 @@ import TimerSceneAPI
 
 protocol HomeSceneRoutingLogic {
   @MainActor func routeToManageGroupScene()
-  @MainActor func routeToEditToDoScene(toDoId: UUID)
+  @MainActor func routeToEditToDoScene()
   @MainActor func routeToTimerScene(groupId: String, groupName: String)
 }
 
@@ -49,13 +49,11 @@ extension HomeSceneRouter: HomeSceneRoutingLogic {
     self.viewController?.navigationController?.pushViewController(destinationViewController, animated: true)
   }
   
-  func routeToEditToDoScene(toDoId: UUID) {
-    guard let todo = self.dataStore?.toDo, let groups = self.dataStore?.groups
+  func routeToEditToDoScene() {
+    guard let toDo = self.dataStore?.toDo, let groups = self.dataStore?.groups
     else { return }
-
-    let payload = EditToDoScenePayload(toDo: todo, groups: groups)
+    let payload = EditToDoScenePayload(toDo: toDo, groups: groups)
     let destinationViewController = self.editToDoSceneBuilder.build(with: payload)
-    
     self.viewController?.navigationController?.pushViewController(destinationViewController, animated: true)
   }
   

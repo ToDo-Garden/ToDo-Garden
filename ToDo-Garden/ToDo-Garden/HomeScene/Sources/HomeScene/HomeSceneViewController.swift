@@ -23,6 +23,7 @@ protocol HomeSceneDisplayLogic: AnyObject {
   func displayCreateToDo(newToDo: SharedEntity.TodoBatchItem)
   func displayDeleteToDo(groupID: UUID, deletedToDo: ToDoListView.ToDoItem)
   func displayErrorToast(error: Error)
+  func routeToEditToDoScene()
 }
 
 @MainActor
@@ -251,6 +252,10 @@ extension HomeSceneViewController: HomeSceneDisplayLogic {
     self.loadingIndicator.pauseAnimation()
     self.showToast(message: error.localizedDescription)
   }
+
+  func routeToEditToDoScene() {
+    self.router?.routeToEditToDoScene()
+  }
 }
 
 // MARK: - Animation
@@ -397,6 +402,40 @@ extension HomeSceneViewController {
   
   public func getSwipedCell() -> UIView {
     return self.bottomSheet.contentView?.subviews.last ?? UIView()
+  }
+}
+
+// MARK: - ToDoList Button Actions
+
+extension HomeSceneViewController: ToDoListButtonActionDelegate {
+  public func didEditButtonTapped(
+    group: ToDoListView.ToDoSection,
+    todo: ToDoListView.ToDoItem
+  ) {
+    self.interactor?.prepareDataForEditTodoScene(todoId: todo.id)
+  }
+  
+  public func didDeleteButtonTapped(
+    group: ToDoListView.ToDoSection,
+    todo: ToDoListView.ToDoItem
+  ) {
+    Task {
+      guard let selectedDate = self.calendarView.getSelectedDate() else { return }
+      
+      await self.interactor?.deleteToDo(group: group, todo: todo, date: selectedDate)
+    }
+  }
+  
+  public func didCreateToDoButtonTapped(group: ToDoListView.ToDoSection) {
+    Task {
+      guard let selectedDate = self.calendarView.getSelectedDate() else { return }
+  
+      await self.interactor?.createToDo(group: group, date: selectedDate)
+    }
+  }
+  
+  public func didTimerButtonTapped(group: ToDoListView.ToDoSection) {
+    self.router?.routeToTimerScene(groupId: group.id.uuidString, groupName: group.getGroupTitle())
   }
 }
 

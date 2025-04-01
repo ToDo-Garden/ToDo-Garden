@@ -7,8 +7,12 @@
 
 import Foundation
 
+import SharedEntity
+
 /// 런타임에 전달받을 의존성을 선언한 구조체입니다.
 public protocol EditToDoScenePayloadable {
+  var toDo: SharedEntity.TodoBatchItem { get set }
+  var groups: [SharedEntity.TodoListGroup] { get set }
 }
 
 @MainActor
