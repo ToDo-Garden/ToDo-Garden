@@ -85,11 +85,21 @@ final class HomeSceneInteractor: HomeSceneDataStore {
 // swiftlint: disable all
 extension HomeSceneInteractor: HomeSceneBusinessLogic {
   func fetchToDoList(request: HomeScene.FetchToDoList.Request) async {
-    do {
-      let fetchedToDoList = try await self.homeSceneWorker.fetchToDoList(dateString: request.dateString)
-      self.presenter?.presentFetchedToDoList(monthlyData: fetchedToDoList)
-    } catch let error {
-      self.handleErrors(error)
+    if self.checkNetworkConnection() {
+      do {
+        let fetchedToDoList = try await self.homeSceneWorker.fetchToDoList(dateString: request.dateString)
+        self.presenter?.presentFetchedToDoList(monthlyData: fetchedToDoList)
+      } catch let error {
+        self.handleErrors(error)
+      }
+    } else {
+      do {
+        let (newMonthlyData, response) = try await self.loadMonthlyToDoListFromGRDB(request: request)
+        self.monthlyData = newMonthlyData
+        self.presenter?.presentFetchedToDoList(monthlyData: response)
+      } catch let error {
+        self.handleErrors(error)
+      }
     }
   }
   
@@ -102,6 +112,17 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
 >>>>>>> fc930727 (#907: 변경사항 반영)
     
     self.presenter?.presentDailyToDoList(dailyData: dailyToDoList)
+  }
+  
+  func loadMonthlyToDoListFromGRDB(request: HomeScene.FetchToDoList.Request) async throws -> ([String: [TodoListGroup]], [DailyToDoListData])
+  {
+    let localMonthlyData = try await self.homeSceneWorker.loadMonthlyToDoListFromGRDB(dateString: request.dateString)
+    var newMonthlyData: [String: [TodoListGroup]] = [:]
+ 
+    for dailyData in localMonthlyData {
+      newMonthlyData[dailyData.date] = dailyData.list
+    }
+    return (newMonthlyData, localMonthlyData)
   }
   
   func createToDo(group: ToDoListView.ToDoSection, date: Date) async {
@@ -193,11 +214,19 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
   }
   
   func requestBatchUpdateToServer() async {
-    do {
-      try await self.homeSceneWorker.requestBatchUpdateToServer()
-      self.itemsForBatch.removeAll()
-    } catch let error {
-      self.handleErrors(error)
+    if self.checkNetworkConnection() {
+      do {
+        try await self.homeSceneWorker.requestBatchUpdateToServer()
+        self.itemsForBatch.removeAll()
+      } catch let error {
+        self.handleErrors(error)
+      }
+    } else {
+      do {
+        try await self.homeSceneWorker.syncronizeGRDBWithBatchItems()
+      } catch let error {
+        self.handleErrors(error)
+      }
     }
   }
   
