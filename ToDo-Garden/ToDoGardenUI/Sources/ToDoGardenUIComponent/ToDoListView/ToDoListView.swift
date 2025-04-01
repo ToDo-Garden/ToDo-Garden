@@ -51,26 +51,24 @@ public final class ToDoListView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
   
-  public func apply(_ snapshot: Snapshot) {
-    self.dataSource.apply(snapshot)
+  public func apply(_ snapshot: Snapshot, completion: (() -> Void)? = nil) {
+    self.dataSource.apply(snapshot, completion: completion)
   }
   
   public func getSnapShot() -> Snapshot {
     return self.dataSource.snapshot()
   }
   
-  public func updateHeaderUIAfterDeleteTodo(section: ToDoSection) {
+  public func updateHeaderUIAfterUpdatingToDo(section: ToDoSection) {
     let newProgressRate = self.calculateProgressRate(for: section)
     
     guard let headerView = self.contentView.supplementaryView(
       forElementKind: UICollectionView.elementKindSectionHeader,
       at: IndexPath(item: 0, section: self.getSectionIndex(for: section))
-    ) as? ToDoGroupSectionHeaderView else {
-      return
-    }
+    ) as? ToDoGroupSectionHeaderView else { return }
     
-    let updatedModel = section.headerUIModel
-    updatedModel.progressRate = newProgressRate
+    var updatedModel = section.headerUIModel
+    updatedModel.updateProgressRate(newProgressRate)
     headerView.update(with: updatedModel)
   }
 }
@@ -243,8 +241,8 @@ extension ToDoListView: ToDoGroupSectionHeaderViewDelegate {
       return
     }
 
-    let updatedModel = section.headerUIModel
-    updatedModel.progressRate = newProgressRate
+    var updatedModel = section.headerUIModel
+    updatedModel.updateProgressRate(newProgressRate)
     headerView.update(with: updatedModel)
   }
   

@@ -1,13 +1,6 @@
 import Foundation
 
-import HomeScene
 import HomeSceneAPI
-import HTTPClient
-import OnBoardingScene
-import SettingScene
-import ShareGardenScene
-import SignUpScene
-import SignUpSceneAPI
 import TDFoundation
 import UserInfoScene
 
@@ -44,57 +37,23 @@ public final class AppCore {
         await self.dependency.userDefaults.setHasShownFirstLaunchOnboarding(true)
       }
     } else {
-      Task {
-        let isLoggedIn: Bool
-        do {
-          _ = try KeychainManager.shared.load(forKey: KeychainManager.KeychainKey.accessToken)
-          _ = try KeychainManager.shared.load(forKey: KeychainManager.KeychainKey.refreshToken)
-          isLoggedIn = true
-        } catch {
-          isLoggedIn = false
-        }
-        
-        self.destination = isLoggedIn
-        ? Destination.home(dependency.router.sceneBuilder.home.build())
-        : Destination.login
+      if self.dependency.isLoggedIn() {
+        switchToHome()
+      } else {
+        self.destination = .login
       }
     }
   }
-}
-
-extension AppCore {
-  public struct Dependency {
-    @MainActor
-    public static let live: Dependency = {
-      let httpClient = HTTPClient.live
-      
-      return Dependency(
-        userDefaults: UserDefaultsClient.live,
-        router: AppRouter(
-          httpClient: httpClient,
-          sceneBuilder: AppRouter.SceneBuilder(
-            home: HomeSceneBuilder(dependency: .live),
-            signup: SignUpSceneBuilder(
-              dependency: SignUpSceneBuilder.Dependency(
-                signUpWorker: SignUpWorker(httpClient: httpClient)
-              )
-            ),
-            shareGarden: ShareGardenSceneBuilder(dependency: .live),
-            setting: SettingSceneBuilder(
-              dependency: SettingSceneBuilder.Dependency(
-                settingWorker: SettingWorker(httpClient: HTTPClient.live),
-                appServiceWorker: ApplicationServiceWorker(),
-                userInfoSceneBuilder: UserInfoSceneSceneBuilder.live
-              )
-            )
-          )
-        ),
-        httpClient: httpClient
-      )
-    }()
-    public let userDefaults: UserDefaultsClient
-    public let router: AppRouter
-    public let httpClient: HTTPClient
+  
+  private func switchToHome() {
+    let builder = self.dependency.router.sceneBuilder.home
+    self.destination = Destination.home(builder.build())
+    
+    // 앱의 생명주기를 같이하는 작업이기 때문에 관리할 필요없습니다.
+    Task {
+      for await _ in self.dependency.scheduledAlertClient.stream() {
+      }
+    }
   }
 }
 

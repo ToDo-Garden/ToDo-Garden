@@ -92,7 +92,7 @@ extension SettingViewController: SettingDisplayLogic {
 
     Task {
       do {
-        let image = try await ImageClient.live.execute(id: imageUrl)
+        let image = try await ImageClient.live.execute(id: imageUrl, isDownsample: true)
         self.profileRow.iconImage = image
       } catch {
         debugPrint("SettingScene: Image Download failed")
@@ -338,19 +338,19 @@ extension SettingViewController {
 
 extension SettingViewController: UICollectionViewDelegate {
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    if indexPath.section == 1 {
-      switch indexPath.item {
-      case 0:
-        self.router?.routeToNotice()
-      case 1:
-        self.router?.routeToPrivacyPolicy()
-      case 2:
-        self.router?.routeToTermsOfService()
-      case 3:
-        self.router?.routeToSendingFeedback()
-      default:
-        break
-      }
+    switch indexPath {
+    case IndexPath(row: 1, section: 0):
+      self.router?.routeToRemind()
+    case IndexPath(row: 0, section: 1):
+      self.router?.routeToNotice()
+    case IndexPath(row: 1, section: 1):
+      self.router?.routeToPrivacyPolicy()
+    case IndexPath(row: 2, section: 1):
+      self.router?.routeToTermsOfService()
+    case IndexPath(row: 3, section: 1):
+      self.router?.routeToSendingFeedback()
+    default:
+      break
     }
   }
 }

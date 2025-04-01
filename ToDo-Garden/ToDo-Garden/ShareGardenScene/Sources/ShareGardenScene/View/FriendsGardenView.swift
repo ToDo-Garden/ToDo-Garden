@@ -75,6 +75,14 @@ extension ShareGardenSceneViewController {
       }
     }
     
+    var searchButtonAction: UIAction? {
+      didSet {
+        guard let action = self.searchButtonAction else { return }
+        
+        self.searchGardenButton.addAction( action, for: UIControl.Event.touchUpInside)
+      }
+    }
+    
     init(friendsGardenStore: FriendsGardenStore) {
       self.friendsGardenListView = FriendsGardenListView(friendsGardenStore: friendsGardenStore)
       super.init(frame: CGRect.zero)

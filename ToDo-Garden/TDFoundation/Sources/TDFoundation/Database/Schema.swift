@@ -49,7 +49,6 @@ extension DatabaseWriter {
         t.autoIncrementedPrimaryKey("id")
         t.column("alertTime", .double)
           .notNull()
-          .unique()
         t.column("isRepeating", .boolean)
           .defaults(to: true)
           .notNull()
@@ -58,15 +57,17 @@ extension DatabaseWriter {
   }
 }
 
-public struct DailyToDoAlert: Equatable {
+public struct DailyToDoAlert: Identifiable {
   public var id: Int64?
   public var alertTime: Double
   public var isRepeating: Bool
   
   public init(
+    id: Int64? = nil,
     alertTime: Double,
-    isRepeating: Bool = true
+    isRepeating: Bool
   ) {
+    self.id = id
     self.alertTime = alertTime
     self.isRepeating = isRepeating
   }
@@ -81,4 +82,15 @@ extension DailyToDoAlert: FetchableRecord, MutablePersistableRecord {
 }
 
 extension DailyToDoAlert: Sendable, Hashable, Codable { }
+
+public struct DailyToDoAlerts: FetchKeyRequest {
+  public init() { }
+  
+  public func fetch(_ db: Database) throws -> [DailyToDoAlert] {
+    try DailyToDoAlert
+      .all()
+      .order(Column("alertTime"))
+      .fetchAll(db)
+  }
+}
 // swiftlint:enable force_try identifier_name

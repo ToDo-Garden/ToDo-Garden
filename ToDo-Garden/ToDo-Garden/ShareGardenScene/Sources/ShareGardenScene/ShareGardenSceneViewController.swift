@@ -7,6 +7,7 @@
 
 import UIKit
 
+import SearchGardenSceneAPI
 import ShareGardenSceneAPI
 import ShareGardenSceneEntity
 import ToDoGardenUIComponent
@@ -50,6 +51,11 @@ final public class ShareGardenSceneViewController: UIViewController, ShareGarden
     super.viewDidLoad()
     self.setup()
     self.updateViewContents()
+  }
+  
+  public override func viewIsAppearing(_ animated: Bool) {
+    super.viewIsAppearing(animated)
+    self.setupViewAppearance()
   }
  
   public override func viewDidDisappear(_ animated: Bool) {
@@ -109,6 +115,7 @@ extension ShareGardenSceneViewController {
   
   private func setupViewAppearance() {
     self.view.backgroundColor = UIColor.white
+    self.navigationController?.isNavigationBarHidden = true
   }
   
   private func addSubviews() {
@@ -125,6 +132,7 @@ extension ShareGardenSceneViewController {
     self.setupMyGardenViewRetryAction()
     self.setupFriendsGardenViewRetryAction()
     self.setupShareButtonAction()
+    self.setupFriendGardenViewSearchAction()
   }
 }
 
@@ -137,6 +145,12 @@ extension ShareGardenSceneViewController {
         self?.myGardenView.showMyGardenView()
         self?.interactor?.requestMyGarden()
       }
+    }
+  }
+  
+  private func setupFriendGardenViewSearchAction() {
+    self.friendsGardenView.searchButtonAction = UIAction { [weak self] _ in
+      self?.router?.routeToSearchGardenScene()
     }
   }
   
@@ -160,6 +174,10 @@ extension ShareGardenSceneViewController: MyGardenViewDelegate {
     }
     
     self.router?.routeToInstaShareClient(icon: UIImage.defaultProfileImage)
+  }
+  
+  func myGardenProfileTapped() {
+    self.router?.routeToMyStatsScene()
   }
 }
 
@@ -217,7 +235,7 @@ extension ShareGardenSceneViewController {
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  let shareGardenScene = ShareGardenSceneBuilder(dependency: .preview).build()
+  let shareGardenScene = ShareGardenSceneBuilder(dependency: .preview ).build()
   return shareGardenScene
 }
 #endif

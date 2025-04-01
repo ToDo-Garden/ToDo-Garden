@@ -35,7 +35,7 @@ extension URLConstants.ToDo {
   public static let editToDo = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/todos")!
   public static let deleteToDo = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/delete_todo")!
   public static let fetchToDoList = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/todo_list")!
-  public static let todoBatch = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/edit_todos")!
+  public static let todoBatch = URL(string: "https://dupsiwbkfitzegzlrwgv.supabase.co/rest/v1/rpc/edit_todos")!
 }
 
 extension URLConstants.Group {

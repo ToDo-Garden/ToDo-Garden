@@ -39,4 +39,14 @@ public extension Date {
     dateFormatter.formatOptions = [.withInternetDateTime]
     return dateFormatter.string(from: self)
   }
+  
+  func asDouble() -> Double {
+    let calendar = Calendar.autoupdatingCurrent
+    let components = calendar
+      .dateComponents([Calendar.Component.hour, Calendar.Component.minute], from: self)
+    let hour = components.hour ?? 0
+    let minute = components.minute ?? 0
+    let totalSeconds = hour * 3600 + minute * 60
+    return Double(totalSeconds)
+  }
 }

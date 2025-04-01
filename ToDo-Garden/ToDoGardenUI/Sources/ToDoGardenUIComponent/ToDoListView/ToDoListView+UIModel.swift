@@ -8,24 +8,10 @@
 import UIKit
 
 extension ToDoListView {
-  public final class ToDoSection: Hashable, @unchecked Sendable {
+  public struct ToDoSection: Hashable, Sendable {
     public let id: UUID
     let headerUIModel: ToDoGroupUIModel
-    private var _toDoItems: [ToDoItem]
-    private let lock = NSLock()
-    
-    public var toDoItems: [ToDoItem] {
-      get {
-        self.lock.lock()
-        defer { self.lock.unlock() }
-        return self._toDoItems
-      }
-      set {
-        self.lock.lock()
-        self._toDoItems = newValue
-        self.lock.unlock()
-      }
-    }
+    private(set) var toDoItems: [ToDoItem]
     
     public init(
       id: UUID = UUID(),
@@ -34,7 +20,7 @@ extension ToDoListView {
     ) {
       self.id = id
       self.headerUIModel = headerUIModel
-      self._toDoItems = toDoItems
+      self.toDoItems = toDoItems
     }
     
     public func getGroupTitle() -> String {
@@ -43,6 +29,22 @@ extension ToDoListView {
     
     public func getColor() -> UIColor {
       return self.headerUIModel.progressColor
+    }
+    
+    public func getToDoItems() -> [ToDoItem] {
+      return self.toDoItems
+    }
+    
+    public mutating func updateToDoItems(_ newToDoItems: [ToDoItem]) {
+      self.toDoItems = newToDoItems
+    }
+    
+    public mutating func appendToDoItems(_ newToDoItem: ToDoItem) {
+      self.toDoItems.append(newToDoItem)
+    }
+    
+    public mutating func removeToDoItems(at index: Int) {
+      self.toDoItems.remove(at: index)
     }
     
     public static func == (lhs: ToDoSection, rhs: ToDoSection) -> Bool {
@@ -54,7 +56,7 @@ extension ToDoListView {
     }
   }
   
-  public class ToDoItem: Hashable, @unchecked Sendable {
+  public struct ToDoItem: Hashable, Sendable {
     public let id: UUID
     public let toDoUIModel: ToDoUIModel
     
@@ -75,24 +77,10 @@ extension ToDoListView {
     }
   }
   
-  public final class ToDoGroupUIModel: Hashable, @unchecked Sendable {
+  public struct ToDoGroupUIModel: Hashable, Sendable {
     let progressColor: UIColor
-    private var _progressRate: Double
-    private let lock = NSLock()
+    private(set) var progressRate: Double
     let groupTitle: String
-    
-    public var progressRate: Double {
-      get {
-        self.lock.lock()
-        defer { self.lock.unlock() }
-        return self._progressRate
-      }
-      set {
-        self.lock.lock()
-        self._progressRate = newValue
-        self.lock.unlock()
-      }
-    }
     
     public init(
       progressColor: UIColor,
@@ -100,8 +88,12 @@ extension ToDoListView {
       groupTitle: String
     ) {
       self.progressColor = progressColor
-      self._progressRate = progressRate
+      self.progressRate = progressRate
       self.groupTitle = groupTitle
+    }
+    
+    public mutating func updateProgressRate(_ newRate: Double) {
+      self.progressRate = newRate
     }
     
     public static func == (lhs: ToDoGroupUIModel, rhs: ToDoGroupUIModel) -> Bool {

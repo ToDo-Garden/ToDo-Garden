@@ -11,12 +11,31 @@ extension Cache where Request == ImageClient {
 public struct ImageClient: Requestable {
   var request: @Sendable (URL) async throws -> Data
   
-  public func execute(id: URL) async throws -> UIImage {
-    let data = try await self.request(id)
-    guard let image = UIImage(data: data) else {
-      throw CocoaError(.coderInvalidValue)
-    }
-    return image
+  public func execute(id: URL, isDownsample: Bool = false) async throws -> UIImage {
+    let data = try await request(id)
+    
+    return isDownsample
+    ? downsample(imageData: data, for: CGSize(width: 72, height: 72), scale: 1.0)
+    : try UIImage(data: data) ?? { throw CocoaError(.coderInvalidValue) }()
+  }
+  
+  private func downsample(imageData: Data, for size: CGSize, scale: CGFloat) -> UIImage {
+    let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+    guard let imageSource = CGImageSourceCreateWithData(imageData as CFData, imageSourceOptions)
+      else { return UIImage() }
+    
+    let maxDimensionInPixels = max(size.width, size.height) * scale
+    let downsampleOptions = [
+      kCGImageSourceCreateThumbnailFromImageAlways: true,
+      kCGImageSourceShouldCacheImmediately: true,
+      kCGImageSourceCreateThumbnailWithTransform: true,
+      kCGImageSourceThumbnailMaxPixelSize: maxDimensionInPixels
+    ] as CFDictionary
+    
+    guard let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions)
+      else { return UIImage() }
+    
+    return UIImage(cgImage: downsampledImage)
   }
 }
 

@@ -17,6 +17,7 @@ import ShareGardenSceneEntity
 @MainActor
 protocol MyGardenViewDelegate: AnyObject {
   func shareButtonTapped()
+  func myGardenProfileTapped()
 }
 
 extension ShareGardenSceneViewController {
@@ -194,7 +195,7 @@ extension ShareGardenSceneViewController.MyGardenView {
     Task {
       guard let imageURL = imageURL else { return }
       
-      let image = try await Cache.shared.execute(id: imageURL)
+      let image = try await ImageClient.live.execute(id: imageURL, isDownsample: true)
       self.profileInfoView.iconImage = image
     }
   }
@@ -207,6 +208,13 @@ extension ShareGardenSceneViewController.MyGardenView {
     self.sectionHeaderView.setupRightActionButton(action: UIAction { [weak self] _ in
       self?.delegate?.shareButtonTapped()
     })
+    
+    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.myGardenProfileTapped))
+    self.profileInfoView.addGestureRecognizer(tapGesture)
+  }
+  
+  @objc private func myGardenProfileTapped() {
+    self.delegate?.myGardenProfileTapped()
   }
 }
 

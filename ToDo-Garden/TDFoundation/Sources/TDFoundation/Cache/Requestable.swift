@@ -4,6 +4,6 @@ import Foundation
 public protocol Requestable: Sendable {
   associatedtype ID: Hashable, Sendable, CustomStringConvertible
   associatedtype Response: MemorySizeProvider
-  func execute(id: ID) async throws -> Response
+  func execute(id: ID, isDownsample: Bool) async throws -> Response
 }
 // swiftlint:enable type_name

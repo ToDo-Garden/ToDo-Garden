@@ -7,10 +7,11 @@
 //
 
 #if DEBUG
-import Foundation
+import UIKit
 
 import ToDoGardenUIComponent
 
+import SearchGardenSceneAPI
 import ShareGardenSceneAPI
 import ShareGardenSceneEntity
 

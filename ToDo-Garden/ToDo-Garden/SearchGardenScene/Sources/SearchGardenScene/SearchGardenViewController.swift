@@ -24,7 +24,6 @@ protocol SearchGardenDisplayLogic: AnyObject {
 }
 
 final class SearchGardenViewController: UIViewController, SearchGardenViewControllable {
-  
   // MARK: - VIP Properties
   
   var interactor: SearchGardenBusinessLogic?
@@ -65,6 +64,11 @@ final class SearchGardenViewController: UIViewController, SearchGardenViewContro
   override func viewDidLoad() {
     super.viewDidLoad()
     self.setupView()
+  }
+  
+  func clear() {
+    self.searchGardenView.clear()
+    self.addGardenView.clear()
   }
 }
 
@@ -230,8 +234,9 @@ extension SearchGardenViewController: SearchGardenDisplayLogic {
       guard let imageURL = user.userImageURL else { continue }
       Task {
         do {
-          let image = try await ImageClient.live.execute(id: imageURL)
+          let image = try await ImageClient.live.execute(id: imageURL, isDownsample: true)
           let updatedUser = user
+          
           updatedUser.userImage = image
           self.searchGardenView.tableView.updateData(of: [updatedUser])
         } catch {
@@ -303,6 +308,7 @@ extension SearchGardenViewController: UITextFieldDelegate {
 
 extension SearchGardenViewController: DefaultModalNavigationBarDelegate {
   func didTapRightButton() {
+    self.clear()
     self.router?.dismissModal()
   }
 }

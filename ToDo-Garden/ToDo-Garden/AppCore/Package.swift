@@ -1,4 +1,4 @@
-// swift-tools-version: 5.10
+// swift-tools-version: 6.0
 import PackageDescription
 
 let package = Package(
@@ -50,6 +50,14 @@ let package = Package(
     Package.Dependency.package(
       name: "UserInfoScene",
       path: "../UserInfoScene"
+    ),
+    Package.Dependency.package(
+      name: "MyStatsScene",
+      path: "../MyStatsScene"
+    ),
+    Package.Dependency.package(
+      name: "SearchGardenScene",
+      path: "../SearchGardenScene"
     )
   ],
   targets: [
@@ -99,6 +107,13 @@ let package = Package(
         Target.Dependency.product(
           name: "UserInfoScene",
           package: "UserInfoScene"
+        ),
+          name: "MyStatsScene",
+          package: "MyStatsScene"
+        ),
+        Target.Dependency.product(
+          name: "SearchGardenScene",
+          package: "SearchGardenScene"
         )
       ]
     ),
