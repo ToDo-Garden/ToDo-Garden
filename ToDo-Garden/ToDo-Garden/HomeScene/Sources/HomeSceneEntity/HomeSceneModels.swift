@@ -40,5 +40,19 @@ public enum HomeScene {
       }
     }
   }
+
+  public enum PrepareDataForEditToDoScene {
+    public struct Request: Sendable {
+      public let todoId: UUID
+      public let selectedDate: Date
+      public let groupId: UUID
+
+      public init(todoId: UUID, selectedDate: Date, groupId: UUID) {
+        self.todoId = todoId
+        self.selectedDate = selectedDate
+        self.groupId = groupId
+      }
+    }
+  }
 }
 // swiftlint:enable all

@@ -30,7 +30,7 @@ protocol HomeSceneBusinessLogic {
   func updateSelection(isSelected: Bool, indexPath: IndexPath, date: Date)
   func writeJSONFile() async
   func requestBatchUpdateToServer() async
-  func prepareDataForEditTodoScene(todoId: UUID)
+  func prepareDataForEditTodoScene(request: HomeScene.PrepareDataForEditToDoScene.Request)
 }
 
 @MainActor
@@ -91,7 +91,6 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
     }
   
     self.presenter?.presentCreateToDo(newToDo: newToDo)
-
   }
   
   func deleteToDo(group:ToDoListView.ToDoSection, todo: ToDoListView.ToDoItem, date: Date) async {
@@ -184,13 +183,41 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
   }
 
   // EditToDoScene으로 넘겨주기 위한 데이터를 준비하는 작업입니다.
-  func prepareDataForEditTodoScene(todoId: UUID) {
-    let today = Date().description.toYYYYMMDDStringFromISO8601Space()
-    guard let groups = self.monthlyData[today]?.first
-    else { return }
+  func prepareDataForEditTodoScene(request: HomeScene.PrepareDataForEditToDoScene.Request) {
+    let dateString = request.selectedDate.description.toYYYYMMDDStringFromISO8601Space()
+    let groups = self.monthlyData[dateString]
+    print(request.groupId.uuidString.lowercased())
+    print(groups?[1].localId == request.groupId.uuidString.lowercased())
+    let group = groups?.first(where: { (group: SharedEntity.TodoListGroup) in
+      return group.localId.lowercased() == request.groupId.uuidString.lowercased()
+    })!
+    let todo = group?.todoList?.first(where: { (todo: SharedEntity.TodoListItem) in
+      return todo.localID.lowercased() == request.todoId.uuidString.lowercased()
+    })!
 
-    self.toDo = itemsForBatch[todoId.uuidString]
+    self.groups = groups
+    self.toDo = self.makeToDoBatchItem(from: todo!, groupId: group!.localId, dateString: dateString)
     self.presenter?.presentDataForEditToDoScene()
+  }
+
+  private func makeToDoBatchItem(
+    from todo: SharedEntity.TodoListItem,
+    groupId: String,
+    dateString: String
+  ) -> SharedEntity.TodoBatchItem {
+    return SharedEntity.TodoBatchItem(
+      localId: todo.localID,
+      name: todo.name,
+      isDone: todo.isDone,
+      createdAt: dateString,
+      isAlarmOn: todo.isAlarmOn,
+      alarmTime: Double(todo.alarmTime ?? 0),
+      isOnlyToday: todo.isOnlyToday,
+      startDay: todo.startDay,
+      endDay: todo.endDay,
+      groupId: groupId,
+      isDelete: false
+    )
   }
 }
 

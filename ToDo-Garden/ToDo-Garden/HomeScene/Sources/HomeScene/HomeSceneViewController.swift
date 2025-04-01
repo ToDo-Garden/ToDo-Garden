@@ -318,9 +318,18 @@ extension HomeSceneViewController: ToDoListButtonActionDelegate {
     group: ToDoListView.ToDoSection,
     todo: ToDoListView.ToDoItem
   ) {
-    self.router?.routeToEditToDoScene(toDoId: todo.id)
+    Task {
+      guard let selectedDate = self.calendarView.getSelectedDate() else { return }
+      let request = HomeScene.PrepareDataForEditToDoScene.Request(
+        todoId: todo.id,
+        selectedDate: selectedDate,
+        groupId: group.id
+      )
+
+      self.interactor?.prepareDataForEditTodoScene(request: request)
+    }
   }
-  
+
   public func didDeleteButtonTapped(
     group: ToDoListView.ToDoSection,
     todo: ToDoListView.ToDoItem
