@@ -82,4 +82,15 @@ extension DailyToDoAlert: FetchableRecord, MutablePersistableRecord {
 }
 
 extension DailyToDoAlert: Sendable, Hashable, Codable { }
+
+public struct DailyToDoAlerts: FetchKeyRequest {
+  public init() { }
+  
+  public func fetch(_ db: Database) throws -> [DailyToDoAlert] {
+    try DailyToDoAlert
+      .all()
+      .order(Column("alertTime"))
+      .fetchAll(db)
+  }
+}
 // swiftlint:enable force_try identifier_name

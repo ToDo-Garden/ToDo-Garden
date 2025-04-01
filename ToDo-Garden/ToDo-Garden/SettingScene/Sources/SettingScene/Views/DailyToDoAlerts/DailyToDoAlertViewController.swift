@@ -22,14 +22,7 @@ final class DailyToDoAlertViewController: UIViewController {
   private var dailyToDoAlertsTask: Task<Void, Never>?
   
   @Dependency(\.defaultDatabase) private var database
-  struct DailyToDoAlerts: FetchKeyRequest {
-    func fetch(_ db: Database) throws -> [DailyToDoAlert] {
-      try DailyToDoAlert
-        .all()
-        .order(Column("alertTime"))
-        .fetchAll(db)
-    }
-  }
+
   @SharedReader(.fetch(DailyToDoAlerts())) private var dailyToDoAlerts: [DailyToDoAlert]
   
   override func viewDidLoad() {
