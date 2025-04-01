@@ -10,6 +10,7 @@ import Foundation
 import SettingSceneAPI
 import ToDoGardenUIComponent
 import ToDoGardenUIConstant
+import UserInfoSceneAPI
 
 protocol SettingRoutingLogic {
   func routeToNotice()
@@ -18,6 +19,7 @@ protocol SettingRoutingLogic {
   func routeToPrivacyPolicy()
   func routeToSendingFeedback()
   func routeToGuideScene()
+  func routeToUserInfoScene()
 }
 
 protocol SettingDataPassing {
@@ -29,6 +31,14 @@ class SettingRouter: SettingDataPassing {
 	var dataStore: SettingDataStore?
   let termsTextView: TermsTextViewController = TermsTextViewController(title: "", text: "")
   let enterGuideSceneViewController: EnterGuideSceneViewController = EnterGuideSceneViewController()
+
+  private let userInfoSceneBuilder: UserInfoSceneSceneBuildable
+  private let userInfoScene: UserInfoSceneViewControllable
+
+  public init(userInfoSceneBuilder: UserInfoSceneSceneBuildable) {
+    self.userInfoSceneBuilder = userInfoSceneBuilder
+    self.userInfoScene = self.userInfoSceneBuilder.build()
+  }
 }
 
 // MARK: - Routing
@@ -76,12 +86,8 @@ extension SettingRouter: SettingRoutingLogic {
     guideSceneViewController.modalPresentationStyle = .fullScreen
     self.viewController?.navigationController?.pushViewController(guideSceneViewController, animated: true)
   }
-}
-
-// MARK: - Declare Payload for scene
-
-extension SettingRouter {
-	struct NextScenePayload: NextScenePayloadable {
-		// var name: String
-	}
+  
+  func routeToUserInfoScene() {
+    self.viewController?.navigationController?.pushViewController(self.userInfoScene, animated: true)
+  }
 }

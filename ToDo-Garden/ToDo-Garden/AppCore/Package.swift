@@ -48,6 +48,10 @@ let package = Package(
       path: "../PostGroupScene"
     ),
     Package.Dependency.package(
+      name: "UserInfoScene",
+      path: "../UserInfoScene"
+    ),
+    Package.Dependency.package(
       name: "MyStatsScene",
       path: "../MyStatsScene"
     ),
@@ -101,12 +105,16 @@ let package = Package(
           package: "PostGroupScene"
         ),
         Target.Dependency.product(
-          name: "MyStatsScene",
-          package: "MyStatsScene"
+          name: "UserInfoScene",
+          package: "UserInfoScene"
         ),
         Target.Dependency.product(
           name: "SearchGardenScene",
           package: "SearchGardenScene"
+        ),
+        Target.Dependency.product(
+          name: "MyStatsScene",
+          package: "MyStatsScene"
         )
       ]
     ),

@@ -27,6 +27,7 @@ final class SettingViewController: UIViewController, SettingViewControllable {
   private let settingCollectionView: UICollectionView
   private var settingCollectionViewDataSource: UICollectionViewDiffableDataSource<Section, Item>?
   private let versionInfoView: VersionInfoView
+  private var tapGestureRecognizer: UITapGestureRecognizer
 
   var interactor: SettingBusinessLogic?
   var router: (SettingRoutingLogic & SettingDataPassing)?
@@ -51,6 +52,7 @@ final class SettingViewController: UIViewController, SettingViewControllable {
       collectionViewLayout: UICollectionViewLayout()
     )
     self.versionInfoView = VersionInfoView()
+    self.tapGestureRecognizer = UITapGestureRecognizer()
     super.init(nibName: nil, bundle: nil)
   }
 
@@ -110,7 +112,7 @@ extension SettingViewController: SettingDisplayLogic {
 // MARK: Subviews Delegate Functions
 
 extension SettingViewController: VersionInfoViewDelegate {
-  func didSelectUpdateButton() {
+  @objc func didSelectUpdateButton() {
     self.interactor?.openAppStore()
   }
 }
@@ -126,6 +128,7 @@ extension SettingViewController {
     self.setupSettingCollectionView()
     self.setupSubviewsLayout()
     self.setupButtonActions()
+    self.setupUserInfoSceneButton()
   }
 
   private func setupSettingLabel() {
@@ -211,6 +214,21 @@ extension SettingViewController {
     self.userGuideButton.touchAction = { [weak self] in
       self?.router?.routeToGuideScene()
     }
+  }
+
+  private func setupUserInfoSceneButton() {
+    self.tapGestureRecognizer = UITapGestureRecognizer(
+      target: self,
+      action: #selector(didSelectUserInfoSceneButton)
+    )
+    if let rightButton = self.profileRow.subviews.first?.subviews[4] as? UIImageView {
+      rightButton.isUserInteractionEnabled = true
+      rightButton.addGestureRecognizer(self.tapGestureRecognizer)
+    }
+  }
+
+  @objc func didSelectUserInfoSceneButton() {
+    self.router?.routeToUserInfoScene()
   }
 }
 
@@ -336,23 +354,3 @@ extension SettingViewController: UICollectionViewDelegate {
     }
   }
 }
-
-extension SettingViewController {
-  struct SomePayload: SettingScenePayloadable {}
-}
-
-import HTTPClient
-#if DEBUG
-@available(iOS 17.0, *)
-#Preview {
-  let settingVC = SettingSceneBuilder(
-    dependency: SettingSceneBuilder.Dependency(
-      settingWorker: SettingWorker(httpClient: HTTPClient.live),
-      appServiceWorker: ApplicationServiceWorker()
-    )
-  ).build()
-  
-  let navi = UINavigationController(rootViewController: settingVC)
-  return navi
-}
-#endif

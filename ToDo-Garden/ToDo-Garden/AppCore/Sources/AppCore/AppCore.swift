@@ -2,6 +2,7 @@ import Foundation
 
 import HomeSceneAPI
 import TDFoundation
+import UserInfoScene
 
 @MainActor
 public final class AppCore {
