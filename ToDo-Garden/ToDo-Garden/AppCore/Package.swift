@@ -108,12 +108,13 @@ let package = Package(
           name: "UserInfoScene",
           package: "UserInfoScene"
         ),
-          name: "MyStatsScene",
-          package: "MyStatsScene"
-        ),
         Target.Dependency.product(
           name: "SearchGardenScene",
           package: "SearchGardenScene"
+        ),
+        Target.Dependency.product(
+          name: "MyStatsScene",
+          package: "MyStatsScene"
         )
       ]
     ),

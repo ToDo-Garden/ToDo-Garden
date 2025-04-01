@@ -444,7 +444,7 @@
 				CODE_SIGN_ENTITLEMENTS = "ToDo-Garden/ToDo-Garden.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7J855UGZA4;
+				DEVELOPMENT_TEAM = W39V9Q93Z6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ToDo-Garden/Resources/Info.plist";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사진 접근 권한이 필요합니다.";
@@ -457,7 +457,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "noah.ToDo-Garden";
+				PRODUCT_BUNDLE_IDENTIFIER = team.todo.garden;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
