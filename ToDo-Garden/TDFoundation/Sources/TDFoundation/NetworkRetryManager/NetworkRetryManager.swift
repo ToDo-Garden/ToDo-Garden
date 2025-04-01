@@ -19,6 +19,10 @@ public final class NetworkRetryManager: NetworkRetryManagerAPI, @unchecked Senda
     self.setupNetworkMonitor()
   }
   
+  public func isConnected() -> Bool {
+    return self.networkMonitor.currentPath.status.isConnected
+  }
+  
   private func setupNetworkMonitor() {
     let updateNetworkStatus = { @Sendable [weak self] in
       guard let isConnected = self?.networkMonitor.currentPath.status.isConnected else { return }
