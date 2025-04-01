@@ -60,6 +60,11 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
     self.calendarView = CalendarView(model: CalendarView.Model.primary)
     super.init(nibName: nil, bundle: nil)
     self.view.backgroundColor = UIColor.white
+    self.registerBackgroundTransitionObserver()
+  }
+  
+  deinit {
+    self.unregisterBackgroundTransition()
   }
   
   @available(*, unavailable)
@@ -430,6 +435,16 @@ extension HomeSceneViewController {
   
   public func getSwipedCell() -> UIView {
     return self.bottomSheet.contentView?.subviews.last ?? UIView()
+  }
+}
+
+extension HomeSceneViewController: @preconcurrency TransitionHandlable {
+  public func handleBackgroundTransition() {
+    Task {
+      await self.interactor?.writeBatchItemsToGRDB()
+      await self.interactor?.requestBatchUpdateToServer()
+      print("백그라운드 이동시 요청할 작업 완료")
+    }
   }
 }
 
