@@ -8,6 +8,8 @@
 import UIKit
 
 import TDFoundation
+import ToDoGardenUIComponent
+
 import ToDoGardenUIResource
 
 import SharingGRDB
@@ -19,17 +21,20 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
   ) -> Bool {
-    registerCustomFonts()
-    UNUserNotificationCenter.current().delegate = NotificationManager.shared
+    self.prepare()
+
+    return true
+  }
+  
+  private func prepare() {
+    NavigationBarUIUpdator.update()
+    self.registerCustomFonts()
     prepareDependencies {
       $0.defaultDatabase = try! appDatabase()
     }
-    
-    return true
+    UNUserNotificationCenter.current().delegate = NotificationManager.shared
   }
-}
-
-extension AppDelegate {
+  
   private func registerCustomFonts() {
     PretendardFont.register()
     GmarkSansFont.register()
