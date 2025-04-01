@@ -10,6 +10,7 @@ import Foundation
 import EditToDoSceneAPI
 import HomeSceneAPI
 import ManageGroupSceneAPI
+import TDFoundation
 import TimerSceneAPI
 
 @MainActor
@@ -20,17 +21,20 @@ public struct HomeSceneBuilder {
     let manageGroupSceneBuilder: ManageGroupSceneBuildable
     let editToDoSceneBuilder: EditToDoSceneBuildable
     let timerSceneBuilder: TimerSceneBuildable
+    let retryManager: NetworkRetryManagerAPI
     
     public init(
       homeSceneWorker: HomeSceneWorkable,
       manageGroupSceneBuilder: ManageGroupSceneBuildable,
       editToDoSceneBuilder: EditToDoSceneBuildable,
-      timerSceneBuilder: TimerSceneBuildable
+      timerSceneBuilder: TimerSceneBuildable,
+      retryManager: NetworkRetryManagerAPI
     ) {
       self.homeSceneWorker = homeSceneWorker
       self.manageGroupSceneBuilder = manageGroupSceneBuilder
       self.editToDoSceneBuilder = editToDoSceneBuilder
       self.timerSceneBuilder = timerSceneBuilder
+      self.retryManager = retryManager
     }
   }
   
@@ -59,7 +63,10 @@ extension HomeSceneBuilder {
   /// - Returns: VIP Cycle 설정이 완료된 `ViewControllable` 프로토콜을 준수한 `ViewController` 인스턴스를 반환합니다.
   @MainActor
   private func configureVIPCycle(for viewController: HomeSceneViewController) -> HomeSceneViewController {
-    let interactor = HomeSceneInteractor(homeSceneWorker: self.dependency.homeSceneWorker)
+    let interactor = HomeSceneInteractor(
+      homeSceneWorker: self.dependency.homeSceneWorker,
+      retryManager: self.dependency.retryManager
+    )
     let presenter = HomeScenePresenter()
     let router = HomeSceneRouter(
       manageGroupSceneBuilder: self.dependency.manageGroupSceneBuilder,
