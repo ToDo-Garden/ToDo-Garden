@@ -10,6 +10,7 @@ import UIKit
 import FoundationExtension
 import HomeSceneAPI
 import HomeSceneEntity
+import SharedEntity
 import ToDoGardenUIComponent
 
 protocol HomeSceneDataStore {
@@ -34,7 +35,7 @@ final class HomeSceneInteractor: HomeSceneDataStore {
   private var homeSceneWorker: HomeSceneWorkable
   private var monthlyData: [String: [HomeScene.TodoListGroup]]
   // ⬆️ 서버에서 받아오는 1달짜리 데이터입니다. ex) key = "20250302"
-  private var itemsForBatch: [String: HomeScene.TodoBatchItem] 
+  private var itemsForBatch: [String: SharedEntity.TodoBatchItem]
   // ⬆️ JSONStorage가 매번 fileWrite를 하기엔 부담스러워서 모아놨다가 적절한 순간에 fileWrite를 진행하기 위한 데이터입니다.
   // 즉, 서버에게 배치처리를 요청하기 위한 배치처리 과정이라고 볼 수 있습니다.
   // ex) key = ToDo의 UUIDString
@@ -120,7 +121,7 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
       batchItem.setName(text)
     } else {
       let alarmTime = Double(targetToDo.alarmTime ?? 0)
-      self.itemsForBatch[targetToDo.localID] = HomeScene.TodoBatchItem(
+      self.itemsForBatch[targetToDo.localID] = SharedEntity.TodoBatchItem(
         localId: targetToDo.localID, name: text, isDone: targetToDo.isDone,
         createdAt: date.toISOString(), isAlarmOn: targetToDo.isAlarmOn, alarmTime: alarmTime,
         isOnlyToday: targetToDo.isOnlyToday, startDay: targetToDo.startDay, endDay: targetToDo.endDay,
@@ -161,7 +162,7 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
       batchItem.setDone(isSelected)
     } else {
       let alarmTime = Double(targetToDo.alarmTime ?? 0)
-      self.itemsForBatch[targetToDo.localID] = HomeScene.TodoBatchItem(
+      self.itemsForBatch[targetToDo.localID] = SharedEntity.TodoBatchItem(
         localId: targetToDo.localID, name: targetToDo.name, isDone: isSelected,
         createdAt: date.toISOString(), isAlarmOn: targetToDo.isAlarmOn, alarmTime: alarmTime,
         isOnlyToday: targetToDo.isOnlyToday, startDay: targetToDo.startDay, endDay: targetToDo.endDay,
@@ -172,11 +173,11 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
 }
 
 extension HomeSceneInteractor {
-  private func addBatchItem(newToDo: HomeScene.TodoBatchItem) {
+  private func addBatchItem(newToDo: SharedEntity.TodoBatchItem) {
     self.itemsForBatch[newToDo.localId] = newToDo
   }
   
-  private func removeBatchItem(deletedToDo: HomeScene.TodoBatchItem) {
+  private func removeBatchItem(deletedToDo: SharedEntity.TodoBatchItem) {
     if self.itemsForBatch[deletedToDo.localId] == nil {
       self.itemsForBatch[deletedToDo.localId] = deletedToDo
     } else {
@@ -184,10 +185,10 @@ extension HomeSceneInteractor {
     }
   }
   
-  private func makeItemForCreateToDo(group: ToDoListView.ToDoSection, date: Date) -> HomeScene.TodoBatchItem {
+  private func makeItemForCreateToDo(group: ToDoListView.ToDoSection, date: Date) -> SharedEntity.TodoBatchItem {
     let newToDoID = UUID()
     let groupID = group.id.uuidString
-    let newItem = HomeScene.TodoBatchItem(
+    let newItem = SharedEntity.TodoBatchItem(
       localId: newToDoID.uuidString,
       name: "New ToDo",
       isDone: false,
@@ -203,12 +204,11 @@ extension HomeSceneInteractor {
     return newItem
   }
   
-  private func makeItemForDeleteToDo(group: ToDoListView.ToDoSection, todo: HomeScene.TodoListItem, date: Date) -> HomeScene.TodoBatchItem {
-    
+    private func makeItemForDeleteToDo(group: ToDoListView.ToDoSection, todo: HomeScene.TodoListItem, date: Date) -> SharedEntity.TodoBatchItem {
     let groupID = group.id.uuidString
     let alarmTime = Double(todo.alarmTime ?? 0)
     
-    let deletedItem = HomeScene.TodoBatchItem(
+    let deletedItem = SharedEntity.TodoBatchItem(
       localId: todo.localID,
       name: todo.name,
       isDone: todo.isDone,
@@ -224,7 +224,7 @@ extension HomeSceneInteractor {
     return deletedItem
   }
   
-  private func makeToDoListItem(batchItem: HomeScene.TodoBatchItem) -> HomeScene.TodoListItem {
+  private func makeToDoListItem(batchItem: SharedEntity.TodoBatchItem) -> HomeScene.TodoListItem {
     let todoListItem = HomeScene.TodoListItem(
       name: batchItem.name,
       endDay: nil,

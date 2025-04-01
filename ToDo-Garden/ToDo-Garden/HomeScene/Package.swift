@@ -22,11 +22,18 @@ let package = Package(
     Package.Dependency.package(path: "../TDUtility"),
     Package.Dependency.package(path: "../ManageGroupScene"),
     Package.Dependency.package(path: "../EditToDoScene"),
-    Package.Dependency.package(path: "../TimerScene")
+    Package.Dependency.package(path: "../TimerScene"),
+    Package.Dependency.package(path: "../TDFoundation")
   ],
   targets: [
     Target.target(
-      name: "HomeSceneEntity"
+      name: "HomeSceneEntity",
+      dependencies: [
+        Target.Dependency.product(
+          name: "SharedEntity",
+          package: "TDFoundation"
+        )
+      ]
     ),
     Target.target(
       name: "HomeSceneAPI",
@@ -69,6 +76,10 @@ let package = Package(
         Target.Dependency.product(
           name: "TimerScene",
           package: "TimerScene"
+        ),
+        Target.Dependency.product(
+          name: "SharedEntity",
+          package: "TDFoundation"
         )
       ]
     )

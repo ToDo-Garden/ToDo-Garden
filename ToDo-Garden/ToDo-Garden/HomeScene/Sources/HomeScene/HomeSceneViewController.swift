@@ -9,6 +9,7 @@ import UIKit
 
 import HomeSceneAPI
 import HomeSceneEntity
+import SharedEntity
 import TDFoundationExtension
 import TDUtility
 import ToDoGardenUIComponent
@@ -19,7 +20,7 @@ import ToDoGardenUIComponent
 protocol HomeSceneDisplayLogic: AnyObject {
   func displayFetchedToDoList(fetchedData: [String: [HomeScene.TodoListGroup]])
   func displayDailyToDoList(snapshot: ToDoListView.Snapshot)
-  func displayCreateToDo(newToDo: HomeScene.TodoBatchItem)
+  func displayCreateToDo(newToDo: SharedEntity.TodoBatchItem)
   func displayDeleteToDo(groupID: UUID, deletedToDo: ToDoListView.ToDoItem)
   func displayErrorToast(error: Error)
 }
@@ -204,7 +205,7 @@ extension HomeSceneViewController: HomeSceneDisplayLogic {
     )
   }
   
-  func displayCreateToDo(newToDo: HomeScene.TodoBatchItem) {
+  func displayCreateToDo(newToDo: SharedEntity.TodoBatchItem) {
     guard var snapshot = self.todoListView?.getSnapShot(),
       let newToDoUUID = UUID(uuidString: newToDo.localId),
       let newToDoGroupUUID = UUID(uuidString: newToDo.groupId),

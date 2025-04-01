@@ -8,13 +8,14 @@
 import UIKit
 
 import HomeSceneEntity
+import SharedEntity
 import ToDoGardenUIComponent
 
 @MainActor
 protocol HomeScenePresentationLogic {
   func presentFetchedToDoList(monthlyData: [HomeScene.FetchToDoList.Response])
   func presentDailyToDoList(dailyData: [HomeScene.TodoListGroup])
-  func presentCreateToDo(newToDo: HomeScene.TodoBatchItem)
+  func presentCreateToDo(newToDo: SharedEntity.TodoBatchItem)
   func presentDeleteToDo(groupID: UUID, deletedToDo: ToDoListView.ToDoItem)
   func presentErrorToast(error: Error)
 }
@@ -37,7 +38,7 @@ extension HomeScenePresenter: HomeScenePresentationLogic {
     self.viewController?.displayDailyToDoList(snapshot: snapshot)
   }
   
-  func presentCreateToDo(newToDo: HomeScene.TodoBatchItem) {
+  func presentCreateToDo(newToDo: SharedEntity.TodoBatchItem) {
     self.viewController?.displayCreateToDo(newToDo: newToDo)
   }
   

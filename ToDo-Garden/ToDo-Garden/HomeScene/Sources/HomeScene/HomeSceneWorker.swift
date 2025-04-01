@@ -10,16 +10,17 @@ import Foundation
 import HomeSceneAPI
 import HomeSceneEntity
 import HTTPClientAPI
+import SharedEntity
 import TDFoundation
 import TDFoundationExtension
 
 public struct HomeSceneWorker: HomeSceneWorkable, Sendable {
   private let httpClient: HTTPClientAPI
-  private let homeStorage: any JSONStorable<HomeScene.TodoBatchItem>
-  
+  private let homeStorage: any JSONStorable<SharedEntity.TodoBatchItem>
+
   public init(
     httpClient: HTTPClientAPI,
-    homeStorage: some JSONStorable<HomeScene.TodoBatchItem>
+    homeStorage: some JSONStorable<SharedEntity.TodoBatchItem>
   ) {
     self.httpClient = httpClient
     self.homeStorage = homeStorage
