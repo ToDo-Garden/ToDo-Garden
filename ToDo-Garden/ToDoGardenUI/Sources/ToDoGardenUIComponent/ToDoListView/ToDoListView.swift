@@ -279,11 +279,14 @@ extension ToDoListView: ToDoGroupSectionHeaderViewDelegate {
   
   private func getCurrentIndexPath(for item: ToDoItem) -> IndexPath? {
     let snapshot = self.dataSource.snapshot()
-    guard let itemIndex = snapshot.itemIdentifiers.firstIndex(of: item) else { return nil }
-
-    guard let sectionIndex = snapshot.sectionIdentifiers.firstIndex(where: { section in
+    guard let section = snapshot.sectionIdentifiers.first(where: { section in
       section.getToDoItems().contains(item)
     }) else { return nil }
+
+    guard let sectionIndex = snapshot.sectionIdentifiers.firstIndex(of: section) else { return nil }
+
+    let sectionItems = section.getToDoItems()
+    guard let itemIndex = sectionItems.firstIndex(of: item) else { return nil }
     
     return IndexPath(item: itemIndex, section: sectionIndex)
   }
