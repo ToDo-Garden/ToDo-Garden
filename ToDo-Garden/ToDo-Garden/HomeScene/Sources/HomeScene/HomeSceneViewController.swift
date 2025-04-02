@@ -9,28 +9,18 @@ import UIKit
 
 import HomeSceneAPI
 import HomeSceneEntity
-<<<<<<< HEAD
 import SharedEntity
-=======
 import TDFoundation
->>>>>>> fc930727 (#907: 변경사항 반영)
 import TDFoundationExtension
 import TDUtility
 import ToDoGardenUIComponent
 
 // swiftlint: disable file_length
-
 @MainActor
 protocol HomeSceneDisplayLogic: AnyObject {
-<<<<<<< HEAD
   func displayFetchedToDoList(fetchedData: [String: [SharedEntity.TodoListGroup]])
   func displayDailyToDoList(snapshot: ToDoListView.Snapshot)
-  func displayCreateToDo(newToDo: SharedEntity.TodoBatchItem)
-=======
-  func displayFetchedToDoList(fetchedData: [String: [TodoListGroup]])
-  func displayDailyToDoList(snapshot: ToDoListView.Snapshot)
   func displayCreateToDo(newToDo: TodoBatchItem)
->>>>>>> fc930727 (#907: 변경사항 반영)
   func displayDeleteToDo(groupID: UUID, deletedToDo: ToDoListView.ToDoItem)
   func displayErrorToast(error: Error)
   func routeToEditToDoScene()
@@ -200,12 +190,8 @@ extension HomeSceneViewController {
 // MARK: - Confirm display logic protocol
 
 extension HomeSceneViewController: HomeSceneDisplayLogic {
-<<<<<<< HEAD
   func displayFetchedToDoList(fetchedData: [String: [SharedEntity.TodoListGroup]]) {
     self.hideToDoList()
-=======
-  func displayFetchedToDoList(fetchedData: [String: [TodoListGroup]]) {
->>>>>>> fc930727 (#907: 변경사항 반영)
     Task {
       let date = self.calendarView.getSelectedDate() ?? Date.now
       await self.interactor?.setMonthlyData(fetchedData)
@@ -227,11 +213,7 @@ extension HomeSceneViewController: HomeSceneDisplayLogic {
     )
   }
   
-<<<<<<< HEAD
-  func displayCreateToDo(newToDo: SharedEntity.TodoBatchItem) {
-=======
   func displayCreateToDo(newToDo: TodoBatchItem) {
->>>>>>> fc930727 (#907: 변경사항 반영)
     guard var snapshot = self.todoListView?.getSnapShot(),
       let newToDoUUID = UUID(uuidString: newToDo.localId),
       let newToDoGroupUUID = UUID(uuidString: newToDo.groupId),

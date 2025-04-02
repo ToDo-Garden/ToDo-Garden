@@ -27,12 +27,7 @@ extension HomeSceneBuilder.Dependency {
   @MainActor
   public static let live = HomeSceneBuilder.Dependency.init(
     homeSceneWorker: HomeSceneWorker(
-<<<<<<< HEAD
-      httpClient: HTTPClient.live,
-      homeStorage: JSONStorage<SharedEntity.TodoBatchItem>(fileName: "todolistBatch.json")
-=======
       httpClient: HTTPClient.live
->>>>>>> 94ab023d (#907: 정적객체 수정)
     ),
     manageGroupSceneBuilder: ManageGroupSceneBuilder.init(dependency: .live),
     editToDoSceneBuilder: EditToDoSceneBuilder(dependency: .live),

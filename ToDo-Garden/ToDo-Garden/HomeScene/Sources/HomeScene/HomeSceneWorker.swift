@@ -3,29 +3,17 @@ import Foundation
 import HomeSceneAPI
 import HomeSceneEntity
 import HTTPClientAPI
-<<<<<<< HEAD
 import SharedEntity
-=======
 import SharingGRDB
->>>>>>> cc845305 (#907: Worker 수정)
 import TDFoundation
 import TDFoundationExtension
 
 // swiftlint: disable all
 public struct HomeSceneWorker: HomeSceneWorkable, Sendable {
   private let httpClient: HTTPClientAPI
-<<<<<<< HEAD
-  private let homeStorage: any JSONStorable<SharedEntity.TodoBatchItem>
-
-  public init(
-    httpClient: HTTPClientAPI,
-    homeStorage: some JSONStorable<SharedEntity.TodoBatchItem>
-  ) {
-=======
   @Dependency(\.defaultDatabase) private var database
   
   public init(httpClient: HTTPClientAPI) {
->>>>>>> cc845305 (#907: Worker 수정)
     self.httpClient = httpClient
   }
   
@@ -45,14 +33,6 @@ public struct HomeSceneWorker: HomeSceneWorkable, Sendable {
         return result
       }
     )
-<<<<<<< HEAD
-    return fetchedToDoList
-  }
-  
-  public func writeJSONFile(data: [SharedEntity.TodoBatchItem]) async throws {
-    var storedItems = (try? self.homeStorage.getItems()) ?? []
-=======
->>>>>>> cc845305 (#907: Worker 수정)
     
     for dailyToDoListData in fetchedToDoList {
       let (myGroups, myToDos) = self.convertToMyGroupsAndMyToDos(from: dailyToDoListData)

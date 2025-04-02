@@ -10,17 +10,14 @@ import UIKit
 import FoundationExtension
 import HomeSceneAPI
 import HomeSceneEntity
-<<<<<<< HEAD
-import SharedEntity
-=======
 import HTTPClientAPI
+import SharedEntity
 import TDFoundation
->>>>>>> fc930727 (#907: 변경사항 반영)
 import ToDoGardenUIComponent
 
 @MainActor
 protocol HomeSceneDataStore {
-  var toDo: SharedEntity.TodoBatchItem? { get set }
+  var toDo: TodoBatchItem? { get set }
   var groups: [SharedEntity.TodoListGroup]? { get set }
 }
 
@@ -29,11 +26,7 @@ protocol HomeSceneBusinessLogic {
   func fetchToDoList(request: HomeScene.FetchToDoList.Request) async
   func createToDo(group: ToDoListView.ToDoSection, date: Date) async
   func deleteToDo(group: ToDoListView.ToDoSection, todo: ToDoListView.ToDoItem, date: Date) async
-<<<<<<< HEAD
   func setMonthlyData(_ monthlyData: [String: [SharedEntity.TodoListGroup]]) async
-=======
-  func setMonthlyData(_ monthlyData: [String: [TodoListGroup]]) async
->>>>>>> fc930727 (#907: 변경사항 반영)
   func loadDailyToDoList(targetDate: String) async
   func updateText(text: String, indexPath: IndexPath, date: Date)
   func updateSelection(isSelected: Bool, indexPath: IndexPath, date: Date)
@@ -47,33 +40,22 @@ final class HomeSceneInteractor: HomeSceneDataStore {
   var presenter: (any HomeScenePresentationLogic)?
   private let retryManager: NetworkRetryManagerAPI
   private var homeSceneWorker: HomeSceneWorkable
-<<<<<<< HEAD
   private var monthlyData: [String: [SharedEntity.TodoListGroup]]
   // ⬆️ 서버에서 받아오는 1달짜리 데이터입니다. ex) key = "20250302"
-  private var itemsForBatch: [String: SharedEntity.TodoBatchItem]
+  private var itemsForBatch: [String: TodoBatchItem]
   // ⬆️ JSONStorage가 매번 fileWrite를 하기엔 부담스러워서 모아놨다가 적절한 순간에 fileWrite를 진행하기 위한 데이터입니다.
   // 즉, 서버에게 배치처리를 요청하기 위한 배치처리 과정이라고 볼 수 있습니다.
   // ex) key = ToDo의 UUIDString
   // ex) key = "20250302"
 
-  var toDo: SharedEntity.TodoBatchItem?
+  var toDo: TodoBatchItem?
   var groups: [SharedEntity.TodoListGroup]?
   // ⬆️ 투두 수정화면에서 필요한 데이터입니다.
 
-  init(homeSceneWorker: HomeSceneWorkable) {
-=======
-  private var monthlyData: [String: [TodoListGroup]]
-  // ⬆️ 서버에서 받아오는 1달짜리 데이터입니다. ex) key = "20250302"
-  private var itemsForBatch: [String: TodoBatchItem]
-  // ⬆️ 매번 fileWrite를 하기엔 부담스러워서 모아놨다가 적절한 순간에 fileWrite를 진행하기 위한 데이터입니다.
-  // 즉, 서버에게 배치처리를 요청하기 위한 배치처리 과정이라고 볼 수 있습니다.
-  // ex) key = ToDo의 UUIDString
-  
   init(
     homeSceneWorker: HomeSceneWorkable,
     retryManager: NetworkRetryManagerAPI
   ) {
->>>>>>> fc930727 (#907: 변경사항 반영)
     self.homeSceneWorker = homeSceneWorker
     self.retryManager = retryManager
     self.monthlyData = [:]
@@ -106,11 +88,7 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
   
   func loadDailyToDoList(targetDate: String) async {
     let formattedDate = targetDate.toYYYYMMDDStringFromISO8601Space()
-<<<<<<< HEAD
     let dailyToDoList: [SharedEntity.TodoListGroup] = self.monthlyData[formattedDate] ?? []
-=======
-    let dailyToDoList: [TodoListGroup] = self.monthlyData[formattedDate] ?? []
->>>>>>> fc930727 (#907: 변경사항 반영)
     
     self.presenter?.presentDailyToDoList(dailyData: dailyToDoList)
   }
@@ -143,13 +121,8 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
   
   func deleteToDo(group:ToDoListView.ToDoSection, todo: ToDoListView.ToDoItem, date: Date) async {
     let dateString = date.description.toYYYYMMDDStringFromISO8601Space()
-<<<<<<< HEAD
     var deletedToDo: SharedEntity.TodoListItem? = nil
 
-=======
-    var deletedToDo: TodoListItem? = nil
-    
->>>>>>> fc930727 (#907: 변경사항 반영)
     if let targetGroupIndex = self.monthlyData[dateString]?.firstIndex(
       where: { UUID(uuidString: $0.localId) == group.id }
     ) {
@@ -169,11 +142,7 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
     self.presenter?.presentDeleteToDo(groupID: group.id, deletedToDo: todo)
   }
   
-<<<<<<< HEAD
   func setMonthlyData(_ monthlyData: [String: [SharedEntity.TodoListGroup]]) async {
-=======
-  func setMonthlyData(_ monthlyData: [String: [TodoListGroup]]) async {
->>>>>>> fc930727 (#907: 변경사항 반영)
     self.monthlyData = monthlyData
   }
   
@@ -189,11 +158,8 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
       batchItem.setName(text)
     } else {
       let alarmTime = Double(targetToDo.alarmTime ?? 0)
-<<<<<<< HEAD
-      self.itemsForBatch[targetToDo.localID] = SharedEntity.TodoBatchItem(
-=======
+
       self.itemsForBatch[targetToDo.localID] = TodoBatchItem(
->>>>>>> fc930727 (#907: 변경사항 반영)
         localId: targetToDo.localID, name: text, isDone: targetToDo.isDone,
         createdAt: date.toISOString(), isAlarmOn: targetToDo.isAlarmOn, alarmTime: alarmTime,
         isOnlyToday: targetToDo.isOnlyToday, startDay: targetToDo.startDay, endDay: targetToDo.endDay,
@@ -242,11 +208,7 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
       batchItem.setDone(isSelected)
     } else {
       let alarmTime = Double(targetToDo.alarmTime ?? 0)
-<<<<<<< HEAD
-      self.itemsForBatch[targetToDo.localID] = SharedEntity.TodoBatchItem(
-=======
       self.itemsForBatch[targetToDo.localID] = TodoBatchItem(
->>>>>>> fc930727 (#907: 변경사항 반영)
         localId: targetToDo.localID, name: targetToDo.name, isDone: isSelected,
         createdAt: date.toISOString(), isAlarmOn: targetToDo.isAlarmOn, alarmTime: alarmTime,
         isOnlyToday: targetToDo.isOnlyToday, startDay: targetToDo.startDay, endDay: targetToDo.endDay,
@@ -277,8 +239,8 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
     from todo: SharedEntity.TodoListItem,
     groupId: String,
     dateString: String
-  ) -> SharedEntity.TodoBatchItem {
-    return SharedEntity.TodoBatchItem(
+  ) -> TodoBatchItem {
+    return TodoBatchItem(
       localId: todo.localID,
       name: todo.name,
       isDone: todo.isDone,
@@ -295,13 +257,6 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
 }
 
 extension HomeSceneInteractor {
-<<<<<<< HEAD
-  private func addBatchItem(newToDo: SharedEntity.TodoBatchItem) {
-    self.itemsForBatch[newToDo.localId] = newToDo
-  }
-  
-  private func removeBatchItem(deletedToDo: SharedEntity.TodoBatchItem) {
-=======
   private func checkNetworkConnection() -> Bool {
     return self.retryManager.isConnected()
   }
@@ -311,7 +266,6 @@ extension HomeSceneInteractor {
   }
   
   private func removeBatchItem(deletedToDo: TodoBatchItem) {
->>>>>>> fc930727 (#907: 변경사항 반영)
     if self.itemsForBatch[deletedToDo.localId] == nil {
       self.itemsForBatch[deletedToDo.localId] = deletedToDo
     } else {
@@ -319,19 +273,11 @@ extension HomeSceneInteractor {
     }
   }
   
-<<<<<<< HEAD
-  private func makeItemForCreateToDo(group: ToDoListView.ToDoSection, date: Date) -> SharedEntity.TodoBatchItem {
-    let newToDoID = UUID()
-    let groupID = group.id.uuidString
-    let newItem = SharedEntity.TodoBatchItem(
-      localId: newToDoID.uuidString,
-=======
   private func makeItemForCreateToDo(group: ToDoListView.ToDoSection, date: Date) -> TodoBatchItem {
     let newToDoID = UUID()
     let groupID = group.id.uuidString.lowercased()
     let newItem = TodoBatchItem(
       localId: newToDoID.uuidString.lowercased(),
->>>>>>> fc930727 (#907: 변경사항 반영)
       name: "New ToDo",
       isDone: false,
       createdAt: date.toISOString(),
@@ -346,21 +292,12 @@ extension HomeSceneInteractor {
     return newItem
   }
   
-<<<<<<< HEAD
-  private func makeItemForDeleteToDo(group: ToDoListView.ToDoSection, todo: SharedEntity.TodoListItem, date: Date) -> SharedEntity.TodoBatchItem {
-    let groupID = group.id.uuidString
-    let alarmTime = Double(todo.alarmTime ?? 0)
-    
-    let deletedItem = SharedEntity.TodoBatchItem(
-      localId: todo.localID,
-=======
   private func makeItemForDeleteToDo(group: ToDoListView.ToDoSection, todo: TodoListItem, date: Date) -> TodoBatchItem {
     let groupID = group.id.uuidString.lowercased()
     let alarmTime = Double(todo.alarmTime ?? 0)
     
     let deletedItem = TodoBatchItem(
       localId: todo.localID.lowercased(),
->>>>>>> fc930727 (#907: 변경사항 반영)
       name: todo.name,
       isDone: todo.isDone,
       createdAt: date.toISOString(),
@@ -375,13 +312,8 @@ extension HomeSceneInteractor {
     return deletedItem
   }
   
-<<<<<<< HEAD
-  private func makeToDoListItem(batchItem: SharedEntity.TodoBatchItem) -> SharedEntity.TodoListItem {
-    let todoListItem = SharedEntity.TodoListItem(
-=======
   private func makeToDoListItem(batchItem: TodoBatchItem) -> TodoListItem {
     let todoListItem = TodoListItem(
->>>>>>> fc930727 (#907: 변경사항 반영)
       name: batchItem.name,
       endDay: nil,
       isDone: false,

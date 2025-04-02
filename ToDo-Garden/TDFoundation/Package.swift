@@ -45,7 +45,8 @@ let package = Package(
           name: "ToDoGardenUIComponent",
           package: "ToDoGardenUI"
         ),
-        "HTTPClientAPI"
+        "HTTPClientAPI",
+        "SharedEntity"
       ]
     ),
     Target.target(

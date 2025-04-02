@@ -278,10 +278,11 @@ extension EditToDoViewController: UIScrollViewDelegate {
 
 import HTTPClient
 import SharedEntity
+import TDFoundation
 
 extension EditToDoViewController {
   struct EditToDoScenePayload: EditToDoScenePayloadable {
-    var toDo: SharedEntity.TodoBatchItem
+    var toDo: TodoBatchItem
     var groups: [SharedEntity.TodoListGroup]
   }
 

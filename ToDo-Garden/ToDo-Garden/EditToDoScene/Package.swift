@@ -29,7 +29,8 @@ let package = Package(
     .target(
       name: "EditToDoSceneAPI",
       dependencies: [
-        .product(name: "ToDoGardenUIAPI", package: "ToDoGardenUI")
+        .product(name: "ToDoGardenUIAPI", package: "ToDoGardenUI"),
+        .product(name: "TDFoundation", package: "TDFoundation")
       ]
     ),
     .target(
