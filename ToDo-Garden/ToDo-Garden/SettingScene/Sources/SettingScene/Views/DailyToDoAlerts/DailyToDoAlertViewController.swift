@@ -8,7 +8,7 @@ import ToDoGardenUIResource
 
 import SharingGRDB
 
-// swiftlint:disable force_try identifier_name function_body_length
+// swiftlint:disable identifier_name function_body_length
 final class DailyToDoAlertViewController: UIViewController {
   private let noticeLabel = UILabel()
   private let tableView = UITableView()
@@ -391,4 +391,4 @@ private extension DailyToDoAlertViewController {
   )
 }
 #endif
-// swiftlint:enable force_try identifier_name function_body_length
+// swiftlint:enable identifier_name function_body_length
