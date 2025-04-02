@@ -216,7 +216,7 @@ extension ManageGroupViewController {
         groupID: groupID,
         groupName: groupName,
         progressColor: groupColor,
-        progressRate: Float.zero
+        progressRate: 1.0
       )
       self?.routeToPostGroupScene(groupInfo: groupInfo)
     }

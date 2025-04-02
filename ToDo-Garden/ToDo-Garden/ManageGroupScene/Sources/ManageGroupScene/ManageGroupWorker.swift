@@ -47,7 +47,7 @@ public class ManageGroupWorker: ManageGroupWorkable {
       groupID: request.groupID,
       groupName: request.groupName,
       progressColor: request.groupColor,
-      progressRate: Float.zero
+      progressRate: 1.0
     )
     return group
   }
@@ -117,7 +117,7 @@ public class ManageGroupWorker: ManageGroupWorkable {
           groupID: groupID,
           groupName: item.name,
           progressColor: try UIColor().fromHex(item.color),
-          progressRate: Float(item.progressrate)
+          progressRate: 1.0
         )
       )
     }

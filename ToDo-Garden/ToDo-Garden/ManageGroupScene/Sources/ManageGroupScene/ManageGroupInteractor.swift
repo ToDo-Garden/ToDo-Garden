@@ -102,7 +102,7 @@ extension ManageGroupInteractor: ManageGroupBusinessLogic {
           groupID: groupID,
           groupName: request.groupName,
           progressColor: request.groupColor,
-          progressRate: Float.zero
+          progressRate: 1.0
         )
         self.currentGroups.append(group)
         let response = ManageGroup.AddGroup.Response(group: group)
