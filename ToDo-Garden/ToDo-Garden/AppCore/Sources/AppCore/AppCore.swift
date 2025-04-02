@@ -80,9 +80,7 @@ public final class AppCore {
 
 extension AppCore {
   public func remainToDoCount(_ count: Int) {
-    // 하위에서 올라온 데이터
     self.dependency.notificationManager.pushDailyToDoReminder(count: count)
-    dump(count)
   }
 }
 
