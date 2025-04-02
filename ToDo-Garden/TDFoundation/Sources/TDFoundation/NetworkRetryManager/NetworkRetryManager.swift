@@ -42,9 +42,11 @@ public final class NetworkRetryManager: NetworkRetryManagerAPI, @unchecked Senda
       .store(in: &self.cancellables)
   }
   
-  public func execute() {
+  public func execute(isRetryingOn: Bool = true) {
     self.networkMonitor.start(queue: .global(qos: .background))
-    self.startRetrying()
+    if isRetryingOn {
+      self.startRetrying()
+    }
   }
   
   private func startRetrying() {

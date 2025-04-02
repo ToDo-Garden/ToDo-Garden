@@ -78,6 +78,7 @@ final class HomeSceneInteractor: HomeSceneDataStore {
     self.retryManager = retryManager
     self.monthlyData = [:]
     self.itemsForBatch = [:]
+    self.retryManager.execute(isRetryingOn: false)
   }
 }
 
@@ -303,7 +304,6 @@ extension HomeSceneInteractor {
 =======
   private func checkNetworkConnection() -> Bool {
     return self.retryManager.isConnected()
-    // NWPathMonitor 버그로 시뮬레이터상에선 항상 false가 반환됨. 실기기에선 정상동작
   }
   
   private func addBatchItem(newToDo: TodoBatchItem) {

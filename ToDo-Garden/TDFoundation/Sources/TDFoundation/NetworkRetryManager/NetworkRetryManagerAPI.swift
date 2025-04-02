@@ -7,7 +7,7 @@
 
 public protocol NetworkRetryManagerAPI: Sendable {
   var retryTask: (@Sendable () async throws -> Void)? { get set }
-  func execute()
+  func execute(isRetryingOn: Bool)
   func cancelRetry()
   func isConnected() -> Bool
 }
