@@ -342,7 +342,22 @@ extension HomeSceneInteractor {
   
   @objc
   private func handleDidBecomeActiveNotification() {
-    self.homeSceneDelegate?(5)
+    let dateToString = Date.now.description.toYYYYMMDDStringFromISO8601Space()
+    
+    guard let dailyData = self.monthlyData[dateToString]
+    else { return }
+    
+    let remainToDoCount = dailyData.reduce(into: 0, { $0 += $1.remainCount })
+    
+    self.homeSceneDelegate?(
+      remainToDoCount
+    )
+  }
+}
+
+extension SharedEntity.TodoListGroup {
+  var remainCount: Int {
+    return self.todoList?.reduce(into: 0, { $0 += $1.isDone ? 0 : 1 }) ?? 0
   }
 }
 
