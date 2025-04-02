@@ -14,7 +14,6 @@
 		4FDA5E392B4FF1E4006506ED /* Asset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FDA5E382B4FF1E4006506ED /* Asset.xcassets */; };
 		61BAD03B2CFDC8B600B15399 /* AppCore in Frameworks */ = {isa = PBXBuildFile; productRef = 61BAD03A2CFDC8B600B15399 /* AppCore */; };
 		639D79512C19A8E300004B26 /* EditToDoScene in Resources */ = {isa = PBXBuildFile; fileRef = 639D79502C19A8E300004B26 /* EditToDoScene */; };
-		E4058D962D9D6863002748BC /* .env in Resources */ = {isa = PBXBuildFile; fileRef = E4058D952D9D6863002748BC /* .env */; };
 		E44542B92CD0B821008B8F93 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = E44542B82CD0B821008B8F93 /* Lottie */; };
 /* End PBXBuildFile section */
 
@@ -53,7 +52,6 @@
 		AE645FE82C64BD3E001A5612 /* CommonViews */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CommonViews; sourceTree = "<group>"; };
 		AE645FE92C64BE80001A5612 /* GuideScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = GuideScene; sourceTree = "<group>"; };
 		AE930F3C2C2E9306002F26AB /* TimerScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = TimerScene; sourceTree = "<group>"; };
-		E4058D952D9D6863002748BC /* .env */ = {isa = PBXFileReference; lastKnownFileType = text; path = .env; sourceTree = "<group>"; };
 		E437F3D32CB3E817003589F0 /* ToDo-Garden.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "ToDo-Garden.entitlements"; sourceTree = "<group>"; };
 		E440FDE72CE4878100775512 /* MyStatsScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MyStatsScene; sourceTree = "<group>"; };
 		E4754C0F2C3BB9790079CFAE /* PostGroupScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = PostGroupScene; sourceTree = "<group>"; };
@@ -86,7 +84,6 @@
 		4F0DF11F2B4EABCE00097B7D = {
 			isa = PBXGroup;
 			children = (
-				E4058D952D9D6863002748BC /* .env */,
 				4F9163DF2CCF5FF3001C7365 /* TDFoundation */,
 				4F577A2B2C2BDE300006F44F /* TDUtility */,
 				4FC8C14A2B87562600BA223E /* ToDoGardenUI */,
@@ -265,7 +262,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E4058D962D9D6863002748BC /* .env in Resources */,
 				4FDA5E392B4FF1E4006506ED /* Asset.xcassets in Resources */,
 				639D79512C19A8E300004B26 /* EditToDoScene in Resources */,
 				4F0DF1382B4EABD000097B7D /* LaunchScreen.storyboard in Resources */,
