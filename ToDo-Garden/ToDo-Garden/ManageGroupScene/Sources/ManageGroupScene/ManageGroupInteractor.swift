@@ -10,6 +10,7 @@ import Foundation
 import HTTPClientAPI
 import ManageGroupSceneAPI
 import ManageGroupSceneEntity
+import TDFoundation
 
 protocol ManageGroupDataStore {
 }
@@ -28,14 +29,18 @@ protocol ManageGroupBusinessLogic {
 class ManageGroupInteractor: ManageGroupDataStore {
   var presenter: ManageGroupPresentationLogic?
   private let manageGroupWorker: ManageGroupWorkable
+  private let retryManager: NetworkRetryManagerAPI
   
   var currentGroups: [ManageGroup.ToDoGroup]
   private var tasks: [ManageGroupInteractor.TaskKey: Task<Void, Never>] = [:]
   
   init(
-    worker: ManageGroupWorkable
+    worker: ManageGroupWorkable,
+    retryManager: NetworkRetryManagerAPI
   ) {
     self.manageGroupWorker = worker
+    self.retryManager = retryManager
+    self.retryManager.execute(isRetryingOn: false)
     self.currentGroups = []
   }
   

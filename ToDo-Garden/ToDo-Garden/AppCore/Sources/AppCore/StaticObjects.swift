@@ -74,7 +74,8 @@ extension ManageGroupSceneBuilder.Dependency {
   @MainActor
   static let live = ManageGroupSceneBuilder.Dependency.init(
     manageGroupWorker: ManageGroupWorker(httpClient: HTTPClient.live),
-    postGroupSceneBuilder: PostGroupSceneBuilder.init(dependency: .live)
+    postGroupSceneBuilder: PostGroupSceneBuilder.init(dependency: .live),
+    retryManager: NetworkRetryManager()
   )
 }
 
