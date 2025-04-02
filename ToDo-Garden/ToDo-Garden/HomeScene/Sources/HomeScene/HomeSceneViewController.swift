@@ -219,7 +219,7 @@ extension HomeSceneViewController: HomeSceneDisplayLogic {
     for section in snapshot.sectionIdentifiers {
       self.todoListView?.updateHeaderUIAfterUpdatingToDo(section: section)
     }
-    self.todoListView?.apply(
+    self.todoListView?.applyWithReloadData(
       snapshot,
       completion: { [weak self] in
         self?.showToDoList()

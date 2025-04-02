@@ -55,6 +55,10 @@ public final class ToDoListView: UIView {
     self.dataSource.apply(snapshot, completion: completion)
   }
   
+  public func applyWithReloadData(_ snapshot: Snapshot, completion: (() -> Void)? = nil) {
+    self.dataSource.applySnapshotUsingReloadData(snapshot, completion: completion)
+  }
+  
   public func getSnapShot() -> Snapshot {
     return self.dataSource.snapshot()
   }
