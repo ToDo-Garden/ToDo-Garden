@@ -15,6 +15,7 @@ import ManageGroupScene
 import MyStatsScene
 import PostGroupScene
 import SearchGardenScene
+import SharedEntity
 import ShareGardenScene
 import SignUpScene
 import TDFoundation
@@ -27,7 +28,7 @@ extension HomeSceneBuilder.Dependency {
   public static let live = HomeSceneBuilder.Dependency.init(
     homeSceneWorker: HomeSceneWorker(
       httpClient: HTTPClient.live,
-      homeStorage: JSONStorage<HomeScene.TodoBatchItem>(fileName: "todolistBatch.json")
+      homeStorage: JSONStorage<SharedEntity.TodoBatchItem>(fileName: "todolistBatch.json")
     ),
     manageGroupSceneBuilder: ManageGroupSceneBuilder.init(dependency: .live),
     editToDoSceneBuilder: EditToDoSceneBuilder(dependency: .live),

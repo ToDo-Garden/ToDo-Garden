@@ -10,16 +10,17 @@ import Foundation
 import HomeSceneAPI
 import HomeSceneEntity
 import HTTPClientAPI
+import SharedEntity
 import TDFoundation
 import TDFoundationExtension
 
 public struct HomeSceneWorker: HomeSceneWorkable, Sendable {
   private let httpClient: HTTPClientAPI
-  private let homeStorage: any JSONStorable<HomeScene.TodoBatchItem>
-  
+  private let homeStorage: any JSONStorable<SharedEntity.TodoBatchItem>
+
   public init(
     httpClient: HTTPClientAPI,
-    homeStorage: some JSONStorable<HomeScene.TodoBatchItem>
+    homeStorage: some JSONStorable<SharedEntity.TodoBatchItem>
   ) {
     self.httpClient = httpClient
     self.homeStorage = homeStorage
@@ -43,7 +44,7 @@ public struct HomeSceneWorker: HomeSceneWorkable, Sendable {
     return fetchedToDoList
   }
   
-  public func writeJSONFile(data: [HomeScene.TodoBatchItem]) async throws {
+  public func writeJSONFile(data: [SharedEntity.TodoBatchItem]) async throws {
     var storedItems = (try? self.homeStorage.getItems()) ?? []
     
     for item in data {

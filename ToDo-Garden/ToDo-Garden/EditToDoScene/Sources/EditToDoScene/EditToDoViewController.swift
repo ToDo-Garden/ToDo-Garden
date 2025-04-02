@@ -64,6 +64,7 @@ final public class EditToDoViewController: UIViewController, EditToDoViewControl
 
   public override func viewDidLoad() {
     super.viewDidLoad()
+    print("i'm called")
     self.setup()
   }
 
@@ -89,7 +90,7 @@ extension EditToDoViewController: ToDoAlarmTimeSettingModalDelegate, ToDoRepetit
 extension EditToDoViewController: EditToDoScheduleViewDelegate {
   func editToDo() {
     if let toDoNameForEdit = self.editToDoView.getEditingText(),
-      let groupForEdit = self.editToDoView.getCurrentGroup() {
+    let groupForEdit = self.editToDoView.getCurrentGroup() {
       let request = EditToDo.CompleteEditToDo.Request(
         toDoName: toDoNameForEdit,
         displayedGroup: EditToDo.DisplayedGroup(
@@ -276,21 +277,23 @@ extension EditToDoViewController: UIScrollViewDelegate {
 }
 
 import HTTPClient
+import SharedEntity
 
 extension EditToDoViewController {
   struct EditToDoScenePayload: EditToDoScenePayloadable {
-    var toDoId: UUID
+    var toDo: SharedEntity.TodoBatchItem
+    var groups: [SharedEntity.TodoListGroup]
   }
 
   class SomeViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
-      super.viewDidAppear(animated)
-      let editToDoViewController = EditToDoSceneBuilder(
-        dependency: EditToDoSceneBuilder.Dependency(
-          editToDoWorker: EditToDoWorker(httpClient: HTTPClient.live)
-        )
-      ).build(with: EditToDoViewController.EditToDoScenePayload(toDoId: UUID()))
-      self.navigationController?.pushViewController(editToDoViewController, animated: true)
+      //      super.viewDidAppear(animated)
+      //      let editToDoViewController = EditToDoSceneBuilder(
+      //        dependency: EditToDoSceneBuilder.Dependency(
+      //          editToDoWorker: EditToDoWorker(httpClient: HTTPClient.live)
+      //        )
+      //      ).build(with: EditToDoViewController.EditToDoScenePayload(toDoId: UUID()))
+      //      self.navigationController?.pushViewController(editToDoViewController, animated: true)
     }
   }
 }
@@ -308,19 +311,19 @@ extension EditToDoViewController {
       break
     }
   }
-  
+
   public func getToDoNameInputView() -> UIView {
     return self.editToDoView.getToDoNameInputView()
   }
-  
+
   public func getGroupSelectionView() -> UIView {
     return self.editToDoView.getGroupSelectionView()
   }
-  
+
   public func getSegmentedControl() -> UIView {
     return self.editToDoSegmentedControl
   }
-  
+
   public func getAlarmTimeView() -> UIView {
     return self.editToDoScheduleView.getAlarmTimeView()
   }

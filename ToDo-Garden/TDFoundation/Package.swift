@@ -16,6 +16,10 @@ let package = Package(
     Product.library(
       name: "HTTPClient",
       targets: ["HTTPClient"]
+    ),
+    Product.library(
+      name: "SharedEntity",
+      targets: ["SharedEntity"]
     )
   ],
   dependencies: [
@@ -43,6 +47,9 @@ let package = Package(
         ),
         "HTTPClientAPI"
       ]
+    ),
+    Target.target(
+      name: "SharedEntity"
     ),
     Target.testTarget(
       name: "HTTPClientTests",

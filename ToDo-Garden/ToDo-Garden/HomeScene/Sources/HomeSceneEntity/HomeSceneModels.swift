@@ -7,6 +7,8 @@
 
 import Foundation
 
+import SharedEntity
+
 // swiftlint:disable all
 public enum HomeScene {
   // MARK: Use cases
@@ -20,9 +22,9 @@ public enum HomeScene {
     
     public struct Response: Codable, Sendable {
       public let date: String
-      public let list: [TodoListGroup]
-      
-      public init(date: String, list: [TodoListGroup]) {
+      public let list: [SharedEntity.TodoListGroup]
+
+      public init(date: String, list: [SharedEntity.TodoListGroup]) {
         self.date = date
         self.list = list
       }
@@ -31,110 +33,25 @@ public enum HomeScene {
   
   public enum BatchUpdate {
     public struct TodoBatchRequest: Codable, Sendable {
-      public let data: [TodoBatchItem]
-      
+      public let data: [SharedEntity.TodoBatchItem]
+
       public init(data: [TodoBatchItem]) {
         self.data = data
       }
     }
   }
-}
 
-// MARK: DTO
-extension HomeScene {
-  public final class TodoListGroup: Codable, @unchecked Sendable {
-    public let localId: String
-    public let name: String
-    public let color: String
-    public var todoList: [TodoListItem]?
-    public let progressRate: Double
-    
-    public init(localId: String, name: String, color: String, todoList: [TodoListItem]?, progressRate: Double) {
-      self.localId = localId
-      self.name = name
-      self.color = color
-      self.todoList = todoList
-      self.progressRate = progressRate
-    }
-  }
-  
-  public final class TodoListItem: Codable, @unchecked Sendable {
-    public var name: String
-    public let endDay: String?
-    public var isDone: Bool
-    public let localID: String
-    public let startDay: String?
-    public let alarmTime: Int?
-    public let isAlarmOn: Bool
-    public let isOnlyToday: Bool
-    public let repeatToDoId: String?
-    
-    enum CodingKeys: String, CodingKey {
-      case name, endDay, isDone, startDay, alarmTime, isAlarmOn, isOnlyToday, repeatToDoId
-      case localID = "local_id"
-    }
-    
-    public init(name: String, endDay: String?, isDone: Bool, localID: String, startDay: String?, alarmTime: Int?, isAlarmOn: Bool, isOnlyToday: Bool, repeatToDoId: String?) {
-      self.name = name
-      self.endDay = endDay
-      self.isDone = isDone
-      self.localID = localID
-      self.startDay = startDay
-      self.alarmTime = alarmTime
-      self.isAlarmOn = isAlarmOn
-      self.isOnlyToday = isOnlyToday
-      self.repeatToDoId = repeatToDoId
-    }
-  }
-  
-  public final class TodoBatchItem: Codable, @unchecked Sendable {
-    public let localId: String
-    public var name: String
-    public var isDone: Bool
-    public let createdAt: String
-    public var isAlarmOn: Bool
-    public var alarmTime: Double
-    public var isOnlyToday: Bool
-    public var startDay: String?
-    public var endDay: String?
-    public let groupId: String
-    public var isDelete: Bool
-    
-    public init(localId: String, name: String, isDone: Bool, createdAt: String, isAlarmOn: Bool, alarmTime: Double, isOnlyToday: Bool, startDay: String?, endDay: String?, groupId: String, isDelete: Bool) {
-      self.localId = localId
-      self.name = name
-      self.isDone = isDone
-      self.createdAt = createdAt
-      self.isAlarmOn = isAlarmOn
-      self.alarmTime = alarmTime
-      self.isOnlyToday = isOnlyToday
-      self.startDay = startDay
-      self.endDay = endDay
-      self.groupId = groupId
-      self.isDelete = isDelete
-    }
+  public enum PrepareDataForEditToDoScene {
+    public struct Request: Sendable {
+      public let todoId: UUID
+      public let selectedDate: Date
+      public let groupId: UUID
 
-    public func setDelete(_ isDelete: Bool) {
-      self.isDelete = isDelete
-    }
-
-    public func setDone(_ isDone: Bool) {
-      self.isDone = isDone
-    }
-
-    public func setName(_ newName: String) {
-      self.name = newName
-    }
-
-    public func setAlarm(isOn: Bool, time: Double) {
-      self.isAlarmOn = isOn
-      self.alarmTime = time
-    }
-
-    public func setPeriod(start: String, end: String) {
-      self.isOnlyToday = false
-      self.startDay = start
-      self.endDay = end
+      public init(todoId: UUID, selectedDate: Date, groupId: UUID) {
+        self.todoId = todoId
+        self.selectedDate = selectedDate
+        self.groupId = groupId
+      }
     }
   }
 }
