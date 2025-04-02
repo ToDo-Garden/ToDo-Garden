@@ -23,7 +23,6 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     options connectionOptions: UIScene.ConnectionOptions
   ) {
     self.setupWindow(with: scene)
-    self.prepare()
     self.appCore.getStarted()
   }
 }
@@ -34,15 +33,5 @@ extension SceneDelegate {
     self.window = UIWindow(windowScene: windowScene)
     window?.rootViewController = self.appCore.dependency.router.navigationController
     window?.makeKeyAndVisible()
-  }
-  
-  private func prepare() {
-    self.registerCustomFonts()
-    NavigationBarUIUpdator.update()
-  }
-  
-  private func registerCustomFonts() {
-    PretendardFont.register()
-    GmarkSansFont.register()
   }
 }
