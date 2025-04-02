@@ -9,6 +9,7 @@ import ShareGardenScene
 import SignUpScene
 import SignUpSceneAPI
 import TDFoundation
+import UserInfoScene
 
 import SharingGRDB
 
@@ -32,7 +33,8 @@ extension AppCore {
             setting: SettingSceneBuilder(
               dependency: SettingSceneBuilder.Dependency(
                 settingWorker: SettingWorker(httpClient: HTTPClient.live),
-                appServiceWorker: ApplicationServiceWorker()
+                appServiceWorker: ApplicationServiceWorker(),
+                userInfoSceneBuilder: UserInfoSceneSceneBuilder.live
               )
             )
           )
