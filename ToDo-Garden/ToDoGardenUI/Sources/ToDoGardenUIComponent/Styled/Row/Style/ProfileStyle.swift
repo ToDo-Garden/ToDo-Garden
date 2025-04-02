@@ -139,6 +139,7 @@ extension Styled.Row {
   
   private func setupShimmeringProfileImageView(_ profileImageView: UIImageView) {
     profileImageView.layer.cornerRadius = profileImageView.bounds.height / 2
+    profileImageView.layer.masksToBounds = true
     profileImageView.isShimmering = true
   }
   
