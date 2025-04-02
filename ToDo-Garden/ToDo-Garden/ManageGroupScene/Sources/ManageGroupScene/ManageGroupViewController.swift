@@ -68,6 +68,7 @@ open class ManageGroupViewController: UIViewController, ManageGroupViewControlla
     self.view.backgroundColor = UIColor.white
     self.setupTableView()
     self.setupNavigationBar()
+    self.manageGroupTableViewDelegate?.hideFooterView()
   }
   
   open override func viewIsAppearing(_ animated: Bool) {
@@ -147,7 +148,10 @@ extension ManageGroupViewController {
     let isEditingMode = self.groupListTableView.isEditing
     self.updateBarButtonItems(isEditingMode: isEditingMode)
     if isEditingMode {
+      self.manageGroupTableViewDelegate?.hideFooterView()
       self.cancelEditing()
+    } else {
+      self.manageGroupTableViewDelegate?.showFooterView()
     }
     self.rightBarButtonCustomView.isEnabled = true
   }
@@ -158,6 +162,7 @@ extension ManageGroupViewController {
     if isEditingMode {
       self.saveGroupList()
     }
+    self.manageGroupTableViewDelegate?.hideFooterView()
     self.rightBarButtonCustomView.isEnabled = true
   }
   
