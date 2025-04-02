@@ -10,17 +10,17 @@ import UIKit
 import HomeSceneAPI
 import HomeSceneEntity
 import SharedEntity
+import TDFoundation
 import TDFoundationExtension
 import TDUtility
 import ToDoGardenUIComponent
 
 // swiftlint: disable file_length
-
 @MainActor
 protocol HomeSceneDisplayLogic: AnyObject {
   func displayFetchedToDoList(fetchedData: [String: [SharedEntity.TodoListGroup]])
   func displayDailyToDoList(snapshot: ToDoListView.Snapshot)
-  func displayCreateToDo(newToDo: SharedEntity.TodoBatchItem)
+  func displayCreateToDo(newToDo: TodoBatchItem)
   func displayDeleteToDo(groupID: UUID, deletedToDo: ToDoListView.ToDoItem)
   func displayErrorToast(error: Error)
   func routeToEditToDoScene()
@@ -50,6 +50,11 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
     self.calendarView = CalendarView(model: CalendarView.Model.primary)
     super.init(nibName: nil, bundle: nil)
     self.view.backgroundColor = UIColor.white
+    self.registerBackgroundTransitionObserver()
+  }
+  
+  deinit {
+    self.unregisterBackgroundTransition()
   }
   
   @available(*, unavailable)
@@ -66,7 +71,7 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
   open override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
     Task {
-      await self.interactor?.writeJSONFile()
+      await self.interactor?.writeBatchItemsToGRDB()
       await self.interactor?.requestBatchUpdateToServer()
     }
   }
@@ -176,6 +181,7 @@ extension HomeSceneViewController {
     self.loadingIndicator.isHidden = false
     self.loadingIndicator.startAnimation()
     Task {
+      await interactor.requestBatchUpdateToServer()
       await interactor.fetchToDoList(request: HomeScene.FetchToDoList.Request(dateString: targetMonth))
     }
   }
@@ -199,7 +205,7 @@ extension HomeSceneViewController: HomeSceneDisplayLogic {
     for section in snapshot.sectionIdentifiers {
       self.todoListView?.updateHeaderUIAfterUpdatingToDo(section: section)
     }
-    self.todoListView?.apply(
+    self.todoListView?.applyWithReloadData(
       snapshot,
       completion: { [weak self] in
         self?.showToDoList()
@@ -207,11 +213,11 @@ extension HomeSceneViewController: HomeSceneDisplayLogic {
     )
   }
   
-  func displayCreateToDo(newToDo: SharedEntity.TodoBatchItem) {
+  func displayCreateToDo(newToDo: TodoBatchItem) {
     guard var snapshot = self.todoListView?.getSnapShot(),
       let newToDoUUID = UUID(uuidString: newToDo.localId),
       let newToDoGroupUUID = UUID(uuidString: newToDo.groupId),
-      var section = snapshot.sectionIdentifiers.first(
+      let section = snapshot.sectionIdentifiers.first(
         where: { $0.id == newToDoGroupUUID }
       ) else { return }
  
@@ -232,7 +238,7 @@ extension HomeSceneViewController: HomeSceneDisplayLogic {
   
   func displayDeleteToDo(groupID: UUID, deletedToDo: ToDoListView.ToDoItem) {
     guard var snapshot = self.todoListView?.getSnapShot(),
-      var section = snapshot.sectionIdentifiers.first(
+      let section = snapshot.sectionIdentifiers.first(
         where: { $0.id == groupID }
       ) else { return }
 
@@ -305,7 +311,7 @@ extension HomeSceneViewController: CalendarViewDateSelectionDelegate {
 
   public func didChangeMonth() {
     Task {
-      await self.interactor?.writeJSONFile()
+      await self.interactor?.writeBatchItemsToGRDB()
       await self.interactor?.requestBatchUpdateToServer()
       self.fetchToDoList()
     }
@@ -411,6 +417,15 @@ extension HomeSceneViewController {
   
   public func getSwipedCell() -> UIView {
     return self.bottomSheet.contentView?.subviews.last ?? UIView()
+  }
+}
+
+extension HomeSceneViewController: @preconcurrency TransitionHandlable {
+  public func handleBackgroundTransition() {
+    Task {
+      await self.interactor?.writeBatchItemsToGRDB()
+      await self.interactor?.requestBatchUpdateToServer()
+    }
   }
 }
 

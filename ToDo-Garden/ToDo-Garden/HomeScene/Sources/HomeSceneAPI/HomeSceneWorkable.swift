@@ -9,10 +9,12 @@ import Foundation
 
 import HomeSceneEntity
 import SharedEntity
+import TDFoundation
 
 public protocol HomeSceneWorkable: Sendable {
-  func fetchToDoList(dateString: String) async throws -> [HomeScene.FetchToDoList.Response]
-  func writeJSONFile(data: [SharedEntity.TodoBatchItem]) async throws
-  func deleteToDo() async throws
+  func fetchToDoList(dateString: String) async throws -> [DailyToDoListData]
+  func writeBatchItemsToGRDB(data: [TodoBatchItem]) async throws
   func requestBatchUpdateToServer() async throws
+  func loadMonthlyToDoListFromGRDB(dateString: String) async throws -> [DailyToDoListData]
+  func syncronizeGRDBWithBatchItems() async throws
 }

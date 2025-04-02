@@ -23,12 +23,17 @@ let package = Package(
     Package.Dependency.package(path: "../ManageGroupScene"),
     Package.Dependency.package(path: "../EditToDoScene"),
     Package.Dependency.package(path: "../TimerScene"),
-    Package.Dependency.package(path: "../TDFoundation")
+    Package.Dependency.package(path: "../TDFoundation"),
+    Package.Dependency.package(url: "https://github.com/pointfreeco/sharing-grdb", from: "0.1.0")
   ],
   targets: [
     Target.target(
       name: "HomeSceneEntity",
       dependencies: [
+        Target.Dependency.product(
+          name: "TDFoundation",
+          package: "TDFoundation"
+        ),
         Target.Dependency.product(
           name: "SharedEntity",
           package: "TDFoundation"
@@ -38,9 +43,14 @@ let package = Package(
     Target.target(
       name: "HomeSceneAPI",
       dependencies: [
+        "HomeSceneEntity",
         Target.Dependency.product(
           name: "ToDoGardenUIAPI",
           package: "ToDoGardenUI"
+        ),
+        Target.Dependency.product(
+          name: "TDFoundation",
+          package: "TDFoundation"
         )
       ]
     ),
@@ -76,6 +86,14 @@ let package = Package(
         Target.Dependency.product(
           name: "TimerScene",
           package: "TimerScene"
+        ),
+        Target.Dependency.product(
+          name: "TDFoundation",
+          package: "TDFoundation"
+        ),
+        Target.Dependency.product(
+          name: "SharingGRDB",
+          package: "sharing-grdb"
         ),
         Target.Dependency.product(
           name: "SharedEntity",

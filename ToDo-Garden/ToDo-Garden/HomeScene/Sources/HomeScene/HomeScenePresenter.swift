@@ -9,13 +9,14 @@ import UIKit
 
 import HomeSceneEntity
 import SharedEntity
+import TDFoundation
 import ToDoGardenUIComponent
 
 @MainActor
 protocol HomeScenePresentationLogic {
-  func presentFetchedToDoList(monthlyData: [HomeScene.FetchToDoList.Response])
+  func presentFetchedToDoList(monthlyData: [DailyToDoListData])
   func presentDailyToDoList(dailyData: [SharedEntity.TodoListGroup])
-  func presentCreateToDo(newToDo: SharedEntity.TodoBatchItem)
+  func presentCreateToDo(newToDo: TodoBatchItem)
   func presentDeleteToDo(groupID: UUID, deletedToDo: ToDoListView.ToDoItem)
   func presentErrorToast(error: Error)
   func presentDataForEditToDoScene()
@@ -29,7 +30,7 @@ final class HomeScenePresenter {
 // MARK: - Request to ViewController
 
 extension HomeScenePresenter: HomeScenePresentationLogic {
-  func presentFetchedToDoList(monthlyData: [HomeScene.FetchToDoList.Response]) {
+  func presentFetchedToDoList(monthlyData: [DailyToDoListData]) {
     let hashTable = self.makeHashTable(monthlyData: monthlyData)
     self.viewController?.displayFetchedToDoList(fetchedData: hashTable)
   }
@@ -39,7 +40,7 @@ extension HomeScenePresenter: HomeScenePresentationLogic {
     self.viewController?.displayDailyToDoList(snapshot: snapshot)
   }
   
-  func presentCreateToDo(newToDo: SharedEntity.TodoBatchItem) {
+  func presentCreateToDo(newToDo: TodoBatchItem) {
     self.viewController?.displayCreateToDo(newToDo: newToDo)
   }
   
@@ -58,7 +59,7 @@ extension HomeScenePresenter: HomeScenePresentationLogic {
 
 // swiftlint: disable all
 extension HomeScenePresenter {
-  private func makeHashTable(monthlyData: [HomeScene.FetchToDoList.Response]) -> [String: [SharedEntity.TodoListGroup]] {
+    private func makeHashTable(monthlyData: [DailyToDoListData]) -> [String: [SharedEntity.TodoListGroup]] {
     var hashTable: [String: [SharedEntity.TodoListGroup]] = [:]
 
     for data in monthlyData {

@@ -10,10 +10,11 @@ import Foundation
 import EditToDoSceneAPI
 import EditToDoSceneEntity
 import SharedEntity
+import TDFoundation
 
 @MainActor
 protocol EditToDoDataStore {
-  var toDo: SharedEntity.TodoBatchItem? { get set }
+  var toDo: TodoBatchItem? { get set }
   var groups: [SharedEntity.TodoListGroup]? { get set }
 }
 
@@ -32,7 +33,7 @@ protocol EditToDoBusinessLogic {
 
 @MainActor
 final class EditToDoInteractor: EditToDoDataStore {
-  var toDo: SharedEntity.TodoBatchItem?
+  var toDo: TodoBatchItem?
   var groups: [SharedEntity.TodoListGroup]?
 
   // MARK: VIP Objects

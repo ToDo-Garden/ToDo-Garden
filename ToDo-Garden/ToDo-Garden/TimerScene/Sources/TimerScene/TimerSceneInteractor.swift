@@ -222,6 +222,6 @@ extension TimerSceneInteractor {
   private func networkErrorHandler(_ error: NSError) {
     guard error.domain == NSURLErrorDomain else { return }
 
-    self.networkRetryManager.execute()
+    self.networkRetryManager.execute(isRetryingOn: true)
   }
 }

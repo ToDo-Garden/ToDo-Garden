@@ -8,6 +8,7 @@
 import Foundation
 
 import SharedEntity
+import TDFoundation
 
 // swiftlint:disable all
 public enum HomeScene {
@@ -19,21 +20,11 @@ public enum HomeScene {
         self.dateString = dateString
       }
     }
-    
-    public struct Response: Codable, Sendable {
-      public let date: String
-      public let list: [SharedEntity.TodoListGroup]
-
-      public init(date: String, list: [SharedEntity.TodoListGroup]) {
-        self.date = date
-        self.list = list
-      }
-    }
   }
   
   public enum BatchUpdate {
     public struct TodoBatchRequest: Codable, Sendable {
-      public let data: [SharedEntity.TodoBatchItem]
+      public let data: [TodoBatchItem]
 
       public init(data: [TodoBatchItem]) {
         self.data = data

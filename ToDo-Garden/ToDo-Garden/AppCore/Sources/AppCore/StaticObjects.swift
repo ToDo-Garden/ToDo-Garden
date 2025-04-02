@@ -27,12 +27,12 @@ extension HomeSceneBuilder.Dependency {
   @MainActor
   public static let live = HomeSceneBuilder.Dependency.init(
     homeSceneWorker: HomeSceneWorker(
-      httpClient: HTTPClient.live,
-      homeStorage: JSONStorage<SharedEntity.TodoBatchItem>(fileName: "todolistBatch.json")
+      httpClient: HTTPClient.live
     ),
     manageGroupSceneBuilder: ManageGroupSceneBuilder.init(dependency: .live),
     editToDoSceneBuilder: EditToDoSceneBuilder(dependency: .live),
-    timerSceneBuilder: TimerSceneBuilder(dependency: .live)
+    timerSceneBuilder: TimerSceneBuilder(dependency: .live),
+    retryManager: NetworkRetryManager()
   )
 }
 

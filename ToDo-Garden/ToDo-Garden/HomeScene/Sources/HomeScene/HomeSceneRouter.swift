@@ -10,6 +10,7 @@ import Foundation
 import EditToDoSceneAPI
 import ManageGroupSceneAPI
 import SharedEntity
+import TDFoundation
 import TimerSceneAPI
 
 protocol HomeSceneRoutingLogic {
@@ -67,7 +68,7 @@ extension HomeSceneRouter: HomeSceneRoutingLogic {
 
 // MARK: - Declare Payload for scene
 struct EditToDoScenePayload: EditToDoScenePayloadable {
-  var toDo: SharedEntity.TodoBatchItem
+  var toDo: TodoBatchItem
   var groups: [SharedEntity.TodoListGroup]
 }
 

@@ -2,7 +2,7 @@ import Foundation
 
 import SharingGRDB
 
-// swiftlint:disable force_try identifier_name
+// swiftlint:disable force_try identifier_name function_body_length
 public func appDatabase() throws -> any DatabaseWriter {
   var configuration = Configuration()
   configuration.foreignKeysEnabled = true
@@ -41,9 +41,17 @@ extension DatabaseWriter {
   public func migrate() throws {
     var migrator = DatabaseMigrator()
     defer { try! migrator.migrate(self) }
+    
     #if DEBUG
-      migrator.eraseDatabaseOnSchemaChange = true
+    migrator.eraseDatabaseOnSchemaChange = true
     #endif
+
+    try createDailyToDoAlertsTable(migrator: &migrator)
+    try createMyGroupsAndMyToDosTables(migrator: &migrator)
+    try createTodoBatchItemTable(migrator: &migrator)
+  }
+  
+  private func createDailyToDoAlertsTable(migrator: inout DatabaseMigrator) throws {
     migrator.registerMigration("Create 'dailyToDoAlerts' table") { db in
       try db.create(table: DailyToDoAlert.databaseTableName) { t in
         t.autoIncrementedPrimaryKey("id")
@@ -51,6 +59,64 @@ extension DatabaseWriter {
           .notNull()
         t.column("isRepeating", .boolean)
           .defaults(to: true)
+          .notNull()
+      }
+    }
+  }
+  
+  private func createMyGroupsAndMyToDosTables(migrator: inout DatabaseMigrator) throws {
+    migrator.registerMigration("Create 'MyGroups' table") { db in
+      try db.create(table: MyGroup.databaseTableName) { t in
+        t.primaryKey("groupId", .text, onConflict: .replace)
+        t.column("date", .text).notNull()
+        t.column("name", .text).notNull()
+        t.column("color", .text).notNull()
+      }
+    }
+    
+    migrator.registerMigration("Create 'MyToDos' table") { db in
+      try db.create(table: MyToDo.databaseTableName) { t in
+        t.primaryKey("todoId", .text, onConflict: .replace)
+        t.column("groupId", .text)
+          .notNull()
+          .references(MyGroup.databaseTableName, onDelete: .cascade)
+        t.column("date", .text).notNull()
+        t.column("name", .text).notNull()
+        t.column("isDone", .boolean).notNull().defaults(to: false)
+        t.column("startDay", .text)
+        t.column("endDay", .text)
+        t.column("alarmTime", .integer)
+        t.column("isAlarmOn", .boolean).notNull().defaults(to: false)
+        t.column("isOnlyToday", .boolean).notNull().defaults(to: true)
+        t.column("repeatToDoId", .text)
+      }
+    }
+  }
+  
+  private func createTodoBatchItemTable(migrator: inout DatabaseMigrator) throws {
+    migrator.registerMigration("Create 'todoBatchItem' table") { db in
+      try db.create(table: TodoBatchItem.databaseTableName) { t in
+        t.primaryKey("localId", .text, onConflict: .replace)
+        t.column("name", .text)
+          .notNull()
+        t.column("isDone", .boolean)
+          .notNull()
+          .defaults(to: false)
+        t.column("createdAt", .text)
+          .notNull()
+        t.column("isAlarmOn", .boolean)
+          .notNull()
+          .defaults(to: false)
+        t.column("alarmTime", .double)
+        t.column("isOnlyToday", .boolean)
+          .notNull()
+          .defaults(to: true)
+        t.column("startDay", .text)
+        t.column("endDay", .text)
+        t.column("isDelete", .boolean)
+          .notNull()
+          .defaults(to: false)
+        t.column("groupId", .text)
           .notNull()
       }
     }
@@ -93,4 +159,4 @@ public struct DailyToDoAlerts: FetchKeyRequest {
       .fetchAll(db)
   }
 }
-// swiftlint:enable force_try identifier_name
+// swiftlint:enable force_try identifier_name function_body_length

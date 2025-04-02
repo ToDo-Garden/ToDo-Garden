@@ -55,6 +55,10 @@ public final class ToDoListView: UIView {
     self.dataSource.apply(snapshot, completion: completion)
   }
   
+  public func applyWithReloadData(_ snapshot: Snapshot, completion: (() -> Void)? = nil) {
+    self.dataSource.applySnapshotUsingReloadData(snapshot, completion: completion)
+  }
+  
   public func getSnapShot() -> Snapshot {
     return self.dataSource.snapshot()
   }
@@ -67,7 +71,7 @@ public final class ToDoListView: UIView {
       at: IndexPath(item: 0, section: self.getSectionIndex(for: section))
     ) as? ToDoGroupSectionHeaderView else { return }
     
-    var updatedModel = section.headerUIModel
+    let updatedModel = section.headerUIModel
     updatedModel.updateProgressRate(newProgressRate)
     headerView.update(with: updatedModel)
   }
@@ -85,24 +89,28 @@ extension ToDoListView {
 // swiftlint: disable all
 extension ToDoListView {
   private func makeDataSource() -> DataSource {
-    let toDoCellRegistration = ToDoCellRegistration { cell, indexPath , toDoItem in
+    let toDoCellRegistration = ToDoCellRegistration { cell, _, toDoItem in
       cell.contentConfiguration = ToDoContentViewContentConfiguration(model: toDoItem.toDoUIModel)
       cell.indentationLevel = Int.zero
 
       toDoItem.toDoUIModel.isSelected.bind { [weak self] bool in
-        guard let self = self else { return }
+        guard let self = self,
+          let currentIndexPath = self.getCurrentIndexPath(for: toDoItem)
+        else { return }
         
-        self.cellUpdatingDelegate?.updateSelection(isSelected: bool, todo: toDoItem, at: indexPath)
+        self.cellUpdatingDelegate?.updateSelection(isSelected: bool, todo: toDoItem, at: currentIndexPath)
+        
         Task { @MainActor in
-          let currentIndexPath = indexPath
           await self.updateHeaderUI(indexPath: currentIndexPath)
         }
       }
       
       toDoItem.toDoUIModel.text.bind { [weak self] text in
-        guard let self = self else { return }
+        guard let self = self,
+          let currentIndexPath = self.getCurrentIndexPath(for: toDoItem)
+        else { return }
         
-        self.cellUpdatingDelegate?.updateText(text: text, todo: toDoItem, at: indexPath)
+        self.cellUpdatingDelegate?.updateText(text: text, todo: toDoItem, at: currentIndexPath)
       }
     }
     
@@ -241,7 +249,7 @@ extension ToDoListView: ToDoGroupSectionHeaderViewDelegate {
       return
     }
 
-    var updatedModel = section.headerUIModel
+    let updatedModel = section.headerUIModel
     updatedModel.updateProgressRate(newProgressRate)
     headerView.update(with: updatedModel)
   }
@@ -267,6 +275,20 @@ extension ToDoListView: ToDoGroupSectionHeaderViewDelegate {
     }
     
     return sectionIndex
+  }
+  
+  private func getCurrentIndexPath(for item: ToDoItem) -> IndexPath? {
+    let snapshot = self.dataSource.snapshot()
+    guard let section = snapshot.sectionIdentifiers.first(where: { section in
+      section.getToDoItems().contains(item)
+    }) else { return nil }
+
+    guard let sectionIndex = snapshot.sectionIdentifiers.firstIndex(of: section) else { return nil }
+
+    let sectionItems = section.getToDoItems()
+    guard let itemIndex = sectionItems.firstIndex(of: item) else { return nil }
+    
+    return IndexPath(item: itemIndex, section: sectionIndex)
   }
 }
 // swiftlint: enable all
