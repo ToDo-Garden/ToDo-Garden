@@ -15,6 +15,7 @@ import SignUpSceneAPI
 public final class AppRouter {
   private let httpClient: HTTPClientAPI
   let sceneBuilder: SceneBuilder
+  var upstreamContinuation: AsyncStream<AppCore.UpStreamOperation>.Continuation?
   
   public init(
     httpClient: HTTPClientAPI,
@@ -94,9 +95,10 @@ public final class AppRouter {
   private func buildLoginViewController() -> UIViewController {
     let login = LoginViewController(with: self.httpClient)
     login.afterLoginAction = { [weak self] isExistingUser in
-      self?.switchTo(
+      guard let self else { return }
+      self.switchTo(
         isExistingUser
-        ? Destination.home(HomeSceneBuilder(dependency: .live).build())
+        ? Destination.home(self.sceneBuilder.home.build())
         : Destination.signUp
       )
     }
@@ -109,14 +111,15 @@ public final class AppRouter {
   private func buildSignUpSecne() -> UIViewController {
     // TODO: - 추후 마켓팅 정보를 대비한 값입니다.
     let isEventAndPromotionalInformationAgreed = true
-    let signUp: SignUpViewControllable = sceneBuilder.signup.build(
+    let signUp: SignUpViewControllable = self.sceneBuilder.signup.build(
       with: SignUpScenePayload(
         agreeOptionalCondition: isEventAndPromotionalInformationAgreed
       )
     )
     signUp.modalPresentationStyle = .overFullScreen
     signUp.afterSignUpAction = { [weak self] in
-      self?.switchTo(Destination.home(HomeSceneBuilder(dependency: .live).build()))
+      guard let self else { return }
+      self.switchTo(Destination.home(self.sceneBuilder.home.build()))
     }
     return signUp
   }
