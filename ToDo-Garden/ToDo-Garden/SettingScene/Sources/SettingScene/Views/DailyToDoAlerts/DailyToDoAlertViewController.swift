@@ -203,7 +203,6 @@ final class DailyToDoAlertViewController: UIViewController {
     let dailyToDoAlertStream = self.$dailyToDoAlerts
       .publisher
       .map { $0.map(\.rowModel) }
-      .removeDuplicates()
       .values
     
     self.dailyToDoAlertsTask = Task { @MainActor [weak self] in
@@ -261,6 +260,11 @@ private extension DailyToDoAlertViewController {
     
     static func == (lhs: Self, rhs: Self) -> Bool {
       lhs.id == rhs.id && lhs.alertTime == rhs.alertTime
+    }
+    
+    func hash(into hasher: inout Hasher) {
+      hasher.combine(self.id)
+      hasher.combine(self.alertTime)
     }
   }
   
