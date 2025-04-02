@@ -56,7 +56,15 @@ public final class AppCore {
       }
     } else {
       self.destination = self.dependency.isLoggedIn()
-      ? Destination.home(self.dependency.router.sceneBuilder.home.build(with: HomeScenePayload(delegate: { self.remainToDoCount($0) })))
+      ? Destination.home(
+        self.dependency.router.sceneBuilder.home.build(
+          with: HomeScenePayload(
+            delegate: {
+              self.remainToDoCount($0)
+            }
+          )
+        )
+      )
       : Destination.login
     }
   }
