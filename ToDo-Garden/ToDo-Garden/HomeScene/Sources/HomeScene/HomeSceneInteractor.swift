@@ -37,6 +37,7 @@ protocol HomeSceneBusinessLogic {
 
 @MainActor
 final class HomeSceneInteractor: HomeSceneDataStore {
+  var homeSceneDelegate: ((Int) -> Void)?
   var presenter: (any HomeScenePresentationLogic)?
   private let retryManager: NetworkRetryManagerAPI
   private var homeSceneWorker: HomeSceneWorkable
@@ -61,6 +62,7 @@ final class HomeSceneInteractor: HomeSceneDataStore {
     self.monthlyData = [:]
     self.itemsForBatch = [:]
     self.retryManager.execute(isRetryingOn: false)
+    self.setupNotificationObserver()
   }
 }
 
@@ -325,6 +327,37 @@ extension HomeSceneInteractor {
       repeatToDoId: nil // TODO: 이건 어떻게 특정하지?
     )
     return todoListItem
+  }
+}
+
+extension HomeSceneInteractor {
+  private func setupNotificationObserver() {
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(self.handleDidBecomeActiveNotification),
+      name: .init("did become active"),
+      object: nil
+    )
+  }
+  
+  @objc
+  private func handleDidBecomeActiveNotification() {
+    let dateToString = Date.now.description.toYYYYMMDDStringFromISO8601Space()
+    
+    guard let dailyData = self.monthlyData[dateToString]
+    else { return }
+    
+    let remainToDoCount = dailyData.reduce(into: 0, { $0 += $1.remainCount })
+    
+    self.homeSceneDelegate?(
+      remainToDoCount
+    )
+  }
+}
+
+extension SharedEntity.TodoListGroup {
+  var remainCount: Int {
+    return self.todoList?.reduce(into: 0, { $0 += $1.isDone ? 0 : 1 }) ?? 0
   }
 }
 

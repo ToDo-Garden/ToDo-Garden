@@ -56,7 +56,15 @@ public final class AppCore {
       }
     } else {
       self.destination = self.dependency.isLoggedIn()
-      ? Destination.home(self.dependency.router.sceneBuilder.home.build())
+      ? Destination.home(
+        self.dependency.router.sceneBuilder.home.build(
+          with: HomeScenePayload(
+            delegate: {
+              self.remainToDoCount($0)
+            }
+          )
+        )
+      )
       : Destination.login
     }
   }
@@ -68,7 +76,10 @@ public final class AppCore {
       let isAuthorized = try await manager.fetchPermission()
       if isAuthorized {
         for await _ in self.dependency.scheduledAlertClient.stream() {
-          manager.pushDailyToDoReminder(count: 5)
+          NotificationCenter.default.post(
+            name: .init("did become active"),
+            object: nil
+          )
         }
       }
     }
@@ -76,8 +87,18 @@ public final class AppCore {
 }
 
 extension AppCore {
+  public func remainToDoCount(_ count: Int) {
+    self.dependency.notificationManager.pushDailyToDoReminder(count: count)
+  }
+}
+
+struct HomeScenePayload: HomeScenePayloadable {
+  var delegate: ((Int) -> Void)?
+}
+
+extension AppCore {
   public enum UpStreamOperation: Sendable {
-    
+    case reminder(count: Int)
   }
 }
 

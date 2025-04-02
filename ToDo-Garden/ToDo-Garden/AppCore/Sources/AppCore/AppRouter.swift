@@ -96,9 +96,14 @@ public final class AppRouter {
     let login = LoginViewController(with: self.httpClient)
     login.afterLoginAction = { [weak self] isExistingUser in
       guard let self else { return }
+      let homeScenePayload = HomeScenePayload(
+        delegate: { [weak self] in
+          self?.upstreamContinuation?.yield(.reminder(count: $0))
+        }
+      )
       self.switchTo(
         isExistingUser
-        ? Destination.home(self.sceneBuilder.home.build())
+        ? Destination.home(self.sceneBuilder.home.build(with: homeScenePayload))
         : Destination.signUp
       )
     }
@@ -119,7 +124,13 @@ public final class AppRouter {
     signUp.modalPresentationStyle = .overFullScreen
     signUp.afterSignUpAction = { [weak self] in
       guard let self else { return }
-      self.switchTo(Destination.home(self.sceneBuilder.home.build()))
+      
+      let homeScenePayload = HomeScenePayload(
+        delegate: { [weak self] in
+          self?.upstreamContinuation?.yield(.reminder(count: $0))
+        }
+      )
+      self.switchTo(Destination.home(self.sceneBuilder.home.build(with: homeScenePayload)))
     }
     return signUp
   }
