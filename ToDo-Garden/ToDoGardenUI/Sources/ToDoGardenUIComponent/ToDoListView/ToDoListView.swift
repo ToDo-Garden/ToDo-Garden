@@ -85,24 +85,28 @@ extension ToDoListView {
 // swiftlint: disable all
 extension ToDoListView {
   private func makeDataSource() -> DataSource {
-    let toDoCellRegistration = ToDoCellRegistration { cell, indexPath , toDoItem in
+    let toDoCellRegistration = ToDoCellRegistration { cell, _, toDoItem in
       cell.contentConfiguration = ToDoContentViewContentConfiguration(model: toDoItem.toDoUIModel)
       cell.indentationLevel = Int.zero
 
       toDoItem.toDoUIModel.isSelected.bind { [weak self] bool in
-        guard let self = self else { return }
+        guard let self = self,
+          let currentIndexPath = self.getCurrentIndexPath(for: toDoItem)
+        else { return }
         
-        self.cellUpdatingDelegate?.updateSelection(isSelected: bool, todo: toDoItem, at: indexPath)
+        self.cellUpdatingDelegate?.updateSelection(isSelected: bool, todo: toDoItem, at: currentIndexPath)
+        
         Task { @MainActor in
-          let currentIndexPath = indexPath
           await self.updateHeaderUI(indexPath: currentIndexPath)
         }
       }
       
       toDoItem.toDoUIModel.text.bind { [weak self] text in
-        guard let self = self else { return }
+        guard let self = self,
+          let currentIndexPath = self.getCurrentIndexPath(for: toDoItem)
+        else { return }
         
-        self.cellUpdatingDelegate?.updateText(text: text, todo: toDoItem, at: indexPath)
+        self.cellUpdatingDelegate?.updateText(text: text, todo: toDoItem, at: currentIndexPath)
       }
     }
     
@@ -267,6 +271,17 @@ extension ToDoListView: ToDoGroupSectionHeaderViewDelegate {
     }
     
     return sectionIndex
+  }
+  
+  private func getCurrentIndexPath(for item: ToDoItem) -> IndexPath? {
+    let snapshot = self.dataSource.snapshot()
+    guard let itemIndex = snapshot.itemIdentifiers.firstIndex(of: item) else { return nil }
+
+    guard let sectionIndex = snapshot.sectionIdentifiers.firstIndex(where: { section in
+      section.getToDoItems().contains(item)
+    }) else { return nil }
+    
+    return IndexPath(item: itemIndex, section: sectionIndex)
   }
 }
 // swiftlint: enable all
