@@ -13,9 +13,7 @@ import ToDoGardenUIResource
 
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   var window: UIWindow?
-  var appCore = AppCore(
-    dependency: AppCore.Dependency.live
-  )
+  var appCore = AppCore(dependency: AppCore.Dependency.live)
   
   func scene(
     _ scene: UIScene,
@@ -24,6 +22,10 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   ) {
     self.setupWindow(with: scene)
     self.appCore.getStarted()
+  }
+  
+  func sceneDidBecomeActive(_ scene: UIScene) {
+    self.appCore.didBecomeActive()
   }
 }
 

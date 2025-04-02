@@ -32,11 +32,15 @@ public final class NotificationManager: NSObject, Sendable, UNUserNotificationCe
   }
 
   public func makeFocusNotification(after seconds: Double) {
-    makeNotification(seconds: seconds, isFocus: true)
+    self.makeNotification(NotificationType.focus(seconds))
   }
 
   public func makeRestNotification(after seconds: Double) {
-    self.makeNotification(seconds: seconds, isFocus: false)
+    self.makeNotification(NotificationType.rest(seconds))
+  }
+  
+  public func pushDailyToDoReminder(count: Int) {
+    self.makeNotification(NotificationType.dailyToDoReminder(count))
   }
 
   public func clearPendingNotifications() {
@@ -56,15 +60,51 @@ extension NotificationManager {
 // MARK: Private Functions
 
 extension NotificationManager {
-  private func makeNotification(seconds: Double, isFocus: Bool) {
+  enum NotificationType {
+    var body: String {
+      switch self {
+      case .focus:
+        return Constant.focusBody
+      case .rest:
+        return Constant.restBody
+      case .dailyToDoReminder(let count):
+        return "아직 완료 하지 않은 ToDo가 \(count)개 남아있어요!"
+      }
+    }
+    
+    var delay: Double {
+      switch self {
+      case .focus(let seconds), .rest(let seconds):
+        return seconds
+      case .dailyToDoReminder:
+        return 0.1
+      }
+    }
+    
+    var identifier: String {
+      switch self {
+      case .focus:
+        return Constant.focusIdentifier
+      case .rest:
+        return Constant.restIdentifier
+      case .dailyToDoReminder:
+        return Constant.dailyToDoReminderIdentifier
+      }
+    }
+    
+    case focus(Double)
+    case rest(Double)
+    case dailyToDoReminder(Int)
+  }
+  
+  private func makeNotification(_ type: NotificationType) {
     let notiContent = UNMutableNotificationContent()
     let constant = NotificationManager.Constant.self
     notiContent.title = constant.title
-    notiContent.body = isFocus ? constant.focusBody : constant.restBody
+    notiContent.body = type.body
 
-    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: seconds, repeats: false)
-    let identifier = isFocus ? constant.focusIdentifier : constant.restIdentifier
-    let request = UNNotificationRequest(identifier: identifier, content: notiContent, trigger: trigger)
+    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: type.delay, repeats: false)
+    let request = UNNotificationRequest(identifier: type.identifier, content: notiContent, trigger: trigger)
 
     UNUserNotificationCenter.current().add(request)
   }
@@ -83,5 +123,6 @@ extension NotificationManager {
     static let restBody = "충전완료! 이제 다시 열심히 힘을 내볼까요?"
     static let focusIdentifier = "focusComplete"
     static let restIdentifier = "restComplete"
+    static let dailyToDoReminderIdentifier = "dailyToDoReminderComplete"
   }
 }
