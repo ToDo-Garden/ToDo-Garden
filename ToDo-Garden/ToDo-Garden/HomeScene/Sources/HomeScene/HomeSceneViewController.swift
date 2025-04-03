@@ -307,6 +307,7 @@ extension HomeSceneViewController: CalendarViewDateSelectionDelegate {
   public func didSelectDate(_ date: Date) {
     self.hideToDoList()
     Task {
+      await self.interactor?.writeBatchItemsToGRDB()
       await self.interactor?.loadDailyToDoList(targetDate: date.description)
     }
   }
