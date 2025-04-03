@@ -94,10 +94,6 @@ extension JSONStorage {
     
     let data = try Data(contentsOf: self.storageURL)
     
-    guard !self.isDataEmpty(data) else {
-      throw StorageError.emptyData
-    }
-    
     return try JSONDecoder().decode([T].self, from: data)
   }
   
