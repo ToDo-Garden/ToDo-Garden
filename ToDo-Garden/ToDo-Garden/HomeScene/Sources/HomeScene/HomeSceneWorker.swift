@@ -131,13 +131,16 @@ extension HomeSceneWorker {
   
   public func syncronizeGRDBWithBatchItems() async throws {
     let batchItems = try await self.readBatchItemsFromGRDB()
-    
     let updatedToDos = batchItems.compactMap { $0.convertToMyToDo() }
-    
     let deletedToDoIds = batchItems.filter { $0.isDelete }.map { $0.localId }
     
     try await self.database.write { db in
+      let existingGroupIds = Set(try MyGroup.fetchAll(db).map { $0.groupId })
+      
       for var todo in updatedToDos {
+        if !existingGroupIds.contains(todo.groupId) {
+          continue
+        }
         try todo.insert(db)
       }
       
