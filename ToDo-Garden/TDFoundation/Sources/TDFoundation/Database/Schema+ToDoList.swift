@@ -5,6 +5,9 @@
 //  Created by SONG on 3/31/25.
 //
 
+import Foundation
+
+import HTTPClientAPI
 import SharedEntity
 import SharingGRDB
 
@@ -15,8 +18,8 @@ public struct MyGroup: Codable, FetchableRecord, MutablePersistableRecord, Senda
   
   public let groupId: String
   public let date: String
-  public let name: String
-  public let color: String
+  public var name: String
+  public var color: String
   
   public init(groupId: String, date: String, name: String, color: String) {
     self.groupId = groupId
@@ -137,6 +140,20 @@ extension TodoBatchItem: FetchableRecord, MutablePersistableRecord {
       isOnlyToday: self.isOnlyToday,
       repeatToDoId: nil
     )
+  }
+}
+
+public struct PendingEditGroup: Codable, FetchableRecord, MutablePersistableRecord {
+  public static let databaseTableName: String = "pendingEditGroup"
+  
+  var requestData: Data
+  
+  public init(request: HTTPRequest) throws {
+    self.requestData = try JSONEncoder().encode(request)
+  }
+  
+  public func toHTTPRequest() throws -> HTTPRequest {
+    return try JSONDecoder().decode(HTTPRequest.self, from: requestData)
   }
 }
 // swiftlint: enable line_length
