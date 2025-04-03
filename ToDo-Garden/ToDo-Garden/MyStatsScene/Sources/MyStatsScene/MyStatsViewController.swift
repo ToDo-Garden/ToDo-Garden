@@ -9,12 +9,13 @@ import UIKit
 
 import MyStatsSceneAPI
 import MyStatsSceneEntity
+import ToDoGardenUIComponent
 
 protocol MyStatsDisplayLogic: AnyObject {
   func displayMyStatsView(viewModel: MyStats.LoadMyStatsViewData.ViewModel)
 }
 
-class MyStatsViewController: UIViewController, MyStatsViewControllable {
+final class MyStatsViewController: UIViewController, MyStatsViewControllable {
   
   // MARK: - VIP Properties
   
@@ -22,7 +23,7 @@ class MyStatsViewController: UIViewController, MyStatsViewControllable {
   var router: (MyStatsRoutingLogic & MyStatsDataPassing)?
   
   private var myStatsView: MyStatsView
-  
+  private var summaryData: [MyStats.SummaryViewModel] = []
   // MARK: - Object lifecycle
   
   init() {
@@ -55,11 +56,13 @@ class MyStatsViewController: UIViewController, MyStatsViewControllable {
 
 extension MyStatsViewController: MyStatsDisplayLogic {
   func displayMyStatsView(viewModel: MyStats.LoadMyStatsViewData.ViewModel) {
+    self.summaryData = viewModel.summaryViewModels
+    
     self.myStatsView.stopShimmering()
     self.updateProfileView(viewModel: viewModel.profileViewModel)
     self.updateGardenView(viewModel: viewModel.gardenViewModel)
     self.updateLongestRecordView(viewModel: viewModel.longestRecordViewModel)
-    self.updateSummaryView(viewModel: viewModel.summaryViewModel)
+    self.updateSummaryView(viewModel: self.summaryData[1])
   }
 }
 

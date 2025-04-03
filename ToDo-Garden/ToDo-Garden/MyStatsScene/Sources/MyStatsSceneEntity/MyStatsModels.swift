@@ -38,18 +38,18 @@ public enum MyStats {
       public let profileViewModel: ProfileViewModel
       public let gardenViewModel: GardenViewModel
       public let longestRecordViewModel: LongestRecordViewModel
-      public let summaryViewModel: SummaryViewModel
+      public let summaryViewModels: [SummaryViewModel]
       
       public init(
         profileViewModel: ProfileViewModel,
         gardenViewModel: GardenViewModel,
         longestRecordViewModel: LongestRecordViewModel,
-        summaryViewModel: SummaryViewModel
+        summaryViewModels: [SummaryViewModel]
       ) {
         self.profileViewModel = profileViewModel
         self.gardenViewModel = gardenViewModel
         self.longestRecordViewModel = longestRecordViewModel
-        self.summaryViewModel = summaryViewModel
+        self.summaryViewModels = summaryViewModels
       }
     }
   }

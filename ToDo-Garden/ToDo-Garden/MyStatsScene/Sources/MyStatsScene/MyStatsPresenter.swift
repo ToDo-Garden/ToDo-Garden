@@ -50,7 +50,7 @@ extension MyStatsPresenter {
       profileViewModel: profileViewModel,
       gardenViewModel: gardenViewModel,
       longestRecordViewModel: longestRecordViewModel,
-      summaryViewModel: summaryViewModel
+      summaryViewModels: summaryViewModel
     )
     return myStatsViewModel
   }
