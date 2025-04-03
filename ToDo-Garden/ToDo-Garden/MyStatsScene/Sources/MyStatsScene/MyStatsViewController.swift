@@ -76,6 +76,7 @@ extension MyStatsViewController {
 extension MyStatsViewController {
   private func setupMyStatsView() {
     self.view.addSubview(self.myStatsView)
+    self.myStatsView.periodicSummaryView.segmentedControl.delegate = self
     self.setupConstraints()
   }
   
@@ -130,5 +131,11 @@ extension MyStatsViewController {
       leftDescription: viewModel.concentratedTime,
       rightDescription: viewModel.completedCount
     )
+  }
+}
+
+extension MyStatsViewController: PeriodSegmentedControlDelegate {
+  func periodSegmentedControlDidSelectIndex(selectedIndex: Int) {
+    self.updateSummaryView(viewModel: self.summaryData[selectedIndex])
   }
 }

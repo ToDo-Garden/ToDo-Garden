@@ -14,7 +14,7 @@ final class MyStatsView: UIView {
   private let profileView: Styled.Row
   private let gardenView: GardenView
   private let longestRecordStackView: LongestRecordStackView
-  private let periodicSummaryView: MyStatsPeriodicSummaryView
+  let periodicSummaryView: MyStatsPeriodicSummaryView
   
   private let constants = Constant.Layout.self
   

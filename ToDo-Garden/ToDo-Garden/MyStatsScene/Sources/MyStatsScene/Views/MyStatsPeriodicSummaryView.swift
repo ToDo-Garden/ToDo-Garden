@@ -11,7 +11,7 @@ import ToDoGardenUIComponent
 
 final class MyStatsPeriodicSummaryView: UIView {
   private let titleLabel: UILabel
-  private let segmentedControl: PeriodSegmentedControl
+  let segmentedControl: PeriodSegmentedControl
   private let summaryView: MyStatsSummaryView
   
   private typealias Constants = Constant.MyStatsPeriodicSummaryView
