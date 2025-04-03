@@ -139,14 +139,14 @@ extension MyStats {
 extension MyStats {
   public struct FetchedProfileViewData: Sendable {
     public let nickname: String
-    public let profileImage: Data? // TODO: 이미지 캐싱이 Data를 뱉는지, UIImage를 뱉는지에 따라 달라짐
+    public let profileImage: UIImage?
     public let continuousRecordCount: Int
     public let continuousRecordStartDate: String
     public let continuousRecordEndDate: String
     
     public init(
       nickname: String,
-      profileImage: Data?,
+      profileImage: UIImage?,
       continuousRecordCount: Int,
       continuousRecordStartDate: String,
       continuousRecordEndDate: String

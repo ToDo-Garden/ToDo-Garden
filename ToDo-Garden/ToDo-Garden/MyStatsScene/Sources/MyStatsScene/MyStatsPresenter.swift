@@ -59,8 +59,8 @@ extension MyStatsPresenter {
     fetchedData: MyStats.FetchedProfileViewData
   ) -> MyStats.ProfileViewModel {
     var image: UIImage
-    if let imageData = fetchedData.profileImage, let profielImage = UIImage(data: imageData) {
-      image = profielImage
+    if let profileImage = fetchedData.profileImage {
+      image = profileImage
     } else {
       image = UIImage.defaultProfileImage
     }
