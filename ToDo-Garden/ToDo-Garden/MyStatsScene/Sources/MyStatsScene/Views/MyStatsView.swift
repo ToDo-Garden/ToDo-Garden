@@ -71,15 +71,7 @@ final class MyStatsView: UIView {
           equalTo: self.profileView.bottomAnchor,
           constant: constants.topMargin
         ),
-        self.gardenView.leadingAnchor.constraint(
-          equalTo: self.leadingAnchor,
-          constant: constants.horizontalMargin
-        ),
-        self.gardenView.trailingAnchor.constraint(
-          equalTo: self.trailingAnchor,
-          constant: -constants.horizontalMargin
-        ),
-        self.gardenView.heightAnchor.constraint(equalToConstant: constants.gardenViewHeight)
+        self.gardenView.centerXAnchor.constraint(equalTo: self.centerXAnchor)
       ]
     )
   }

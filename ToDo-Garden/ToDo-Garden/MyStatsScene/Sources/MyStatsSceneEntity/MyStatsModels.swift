@@ -124,14 +124,6 @@ extension MyStats {
       self.completedCount = completedCount
     }
   }
-  
-  public struct Payload {
-    public let myGarden: PomodoroRecordCollection
-    
-    public init(myGarden: PomodoroRecordCollection) {
-      self.myGarden = myGarden
-    }
-  }
 }
 
 // MARK: Data Models
