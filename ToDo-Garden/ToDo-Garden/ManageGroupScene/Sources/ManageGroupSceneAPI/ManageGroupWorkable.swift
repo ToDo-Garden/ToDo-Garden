@@ -23,4 +23,6 @@ public protocol ManageGroupWorkable {
     progressRate: Float
   ) -> ManageGroup.ToDoGroup
   func addGroupDirectly(request: ManageGroup.AddGroup.Request) async throws -> UUID
+  func fetchGroupListFromGRDB() async throws -> [ManageGroup.ToDoGroup]
+  func saveGroupListToGRDB(request: ManageGroup.SaveGroupList.Request) async throws -> [ManageGroup.ToDoGroup]
 }

@@ -59,7 +59,12 @@ extension ManageGroupInteractor: ManageGroupBusinessLogic {
       
       do {
         try Task.checkCancellation()
-        let result = try await self.manageGroupWorker.fetchGroupList(request: request)
+        var result: [ManageGroup.ToDoGroup]
+        if self.checkNetworkConnection() {
+          result = try await self.manageGroupWorker.fetchGroupList(request: request)
+        } else {
+          result = try await self.manageGroupWorker.fetchGroupListFromGRDB()
+        }
         try Task.checkCancellation()
         self.currentGroups = result
         let response = ManageGroup.FetchGroupList.Response(with: result)
@@ -76,7 +81,12 @@ extension ManageGroupInteractor: ManageGroupBusinessLogic {
       
       do {
         try Task.checkCancellation()
-        let result = try await self.manageGroupWorker.saveGroupList(request: request)
+        var result: [ManageGroup.ToDoGroup]
+        if self.checkNetworkConnection() {
+          result = try await self.manageGroupWorker.saveGroupList(request: request)
+        } else {
+          result = try await self.manageGroupWorker.saveGroupListToGRDB(request: request)
+        }
         try Task.checkCancellation()
         self.currentGroups = result
         let response = ManageGroup.SaveGroupList.Response(with: result)
@@ -143,6 +153,10 @@ extension ManageGroupInteractor: ManageGroupBusinessLogic {
     } else {
       return
     }
+  }
+  
+  private func checkNetworkConnection() -> Bool {
+    self.retryManager.isConnected()
   }
 }
 
