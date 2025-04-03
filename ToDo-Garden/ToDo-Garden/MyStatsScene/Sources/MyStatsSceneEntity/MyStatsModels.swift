@@ -160,11 +160,11 @@ extension MyStats {
   }
   
   public struct FetchedLongestRecordViewData: Sendable, Codable {
-    public let maxPomodoroRecord: MaxPomodoroRecordDTO
+    public let maxPomodoroRecord: MaxPomodoroRecordDTO?
     public let maxContinuousDays: MaxContinuousDaysDTO?
     
     public init(
-      maxPomodoroRecord: MaxPomodoroRecordDTO,
+      maxPomodoroRecord: MaxPomodoroRecordDTO?,
       maxContinuousDays: MaxContinuousDaysDTO?
     ) {
       self.maxPomodoroRecord = maxPomodoroRecord
