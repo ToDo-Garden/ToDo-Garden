@@ -33,6 +33,7 @@ protocol HomeSceneBusinessLogic {
   func writeBatchItemsToGRDB() async
   func requestBatchUpdateToServer() async
   func prepareDataForEditTodoScene(request: HomeScene.PrepareDataForEditToDoScene.Request)
+  func syncronizeServerEditGroups() async
 }
 
 @MainActor
@@ -69,6 +70,18 @@ final class HomeSceneInteractor: HomeSceneDataStore {
 // MARK: - Request to worker
 // swiftlint: disable all
 extension HomeSceneInteractor: HomeSceneBusinessLogic {
+  func syncronizeServerEditGroups() async {
+    if self.checkNetworkConnection() {
+      do {
+        try await self.homeSceneWorker.syncronizeServerEditGroups()
+      } catch let error {
+        self.handleErrors(error)
+      }
+    } else {
+      return
+    }
+  }
+  
   func fetchToDoList(request: HomeScene.FetchToDoList.Request) async {
     if self.checkNetworkConnection() {
       do {

@@ -17,4 +17,5 @@ public protocol HomeSceneWorkable: Sendable {
   func requestBatchUpdateToServer() async throws
   func loadMonthlyToDoListFromGRDB(dateString: String) async throws -> [DailyToDoListData]
   func syncronizeGRDBWithBatchItems() async throws
+  func syncronizeServerEditGroups() async throws
 }

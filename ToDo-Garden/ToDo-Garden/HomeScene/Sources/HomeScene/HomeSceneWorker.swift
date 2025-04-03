@@ -149,6 +149,32 @@ extension HomeSceneWorker {
     }
   }
   
+  public func syncronizeServerEditGroups() async throws {
+    guard let request = try await self.loadPendingEditGroup() else { return }
+    
+    try await self.httpClient.send(
+      input: request,
+      serializer: { $0 },
+      deserializer: { response in
+        try response.validateStatusCode()
+      }
+    )
+    
+    try await self.deletePendingEditGroup()
+  }
+  
+  private func loadPendingEditGroup() async throws -> HTTPRequest? {
+      try await database.read { db in
+          try PendingEditGroup.fetchOne(db)?.toHTTPRequest()
+      }
+  }
+  
+  private func deletePendingEditGroup() async throws {
+      try await database.write { db in
+          try db.execute(sql: "DELETE FROM \(PendingEditGroup.databaseTableName)")
+      }
+  }
+  
   private func writeFetchedToDoListToGRDB(myGroups: [MyGroup], myToDos: [MyToDo]) async throws {
     try await self.database.write { db in
       for var group in myGroups {

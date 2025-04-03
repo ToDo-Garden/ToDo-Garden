@@ -73,6 +73,7 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
     Task {
       await self.interactor?.writeBatchItemsToGRDB()
       await self.interactor?.requestBatchUpdateToServer()
+      await self.interactor?.syncronizeServerEditGroups()
     }
   }
   
@@ -182,6 +183,7 @@ extension HomeSceneViewController {
     self.loadingIndicator.startAnimation()
     Task {
       await interactor.requestBatchUpdateToServer()
+      await interactor.syncronizeServerEditGroups()
       await interactor.fetchToDoList(request: HomeScene.FetchToDoList.Request(dateString: targetMonth))
     }
   }
@@ -425,6 +427,7 @@ extension HomeSceneViewController: @preconcurrency TransitionHandlable {
     Task {
       await self.interactor?.writeBatchItemsToGRDB()
       await self.interactor?.requestBatchUpdateToServer()
+      await self.interactor?.syncronizeServerEditGroups()
     }
   }
 }
