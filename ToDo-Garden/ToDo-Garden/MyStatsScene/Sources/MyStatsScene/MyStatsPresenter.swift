@@ -12,7 +12,7 @@ import TDFoundationExtension
 import ToDoGardenUIComponent // TODO: - PomodoroRecordCollection 이관 예정
 
 protocol MyStatsPresentationLogic {
-  func presentMyStatsViewData(response: MyStats.LoadMyStatsViewData.Response, with payload: MyStats.Payload)
+  func presentMyStatsViewData(response: MyStats.LoadMyStatsViewData.Response, with payload: PomodoroRecordCollection)
 }
 
 class MyStatsPresenter {
@@ -24,7 +24,7 @@ class MyStatsPresenter {
 extension MyStatsPresenter: MyStatsPresentationLogic {
   func presentMyStatsViewData(
     response: MyStats.LoadMyStatsViewData.Response,
-    with payload: MyStats.Payload
+    with payload: PomodoroRecordCollection
   ) {
     let viewModel = self.makeViewModel(response: response, with: payload)
     
@@ -37,12 +37,12 @@ extension MyStatsPresenter: MyStatsPresentationLogic {
 // MARK: - Make ViewModels
 
 extension MyStatsPresenter {
-  private func makeViewModel(response: MyStats.LoadMyStatsViewData.Response, with payload: MyStats.Payload)
+  private func makeViewModel(response: MyStats.LoadMyStatsViewData.Response, with payload: PomodoroRecordCollection)
   -> MyStats.LoadMyStatsViewData.ViewModel {
     let profileViewModel = self.makeProfileViewModel(
       fetchedData: response.profileViewData
     )
-    let gardenViewModel = self.makeGardenViewModel(myGarden: payload.myGarden)
+    let gardenViewModel = self.makeGardenViewModel(myGarden: payload)
     let longestRecordViewModel = self.makeLongestRecordViewModel(fetchedData: response.longestRecordViewData)
     let summaryViewModel = self.makeSummaryViewModel(fetchedData: response.summaryViewData)
     
