@@ -26,7 +26,7 @@ protocol ShareGardenSceneDataPassing {
   var dataStore: ShareGardenSceneDataStore? { get }
 }
 
-final class ShareGardenSceneRouter: ShareGardenSceneDataPassing {
+final class ShareGardenSceneRouter: NSObject, ShareGardenSceneDataPassing {
   weak var viewController: ShareGardenSceneViewController?
   var dataStore: ShareGardenSceneDataStore?
   let searchGardenViewController: SearchGardenViewControllable
@@ -45,6 +45,7 @@ final class ShareGardenSceneRouter: ShareGardenSceneDataPassing {
 
 extension ShareGardenSceneRouter: ShareGardenSceneRoutingLogic {
   func routeToSearchGardenScene() {
+    self.searchGardenViewController.presentationController?.delegate = self
     self.viewController?.present(self.searchGardenViewController, animated: true)
   }
   
@@ -82,3 +83,14 @@ extension ShareGardenSceneRouter {
     let myGarden: PomodoroRecordCollection
   }
 }
+
+extension ShareGardenSceneRouter: UIAdaptivePresentationControllerDelegate {
+  func presentationControllerWillDismiss(_ presentationController: UIPresentationController) {
+    self.reloadFriendsGardenList()
+  }
+  
+  private func reloadFriendsGardenList() {
+    self.viewController?.interactor?.requestFriendsGardenList()
+  }
+}
+
