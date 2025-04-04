@@ -107,4 +107,3 @@ extension ShareGardenSceneRouter: SearchGardenSceneDelegate {
     let searchGardenSceneDelegate: any SearchGardenSceneDelegate
   }
 }
-
