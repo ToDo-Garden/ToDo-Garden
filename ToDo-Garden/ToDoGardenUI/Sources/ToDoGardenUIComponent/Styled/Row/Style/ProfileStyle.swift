@@ -27,6 +27,8 @@ extension Styled.Row {
       image: model[style: \.defaultImage],
       size: model[style: \.imageSize]
     )
+    profileImageView.layer.cornerRadius = model[style: \.imageSize].width / 2
+    profileImageView.clipsToBounds = true
     self.bindingProfileImageState(imageView: profileImageView)
     let profileImageTrailingPadding = UIView()
     
