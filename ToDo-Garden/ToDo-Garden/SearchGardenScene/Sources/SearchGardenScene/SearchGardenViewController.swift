@@ -108,6 +108,7 @@ extension SearchGardenViewController {
   }
   
   private func setupSearchGardenView() {
+    self.searchGardenView.keyboardDelegate = self
     self.searchGardenView.tableView.delegate = self
     self.searchGardenView.tableView.onEndReached = {
       self.interactor?.loadSearchedGardenContinue()
@@ -324,6 +325,22 @@ extension SearchGardenViewController: UITableViewDataSourcePrefetching {
     
     if shouldLoadNextPage {
       self.interactor?.loadSearchedGardenContinue()
+    }
+  }
+}
+
+extension SearchGardenViewController: SearchGardenViewKeyboardDelegate {
+  func showKeyboard(_ view: SearchGardenView, keyboardHeight: CGFloat, duration: TimeInterval) {
+    UIView.animate(withDuration: duration) {
+      view.tableView.contentInset.bottom = keyboardHeight
+      view.tableView.verticalScrollIndicatorInsets.bottom = keyboardHeight
+    }
+  }
+  
+  func hideKeyboard(_ view: SearchGardenView, duration: TimeInterval) {
+    UIView.animate(withDuration: duration) {
+      view.tableView.contentInset.bottom = 0
+      view.tableView.verticalScrollIndicatorInsets.bottom = 0
     }
   }
 }
