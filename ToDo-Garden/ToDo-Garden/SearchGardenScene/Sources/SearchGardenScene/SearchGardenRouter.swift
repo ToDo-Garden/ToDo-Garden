@@ -10,10 +10,12 @@ import Foundation
 import SearchGardenSceneAPI
 import SearchGardenSceneEntity
 
+@MainActor
 protocol SearchGardenRoutingLogic {
   func dismissModal()
 }
 
+@MainActor
 protocol SearchGardenDataPassing {
   var dataStore: SearchGardenDataStore? { get }
 }
