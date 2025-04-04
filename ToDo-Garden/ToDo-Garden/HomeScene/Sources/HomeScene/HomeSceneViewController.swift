@@ -450,11 +450,19 @@ extension HomeSceneViewController {
   }
   
   private func showKeyboard(keyboardHeight: CGFloat, duration: TimeInterval) {
-    
+    self.bottomSheet.animateBottomSheet(to: BottomSheet.State.expanded)
+    UIView.animate(withDuration: duration) {
+      self.todoListView?.contentView.contentInset.bottom = keyboardHeight
+      self.todoListView?.contentView.verticalScrollIndicatorInsets.bottom = keyboardHeight
+    }
   }
   
   private func hideKeyboard(duration: TimeInterval) {
-
+    self.bottomSheet.animateBottomSheet(to: BottomSheet.State.normal)
+    UIView.animate(withDuration: duration) {
+      self.todoListView?.contentView.contentInset.bottom = 0
+      self.todoListView?.contentView.verticalScrollIndicatorInsets.bottom = 0
+    }
   }
 }
 
