@@ -14,7 +14,6 @@ public enum KeyboardEvent: Sendable {
 
 public enum UITextFieldNotificationObserver {
   public static func observeKeyboardEvents(
-    for textField: UITextField,
     handler: @Sendable @escaping (KeyboardEvent) -> Void
   ) {
     let notificationCenter = NotificationCenter.default

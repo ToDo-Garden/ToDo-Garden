@@ -11,14 +11,7 @@ import TDFoundation
 import ToDoGardenUIComponent
 import ToDoGardenUIResource
 
-protocol SearchGardenViewKeyboardDelegate: AnyObject {
-  @MainActor func showKeyboard(_ view: SearchGardenView, keyboardHeight: CGFloat, duration: TimeInterval)
-  @MainActor func hideKeyboard(_ view: SearchGardenView, duration: TimeInterval)
-}
-
 final class SearchGardenView: UIVStackView {
-  weak var keyboardDelegate: SearchGardenViewKeyboardDelegate?
-  
   let textField: UITextField
   let tableView: SearchGardenTableView
   
@@ -32,7 +25,6 @@ final class SearchGardenView: UIVStackView {
     self.isUserInteractionEnabled = true
     self.backgroundColor = UIColor.white
     self.setupSubViews()
-    self.setupKeyboardObservers()
   }
   
   func clear() {
@@ -90,25 +82,5 @@ extension SearchGardenView {
         self.tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
       ]
     )
-  }
-}
-
-// MARK: - Keyboard Delegate Forwarding
-extension SearchGardenView {
-  private func setupKeyboardObservers() {
-    UITextFieldNotificationObserver.observeKeyboardEvents(for: self.textField) { [weak self] event in
-      guard let self else { return }
-
-      switch event {
-      case .willShow(let height, let duration):
-        Task { @MainActor in
-          self.keyboardDelegate?.showKeyboard(self, keyboardHeight: height, duration: duration)
-        }
-      case .willHide(let duration):
-        Task { @MainActor in
-          self.keyboardDelegate?.hideKeyboard(self, duration: duration)
-        }
-      }
-    }
   }
 }

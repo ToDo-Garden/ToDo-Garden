@@ -64,6 +64,7 @@ final class SearchGardenViewController: UIViewController, SearchGardenViewContro
   override func viewDidLoad() {
     super.viewDidLoad()
     self.setupView()
+    self.setupKeyboardObservers()
   }
   
   func clear() {
@@ -108,7 +109,6 @@ extension SearchGardenViewController {
   }
   
   private func setupSearchGardenView() {
-    self.searchGardenView.keyboardDelegate = self
     self.searchGardenView.tableView.delegate = self
     self.searchGardenView.tableView.onEndReached = {
       self.interactor?.loadSearchedGardenContinue()
@@ -329,18 +329,36 @@ extension SearchGardenViewController: UITableViewDataSourcePrefetching {
   }
 }
 
-extension SearchGardenViewController: SearchGardenViewKeyboardDelegate {
-  func showKeyboard(_ view: SearchGardenView, keyboardHeight: CGFloat, duration: TimeInterval) {
-    UIView.animate(withDuration: duration) {
-      view.tableView.contentInset.bottom = keyboardHeight
-      view.tableView.verticalScrollIndicatorInsets.bottom = keyboardHeight
+extension SearchGardenViewController{
+  private func setupKeyboardObservers() {
+    UITextFieldNotificationObserver.observeKeyboardEvents { [weak self] event in
+      guard let self else { return }
+
+      switch event {
+      case .willShow(let height, let duration):
+        Task { @MainActor in
+          self.showKeyboard(keyboardHeight: height, duration: duration)
+        }
+      case .willHide(let duration):
+        Task { @MainActor in
+          self.hideKeyboard(duration: duration)
+        }
+      }
     }
   }
   
-  func hideKeyboard(_ view: SearchGardenView, duration: TimeInterval) {
+  private func showKeyboard(keyboardHeight: CGFloat, duration: TimeInterval) {
+    print(Thread.isMainThread)
     UIView.animate(withDuration: duration) {
-      view.tableView.contentInset.bottom = 0
-      view.tableView.verticalScrollIndicatorInsets.bottom = 0
+      self.searchGardenView.tableView.contentInset.bottom = keyboardHeight
+      self.searchGardenView.tableView.verticalScrollIndicatorInsets.bottom = keyboardHeight
+    }
+  }
+  
+  private func hideKeyboard(duration: TimeInterval) {
+    UIView.animate(withDuration: duration) {
+      self.searchGardenView.tableView.contentInset.bottom = 0
+      self.searchGardenView.tableView.verticalScrollIndicatorInsets.bottom = 0
     }
   }
 }
