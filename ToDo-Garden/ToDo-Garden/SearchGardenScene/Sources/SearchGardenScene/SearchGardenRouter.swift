@@ -22,6 +22,7 @@ protocol SearchGardenDataPassing {
 
 final class SearchGardenRouter: SearchGardenDataPassing {
   weak var viewController: SearchGardenViewController?
+  weak var searchGardenSceneDelegate: SearchGardenSceneDelegate?
   var dataStore: SearchGardenDataStore?
   
   init() {
@@ -33,5 +34,6 @@ final class SearchGardenRouter: SearchGardenDataPassing {
 extension SearchGardenRouter: SearchGardenRoutingLogic {
   func dismissModal() {
     self.viewController?.dismiss(animated: true)
+    self.searchGardenSceneDelegate?.searchGardenDoneButtonDidTap()
   }
 }

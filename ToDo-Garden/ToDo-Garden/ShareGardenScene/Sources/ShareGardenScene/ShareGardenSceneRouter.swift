@@ -29,14 +29,14 @@ protocol ShareGardenSceneDataPassing {
 final class ShareGardenSceneRouter: NSObject, ShareGardenSceneDataPassing {
   weak var viewController: ShareGardenSceneViewController?
   var dataStore: ShareGardenSceneDataStore?
-  let searchGardenViewController: SearchGardenViewControllable
+  private let searchGardenSceneBuilder: SearchGardenSceneBuildable
   private let myStatsSceneBuilder: MyStatsSceneBuildable
   
   init(
     searchGardenSceneBuilder: SearchGardenSceneBuildable,
     myStatsSceneBuilder: MyStatsSceneBuildable
   ) {
-    self.searchGardenViewController = searchGardenSceneBuilder.build()
+    self.searchGardenSceneBuilder = searchGardenSceneBuilder
     self.myStatsSceneBuilder = myStatsSceneBuilder
   }
 }
@@ -45,8 +45,13 @@ final class ShareGardenSceneRouter: NSObject, ShareGardenSceneDataPassing {
 
 extension ShareGardenSceneRouter: ShareGardenSceneRoutingLogic {
   func routeToSearchGardenScene() {
-    self.searchGardenViewController.presentationController?.delegate = self
-    self.viewController?.present(self.searchGardenViewController, animated: true)
+    let searchGardenScene = self.searchGardenSceneBuilder.build(
+      with: SearchGardenScenePayload(
+        searchGardenSceneDelegate: self
+      )
+    )
+    searchGardenScene.presentationController?.delegate = self
+    self.viewController?.present(searchGardenScene, animated: true)
   }
   
   func routeToInstaShareClient(icon: UIImage) {
@@ -91,6 +96,15 @@ extension ShareGardenSceneRouter: UIAdaptivePresentationControllerDelegate {
   
   private func reloadFriendsGardenList() {
     self.viewController?.interactor?.requestFriendsGardenList()
+  }
+}
+extension ShareGardenSceneRouter: SearchGardenSceneDelegate {
+  func searchGardenDoneButtonDidTap() {
+    self.reloadFriendsGardenList()
+  }
+  
+  struct SearchGardenScenePayload: SearchGardenScenePayloadable {
+    let searchGardenSceneDelegate: any SearchGardenSceneDelegate
   }
 }
 
