@@ -71,7 +71,8 @@ public final actor Cache<Request: Requestable>: Sendable {
   
   public func execute(
     id: Request.ID,
-    expiration: StorageExpiration? = nil
+    expiration: StorageExpiration? = nil,
+    isDownsample: Bool = false
   ) async throws -> Request.Response {
     let task = self.storage.object(forKey: id.description)?.loadingState?.task
     guard !Task.isCancelled else {
@@ -92,7 +93,12 @@ public final actor Cache<Request: Requestable>: Sendable {
         case nil:
           ExpirationLocals.$value.withValue(expiration ?? configuration.expiration) {
             self.storage.setRequestState(
-              .loading(.init(task: initialTask(id), continuations: [continuation])),
+              .loading(
+                .init(
+                  task: initialTask(id, isDownsample: isDownsample),
+                  continuations: [continuation]
+                )
+              ),
               forKey: id.description
             )
           }
@@ -107,10 +113,10 @@ public final actor Cache<Request: Requestable>: Sendable {
     }
   }
   
-  private func initialTask(_ id: Request.ID) -> Task<Void, Never> {
+  private func initialTask(_ id: Request.ID, isDownsample: Bool) -> Task<Void, Never> {
     Task {
       do {
-        let response = try await self.request.execute(id: id, isDownsample: false)
+        let response = try await self.request.execute(id: id, isDownsample: isDownsample)
         try Task.checkCancellation()
         let key = id.description
         let continuations = self.storage.continuations(forKey: key)

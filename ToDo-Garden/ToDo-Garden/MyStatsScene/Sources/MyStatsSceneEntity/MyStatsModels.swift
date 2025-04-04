@@ -38,18 +38,18 @@ public enum MyStats {
       public let profileViewModel: ProfileViewModel
       public let gardenViewModel: GardenViewModel
       public let longestRecordViewModel: LongestRecordViewModel
-      public let summaryViewModel: SummaryViewModel
+      public let summaryViewModels: [SummaryViewModel]
       
       public init(
         profileViewModel: ProfileViewModel,
         gardenViewModel: GardenViewModel,
         longestRecordViewModel: LongestRecordViewModel,
-        summaryViewModel: SummaryViewModel
+        summaryViewModels: [SummaryViewModel]
       ) {
         self.profileViewModel = profileViewModel
         self.gardenViewModel = gardenViewModel
         self.longestRecordViewModel = longestRecordViewModel
-        self.summaryViewModel = summaryViewModel
+        self.summaryViewModels = summaryViewModels
       }
     }
   }
@@ -124,14 +124,6 @@ extension MyStats {
       self.completedCount = completedCount
     }
   }
-  
-  public struct Payload {
-    public let myGarden: PomodoroRecordCollection
-    
-    public init(myGarden: PomodoroRecordCollection) {
-      self.myGarden = myGarden
-    }
-  }
 }
 
 // MARK: Data Models
@@ -139,14 +131,14 @@ extension MyStats {
 extension MyStats {
   public struct FetchedProfileViewData: Sendable {
     public let nickname: String
-    public let profileImage: Data? // TODO: 이미지 캐싱이 Data를 뱉는지, UIImage를 뱉는지에 따라 달라짐
+    public let profileImage: UIImage?
     public let continuousRecordCount: Int
     public let continuousRecordStartDate: String
     public let continuousRecordEndDate: String
     
     public init(
       nickname: String,
-      profileImage: Data?,
+      profileImage: UIImage?,
       continuousRecordCount: Int,
       continuousRecordStartDate: String,
       continuousRecordEndDate: String
@@ -160,11 +152,11 @@ extension MyStats {
   }
   
   public struct FetchedLongestRecordViewData: Sendable, Codable {
-    public let maxPomodoroRecord: MaxPomodoroRecordDTO
+    public let maxPomodoroRecord: MaxPomodoroRecordDTO?
     public let maxContinuousDays: MaxContinuousDaysDTO?
     
     public init(
-      maxPomodoroRecord: MaxPomodoroRecordDTO,
+      maxPomodoroRecord: MaxPomodoroRecordDTO?,
       maxContinuousDays: MaxContinuousDaysDTO?
     ) {
       self.maxPomodoroRecord = maxPomodoroRecord

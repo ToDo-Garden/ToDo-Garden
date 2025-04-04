@@ -14,7 +14,7 @@ final class MyStatsView: UIView {
   private let profileView: Styled.Row
   private let gardenView: GardenView
   private let longestRecordStackView: LongestRecordStackView
-  private let periodicSummaryView: MyStatsPeriodicSummaryView
+  let periodicSummaryView: MyStatsPeriodicSummaryView
   
   private let constants = Constant.Layout.self
   
@@ -71,15 +71,7 @@ final class MyStatsView: UIView {
           equalTo: self.profileView.bottomAnchor,
           constant: constants.topMargin
         ),
-        self.gardenView.leadingAnchor.constraint(
-          equalTo: self.leadingAnchor,
-          constant: constants.horizontalMargin
-        ),
-        self.gardenView.trailingAnchor.constraint(
-          equalTo: self.trailingAnchor,
-          constant: -constants.horizontalMargin
-        ),
-        self.gardenView.heightAnchor.constraint(equalToConstant: constants.gardenViewHeight)
+        self.gardenView.centerXAnchor.constraint(equalTo: self.centerXAnchor)
       ]
     )
   }

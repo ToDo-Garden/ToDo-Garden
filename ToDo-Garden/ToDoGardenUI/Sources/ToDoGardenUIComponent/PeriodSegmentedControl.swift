@@ -10,6 +10,10 @@ import UIKit
 import ToDoGardenUIConstant
 import ToDoGardenUIResource
 
+public protocol PeriodSegmentedControlDelegate: AnyObject {
+  func periodSegmentedControlDidSelectIndex(selectedIndex: Int)
+}
+
 public final class PeriodSegmentedControl: UIControl {
   private let items: [String]
   private let feedbackGenerator: UISelectionFeedbackGenerator
@@ -17,6 +21,7 @@ public final class PeriodSegmentedControl: UIControl {
   private var targetXPositions: [CGFloat]
   private var periodSegmentedControlGestureRecognizer: PeriodSegmentedControlGestureRecognizer?
   private var expectedXPosition: CGFloat
+  public weak var delegate: PeriodSegmentedControlDelegate?
   
   public init(items: [String] = Constant.PeriodSegmentedControl.Content.defaultItems) {
     self.items = items
@@ -59,7 +64,13 @@ public final class PeriodSegmentedControl: UIControl {
   
   public func highlightedIndex() -> Int? {
     let currentX = self.calculateClosestX(from: self.expectedXPosition)
-    return currentX.calculateHighlightedIndex()
+    let newIndex = currentX.calculateHighlightedIndex()
+
+    if let index = newIndex {
+      self.delegate?.periodSegmentedControlDidSelectIndex(selectedIndex: index)
+    }
+
+    return newIndex
   }
 }
 
@@ -149,6 +160,7 @@ extension PeriodSegmentedControl {
       }
       self.feedbackGenerator.selectionChanged()
       self.expectedXPosition = closestX
+      _ = self.highlightedIndex()
     }
     
     self.expectedXPosition = newX
@@ -188,6 +200,7 @@ extension PeriodSegmentedControl {
       }
       self.feedbackGenerator.selectionChanged()
       self.expectedXPosition = closestX
+      _ = self.highlightedIndex()
     default:
       break
     }

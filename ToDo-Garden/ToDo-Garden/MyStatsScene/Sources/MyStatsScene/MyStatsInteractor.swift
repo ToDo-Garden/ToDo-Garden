@@ -13,8 +13,6 @@ import MyStatsSceneEntity
 import ToDoGardenUIComponent // PomodoroRecordCollection 이관 예정
 
 protocol MyStatsDataStore {
-//  var myName: String { get set }
-//  var myImage: UIImage { get set }
   var myGarden: PomodoroRecordCollection { get set }
 }
 
@@ -48,24 +46,17 @@ extension MyStatsInteractor: MyStatsBusinessLogic {
   func loadMyStatsViewData(request: MyStats.LoadMyStatsViewData.Request) {
     self.loadMyStatsViewDataTask = Task {
       defer { self.loadMyStatsViewDataTask = nil }
+      
       do {
         try Task.checkCancellation()
-        let payload = self.createPayload()
         let response = try await self.fetchViewData()
         try Task.checkCancellation()
         self.savePeriodicState(with: response)
-        self.presenter?.presentMyStatsViewData(response: response, with: payload)
+        self.presenter?.presentMyStatsViewData(response: response, with: self.myGarden)
       } catch let error {
         debugPrint(error)
       }
     }
-  }
-  
-  private func createPayload() -> MyStats.Payload {
-    // TODO: 화면 연결완료되면 제거 될 예정
-    return MyStats.Payload(
-      myGarden: self.myGarden
-    )
   }
   
   private func fetchViewData() async throws -> MyStats.LoadMyStatsViewData.Response {

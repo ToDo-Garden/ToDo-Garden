@@ -14,7 +14,7 @@ protocol MyStatsRoutingLogic {
 }
 
 protocol MyStatsDataPassing {
-  var dataStore: MyStatsDataStore? { get }
+  var dataStore: MyStatsDataStore? { get set }
 }
 
 class MyStatsRouter: MyStatsDataPassing {

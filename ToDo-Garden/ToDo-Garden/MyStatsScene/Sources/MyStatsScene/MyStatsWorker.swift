@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 
 import HTTPClientAPI
 import MyStatsSceneAPI
@@ -15,9 +15,10 @@ public struct MyStatsWorker: MyStatsWorkable {
   public func fetchProfileViewData() async throws -> MyStats.FetchedProfileViewData {
     let result = try await self.downloadProfileData()
     
-    var imageData: Data?
-    if let imageUrlString = result.imageUrl {
-      imageData = try await self.downloadImageData(urlString: imageUrlString)
+    var imageData: UIImage?
+    if let urlString = result.imageUrl,
+      let imageUrl = URL(string: urlString) {
+      imageData = try await Cache.shared.execute(id: imageUrl, isDownsample: true)
     } else {
       imageData = nil
     }
@@ -102,29 +103,6 @@ extension MyStatsWorker {
         }
         
         return try JSONDecoder().decode(MyStats.FetchedSummaryViewData.self, from: data)
-      }
-    )
-    return result
-  }
-  
-  private func downloadImageData(urlString: String) async throws -> Data {
-    guard let url = URL(string: urlString) else {
-      throw URLError(.badURL)
-    }
-    
-    let request = HTTPRequest(method: .get, endPoint: url)
-    let result = try await self.httpClient.send(
-      input: request,
-      serializer: { $0 },
-      deserializer: { response in
-        guard response.statusCode >= 200 && response.statusCode < 400 else {
-          throw HTTPClientError.badStatusCode(response.statusCode)
-        }
-        
-        guard let data = response.body else {
-          throw HTTPClientError.deserializationError
-        }
-        return data
       }
     )
     return result
