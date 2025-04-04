@@ -447,6 +447,7 @@
 				DEVELOPMENT_TEAM = W39V9Q93Z6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ToDo-Garden/Resources/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "투두가든";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사진 접근 권한이 필요합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -476,6 +477,7 @@
 				DEVELOPMENT_TEAM = W39V9Q93Z6;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ToDo-Garden/Resources/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "투두가든";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사진 접근 권한이 필요합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
