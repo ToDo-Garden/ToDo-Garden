@@ -436,7 +436,7 @@ extension HomeSceneViewController {
       guard let self = self else { return }
 
       Task { @MainActor in
-        guard self.checkIfVisible() else { return }
+        guard self.isTopViewController() else { return }
 
         switch event {
         case .willShow(let height, let duration):
