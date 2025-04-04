@@ -332,15 +332,16 @@ extension SearchGardenViewController: UITableViewDataSourcePrefetching {
 extension SearchGardenViewController {
   private func setupKeyboardObservers() {
     UITextFieldNotificationObserver.observeKeyboardEvents { [weak self] event in
-      guard let self else { return }
+      guard let self = self else { return }
 
-      switch event {
-      case .willShow(let height, let duration):
-        Task { @MainActor in
+      Task { @MainActor in
+        guard self.checkIfVisible() else { return }
+
+        switch event {
+        case .willShow(let height, let duration):
           self.showKeyboard(keyboardHeight: height, duration: duration)
-        }
-      case .willHide(let duration):
-        Task { @MainActor in
+
+        case .willHide(let duration):
           self.hideKeyboard(duration: duration)
         }
       }

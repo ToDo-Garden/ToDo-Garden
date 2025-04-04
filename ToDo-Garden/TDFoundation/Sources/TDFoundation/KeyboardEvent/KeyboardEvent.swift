@@ -40,3 +40,9 @@ public enum UITextFieldNotificationObserver {
     }
   }
 }
+
+public extension UIViewController {
+  func checkIfVisible() -> Bool {
+    return self.isViewLoaded && self.view.window != nil
+  }
+}

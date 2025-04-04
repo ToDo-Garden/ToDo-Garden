@@ -66,6 +66,7 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
   open override func viewDidLoad() {
     super.viewDidLoad()
     self.setupViews()
+    self.setupKeyboardObservers()
   }
   
   open override func viewDidDisappear(_ animated: Bool) {
@@ -432,19 +433,28 @@ extension HomeSceneViewController: @preconcurrency TransitionHandlable {
 extension HomeSceneViewController {
   private func setupKeyboardObservers() {
     UITextFieldNotificationObserver.observeKeyboardEvents { [weak self] event in
-      guard let self else { return }
-      
-      switch event {
-      case .willShow(let height, let duration):
-        Task { @MainActor in
+      guard let self = self else { return }
+
+      Task { @MainActor in
+        guard self.checkIfVisible() else { return }
+
+        switch event {
+        case .willShow(let height, let duration):
           self.showKeyboard(keyboardHeight: height, duration: duration)
-        }
-      case .willHide(let duration):
-        Task { @MainActor in
+
+        case .willHide(let duration):
           self.hideKeyboard(duration: duration)
         }
       }
     }
+  }
+  
+  private func showKeyboard(keyboardHeight: CGFloat, duration: TimeInterval) {
+    
+  }
+  
+  private func hideKeyboard(duration: TimeInterval) {
+
   }
 }
 
