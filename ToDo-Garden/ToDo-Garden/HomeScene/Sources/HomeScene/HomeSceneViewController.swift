@@ -429,6 +429,25 @@ extension HomeSceneViewController: @preconcurrency TransitionHandlable {
   }
 }
 
+extension HomeSceneViewController {
+  private func setupKeyboardObservers() {
+    UITextFieldNotificationObserver.observeKeyboardEvents { [weak self] event in
+      guard let self else { return }
+      
+      switch event {
+      case .willShow(let height, let duration):
+        Task { @MainActor in
+          self.showKeyboard(keyboardHeight: height, duration: duration)
+        }
+      case .willHide(let duration):
+        Task { @MainActor in
+          self.hideKeyboard(duration: duration)
+        }
+      }
+    }
+  }
+}
+
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
