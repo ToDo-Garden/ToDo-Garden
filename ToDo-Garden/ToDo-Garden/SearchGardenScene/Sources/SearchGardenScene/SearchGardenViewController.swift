@@ -348,7 +348,6 @@ extension SearchGardenViewController {
   }
   
   private func showKeyboard(keyboardHeight: CGFloat, duration: TimeInterval) {
-    print(Thread.isMainThread)
     UIView.animate(withDuration: duration) {
       self.searchGardenView.tableView.contentInset.bottom = keyboardHeight
       self.searchGardenView.tableView.verticalScrollIndicatorInsets.bottom = keyboardHeight
