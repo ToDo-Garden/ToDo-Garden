@@ -24,12 +24,15 @@ public struct ApplicationServiceWorker {
   func isUpdateAvailable() async throws -> Bool {
     return false
 //    앱 출시 이후 확인하고 넣어주세요.
+//    guard let bundleID = Bundle.main.bundleIdentifier else {
+//      return false
+//    }
 //    let response = try await HTTPClient(
 //      transport: URLSessionTransport(urlSession: URLSession.shared),
 //      middlewares: []
 //    )
 //    .send(
-//      input: try KeyConstants.appBundleID,
+//      input: bundleID,
 //      serializer: {
 //        .init(
 //          method: .get,
