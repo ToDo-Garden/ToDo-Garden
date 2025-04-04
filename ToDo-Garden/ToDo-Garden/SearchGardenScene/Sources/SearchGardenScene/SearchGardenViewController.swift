@@ -329,7 +329,7 @@ extension SearchGardenViewController: UITableViewDataSourcePrefetching {
   }
 }
 
-extension SearchGardenViewController{
+extension SearchGardenViewController {
   private func setupKeyboardObservers() {
     UITextFieldNotificationObserver.observeKeyboardEvents { [weak self] event in
       guard let self else { return }
