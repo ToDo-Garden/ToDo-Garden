@@ -81,8 +81,8 @@ extension ShareGardenSceneBuilder.Dependency {
     myStatsSceneBuilder: MyStatsBuilderStub()
   )
   
-  class SearchGardenBuilderStub: @preconcurrency SearchGardenSceneBuildable {
-    @MainActor func build() -> any SearchGardenViewControllable {
+  final class SearchGardenBuilderStub: SearchGardenSceneBuildable {
+    func build(with payload: SearchGardenScenePayloadable) -> any SearchGardenViewControllable {
       return StubViewController()
     }
   }
