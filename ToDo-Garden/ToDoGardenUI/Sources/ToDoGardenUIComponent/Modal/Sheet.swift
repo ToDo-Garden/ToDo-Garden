@@ -141,7 +141,7 @@ extension BottomSheet {
     return false
   }
 
-  private func animateBottomSheet(to state: State = .normal) {
+  public func animateBottomSheet(to state: State = .normal) {
     guard let superview = self.superview else { return }
     let finalConstant: CGFloat
     if state == .normal {

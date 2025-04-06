@@ -7,6 +7,7 @@
 
 import UIKit
 
+import TDFoundation
 import ToDoGardenUIComponent
 import ToDoGardenUIResource
 

@@ -64,6 +64,7 @@ final class SearchGardenViewController: UIViewController, SearchGardenViewContro
   override func viewDidLoad() {
     super.viewDidLoad()
     self.setupView()
+    self.setupKeyboardObservers()
   }
   
   func clear() {
@@ -324,6 +325,40 @@ extension SearchGardenViewController: UITableViewDataSourcePrefetching {
     
     if shouldLoadNextPage {
       self.interactor?.loadSearchedGardenContinue()
+    }
+  }
+}
+
+extension SearchGardenViewController {
+  private func setupKeyboardObservers() {
+    UITextFieldNotificationObserver.observeKeyboardEvents { [weak self] event in
+      guard let self = self else { return }
+
+      Task { @MainActor in
+        guard self.isTopViewController() else { return }
+
+        switch event {
+        case .willShow(let height, let duration):
+          self.showKeyboard(keyboardHeight: height, duration: duration)
+
+        case .willHide(let duration):
+          self.hideKeyboard(duration: duration)
+        }
+      }
+    }
+  }
+  
+  private func showKeyboard(keyboardHeight: CGFloat, duration: TimeInterval) {
+    UIView.animate(withDuration: duration) {
+      self.searchGardenView.tableView.contentInset.bottom = keyboardHeight
+      self.searchGardenView.tableView.verticalScrollIndicatorInsets.bottom = keyboardHeight
+    }
+  }
+  
+  private func hideKeyboard(duration: TimeInterval) {
+    UIView.animate(withDuration: duration) {
+      self.searchGardenView.tableView.contentInset.bottom = 0
+      self.searchGardenView.tableView.verticalScrollIndicatorInsets.bottom = 0
     }
   }
 }

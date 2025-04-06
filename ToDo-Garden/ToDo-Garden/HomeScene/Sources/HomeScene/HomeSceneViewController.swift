@@ -66,6 +66,7 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
   open override func viewDidLoad() {
     super.viewDidLoad()
     self.setupViews()
+    self.setupKeyboardObservers()
   }
   
   open override func viewDidDisappear(_ animated: Bool) {
@@ -429,6 +430,42 @@ extension HomeSceneViewController: @preconcurrency TransitionHandlable {
       await self.interactor?.writeBatchItemsToGRDB()
       await self.interactor?.requestBatchUpdateToServer()
       await self.interactor?.syncronizeServerEditGroups()
+    }
+  }
+}
+
+extension HomeSceneViewController {
+  private func setupKeyboardObservers() {
+    UITextFieldNotificationObserver.observeKeyboardEvents { [weak self] event in
+      guard let self = self else { return }
+
+      Task { @MainActor in
+        guard self.isTopViewController() else { return }
+
+        switch event {
+        case .willShow(let height, let duration):
+          self.showKeyboard(keyboardHeight: height, duration: duration)
+
+        case .willHide(let duration):
+          self.hideKeyboard(duration: duration)
+        }
+      }
+    }
+  }
+  
+  private func showKeyboard(keyboardHeight: CGFloat, duration: TimeInterval) {
+    UIView.animate(withDuration: duration) {
+      self.todoListView?.contentView.contentInset.bottom = keyboardHeight
+      self.todoListView?.contentView.verticalScrollIndicatorInsets.bottom = keyboardHeight
+    }
+    self.bottomSheet.animateBottomSheet(to: BottomSheet.State.expanded)
+  }
+  
+  private func hideKeyboard(duration: TimeInterval) {
+    self.bottomSheet.animateBottomSheet(to: BottomSheet.State.normal)
+    UIView.animate(withDuration: duration) {
+      self.todoListView?.contentView.contentInset.bottom = 0
+      self.todoListView?.contentView.verticalScrollIndicatorInsets.bottom = 0
     }
   }
 }
