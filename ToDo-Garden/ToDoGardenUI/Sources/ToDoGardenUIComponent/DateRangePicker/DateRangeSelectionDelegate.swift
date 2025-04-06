@@ -12,9 +12,9 @@ final class DateRangeSelectionDelegate: CalendarViewSingleSelectionDelegate {
   var startDate: CalendarItem?
   var endDate: CalendarItem?
   var dateRangePresentDelegate: DateRangePresentDelegate?
-  
+
   private var lastScrollTime: TimeInterval = 0
-  
+
   override init(
     collectionView: UICollectionView,
     collectionViewLayoutModel: CalendarView.Model.CollectionViewLayout,
@@ -28,11 +28,11 @@ final class DateRangeSelectionDelegate: CalendarViewSingleSelectionDelegate {
       cellIdentifier: cellIdentifier
     )
   }
-  
+
   // MARK: - UICollectionViewDelegate Methods
   func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
     guard let touchedItem = self.collectionViewDataSource.itemIdentifier(for: indexPath) else { return }
-    
+
     switch self.currentSelectionState {
     case RangeSelectionState.startAndEnd:
       self.clearSelection()
@@ -47,7 +47,7 @@ final class DateRangeSelectionDelegate: CalendarViewSingleSelectionDelegate {
     case RangeSelectionState.empty:
       break
     }
-    
+
     self.updateSelectionState()
     self.updateSelectionSnapshot()
     self.dateRangePresentDelegate?.didTouchCell(
@@ -55,12 +55,12 @@ final class DateRangeSelectionDelegate: CalendarViewSingleSelectionDelegate {
       endDate: self.endDate?.date
     )
   }
-  
+
   override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     super.collectionView(collectionView, didSelectItemAt: indexPath)
-    
+
     guard let selectedItem = self.collectionViewDataSource.itemIdentifier(for: indexPath) else { return }
-    
+
     switch self.currentSelectionState {
     case RangeSelectionState.startAndEnd:
       self.clearSelection()
@@ -85,9 +85,9 @@ final class DateRangeSelectionDelegate: CalendarViewSingleSelectionDelegate {
     self.updateSelectionSnapshot()
     self.dateRangePresentDelegate?.didTouchCell(startDate: self.startDate?.date, endDate: self.endDate?.date)
   }
-  
+
   // MARK: - UIScrollViewDelegate Methods
-  
+
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
     let debounceInterval: TimeInterval = 0.07
     let currentTime = Date().timeIntervalSince1970
@@ -96,12 +96,27 @@ final class DateRangeSelectionDelegate: CalendarViewSingleSelectionDelegate {
       self.lastScrollTime = currentTime
     }
   }
-  
+
   override func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
     return
   }
-  
+
   override func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
     return
+  }
+}
+
+/// ⬇️ DateRangeSelectionDelegate 에 추가
+extension DateRangeSelectionDelegate {
+  func updateRange(start: Date, end: Date) {
+    let allItems = self.collectionViewDataSource.snapshot().itemIdentifiers
+    guard let startItem = allItems.first(where: { $0.date == start }),
+    let endItem = allItems.first(where: { $0.date == end }) else { return }
+    
+    self.startDate = startItem
+    self.endDate = endItem
+    self.updateSelectionState()
+    self.updateSelectionSnapshot()
+    self.dateRangePresentDelegate?.didTouchCell(startDate: start, endDate: end)
   }
 }

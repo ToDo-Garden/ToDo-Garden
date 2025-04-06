@@ -43,6 +43,15 @@ public final class DateRangePickerCalendar: CalendarView {
   func register(_ picker: DateRangePresentDelegate) {
     (self.calendarViewDelegate as? DateRangeSelectionDelegate)?.dateRangePresentDelegate = picker
   }
+
+  /// ⬇️ DateRangePickerCalendar 에 추가
+  func updateRange(startDate: String, endDate: String) {
+    (self.calendarViewDelegate as? DateRangeSelectionDelegate)?
+      .updateRange(
+        start: startDate.toDateISO8601Format(),
+        end: startDate.toDateISO8601Format()
+      )
+  }
 }
 
 #if DEBUG

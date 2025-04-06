@@ -38,6 +38,7 @@ final public class EditToDoViewController: UIViewController, EditToDoViewControl
   private(set) var completeEditButton: ToDoGardenBoxButton
 
   private let alarmTimeSettingModal = ToDoAlarmTimeSettingModal()
+  private let repetitionSettingModal = ToDoRepetitionSettingModal()
 
   @ExecuteOnce private var scrollToEditToDoMode: (() -> Void)?
 
@@ -70,7 +71,12 @@ final public class EditToDoViewController: UIViewController, EditToDoViewControl
   public override func viewDidLoad() {
     super.viewDidLoad()
     self.setup()
+    self.setupModalDelegate()
+  }
+
+  private func setupModalDelegate() {
     self.alarmTimeSettingModal.delegate = self
+    self.repetitionSettingModal.delegate = self
   }
 
   public override func viewIsAppearing(_ animated: Bool) {
@@ -122,9 +128,8 @@ extension EditToDoViewController: EditToDoScheduleViewDelegate {
   }
 
   func didSelectRepetitionDateButton() {
-    let repetitionSelectionModal = ToDoRepetitionSettingModal()
-    repetitionSelectionModal.delegate = self
-    self.present(repetitionSelectionModal, animated: true)
+    self.repetitionSettingModal.setupPresentationStyle()
+    self.present(self.repetitionSettingModal, animated: true)
   }
 
   func didSelectRepetitionRange(_ startDate: Date, _ endDate: Date) {
@@ -176,12 +181,16 @@ extension EditToDoViewController: EditToDoDisplayLogic {
       self.editToDoScheduleView.updateToAlarmOff()
     }
     self.editToDoScheduleView.updateAlarmTime(alarmTime: alarmTime)
+
     if toDo.isOnlyToday {
       self.editToDoScheduleView.updateToRepeatOnlyToday()
     } else {
       if let startDay = toDo.startDay, let endDay = toDo.endDay {
         self.editToDoScheduleView.updateToRepeatInRange(startDay: startDay, endDay: endDay)
       }
+    }
+    if let start = toDo.startDay, let end = toDo.endDay {
+      self.repetitionSettingModal.updateRange(start: start, end: end)
     }
   }
 

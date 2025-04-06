@@ -34,7 +34,11 @@ public final class DateRangePicker: UIView {
   public func getEndDate() -> Date? {
     self.dateRangePickerCalendar.getEndDate()
   }
-  
+
+  public func updateRange(startDate: String, endDate: String) {
+    self.dateRangePickerCalendar.updateRange(startDate: startDate, endDate: endDate)
+  }
+
   private func setup() {
     self.setupHeader()
     self.setupCalendar()
