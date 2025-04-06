@@ -33,6 +33,7 @@ protocol HomeSceneBusinessLogic {
   func writeBatchItemsToGRDB() async
   func requestBatchUpdateToServer() async
   func prepareDataForEditTodoScene(request: HomeScene.PrepareDataForEditToDoScene.Request)
+  func syncronizeServerEditGroups() async
 }
 
 @MainActor
@@ -69,6 +70,18 @@ final class HomeSceneInteractor: HomeSceneDataStore {
 // MARK: - Request to worker
 // swiftlint: disable all
 extension HomeSceneInteractor: HomeSceneBusinessLogic {
+  func syncronizeServerEditGroups() async {
+    if self.checkNetworkConnection() {
+      do {
+        try await self.homeSceneWorker.syncronizeServerEditGroups()
+      } catch let error {
+        self.handleErrors(error)
+      }
+    } else {
+      return
+    }
+  }
+  
   func fetchToDoList(request: HomeScene.FetchToDoList.Request) async {
     if self.checkNetworkConnection() {
       do {
@@ -223,8 +236,7 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
   func prepareDataForEditTodoScene(request: HomeScene.PrepareDataForEditToDoScene.Request) {
     let dateString = request.selectedDate.description.toYYYYMMDDStringFromISO8601Space()
     let groups = self.monthlyData[dateString]
-    print(request.groupId.uuidString.lowercased())
-    print(groups?[1].localId == request.groupId.uuidString.lowercased())
+ 
     let group = groups?.first(where: { (group: SharedEntity.TodoListGroup) in
       return group.localId.lowercased() == request.groupId.uuidString.lowercased()
     })!

@@ -10,6 +10,7 @@ import Foundation
 import HTTPClientAPI
 import ManageGroupSceneAPI
 import ManageGroupSceneEntity
+import TDFoundation
 
 protocol ManageGroupDataStore {
 }
@@ -28,14 +29,18 @@ protocol ManageGroupBusinessLogic {
 class ManageGroupInteractor: ManageGroupDataStore {
   var presenter: ManageGroupPresentationLogic?
   private let manageGroupWorker: ManageGroupWorkable
+  private let retryManager: NetworkRetryManagerAPI
   
   var currentGroups: [ManageGroup.ToDoGroup]
   private var tasks: [ManageGroupInteractor.TaskKey: Task<Void, Never>] = [:]
   
   init(
-    worker: ManageGroupWorkable
+    worker: ManageGroupWorkable,
+    retryManager: NetworkRetryManagerAPI
   ) {
     self.manageGroupWorker = worker
+    self.retryManager = retryManager
+    self.retryManager.execute(isRetryingOn: false)
     self.currentGroups = []
   }
   
@@ -54,7 +59,12 @@ extension ManageGroupInteractor: ManageGroupBusinessLogic {
       
       do {
         try Task.checkCancellation()
-        let result = try await self.manageGroupWorker.fetchGroupList(request: request)
+        var result: [ManageGroup.ToDoGroup]
+        if self.checkNetworkConnection() {
+          result = try await self.manageGroupWorker.fetchGroupList(request: request)
+        } else {
+          result = try await self.manageGroupWorker.fetchGroupListFromGRDB()
+        }
         try Task.checkCancellation()
         self.currentGroups = result
         let response = ManageGroup.FetchGroupList.Response(with: result)
@@ -71,7 +81,12 @@ extension ManageGroupInteractor: ManageGroupBusinessLogic {
       
       do {
         try Task.checkCancellation()
-        let result = try await self.manageGroupWorker.saveGroupList(request: request)
+        var result: [ManageGroup.ToDoGroup]
+        if self.checkNetworkConnection() {
+          result = try await self.manageGroupWorker.saveGroupList(request: request)
+        } else {
+          result = try await self.manageGroupWorker.saveGroupListToGRDB(request: request)
+        }
         try Task.checkCancellation()
         self.currentGroups = result
         let response = ManageGroup.SaveGroupList.Response(with: result)
@@ -97,7 +112,7 @@ extension ManageGroupInteractor: ManageGroupBusinessLogic {
           groupID: groupID,
           groupName: request.groupName,
           progressColor: request.groupColor,
-          progressRate: Float.zero
+          progressRate: 1.0
         )
         self.currentGroups.append(group)
         let response = ManageGroup.AddGroup.Response(group: group)
@@ -138,6 +153,10 @@ extension ManageGroupInteractor: ManageGroupBusinessLogic {
     } else {
       return
     }
+  }
+  
+  private func checkNetworkConnection() -> Bool {
+    self.retryManager.isConnected()
   }
 }
 

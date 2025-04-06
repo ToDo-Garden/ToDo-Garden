@@ -49,6 +49,7 @@ extension DatabaseWriter {
     try createDailyToDoAlertsTable(migrator: &migrator)
     try createMyGroupsAndMyToDosTables(migrator: &migrator)
     try createTodoBatchItemTable(migrator: &migrator)
+    try createPendingEditGroupTable(migrator: &migrator)
   }
   
   private func createDailyToDoAlertsTable(migrator: inout DatabaseMigrator) throws {
@@ -118,6 +119,14 @@ extension DatabaseWriter {
           .defaults(to: false)
         t.column("groupId", .text)
           .notNull()
+      }
+    }
+  }
+  
+  private func createPendingEditGroupTable(migrator: inout DatabaseMigrator) throws {
+    migrator.registerMigration("Create 'pendingEditGroup' table") { db in
+      try db.create(table: "pendingEditGroup") { t in
+        t.column("requestData", .blob).notNull()
       }
     }
   }

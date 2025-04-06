@@ -24,7 +24,8 @@ let package = Package(
     .package(name: "ToDoGardenUI", path: "../ToDoGardenUI"),
     .package(name: "PostGroupScene", path: "./PostGroupScene"),
     .package(path: "../TDUtility"),
-    .package(path: "../TDFoundation")
+    .package(path: "../TDFoundation"),
+    Package.Dependency.package(url: "https://github.com/pointfreeco/sharing-grdb", from: "0.1.0")
   ],
   targets: [
     .target(
@@ -45,7 +46,11 @@ let package = Package(
         "ManageGroupSceneAPI",
         "ManageGroupSceneEntity",
         .product(name: "TDUtility", package: "TDUtility"),
-        .product(name: "TDFoundation", package: "TDFoundation")
+        .product(name: "TDFoundation", package: "TDFoundation"),
+        Target.Dependency.product(
+          name: "SharingGRDB",
+          package: "sharing-grdb"
+        )
       ]
     ),
     .testTarget(
