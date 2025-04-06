@@ -55,5 +55,6 @@ extension EditToDoSceneBuilder {
   private func setPayload(for viewController: EditToDoViewController, with payload: EditToDoScenePayloadable) {
     viewController.router?.dataStore?.toDo = payload.toDo
     viewController.router?.dataStore?.groups = payload.groups
+    viewController.router?.delegate = payload.delegate
   }
 }

@@ -7,6 +7,7 @@
 
 import UIKit
 
+import EditToDoSceneAPI
 import HomeSceneAPI
 import HomeSceneEntity
 import SharedEntity
@@ -261,6 +262,17 @@ extension HomeSceneViewController: HomeSceneDisplayLogic {
 
   func routeToEditToDoScene() {
     self.router?.routeToEditToDoScene()
+  }
+}
+
+// MARK: - Route From EditToDoScene
+extension HomeSceneViewController: EditToDoSceneDelegate {
+  public func didEdit(toDo: TodoBatchItem) {
+
+  }
+
+  public func didRemove(toDo: TodoBatchItem) {
+    
   }
 }
 

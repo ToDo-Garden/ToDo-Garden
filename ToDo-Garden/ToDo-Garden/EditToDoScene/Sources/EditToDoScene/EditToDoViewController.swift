@@ -94,18 +94,10 @@ extension EditToDoViewController: ToDoAlarmTimeSettingModalDelegate, ToDoRepetit
 
 extension EditToDoViewController: EditToDoScheduleViewDelegate {
   func editToDo() {
-    if let toDoNameForEdit = self.editToDoView.getEditingText(),
-    let groupForEdit = self.editToDoView.getCurrentGroup() {
-      let request = EditToDo.CompleteEditToDo.Request(
-        toDoName: toDoNameForEdit,
-        displayedGroup: EditToDo.DisplayedGroup(
-          id: groupForEdit.groupId,
-          name: groupForEdit.groupName,
-          color: groupForEdit.groupColor,
-          orderIdx: 0
-        )
-      )
-      self.interactor?.editToDo(request: request)
+    if let name = self.editToDoView.getEditingText(),
+    let group = self.editToDoView.getCurrentGroup() {
+      self.interactor?.editToDo(name: name, groupId: group.groupId)
+      self.router?.routeToHomeScene()
     }
   }
 
@@ -148,7 +140,7 @@ extension EditToDoViewController: EditToDoDisplayLogic {
     self.updateEditToDoScheduleView(toDo: viewModel.toDo, alarmTime: viewModel.alarmTime)
   }
 
-  private func updateEditToDoView(toDo: TodoBatchItem, groups: [SharedEntity.TodoListGroup]) {
+  private func updateEditToDoView(toDo: TodoBatchItem, groups: [TodoListGroup]) {
     self.editToDoView.updateToDoName(toDo.name)
     var order = 0
     let groups = groups.map {
@@ -198,7 +190,7 @@ extension EditToDoViewController: EditToDoDisplayLogic {
   }
 
   func displayDismiss() {
-    self.router?.routeToToDoListScene()
+    self.router?.routeToHomeScene()
   }
 
   func displayRepeatOnlyToday() {
@@ -246,7 +238,7 @@ extension EditToDoViewController: ToDoGardenAlertControllerDelegate {
     case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.retry:
       self.interactor?.prepareSceneData()
     case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.goHome:
-      self.router?.routeToToDoListScene()
+      self.router?.routeToHomeScene()
     case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.delete:
       self.interactor?.deleteToDo()
     default:
@@ -318,6 +310,7 @@ extension EditToDoViewController {
   struct EditToDoScenePayload: EditToDoScenePayloadable {
     var toDo: TodoBatchItem
     var groups: [SharedEntity.TodoListGroup]
+    var delegate: EditToDoSceneAPI.EditToDoSceneDelegate?
   }
 
   class SomeViewController: UIViewController {

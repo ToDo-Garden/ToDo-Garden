@@ -53,7 +53,7 @@ extension HomeSceneRouter: HomeSceneRoutingLogic {
   func routeToEditToDoScene() {
     guard let toDo = self.dataStore?.toDo, let groups = self.dataStore?.groups
     else { return }
-    let payload = EditToDoScenePayload(toDo: toDo, groups: groups)
+    let payload = EditToDoScenePayload(toDo: toDo, groups: groups, delegate: self.viewController)
     let destinationViewController = self.editToDoSceneBuilder.build(with: payload)
     self.viewController?.navigationController?.pushViewController(destinationViewController, animated: true)
   }
@@ -70,6 +70,7 @@ extension HomeSceneRouter: HomeSceneRoutingLogic {
 struct EditToDoScenePayload: EditToDoScenePayloadable {
   var toDo: TodoBatchItem
   var groups: [SharedEntity.TodoListGroup]
+  var delegate: EditToDoSceneDelegate?
 }
 
 struct TimerScenePayload: TimerScenePayloadable {

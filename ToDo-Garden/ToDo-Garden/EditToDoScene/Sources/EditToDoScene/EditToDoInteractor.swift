@@ -27,8 +27,8 @@ protocol EditToDoBusinessLogic {
   func changeAlarmTime(_ time: Double)
 
   func prepareSceneData()
+  func editToDo(name: String, groupId: String)
   func deleteToDo()
-  func editToDo(request: EditToDo.CompleteEditToDo.Request)
 }
 
 @MainActor
@@ -38,6 +38,8 @@ final class EditToDoInteractor: EditToDoDataStore {
 
   // MARK: VIP Objects
   var presenter: EditToDoPresentationLogic?
+
+  public init() {}
 }
 
 // MARK: - Non-REST API Logics
@@ -94,71 +96,30 @@ extension EditToDoInteractor: EditToDoBusinessLogic {
 import HTTPClient
 import HTTPClientAPI
 
+// swiftlint:disable multiline_arguments
 extension EditToDoInteractor {
   /// 서버에 투두의 수정을 요청하는 메서드입니다.
-  func editToDo(request: EditToDo.CompleteEditToDo.Request) {
-//    guard let toDo else {
-//      self.presenter?.presentError(.failToFetch)
-//      return
-//    }
-//
-//    self.toDo?.name = request.toDoName
-//    self.toDo?.groupData = EditToDo.Group(
-//      id: request.displayedGroup.id,
-//      name: request.displayedGroup.name,
-//      color: request.displayedGroup.color.hexStringFromColor(),
-//      orderIdx: 0
-//    )
-//
-//    self.tasks[TaskKey.editToDo] = Task {
-//      defer { self.tasks[TaskKey.editToDo] = nil }
-//
-//      do {
-//        try Task.checkCancellation()
-//        try await self.editToDoWorker.editToDo(toDo)
-//        try Task.checkCancellation()
-//        self.presenter?.presentDismiss()
-//      } catch let error {
-//        debugPrint(error.localizedDescription)
-//        self.presenter?.presentError(.network)
-//      }
-//    }
+  func editToDo(name: String, groupId: String) {
+    guard let toDo = self.toDo
+    else { return }
+
+    let startDay = toDo.isOnlyToday ? nil : toDo.startDay
+    let endDay = toDo.isOnlyToday ? nil : toDo.endDay
+    self.toDo = TodoBatchItem(
+      localId: toDo.groupId, name: toDo.name, isDone: toDo.isDone, createdAt: toDo.createdAt,
+      isAlarmOn: toDo.isAlarmOn, alarmTime: toDo.alarmTime, isOnlyToday: toDo.isOnlyToday,
+      startDay: startDay, endDay: endDay, groupId: groupId, isDelete: false
+    )
   }
 
-  /// 서버에 투두의 삭제를 요청하는 메서드입니다.
+  // TODO: 서버에 투두의 삭제를 요청하는 메서드입니다.
   func deleteToDo() {
-//    guard let toDoId else {
-//      self.presenter?.presentError(.failToFetch)
-//      return
-//    }
-//
-//    self.tasks[TaskKey.deleteToDo] = Task {
-//      defer { self.tasks[TaskKey.deleteToDo] = nil }
-//
-//      do {
-//        try Task.checkCancellation()
-//        try await self.editToDoWorker.deleteToDo(id: toDoId)
-//        try Task.checkCancellation()
-//        self.presenter?.presentDismiss()
-//      } catch let error {
-//        debugPrint(error.localizedDescription)
-//        self.presenter?.presentError(.network)
-//      }
-//    }
   }
 }
+// swiftlint:enable multiline_arguments
 
 // MARK: Errors
 
 enum EditToDoInteractorError: Error {
   case toDoDataNotExisted
-}
-
-extension EditToDoInteractor {
-  enum TaskKey {
-    case fetchToDo
-    case fetchGroup
-    case deleteToDo
-    case editToDo
-  }
 }

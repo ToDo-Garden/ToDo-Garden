@@ -14,11 +14,15 @@ public enum EditToDo {
   // MARK: Use cases
   public enum FetchToDo {
     public struct ViewModel {
-      public let toDo: TodoBatchItem
+      public let toDo: TDFoundation.TodoBatchItem
       public let alarmTime: String
       public let groups: [TodoListGroup]
 
-      public init(toDo: TodoBatchItem, alarmTime: String, groups: [TodoListGroup]) {
+      public init(
+        toDo: TDFoundation.TodoBatchItem,
+        alarmTime: String,
+        groups: [TodoListGroup]
+      ) {
         self.toDo = toDo
         self.alarmTime = alarmTime
         self.groups = groups
