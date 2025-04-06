@@ -10,16 +10,19 @@ import Foundation
 import SearchGardenSceneAPI
 import SearchGardenSceneEntity
 
+@MainActor
 protocol SearchGardenRoutingLogic {
   func dismissModal()
 }
 
+@MainActor
 protocol SearchGardenDataPassing {
   var dataStore: SearchGardenDataStore? { get }
 }
 
 final class SearchGardenRouter: SearchGardenDataPassing {
   weak var viewController: SearchGardenViewController?
+  weak var searchGardenSceneDelegate: SearchGardenSceneDelegate?
   var dataStore: SearchGardenDataStore?
   
   init() {
@@ -31,5 +34,6 @@ final class SearchGardenRouter: SearchGardenDataPassing {
 extension SearchGardenRouter: SearchGardenRoutingLogic {
   func dismissModal() {
     self.viewController?.dismiss(animated: true)
+    self.searchGardenSceneDelegate?.searchGardenDoneButtonDidTap()
   }
 }
