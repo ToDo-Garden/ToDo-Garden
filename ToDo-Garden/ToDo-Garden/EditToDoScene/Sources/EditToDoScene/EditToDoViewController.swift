@@ -23,7 +23,8 @@ protocol EditToDoDisplayLogic: AnyObject {
   func showErrorAlert(_ type: EditToDo.ErrorType)
 
   func displayRepeatOnlyToday()
-  func displayChangedRepetition(viewModel: EditToDo.ChangeRepetitionRange.ViewModel)
+  func displayRepeatOtherDays()
+  func displayChangedRepetition(start: String, end: String)
   func displayChangedAlarm(viewModel: EditToDo.ChangeAlarmActivation.ViewModel)
   func displayFetchedAlarmTime(viewModel: EditToDo.FetchAlarmTime.ViewModel)
   func displayChangedAlarmTime(viewModel: EditToDo.ChangeAlarmTime.ViewModel)
@@ -35,6 +36,8 @@ final public class EditToDoViewController: UIViewController, EditToDoViewControl
   private(set) var editToDoView: EditToDoView
   private(set) var editToDoScheduleView: EditToDoScheduleView
   private(set) var completeEditButton: ToDoGardenBoxButton
+
+  private let alarmTimeSettingModal = ToDoAlarmTimeSettingModal()
 
   @ExecuteOnce private var scrollToEditToDoMode: (() -> Void)?
 
@@ -66,8 +69,8 @@ final public class EditToDoViewController: UIViewController, EditToDoViewControl
 
   public override func viewDidLoad() {
     super.viewDidLoad()
-    print("i'm called")
     self.setup()
+    self.alarmTimeSettingModal.delegate = self
   }
 
   public override func viewIsAppearing(_ animated: Bool) {
@@ -115,12 +118,15 @@ extension EditToDoViewController: EditToDoScheduleViewDelegate {
   }
 
   func didSelectAlarmTime(_ alarmTime: Double) {
-    let request = EditToDo.ChangeAlarmTime.Request(alarmTime: alarmTime)
-    self.interactor?.changeAlarmTime(request: request)
+    self.interactor?.changeAlarmTime(alarmTime)
   }
 
-  func didSelectOnlyTodayView(isOnlyToday: Bool) {
-    self.interactor?.changeRepetition(isOnlyToday: isOnlyToday)
+  func didSelectOnlyTodayView() {
+    self.interactor?.changeRepetition(isOnlyToday: true)
+  }
+
+  func didSelectRepeatOtherDaysView() {
+    self.interactor?.changeRepetition(isOnlyToday: false)
   }
 
   func didSelectRepetitionDateButton() {
@@ -130,8 +136,7 @@ extension EditToDoViewController: EditToDoScheduleViewDelegate {
   }
 
   func didSelectRepetitionRange(_ startDate: Date, _ endDate: Date) {
-    let request = EditToDo.ChangeRepetitionRange.Request(startDate: startDate, endDate: endDate)
-    self.interactor?.changeReptitionRange(request: request)
+    self.interactor?.changeReptitionRange(start: startDate, end: endDate)
   }
 }
 
@@ -200,10 +205,12 @@ extension EditToDoViewController: EditToDoDisplayLogic {
     self.editToDoScheduleView.updateToRepeatOnlyToday()
   }
 
-  func displayChangedRepetition(viewModel: EditToDo.ChangeRepetitionRange.ViewModel) {
-    let startDay = viewModel.startDay
-    let endDay = viewModel.endDay
-    self.editToDoScheduleView.updateToRepeatInRange(startDay: startDay, endDay: endDay)
+  func displayRepeatOtherDays() {
+    self.editToDoScheduleView.updateToRepeatOtherDays()
+  }
+
+  func displayChangedRepetition(start: String, end: String) {
+    self.editToDoScheduleView.updateToRepeatInRange(startDay: start, endDay: end)
   }
 
   func displayChangedAlarm(viewModel: EditToDo.ChangeAlarmActivation.ViewModel) {
@@ -215,8 +222,7 @@ extension EditToDoViewController: EditToDoDisplayLogic {
   }
 
   func displayFetchedAlarmTime(viewModel: EditToDo.FetchAlarmTime.ViewModel) {
-    let alarmTimeSettingModal = ToDoAlarmTimeSettingModal()
-    alarmTimeSettingModal.delegate = self
+    self.alarmTimeSettingModal.sheetPresentationController?.detents = [.medium()]
     let hour = viewModel.hour
     let minute = viewModel.minute
     alarmTimeSettingModal.updateInitialAlarmTime(hour: hour, minute: minute)

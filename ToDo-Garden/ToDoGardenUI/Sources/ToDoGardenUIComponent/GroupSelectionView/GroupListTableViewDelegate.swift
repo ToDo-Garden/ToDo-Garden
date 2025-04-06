@@ -117,14 +117,12 @@ extension GroupListTableViewDelegate {
       let id = item.groupId
       self.editableGroupIndexDictionary[id] = index
     }
-//    debugPrint(self.editableGroupIndexDictionary)
   }
 
   private func reloadNewEditableGroups(groupItems: [GroupSelectionViewItem]) {
     var snapshot = NSDiffableDataSourceSnapshot<GroupSelectionViewSection, GroupSelectionViewItem>()
     snapshot.appendSections([.main])
     let items = groupItems.filter { (item: GroupSelectionViewItem) in
-      debugPrint(item)
       if let currentGroupItem = self.currentGroupItem {
         return item != currentGroupItem
       }

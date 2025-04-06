@@ -21,10 +21,10 @@ protocol EditToDoDataStore {
 @MainActor
 protocol EditToDoBusinessLogic {
   func changeRepetition(isOnlyToday: Bool)
-  func changeReptitionRange(request: EditToDo.ChangeRepetitionRange.Request)
+  func changeReptitionRange(start: Date, end: Date)
   func changeAlarmActivation()
   func fetchAlarmTime()
-  func changeAlarmTime(request: EditToDo.ChangeAlarmTime.Request)
+  func changeAlarmTime(_ time: Double)
 
   func prepareSceneData()
   func deleteToDo()
@@ -53,55 +53,40 @@ extension EditToDoInteractor: EditToDoBusinessLogic {
 
   /// 사용자가 투두 알림 스위치를 통해 활성화 여부를 변경했을 때 호출되는 메서드입니다.
   func changeAlarmActivation() {
-//    self.toDo.isAlarmOn.toggle()
-//    let response = EditToDo.ChangeAlarmActivation.Response(isAlarmOn: self.toDo.isAlarmOn)
-//    self.presenter?.presentAlarmActivation(response: response)
+    self.toDo?.isAlarmOn.toggle()
+    guard let isAlarmOn = self.toDo?.isAlarmOn else { return }
+    let response = EditToDo.ChangeAlarmActivation.Response(isAlarmOn: isAlarmOn)
+    self.presenter?.presentAlarmActivation(response: response)
   }
 
   /// 사용자가 투두 알림 시간 설정 버튼을 눌렀을 때, 기존에 설정했던 시간을 보여주기 위해 호출되는 메서드입니다.
   func fetchAlarmTime() {
-//    let alarmTime = self.toDo?.alarm.alarmTime
-//    let response = EditToDo.FetchAlarmTime.Response(alarmTime: alarmTime)
-//    self.presenter?.presentFetchedAlarmTime(response: response)
+    guard let alarmTime = self.toDo?.alarmTime else { return }
+    let response = EditToDo.FetchAlarmTime.Response(alarmTime: alarmTime)
+    self.presenter?.presentFetchedAlarmTime(response: response)
   }
 
-  func changeAlarmTime(request: EditToDo.ChangeAlarmTime.Request) {
-//    let alarmTime = request.alarmTime
-//    self.toDo?.alarm.alarmTime = alarmTime
-//    let response = EditToDo.ChangeAlarmTime.Response(alarmTime: alarmTime)
-//    self.presenter?.presentChangedAlarmTime(response: response)
+  func changeAlarmTime(_ time: Double) {
+    self.toDo?.alarmTime = time
+    let response = EditToDo.ChangeAlarmTime.Response(alarmTime: time)
+    self.presenter?.presentChangedAlarmTime(response: response)
   }
 
   func changeRepetition(isOnlyToday: Bool) {
-//    self.toDo?.repetition.isOnlyToday = isOnlyToday
-//    if isOnlyToday {
-//      self.presenter?.presentRepeatOnlyToday()
-//    } else {
-//      let currentDate = Date()
-//      let tomorrowDate = currentDate.addingTimeInterval(60 * 60 * 24)
-//      let repetition = self.toDo?.repetition
-//      if repetition?.startDate == nil && repetition?.endDate == nil {
-//        self.toDo?.repetition.startDate = currentDate
-//        self.toDo?.repetition.endDate = tomorrowDate
-//      }
-//
-//      let response = EditToDo.ChangeRepetitionRange.Response(
-//        startDate: self.toDo?.repetition.startDate ?? currentDate,
-//        endDate: self.toDo?.repetition.endDate ?? tomorrowDate
-//      )
-//      self.presenter?.presentChangedRepetitionRange(response: response)
+    self.toDo?.isOnlyToday = isOnlyToday
+    if isOnlyToday {
+      self.presenter?.presentRepeatOnlyToday()
+    } else {
+      self.presenter?.presentRepeatOtherDays()
+    }
   }
 
   /// 사용자가 투두 반복 설정 뷰를 선택했을 때 호출하는 메서드입니다.
-  func changeReptitionRange(request: EditToDo.ChangeRepetitionRange.Request) {
-//    self.toDo?.repetition.isOnlyToday = false
-//    let startDate = request.startDate
-//    let endDate = request.endDate
-//    self.toDo?.repetition.startDate = startDate
-//    self.toDo?.repetition.endDate = endDate
-//
-//    let response = EditToDo.ChangeRepetitionRange.Response(startDate: startDate, endDate: endDate)
-//    self.presenter?.presentChangedRepetitionRange(response: response)
+  func changeReptitionRange(start: Date, end: Date) {
+    self.toDo?.isOnlyToday = false
+    self.toDo?.startDay = start.toISOString()
+    self.toDo?.endDay = end.toISOString()
+    self.presenter?.presentChangedRepetitionRange(start: start, end: end)
   }
 }
 

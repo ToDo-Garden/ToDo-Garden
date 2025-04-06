@@ -21,7 +21,8 @@ protocol EditToDoPresentationLogic {
   func presentFetchedAlarmTime(response: EditToDo.FetchAlarmTime.Response)
   func presentChangedAlarmTime(response: EditToDo.ChangeAlarmTime.Response)
   func presentRepeatOnlyToday()
-  func presentChangedRepetitionRange(response: EditToDo.ChangeRepetitionRange.Response)
+  func presentRepeatOtherDays()
+  func presentChangedRepetitionRange(start: Date, end: Date)
 }
 
 final class EditToDoPresenter {
@@ -70,11 +71,15 @@ extension EditToDoPresenter: EditToDoPresentationLogic {
     self.viewController?.displayRepeatOnlyToday()
   }
 
-  func presentChangedRepetitionRange(response: EditToDo.ChangeRepetitionRange.Response) {
-    let startDay = self.dateFormatter.string(from: response.startDate)
-    let endDay = self.dateFormatter.string(from: response.endDate)
-    let viewModel = EditToDo.ChangeRepetitionRange.ViewModel(startDay: startDay, endDay: endDay)
-    self.viewController?.displayChangedRepetition(viewModel: viewModel)
+  func presentRepeatOtherDays() {
+    self.viewController?.displayRepeatOtherDays()
+  }
+
+  func presentChangedRepetitionRange(start: Date, end: Date) {
+    self.viewController?.displayChangedRepetition(
+      start: self.dateFormatter.string(from: start),
+      end: self.dateFormatter.string(from: end)
+    )
   }
 
   func presentError(_ type: EditToDo.ErrorType) {
