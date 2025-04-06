@@ -8,11 +8,12 @@
 import UIKit
 
 import EditToDoSceneEntity
+import SharedEntity
+import TDFoundation
 
 @MainActor
 protocol EditToDoPresentationLogic {
-  func presentFetchedToDo(response: EditToDo.FetchToDo.Response)
-  func presentFetchedGroupList(groupList: [EditToDo.Group])
+  func presentFetchedToDo(toDo: TodoBatchItem, groups: [TodoListGroup])
   func presentDismiss()
   func presentError(_ type: EditToDo.ErrorType)
 
@@ -36,21 +37,11 @@ final class EditToDoPresenter {
 // MARK: - Request to ViewController
 
 extension EditToDoPresenter: EditToDoPresentationLogic {
-  func presentFetchedToDo(response: EditToDo.FetchToDo.Response) {
-    let viewModel = EditToDo.FetchToDo.ViewModel(toDo: self.makeDisplayedToDo(from: response.toDo))
+  func presentFetchedToDo(toDo: TodoBatchItem, groups: [TodoListGroup]) {
+    let alarmTime = self.makeAlarmTime(of: toDo.alarmTime)
+    let alarmTimeString = String(format: "%02d:%02d", alarmTime.hour, alarmTime.minute)
+    let viewModel = EditToDo.FetchToDo.ViewModel(toDo: toDo, alarmTime: alarmTimeString, groups: groups)
     self.viewController?.displayFetchedToDo(viewModel: viewModel)
-  }
-
-  func presentFetchedGroupList(groupList: [EditToDo.Group]) {
-    let displayedGroupList = groupList.map {
-      return EditToDo.DisplayedGroup(
-        id: $0.id,
-        name: $0.name,
-        color: (try? UIColor().fromHex($0.color)) ?? UIColor.toDoGardenGreenDark,
-        orderIdx: $0.orderIdx
-      )
-    }
-    self.viewController?.displayFetchedGroupList(displayedGroupList)
   }
 
   func presentDismiss() {
@@ -97,31 +88,6 @@ extension EditToDoPresenter {
   private struct AlarmTime {
     let hour: Int
     let minute: Int
-  }
-
-  private func makeDisplayedToDo(
-    from fetchedToDo: EditToDo.ToDo
-  ) -> EditToDo.FetchToDo.ViewModel.DisplayedToDo {
-    let displayedGroup = EditToDo.DisplayedGroup(
-      id: fetchedToDo.groupData.id,
-      name: fetchedToDo.groupData.name,
-      color: (try? UIColor().fromHex(fetchedToDo.groupData.color)) ?? UIColor.toDoGardenGreenDark,
-      orderIdx: fetchedToDo.groupData.orderIdx
-    )
-    let alarmTime = self.makeAlarmTime(of: fetchedToDo.alarm.alarmTime)
-    let alarmTimeString = String(format: "%02d:%02d", alarmTime.hour, alarmTime.minute)
-    let startDay = self.makeDayString(from: fetchedToDo.repetition.startDate)
-    let endDay = self.makeDayString(from: fetchedToDo.repetition.endDate)
-
-    return EditToDo.FetchToDo.ViewModel.DisplayedToDo(
-      toDoName: fetchedToDo.name,
-      group: displayedGroup,
-      isAlarmOn: fetchedToDo.alarm.isAlarmOn,
-      alarmTime: alarmTimeString,
-      isOnlyToday: fetchedToDo.repetition.isOnlyToday,
-      startDay: startDay,
-      endDay: endDay
-    )
   }
 
   private func makeAlarmTime(of time: Double?) -> AlarmTime {

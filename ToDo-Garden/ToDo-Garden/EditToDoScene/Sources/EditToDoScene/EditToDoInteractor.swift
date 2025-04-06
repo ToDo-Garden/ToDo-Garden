@@ -38,19 +38,19 @@ final class EditToDoInteractor: EditToDoDataStore {
 
   // MARK: VIP Objects
   var presenter: EditToDoPresentationLogic?
-  private let editToDoWorker: EditToDoWorkable
-
-  private var tasks: [EditToDoInteractor.TaskKey: Task<Void, Never>]
-
-  public init(editToDoWorker: EditToDoWorkable) {
-    self.editToDoWorker = editToDoWorker
-    self.tasks = [:]
-  }
 }
 
 // MARK: - Non-REST API Logics
 
 extension EditToDoInteractor: EditToDoBusinessLogic {
+  func prepareSceneData() {
+    if let toDo = self.toDo, let groups = self.groups {
+      self.presenter?.presentFetchedToDo(toDo: toDo, groups: groups)
+    } else {
+      self.presenter?.presentError(EditToDo.ErrorType.failToFetch)
+    }
+  }
+
   /// 사용자가 투두 알림 스위치를 통해 활성화 여부를 변경했을 때 호출되는 메서드입니다.
   func changeAlarmActivation() {
 //    self.toDo.isAlarmOn.toggle()
@@ -110,50 +110,6 @@ import HTTPClient
 import HTTPClientAPI
 
 extension EditToDoInteractor {
-  func prepareSceneData() {
-    self.fetchToDo()
-    self.fetchGroupList()
-  }
-
-  /// 서버로부터 수정할 투두의 정보를 받아오는 메서드입니다.
-  private func fetchToDo() {
-//    guard let id = self.toDoId else {
-//      self.presenter?.presentError(.network)
-//      return
-//    }
-//
-//    self.tasks[TaskKey.fetchToDo] = Task {
-//      defer { self.tasks[TaskKey.fetchToDo] = nil }
-//
-//      do {
-//        try Task.checkCancellation()
-//        let toDo = try await self.editToDoWorker.fetchToDo(id: id)
-//        try Task.checkCancellation()
-//        self.toDo = toDo
-//        let response = EditToDo.FetchToDo.Response(toDo: toDo)
-//        self.presenter?.presentFetchedToDo(response: response)
-//      } catch let error {
-//        debugPrint(error.localizedDescription)
-//        self.presenter?.presentError(.failToFetch)
-//      }
-//    }
-  }
-
-  private func fetchGroupList() {
-    self.tasks[TaskKey.fetchGroup] = Task {
-      defer { self.tasks[TaskKey.fetchGroup] = nil }
-
-      do {
-        try Task.checkCancellation()
-        let groupList = try await self.editToDoWorker.fetchGroupList()
-        try Task.checkCancellation()
-        self.presenter?.presentFetchedGroupList(groupList: groupList)
-      } catch let error {
-        debugPrint(error.localizedDescription)
-      }
-    }
-  }
-
   /// 서버에 투두의 수정을 요청하는 메서드입니다.
   func editToDo(request: EditToDo.CompleteEditToDo.Request) {
 //    guard let toDo else {

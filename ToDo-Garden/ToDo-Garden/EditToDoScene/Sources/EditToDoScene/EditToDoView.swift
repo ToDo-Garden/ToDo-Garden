@@ -297,7 +297,7 @@ extension EditToDoView {
     self.toDoNameInputView.changeBottomLine(color: UIColor.toDoGardenYellow)
     self.groupSelectionView.updateGroup(
       current: GroupSelectionViewItem(
-        groupId: UUID(),
+        groupId: UUID().uuidString,
         groupName: text,
         groupColor: UIColor.toDoGardenYellow
       )

@@ -9,6 +9,8 @@ import UIKit
 
 import EditToDoSceneAPI
 import EditToDoSceneEntity
+import SharedEntity
+import TDFoundation
 import TDUtility
 import ToDoGardenUIAPI
 import ToDoGardenUIComponent
@@ -137,18 +139,46 @@ extension EditToDoViewController: EditToDoScheduleViewDelegate {
 
 extension EditToDoViewController: EditToDoDisplayLogic {
   func displayFetchedToDo(viewModel: EditToDo.FetchToDo.ViewModel) {
-    let toDo = viewModel.toDo
-    self.editToDoView.updateToDoName(toDo.toDoName)
-    self.editToDoView.updateGroup(current: toDo.group)
+    self.updateEditToDoView(toDo: viewModel.toDo, groups: viewModel.groups)
+    self.updateEditToDoScheduleView(toDo: viewModel.toDo, alarmTime: viewModel.alarmTime)
+  }
+
+  private func updateEditToDoView(toDo: TodoBatchItem, groups: [SharedEntity.TodoListGroup]) {
+    self.editToDoView.updateToDoName(toDo.name)
+    var order = 0
+    let groups = groups.map {
+      order += 1
+      return EditToDo.DisplayedGroup(
+        id: $0.localId,
+        name: $0.name,
+        color: (try? UIColor().fromHex($0.color)) ?? UIColor.toDoGardenGreenDark,
+        orderIdx: order
+      )
+    }
+    var newOrder = 0
+    guard let group = groups.first(where: {
+      newOrder += 1
+      return $0.id == toDo.groupId
+    }) else { return }
+
+    self.editToDoView.updateGroup(
+      current: EditToDo.DisplayedGroup(
+        id: group.id,
+        name: group.name,
+        color: group.color,
+        orderIdx: newOrder
+      )
+    )
+    self.editToDoView.updateGroupList(groups)
+  }
+
+  private func updateEditToDoScheduleView(toDo: TodoBatchItem, alarmTime: String) {
     if toDo.isAlarmOn {
       self.editToDoScheduleView.updateToAlarmOn()
     } else {
       self.editToDoScheduleView.updateToAlarmOff()
     }
-    if let alarmTime = toDo.alarmTime {
-      self.editToDoScheduleView.updateAlarmTime(alarmTime: alarmTime)
-    }
-    self.editToDoView.updateToDoName(toDo.toDoName)
+    self.editToDoScheduleView.updateAlarmTime(alarmTime: alarmTime)
     if toDo.isOnlyToday {
       self.editToDoScheduleView.updateToRepeatOnlyToday()
     } else {
@@ -277,9 +307,7 @@ extension EditToDoViewController: UIScrollViewDelegate {
 }
 
 import HTTPClient
-import SharedEntity
-import TDFoundation
-
+// swiftlint:disable all
 extension EditToDoViewController {
   struct EditToDoScenePayload: EditToDoScenePayloadable {
     var toDo: TodoBatchItem
@@ -288,16 +316,35 @@ extension EditToDoViewController {
 
   class SomeViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
-      //      super.viewDidAppear(animated)
-      //      let editToDoViewController = EditToDoSceneBuilder(
-      //        dependency: EditToDoSceneBuilder.Dependency(
-      //          editToDoWorker: EditToDoWorker(httpClient: HTTPClient.live)
-      //        )
-      //      ).build(with: EditToDoViewController.EditToDoScenePayload(toDoId: UUID()))
-      //      self.navigationController?.pushViewController(editToDoViewController, animated: true)
+      super.viewDidAppear(animated)
+      let editToDoViewController = EditToDoSceneBuilder().build(
+        with: EditToDoViewController.EditToDoScenePayload(
+          toDo: TodoBatchItem(
+            localId: "sadfasdfsdf", name: "temp", isDone: true,
+            createdAt: "1212", isAlarmOn: true, alarmTime: Double(43450),
+            isOnlyToday: true, startDay: nil, endDay: nil, groupId: "1111", isDelete: false
+          ),
+          groups: [
+            TodoListGroup(
+              localId: "2222", name: "그룹2", color: UIColor.blue.hexStringFromColor(),
+              todoList: nil, progressRate: Double(0)
+            ),
+            TodoListGroup(
+              localId: "1111", name: "그룹1", color: UIColor.toDoGardenGreenDark.hexStringFromColor(),
+              todoList: nil, progressRate: Double(0.4)
+            ),
+            TodoListGroup(
+              localId: "3333", name: "그룹3", color: UIColor.red.hexStringFromColor(),
+              todoList: nil, progressRate: Double(0.1)
+            )
+          ]
+        )
+      )
+      self.navigationController?.pushViewController(editToDoViewController, animated: true)
     }
   }
 }
+// swiftlint:enable all
 
 extension EditToDoViewController {
   public func setForGuide(index: Int) {

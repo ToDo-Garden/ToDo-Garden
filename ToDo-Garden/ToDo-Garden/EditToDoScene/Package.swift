@@ -34,7 +34,11 @@ let package = Package(
       ]
     ),
     .target(
-      name: "EditToDoSceneEntity"
+      name: "EditToDoSceneEntity",
+      dependencies: [
+        .product(name: "SharedEntity", package: "TDFoundation"),
+        .product(name: "TDFoundation", package: "TDFoundation")
+      ]
     ),
     .target(
       name: "EditToDoScene",

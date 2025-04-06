@@ -99,10 +99,10 @@ extension GroupSelectionViewCell {
 @available(iOS 17.0, *)
 #Preview {
   let cell = GroupSelectionViewCell()
-  cell.updateUI(
-    groupItem: GroupSelectionViewItem(
-      groupId: UUID(), groupName: "영어독해", groupColor: UIColor.toDoGardenGreenDark
-    )
-  )
+//  cell.updateUI(
+//    groupItem: GroupSelectionViewItem(
+//      groupId: UUID(), groupName: "영어독해", groupColor: UIColor.toDoGardenGreenDark
+//    )
+//  )
   return cell
 }

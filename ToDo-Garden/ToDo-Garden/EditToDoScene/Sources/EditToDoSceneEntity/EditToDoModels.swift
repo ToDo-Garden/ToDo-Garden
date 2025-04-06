@@ -7,55 +7,21 @@
 
 import UIKit.UIColor
 
-// swiftlint:disable file_length
+import SharedEntity
+import TDFoundation
+
 public enum EditToDo {
   // MARK: Use cases
   public enum FetchToDo {
-    public struct Request {
-      public init() {}
-    }
-
-    public struct Response {
-      public let toDo: ToDo
-
-      public init(toDo: ToDo) {
-        self.toDo = toDo
-      }
-    }
-
     public struct ViewModel {
-      public struct DisplayedToDo {
-        public let toDoName: String
-        public let group: DisplayedGroup
-        public let isAlarmOn: Bool
-        public let alarmTime: String?
-        public let isOnlyToday: Bool
-        public let startDay: String?
-        public let endDay: String?
+      public let toDo: TodoBatchItem
+      public let alarmTime: String
+      public let groups: [TodoListGroup]
 
-        public init(
-          toDoName: String,
-          group: DisplayedGroup,
-          isAlarmOn: Bool,
-          alarmTime: String?,
-          isOnlyToday: Bool,
-          startDay: String?,
-          endDay: String?
-        ) {
-          self.toDoName = toDoName
-          self.group = group
-          self.isAlarmOn = isAlarmOn
-          self.alarmTime = alarmTime
-          self.isOnlyToday = isOnlyToday
-          self.startDay = startDay
-          self.endDay = endDay
-        }
-      }
-
-      public let toDo: DisplayedToDo
-
-      public init(toDo: DisplayedToDo) {
+      public init(toDo: TodoBatchItem, alarmTime: String, groups: [TodoListGroup]) {
         self.toDo = toDo
+        self.alarmTime = alarmTime
+        self.groups = groups
       }
     }
   }
@@ -252,13 +218,13 @@ extension EditToDo {
   }
 
   public struct DisplayedGroup {
-    public let id: UUID
+    public let id: String
     public let name: String
     public let color: UIColor
     public let orderIdx: Int
 
     public init(
-      id: UUID, 
+      id: String,
       name: String,
       color: UIColor,
       orderIdx: Int
@@ -419,4 +385,3 @@ extension EditToDo {
     case failToFetch
   }
 }
-// swiftlint:enable file_length
