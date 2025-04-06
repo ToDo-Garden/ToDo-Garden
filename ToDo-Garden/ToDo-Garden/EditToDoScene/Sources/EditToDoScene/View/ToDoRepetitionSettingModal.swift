@@ -27,7 +27,7 @@ final class ToDoRepetitionSettingModal: UIViewController {
     self.startDate = startDate
     self.endDate = endDate
     super.init(nibName: nil, bundle: nil)
-    print("modal presented")
+    self.setupPresentationStyle()
   }
 
   @available(*, unavailable)
@@ -47,9 +47,11 @@ extension ToDoRepetitionSettingModal {
 
 extension ToDoRepetitionSettingModal {
   private func setupPresentationStyle() {
-    self.sheetPresentationController?.detents = [
-      UISheetPresentationController.Detent.large()
-    ]
+    if #available(iOS 16.0, *) {
+      self.sheetPresentationController?.detents = [
+        .custom { _ in return 500 }
+      ]
+    }
     self.sheetPresentationController?.prefersGrabberVisible = true
   }
 
