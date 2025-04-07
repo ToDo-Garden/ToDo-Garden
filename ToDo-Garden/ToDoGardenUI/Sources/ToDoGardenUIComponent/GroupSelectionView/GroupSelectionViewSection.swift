@@ -14,11 +14,11 @@ enum GroupSelectionViewSection {
 }
 
 public struct GroupSelectionViewItem {
-  public let groupId: UUID
+  public let groupId: String
   public let groupName: String
   public let groupColor: UIColor
 
-  public init(groupId: UUID, groupName: String, groupColor: UIColor) {
+  public init(groupId: String, groupName: String, groupColor: UIColor) {
     self.groupId = groupId
     self.groupName = groupName
     self.groupColor = groupColor

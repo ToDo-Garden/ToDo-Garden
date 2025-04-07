@@ -35,7 +35,8 @@ final class EditToDoRepetitionView: UIView {
   }
 
   func setRepeatRangeSelected() {
-    self.setRepeatOtherDaysViewSelected()
+    self.repeatOnlyTodayView.setDeSelected()
+    self.repeatOtherDaysView.setSelected()
     self.repeatOtherDaysView.updateDateButtonState(isSelected: true)
   }
 
@@ -47,7 +48,8 @@ final class EditToDoRepetitionView: UIView {
 // MARK: EditToDoRepetitionView Delegate
 
 protocol EditToDoRepetitionViewDelegate: AnyObject {
-  func didSelectOnlyTodayView(isOnlyToday: Bool)
+  func didSelectOnlyTodayView()
+  func didSelectRepeatOtherDaysView()
   func didSelectRepetitionDateButton()
 }
 
@@ -76,13 +78,11 @@ extension EditToDoRepetitionView {
 
   private func setupRepeatOnlyTodayViewDelegate() {
     self.repeatOnlyTodayView.bindTapGesture { _ in
-      let isOnlyToday = true
-      self.delegate?.didSelectOnlyTodayView(isOnlyToday: isOnlyToday)
+      self.delegate?.didSelectOnlyTodayView()
     }
 
     self.repeatOtherDaysView.bindTapGesture { _ in
-      let isOnlyToday = false
-      self.delegate?.didSelectOnlyTodayView(isOnlyToday: isOnlyToday)
+      self.delegate?.didSelectRepeatOtherDaysView()
     }
   }
 

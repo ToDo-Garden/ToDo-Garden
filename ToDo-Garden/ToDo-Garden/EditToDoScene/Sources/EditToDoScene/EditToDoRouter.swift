@@ -9,23 +9,36 @@ import Foundation
 
 import EditToDoSceneAPI
 
+@MainActor
 protocol EditToDoRoutingLogic {
-  func routeToToDoListScene()
+  func routeToHomeScene()
+  func routeToHomeSceneWithToDo()
 }
 
+@MainActor
 protocol EditToDoDataPassing {
   var dataStore: EditToDoDataStore? { get set }
+  var delegate: EditToDoSceneDelegate? { get set }
 }
 
+@MainActor
 class EditToDoRouter: EditToDoDataPassing {
   weak var viewController: EditToDoViewController?
+  weak var delegate: EditToDoSceneDelegate?
   var dataStore: EditToDoDataStore?
 }
 
 // MARK: - Routing
 
+// swiftlint:disable all
 extension EditToDoRouter: EditToDoRoutingLogic {
-  func routeToToDoListScene() {
+  func routeToHomeScene() {
     self.viewController?.navigationController?.popViewController(animated: true)
   }
+
+  func routeToHomeSceneWithToDo() {
+    self.delegate?.didEdit(toDo: self.dataStore!.toDo!)
+    self.routeToHomeScene()
+  }
 }
+// swiftlint:enable all

@@ -12,7 +12,7 @@ import ToDoGardenUIConstant
 
 final class GroupListTableViewDelegate: NSObject {
   private let cellHeight: CGFloat
-  private var editableGroupIndexDictionary: [UUID: Int]
+  private var editableGroupIndexDictionary: [String: Int]
   private var tableViewDataSource: UITableViewDiffableDataSource<
     GroupSelectionViewSection,
     GroupSelectionViewItem

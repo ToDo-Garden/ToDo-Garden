@@ -21,14 +21,14 @@ protocol EditToDoDataStore {
 @MainActor
 protocol EditToDoBusinessLogic {
   func changeRepetition(isOnlyToday: Bool)
-  func changeReptitionRange(request: EditToDo.ChangeRepetitionRange.Request)
+  func changeReptitionRange(start: Date, end: Date)
   func changeAlarmActivation()
   func fetchAlarmTime()
-  func changeAlarmTime(request: EditToDo.ChangeAlarmTime.Request)
+  func changeAlarmTime(_ time: Double)
 
   func prepareSceneData()
+  func editToDo(name: String, groupId: String)
   func deleteToDo()
-  func editToDo(request: EditToDo.CompleteEditToDo.Request)
 }
 
 @MainActor
@@ -38,70 +38,57 @@ final class EditToDoInteractor: EditToDoDataStore {
 
   // MARK: VIP Objects
   var presenter: EditToDoPresentationLogic?
-  private let editToDoWorker: EditToDoWorkable
 
-  private var tasks: [EditToDoInteractor.TaskKey: Task<Void, Never>]
-
-  public init(editToDoWorker: EditToDoWorkable) {
-    self.editToDoWorker = editToDoWorker
-    self.tasks = [:]
-  }
+  public init() {}
 }
 
 // MARK: - Non-REST API Logics
 
 extension EditToDoInteractor: EditToDoBusinessLogic {
+  func prepareSceneData() {
+    if let toDo = self.toDo, let groups = self.groups {
+      self.presenter?.presentFetchedToDo(toDo: toDo, groups: groups)
+    } else {
+      self.presenter?.presentError(EditToDo.ErrorType.failToFetch)
+    }
+  }
+
   /// 사용자가 투두 알림 스위치를 통해 활성화 여부를 변경했을 때 호출되는 메서드입니다.
   func changeAlarmActivation() {
-//    self.toDo.isAlarmOn.toggle()
-//    let response = EditToDo.ChangeAlarmActivation.Response(isAlarmOn: self.toDo.isAlarmOn)
-//    self.presenter?.presentAlarmActivation(response: response)
+    self.toDo?.isAlarmOn.toggle()
+    guard let isAlarmOn = self.toDo?.isAlarmOn else { return }
+    let response = EditToDo.ChangeAlarmActivation.Response(isAlarmOn: isAlarmOn)
+    self.presenter?.presentAlarmActivation(response: response)
   }
 
   /// 사용자가 투두 알림 시간 설정 버튼을 눌렀을 때, 기존에 설정했던 시간을 보여주기 위해 호출되는 메서드입니다.
   func fetchAlarmTime() {
-//    let alarmTime = self.toDo?.alarm.alarmTime
-//    let response = EditToDo.FetchAlarmTime.Response(alarmTime: alarmTime)
-//    self.presenter?.presentFetchedAlarmTime(response: response)
+    guard let alarmTime = self.toDo?.alarmTime else { return }
+    let response = EditToDo.FetchAlarmTime.Response(alarmTime: alarmTime)
+    self.presenter?.presentFetchedAlarmTime(response: response)
   }
 
-  func changeAlarmTime(request: EditToDo.ChangeAlarmTime.Request) {
-//    let alarmTime = request.alarmTime
-//    self.toDo?.alarm.alarmTime = alarmTime
-//    let response = EditToDo.ChangeAlarmTime.Response(alarmTime: alarmTime)
-//    self.presenter?.presentChangedAlarmTime(response: response)
+  func changeAlarmTime(_ time: Double) {
+    self.toDo?.alarmTime = time
+    let response = EditToDo.ChangeAlarmTime.Response(alarmTime: time)
+    self.presenter?.presentChangedAlarmTime(response: response)
   }
 
   func changeRepetition(isOnlyToday: Bool) {
-//    self.toDo?.repetition.isOnlyToday = isOnlyToday
-//    if isOnlyToday {
-//      self.presenter?.presentRepeatOnlyToday()
-//    } else {
-//      let currentDate = Date()
-//      let tomorrowDate = currentDate.addingTimeInterval(60 * 60 * 24)
-//      let repetition = self.toDo?.repetition
-//      if repetition?.startDate == nil && repetition?.endDate == nil {
-//        self.toDo?.repetition.startDate = currentDate
-//        self.toDo?.repetition.endDate = tomorrowDate
-//      }
-//
-//      let response = EditToDo.ChangeRepetitionRange.Response(
-//        startDate: self.toDo?.repetition.startDate ?? currentDate,
-//        endDate: self.toDo?.repetition.endDate ?? tomorrowDate
-//      )
-//      self.presenter?.presentChangedRepetitionRange(response: response)
+    self.toDo?.isOnlyToday = isOnlyToday
+    if isOnlyToday {
+      self.presenter?.presentRepeatOnlyToday()
+    } else {
+      self.presenter?.presentRepeatOtherDays()
+    }
   }
 
   /// 사용자가 투두 반복 설정 뷰를 선택했을 때 호출하는 메서드입니다.
-  func changeReptitionRange(request: EditToDo.ChangeRepetitionRange.Request) {
-//    self.toDo?.repetition.isOnlyToday = false
-//    let startDate = request.startDate
-//    let endDate = request.endDate
-//    self.toDo?.repetition.startDate = startDate
-//    self.toDo?.repetition.endDate = endDate
-//
-//    let response = EditToDo.ChangeRepetitionRange.Response(startDate: startDate, endDate: endDate)
-//    self.presenter?.presentChangedRepetitionRange(response: response)
+  func changeReptitionRange(start: Date, end: Date) {
+    self.toDo?.isOnlyToday = false
+    self.toDo?.startDay = start.toISOString()
+    self.toDo?.endDay = end.toISOString()
+    self.presenter?.presentChangedRepetitionRange(start: start, end: end)
   }
 }
 
@@ -109,115 +96,30 @@ extension EditToDoInteractor: EditToDoBusinessLogic {
 import HTTPClient
 import HTTPClientAPI
 
+// swiftlint:disable multiline_arguments
 extension EditToDoInteractor {
-  func prepareSceneData() {
-    self.fetchToDo()
-    self.fetchGroupList()
-  }
-
-  /// 서버로부터 수정할 투두의 정보를 받아오는 메서드입니다.
-  private func fetchToDo() {
-//    guard let id = self.toDoId else {
-//      self.presenter?.presentError(.network)
-//      return
-//    }
-//
-//    self.tasks[TaskKey.fetchToDo] = Task {
-//      defer { self.tasks[TaskKey.fetchToDo] = nil }
-//
-//      do {
-//        try Task.checkCancellation()
-//        let toDo = try await self.editToDoWorker.fetchToDo(id: id)
-//        try Task.checkCancellation()
-//        self.toDo = toDo
-//        let response = EditToDo.FetchToDo.Response(toDo: toDo)
-//        self.presenter?.presentFetchedToDo(response: response)
-//      } catch let error {
-//        debugPrint(error.localizedDescription)
-//        self.presenter?.presentError(.failToFetch)
-//      }
-//    }
-  }
-
-  private func fetchGroupList() {
-    self.tasks[TaskKey.fetchGroup] = Task {
-      defer { self.tasks[TaskKey.fetchGroup] = nil }
-
-      do {
-        try Task.checkCancellation()
-        let groupList = try await self.editToDoWorker.fetchGroupList()
-        try Task.checkCancellation()
-        self.presenter?.presentFetchedGroupList(groupList: groupList)
-      } catch let error {
-        debugPrint(error.localizedDescription)
-      }
-    }
-  }
-
   /// 서버에 투두의 수정을 요청하는 메서드입니다.
-  func editToDo(request: EditToDo.CompleteEditToDo.Request) {
-//    guard let toDo else {
-//      self.presenter?.presentError(.failToFetch)
-//      return
-//    }
-//
-//    self.toDo?.name = request.toDoName
-//    self.toDo?.groupData = EditToDo.Group(
-//      id: request.displayedGroup.id,
-//      name: request.displayedGroup.name,
-//      color: request.displayedGroup.color.hexStringFromColor(),
-//      orderIdx: 0
-//    )
-//
-//    self.tasks[TaskKey.editToDo] = Task {
-//      defer { self.tasks[TaskKey.editToDo] = nil }
-//
-//      do {
-//        try Task.checkCancellation()
-//        try await self.editToDoWorker.editToDo(toDo)
-//        try Task.checkCancellation()
-//        self.presenter?.presentDismiss()
-//      } catch let error {
-//        debugPrint(error.localizedDescription)
-//        self.presenter?.presentError(.network)
-//      }
-//    }
+  func editToDo(name: String, groupId: String) {
+    guard let toDo = self.toDo
+    else { return }
+
+    let startDay = toDo.isOnlyToday ? nil : toDo.startDay
+    let endDay = toDo.isOnlyToday ? nil : toDo.endDay
+    self.toDo = TodoBatchItem(
+      localId: toDo.groupId, name: toDo.name, isDone: toDo.isDone, createdAt: toDo.createdAt,
+      isAlarmOn: toDo.isAlarmOn, alarmTime: toDo.alarmTime, isOnlyToday: toDo.isOnlyToday,
+      startDay: startDay, endDay: endDay, groupId: groupId, isDelete: false
+    )
   }
 
-  /// 서버에 투두의 삭제를 요청하는 메서드입니다.
+  // TODO: 서버에 투두의 삭제를 요청하는 메서드입니다.
   func deleteToDo() {
-//    guard let toDoId else {
-//      self.presenter?.presentError(.failToFetch)
-//      return
-//    }
-//
-//    self.tasks[TaskKey.deleteToDo] = Task {
-//      defer { self.tasks[TaskKey.deleteToDo] = nil }
-//
-//      do {
-//        try Task.checkCancellation()
-//        try await self.editToDoWorker.deleteToDo(id: toDoId)
-//        try Task.checkCancellation()
-//        self.presenter?.presentDismiss()
-//      } catch let error {
-//        debugPrint(error.localizedDescription)
-//        self.presenter?.presentError(.network)
-//      }
-//    }
   }
 }
+// swiftlint:enable multiline_arguments
 
 // MARK: Errors
 
 enum EditToDoInteractorError: Error {
   case toDoDataNotExisted
-}
-
-extension EditToDoInteractor {
-  enum TaskKey {
-    case fetchToDo
-    case fetchGroup
-    case deleteToDo
-    case editToDo
-  }
 }

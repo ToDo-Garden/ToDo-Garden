@@ -27,12 +27,25 @@ final class ToDoRepetitionSettingModal: UIViewController {
     self.startDate = startDate
     self.endDate = endDate
     super.init(nibName: nil, bundle: nil)
-    print("modal presented")
+    self.setupPresentationStyle()
   }
 
   @available(*, unavailable)
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+
+  func updateRange(start: String, end: String) {
+    self.dateRangePicker.updateRange(startDate: start, endDate: end)
+  }
+
+  func setupPresentationStyle() {
+    if #available(iOS 16.0, *) {
+      self.sheetPresentationController?.detents = [
+        .custom { _ in return 500 }
+      ]
+    }
+    self.sheetPresentationController?.prefersGrabberVisible = true
   }
 }
 
@@ -46,13 +59,6 @@ extension ToDoRepetitionSettingModal {
 }
 
 extension ToDoRepetitionSettingModal {
-  private func setupPresentationStyle() {
-    self.sheetPresentationController?.detents = [
-      UISheetPresentationController.Detent.large()
-    ]
-    self.sheetPresentationController?.prefersGrabberVisible = true
-  }
-
   private func setup() {
     self.setupCompleteButton()
     self.setupCompleteButtonActivation()

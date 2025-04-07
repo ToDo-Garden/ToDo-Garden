@@ -43,16 +43,20 @@ final class EditToDoScheduleView: UIView {
     self.editToDoRepetitionView.setRepeatOnlyTodaySelected()
   }
 
+  func updateToRepeatOtherDays() {
+    self.editToDoRepetitionView.setRepeatRangeSelected()
+  }
+
   func updateToRepeatInRange(startDay: String, endDay: String) {
     self.editToDoRepetitionView.updateRepetitionRange(startDay: startDay, endDay: endDay)
-    self.editToDoRepetitionView.setRepeatRangeSelected()
   }
 }
 
 // MARK: Delegate Functions
 
 protocol EditToDoScheduleViewDelegate: AnyObject {
-  func didSelectOnlyTodayView(isOnlyToday: Bool)
+  func didSelectOnlyTodayView()
+  func didSelectRepeatOtherDaysView()
   func didSelectRepetitionDateButton()
   func didToggleSwitch()
   func didSelectAlarmSettingButton()
@@ -60,8 +64,12 @@ protocol EditToDoScheduleViewDelegate: AnyObject {
 
 /// 하위 뷰들에서 이벤트를 입력받았을 때 Delegate로 전달받아 호출되는 메서드들입니다.
 extension EditToDoScheduleView: EditToDoRepetitionViewDelegate, EditToDoAlarmViewDelegate {
-  func didSelectOnlyTodayView(isOnlyToday: Bool) {
-    self.delegate?.didSelectOnlyTodayView(isOnlyToday: isOnlyToday)
+  func didSelectOnlyTodayView() {
+    self.delegate?.didSelectOnlyTodayView()
+  }
+
+  func didSelectRepeatOtherDaysView() {
+    self.delegate?.didSelectRepeatOtherDaysView()
   }
 
   func didSelectRepetitionDateButton() {

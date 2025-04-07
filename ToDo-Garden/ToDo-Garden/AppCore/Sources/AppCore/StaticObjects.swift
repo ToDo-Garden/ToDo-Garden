@@ -30,7 +30,7 @@ extension HomeSceneBuilder.Dependency {
       httpClient: HTTPClient.live
     ),
     manageGroupSceneBuilder: ManageGroupSceneBuilder.init(dependency: .live),
-    editToDoSceneBuilder: EditToDoSceneBuilder(dependency: .live),
+    editToDoSceneBuilder: EditToDoSceneBuilder(),
     timerSceneBuilder: TimerSceneBuilder(dependency: .live),
     retryManager: NetworkRetryManager()
   )
@@ -87,8 +87,6 @@ extension PostGroupSceneBuilder.Dependency {
 
 // MARK: EDIT TODO SCENE
 extension EditToDoSceneBuilder.Dependency {
-  @MainActor
-  static let live = EditToDoSceneBuilder.Dependency.init(editToDoWorker: EditToDoWorker(httpClient: HTTPClient.live))
 }
 
 // MARK: SIGN UP SCENE

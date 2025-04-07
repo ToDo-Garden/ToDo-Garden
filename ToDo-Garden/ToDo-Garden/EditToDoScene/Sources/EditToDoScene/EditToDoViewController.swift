@@ -9,6 +9,8 @@ import UIKit
 
 import EditToDoSceneAPI
 import EditToDoSceneEntity
+import SharedEntity
+import TDFoundation
 import TDUtility
 import ToDoGardenUIAPI
 import ToDoGardenUIComponent
@@ -21,7 +23,8 @@ protocol EditToDoDisplayLogic: AnyObject {
   func showErrorAlert(_ type: EditToDo.ErrorType)
 
   func displayRepeatOnlyToday()
-  func displayChangedRepetition(viewModel: EditToDo.ChangeRepetitionRange.ViewModel)
+  func displayRepeatOtherDays()
+  func displayChangedRepetition(start: String, end: String)
   func displayChangedAlarm(viewModel: EditToDo.ChangeAlarmActivation.ViewModel)
   func displayFetchedAlarmTime(viewModel: EditToDo.FetchAlarmTime.ViewModel)
   func displayChangedAlarmTime(viewModel: EditToDo.ChangeAlarmTime.ViewModel)
@@ -33,6 +36,9 @@ final public class EditToDoViewController: UIViewController, EditToDoViewControl
   private(set) var editToDoView: EditToDoView
   private(set) var editToDoScheduleView: EditToDoScheduleView
   private(set) var completeEditButton: ToDoGardenBoxButton
+
+  private let alarmTimeSettingModal = ToDoAlarmTimeSettingModal()
+  private let repetitionSettingModal = ToDoRepetitionSettingModal()
 
   @ExecuteOnce private var scrollToEditToDoMode: (() -> Void)?
 
@@ -64,8 +70,13 @@ final public class EditToDoViewController: UIViewController, EditToDoViewControl
 
   public override func viewDidLoad() {
     super.viewDidLoad()
-    print("i'm called")
     self.setup()
+    self.setupModalDelegate()
+  }
+
+  private func setupModalDelegate() {
+    self.alarmTimeSettingModal.delegate = self
+    self.repetitionSettingModal.delegate = self
   }
 
   public override func viewIsAppearing(_ animated: Bool) {
@@ -89,18 +100,10 @@ extension EditToDoViewController: ToDoAlarmTimeSettingModalDelegate, ToDoRepetit
 
 extension EditToDoViewController: EditToDoScheduleViewDelegate {
   func editToDo() {
-    if let toDoNameForEdit = self.editToDoView.getEditingText(),
-    let groupForEdit = self.editToDoView.getCurrentGroup() {
-      let request = EditToDo.CompleteEditToDo.Request(
-        toDoName: toDoNameForEdit,
-        displayedGroup: EditToDo.DisplayedGroup(
-          id: groupForEdit.groupId,
-          name: groupForEdit.groupName,
-          color: groupForEdit.groupColor,
-          orderIdx: 0
-        )
-      )
-      self.interactor?.editToDo(request: request)
+    if let name = self.editToDoView.getEditingText(),
+    let group = self.editToDoView.getCurrentGroup() {
+      self.interactor?.editToDo(name: name, groupId: group.groupId)
+      self.router?.routeToHomeScene()
     }
   }
 
@@ -113,23 +116,24 @@ extension EditToDoViewController: EditToDoScheduleViewDelegate {
   }
 
   func didSelectAlarmTime(_ alarmTime: Double) {
-    let request = EditToDo.ChangeAlarmTime.Request(alarmTime: alarmTime)
-    self.interactor?.changeAlarmTime(request: request)
+    self.interactor?.changeAlarmTime(alarmTime)
   }
 
-  func didSelectOnlyTodayView(isOnlyToday: Bool) {
-    self.interactor?.changeRepetition(isOnlyToday: isOnlyToday)
+  func didSelectOnlyTodayView() {
+    self.interactor?.changeRepetition(isOnlyToday: true)
+  }
+
+  func didSelectRepeatOtherDaysView() {
+    self.interactor?.changeRepetition(isOnlyToday: false)
   }
 
   func didSelectRepetitionDateButton() {
-    let repetitionSelectionModal = ToDoRepetitionSettingModal()
-    repetitionSelectionModal.delegate = self
-    self.present(repetitionSelectionModal, animated: true)
+    self.repetitionSettingModal.setupPresentationStyle()
+    self.present(self.repetitionSettingModal, animated: true)
   }
 
   func didSelectRepetitionRange(_ startDate: Date, _ endDate: Date) {
-    let request = EditToDo.ChangeRepetitionRange.Request(startDate: startDate, endDate: endDate)
-    self.interactor?.changeReptitionRange(request: request)
+    self.interactor?.changeReptitionRange(start: startDate, end: endDate)
   }
 }
 
@@ -137,24 +141,56 @@ extension EditToDoViewController: EditToDoScheduleViewDelegate {
 
 extension EditToDoViewController: EditToDoDisplayLogic {
   func displayFetchedToDo(viewModel: EditToDo.FetchToDo.ViewModel) {
-    let toDo = viewModel.toDo
-    self.editToDoView.updateToDoName(toDo.toDoName)
-    self.editToDoView.updateGroup(current: toDo.group)
+    self.updateEditToDoView(toDo: viewModel.toDo, groups: viewModel.groups)
+    self.updateEditToDoScheduleView(toDo: viewModel.toDo, alarmTime: viewModel.alarmTime)
+  }
+
+  private func updateEditToDoView(toDo: TodoBatchItem, groups: [TodoListGroup]) {
+    self.editToDoView.updateToDoName(toDo.name)
+    var order = 0
+    let groups = groups.map {
+      order += 1
+      return EditToDo.DisplayedGroup(
+        id: $0.localId,
+        name: $0.name,
+        color: (try? UIColor().fromHex($0.color)) ?? UIColor.toDoGardenGreenDark,
+        orderIdx: order
+      )
+    }
+    var newOrder = 0
+    guard let group = groups.first(where: {
+      newOrder += 1
+      return $0.id == toDo.groupId
+    }) else { return }
+
+    self.editToDoView.updateGroup(
+      current: EditToDo.DisplayedGroup(
+        id: group.id,
+        name: group.name,
+        color: group.color,
+        orderIdx: newOrder
+      )
+    )
+    self.editToDoView.updateGroupList(groups)
+  }
+
+  private func updateEditToDoScheduleView(toDo: TodoBatchItem, alarmTime: String) {
     if toDo.isAlarmOn {
       self.editToDoScheduleView.updateToAlarmOn()
     } else {
       self.editToDoScheduleView.updateToAlarmOff()
     }
-    if let alarmTime = toDo.alarmTime {
-      self.editToDoScheduleView.updateAlarmTime(alarmTime: alarmTime)
-    }
-    self.editToDoView.updateToDoName(toDo.toDoName)
+    self.editToDoScheduleView.updateAlarmTime(alarmTime: alarmTime)
+
     if toDo.isOnlyToday {
       self.editToDoScheduleView.updateToRepeatOnlyToday()
     } else {
       if let startDay = toDo.startDay, let endDay = toDo.endDay {
         self.editToDoScheduleView.updateToRepeatInRange(startDay: startDay, endDay: endDay)
       }
+    }
+    if let start = toDo.startDay, let end = toDo.endDay {
+      self.repetitionSettingModal.updateRange(start: start, end: end)
     }
   }
 
@@ -163,17 +199,19 @@ extension EditToDoViewController: EditToDoDisplayLogic {
   }
 
   func displayDismiss() {
-    self.router?.routeToToDoListScene()
+    self.router?.routeToHomeScene()
   }
 
   func displayRepeatOnlyToday() {
     self.editToDoScheduleView.updateToRepeatOnlyToday()
   }
 
-  func displayChangedRepetition(viewModel: EditToDo.ChangeRepetitionRange.ViewModel) {
-    let startDay = viewModel.startDay
-    let endDay = viewModel.endDay
-    self.editToDoScheduleView.updateToRepeatInRange(startDay: startDay, endDay: endDay)
+  func displayRepeatOtherDays() {
+    self.editToDoScheduleView.updateToRepeatOtherDays()
+  }
+
+  func displayChangedRepetition(start: String, end: String) {
+    self.editToDoScheduleView.updateToRepeatInRange(startDay: start, endDay: end)
   }
 
   func displayChangedAlarm(viewModel: EditToDo.ChangeAlarmActivation.ViewModel) {
@@ -185,8 +223,7 @@ extension EditToDoViewController: EditToDoDisplayLogic {
   }
 
   func displayFetchedAlarmTime(viewModel: EditToDo.FetchAlarmTime.ViewModel) {
-    let alarmTimeSettingModal = ToDoAlarmTimeSettingModal()
-    alarmTimeSettingModal.delegate = self
+    self.alarmTimeSettingModal.sheetPresentationController?.detents = [.medium()]
     let hour = viewModel.hour
     let minute = viewModel.minute
     alarmTimeSettingModal.updateInitialAlarmTime(hour: hour, minute: minute)
@@ -210,7 +247,7 @@ extension EditToDoViewController: ToDoGardenAlertControllerDelegate {
     case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.retry:
       self.interactor?.prepareSceneData()
     case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.goHome:
-      self.router?.routeToToDoListScene()
+      self.router?.routeToHomeScene()
     case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.delete:
       self.interactor?.deleteToDo()
     default:
@@ -277,27 +314,45 @@ extension EditToDoViewController: UIScrollViewDelegate {
 }
 
 import HTTPClient
-import SharedEntity
-import TDFoundation
-
+// swiftlint:disable all
 extension EditToDoViewController {
   struct EditToDoScenePayload: EditToDoScenePayloadable {
     var toDo: TodoBatchItem
     var groups: [SharedEntity.TodoListGroup]
+    var delegate: EditToDoSceneAPI.EditToDoSceneDelegate?
   }
 
   class SomeViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
-      //      super.viewDidAppear(animated)
-      //      let editToDoViewController = EditToDoSceneBuilder(
-      //        dependency: EditToDoSceneBuilder.Dependency(
-      //          editToDoWorker: EditToDoWorker(httpClient: HTTPClient.live)
-      //        )
-      //      ).build(with: EditToDoViewController.EditToDoScenePayload(toDoId: UUID()))
-      //      self.navigationController?.pushViewController(editToDoViewController, animated: true)
+      super.viewDidAppear(animated)
+      let editToDoViewController = EditToDoSceneBuilder().build(
+        with: EditToDoViewController.EditToDoScenePayload(
+          toDo: TodoBatchItem(
+            localId: "sadfasdfsdf", name: "temp", isDone: true,
+            createdAt: "1212", isAlarmOn: true, alarmTime: Double(43450),
+            isOnlyToday: true, startDay: nil, endDay: nil, groupId: "1111", isDelete: false
+          ),
+          groups: [
+            TodoListGroup(
+              localId: "2222", name: "그룹2", color: UIColor.blue.hexStringFromColor(),
+              todoList: nil, progressRate: Double(0)
+            ),
+            TodoListGroup(
+              localId: "1111", name: "그룹1", color: UIColor.toDoGardenGreenDark.hexStringFromColor(),
+              todoList: nil, progressRate: Double(0.4)
+            ),
+            TodoListGroup(
+              localId: "3333", name: "그룹3", color: UIColor.red.hexStringFromColor(),
+              todoList: nil, progressRate: Double(0.1)
+            )
+          ]
+        )
+      )
+      self.navigationController?.pushViewController(editToDoViewController, animated: true)
     }
   }
 }
+// swiftlint:enable all
 
 extension EditToDoViewController {
   public func setForGuide(index: Int) {

@@ -11,9 +11,11 @@ import SharedEntity
 import TDFoundation
 
 /// 런타임에 전달받을 의존성을 선언한 구조체입니다.
+@MainActor
 public protocol EditToDoScenePayloadable {
-  var toDo: TodoBatchItem { get set }
+  var toDo: TDFoundation.TodoBatchItem { get set }
   var groups: [SharedEntity.TodoListGroup] { get set }
+  var delegate: EditToDoSceneDelegate? { get set }
 }
 
 @MainActor
