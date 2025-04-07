@@ -7,6 +7,7 @@
 
 @preconcurrency import UIKit
 
+import TDFoundation
 import ToDoGardenUIComponent
 
 import ShareGardenSceneEntity
@@ -96,6 +97,8 @@ extension ShareGardenSceneViewController {
       }
     }
     
+    private var task: Task<Void, any Error>?
+    
     private var isEditing: Bool {
       didSet {
         if let profileInfoStackView = self.profileInfoView.subviews.first as? UIStackView {
@@ -161,6 +164,17 @@ extension ShareGardenSceneViewController.FriendsGardenProfileInfoView {
         description: "연속 \(friendsGarden.focusStreakDays)일 집중"
       )
     )
+    self.task?.cancel()
+    self.task = Task {
+      guard
+        let urlString = friendsGarden.imageUrl,
+        let url = URL(string: urlString)
+      else {
+        return
+      }
+      let image = try await Cache.shared.execute(id: url)
+      self.profileInfoView.configuration.profileModel?.image = image
+    }
   }
 }
 

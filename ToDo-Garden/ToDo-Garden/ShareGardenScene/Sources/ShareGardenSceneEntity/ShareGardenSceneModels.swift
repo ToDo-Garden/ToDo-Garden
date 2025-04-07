@@ -13,17 +13,20 @@ public enum ShareGardenScene {
   public struct FriendsGarden: Identifiable, Sendable {
     public let id: UUID
     public let nickname: String
+    public let imageUrl: String?
     public let focusStreakDays: Int
     public let pomodoroRecords: PomodoroRecordCollection
     
     public init(
       id: UUID = UUID(),
       nickname: String,
+      imageUrl: String? = nil,
       focusStreakDays: Int,
       pomodoroRecords: PomodoroRecordCollection
     ) {
       self.id = id
       self.nickname = nickname
+      self.imageUrl = imageUrl
       self.focusStreakDays = focusStreakDays
       self.pomodoroRecords = pomodoroRecords
     }
