@@ -92,7 +92,7 @@ extension SettingViewController: SettingDisplayLogic {
 
     Task {
       do {
-        let image = try await ImageClient.live.execute(id: imageUrl, isDownsample: true)
+        let image = try await Cache.shared.execute(id: imageUrl, isDownsample: true)
         self.profileRow.iconImage = image
       } catch {
         debugPrint("SettingScene: Image Download failed")
