@@ -41,7 +41,9 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
   
   var interactor: (any HomeSceneBusinessLogic)?
   var router: (any (HomeSceneRoutingLogic & HomeSceneDataPassing))?
-  
+
+  var editingContext: EditingContext?
+
   // MARK: - Properties
   
   // MARK: - Object lifecycle
@@ -267,8 +269,13 @@ extension HomeSceneViewController: HomeSceneDisplayLogic {
 
 // MARK: - Route From EditToDoScene
 extension HomeSceneViewController: EditToDoSceneDelegate {
-  public func didEdit(toDo: TodoBatchItem) {
+  struct EditingContext {
+    let group: ToDoListView.ToDoSection
+    let todo: ToDoListView.ToDoItem
+  }
 
+  public func didEdit(toDo: TodoBatchItem) {
+    
   }
 
   public func didRemove(toDo: TodoBatchItem) {
@@ -344,6 +351,7 @@ extension HomeSceneViewController: ToDoListButtonActionDelegate {
         groupId: group.id
       )
 
+      self.editingContext = EditingContext(group: group, todo: todo)
       self.interactor?.prepareDataForEditTodoScene(request: request)
     }
   }
@@ -354,7 +362,8 @@ extension HomeSceneViewController: ToDoListButtonActionDelegate {
   ) {
     Task {
       guard let selectedDate = self.calendarView.getSelectedDate() else { return }
-      
+
+      self.editingContext = EditingContext(group: group, todo: todo)
       await self.interactor?.deleteToDo(group: group, todo: todo, date: selectedDate)
     }
   }
