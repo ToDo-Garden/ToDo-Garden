@@ -249,7 +249,7 @@ extension EditToDoViewController: ToDoGardenAlertControllerDelegate {
     case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.goHome:
       self.router?.routeToHomeScene()
     case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.delete:
-      self.interactor?.deleteToDo()
+      self.router?.routeToHomeSceneWithDeletedToDo()
     default:
       break
     }

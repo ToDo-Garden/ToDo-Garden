@@ -169,7 +169,44 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
       )
     }
   }
-  
+
+  // 투두 수정 화면에서 수정된 데이터를 반영하는 메서드입니다.
+  func updateToDo(toDoBatchItem: TodoBatchItem, indexPath: IndexPath, date: Date) {
+    let targetDate = date.description.toYYYYMMDDStringFromISO8601Space()
+    guard let targetGroup = self.monthlyData[targetDate]?[indexPath.section],
+      let targetToDo = targetGroup.todoList?[indexPath.item]
+    else { return }
+
+    targetToDo.name = toDoBatchItem.name
+    targetToDo.isAlarmOn = toDoBatchItem.isAlarmOn
+    targetToDo.alarmTime = Int(toDoBatchItem.alarmTime)
+    targetToDo.isOnlyToday = toDoBatchItem.isOnlyToday
+    targetToDo.startDay = toDoBatchItem.startDay
+    targetToDo.endDay = toDoBatchItem.endDay
+
+    if let batchItem = self.itemsForBatch[targetToDo.localID] {
+      batchItem.setName(toDoBatchItem.name)
+      batchItem.setAlarm(isOn: toDoBatchItem.isAlarmOn, time: toDoBatchItem.alarmTime)
+      if targetToDo.isOnlyToday && toDoBatchItem.isOnlyToday == false {
+        // 반복 설정을 새로 설정하면
+
+      } else {
+        // 반복 설정을 해제하면
+
+      }
+
+    } else {
+      let alarmTime = Double(targetToDo.alarmTime ?? 0)
+
+      self.itemsForBatch[targetToDo.localID] = TodoBatchItem(
+        localId: targetToDo.localID, name: targetToDo.name, isDone: targetToDo.isDone,
+        createdAt: date.toISOString(), isAlarmOn: targetToDo.isAlarmOn, alarmTime: alarmTime,
+        isOnlyToday: targetToDo.isOnlyToday, startDay: targetToDo.startDay, endDay: targetToDo.endDay,
+        groupId: targetGroup.localId.lowercased(), isDelete: false
+      )
+    }
+  }
+
   func writeBatchItemsToGRDB() async {
     guard !self.itemsForBatch.values.isEmpty else { return }
     

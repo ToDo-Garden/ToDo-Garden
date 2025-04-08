@@ -111,10 +111,16 @@ public final class TodoBatchItem: Codable, @unchecked Sendable {
     self.alarmTime = time
   }
 
-  public func setPeriod(start: String, end: String) {
+  public func setPeriod(start: String?, end: String?) {
     self.isOnlyToday = false
     self.startDay = start
     self.endDay = end
+  }
+
+  public func setOnlyToday() {
+    self.isOnlyToday = true
+    self.startDay = nil
+    self.endDay = nil
   }
 }
 

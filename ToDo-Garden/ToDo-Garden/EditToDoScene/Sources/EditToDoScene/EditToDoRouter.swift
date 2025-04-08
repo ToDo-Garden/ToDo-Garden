@@ -13,6 +13,7 @@ import EditToDoSceneAPI
 protocol EditToDoRoutingLogic {
   func routeToHomeScene()
   func routeToHomeSceneWithToDo()
+  func routeToHomeSceneWithDeletedToDo()
 }
 
 @MainActor
@@ -38,6 +39,11 @@ extension EditToDoRouter: EditToDoRoutingLogic {
 
   func routeToHomeSceneWithToDo() {
     self.delegate?.didEdit(toDo: self.dataStore!.toDo!)
+    self.routeToHomeScene()
+  }
+
+  func routeToHomeSceneWithDeletedToDo() {
+    self.delegate?.didRemove(toDo: self.dataStore!.toDo!)
     self.routeToHomeScene()
   }
 }

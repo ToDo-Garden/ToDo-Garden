@@ -184,6 +184,7 @@ extension HomeSceneViewController {
     self.loadingIndicator.isHidden = false
     self.loadingIndicator.startAnimation()
     Task {
+      await interactor.writeBatchItemsToGRDB()
       await interactor.requestBatchUpdateToServer()
       await interactor.fetchToDoList(request: HomeScene.FetchToDoList.Request(dateString: targetMonth))
     }
@@ -279,7 +280,13 @@ extension HomeSceneViewController: EditToDoSceneDelegate {
   }
 
   public func didRemove(toDo: TodoBatchItem) {
-    
+    Task {
+      defer { self.editingContext = nil }
+      guard let context = self.editingContext, let date = self.calendarView.getSelectedDate()
+      else { return }
+
+      await self.interactor?.deleteToDo(group: context.group, todo: context.todo, date: date)
+    }
   }
 }
 
