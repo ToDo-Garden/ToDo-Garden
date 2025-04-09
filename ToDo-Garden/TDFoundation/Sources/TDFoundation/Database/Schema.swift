@@ -119,6 +119,7 @@ extension DatabaseWriter {
           .defaults(to: false)
         t.column("groupId", .text)
           .notNull()
+          .references(MyGroup.databaseTableName, onDelete: .cascade)
       }
     }
   }
