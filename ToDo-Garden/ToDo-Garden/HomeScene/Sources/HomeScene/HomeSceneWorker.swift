@@ -62,6 +62,7 @@ public struct HomeSceneWorker: HomeSceneWorkable, Sendable {
       input: request,
       serializer: { $0 },
       deserializer: { response in
+        if response.statusCode == 409 { return }
         try response.validateStatusCode()
       }
     )
