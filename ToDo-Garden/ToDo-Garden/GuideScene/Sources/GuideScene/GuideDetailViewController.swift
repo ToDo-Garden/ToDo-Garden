@@ -69,8 +69,8 @@ public final class GuideDetailViewController: UIViewController {
       arrangedSubviews: []
     )
     self.bottomView = BottomView()
-    self.bottomView.backButtonAction = {
-      self.dismiss(animated: true)
+    self.bottomView.backButtonAction = { [weak self] in
+      self?.dismiss(animated: true)
     }
     self.bindingCurrentIndex()
     self.layoutScrollView()

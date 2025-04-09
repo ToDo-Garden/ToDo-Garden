@@ -84,7 +84,7 @@ extension EnterGuideSceneViewController {
       guard let self = self else { return }
       
       self.navigationController?.present(
-        self.withFullScreenModal(GuideDetailViewController.todoCreate),
+        self.withFullScreenModal(GuideDetailViewController.todoCreate()),
         animated: true
       )
     }, for: UIControl.Event.touchUpInside)
@@ -93,7 +93,7 @@ extension EnterGuideSceneViewController {
       guard let self = self else { return }
       
       self.navigationController?.present(
-        self.withFullScreenModal(GuideDetailViewController.groupManagement),
+        self.withFullScreenModal(GuideDetailViewController.groupManagement()),
         animated: true
       )
     }, for: UIControl.Event.touchUpInside)
@@ -102,7 +102,7 @@ extension EnterGuideSceneViewController {
       guard let self = self else { return }
       
       self.navigationController?.present(
-        self.withFullScreenModal(GuideDetailViewController.todoEdit),
+        self.withFullScreenModal(GuideDetailViewController.todoEdit()),
         animated: true
       )
     }, for: UIControl.Event.touchUpInside)
@@ -111,7 +111,7 @@ extension EnterGuideSceneViewController {
       guard let self = self else { return }
       
       self.navigationController?.present(
-        self.withFullScreenModal(GuideDetailViewController.shareTab),
+        self.withFullScreenModal(GuideDetailViewController.shareTab()),
         animated: true
       )
     }, for: UIControl.Event.touchUpInside)

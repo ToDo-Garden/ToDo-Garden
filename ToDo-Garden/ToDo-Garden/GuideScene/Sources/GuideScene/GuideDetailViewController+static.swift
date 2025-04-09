@@ -6,8 +6,19 @@
 //
 
 extension GuideDetailViewController {
-  public static let todoCreate = GuideDetailViewController(.todoCreate)
-  public static let groupManagement = GuideDetailViewController(.groupManagement)
-  public static let shareTab = GuideDetailViewController(.shareTab)
-  public static let todoEdit = GuideDetailViewController(.todoEdit)
+  public static func todoCreate() -> GuideDetailViewController {
+    return GuideDetailViewController(.todoCreate)
+  }
+
+  public static func groupManagement() -> GuideDetailViewController {
+    return GuideDetailViewController(.groupManagement)
+  }
+
+  public static func shareTab() -> GuideDetailViewController {
+    return GuideDetailViewController(.shareTab)
+  }
+
+  public static func todoEdit() -> GuideDetailViewController {
+    return GuideDetailViewController(.todoEdit)
+  }
 }
