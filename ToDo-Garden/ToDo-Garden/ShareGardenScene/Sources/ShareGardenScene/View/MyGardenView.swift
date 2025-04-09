@@ -195,7 +195,7 @@ extension ShareGardenSceneViewController.MyGardenView {
     Task {
       guard let imageURL = imageURL else { return }
       
-      let image = try await ImageClient.live.execute(id: imageURL, isDownsample: true)
+      let image = try await Cache.shared.execute(id: imageURL, isDownsample: true)
       self.profileInfoView.iconImage = image
     }
   }
