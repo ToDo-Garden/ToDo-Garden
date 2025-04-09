@@ -184,8 +184,8 @@ extension HomeSceneViewController {
     self.loadingIndicator.isHidden = false
     self.loadingIndicator.startAnimation()
     Task {
-      await interactor.requestBatchUpdateToServer()
       await interactor.syncronizeServerEditGroups()
+      await interactor.requestBatchUpdateToServer()
       await interactor.fetchToDoList(request: HomeScene.FetchToDoList.Request(dateString: targetMonth))
     }
   }
