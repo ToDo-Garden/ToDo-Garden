@@ -69,6 +69,10 @@ public final class TextInputView: UIView, TextInputViewAPI {
   public func getEditingText() -> String? {
     return self.inputTextField.text
   }
+  
+  public func setPlaceholderForGuide() {
+    self.placeholderLabel.text = ""
+  }
 }
 
 // MARK: Private Functions
