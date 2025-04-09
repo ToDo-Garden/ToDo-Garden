@@ -82,6 +82,7 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
     }
   }
   
+  
   func fetchToDoList(request: HomeScene.FetchToDoList.Request) async {
     if self.checkNetworkConnection() {
       do {
@@ -128,7 +129,12 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
       where: { UUID(uuidString: $0.localId) == group.id }
     ) {
       let targetGroup = self.monthlyData[dateString]?[targetGroupIndex]
-      targetGroup?.todoList?.append(self.makeToDoListItem(batchItem: newToDo))
+      let newItem = self.makeToDoListItem(batchItem: newToDo)
+      if targetGroup?.todoList == nil {
+        targetGroup?.todoList = [newItem]
+      } else {
+        targetGroup?.todoList?.append(newItem)
+      }
     }
   
     self.presenter?.presentCreateToDo(newToDo: newToDo)
