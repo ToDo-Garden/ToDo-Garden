@@ -293,6 +293,7 @@ extension EditToDoView {
 extension EditToDoView {
   func setForGuide() {
     let text = "영어독해"
+    self.toDoNameInputView.setPlaceholderForGuide()
     self.toDoNameInputView.setBeginEditing(with: text)
     self.toDoNameInputView.changeBottomLine(color: UIColor.toDoGardenYellow)
     self.groupSelectionView.updateGroup(
@@ -302,6 +303,7 @@ extension EditToDoView {
         groupColor: UIColor.toDoGardenYellow
       )
     )
+    _ = self.toDoNameInputView.resignFirstResponder()
   }
   
   func getToDoNameInputView() -> UIView {
