@@ -34,6 +34,8 @@ public struct HomeSceneWorker: HomeSceneWorkable, Sendable {
       }
     )
     
+    try await self.syncDeletedGroups(from: fetchedToDoList)
+    
     for dailyToDoListData in fetchedToDoList {
       let (myGroups, myToDos) = self.convertToMyGroupsAndMyToDos(from: dailyToDoListData)
       try await self.writeFetchedToDoListToGRDB(myGroups: myGroups, myToDos: myToDos)
@@ -234,6 +236,24 @@ extension HomeSceneWorker {
       }
       
       return dailyDataDict.map { DailyToDoListData(date: $0.key, list: $0.value) }
+    }
+  }
+  
+  private func syncDeletedGroups(from fetchedToDoList: [DailyToDoListData]) async throws {
+    let allServerGroupIds: Set<String> = fetchedToDoList.flatMap { dailyData in
+      dailyData.list.map { $0.localId.lowercased() }
+    }.reduce(into: Set<String>()) { result, id in
+      result.insert(id)
+    }
+
+    try await self.database.write { db in
+      let serverIds = allServerGroupIds
+      let existingGroups = try MyGroup.fetchAll(db)
+      for group in existingGroups {
+        if !serverIds.contains(group.groupId) {
+          try group.delete(db)
+        }
+      }
     }
   }
 }
