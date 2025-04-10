@@ -11,6 +11,7 @@ import SignUpScene
 import SignUpSceneAPI
 
 // swiftlint:disable function_body_length
+/// TODO: 여러가지 이유로 Shared로 만들면 훨씬 좋을 거 같습니다.
 @MainActor
 public final class AppRouter {
   private let httpClient: HTTPClientAPI
@@ -33,20 +34,19 @@ public final class AppRouter {
   func switchTo(_ destination: Destination) {
     switch destination {
     case Destination.home(let viewController):
-      self.navigationController.viewControllers = [
-        RootTabBarController(
-          tabItems: [
-            RootTabBarController.RootTab.home(index: 0, viewController: viewController),
-            RootTabBarController.RootTab.share(
-              index: 1,
-              viewController: UINavigationController(
-                rootViewController: sceneBuilder.shareGarden.build()
-              )
-            ),
-            RootTabBarController.RootTab.settings(index: 2, viewController: sceneBuilder.setting.build())
-          ]
-        )
-      ]
+      let tabBarController = RootTabBarController(
+        tabItems: [
+          RootTabBarController.RootTab.home(index: 0, viewController: viewController),
+          RootTabBarController.RootTab.share(
+            index: 1,
+            viewController: UINavigationController(
+              rootViewController: self.sceneBuilder.shareGarden.build()
+            )
+          ),
+          RootTabBarController.RootTab.settings(index: 2, viewController: self.sceneBuilder.setting.build())
+        ]
+      )
+      self.navigationController.setRootViewController(tabBarController)
       
     case Destination.onboarding:
       self.navigationController.viewControllers = [
@@ -59,11 +59,12 @@ public final class AppRouter {
         animated: true
       )
       
-    case Destination.login:
-      self.navigationController.pushViewController(
-        self.buildLoginViewController(),
-        animated: true
-      )
+    case Destination.login(let isForward):
+      self.navigationController
+        .setRootViewController(
+          self.buildLoginViewController(),
+          withForwardTransition: isForward
+        )
       
     case Destination.signUp:
       self.navigationController.pushViewController(
@@ -87,7 +88,7 @@ public final class AppRouter {
   private func buildTutorialViewController() -> UIViewController {
     let tutroial = TutorialOnBoardingViewController()
     tutroial.endAction = { [weak self] in
-      self?.switchTo(Destination.login)
+      self?.switchTo(Destination.login(true))
     }
     return tutroial
   }

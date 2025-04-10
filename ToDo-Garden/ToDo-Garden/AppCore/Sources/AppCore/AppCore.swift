@@ -12,7 +12,7 @@ public final class AppCore {
     
     case onboarding
     case tutorial
-    case login
+    case login(Bool)
     case signUp
     
     case home(HomeSceneViewControllable)
@@ -65,7 +65,7 @@ public final class AppCore {
           )
         )
       )
-      : Destination.login
+      : Destination.login(true)
     }
   }
   
@@ -107,7 +107,7 @@ import UIKit
 @available(iOS 17.0, *)
 #Preview {
   let core = AppCore(dependency: .live)
-  core.destination = .login
+  core.destination = .login(false)
   return core.dependency.router.navigationController
 }
 #endif
