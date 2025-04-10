@@ -10,6 +10,7 @@ import UIKit
 final public class SearchGardenTableView: UITableView {
   private var diffableDataSource: UITableViewDiffableDataSource<SearchGardenSection, SearchGardenUser>!
   private var snapshot: NSDiffableDataSourceSnapshot<SearchGardenSection, SearchGardenUser>!
+  private var placeHolderData: SearchGardenUser? = SearchGardenUser.placeholderData()
 
   public override init(frame: CGRect, style: UITableView.Style) {
     super.init(frame: frame, style: style)
@@ -33,10 +34,18 @@ final public class SearchGardenTableView: UITableView {
     self.snapshot.appendItems(users)
     self.diffableDataSource.apply(self.snapshot, animatingDifferences: true)
   }
+  
   public func clearItemsInMainSection(completion: (() -> Void)? = nil) {
     self.snapshot.deleteItems(snapshot.itemIdentifiers(inSection: SearchGardenSection.main))
     self.diffableDataSource.apply(self.snapshot, animatingDifferences: false)
     completion?()
+  }
+  
+  public func cleanUpDeinit() {
+    self.placeHolderData = nil
+    self.snapshot = NSDiffableDataSourceSnapshot<SearchGardenSection, SearchGardenUser>()
+    self.snapshot.appendSections([.main])
+    self.diffableDataSource.apply(self.snapshot, animatingDifferences: false)
   }
   
   public func userForCell(at indexPath: IndexPath) -> SearchGardenUser? {
@@ -49,16 +58,18 @@ final public class SearchGardenTableView: UITableView {
   }
   
   public func appendPlaceholderCell() {
-    self.snapshot.appendItems([SearchGardenUser.placeholderData])
+    guard let placeHolderData = self.placeHolderData else { return }
+    self.snapshot.appendItems([placeHolderData])
     self.diffableDataSource.apply(self.snapshot, animatingDifferences: false)
   }
   
   public func deletePlaceholderCell() {
-    guard self.snapshot.itemIdentifiers.contains(SearchGardenUser.placeholderData) else {
+    guard let placeHolderData = self.placeHolderData else { return }
+    guard self.snapshot.itemIdentifiers.contains(placeHolderData) else {
       return
     }
     
-    self.snapshot.deleteItems([SearchGardenUser.placeholderData])
+    self.snapshot.deleteItems([placeHolderData])
     self.diffableDataSource.apply(self.snapshot, animatingDifferences: false)
   }
   
