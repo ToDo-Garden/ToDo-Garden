@@ -49,14 +49,16 @@ public struct UserInfoSceneSceneBuilder {
 }
 
 extension UserInfoSceneSceneBuilder {
-  public static let live = Self(dependency: Dependency(
-    photoPicker: PHPickerViewController(configuration: PHPickerConfiguration()),
-    appServiceWorker: AppServiceWorker(),
-    userPhotoWorker: UserPhotoWorker(),
-    userInfoWorker: UserInfoSceneWorker(httpClient: HTTPClient.live),
-    editUserIntroductionSceneBuilder: nil,
-    editUserNameSceneBuilder: nil)
-  )
+  public static func live(signout: @escaping () -> Void) -> Self {
+    Self(dependency: Dependency(
+      photoPicker: PHPickerViewController(configuration: PHPickerConfiguration()),
+      appServiceWorker: AppServiceWorker(),
+      userPhotoWorker: UserPhotoWorker(),
+      userInfoWorker: UserInfoSceneWorker(httpClient: HTTPClient.live, signout: signout),
+      editUserIntroductionSceneBuilder: nil,
+      editUserNameSceneBuilder: nil)
+    )
+  }
 }
 
 extension UserInfoSceneSceneBuilder: UserInfoSceneSceneBuildable {

@@ -14,11 +14,8 @@ import UserInfoSceneAPI
 import UserInfoSceneEntity
 
 public struct UserInfoSceneWorker: UserInfoSceneWorkable {
-  private let httpClient: HTTPClientAPI
-  
-  public init(httpClient: HTTPClientAPI) {
-    self.httpClient = httpClient
-  }
+  let httpClient: HTTPClientAPI
+  let signout: () -> Void
 
   public func requestChangeProfileImage(with data: Data) async throws {
     let userIDString = try self.getUserID()
@@ -102,7 +99,9 @@ public struct UserInfoSceneWorker: UserInfoSceneWorkable {
     )
   }
 
+  @MainActor
   public func requestSignOut() async throws {
+    self.signout()
     let request = HTTPRequest(
       method: HTTPMethod.post,
       endPoint: URLConstants.Auth.logoutURL

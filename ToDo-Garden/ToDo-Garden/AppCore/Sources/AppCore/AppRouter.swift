@@ -14,7 +14,7 @@ import SignUpSceneAPI
 @MainActor
 public final class AppRouter {
   private let httpClient: HTTPClientAPI
-  let sceneBuilder: SceneBuilder
+  var sceneBuilder: SceneBuilder
   var upstreamContinuation: AsyncStream<AppCore.UpStreamOperation>.Continuation?
   
   public init(
@@ -149,7 +149,7 @@ extension AppRouter {
     let home: HomeSceneBuilder
     let signup: SignUpSceneBuilder
     let shareGarden: ShareGardenSceneBuilder
-    let setting: SettingSceneBuilder
+    var setting: SettingSceneBuilder!
   }
 }
 // swiftlint:enable function_body_length
