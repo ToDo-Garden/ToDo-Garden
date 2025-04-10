@@ -71,35 +71,72 @@ final class HomeSceneInteractor: HomeSceneDataStore {
 // swiftlint: disable all
 extension HomeSceneInteractor: HomeSceneBusinessLogic {
   func syncronizeServerEditGroups() async {
-    if self.checkNetworkConnection() {
-      do {
+    await FallbackFlow.run(
+      online: { [weak self] in
+        guard let self = self else { return }
+        
         try await self.homeSceneWorker.syncronizeServerEditGroups()
-      } catch let error {
-        self.handleErrors(error)
+      },
+      offline: { return },
+      handleError: { [weak self] error in
+        self?.handleErrors(error)
+      },
+      checkNetworkConnection: { [weak self] in
+        guard let self = self else { return false }
+        
+        return self.checkNetworkConnection()
       }
-    } else {
-      return
-    }
+    )
   }
   
-  
   func fetchToDoList(request: HomeScene.FetchToDoList.Request) async {
-    if self.checkNetworkConnection() {
-      do {
+    await FallbackFlow.run(
+      online: { [weak self] in
+        guard let self = self else { return }
+        
         let fetchedToDoList = try await self.homeSceneWorker.fetchToDoList(dateString: request.dateString)
         self.presenter?.presentFetchedToDoList(monthlyData: fetchedToDoList)
-      } catch let error {
-        self.handleErrors(error)
-      }
-    } else {
-      do {
+      },
+      offline: { [weak self] in
+        guard let self = self else { return }
+        
         let (newMonthlyData, response) = try await self.loadMonthlyToDoListFromGRDB(request: request)
         self.monthlyData = newMonthlyData
         self.presenter?.presentFetchedToDoList(monthlyData: response)
-      } catch let error {
-        self.handleErrors(error)
+      },
+      handleError: { [weak self] error in
+        self?.handleErrors(error)
+      },
+      checkNetworkConnection: { [weak self] in
+        guard let self = self else { return false }
+        
+        return self.checkNetworkConnection()
       }
-    }
+    )
+  }
+  
+  func requestBatchUpdateToServer() async {
+    await FallbackFlow.run(
+      online: { [weak self] in
+        guard let self = self else { return }
+        
+        try await self.homeSceneWorker.requestBatchUpdateToServer()
+        self.itemsForBatch.removeAll()
+      },
+      offline: { [weak self] in
+        guard let self = self else { return }
+        
+        try await self.homeSceneWorker.syncronizeGRDBWithBatchItems()
+      },
+      handleError: { [weak self] error in
+        self?.handleErrors(error)
+      },
+      checkNetworkConnection: { [weak self] in
+        guard let self = self else { return false }
+        
+        return self.checkNetworkConnection()
+      }
+    )
   }
   
   func loadDailyToDoList(targetDate: String) async {
@@ -198,23 +235,6 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
       self.itemsForBatch.removeAll()
     } catch let error {
       self.handleErrors(error)
-    }
-  }
-  
-  func requestBatchUpdateToServer() async {
-    if self.checkNetworkConnection() {
-      do {
-        try await self.homeSceneWorker.requestBatchUpdateToServer()
-        self.itemsForBatch.removeAll()
-      } catch let error {
-        self.handleErrors(error)
-      }
-    } else {
-      do {
-        try await self.homeSceneWorker.syncronizeGRDBWithBatchItems()
-      } catch let error {
-        self.handleErrors(error)
-      }
     }
   }
   
