@@ -73,9 +73,9 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
   open override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
     Task {
+      await self.interactor?.syncronizeServerEditGroups()
       await self.interactor?.writeBatchItemsToGRDB()
       await self.interactor?.requestBatchUpdateToServer()
-      await self.interactor?.syncronizeServerEditGroups()
     }
   }
   
@@ -439,9 +439,9 @@ extension HomeSceneViewController {
 extension HomeSceneViewController: @preconcurrency TransitionHandlable {
   public func handleBackgroundTransition() {
     Task {
+      await self.interactor?.syncronizeServerEditGroups()
       await self.interactor?.writeBatchItemsToGRDB()
       await self.interactor?.requestBatchUpdateToServer()
-      await self.interactor?.syncronizeServerEditGroups()
     }
   }
 }
