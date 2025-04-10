@@ -170,6 +170,8 @@ extension SearchGardenViewController {
   }
   
   private func doneButtonTapped() {
+    self.searchGardenView.tableView.onEndReached = nil
+    self.searchGardenView.clear()
     self.router?.dismissModal()
   }
   
@@ -309,6 +311,7 @@ extension SearchGardenViewController: UITextFieldDelegate {
 
 extension SearchGardenViewController: DefaultModalNavigationBarDelegate {
   func didTapRightButton() {
+    self.searchGardenView.tableView.onEndReached = nil
     self.clear()
     self.router?.dismissModal()
   }
