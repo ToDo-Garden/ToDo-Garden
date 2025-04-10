@@ -9,9 +9,6 @@ import UIKit
 
 import TDUtility
 
-import UIKit
-import TDUtility
-
 extension UIScrollView {
   private var onEndReachedKey: String { "onEndReachedKey" }
   private var scrollHandlerKey: String { "scrollHandlerKey" }
