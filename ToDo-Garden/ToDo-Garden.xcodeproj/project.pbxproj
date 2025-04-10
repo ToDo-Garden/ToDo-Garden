@@ -13,6 +13,7 @@
 		4FC8C1092B8336A100BA223E /* ToDoGardenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FC8C1082B8336A100BA223E /* ToDoGardenTests.swift */; };
 		4FDA5E392B4FF1E4006506ED /* Asset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FDA5E382B4FF1E4006506ED /* Asset.xcassets */; };
 		61BAD03B2CFDC8B600B15399 /* AppCore in Frameworks */ = {isa = PBXBuildFile; productRef = 61BAD03A2CFDC8B600B15399 /* AppCore */; };
+		639707F82DA68BEB00CC74E1 /* .env in Resources */ = {isa = PBXBuildFile; fileRef = 639707F72DA68BEB00CC74E1 /* .env */; };
 		639D79512C19A8E300004B26 /* EditToDoScene in Resources */ = {isa = PBXBuildFile; fileRef = 639D79502C19A8E300004B26 /* EditToDoScene */; };
 		E44542B92CD0B821008B8F93 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = E44542B82CD0B821008B8F93 /* Lottie */; };
 /* End PBXBuildFile section */
@@ -47,6 +48,7 @@
 		631CD21F2C609FAD0000F78E /* SettingScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SettingScene; sourceTree = "<group>"; };
 		634BD1762CA1728500396CAB /* EditUserNameScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = EditUserNameScene; sourceTree = "<group>"; };
 		638F7F532C7F4AF500338FA3 /* UserInfoScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = UserInfoScene; sourceTree = "<group>"; };
+		639707F72DA68BEB00CC74E1 /* .env */ = {isa = PBXFileReference; lastKnownFileType = text; name = .env; path = "ToDo-Garden/.env"; sourceTree = SOURCE_ROOT; };
 		639D79502C19A8E300004B26 /* EditToDoScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = EditToDoScene; sourceTree = "<group>"; };
 		63E20C1D2CB3BBFE00EC158E /* EditUserIntroductionScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = EditUserIntroductionScene; sourceTree = "<group>"; };
 		AE645FE82C64BD3E001A5612 /* CommonViews */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CommonViews; sourceTree = "<group>"; };
@@ -144,6 +146,7 @@
 			isa = PBXGroup;
 			children = (
 				4F0DF13F2B4EB64C00097B7D /* Application */,
+				639707F72DA68BEB00CC74E1 /* .env */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -265,6 +268,7 @@
 				4FDA5E392B4FF1E4006506ED /* Asset.xcassets in Resources */,
 				639D79512C19A8E300004B26 /* EditToDoScene in Resources */,
 				4F0DF1382B4EABD000097B7D /* LaunchScreen.storyboard in Resources */,
+				639707F82DA68BEB00CC74E1 /* .env in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

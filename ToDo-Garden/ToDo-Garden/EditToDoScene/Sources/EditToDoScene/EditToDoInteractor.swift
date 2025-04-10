@@ -110,6 +110,7 @@ extension EditToDoInteractor {
       isAlarmOn: toDo.isAlarmOn, alarmTime: toDo.alarmTime, isOnlyToday: toDo.isOnlyToday,
       startDay: startDay, endDay: endDay, groupId: groupId, isDelete: false
     )
+    self.presenter?.presentEditedToDo()
   }
 
   // TODO: 서버에 투두의 삭제를 요청하는 메서드입니다.

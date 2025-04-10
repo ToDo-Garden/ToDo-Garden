@@ -16,6 +16,7 @@ protocol EditToDoPresentationLogic {
   func presentFetchedToDo(toDo: TodoBatchItem, groups: [TodoListGroup])
   func presentDismiss()
   func presentError(_ type: EditToDo.ErrorType)
+  func presentEditedToDo()
 
   func presentAlarmActivation(response: EditToDo.ChangeAlarmActivation.Response)
   func presentFetchedAlarmTime(response: EditToDo.FetchAlarmTime.Response)
@@ -39,10 +40,21 @@ final class EditToDoPresenter {
 
 extension EditToDoPresenter: EditToDoPresentationLogic {
   func presentFetchedToDo(toDo: TodoBatchItem, groups: [TodoListGroup]) {
-    let alarmTime = self.makeAlarmTime(of: toDo.alarmTime)
-    let alarmTimeString = String(format: "%02d:%02d", alarmTime.hour, alarmTime.minute)
-    let viewModel = EditToDo.FetchToDo.ViewModel(toDo: toDo, alarmTime: alarmTimeString, groups: groups)
+    let todo = toDo
+    let alarmTime = self.makeAlarmTime(of: todo.alarmTime)
+    let alarmTimeString = String(format: "%02d:%02d", todo.alarmTime, alarmTime.minute)
+    todo.startDay = self.dateFormatter.string(
+      from: todo.startDay?.toDateISO8601Format() ?? Date()
+    )
+    todo.endDay = self.dateFormatter.string(
+      from: todo.endDay?.toDateISO8601Format() ?? Date()
+    )
+    let viewModel = EditToDo.FetchToDo.ViewModel(toDo: todo, alarmTime: alarmTimeString, groups: groups)
     self.viewController?.displayFetchedToDo(viewModel: viewModel)
+  }
+
+  func presentEditedToDo() {
+    self.viewController?.displayEditedToDo()
   }
 
   func presentDismiss() {
