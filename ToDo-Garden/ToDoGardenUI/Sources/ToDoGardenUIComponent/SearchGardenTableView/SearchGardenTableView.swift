@@ -77,13 +77,15 @@ final public class SearchGardenTableView: UITableView {
     self.diffableDataSource = UITableViewDiffableDataSource<
       SearchGardenSection,
       SearchGardenUser
-    >(tableView: self) { (tableView, indexPath, userData) -> TableRow? in
-      guard let tableRow = tableView.dequeueReusableCell(
+    >(tableView: self) { [weak self] (tableView, indexPath, userData) -> TableRow? in
+      guard let self = self,
+        let tableRow = tableView.dequeueReusableCell(
         withIdentifier: TableRow.identifier,
         for: indexPath
       ) as? TableRow else {
         return nil
       }
+
       self.diffableDataSource.defaultRowAnimation = UITableView.RowAnimation.fade
       self.updateTableRow(userData: userData, tableRow: tableRow)
       self.setDummyOrNot(userData: userData, tableRow: tableRow)
