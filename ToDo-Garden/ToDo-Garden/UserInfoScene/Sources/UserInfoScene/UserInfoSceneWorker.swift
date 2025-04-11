@@ -81,8 +81,10 @@ public struct UserInfoSceneWorker: UserInfoSceneWorkable {
     }
   }
   // swiftlint: enable function_body_length
-
+  
+  @MainActor
   public func requestWithdraw() async throws {
+    self.signout()
     let request = HTTPRequest(
       method: HTTPMethod.post,
       endPoint: URLConstants.Auth.withDrawURL
