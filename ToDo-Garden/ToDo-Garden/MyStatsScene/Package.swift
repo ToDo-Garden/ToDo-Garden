@@ -48,6 +48,7 @@ let package = Package(
         .product(name: "HTTPClient", package: "TDFoundation"),
         .product(name: "HTTPClientAPI", package: "TDFoundation"),
         .product(name: "TDUtility", package: "TDUtility"),
+        .product(name: "TDFoundationExtension", package: "TDUtility"),
         .product(name: "ToDoGardenUIAPI", package: "ToDoGardenUI"),
         .product(name: "ToDoGardenUIResource", package: "ToDoGardenUI"),
         .product(name: "TDFoundation", package: "TDFoundation")
