@@ -26,7 +26,7 @@ public struct MyStatsWorker: MyStatsWorkable {
     return MyStats.FetchedProfileViewData(
       nickname: result.nickname,
       profileImage: imageData,
-      continuousRecordCount: result.continuousRecordCount,
+      continuousRecordCount: result.continuousRecordCount.roundedToInt(),
       continuousRecordStartDate: result.continuousRecordStartDate,
       continuousRecordEndDate: result.continuousRecordEndDate
     )

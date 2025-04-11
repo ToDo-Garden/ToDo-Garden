@@ -88,9 +88,9 @@ extension MyStatsPresenter {
     let convertedDate = fetchedData.maxPomodoroRecord?.recordDate.toDateISO8601Format().toStringDefaultFormat()
     let viewModel = MyStats.LongestRecordViewModel(
       concentratedRecordGroupName: fetchedData.maxPomodoroRecord?.groupName ?? "",
-      concentratedRecordCount: fetchedData.maxPomodoroRecord?.maxPomodoroCount ?? 0,
+      concentratedRecordCount: fetchedData.maxPomodoroRecord?.maxPomodoroCount.roundedToInt() ?? 0,
       concentratedRecordDate: convertedDate ?? "",
-      longestContinuousRecordCount: fetchedData.maxContinuousDays?.maxCount ?? 0,
+      longestContinuousRecordCount: fetchedData.maxContinuousDays?.maxCount.roundedToInt() ?? 0,
       longestContinuousRecordStartDate: fetchedData.maxContinuousDays?.startDate ?? "",
       longestContinuousRecordEndDate: fetchedData.maxContinuousDays?.endDate ?? "기록이 없습니다"
     )
@@ -114,18 +114,18 @@ extension MyStatsPresenter {
     }
 
     let dailyViewModel = MyStats.SummaryViewModel(
-      concentratedTime: formatTime(fetchedData.dailyAverageFocusTime),
-      completedCount: "\(fetchedData.dailyAveragePomodoroCount)개 목표"
+      concentratedTime: formatTime(fetchedData.dailyAverageFocusTime.roundedToInt()),
+      completedCount: "\(fetchedData.dailyAveragePomodoroCount.roundedToInt())개 목표"
     )
 
     let weeklyViewModel = MyStats.SummaryViewModel(
-      concentratedTime: formatTime(fetchedData.weeklyAverageFocusTime),
-      completedCount: "\(fetchedData.weeklyAveragePomodoroCount)개 목표"
+      concentratedTime: formatTime(fetchedData.weeklyAverageFocusTime.roundedToInt()),
+      completedCount: "\(fetchedData.weeklyAveragePomodoroCount.roundedToInt())개 목표"
     )
 
     let monthlyViewModel = MyStats.SummaryViewModel(
-      concentratedTime: formatTime(fetchedData.monthlyAverageFocusTime),
-      completedCount: "\(fetchedData.monthlyAveragePomodoroCount)개 목표"
+      concentratedTime: formatTime(fetchedData.monthlyAverageFocusTime.roundedToInt()),
+      completedCount: "\(fetchedData.monthlyAveragePomodoroCount.roundedToInt())개 목표"
     )
 
     return [dailyViewModel, weeklyViewModel, monthlyViewModel]
