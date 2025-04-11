@@ -46,7 +46,7 @@ extension UIScrollView {
       let height = scrollView.frame.size.height
       let contentYOffset = scrollView.contentOffset.y
       let distanceFromBottom = scrollView.contentSize.height - contentYOffset
-      let threshold: CGFloat = 100.0
+      let threshold: CGFloat = 200.0
 
       if distanceFromBottom < height + threshold {
         scrollView.onEndReached?()
