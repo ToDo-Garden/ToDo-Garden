@@ -65,6 +65,7 @@ final class SearchGardenViewController: UIViewController, SearchGardenViewContro
     super.viewDidLoad()
     self.setupView()
     self.setupKeyboardObservers()
+    self.presentationController?.delegate = self
   }
   
   func clear() {
@@ -363,5 +364,12 @@ extension SearchGardenViewController {
       self.searchGardenView.tableView.contentInset.bottom = 0
       self.searchGardenView.tableView.verticalScrollIndicatorInsets.bottom = 0
     }
+  }
+}
+
+extension SearchGardenViewController: UIAdaptivePresentationControllerDelegate {
+  func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+    self.searchGardenView.tableView.onEndReached = nil
+    self.clear()
   }
 }
