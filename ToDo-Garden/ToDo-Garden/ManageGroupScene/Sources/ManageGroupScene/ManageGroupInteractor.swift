@@ -51,7 +51,7 @@ class ManageGroupInteractor: ManageGroupDataStore {
 }
 
 // MARK: - Request to worker
-
+// swiftlint: disable all
 extension ManageGroupInteractor: ManageGroupBusinessLogic {
   func fetchGroupList(request: ManageGroup.FetchGroupList.Request) {
     self.tasks[TaskKey.fetchGroups] = Task {
@@ -59,16 +59,34 @@ extension ManageGroupInteractor: ManageGroupBusinessLogic {
       
       do {
         try Task.checkCancellation()
-        var result: [ManageGroup.ToDoGroup]
-        if self.checkNetworkConnection() {
-          result = try await self.manageGroupWorker.fetchGroupList(request: request)
-        } else {
-          result = try await self.manageGroupWorker.fetchGroupListFromGRDB()
-        }
-        try Task.checkCancellation()
-        self.currentGroups = result
-        let response = ManageGroup.FetchGroupList.Response(with: result)
-        self.presenter?.presentFetchedGroupList(response: response)
+        await FallbackFlow.run(
+          online: { [weak self] in
+            guard let self = self else { return }
+            
+            let result = try await self.manageGroupWorker.fetchGroupList(request: request)
+            let response = ManageGroup.FetchGroupList.Response(with: result)
+            try Task.checkCancellation()
+            self.currentGroups = result
+            self.presenter?.presentFetchedGroupList(response: response)
+          },
+          offline: { [weak self] in
+            guard let self = self else { return }
+            
+            let result = try await self.manageGroupWorker.fetchGroupListFromGRDB()
+            let response = ManageGroup.FetchGroupList.Response(with: result)
+            try Task.checkCancellation()
+            self.currentGroups = result
+            self.presenter?.presentFetchedGroupList(response: response)
+          },
+          handleError: { [weak self] error in
+            self?.handleError(error, about: TaskKey.fetchGroups)
+          },
+          checkNetworkConnection: { [weak self] in
+            guard let self = self else { return false }
+            
+            return self.checkNetworkConnection()
+          }
+        )
       } catch let error {
         self.handleError(error, about: TaskKey.fetchGroups)
       }
@@ -78,24 +96,43 @@ extension ManageGroupInteractor: ManageGroupBusinessLogic {
   func saveGroupList(request: ManageGroupSceneEntity.ManageGroup.SaveGroupList.Request) {
     self.tasks[TaskKey.saveGroups] = Task {
       defer { self.tasks[TaskKey.saveGroups] = nil }
-      
       do {
         try Task.checkCancellation()
-        var result: [ManageGroup.ToDoGroup]
-        if self.checkNetworkConnection() {
-          result = try await self.manageGroupWorker.saveGroupList(request: request)
-        } else {
-          result = try await self.manageGroupWorker.saveGroupListToGRDB(request: request)
-        }
-        try Task.checkCancellation()
-        self.currentGroups = result
-        let response = ManageGroup.SaveGroupList.Response(with: result)
-        self.presenter?.presentSavedGroupList(response: response)
+        await FallbackFlow.run(
+          online: { [weak self] in
+            guard let self = self else { return }
+            
+            let result = try await self.manageGroupWorker.saveGroupList(request: request)
+            let response = ManageGroup.SaveGroupList.Response(with: result)
+            try Task.checkCancellation()
+            self.currentGroups = result
+            self.presenter?.presentSavedGroupList(response: response)
+          },
+          offline: { [weak self] in
+            guard let self = self else { return }
+            
+            let result = try await self.manageGroupWorker.saveGroupListToGRDB(request: request)
+            let response = ManageGroup.SaveGroupList.Response(with: result)
+            try Task.checkCancellation()
+            self.currentGroups = result
+            self.presenter?.presentSavedGroupList(response: response)
+          },
+          handleError: { [weak self] error in
+            self?.handleError(error, about: TaskKey.saveGroups)
+          },
+          checkNetworkConnection: { [weak self] in
+            guard let self = self else { return false }
+            
+            return self.checkNetworkConnection()
+          }
+        )
       } catch let error {
         self.handleError(error, about: TaskKey.saveGroups)
       }
     }
   }
+  
+  // swiftlint: enable all
   
   func addGroupDirectly(request: ManageGroup.AddGroup.Request) {
     self.tasks[TaskKey.addGroupDirectly] = Task {

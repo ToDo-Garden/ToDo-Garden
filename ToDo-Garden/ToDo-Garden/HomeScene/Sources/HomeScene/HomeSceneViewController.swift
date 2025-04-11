@@ -73,9 +73,9 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
   open override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
     Task {
+      await self.interactor?.syncronizeServerEditGroups()
       await self.interactor?.writeBatchItemsToGRDB()
       await self.interactor?.requestBatchUpdateToServer()
-      await self.interactor?.syncronizeServerEditGroups()
     }
   }
   
@@ -184,8 +184,8 @@ extension HomeSceneViewController {
     self.loadingIndicator.isHidden = false
     self.loadingIndicator.startAnimation()
     Task {
-      await interactor.requestBatchUpdateToServer()
       await interactor.syncronizeServerEditGroups()
+      await interactor.requestBatchUpdateToServer()
       await interactor.fetchToDoList(request: HomeScene.FetchToDoList.Request(dateString: targetMonth))
     }
   }
@@ -439,9 +439,9 @@ extension HomeSceneViewController {
 extension HomeSceneViewController: @preconcurrency TransitionHandlable {
   public func handleBackgroundTransition() {
     Task {
+      await self.interactor?.syncronizeServerEditGroups()
       await self.interactor?.writeBatchItemsToGRDB()
       await self.interactor?.requestBatchUpdateToServer()
-      await self.interactor?.syncronizeServerEditGroups()
     }
   }
 }
