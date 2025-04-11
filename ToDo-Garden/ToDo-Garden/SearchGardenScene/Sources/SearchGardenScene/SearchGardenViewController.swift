@@ -114,7 +114,7 @@ extension SearchGardenViewController {
     self.searchGardenView.tableView.onEndReached = {
       self.interactor?.loadSearchedGardenContinue()
     }
-    self.searchGardenView.tableView.prefetchDataSource = self
+    // self.searchGardenView.tableView.prefetchDataSource = self
     self.searchGardenView.textField.delegate = self
     self.searchGardenView.textField.returnKeyType = .search
     self.view.addSubview(self.searchGardenView)
@@ -318,20 +318,20 @@ extension SearchGardenViewController: DefaultModalNavigationBarDelegate {
   }
 }
 
-extension SearchGardenViewController: UITableViewDataSourcePrefetching {
-  func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-    let shouldLoadNextPage = indexPaths.contains { indexPath in
-      guard let user = self.searchGardenView.tableView.userForCell(at: indexPath) else {
-        return false
-      }
-      return user.isDummyData
-    }
-    
-    if shouldLoadNextPage {
-      self.interactor?.loadSearchedGardenContinue()
-    }
-  }
-}
+//  extension SearchGardenViewController: UITableViewDataSourcePrefetching {
+//    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+//      let shouldLoadNextPage = indexPaths.contains { indexPath in
+//        guard let user = self.searchGardenView.tableView.userForCell(at: indexPath) else {
+//          return false
+//        }
+//        return user.isDummyData
+//      }
+//
+//      if shouldLoadNextPage {
+//        self.interactor?.loadSearchedGardenContinue()
+//      }
+//    }
+//  }
 
 extension SearchGardenViewController {
   private func setupKeyboardObservers() {
