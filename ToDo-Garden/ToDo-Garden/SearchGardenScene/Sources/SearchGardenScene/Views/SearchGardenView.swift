@@ -28,7 +28,7 @@ final class SearchGardenView: UIVStackView {
   }
   
   func clear() {
-    self.tableView.clearItemsInMainSection()
+    self.tableView.cleanUpDeinit()
   }
 }
 

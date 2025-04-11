@@ -65,6 +65,7 @@ final class SearchGardenViewController: UIViewController, SearchGardenViewContro
     super.viewDidLoad()
     self.setupView()
     self.setupKeyboardObservers()
+    self.presentationController?.delegate = self
   }
   
   func clear() {
@@ -113,7 +114,7 @@ extension SearchGardenViewController {
     self.searchGardenView.tableView.onEndReached = {
       self.interactor?.loadSearchedGardenContinue()
     }
-    self.searchGardenView.tableView.prefetchDataSource = self
+    // self.searchGardenView.tableView.prefetchDataSource = self
     self.searchGardenView.textField.delegate = self
     self.searchGardenView.textField.returnKeyType = .search
     self.view.addSubview(self.searchGardenView)
@@ -170,6 +171,8 @@ extension SearchGardenViewController {
   }
   
   private func doneButtonTapped() {
+    self.searchGardenView.tableView.onEndReached = nil
+    self.searchGardenView.clear()
     self.router?.dismissModal()
   }
   
@@ -309,25 +312,26 @@ extension SearchGardenViewController: UITextFieldDelegate {
 
 extension SearchGardenViewController: DefaultModalNavigationBarDelegate {
   func didTapRightButton() {
+    self.searchGardenView.tableView.onEndReached = nil
     self.clear()
     self.router?.dismissModal()
   }
 }
 
-extension SearchGardenViewController: UITableViewDataSourcePrefetching {
-  func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-    let shouldLoadNextPage = indexPaths.contains { indexPath in
-      guard let user = self.searchGardenView.tableView.userForCell(at: indexPath) else {
-        return false
-      }
-      return user.isDummyData
-    }
-    
-    if shouldLoadNextPage {
-      self.interactor?.loadSearchedGardenContinue()
-    }
-  }
-}
+//  extension SearchGardenViewController: UITableViewDataSourcePrefetching {
+//    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+//      let shouldLoadNextPage = indexPaths.contains { indexPath in
+//        guard let user = self.searchGardenView.tableView.userForCell(at: indexPath) else {
+//          return false
+//        }
+//        return user.isDummyData
+//      }
+//
+//      if shouldLoadNextPage {
+//        self.interactor?.loadSearchedGardenContinue()
+//      }
+//    }
+//  }
 
 extension SearchGardenViewController {
   private func setupKeyboardObservers() {
@@ -360,5 +364,12 @@ extension SearchGardenViewController {
       self.searchGardenView.tableView.contentInset.bottom = 0
       self.searchGardenView.tableView.verticalScrollIndicatorInsets.bottom = 0
     }
+  }
+}
+
+extension SearchGardenViewController: UIAdaptivePresentationControllerDelegate {
+  func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+    self.searchGardenView.tableView.onEndReached = nil
+    self.clear()
   }
 }

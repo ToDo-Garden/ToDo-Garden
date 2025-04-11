@@ -90,8 +90,22 @@ final class SearchGardenSceneTests{
   @Test func testBuilder() {
     self.reset()
     let builder = SearchGardenSceneBuilder(dependency: .init(searchGardenWorker: self.worker))
-    let viewController = builder.build()
+    let viewController = builder.build(with: PayloadMock(searchGardenSceneDelegate: DelegateMock()))
     #expect(viewController is SearchGardenViewController)
+  }
+}
+
+struct PayloadMock: SearchGardenScenePayloadable {
+  let searchGardenSceneDelegate: any SearchGardenSceneAPI.SearchGardenSceneDelegate
+  
+  init(searchGardenSceneDelegate: any SearchGardenSceneAPI.SearchGardenSceneDelegate) {
+    self.searchGardenSceneDelegate = searchGardenSceneDelegate
+  }
+}
+
+class DelegateMock: SearchGardenSceneDelegate {
+  func searchGardenDoneButtonDidTap() {
+    return
   }
 }
 

@@ -10,64 +10,61 @@ import UIKit
 import TDUtility
 
 extension UIScrollView {
-  private var onEndReachedKey: String {
-    return "onEndReachedKey"
-  }
-  
+  private var onEndReachedKey: String { "onEndReachedKey" }
+  private var scrollHandlerKey: String { "scrollHandlerKey" }
+
   public var onEndReached: (() -> Void)? {
     get {
       self.ao_get(key: self.onEndReachedKey) as? (() -> Void)
     }
     set {
       self.ao_setOptional(newValue, key: self.onEndReachedKey, policy: AssociationPolicy.copyNonatomic)
-      self.setEndReachedDelegate()
-    }
-  }
-  
-  private func setEndReachedDelegate() {
-    InfiniteScrollHandler.shared.originalDelegates[self] = self.delegate
-    self.delegate = InfiniteScrollHandler.shared
-  }
-}
 
-final class InfiniteScrollHandler: NSObject, UIScrollViewDelegate {
-  static let shared = InfiniteScrollHandler()
-  var originalDelegates: [UIScrollView: UIScrollViewDelegate?] = [:]
-  
-  func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    guard self.originalDelegates.keys.contains(scrollView) else { return }
-    
-    let height = scrollView.frame.size.height
-    let contentYOffset = scrollView.contentOffset.y
-    let distanceFromBottom = scrollView.contentSize.height - contentYOffset
-    let threshold: CGFloat = 200.0
-    
-    if distanceFromBottom < height + threshold {
-      scrollView.onEndReached?()
-    }
-    
-    self.originalDelegates[scrollView]??.scrollViewDidScroll?(scrollView)
-  }
-  
-  @preconcurrency
-  override func responds(to aSelector: Selector!) -> Bool {
-    MainActor.assumeIsolated {
-      if let scrollView = self.originalDelegates.keys.first(where: { $0.delegate === self }),
-        let originalDelegate = self.originalDelegates[scrollView] {
-        return super.responds(to: aSelector) || originalDelegate?.responds(to: aSelector) == true
+      if newValue != nil {
+        let handler = InfiniteScrollHandler(scrollView: self, originalDelegate: self.delegate)
+        self.ao_set(handler, key: self.scrollHandlerKey, policy: AssociationPolicy.retainNonatomic)
+        self.delegate = handler
+      } else {
+        self.delegate = (self.ao_get(key: self.scrollHandlerKey) as? InfiniteScrollHandler)?.originalDelegate
+        self.ao_setOptional(nil, key: self.scrollHandlerKey, policy: AssociationPolicy.assign)
       }
-      return super.responds(to: aSelector)
     }
   }
   
-  @preconcurrency
-  override func forwardingTarget(for aSelector: Selector!) -> Any? {
-    let target: UIScrollViewDelegate? = MainActor.assumeIsolated {
-      if let scrollView = self.originalDelegates.keys.first(where: { $0.delegate === self }) {
-        return self.originalDelegates[scrollView] ?? nil
-      }
-      return nil
+  @MainActor private final class InfiniteScrollHandler: NSObject, UIScrollViewDelegate {
+    weak var originalDelegate: UIScrollViewDelegate?
+    weak var scrollView: UIScrollView?
+
+    init(scrollView: UIScrollView, originalDelegate: UIScrollViewDelegate?) {
+      self.scrollView = scrollView
+      self.originalDelegate = originalDelegate
     }
-    return target
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+      guard let scrollView = self.scrollView else { return }
+
+      let height = scrollView.frame.size.height
+      let contentYOffset = scrollView.contentOffset.y
+      let distanceFromBottom = scrollView.contentSize.height - contentYOffset
+      let threshold: CGFloat = 200.0
+
+      if distanceFromBottom < height + threshold {
+        scrollView.onEndReached?()
+      }
+
+      self.originalDelegate?.scrollViewDidScroll?(scrollView)
+    }
+
+    @preconcurrency override func responds(to aSelector: Selector!) -> Bool {
+      MainActor.assumeIsolated {
+        return super.responds(to: aSelector) || self.originalDelegate?.responds(to: aSelector) == true
+      }
+    }
+
+    @preconcurrency override func forwardingTarget(for aSelector: Selector!) -> Any? {
+      MainActor.assumeIsolated {
+        return self.originalDelegate
+      }
+    }
   }
 }

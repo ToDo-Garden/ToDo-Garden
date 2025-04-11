@@ -15,7 +15,7 @@ public struct ImageClient: Requestable {
     let data = try await request(id)
     
     return isDownsample
-    ? downsample(imageData: data, for: CGSize(width: 90, height: 90), scale: 1.0)
+    ? downsample(imageData: data, for: CGSize(width: 180, height: 180), scale: 1.0)
     : try UIImage(data: data) ?? { throw CocoaError(.coderInvalidValue) }()
   }
   
