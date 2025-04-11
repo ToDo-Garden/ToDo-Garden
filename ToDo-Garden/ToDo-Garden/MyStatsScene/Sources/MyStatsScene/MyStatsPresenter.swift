@@ -91,8 +91,10 @@ extension MyStatsPresenter {
       concentratedRecordCount: fetchedData.maxPomodoroRecord?.maxPomodoroCount.roundedToInt() ?? 0,
       concentratedRecordDate: convertedDate ?? "",
       longestContinuousRecordCount: fetchedData.maxContinuousDays?.maxCount.roundedToInt() ?? 0,
-      longestContinuousRecordStartDate: fetchedData.maxContinuousDays?.startDate ?? "",
-      longestContinuousRecordEndDate: fetchedData.maxContinuousDays?.endDate ?? "기록이 없습니다"
+      longestContinuousRecordStartDate:
+        fetchedData.maxContinuousDays?.startDate.toDateISO8601Format().toStringDefaultFormat() ?? "",
+      longestContinuousRecordEndDate:
+        fetchedData.maxContinuousDays?.endDate.toDateISO8601Format().toStringDefaultFormat() ?? "기록이 없습니다"
     )
     return viewModel
   }
