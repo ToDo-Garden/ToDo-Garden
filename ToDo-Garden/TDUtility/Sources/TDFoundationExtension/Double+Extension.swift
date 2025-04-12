@@ -11,4 +11,8 @@ public extension Double {
     ? floor((self.truncatingRemainder(dividingBy: 3600)) / 60)
     : floor(self / 60)
   }
+  
+  func roundedToInt() -> Int {
+    return Int(self.rounded())
+  }
 }
