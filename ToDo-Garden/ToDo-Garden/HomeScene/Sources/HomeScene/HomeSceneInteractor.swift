@@ -310,10 +310,6 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
   func prepareDataForEditTodoScene(request: HomeScene.PrepareDataForEditToDoScene.Request) {
     let dateString = request.selectedDate.description.toYYYYMMDDStringFromISO8601Space()
     let groups = self.monthlyData[dateString]
-<<<<<<< HEAD
-=======
- 
->>>>>>> develop
     let group = groups?.first(where: { (group: SharedEntity.TodoListGroup) in
       return group.localId.lowercased() == request.groupId.uuidString.lowercased()
     })!
