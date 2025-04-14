@@ -6,7 +6,7 @@ import ToDoGardenUIConstant
 private typealias ViewMode = UIKit.UITextField.ViewMode
 
 extension Styled {
-  public final class TextField: UITextField {
+  public final class TextField: UITextField, UITextFieldDelegate {
     public var mainColor: UIColor? {
       get {
         if let model = self.configuration.groupEditModel {
@@ -32,6 +32,7 @@ extension Styled {
       self.configuration = configuration
       super.init(frame: CGRect.zero)
       self.build()
+      self.delegate = self
     }
     
     public required init?(coder: NSCoder) {
@@ -40,6 +41,11 @@ extension Styled {
     
     deinit {
       self.cancellables.removeAll()
+    }
+    
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+      _ = self.resignFirstResponder()
+      return true
     }
     
     public override func textRect(forBounds bounds: CGRect) -> CGRect {
@@ -107,6 +113,7 @@ extension Styled {
     }
     
     private func build() {
+      self.returnKeyType = .done
       self.clearButtonMode = ViewMode.whileEditing
       switch configuration {
       case let Configuration.primary(primaryModel):

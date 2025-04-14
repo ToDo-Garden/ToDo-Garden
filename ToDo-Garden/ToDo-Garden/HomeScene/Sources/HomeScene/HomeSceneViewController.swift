@@ -69,11 +69,13 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
   open override func viewDidLoad() {
     super.viewDidLoad()
     self.setupViews()
+    self.setupKeyboardObservers()
   }
   
   open override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
     Task {
+      await self.interactor?.syncronizeServerEditGroups()
       await self.interactor?.writeBatchItemsToGRDB()
       await self.interactor?.requestBatchUpdateToServer()
     }
@@ -184,7 +186,7 @@ extension HomeSceneViewController {
     self.loadingIndicator.isHidden = false
     self.loadingIndicator.startAnimation()
     Task {
-      await interactor.writeBatchItemsToGRDB()
+      await interactor.syncronizeServerEditGroups()
       await interactor.requestBatchUpdateToServer()
       await interactor.fetchToDoList(request: HomeScene.FetchToDoList.Request(dateString: targetMonth))
     }
@@ -352,6 +354,7 @@ extension HomeSceneViewController: CalendarViewDateSelectionDelegate {
   public func didSelectDate(_ date: Date) {
     self.hideToDoList()
     Task {
+      await self.interactor?.writeBatchItemsToGRDB()
       await self.interactor?.loadDailyToDoList(targetDate: date.description)
     }
   }
@@ -472,8 +475,45 @@ extension HomeSceneViewController {
 extension HomeSceneViewController: @preconcurrency TransitionHandlable {
   public func handleBackgroundTransition() {
     Task {
+      await self.interactor?.syncronizeServerEditGroups()
       await self.interactor?.writeBatchItemsToGRDB()
       await self.interactor?.requestBatchUpdateToServer()
+    }
+  }
+}
+
+extension HomeSceneViewController {
+  private func setupKeyboardObservers() {
+    UITextFieldNotificationObserver.observeKeyboardEvents { [weak self] event in
+      guard let self = self else { return }
+
+      Task { @MainActor in
+        guard self.isTopViewController() else { return }
+
+        switch event {
+        case .willShow(let height, let duration):
+          self.showKeyboard(keyboardHeight: height, duration: duration)
+
+        case .willHide(let duration):
+          self.hideKeyboard(duration: duration)
+        }
+      }
+    }
+  }
+  
+  private func showKeyboard(keyboardHeight: CGFloat, duration: TimeInterval) {
+    UIView.animate(withDuration: duration) {
+      self.todoListView?.contentView.contentInset.bottom = keyboardHeight
+      self.todoListView?.contentView.verticalScrollIndicatorInsets.bottom = keyboardHeight
+    }
+    self.bottomSheet.animateBottomSheet(to: BottomSheet.State.expanded)
+  }
+  
+  private func hideKeyboard(duration: TimeInterval) {
+    self.bottomSheet.animateBottomSheet(to: BottomSheet.State.normal)
+    UIView.animate(withDuration: duration) {
+      self.todoListView?.contentView.contentInset.bottom = 0
+      self.todoListView?.contentView.verticalScrollIndicatorInsets.bottom = 0
     }
   }
 }

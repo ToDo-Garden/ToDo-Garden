@@ -9,6 +9,7 @@ import UIKit
 
 import ManageGroupSceneAPI
 import PostGroupSceneAPI
+import TDFoundation
 import ToDoGardenUIAPI
 
 public struct ManageGroupSceneBuilder {
@@ -16,13 +17,16 @@ public struct ManageGroupSceneBuilder {
   public struct Dependency {
     let manageGroupWorker: ManageGroupWorkable
     let postGroupSceneBuilder: PostGroupSceneBuildable?
+    let retryManager: NetworkRetryManagerAPI
     
     public init(
       manageGroupWorker: ManageGroupWorkable,
-      postGroupSceneBuilder: PostGroupSceneBuildable?
+      postGroupSceneBuilder: PostGroupSceneBuildable?,
+      retryManager: NetworkRetryManagerAPI
     ) {
       self.manageGroupWorker = manageGroupWorker
       self.postGroupSceneBuilder = postGroupSceneBuilder
+      self.retryManager = retryManager
     }
   }
   
@@ -52,7 +56,8 @@ extension ManageGroupSceneBuilder {
   /// - Returns: VIP Cycle 설정이 완료된 `ViewControllable` 프로토콜을 준수한 `ViewController` 인스턴스를 반환합니다.
   private func configureVIPCycle(for viewController: ManageGroupViewController) -> ManageGroupViewController {
     let interactor = ManageGroupInteractor(
-      worker: self.dependency.manageGroupWorker
+      worker: self.dependency.manageGroupWorker,
+      retryManager: self.dependency.retryManager
     )
     
     let presenter = ManageGroupPresenter()

@@ -18,27 +18,36 @@ extension AppCore {
     @MainActor
     public static let live: Dependency = {
       let httpClient = HTTPClient.live
-      
-      return Dependency(
-        router: AppRouter(
-          httpClient: httpClient,
-          sceneBuilder: AppRouter.SceneBuilder(
-            home: HomeSceneBuilder(dependency: .live),
-            signup: SignUpSceneBuilder(
-              dependency: SignUpSceneBuilder.Dependency(
-                signUpWorker: SignUpWorker(httpClient: httpClient)
-              )
-            ),
-            shareGarden: ShareGardenSceneBuilder(dependency: .live),
-            setting: SettingSceneBuilder(
-              dependency: SettingSceneBuilder.Dependency(
-                settingWorker: SettingWorker(httpClient: HTTPClient.live),
-                appServiceWorker: ApplicationServiceWorker(),
-                userInfoSceneBuilder: UserInfoSceneSceneBuilder.live
-              )
-            )
+      let sceneBuilder = AppRouter.SceneBuilder(
+        home: HomeSceneBuilder(dependency: .live),
+        signup: SignUpSceneBuilder(
+          dependency: SignUpSceneBuilder.Dependency(
+            signUpWorker: SignUpWorker(httpClient: httpClient)
           )
         ),
+        shareGarden: ShareGardenSceneBuilder(dependency: .live),
+        setting: nil
+      )
+      let router = AppRouter(
+        httpClient: httpClient,
+        sceneBuilder: sceneBuilder
+      )
+      
+      let setting = SettingSceneBuilder(
+        dependency: SettingSceneBuilder.Dependency(
+          settingWorker: SettingWorker(httpClient: HTTPClient.live),
+          appServiceWorker: ApplicationServiceWorker(),
+          userInfoSceneBuilder: UserInfoSceneSceneBuilder.live { [weak router] in
+            router?.switchTo(.login(false))
+            try? KeychainManager.shared.clearLoginData()
+            try? KeychainManager.shared.clearAccessToken()
+          }
+        )
+      )
+      router.sceneBuilder.setting = setting
+      
+      return Dependency(
+        router: router,
         userDefaults: UserDefaultsClient.live,
         httpClient: httpClient,
         isLoggedIn: {

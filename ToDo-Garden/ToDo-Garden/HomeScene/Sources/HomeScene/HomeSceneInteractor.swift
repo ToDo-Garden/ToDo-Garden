@@ -34,6 +34,7 @@ protocol HomeSceneBusinessLogic {
   func writeBatchItemsToGRDB() async
   func requestBatchUpdateToServer() async
   func prepareDataForEditTodoScene(request: HomeScene.PrepareDataForEditToDoScene.Request)
+  func syncronizeServerEditGroups() async
 }
 
 @MainActor
@@ -76,23 +77,73 @@ final class HomeSceneInteractor: HomeSceneDataStore {
 // MARK: - Request to worker
 // swiftlint: disable all
 extension HomeSceneInteractor: HomeSceneBusinessLogic {
+  func syncronizeServerEditGroups() async {
+    await FallbackFlow.run(
+      online: { [weak self] in
+        guard let self = self else { return }
+        
+        try await self.homeSceneWorker.syncronizeServerEditGroups()
+      },
+      offline: { return },
+      handleError: { [weak self] error in
+        self?.handleErrors(error)
+      },
+      checkNetworkConnection: { [weak self] in
+        guard let self = self else { return false }
+        
+        return self.checkNetworkConnection()
+      }
+    )
+  }
+  
   func fetchToDoList(request: HomeScene.FetchToDoList.Request) async {
-    if self.checkNetworkConnection() {
-      do {
+    await FallbackFlow.run(
+      online: { [weak self] in
+        guard let self = self else { return }
+        
         let fetchedToDoList = try await self.homeSceneWorker.fetchToDoList(dateString: request.dateString)
         self.presenter?.presentFetchedToDoList(monthlyData: fetchedToDoList)
-      } catch let error {
-        self.handleErrors(error)
-      }
-    } else {
-      do {
+      },
+      offline: { [weak self] in
+        guard let self = self else { return }
+        
         let (newMonthlyData, response) = try await self.loadMonthlyToDoListFromGRDB(request: request)
         self.monthlyData = newMonthlyData
         self.presenter?.presentFetchedToDoList(monthlyData: response)
-      } catch let error {
-        self.handleErrors(error)
+      },
+      handleError: { [weak self] error in
+        self?.handleErrors(error)
+      },
+      checkNetworkConnection: { [weak self] in
+        guard let self = self else { return false }
+        
+        return self.checkNetworkConnection()
       }
-    }
+    )
+  }
+  
+  func requestBatchUpdateToServer() async {
+    await FallbackFlow.run(
+      online: { [weak self] in
+        guard let self = self else { return }
+        
+        try await self.homeSceneWorker.requestBatchUpdateToServer()
+        self.itemsForBatch.removeAll()
+      },
+      offline: { [weak self] in
+        guard let self = self else { return }
+        
+        try await self.homeSceneWorker.syncronizeGRDBWithBatchItems()
+      },
+      handleError: { [weak self] error in
+        self?.handleErrors(error)
+      },
+      checkNetworkConnection: { [weak self] in
+        guard let self = self else { return false }
+        
+        return self.checkNetworkConnection()
+      }
+    )
   }
   
   func loadDailyToDoList(targetDate: String) async {
@@ -122,7 +173,12 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
       where: { UUID(uuidString: $0.localId) == group.id }
     ) {
       let targetGroup = self.monthlyData[dateString]?[targetGroupIndex]
-      targetGroup?.todoList?.append(self.makeToDoListItem(batchItem: newToDo))
+      let newItem = self.makeToDoListItem(batchItem: newToDo)
+      if targetGroup?.todoList == nil {
+        targetGroup?.todoList = [newItem]
+      } else {
+        targetGroup?.todoList?.append(newItem)
+      }
     }
   
     self.presenter?.presentCreateToDo(newToDo: newToDo)
@@ -230,23 +286,6 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
     }
   }
   
-  func requestBatchUpdateToServer() async {
-    if self.checkNetworkConnection() {
-      do {
-        try await self.homeSceneWorker.requestBatchUpdateToServer()
-        self.itemsForBatch.removeAll()
-      } catch let error {
-        self.handleErrors(error)
-      }
-    } else {
-      do {
-        try await self.homeSceneWorker.syncronizeGRDBWithBatchItems()
-      } catch let error {
-        self.handleErrors(error)
-      }
-    }
-  }
-  
   func updateSelection(isSelected: Bool, indexPath: IndexPath, date: Date) {
     let targetDate = date.description.toYYYYMMDDStringFromISO8601Space()
     guard let targetGroup = self.monthlyData[targetDate]?[indexPath.section],
@@ -271,6 +310,10 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
   func prepareDataForEditTodoScene(request: HomeScene.PrepareDataForEditToDoScene.Request) {
     let dateString = request.selectedDate.description.toYYYYMMDDStringFromISO8601Space()
     let groups = self.monthlyData[dateString]
+<<<<<<< HEAD
+=======
+ 
+>>>>>>> develop
     let group = groups?.first(where: { (group: SharedEntity.TodoListGroup) in
       return group.localId.lowercased() == request.groupId.uuidString.lowercased()
     })!

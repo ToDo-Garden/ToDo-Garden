@@ -7,6 +7,7 @@
 
 import UIKit
 
+import TDFoundation
 import ToDoGardenUIComponent
 import ToDoGardenUIResource
 
@@ -27,7 +28,7 @@ final class SearchGardenView: UIVStackView {
   }
   
   func clear() {
-    self.tableView.clearItemsInMainSection()
+    self.tableView.cleanUpDeinit()
   }
 }
 

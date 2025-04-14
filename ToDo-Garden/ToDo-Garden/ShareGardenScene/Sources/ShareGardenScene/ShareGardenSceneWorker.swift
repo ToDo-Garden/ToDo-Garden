@@ -34,6 +34,7 @@ public struct ShareGardenSceneWorker: ShareGardenSceneWorkable {
           let friendGarden = ShareGardenScene.FriendsGarden(
             id: UUID(uuidString: friendGardenDTO.id) ?? UUID(),
             nickname: friendGardenDTO.nickname,
+            imageUrl: friendGardenDTO.imageUrl,
             focusStreakDays: friendGardenDTO.maxstreakcount ?? Int.zero,
             pomodoroRecords: self.makePomodoroCollection(from: friendGardenDTO.pomodororecords)
           )

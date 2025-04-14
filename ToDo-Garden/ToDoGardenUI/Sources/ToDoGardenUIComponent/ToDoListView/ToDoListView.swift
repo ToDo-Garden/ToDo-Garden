@@ -18,7 +18,7 @@ extension ToDoListView {
 }
 
 public final class ToDoListView: UIView {
-  private lazy var contentView: UICollectionView = {
+  public lazy var contentView: UICollectionView = {
     let toDoListView = UICollectionView(
       frame: CGRect.zero,
       collectionViewLayout: self.makeToDoListViewLayout()

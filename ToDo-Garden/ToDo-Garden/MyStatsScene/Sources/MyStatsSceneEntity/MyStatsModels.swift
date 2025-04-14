@@ -165,21 +165,21 @@ extension MyStats {
   }
   
   public struct FetchedSummaryViewData: Sendable, Codable {
-    public let dailyAverageFocusTime: Int
-    public let weeklyAverageFocusTime: Int
-    public let monthlyAverageFocusTime: Int
+    public let dailyAverageFocusTime: Double
+    public let weeklyAverageFocusTime: Double
+    public let monthlyAverageFocusTime: Double
     
-    public let dailyAveragePomodoroCount: Int
-    public let weeklyAveragePomodoroCount: Int
-    public let monthlyAveragePomodoroCount: Int
+    public let dailyAveragePomodoroCount: Double
+    public let weeklyAveragePomodoroCount: Double
+    public let monthlyAveragePomodoroCount: Double
     
     public init(
-      dailyAverageFocusTime: Int,
-      weeklyAverageFocusTime: Int,
-      monthlyAverageFocusTime: Int,
-      dailyAveragePomodoroCount: Int,
-      weeklyAveragePomodoroCount: Int,
-      monthlyAveragePomodoroCount: Int
+      dailyAverageFocusTime: Double,
+      weeklyAverageFocusTime: Double,
+      monthlyAverageFocusTime: Double,
+      dailyAveragePomodoroCount: Double,
+      weeklyAveragePomodoroCount: Double,
+      monthlyAveragePomodoroCount: Double
     ) {
       self.dailyAverageFocusTime = dailyAverageFocusTime
       self.weeklyAverageFocusTime = weeklyAverageFocusTime
@@ -203,14 +203,14 @@ extension MyStats {
     public let imageUrl: String?
     public let continuousRecordStartDate: String
     public let continuousRecordEndDate: String
-    public let continuousRecordCount: Int
+    public let continuousRecordCount: Double
     
     public init(
       nickname: String,
       imageUrl: String?,
       continuousRecordStartDate: String,
       continuousRecordEndDate: String,
-      continuousRecordCount: Int
+      continuousRecordCount: Double
     ) {
       self.nickname = nickname
       self.imageUrl = imageUrl
@@ -223,9 +223,9 @@ extension MyStats {
   public struct MaxPomodoroRecordDTO: Sendable, Codable {
     public let groupName: String
     public let recordDate: String
-    public let maxPomodoroCount: Int
+    public let maxPomodoroCount: Double
     
-    public init(groupName: String, recordDate: String, maxPomodoroCount: Int) {
+    public init(groupName: String, recordDate: String, maxPomodoroCount: Double) {
       self.groupName = groupName
       self.recordDate = recordDate
       self.maxPomodoroCount = maxPomodoroCount
@@ -235,9 +235,9 @@ extension MyStats {
   public struct MaxContinuousDaysDTO: Sendable, Codable {
     public let startDate: String
     public let endDate: String
-    public let maxCount: Int
+    public let maxCount: Double
     
-    public init(startDate: String, endDate: String, maxCount: Int) {
+    public init(startDate: String, endDate: String, maxCount: Double) {
       self.startDate = startDate
       self.endDate = endDate
       self.maxCount = maxCount

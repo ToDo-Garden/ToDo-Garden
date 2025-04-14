@@ -51,6 +51,20 @@ public final class ManageGroupTableViewDelegate: NSObject {
   func saveDisplayGroupsBeforeEditing() {
     self.displayedGroupsBeforeEditing = self.displayedGroups
   }
+  
+  func showFooterView() {
+    guard let button = self.footerView.subviews[0] as? UIButton else { return }
+    
+    button.alpha = 1.0
+    button.isEnabled = true
+  }
+  
+  func hideFooterView() {
+    guard let button = self.footerView.subviews[0] as? UIButton else { return }
+    
+    button.alpha = 0.5
+    button.isEnabled = false
+  }
 }
 
 // MARK: - UITableViewDataSource

@@ -10,6 +10,7 @@ import UIKit
 import HTTPClientAPI
 import MyStatsSceneAPI
 import MyStatsSceneEntity
+import TDFoundationExtension
 import ToDoGardenUIComponent // PomodoroRecordCollection 이관 예정
 
 protocol MyStatsDataStore {
@@ -98,16 +99,16 @@ extension MyStatsInteractor {
     let dataSet = response.summaryViewData
     self.periodicState = PeriodicState(
       daily: (
-        focusTime: dataSet.dailyAverageFocusTime,
-        pomodoroCount: dataSet.dailyAveragePomodoroCount
+        focusTime: dataSet.dailyAverageFocusTime.roundedToInt(),
+        pomodoroCount: dataSet.dailyAveragePomodoroCount.roundedToInt()
       ),
       weekly: (
-        focusTime: dataSet.weeklyAverageFocusTime,
-        pomodoroCount: dataSet.weeklyAveragePomodoroCount
+        focusTime: dataSet.weeklyAverageFocusTime.roundedToInt(),
+        pomodoroCount: dataSet.weeklyAveragePomodoroCount.roundedToInt()
       ),
       monthly: (
-        focusTime: dataSet.monthlyAverageFocusTime,
-        pomodoroCount: dataSet.monthlyAveragePomodoroCount
+        focusTime: dataSet.monthlyAverageFocusTime.roundedToInt(),
+        pomodoroCount: dataSet.monthlyAveragePomodoroCount.roundedToInt()
       )
     )
   }

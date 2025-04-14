@@ -10,13 +10,17 @@ import UIKit
 import HTTPClientAPI
 import ManageGroupSceneAPI
 import ManageGroupSceneEntity
+import SharingGRDB
 import TDFoundation
 import TDUtility
 
 public class ManageGroupWorker: ManageGroupWorkable {
   private let httpClient: HTTPClientAPI
+  @Dependency(\.defaultDatabase) private var database
   
-  public init(httpClient: HTTPClientAPI) {
+  public init(
+    httpClient: HTTPClientAPI
+  ) {
     self.httpClient = httpClient
   }
   
@@ -24,7 +28,7 @@ public class ManageGroupWorker: ManageGroupWorkable {
     request: ManageGroupSceneEntity.ManageGroup.FetchGroupList.Request
   ) async throws -> [ManageGroup.ToDoGroup] {
     do {
-      let groups = try await self.fetchGroupsFromDatabase()
+      let groups = try await self.fetchGroupsFromServer()
       return groups
     } catch let error {
       throw error
@@ -35,7 +39,7 @@ public class ManageGroupWorker: ManageGroupWorkable {
     request: ManageGroupSceneEntity.ManageGroup.SaveGroupList.Request
   ) async throws -> [ManageGroup.ToDoGroup] {
     do {
-      let groups = try await self.saveGroupsInDatabase(groupList: request.list)
+      let groups = try await self.saveGroupsToServer(groupList: request.list)
       return groups
     } catch let error {
       throw error
@@ -47,7 +51,7 @@ public class ManageGroupWorker: ManageGroupWorkable {
       groupID: request.groupID,
       groupName: request.groupName,
       progressColor: request.groupColor,
-      progressRate: Float.zero
+      progressRate: 1.0
     )
     return group
   }
@@ -66,11 +70,11 @@ public class ManageGroupWorker: ManageGroupWorkable {
   }
   
   public func addGroupDirectly(request: ManageGroup.AddGroup.Request) async throws -> UUID {
-    let groupID = try await self.addGroupDirectlyInDatabase(request: request)
+    let groupID = try await self.addGroupDirectlyToServer(request: request)
     return groupID
   }
   
-  private func saveGroupsInDatabase(groupList: [ManageGroup.ToDoGroup]) async throws -> [ManageGroup.ToDoGroup] {
+  private func saveGroupsToServer(groupList: [ManageGroup.ToDoGroup]) async throws -> [ManageGroup.ToDoGroup] {
     let request = try self.makeSaveGroupHTTPResquest(groupList: groupList)
     try await self.httpClient.send(
       input: request,
@@ -84,7 +88,7 @@ public class ManageGroupWorker: ManageGroupWorkable {
     return groupList
   }
   // swiftlint: disable all
-  private func fetchGroupsFromDatabase() async throws -> [ManageGroup.ToDoGroup] {
+  private func fetchGroupsFromServer() async throws -> [ManageGroup.ToDoGroup] {
     let fetchedData = try await self.httpClient.send(
       input: ManageGroup.FetchGroupList.RequestDTO(),
       serializer: { data in
@@ -117,7 +121,7 @@ public class ManageGroupWorker: ManageGroupWorkable {
           groupID: groupID,
           groupName: item.name,
           progressColor: try UIColor().fromHex(item.color),
-          progressRate: Float(item.progressrate)
+          progressRate: 1.0
         )
       )
     }
@@ -125,7 +129,7 @@ public class ManageGroupWorker: ManageGroupWorkable {
     return groups
   }
   
-  private func addGroupDirectlyInDatabase(request: ManageGroup.AddGroup.Request) async throws -> UUID {
+  private func addGroupDirectlyToServer(request: ManageGroup.AddGroup.Request) async throws -> UUID {
     guard let groupID = try await self.httpClient.send(
       input: ManageGroup.AddGroup.RequestDTO(
         name: request.groupName,
@@ -179,6 +183,55 @@ public class ManageGroupWorker: ManageGroupWorkable {
       body: body
     )
     return request
+  }
+}
+
+extension ManageGroupWorker {
+  public func fetchGroupListFromGRDB() async throws -> [ManageGroup.ToDoGroup] {
+    let myGroups: [MyGroup] = try await database.read { db in
+      try MyGroup.fetchAll(db)
+    }
+    
+    return myGroups.compactMap { $0.toToDoGroup() }
+  }
+  
+  public func saveGroupListToGRDB(request: ManageGroup.SaveGroupList.Request) async throws -> [ManageGroup.ToDoGroup] {
+    let updatedGroups = request.list.map { $0.toMyGroup() }
+    
+    try await database.write { db in
+      let existingGroups = try MyGroup.fetchAll(db)
+      let updatedGroupIDs = Set(updatedGroups.map { $0.groupId })
+      
+      let groupsToDelete = existingGroups.filter { !updatedGroupIDs.contains($0.groupId) }
+      for group in groupsToDelete {
+        try group.delete(db)
+      }
+
+      for var updatedGroup in updatedGroups {
+        if let existingGroup = existingGroups.first(where: { $0.groupId == updatedGroup.groupId }) {
+          var updatedGroup = existingGroup
+          updatedGroup.name = updatedGroup.name
+          updatedGroup.color = updatedGroup.color
+          try updatedGroup.update(db)
+        } else {
+          try updatedGroup.insert(db)
+        }
+      }
+    }
+    
+    let pending = try self.makeSaveGroupHTTPResquest(groupList: request.list)
+    
+    try await self.savePendingEditGroup(pending)
+    
+    return request.list
+  }
+  
+  private func savePendingEditGroup(_ request: HTTPRequest) async throws {
+    try await database.write { db in
+      var pendingRequest = try PendingEditGroup(request: request)
+      try db.execute(sql: "DELETE FROM \(PendingEditGroup.databaseTableName)")
+      try pendingRequest.insert(db)
+    }
   }
 }
 // swiftlint: enable all

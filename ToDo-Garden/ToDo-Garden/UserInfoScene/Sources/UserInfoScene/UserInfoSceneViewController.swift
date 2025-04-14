@@ -68,6 +68,11 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
     self.interactor?.configureCollectionView()
     self.interactor?.fetchProfileImage()
   }
+  
+  override func viewIsAppearing(_ animated: Bool) {
+    super.viewIsAppearing(animated)
+    self.navigationController?.navigationBar.isHidden = false
+  }
 }
 
 // MARK: - Confirm display logic protocol

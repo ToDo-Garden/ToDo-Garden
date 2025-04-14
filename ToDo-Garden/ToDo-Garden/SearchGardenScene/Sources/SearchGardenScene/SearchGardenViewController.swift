@@ -64,6 +64,8 @@ final class SearchGardenViewController: UIViewController, SearchGardenViewContro
   override func viewDidLoad() {
     super.viewDidLoad()
     self.setupView()
+    self.setupKeyboardObservers()
+    self.presentationController?.delegate = self
   }
   
   func clear() {
@@ -112,7 +114,7 @@ extension SearchGardenViewController {
     self.searchGardenView.tableView.onEndReached = {
       self.interactor?.loadSearchedGardenContinue()
     }
-    self.searchGardenView.tableView.prefetchDataSource = self
+    // self.searchGardenView.tableView.prefetchDataSource = self
     self.searchGardenView.textField.delegate = self
     self.searchGardenView.textField.returnKeyType = .search
     self.view.addSubview(self.searchGardenView)
@@ -169,6 +171,8 @@ extension SearchGardenViewController {
   }
   
   private func doneButtonTapped() {
+    self.searchGardenView.tableView.onEndReached = nil
+    self.searchGardenView.clear()
     self.router?.dismissModal()
   }
   
@@ -234,7 +238,7 @@ extension SearchGardenViewController: SearchGardenDisplayLogic {
       guard let imageURL = user.userImageURL else { continue }
       Task {
         do {
-          let image = try await ImageClient.live.execute(id: imageURL, isDownsample: true)
+          let image = try await Cache.shared.execute(id: imageURL, isDownsample: true)
           let updatedUser = user
           
           updatedUser.userImage = image
@@ -308,22 +312,64 @@ extension SearchGardenViewController: UITextFieldDelegate {
 
 extension SearchGardenViewController: DefaultModalNavigationBarDelegate {
   func didTapRightButton() {
+    self.searchGardenView.tableView.onEndReached = nil
     self.clear()
     self.router?.dismissModal()
   }
 }
 
-extension SearchGardenViewController: UITableViewDataSourcePrefetching {
-  func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-    let shouldLoadNextPage = indexPaths.contains { indexPath in
-      guard let user = self.searchGardenView.tableView.userForCell(at: indexPath) else {
-        return false
+//  extension SearchGardenViewController: UITableViewDataSourcePrefetching {
+//    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+//      let shouldLoadNextPage = indexPaths.contains { indexPath in
+//        guard let user = self.searchGardenView.tableView.userForCell(at: indexPath) else {
+//          return false
+//        }
+//        return user.isDummyData
+//      }
+//
+//      if shouldLoadNextPage {
+//        self.interactor?.loadSearchedGardenContinue()
+//      }
+//    }
+//  }
+
+extension SearchGardenViewController {
+  private func setupKeyboardObservers() {
+    UITextFieldNotificationObserver.observeKeyboardEvents { [weak self] event in
+      guard let self = self else { return }
+
+      Task { @MainActor in
+        guard self.isTopViewController() else { return }
+
+        switch event {
+        case .willShow(let height, let duration):
+          self.showKeyboard(keyboardHeight: height, duration: duration)
+
+        case .willHide(let duration):
+          self.hideKeyboard(duration: duration)
+        }
       }
-      return user.isDummyData
     }
-    
-    if shouldLoadNextPage {
-      self.interactor?.loadSearchedGardenContinue()
+  }
+  
+  private func showKeyboard(keyboardHeight: CGFloat, duration: TimeInterval) {
+    UIView.animate(withDuration: duration) {
+      self.searchGardenView.tableView.contentInset.bottom = keyboardHeight
+      self.searchGardenView.tableView.verticalScrollIndicatorInsets.bottom = keyboardHeight
     }
+  }
+  
+  private func hideKeyboard(duration: TimeInterval) {
+    UIView.animate(withDuration: duration) {
+      self.searchGardenView.tableView.contentInset.bottom = 0
+      self.searchGardenView.tableView.verticalScrollIndicatorInsets.bottom = 0
+    }
+  }
+}
+
+extension SearchGardenViewController: UIAdaptivePresentationControllerDelegate {
+  func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+    self.searchGardenView.tableView.onEndReached = nil
+    self.clear()
   }
 }

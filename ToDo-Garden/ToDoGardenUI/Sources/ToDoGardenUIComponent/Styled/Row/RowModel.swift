@@ -6,11 +6,17 @@ import ToDoGardenUIResource
 
 extension Styled.Row {
   public enum Configuration {
-    var profileModel: ProfileModel? {
-      if case let Self.profile(model) = self {
-        return model
+    public var profileModel: ProfileModel? {
+      get {
+        if case let Self.profile(model) = self {
+          return model
+        }
+        return nil
       }
-      return nil
+      set {
+        guard let newValue else { return }
+        self = .profile(newValue)
+      }
     }
     
     var listPrimaryModel: ListPrimaryModel? {
