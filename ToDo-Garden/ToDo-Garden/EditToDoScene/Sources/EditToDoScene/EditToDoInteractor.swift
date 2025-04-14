@@ -106,7 +106,7 @@ extension EditToDoInteractor {
     let startDay = toDo.isOnlyToday ? nil : toDo.startDay
     let endDay = toDo.isOnlyToday ? nil : toDo.endDay
     self.toDo = TodoBatchItem(
-      localId: toDo.groupId, name: toDo.name, isDone: toDo.isDone, createdAt: toDo.createdAt,
+      localId: toDo.localId, name: name, isDone: toDo.isDone, createdAt: toDo.createdAt,
       isAlarmOn: toDo.isAlarmOn, alarmTime: toDo.alarmTime, isOnlyToday: toDo.isOnlyToday,
       startDay: startDay, endDay: endDay, groupId: groupId, isDelete: false
     )

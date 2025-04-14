@@ -278,16 +278,25 @@ extension HomeSceneViewController: EditToDoSceneDelegate {
   public func didEdit(toDo: TodoBatchItem) {
     Task {
       defer { self.editingContext = nil }
-      guard let context = self.editingContext, let date = self.calendarView.getSelectedDate()
+
+      guard
+        let context = self.editingContext,
+        let date = self.calendarView.getSelectedDate(),
+        let snapshot = self.todoListView?.getSnapShot(),
+        let section = snapshot.indexOfSection(context.group)
       else { return }
 
-      guard let snapshot = self.todoListView?.getSnapShot(),
-        let section = snapshot.indexOfSection(context.group),
-        let item = snapshot.indexOfItem(context.todo)
-      else { return }
+      let items = snapshot.itemIdentifiers(inSection: context.group)
+      guard let itemIndex = items.firstIndex(where: { $0.id == context.todo.id }) else { return }
 
-      let indexPath = IndexPath(item: item, section: section)
-      await self.interactor?.updateToDo(group: context.group, batchItem: toDo, indexPath: indexPath, date: date)
+      let indexPath = IndexPath(item: itemIndex, section: section)
+
+      await self.interactor?.updateToDo(
+        group: context.group,
+        batchItem: toDo,
+        indexPath: indexPath,
+        date: date
+      )
     }
   }
 

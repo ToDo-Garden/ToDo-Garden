@@ -40,16 +40,23 @@ final class EditToDoPresenter {
 
 extension EditToDoPresenter: EditToDoPresentationLogic {
   func presentFetchedToDo(toDo: TodoBatchItem, groups: [TodoListGroup]) {
-    let todo = toDo
-    let alarmTime = self.makeAlarmTime(of: todo.alarmTime)
-    let alarmTimeString = String(format: "%02d:%02d", todo.alarmTime, alarmTime.minute)
-    todo.startDay = self.dateFormatter.string(
-      from: todo.startDay?.toDateISO8601Format() ?? Date()
+    let displayedTodo = toDo
+    let alarmTime = self.makeAlarmTime(of: toDo.alarmTime)
+    let alarmTimeString = String(format: "%02d:%02d", toDo.alarmTime, alarmTime.minute)
+    let formatter = ISO8601DateFormatter()
+
+    if let startDate = formatter.date(from: displayedTodo.startDay ?? ""),
+      let endDate = formatter.date(from: displayedTodo.endDay ?? "") {
+      let startDayString = self.dateFormatter.string(from: startDate)
+      displayedTodo.startDay = startDayString
+      let endDayString = self.dateFormatter.string(from: endDate)
+      displayedTodo.endDay = endDayString
+    }
+    let viewModel = EditToDo.FetchToDo.ViewModel(
+      toDo: displayedTodo,
+      alarmTime: alarmTimeString,
+      groups: groups
     )
-    todo.endDay = self.dateFormatter.string(
-      from: todo.endDay?.toDateISO8601Format() ?? Date()
-    )
-    let viewModel = EditToDo.FetchToDo.ViewModel(toDo: todo, alarmTime: alarmTimeString, groups: groups)
     self.viewController?.displayFetchedToDo(viewModel: viewModel)
   }
 

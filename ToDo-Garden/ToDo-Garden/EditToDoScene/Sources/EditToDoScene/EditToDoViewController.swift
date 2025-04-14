@@ -190,11 +190,10 @@ extension EditToDoViewController: EditToDoDisplayLogic {
       self.editToDoScheduleView.updateToRepeatOnlyToday()
     } else {
       if let startDay = toDo.startDay, let endDay = toDo.endDay {
+        self.editToDoScheduleView.updateToRepeatOtherDays()
         self.editToDoScheduleView.updateToRepeatInRange(startDay: startDay, endDay: endDay)
+        self.repetitionSettingModal.updateRange(start: startDay, end: endDay)
       }
-    }
-    if let start = toDo.startDay, let end = toDo.endDay {
-      self.repetitionSettingModal.updateRange(start: start, end: end)
     }
   }
 
