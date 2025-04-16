@@ -57,11 +57,6 @@ final public class ShareGardenSceneViewController: UIViewController, ShareGarden
     super.viewIsAppearing(animated)
     self.setupViewAppearance()
   }
- 
-  public override func viewDidDisappear(_ animated: Bool) {
-    super.viewDidDisappear(animated)
-    self.cleanUpViewResources()
-  }
 }
 
 // MARK: - Conform to display logic protocol
