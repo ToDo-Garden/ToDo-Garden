@@ -53,7 +53,10 @@ final public class SearchGardenTableView: UITableView {
   }
   
   public func updateData(of user: [SearchGardenUser]) {
-    self.snapshot.reconfigureItems(user)
+    let currentItems = Set(snapshot.itemIdentifiers)
+    let validUsers = user.filter { currentItems.contains($0) }
+    
+    self.snapshot.reconfigureItems(validUsers)
     self.diffableDataSource.apply(self.snapshot, animatingDifferences: false)
   }
   
