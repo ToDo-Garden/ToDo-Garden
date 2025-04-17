@@ -17,7 +17,6 @@ import UserInfoSceneEntity
 public struct UserInfoSceneSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
   public struct Dependency {
-    let photoPicker: PHPickerViewController
     let appServiceWorker: AppServiceWorkable
     let userPhotoWorker: UserPhotoWorker
     let userInfoWorker: UserInfoSceneWorkable
@@ -25,14 +24,12 @@ public struct UserInfoSceneSceneBuilder {
     let editUserNameSceneBuilder: EditUserNameSceneSceneBuildable?
 
     public init(
-      photoPicker: PHPickerViewController,
       appServiceWorker: AppServiceWorkable,
       userPhotoWorker: UserPhotoWorker,
       userInfoWorker: UserInfoSceneWorkable,
       editUserIntroductionSceneBuilder: EditUserIntroductionSceneBuildable?,
       editUserNameSceneBuilder: EditUserNameSceneSceneBuildable?
     ) {
-      self.photoPicker = photoPicker
       self.appServiceWorker = appServiceWorker
       self.userPhotoWorker = userPhotoWorker
       self.userInfoWorker = userInfoWorker
@@ -51,7 +48,6 @@ public struct UserInfoSceneSceneBuilder {
 extension UserInfoSceneSceneBuilder {
   public static func live(signout: @escaping () -> Void) -> Self {
     Self(dependency: Dependency(
-      photoPicker: PHPickerViewController(configuration: PHPickerConfiguration()),
       appServiceWorker: AppServiceWorker(),
       userPhotoWorker: UserPhotoWorker(),
       userInfoWorker: UserInfoSceneWorker(httpClient: HTTPClient.live, signout: signout),
@@ -66,10 +62,8 @@ extension UserInfoSceneSceneBuilder: UserInfoSceneSceneBuildable {
   /// - Parameter payload: 런타임에 전달받아야 하는 의존성입니다.
   /// - Returns: 런타임 의존성, VIP Cycle이 설정된 ViewController를 반환합니다.
   public func build() -> UserInfoSceneViewControllable {
-    self.dependency.photoPicker.delegate = self.dependency.userPhotoWorker
-    let userInfoSceneViewController = UserInfoSceneViewController(
-      photoPicker: self.dependency.photoPicker
-    )
+    let userInfoSceneViewController = UserInfoSceneViewController()
+    userInfoSceneViewController.photoPickerDelegate = self.dependency.userPhotoWorker
     let configuredVIPCycleViewController = self.configureVIPCycle(for: userInfoSceneViewController)
     return configuredVIPCycleViewController
   }
