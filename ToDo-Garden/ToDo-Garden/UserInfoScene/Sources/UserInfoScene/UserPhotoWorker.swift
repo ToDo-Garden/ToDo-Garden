@@ -14,12 +14,14 @@ public final class UserPhotoWorker: PHPickerViewControllerDelegate {
 
   public func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
     picker.dismiss(animated: true)
-
+    
     if let itemProvider = results.first?.itemProvider, itemProvider.canLoadObject(ofClass: UIImage.self) {
       itemProvider.loadObject(ofClass: UIImage.self) { (loadedObject, error) in
         let newProfileImage = loadedObject as? UIImage
         self.selectedImagesHandler?(newProfileImage, error)
       }
+    } else {
+      self.selectedImagesHandler?(nil, nil)
     }
   }
 
@@ -32,14 +34,15 @@ public final class UserPhotoWorker: PHPickerViewControllerDelegate {
     }
   }
 
-  func requestPhoto() async throws -> UIImage {
+  func requestPhoto() async throws -> UIImage? {
     try await withCheckedThrowingContinuation { [weak self] continuation in
       self?.selectedImagesHandler = { image, error in
         if let image {
           continuation.resume(returning: image)
-        } else {
-          let error = error ?? UserPhotoworkerError.unknownError
+        } else if let error {
           continuation.resume(throwing: error)
+        } else {
+          continuation.resume(returning: nil)
         }
       }
     }

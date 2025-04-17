@@ -35,7 +35,8 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
   private let userInfoCollectionView: UICollectionView
   private var userInfoCollectionViewDataSource: DiffableDataSource?
   private let manageAccountView: ManageAccountView
-  private let photoPicker: PHPickerViewController
+  private var photoPicker: PHPickerViewController?
+  weak var photoPickerDelegate: PHPickerViewControllerDelegate?
 
   // MARK: - VIP Properties
   
@@ -44,14 +45,13 @@ final class UserInfoSceneViewController: UIViewController, UserInfoSceneViewCont
   
   // MARK: - Object lifecycle
   
-  init(photoPicker: PHPickerViewController) {
+  init() {
     self.profileInfoView = ProfileInfoView()
     self.userInfoCollectionView = UICollectionView(
       frame: CGRect.zero,
       collectionViewLayout: UICollectionViewLayout()
     )
     self.manageAccountView = ManageAccountView()
-    self.photoPicker = photoPicker
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -103,7 +103,14 @@ extension UserInfoSceneViewController: UserInfoSceneDisplayLogic {
 
   func displayUserPhotoAccess(viewModel: UserInfoScene.FetchUserPhotoAccess.ViewModel) {
     if viewModel.isPhotoAccessible {
-      self.present(self.photoPicker, animated: true)
+      var configuration = PHPickerConfiguration()
+      configuration.filter = .images
+      self.photoPicker = PHPickerViewController(configuration: configuration)
+      self.photoPicker?.delegate = self.photoPickerDelegate
+      
+      guard let photoPicker else { return }
+      
+      self.present(photoPicker, animated: true)
       self.interactor?.changeUserProfileImage()
     } else {
       self.showMovingToSettingAppAlert()
