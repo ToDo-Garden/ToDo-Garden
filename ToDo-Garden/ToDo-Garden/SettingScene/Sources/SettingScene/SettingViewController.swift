@@ -221,10 +221,7 @@ extension SettingViewController {
       target: self,
       action: #selector(didSelectUserInfoSceneButton)
     )
-    if let rightButton = self.profileRow.subviews.first?.subviews[4] as? UIImageView {
-      rightButton.isUserInteractionEnabled = true
-      rightButton.addGestureRecognizer(self.tapGestureRecognizer)
-    }
+    self.profileRow.addGestureRecognizer(self.tapGestureRecognizer)
   }
 
   @objc func didSelectUserInfoSceneButton() {
