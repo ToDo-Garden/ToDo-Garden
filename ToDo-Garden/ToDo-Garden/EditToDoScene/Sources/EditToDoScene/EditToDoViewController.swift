@@ -18,6 +18,7 @@ import ToDoGardenUIConstant
 
 protocol EditToDoDisplayLogic: AnyObject {
   func displayFetchedToDo(viewModel: EditToDo.FetchToDo.ViewModel)
+  func displayEditedToDo()
   func displayFetchedGroupList(_ groupList: [EditToDo.DisplayedGroup])
   func displayDismiss()
   func showErrorAlert(_ type: EditToDo.ErrorType)
@@ -103,7 +104,6 @@ extension EditToDoViewController: EditToDoScheduleViewDelegate {
     if let name = self.editToDoView.getEditingText(),
     let group = self.editToDoView.getCurrentGroup() {
       self.interactor?.editToDo(name: name, groupId: group.groupId)
-      self.router?.routeToHomeScene()
     }
   }
 
@@ -143,6 +143,10 @@ extension EditToDoViewController: EditToDoDisplayLogic {
   func displayFetchedToDo(viewModel: EditToDo.FetchToDo.ViewModel) {
     self.updateEditToDoView(toDo: viewModel.toDo, groups: viewModel.groups)
     self.updateEditToDoScheduleView(toDo: viewModel.toDo, alarmTime: viewModel.alarmTime)
+  }
+
+  func displayEditedToDo() {
+    self.router?.routeToHomeSceneWithToDo()
   }
 
   private func updateEditToDoView(toDo: TodoBatchItem, groups: [TodoListGroup]) {
@@ -186,11 +190,10 @@ extension EditToDoViewController: EditToDoDisplayLogic {
       self.editToDoScheduleView.updateToRepeatOnlyToday()
     } else {
       if let startDay = toDo.startDay, let endDay = toDo.endDay {
+        self.editToDoScheduleView.updateToRepeatOtherDays()
         self.editToDoScheduleView.updateToRepeatInRange(startDay: startDay, endDay: endDay)
+        self.repetitionSettingModal.updateRange(start: startDay, end: endDay)
       }
-    }
-    if let start = toDo.startDay, let end = toDo.endDay {
-      self.repetitionSettingModal.updateRange(start: start, end: end)
     }
   }
 
@@ -249,7 +252,7 @@ extension EditToDoViewController: ToDoGardenAlertControllerDelegate {
     case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.goHome:
       self.router?.routeToHomeScene()
     case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.delete:
-      self.interactor?.deleteToDo()
+      self.router?.routeToHomeSceneWithDeletedToDo()
     default:
       break
     }

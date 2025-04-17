@@ -8,14 +8,14 @@
 // swiftlint:disable all
 public final class TodoListItem: Codable, @unchecked Sendable {
   public var name: String
-  public let endDay: String?
+  public var endDay: String?
   public var isDone: Bool
-  public let localID: String
-  public let startDay: String?
-  public let alarmTime: Int?
-  public let isAlarmOn: Bool
-  public let isOnlyToday: Bool
-  public let repeatToDoId: String?
+  public var localID: String
+  public var startDay: String?
+  public var alarmTime: Int?
+  public var isAlarmOn: Bool
+  public var isOnlyToday: Bool
+  public var repeatToDoId: String?
 
   enum CodingKeys: String, CodingKey {
     case name, endDay, isDone, startDay, alarmTime, isAlarmOn, isOnlyToday, repeatToDoId

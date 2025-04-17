@@ -41,7 +41,9 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
   
   var interactor: (any HomeSceneBusinessLogic)?
   var router: (any (HomeSceneRoutingLogic & HomeSceneDataPassing))?
-  
+
+  var editingContext: EditingContext?
+
   // MARK: - Properties
   
   // MARK: - Object lifecycle
@@ -270,12 +272,44 @@ extension HomeSceneViewController: HomeSceneDisplayLogic {
 
 // MARK: - Route From EditToDoScene
 extension HomeSceneViewController: EditToDoSceneDelegate {
-  public func didEdit(toDo: TodoBatchItem) {
+  struct EditingContext {
+    let group: ToDoListView.ToDoSection
+    let todo: ToDoListView.ToDoItem
+  }
 
+  public func didEdit(toDo: TodoBatchItem) {
+    Task {
+      defer { self.editingContext = nil }
+
+      guard
+        let context = self.editingContext,
+        let date = self.calendarView.getSelectedDate(),
+        let snapshot = self.todoListView?.getSnapShot(),
+        let section = snapshot.indexOfSection(context.group)
+      else { return }
+
+      let items = snapshot.itemIdentifiers(inSection: context.group)
+      guard let itemIndex = items.firstIndex(where: { $0.id == context.todo.id }) else { return }
+
+      let indexPath = IndexPath(item: itemIndex, section: section)
+
+      await self.interactor?.updateToDo(
+        group: context.group,
+        batchItem: toDo,
+        indexPath: indexPath,
+        date: date
+      )
+    }
   }
 
   public func didRemove(toDo: TodoBatchItem) {
-    
+    Task {
+      defer { self.editingContext = nil }
+      guard let context = self.editingContext, let date = self.calendarView.getSelectedDate()
+      else { return }
+
+      await self.interactor?.deleteToDo(group: context.group, todo: context.todo, date: date)
+    }
   }
 }
 
@@ -348,6 +382,7 @@ extension HomeSceneViewController: ToDoListButtonActionDelegate {
         groupId: group.id
       )
 
+      self.editingContext = EditingContext(group: group, todo: todo)
       self.interactor?.prepareDataForEditTodoScene(request: request)
     }
   }
@@ -358,7 +393,8 @@ extension HomeSceneViewController: ToDoListButtonActionDelegate {
   ) {
     Task {
       guard let selectedDate = self.calendarView.getSelectedDate() else { return }
-      
+
+      self.editingContext = EditingContext(group: group, todo: todo)
       await self.interactor?.deleteToDo(group: group, todo: todo, date: selectedDate)
     }
   }
