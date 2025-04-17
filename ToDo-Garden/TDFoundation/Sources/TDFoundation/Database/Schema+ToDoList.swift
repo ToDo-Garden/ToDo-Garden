@@ -82,8 +82,9 @@ public final class TodoBatchItem: Codable, @unchecked Sendable {
   public var endDay: String?
   public let groupId: String
   public var isDelete: Bool
+  public let repeatToDoId: String?
   
-  public init(localId: String, name: String, isDone: Bool, createdAt: String, isAlarmOn: Bool, alarmTime: Double, isOnlyToday: Bool, startDay: String?, endDay: String?, groupId: String, isDelete: Bool) {
+  public init(localId: String, name: String, isDone: Bool, createdAt: String, isAlarmOn: Bool, alarmTime: Double, isOnlyToday: Bool, startDay: String?, endDay: String?, groupId: String, isDelete: Bool, repeatToDoId: String? = nil) {
     self.localId = localId
     self.name = name
     self.isDone = isDone
@@ -95,6 +96,7 @@ public final class TodoBatchItem: Codable, @unchecked Sendable {
     self.endDay = endDay
     self.groupId = groupId
     self.isDelete = isDelete
+    self.repeatToDoId = repeatToDoId
   }
 
   public func setDelete(_ isDelete: Bool) {

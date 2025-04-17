@@ -120,6 +120,7 @@ extension DatabaseWriter {
         t.column("groupId", .text)
           .notNull()
           .references(MyGroup.databaseTableName, onDelete: .cascade)
+        t.column("repeatToDoId", .text)
       }
     }
   }
