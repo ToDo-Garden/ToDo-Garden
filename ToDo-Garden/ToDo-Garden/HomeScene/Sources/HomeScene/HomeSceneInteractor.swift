@@ -45,13 +45,7 @@ final class HomeSceneInteractor: HomeSceneDataStore {
   private var homeSceneWorker: HomeSceneWorkable
   private var monthlyData: [String: [SharedEntity.TodoListGroup]]
   // ⬆️ 서버에서 받아오는 1달짜리 데이터입니다. ex) key = "20250302"
-  private var itemsForBatch: [String: TodoBatchItem] {
-    didSet {
-      itemsForBatch.values.forEach {
-        print($0.localId)
-      }
-    }
-  }
+  private var itemsForBatch: [String: TodoBatchItem] 
   // ⬆️ JSONStorage가 매번 fileWrite를 하기엔 부담스러워서 모아놨다가 적절한 순간에 fileWrite를 진행하기 위한 데이터입니다.
   // 즉, 서버에게 배치처리를 요청하기 위한 배치처리 과정이라고 볼 수 있습니다.
   // ex) key = ToDo의 UUIDString
