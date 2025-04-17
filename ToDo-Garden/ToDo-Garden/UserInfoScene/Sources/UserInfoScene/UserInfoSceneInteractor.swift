@@ -73,14 +73,15 @@ extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
   func changeUserProfileImage() {
     self.requestUserPhotoTask = Task {
       do {
-        let profileImageToChange = try await self.userPhotoWorker.requestPhoto()
-        if let imageData = profileImageToChange.jpegData(compressionQuality: 0.7) {
-          try await self.userInfoWorker.requestChangeProfileImage(with: imageData)
-          let response = UserInfoScene.ChangeProfileImage.Response(
-            changeResult: Result.success(profileImageToChange)
-          )
-
-          self.presenter?.presentChangedProfileImage(response: response)
+        if let profileImageToChange = try await self.userPhotoWorker.requestPhoto() {
+          if let imageData = profileImageToChange.jpegData(compressionQuality: 0.7) {
+            try await self.userInfoWorker.requestChangeProfileImage(with: imageData)
+            let response = UserInfoScene.ChangeProfileImage.Response(
+              changeResult: Result.success(profileImageToChange)
+            )
+            
+            self.presenter?.presentChangedProfileImage(response: response)
+          }
         }
       } catch let error {
         let response = UserInfoScene.ChangeProfileImage.Response(
