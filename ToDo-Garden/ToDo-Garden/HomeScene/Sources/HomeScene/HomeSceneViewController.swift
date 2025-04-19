@@ -187,6 +187,7 @@ extension HomeSceneViewController {
     self.loadingIndicator.startAnimation()
     Task {
       await interactor.syncronizeServerEditGroups()
+      await interactor.writeBatchItemsToGRDB()
       await interactor.requestBatchUpdateToServer()
       await interactor.fetchToDoList(request: HomeScene.FetchToDoList.Request(dateString: targetMonth))
     }
@@ -280,25 +281,29 @@ extension HomeSceneViewController: EditToDoSceneDelegate {
   public func didEdit(toDo: TodoBatchItem) {
     Task {
       defer { self.editingContext = nil }
-
+      self.loadingIndicator.isHidden = false
+      self.loadingIndicator.startAnimation()
+      
       guard
         let context = self.editingContext,
         let date = self.calendarView.getSelectedDate(),
         let snapshot = self.todoListView?.getSnapShot(),
-        let section = snapshot.indexOfSection(context.group)
+        let sectionIndex = snapshot.indexOfSection(context.group)
       else { return }
-
+      
       let items = snapshot.itemIdentifiers(inSection: context.group)
       guard let itemIndex = items.firstIndex(where: { $0.id == context.todo.id }) else { return }
 
-      let indexPath = IndexPath(item: itemIndex, section: section)
-
+      let indexPath = IndexPath(item: itemIndex, section: sectionIndex)
+      
       await self.interactor?.updateToDo(
         group: context.group,
         batchItem: toDo,
         indexPath: indexPath,
         date: date
       )
+      
+      self.fetchToDoList()
     }
   }
 
