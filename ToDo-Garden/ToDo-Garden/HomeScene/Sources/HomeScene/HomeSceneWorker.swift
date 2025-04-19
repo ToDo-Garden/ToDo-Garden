@@ -134,7 +134,6 @@ extension HomeSceneWorker {
     return (myGroups, myToDos)
   }
   
-  // 일단 커밋 정리해. 범위 조절은 완벽하다.
   public func writeBatchItemsToGRDB(data: [TodoBatchItem]) async throws {
     try await self.database.write { db in
       for var item in data {
