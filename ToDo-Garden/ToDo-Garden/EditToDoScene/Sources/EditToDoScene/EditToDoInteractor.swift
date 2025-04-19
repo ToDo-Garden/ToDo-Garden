@@ -20,6 +20,7 @@ protocol EditToDoDataStore {
 
 @MainActor
 protocol EditToDoBusinessLogic {
+  var needsAlert: Bool { get }
   func changeRepetition(isOnlyToday: Bool)
   func changeReptitionRange(start: Date, end: Date)
   func changeAlarmActivation()
@@ -34,7 +35,7 @@ protocol EditToDoBusinessLogic {
 final class EditToDoInteractor: EditToDoDataStore {
   var toDo: TodoBatchItem?
   var groups: [SharedEntity.TodoListGroup]?
-
+  var needsAlert: Bool = false
   // MARK: VIP Objects
   var presenter: EditToDoPresentationLogic?
 
@@ -74,6 +75,9 @@ extension EditToDoInteractor: EditToDoBusinessLogic {
   }
 
   func changeRepetition(isOnlyToday: Bool) {
+    let previousValue = self.toDo?.isOnlyToday
+    self.needsAlert = (previousValue == false && isOnlyToday == true)
+    
     self.toDo?.isOnlyToday = isOnlyToday
     if isOnlyToday {
       self.presenter?.presentRepeatOnlyToday()
