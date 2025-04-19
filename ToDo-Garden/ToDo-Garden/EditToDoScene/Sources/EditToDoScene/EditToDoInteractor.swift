@@ -28,7 +28,6 @@ protocol EditToDoBusinessLogic {
 
   func prepareSceneData()
   func editToDo(name: String, groupId: String)
-  func deleteToDo()
 }
 
 @MainActor
@@ -111,10 +110,6 @@ extension EditToDoInteractor {
       startDay: startDay, endDay: endDay, groupId: groupId, isDelete: false
     )
     self.presenter?.presentEditedToDo()
-  }
-
-  // TODO: 서버에 투두의 삭제를 요청하는 메서드입니다.
-  func deleteToDo() {
   }
 }
 // swiftlint:enable multiline_arguments
