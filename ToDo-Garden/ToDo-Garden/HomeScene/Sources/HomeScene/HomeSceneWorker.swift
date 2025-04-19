@@ -66,9 +66,7 @@ public struct HomeSceneWorker: HomeSceneWorkable, Sendable {
       }
     )
 
-    _ = try await database.write { db in
-      try TodoBatchItem.deleteAll(db)
-    }
+    try await self.clearToDoBatchItemTable()
   }
   
   public func loadMonthlyToDoListFromGRDB(dateString: String) async throws -> [DailyToDoListData] {
@@ -76,9 +74,32 @@ public struct HomeSceneWorker: HomeSceneWorkable, Sendable {
     
     return localMonthlyData
   }
+  
+  public func getRepeatToDos(repeatToDoId: String) async throws -> [MyToDo] {
+    let todos: [MyToDo] = try await database.read { db in
+      try MyToDo
+        .filter(Column("repeatToDoId") == repeatToDoId)
+        .fetchAll(db)
+    }
+    return todos
+  }
+  
+  public func clearRepeatToDos(repeatToDoId: String) async throws {
+    _ = try await database.write { db in
+      try MyToDo
+        .filter(Column("repeatToDoId") == repeatToDoId)
+        .deleteAll(db)
+    }
+  }
 }
 
 extension HomeSceneWorker {
+  private func clearToDoBatchItemTable() async throws {
+    _ = try await database.write { db in
+      try TodoBatchItem.deleteAll(db)
+    }
+  }
+  
   private func convertToMyGroupsAndMyToDos(from dailyData: DailyToDoListData) -> ([MyGroup], [MyToDo]) {
     var myGroups: [MyGroup] = []
     var myToDos: [MyToDo] = []
@@ -113,6 +134,7 @@ extension HomeSceneWorker {
     return (myGroups, myToDos)
   }
   
+  // 일단 커밋 정리해. 범위 조절은 완벽하다.
   public func writeBatchItemsToGRDB(data: [TodoBatchItem]) async throws {
     try await self.database.write { db in
       for var item in data {

@@ -18,4 +18,6 @@ public protocol HomeSceneWorkable: Sendable {
   func loadMonthlyToDoListFromGRDB(dateString: String) async throws -> [DailyToDoListData]
   func syncronizeGRDBWithBatchItems() async throws
   func syncronizeServerEditGroups() async throws
+  func getRepeatToDos(repeatToDoId: String) async throws -> [MyToDo]
+  func clearRepeatToDos(repeatToDoId: String) async throws
 }
