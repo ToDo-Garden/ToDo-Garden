@@ -278,7 +278,7 @@ extension HomeSceneViewController: EditToDoSceneDelegate {
     let todo: ToDoListView.ToDoItem
   }
 
-  public func didEdit(toDo: TodoBatchItem) {
+  public func didEdit(toDo: TodoBatchItem, isNeededDeletionBySelection: Bool) {
     Task {
       defer { self.editingContext = nil }
       self.loadingIndicator.isHidden = false
@@ -300,7 +300,8 @@ extension HomeSceneViewController: EditToDoSceneDelegate {
         group: context.group,
         batchItem: toDo,
         indexPath: indexPath,
-        date: date
+        date: date,
+        isNeededDeletionBySelection: isNeededDeletionBySelection
       )
       
       self.fetchToDoList()
