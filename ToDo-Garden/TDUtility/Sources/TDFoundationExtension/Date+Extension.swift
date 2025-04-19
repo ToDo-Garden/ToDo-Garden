@@ -8,6 +8,11 @@
 import Foundation
 
 public extension Date {
+  func toKSTDate() -> Date {
+    let secondsFromGMT = TimeZone(identifier: "Asia/Seoul")?.secondsFromGMT(for: self) ?? 0
+    return self.addingTimeInterval(TimeInterval(secondsFromGMT))
+  }
+  
   func toStringDefaultFormat() -> String {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "yyyy.MM.dd"
