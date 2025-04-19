@@ -236,18 +236,16 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
   ) async {
     let targetDate = date.description.toYYYYMMDDStringFromISO8601Space()
     guard let targetGroup = self.monthlyData[targetDate]?[indexPath.section],
-          let targetToDo = targetGroup.todoList?[indexPath.item]
-    else { return }
+      let targetToDo = targetGroup.todoList?[indexPath.item] else { return }
 
-    let formatter = ISO8601DateFormatter()
     switch self.getRepetitionStatus(toDo: targetToDo, batchItem: batchItem) {
     case .made:
       self.addRepeatToDos(
         batchItem: batchItem, targetToDo: targetToDo, group: group, indexPath: indexPath, date: date
       )
     case .changed:
-      self.updateRepeatToDos(
-        batchItem: batchItem, targetToDo: targetToDo, group: group, date: date
+      await self.updateRepeatToDos(
+        batchItem: batchItem, targetToDo: targetToDo, group: group, indexPath: indexPath, date: date
       )
     case .deleted:
       self.removeRepeatToDos(
@@ -264,7 +262,6 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
     targetToDo.isOnlyToday = batchItem.isOnlyToday
     targetToDo.startDay = batchItem.startDay
     targetToDo.endDay = batchItem.endDay
-    self.monthlyData[targetDate]?[indexPath.section].todoList?[indexPath.item] = targetToDo
     self.itemsForBatch[targetToDo.localID] = batchItem
   }
 
@@ -366,25 +363,20 @@ extension HomeSceneInteractor {
     guard
         let startDayString = batchItem.startDay,
         let endDayString = batchItem.endDay,
-        let startDate = ISO8601DateFormatter().date(from: startDayString),
-        let endDate = ISO8601DateFormatter().date(from: endDayString)
+        let startDate = formatter.date(from: startDayString)?.toKSTDate(),
+        let endDate = formatter.date(from: endDayString)?.toKSTDate(),
+        let targetGroup = self.groups?.first(where: { $0.localId == batchItem.groupId })
       else { return }
-
+    
     var currentDate = startDate
     while currentDate <= endDate {
-      if currentDate == date {
+      if currentDate == date.toKSTDate() {
         currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
         continue
       }
-      let newToDo = TodoListItem(
-        name: targetToDo.name, endDay: nil, isDone: targetToDo.isDone,
-        localID: batchItem.groupId, startDay: nil, alarmTime: targetToDo.alarmTime,
-        isAlarmOn: targetToDo.isAlarmOn, isOnlyToday: true,
-        repeatToDoId: targetToDo.localID
-      )
-      let currentGroup = self.monthlyData[currentDate.toStringYYYYMMDD()]?[indexPath.section]
-      currentGroup?.todoList?.append(newToDo)
-      let newBatchItem = self.makeItemForCreateToDo(group: group, date: currentDate)
+      
+      let newToDoID = UUID()
+      let newBatchItem = self.makeItemForCreateToDo(group: group, newGroupId: targetGroup.localId, newToDoID: newToDoID, date: currentDate, isOnlyToday: false, repeatToDoId: targetToDo.localID)
       newBatchItem.setName(batchItem.name)
       self.addBatchItem(newToDo: newBatchItem)
       currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
@@ -395,38 +387,48 @@ extension HomeSceneInteractor {
     batchItem: TodoBatchItem,
     targetToDo: TodoListItem,
     group: ToDoListView.ToDoSection,
+    indexPath: IndexPath,
     date: Date
-  ) {
-    let formatter = ISO8601DateFormatter()
-    guard
+  ) async {
+    do {
+      let formatter = ISO8601DateFormatter()
+      guard
         let startDayString = batchItem.startDay,
         let endDayString = batchItem.endDay,
-        let startDate = ISO8601DateFormatter().date(from: startDayString),
-        let endDate = ISO8601DateFormatter().date(from: endDayString)
+        let startDate = formatter.date(from: startDayString),
+        let endDate = formatter.date(from: endDayString),
+        let targetGroup = self.groups?.first(where: { $0.localId == batchItem.groupId })
       else { return }
 
-    var currentDate = startDate
-    while currentDate <= endDate {
-      if currentDate == date {
-        currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
-        continue
+      var currentDate = startDate
+      let oldTodos = try await self.homeSceneWorker.getRepeatToDos(repeatToDoId: batchItem.localId)
+      for oldTodo in oldTodos {
+        if oldTodo.todoId.lowercased() == batchItem.localId.lowercased() {
+          continue
+        }
+        let batchItem = self.makeBatchItemFrom(myToDo: oldTodo, isDelete: true)
+        self.removeBatchItem(deletedToDo: batchItem)
       }
-
-      let existedToDo = self.makeItemForDeleteToDo(group: group, todo: targetToDo, date: currentDate)
-      self.addBatchItem(newToDo: existedToDo)
-      currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
-    }
-
-    currentDate = startDate
-    while currentDate <= endDate {
-      if currentDate == date {
+      await self.writeBatchItemsToGRDB()
+      
+      try await self.homeSceneWorker.clearRepeatToDos(repeatToDoId: batchItem.localId)
+      
+      while currentDate <= endDate {
+        if currentDate == date {
+          currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
+          continue
+        }
+        
+        let newToDoID = UUID()
+        let newToDo = self.makeItemForCreateToDo(group: group, newGroupId: targetGroup.localId, newToDoID: newToDoID, date: currentDate, isOnlyToday: false, repeatToDoId: targetToDo.localID)
+        
+        newToDo.setName(batchItem.name)
+        self.addBatchItem(newToDo: newToDo)
         currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
-        continue
       }
-
-      let newToDo = self.makeItemForCreateToDo(group: group, date: currentDate)
-      self.addBatchItem(newToDo: newToDo)
-      currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
+      
+    } catch let error {
+      self.handleErrors(error)
     }
   }
 
@@ -470,21 +472,31 @@ extension HomeSceneInteractor {
     }
   }
   
-  private func makeItemForCreateToDo(group: ToDoListView.ToDoSection, date: Date) -> TodoBatchItem {
-    let newToDoID = UUID()
-    let groupID = group.id.uuidString.lowercased()
+  private func makeBatchItemFrom(myToDo: MyToDo, isDelete: Bool = true) -> TodoBatchItem {
+    return TodoBatchItem(
+      localId: myToDo.todoId.lowercased(), name: myToDo.name, isDone: myToDo.isDone,
+      createdAt: myToDo.date, isAlarmOn: myToDo.isAlarmOn, alarmTime: Double.zero,
+      isOnlyToday: myToDo.isOnlyToday, startDay: myToDo.startDay,
+      endDay: myToDo.endDay, groupId: myToDo.groupId, isDelete: isDelete
+    )
+  }
+  
+  private func makeItemForCreateToDo(group: ToDoListView.ToDoSection, newGroupId: String? = nil, newToDoID: UUID = UUID(), date: Date, isOnlyToday: Bool = true, repeatToDoId: String? = nil) -> TodoBatchItem {
+
+    let groupID = (newGroupId != nil) ? newGroupId! : group.id.uuidString.lowercased()
     let newItem = TodoBatchItem(
       localId: newToDoID.uuidString.lowercased(),
       name: "New ToDo",
       isDone: false,
       createdAt: date.toISOString(),
       isAlarmOn: false,
-      alarmTime: 0, // 기본값 뭐임?
-      isOnlyToday: true,
+      alarmTime: 0,
+      isOnlyToday: isOnlyToday,
       startDay: nil,
       endDay: nil,
       groupId: groupID,
-      isDelete: false
+      isDelete: false,
+      repeatToDoId: repeatToDoId
     )
     return newItem
   }
@@ -504,7 +516,8 @@ extension HomeSceneInteractor {
       startDay: todo.startDay,
       endDay: todo.endDay,
       groupId: groupID,
-      isDelete: true
+      isDelete: true,
+      repeatToDoId: todo.localID
     )
     return deletedItem
   }
@@ -512,14 +525,14 @@ extension HomeSceneInteractor {
   private func makeToDoListItem(batchItem: TodoBatchItem) -> TodoListItem {
     let todoListItem = TodoListItem(
       name: batchItem.name,
-      endDay: nil,
-      isDone: false,
+      endDay: batchItem.endDay,
+      isDone: batchItem.isDone,
       localID: batchItem.localId.lowercased(),
-      startDay: nil,
-      alarmTime: nil,
-      isAlarmOn: false,
-      isOnlyToday: true,
-      repeatToDoId: nil // TODO: 이건 어떻게 특정하지?
+      startDay: batchItem.startDay,
+      alarmTime: Int(batchItem.alarmTime),
+      isAlarmOn: batchItem.isAlarmOn,
+      isOnlyToday: batchItem.isOnlyToday,
+      repeatToDoId: batchItem.repeatToDoId
     )
     return todoListItem
   }
