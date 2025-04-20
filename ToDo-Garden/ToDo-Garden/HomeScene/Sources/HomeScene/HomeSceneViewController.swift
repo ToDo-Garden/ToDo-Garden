@@ -74,10 +74,15 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
   
   open override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
+    let targetMonth = self.calendarView.getCurrentMonth().toYYYYMMDDStringFromYYYYMM()
     Task {
       await self.interactor?.syncronizeServerEditGroups()
       await self.interactor?.writeBatchItemsToGRDB()
       await self.interactor?.requestBatchUpdateToServer()
+      await self.interactor?.fetchToDoList(
+        request: HomeScene.FetchToDoList.Request(dateString: targetMonth),
+        isForRouting: true
+      )
     }
   }
   
@@ -189,7 +194,10 @@ extension HomeSceneViewController {
       await interactor.syncronizeServerEditGroups()
       await interactor.writeBatchItemsToGRDB()
       await interactor.requestBatchUpdateToServer()
-      await interactor.fetchToDoList(request: HomeScene.FetchToDoList.Request(dateString: targetMonth))
+      await interactor.fetchToDoList(
+        request: HomeScene.FetchToDoList.Request(dateString: targetMonth),
+        isForRouting: false
+      )
     }
   }
 }

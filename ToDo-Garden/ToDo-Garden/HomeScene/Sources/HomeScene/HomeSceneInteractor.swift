@@ -23,7 +23,7 @@ protocol HomeSceneDataStore {
 
 @MainActor
 protocol HomeSceneBusinessLogic {
-  func fetchToDoList(request: HomeScene.FetchToDoList.Request) async
+  func fetchToDoList(request: HomeScene.FetchToDoList.Request, isForRouting: Bool) async
   func createToDo(group: ToDoListView.ToDoSection, date: Date) async
   func deleteToDo(group: ToDoListView.ToDoSection, todo: ToDoListView.ToDoItem, date: Date) async
   func setMonthlyData(_ monthlyData: [String: [SharedEntity.TodoListGroup]]) async
@@ -93,20 +93,24 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
     )
   }
   
-  func fetchToDoList(request: HomeScene.FetchToDoList.Request) async {
+  func fetchToDoList(request: HomeScene.FetchToDoList.Request, isForRouting: Bool) async {
     await FallbackFlow.run(
       online: { [weak self] in
         guard let self = self else { return }
         
         let fetchedToDoList = try await self.homeSceneWorker.fetchToDoList(dateString: request.dateString)
-        self.presenter?.presentFetchedToDoList(monthlyData: fetchedToDoList)
+        if isForRouting == false {
+          self.presenter?.presentFetchedToDoList(monthlyData: fetchedToDoList)
+        }
       },
       offline: { [weak self] in
         guard let self = self else { return }
         
         let (newMonthlyData, response) = try await self.loadMonthlyToDoListFromGRDB(request: request)
         self.monthlyData = newMonthlyData
-        self.presenter?.presentFetchedToDoList(monthlyData: response)
+        if isForRouting == false {
+          self.presenter?.presentFetchedToDoList(monthlyData: response)
+        }
       },
       handleError: { [weak self] error in
         self?.handleErrors(error)
@@ -290,7 +294,6 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
     
     if isSelected == targetToDo.isDone { return }
     targetToDo.isDone = isSelected
-    print(targetToDo.localID)
     if let batchItem = self.itemsForBatch[targetToDo.localID] {
       batchItem.setDone(isSelected)
     } else {
@@ -299,7 +302,7 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
         localId: targetToDo.localID, name: targetToDo.name, isDone: isSelected,
         createdAt: date.toISOString(), isAlarmOn: targetToDo.isAlarmOn, alarmTime: alarmTime,
         isOnlyToday: targetToDo.isOnlyToday, startDay: targetToDo.startDay, endDay: targetToDo.endDay,
-        groupId: targetGroup.localId, isDelete: false
+        groupId: targetGroup.localId, isDelete: false, repeatToDoId: targetToDo.repeatToDoId
       )
     }
   }
