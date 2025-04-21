@@ -462,6 +462,8 @@ extension HomeSceneInteractor {
         }
         
         if isNeededDeletionBySelection == true && oldTodo.isDone == true {
+          let batchItem = self.makeBatchItemFrom(myToDo: oldTodo, isDelete: false)
+          self.addBatchItem(newToDo: batchItem)
           continue
         }
         
