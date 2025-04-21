@@ -12,9 +12,9 @@ import ToDoGardenUIConstant
 final public class ToDoGardenAlertView: UIView {
   private var configuration: Configuration
   
-  var buttonActionHandler: ((Constant.ToDoGardenAlertView.Content.ButtonActionType) -> Void)?
+  public var buttonActionHandler: ((Constant.ToDoGardenAlertView.Content.ButtonActionType) -> Void)?
   
-  init(configuration: Configuration) {
+  public init(configuration: Configuration) {
     self.configuration = configuration
     super.init(frame: CGRect.zero)
     self.build()

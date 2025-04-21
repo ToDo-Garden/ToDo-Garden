@@ -11,6 +11,6 @@ import TDFoundation
 
 @MainActor
 public protocol EditToDoSceneDelegate: AnyObject {
-  func didEdit(toDo: TodoBatchItem)
+  func didEdit(toDo: TodoBatchItem, isNeededDeletionBySelection: Bool)
   func didRemove(toDo: TodoBatchItem)
 }

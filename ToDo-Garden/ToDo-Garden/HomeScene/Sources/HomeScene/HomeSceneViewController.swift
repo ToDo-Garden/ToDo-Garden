@@ -74,10 +74,15 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
   
   open override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
+    let targetMonth = self.calendarView.getCurrentMonth().toYYYYMMDDStringFromYYYYMM()
     Task {
       await self.interactor?.syncronizeServerEditGroups()
       await self.interactor?.writeBatchItemsToGRDB()
       await self.interactor?.requestBatchUpdateToServer()
+      await self.interactor?.fetchToDoList(
+        request: HomeScene.FetchToDoList.Request(dateString: targetMonth),
+        isForRouting: true
+      )
     }
   }
   
@@ -187,8 +192,12 @@ extension HomeSceneViewController {
     self.loadingIndicator.startAnimation()
     Task {
       await interactor.syncronizeServerEditGroups()
+      await interactor.writeBatchItemsToGRDB()
       await interactor.requestBatchUpdateToServer()
-      await interactor.fetchToDoList(request: HomeScene.FetchToDoList.Request(dateString: targetMonth))
+      await interactor.fetchToDoList(
+        request: HomeScene.FetchToDoList.Request(dateString: targetMonth),
+        isForRouting: false
+      )
     }
   }
 }
@@ -277,28 +286,33 @@ extension HomeSceneViewController: EditToDoSceneDelegate {
     let todo: ToDoListView.ToDoItem
   }
 
-  public func didEdit(toDo: TodoBatchItem) {
+  public func didEdit(toDo: TodoBatchItem, isNeededDeletionBySelection: Bool) {
     Task {
       defer { self.editingContext = nil }
-
+      self.loadingIndicator.isHidden = false
+      self.loadingIndicator.startAnimation()
+      
       guard
         let context = self.editingContext,
         let date = self.calendarView.getSelectedDate(),
         let snapshot = self.todoListView?.getSnapShot(),
-        let section = snapshot.indexOfSection(context.group)
+        let sectionIndex = snapshot.indexOfSection(context.group)
       else { return }
-
+      
       let items = snapshot.itemIdentifiers(inSection: context.group)
       guard let itemIndex = items.firstIndex(where: { $0.id == context.todo.id }) else { return }
 
-      let indexPath = IndexPath(item: itemIndex, section: section)
-
+      let indexPath = IndexPath(item: itemIndex, section: sectionIndex)
+      
       await self.interactor?.updateToDo(
         group: context.group,
         batchItem: toDo,
         indexPath: indexPath,
-        date: date
+        date: date,
+        isNeededDeletionBySelection: isNeededDeletionBySelection
       )
+      
+      self.fetchToDoList()
     }
   }
 

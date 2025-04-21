@@ -16,6 +16,7 @@ import ToDoGardenUIAPI
 import ToDoGardenUIComponent
 import ToDoGardenUIConstant
 
+// swiftlint: disable all
 protocol EditToDoDisplayLogic: AnyObject {
   func displayFetchedToDo(viewModel: EditToDo.FetchToDo.ViewModel)
   func displayEditedToDo()
@@ -146,7 +147,13 @@ extension EditToDoViewController: EditToDoDisplayLogic {
   }
 
   func displayEditedToDo() {
-    self.router?.routeToHomeSceneWithToDo()
+    guard let interactor = self.interactor else { return }
+    
+    if interactor.needsAlert {
+      self.showDeleteRepeatToDoAlert()
+    } else {
+      self.router?.routeToHomeSceneWithToDo(isNeededDeletionBySelection: false)
+    }
   }
 
   private func updateEditToDoView(toDo: TodoBatchItem, groups: [TodoListGroup]) {
@@ -253,6 +260,11 @@ extension EditToDoViewController: ToDoGardenAlertControllerDelegate {
       self.router?.routeToHomeScene()
     case ToDoGardenUIConstant.Constant.ToDoGardenAlertView.Content.ButtonActionType.delete:
       self.router?.routeToHomeSceneWithDeletedToDo()
+      
+    case .deleteEntireToDoRepeat:
+      self.router?.routeToHomeSceneWithToDo(isNeededDeletionBySelection: false)
+    case .deleteUncompletedToDoRepeat:
+      self.router?.routeToHomeSceneWithToDo(isNeededDeletionBySelection: true)
     default:
       break
     }
@@ -272,6 +284,12 @@ extension EditToDoViewController: ToDoGardenAlertControllerDelegate {
       failToFetchAlert.delegate = self
       self.showAlert(failToFetchAlert)
     }
+  }
+  
+  func showDeleteRepeatToDoAlert() {
+    let alertView = ToDoGardenAlertController(for: ToDoGardenAlertView.Configuration.deleteToDoRepeat)
+    alertView.delegate = self
+    self.showAlert(alertView)
   }
 }
 
@@ -317,7 +335,7 @@ extension EditToDoViewController: UIScrollViewDelegate {
 }
 
 import HTTPClient
-// swiftlint:disable all
+
 extension EditToDoViewController {
   struct EditToDoScenePayload: EditToDoScenePayloadable {
     var toDo: TodoBatchItem
@@ -355,7 +373,6 @@ extension EditToDoViewController {
     }
   }
 }
-// swiftlint:enable all
 
 extension EditToDoViewController {
   public func setForGuide(index: Int) {
@@ -394,3 +411,5 @@ extension EditToDoViewController {
   return UINavigationController(rootViewController: EditToDoViewController.SomeViewController())
 }
 #endif
+
+// swiftlint: enable all

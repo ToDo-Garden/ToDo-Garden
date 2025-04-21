@@ -20,6 +20,7 @@ protocol EditToDoDataStore {
 
 @MainActor
 protocol EditToDoBusinessLogic {
+  var needsAlert: Bool { get }
   func changeRepetition(isOnlyToday: Bool)
   func changeReptitionRange(start: Date, end: Date)
   func changeAlarmActivation()
@@ -28,14 +29,13 @@ protocol EditToDoBusinessLogic {
 
   func prepareSceneData()
   func editToDo(name: String, groupId: String)
-  func deleteToDo()
 }
 
 @MainActor
 final class EditToDoInteractor: EditToDoDataStore {
   var toDo: TodoBatchItem?
   var groups: [SharedEntity.TodoListGroup]?
-
+  var needsAlert: Bool = false
   // MARK: VIP Objects
   var presenter: EditToDoPresentationLogic?
 
@@ -75,6 +75,9 @@ extension EditToDoInteractor: EditToDoBusinessLogic {
   }
 
   func changeRepetition(isOnlyToday: Bool) {
+    let previousValue = self.toDo?.isOnlyToday
+    self.needsAlert = (previousValue == false && isOnlyToday == true)
+    
     self.toDo?.isOnlyToday = isOnlyToday
     if isOnlyToday {
       self.presenter?.presentRepeatOnlyToday()
@@ -111,10 +114,6 @@ extension EditToDoInteractor {
       startDay: startDay, endDay: endDay, groupId: groupId, isDelete: false
     )
     self.presenter?.presentEditedToDo()
-  }
-
-  // TODO: 서버에 투두의 삭제를 요청하는 메서드입니다.
-  func deleteToDo() {
   }
 }
 // swiftlint:enable multiline_arguments

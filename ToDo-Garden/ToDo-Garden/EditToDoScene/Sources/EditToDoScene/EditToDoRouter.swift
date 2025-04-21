@@ -12,7 +12,7 @@ import EditToDoSceneAPI
 @MainActor
 protocol EditToDoRoutingLogic {
   func routeToHomeScene()
-  func routeToHomeSceneWithToDo()
+  func routeToHomeSceneWithToDo(isNeededDeletionBySelection: Bool)
   func routeToHomeSceneWithDeletedToDo()
 }
 
@@ -37,8 +37,11 @@ extension EditToDoRouter: EditToDoRoutingLogic {
     self.viewController?.navigationController?.popViewController(animated: true)
   }
 
-  func routeToHomeSceneWithToDo() {
-    self.delegate?.didEdit(toDo: self.dataStore!.toDo!)
+  func routeToHomeSceneWithToDo(isNeededDeletionBySelection: Bool) {
+    self.delegate?.didEdit(
+      toDo: self.dataStore!.toDo!,
+      isNeededDeletionBySelection: isNeededDeletionBySelection
+    )
     self.routeToHomeScene()
   }
 

@@ -23,13 +23,16 @@ protocol HomeSceneDataStore {
 
 @MainActor
 protocol HomeSceneBusinessLogic {
-  func fetchToDoList(request: HomeScene.FetchToDoList.Request) async
+  func fetchToDoList(request: HomeScene.FetchToDoList.Request, isForRouting: Bool) async
   func createToDo(group: ToDoListView.ToDoSection, date: Date) async
   func deleteToDo(group: ToDoListView.ToDoSection, todo: ToDoListView.ToDoItem, date: Date) async
   func setMonthlyData(_ monthlyData: [String: [SharedEntity.TodoListGroup]]) async
   func loadDailyToDoList(targetDate: String) async
   func updateText(text: String, indexPath: IndexPath, date: Date)
-  func updateToDo(group: ToDoListView.ToDoSection, batchItem: TodoBatchItem, indexPath: IndexPath, date: Date) async
+  func updateToDo(
+    group: ToDoListView.ToDoSection, batchItem: TodoBatchItem,
+    indexPath: IndexPath, date: Date, isNeededDeletionBySelection: Bool
+  ) async
   func updateSelection(isSelected: Bool, indexPath: IndexPath, date: Date)
   func writeBatchItemsToGRDB() async
   func requestBatchUpdateToServer() async
@@ -90,20 +93,24 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
     )
   }
   
-  func fetchToDoList(request: HomeScene.FetchToDoList.Request) async {
+  func fetchToDoList(request: HomeScene.FetchToDoList.Request, isForRouting: Bool) async {
     await FallbackFlow.run(
       online: { [weak self] in
         guard let self = self else { return }
         
         let fetchedToDoList = try await self.homeSceneWorker.fetchToDoList(dateString: request.dateString)
-        self.presenter?.presentFetchedToDoList(monthlyData: fetchedToDoList)
+        if isForRouting == false {
+          self.presenter?.presentFetchedToDoList(monthlyData: fetchedToDoList)
+        }
       },
       offline: { [weak self] in
         guard let self = self else { return }
         
         let (newMonthlyData, response) = try await self.loadMonthlyToDoListFromGRDB(request: request)
         self.monthlyData = newMonthlyData
-        self.presenter?.presentFetchedToDoList(monthlyData: response)
+        if isForRouting == false {
+          self.presenter?.presentFetchedToDoList(monthlyData: response)
+        }
       },
       handleError: { [weak self] error in
         self?.handleErrors(error)
@@ -232,28 +239,29 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
     group: ToDoListView.ToDoSection,
     batchItem: TodoBatchItem,
     indexPath: IndexPath,
-    date: Date
+    date: Date,
+    isNeededDeletionBySelection: Bool
   ) async {
     let targetDate = date.description.toYYYYMMDDStringFromISO8601Space()
     guard let targetGroup = self.monthlyData[targetDate]?[indexPath.section],
-          let targetToDo = targetGroup.todoList?[indexPath.item]
-    else { return }
+      let targetToDo = targetGroup.todoList?[indexPath.item] else { return }
 
-    let formatter = ISO8601DateFormatter()
     switch self.getRepetitionStatus(toDo: targetToDo, batchItem: batchItem) {
     case .made:
       self.addRepeatToDos(
         batchItem: batchItem, targetToDo: targetToDo, group: group, indexPath: indexPath, date: date
       )
     case .changed:
-      self.updateRepeatToDos(
-        batchItem: batchItem, targetToDo: targetToDo, group: group, date: date
+      await self.updateRepeatToDos(
+        batchItem: batchItem, targetToDo: targetToDo, group: group,
+        indexPath: indexPath, date: date
       )
     case .deleted:
-      self.removeRepeatToDos(
-        batchItem: batchItem, targetToDo: targetToDo, group: group, indexPath: indexPath, date: date
+      await self.removeRepeatToDos(
+        batchItem: batchItem, targetToDo: targetToDo,
+        group: group, indexPath: indexPath, date: date,
+        isNeededDeletionBySelection: isNeededDeletionBySelection
       )
-      return
     default:
       break
     }
@@ -264,7 +272,6 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
     targetToDo.isOnlyToday = batchItem.isOnlyToday
     targetToDo.startDay = batchItem.startDay
     targetToDo.endDay = batchItem.endDay
-    self.monthlyData[targetDate]?[indexPath.section].todoList?[indexPath.item] = targetToDo
     self.itemsForBatch[targetToDo.localID] = batchItem
   }
 
@@ -295,13 +302,16 @@ extension HomeSceneInteractor: HomeSceneBusinessLogic {
         localId: targetToDo.localID, name: targetToDo.name, isDone: isSelected,
         createdAt: date.toISOString(), isAlarmOn: targetToDo.isAlarmOn, alarmTime: alarmTime,
         isOnlyToday: targetToDo.isOnlyToday, startDay: targetToDo.startDay, endDay: targetToDo.endDay,
-        groupId: targetGroup.localId, isDelete: false
+        groupId: targetGroup.localId, isDelete: false, repeatToDoId: targetToDo.repeatToDoId
       )
     }
   }
 
   // EditToDoScene으로 넘겨주기 위한 데이터를 준비하는 작업입니다.
   func prepareDataForEditTodoScene(request: HomeScene.PrepareDataForEditToDoScene.Request) {
+    Task {
+      try await self.homeSceneWorker.syncronizeGRDBWithBatchItems()
+    }
     let dateString = request.selectedDate.description.toYYYYMMDDStringFromISO8601Space()
     let groups = self.monthlyData[dateString]
     let group = groups?.first(where: { (group: SharedEntity.TodoListGroup) in
@@ -366,25 +376,20 @@ extension HomeSceneInteractor {
     guard
         let startDayString = batchItem.startDay,
         let endDayString = batchItem.endDay,
-        let startDate = ISO8601DateFormatter().date(from: startDayString),
-        let endDate = ISO8601DateFormatter().date(from: endDayString)
+        let startDate = formatter.date(from: startDayString)?.toKSTDate(),
+        let endDate = formatter.date(from: endDayString)?.toKSTDate(),
+        let targetGroup = self.groups?.first(where: { $0.localId == batchItem.groupId })
       else { return }
-
+    
     var currentDate = startDate
     while currentDate <= endDate {
-      if currentDate == date {
+      if currentDate == date.toKSTDate() {
         currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
         continue
       }
-      let newToDo = TodoListItem(
-        name: targetToDo.name, endDay: nil, isDone: targetToDo.isDone,
-        localID: batchItem.groupId, startDay: nil, alarmTime: targetToDo.alarmTime,
-        isAlarmOn: targetToDo.isAlarmOn, isOnlyToday: true,
-        repeatToDoId: targetToDo.localID
-      )
-      let currentGroup = self.monthlyData[currentDate.toStringYYYYMMDD()]?[indexPath.section]
-      currentGroup?.todoList?.append(newToDo)
-      let newBatchItem = self.makeItemForCreateToDo(group: group, date: currentDate)
+      
+      let newToDoID = UUID()
+      let newBatchItem = self.makeItemForCreateToDo(group: group, newGroupId: targetGroup.localId, newToDoID: newToDoID, date: currentDate, isOnlyToday: false, repeatToDoId: targetToDo.localID)
       newBatchItem.setName(batchItem.name)
       self.addBatchItem(newToDo: newBatchItem)
       currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
@@ -395,38 +400,49 @@ extension HomeSceneInteractor {
     batchItem: TodoBatchItem,
     targetToDo: TodoListItem,
     group: ToDoListView.ToDoSection,
+    indexPath: IndexPath,
     date: Date
-  ) {
-    let formatter = ISO8601DateFormatter()
-    guard
+  ) async {
+    do {
+      let formatter = ISO8601DateFormatter()
+      guard
         let startDayString = batchItem.startDay,
         let endDayString = batchItem.endDay,
-        let startDate = ISO8601DateFormatter().date(from: startDayString),
-        let endDate = ISO8601DateFormatter().date(from: endDayString)
+        let startDate = formatter.date(from: startDayString),
+        let endDate = formatter.date(from: endDayString),
+        let targetGroup = self.groups?.first(where: { $0.localId == batchItem.groupId })
       else { return }
 
-    var currentDate = startDate
-    while currentDate <= endDate {
-      if currentDate == date {
-        currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
-        continue
+      var currentDate = startDate
+      let oldTodos = try await self.homeSceneWorker.getRepeatToDos(repeatToDoId: batchItem.localId)
+      for oldTodo in oldTodos {
+        if oldTodo.todoId.lowercased() == batchItem.localId.lowercased() {
+          continue
+        }
+        
+        let batchItem = self.makeBatchItemFrom(myToDo: oldTodo, isDelete: true)
+        self.removeBatchItem(deletedToDo: batchItem)
       }
-
-      let existedToDo = self.makeItemForDeleteToDo(group: group, todo: targetToDo, date: currentDate)
-      self.addBatchItem(newToDo: existedToDo)
-      currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
-    }
-
-    currentDate = startDate
-    while currentDate <= endDate {
-      if currentDate == date {
+      await self.writeBatchItemsToGRDB()
+      
+      try await self.homeSceneWorker.clearRepeatToDos(repeatToDoId: batchItem.localId)
+      
+      while currentDate <= endDate {
+        if currentDate.toStringYYYYMMDD() == date.toStringYYYYMMDD() {
+          currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
+          continue
+        }
+        
+        let newToDoID = UUID()
+        let newToDo = self.makeItemForCreateToDo(group: group, newGroupId: targetGroup.localId, newToDoID: newToDoID, date: currentDate, isOnlyToday: false, repeatToDoId: targetToDo.localID)
+        
+        newToDo.setName(batchItem.name)
+        self.addBatchItem(newToDo: newToDo)
         currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
-        continue
       }
-
-      let newToDo = self.makeItemForCreateToDo(group: group, date: currentDate)
-      self.addBatchItem(newToDo: newToDo)
-      currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
+      
+    } catch let error {
+      self.handleErrors(error)
     }
   }
 
@@ -435,20 +451,26 @@ extension HomeSceneInteractor {
     targetToDo: TodoListItem,
     group: ToDoListView.ToDoSection,
     indexPath: IndexPath,
-    date: Date
-  ) {
-    let formatter = ISO8601DateFormatter()
-    var currentDate = formatter.date(from: targetToDo.startDay!)!
-    let endDate = formatter.date(from: targetToDo.endDay!)!
-    while currentDate <= endDate {
-      let existedToDo = self.makeItemForDeleteToDo(group: group, todo: targetToDo, date: currentDate)
-      self.addBatchItem(newToDo: existedToDo)
-      let targetGroup = self.monthlyData[currentDate.toStringYYYYMMDD()]?[indexPath.section]
-      let deleteTodoIndex = targetGroup?.todoList?.firstIndex {
-        $0.repeatToDoId?.lowercased() == targetToDo.localID.lowercased() || $0.localID == targetToDo.localID
+    date: Date,
+    isNeededDeletionBySelection: Bool
+  ) async {
+    do {
+      let oldTodos = try await self.homeSceneWorker.getRepeatToDos(repeatToDoId: batchItem.localId)
+      for oldTodo in oldTodos {
+        if oldTodo.todoId.lowercased() == batchItem.localId.lowercased() {
+          continue
+        }
+        
+        if isNeededDeletionBySelection == true && oldTodo.isDone == true {
+          continue
+        }
+        
+        let batchItem = self.makeBatchItemFrom(myToDo: oldTodo, isDelete: true)
+        self.removeBatchItem(deletedToDo: batchItem)
       }
-      targetGroup?.todoList?.remove(at: deleteTodoIndex!)
-      currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
+      await self.writeBatchItemsToGRDB()
+    } catch let error {
+      self.handleErrors(error)
     }
   }
 }
@@ -470,21 +492,31 @@ extension HomeSceneInteractor {
     }
   }
   
-  private func makeItemForCreateToDo(group: ToDoListView.ToDoSection, date: Date) -> TodoBatchItem {
-    let newToDoID = UUID()
-    let groupID = group.id.uuidString.lowercased()
+  private func makeBatchItemFrom(myToDo: MyToDo, isDelete: Bool = true) -> TodoBatchItem {
+    return TodoBatchItem(
+      localId: myToDo.todoId.lowercased(), name: myToDo.name, isDone: myToDo.isDone,
+      createdAt: myToDo.date, isAlarmOn: myToDo.isAlarmOn, alarmTime: Double.zero,
+      isOnlyToday: myToDo.isOnlyToday, startDay: myToDo.startDay,
+      endDay: myToDo.endDay, groupId: myToDo.groupId, isDelete: isDelete
+    )
+  }
+  
+  private func makeItemForCreateToDo(group: ToDoListView.ToDoSection, newGroupId: String? = nil, newToDoID: UUID = UUID(), date: Date, isOnlyToday: Bool = true, repeatToDoId: String? = nil) -> TodoBatchItem {
+
+    let groupID = (newGroupId != nil) ? newGroupId! : group.id.uuidString.lowercased()
     let newItem = TodoBatchItem(
       localId: newToDoID.uuidString.lowercased(),
       name: "New ToDo",
       isDone: false,
       createdAt: date.toISOString(),
       isAlarmOn: false,
-      alarmTime: 0, // 기본값 뭐임?
-      isOnlyToday: true,
+      alarmTime: 0,
+      isOnlyToday: isOnlyToday,
       startDay: nil,
       endDay: nil,
       groupId: groupID,
-      isDelete: false
+      isDelete: false,
+      repeatToDoId: repeatToDoId
     )
     return newItem
   }
@@ -504,7 +536,8 @@ extension HomeSceneInteractor {
       startDay: todo.startDay,
       endDay: todo.endDay,
       groupId: groupID,
-      isDelete: true
+      isDelete: true,
+      repeatToDoId: todo.localID
     )
     return deletedItem
   }
@@ -512,14 +545,14 @@ extension HomeSceneInteractor {
   private func makeToDoListItem(batchItem: TodoBatchItem) -> TodoListItem {
     let todoListItem = TodoListItem(
       name: batchItem.name,
-      endDay: nil,
-      isDone: false,
+      endDay: batchItem.endDay,
+      isDone: batchItem.isDone,
       localID: batchItem.localId.lowercased(),
-      startDay: nil,
-      alarmTime: nil,
-      isAlarmOn: false,
-      isOnlyToday: true,
-      repeatToDoId: nil // TODO: 이건 어떻게 특정하지?
+      startDay: batchItem.startDay,
+      alarmTime: Int(batchItem.alarmTime),
+      isAlarmOn: batchItem.isAlarmOn,
+      isOnlyToday: batchItem.isOnlyToday,
+      repeatToDoId: batchItem.repeatToDoId
     )
     return todoListItem
   }
