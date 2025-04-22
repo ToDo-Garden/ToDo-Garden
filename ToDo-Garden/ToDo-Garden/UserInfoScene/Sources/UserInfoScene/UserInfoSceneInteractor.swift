@@ -7,6 +7,7 @@
 
 import UIKit.UIImage
 
+import TDFoundation
 import UserInfoSceneAPI
 import UserInfoSceneEntity
 
@@ -79,6 +80,7 @@ extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
             let response = UserInfoScene.ChangeProfileImage.Response(
               changeResult: Result.success(profileImageToChange)
             )
+            userProfile = UIImage(data: imageData)
             
             self.presenter?.presentChangedProfileImage(response: response)
           }
@@ -142,7 +144,11 @@ extension UserInfoSceneInteractor: UserInfoSceneBusinessLogic {
   
   func fetchProfileImage() {
     Task {
-      let image = try await self.userInfoWorker.requestProfileImage()
+      let image = if userProfile == nil {
+        try await self.userInfoWorker.requestProfileImage()
+      } else {
+        userProfile
+      }
       let response = UserInfoScene.FetchProfileImage.Response(image: image)
       self.presenter?.presentFetchedProfileImage(response: response)
     }

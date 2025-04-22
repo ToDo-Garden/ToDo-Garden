@@ -55,6 +55,7 @@ final public class ShareGardenSceneViewController: UIViewController, ShareGarden
   
   public override func viewIsAppearing(_ animated: Bool) {
     super.viewIsAppearing(animated)
+    self.interactor?.requestMyGarden()
     self.setupViewAppearance()
   }
 }
