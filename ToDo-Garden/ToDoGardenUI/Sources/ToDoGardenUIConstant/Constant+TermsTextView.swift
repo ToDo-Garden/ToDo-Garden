@@ -171,7 +171,7 @@ extension Constant.TermsTextView {
   
   19. 부칙 (시행일)
   
-  본 약관은 2025년 N월 N일부터 효력이 발생됩니다.
+  본 약관은 2025년 4월 30일부터 효력이 발생됩니다.
   """
   
   public static let privacyPolicyTitle: String = "개인정보 처리 방침"
