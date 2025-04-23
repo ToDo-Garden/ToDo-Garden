@@ -18,9 +18,13 @@ public struct MyStatsWorker: MyStatsWorkable {
     var imageData: UIImage?
     if let urlString = result.imageUrl,
       let imageUrl = URL(string: urlString) {
-      imageData = try await Cache.shared.execute(id: imageUrl, isDownsample: true)
+      if await userProfile == nil {
+        imageData = try await Cache.shared.execute(id: imageUrl, isDownsample: true)
+      } else {
+        imageData = await userProfile
+      }
     } else {
-      imageData = nil
+      imageData = UIImage.defaultProfileImage
     }
     
     return MyStats.FetchedProfileViewData(
