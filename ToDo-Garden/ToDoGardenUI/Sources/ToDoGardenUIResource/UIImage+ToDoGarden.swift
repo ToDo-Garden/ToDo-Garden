@@ -164,4 +164,5 @@ extension UIImage {
   public static let btnDelete = UIImage(
     resource: .btnDelete
   )
+  public static let cover = UIImage(resource: .cover)
 }

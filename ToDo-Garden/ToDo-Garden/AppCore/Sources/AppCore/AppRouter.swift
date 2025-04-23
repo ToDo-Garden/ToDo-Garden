@@ -9,6 +9,7 @@ import SettingScene
 import ShareGardenScene
 import SignUpScene
 import SignUpSceneAPI
+import ToDoGardenUIComponent
 
 // swiftlint:disable function_body_length
 /// TODO: 여러가지 이유로 Shared로 만들면 훨씬 좋을 거 같습니다.
@@ -27,7 +28,7 @@ public final class AppRouter {
   }
   
   public var navigationController: UINavigationController = UINavigationController(
-    rootViewController: UIViewController()
+    rootViewController: CoverViewController()
   )
   
   typealias Destination = AppCore.Destination
