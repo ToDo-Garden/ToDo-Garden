@@ -58,6 +58,14 @@ let package = Package(
     Package.Dependency.package(
       name: "SearchGardenScene",
       path: "../SearchGardenScene"
+    ),
+    Package.Dependency.package(
+      name: "EditUserIntroductionScene",
+      path: "../EditUserIntroductionScene"
+    ),
+    Package.Dependency.package(
+      name: "EditUserNameScene",
+      path: "../EditUserNameScene"
     )
   ],
   targets: [
@@ -115,6 +123,14 @@ let package = Package(
         Target.Dependency.product(
           name: "MyStatsScene",
           package: "MyStatsScene"
+        ),
+        Target.Dependency.product(
+          name: "EditUserIntroductionScene",
+          package: "EditUserIntroductionScene"
+        ),
+        Target.Dependency.product(
+          name: "EditUserNameScene",
+          package: "EditUserNameScene"
         )
       ]
     ),

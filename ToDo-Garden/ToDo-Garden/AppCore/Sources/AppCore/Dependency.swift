@@ -1,5 +1,9 @@
 import Foundation
 
+import EditUserIntroductionScene
+import EditUserIntroductionSceneAPI
+import EditUserNameScene
+import EditUserNameSceneAPI
 import HomeScene
 import HomeSceneAPI
 import HTTPClient
@@ -37,11 +41,19 @@ extension AppCore {
         dependency: SettingSceneBuilder.Dependency(
           settingWorker: SettingWorker(httpClient: HTTPClient.live),
           appServiceWorker: ApplicationServiceWorker(),
-          userInfoSceneBuilder: UserInfoSceneSceneBuilder.live { [weak router] in
-            router?.switchTo(.login(false))
-            try? KeychainManager.shared.clearLoginData()
-            try? KeychainManager.shared.clearAccessToken()
-          }
+          userInfoSceneBuilder: UserInfoSceneSceneBuilder.live(
+            signout: { [weak router] in
+              router?.switchTo(.login(false))
+              try? KeychainManager.shared.clearLoginData()
+              try? KeychainManager.shared.clearAccessToken()
+            },
+            editUserIntroductionSceneBuilder: EditUserIntroductionSceneBuilder.live(
+              httpClient: HTTPClient.live
+            ),
+            editUserNameSceneBuilder: EditUserNameSceneBuilder.live(
+              httpClient: HTTPClient.live
+            )
+          )
         )
       )
       router.sceneBuilder.setting = setting

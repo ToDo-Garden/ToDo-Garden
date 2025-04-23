@@ -9,6 +9,7 @@ import Foundation
 
 import EditUserIntroductionSceneAPI
 import EditUserIntroductionSceneEntity
+import HTTPClientAPI
 
 public struct EditUserIntroductionSceneBuilder {
   /// 컴파일 타임에 필요한 의존성을 선언한 구조체입니다.
@@ -24,6 +25,18 @@ public struct EditUserIntroductionSceneBuilder {
 
   public init(dependency: Dependency) {
     self.dependency = dependency
+  }
+}
+
+extension EditUserIntroductionSceneBuilder {
+  public static func live(httpClient: HTTPClientAPI) -> Self {
+    Self(
+      dependency: Dependency(
+        someWorker: EditUserIntroductionSceneWorker(
+          httpClient: httpClient
+        )
+      )
+    )
   }
 }
 
