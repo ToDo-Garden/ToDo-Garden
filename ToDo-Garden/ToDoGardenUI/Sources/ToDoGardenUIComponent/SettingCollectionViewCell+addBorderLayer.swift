@@ -21,7 +21,17 @@ extension SettingCollectionViewCell {
         width: 1.0,
         cornerRadius: 10
       )
+    case Position.all:
+      self.setupBorder()
     }
+  }
+}
+
+extension SettingCollectionViewCell {
+  private func setupBorder() {
+    self.layer.cornerRadius = 10
+    self.layer.borderColor = UIColor.toDoGardenGreenBackground.cgColor
+    self.layer.borderWidth = 1.0
   }
 }
 

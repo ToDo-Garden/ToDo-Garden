@@ -196,8 +196,7 @@ extension SettingViewController {
       image: UIImage.alarmImage.withTintColor(SettingSceneTheme.mainColor),
       title: sectionTitle.userSetting,
       items: [
-        Item(title: itemTitle.alarmSetting, isShowingModal: false, position: SettingCollectionViewCell.Position.top),
-        Item(title: itemTitle.remindSetting, isShowingModal: false, position: SettingCollectionViewCell.Position.bottom)
+        Item(title: itemTitle.remindSetting, isShowingModal: false, position: SettingCollectionViewCell.Position.all)
       ]
     )
 
@@ -205,10 +204,8 @@ extension SettingViewController {
       image: UIImage.leafImage,
       title: sectionTitle.appSupport,
       items: [
-        Item(title: itemTitle.announcement, isShowingModal: true, position: SettingCollectionViewCell.Position.top),
-        Item(title: itemTitle.privacyPolicy, isShowingModal: true, position: SettingCollectionViewCell.Position.middle),
-        Item(title: itemTitle.termsOfUse, isShowingModal: true, position: SettingCollectionViewCell.Position.middle),
-        Item(title: itemTitle.sendFeedback, isShowingModal: true, position: SettingCollectionViewCell.Position.bottom)
+        Item(title: itemTitle.privacyPolicy, isShowingModal: true, position: SettingCollectionViewCell.Position.top),
+        Item(title: itemTitle.termsOfUse, isShowingModal: true, position: SettingCollectionViewCell.Position.bottom)
       ]
     )
 
@@ -341,16 +338,12 @@ extension SettingViewController {
 extension SettingViewController: UICollectionViewDelegate {
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     switch indexPath {
-    case IndexPath(row: 1, section: 0):
+    case IndexPath(row: 0, section: 0):
       self.router?.routeToRemind()
     case IndexPath(row: 0, section: 1):
-      self.router?.routeToNotice()
-    case IndexPath(row: 1, section: 1):
       self.router?.routeToPrivacyPolicy()
-    case IndexPath(row: 2, section: 1):
+    case IndexPath(row: 1, section: 1):
       self.router?.routeToTermsOfService()
-    case IndexPath(row: 3, section: 1):
-      self.router?.routeToSendingFeedback()
     default:
       break
     }

@@ -14,6 +14,7 @@ open class SettingCollectionViewCell: UICollectionViewCell, ReusableIdentifier {
     case top
     case middle
     case bottom
+    case all
   }
 
   private var cellPosition: Position
