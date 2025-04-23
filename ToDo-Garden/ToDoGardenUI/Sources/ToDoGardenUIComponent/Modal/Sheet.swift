@@ -22,12 +22,14 @@ public final class BottomSheet: UIView {
   private var normalTopOffset: CGFloat {
     let screenHeight = UIScreen.main.bounds.height
     let multiplier: CGFloat
-    
+
     switch screenHeight {
     case 0 ... 667:
       multiplier = 0.63
-    case 668 ... 860:
+    case 668 ... 810:
       multiplier = 0.52
+    case 811 ... 820:
+      multiplier = 0.55
     default:
       multiplier = 0.5
     }
