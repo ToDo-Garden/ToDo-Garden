@@ -32,8 +32,8 @@ public final class TermsTextViewController: UIViewController {
     self.setupConstraints()
   }
   
-  public override func viewIsAppearing(_ animated: Bool) {
-    super.viewIsAppearing(animated)
+  public override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
     self.navigationController?.navigationBar.isHidden = false
     self.textView.setContentOffset(CGPoint.zero, animated: false)
   }
