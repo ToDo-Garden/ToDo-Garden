@@ -46,13 +46,17 @@ public struct UserInfoSceneSceneBuilder {
 }
 
 extension UserInfoSceneSceneBuilder {
-  public static func live(signout: @escaping () -> Void) -> Self {
+  public static func live(
+    signout: @escaping () -> Void,
+    editUserIntroductionSceneBuilder: EditUserIntroductionSceneBuildable? = nil,
+    editUserNameSceneBuilder: EditUserNameSceneSceneBuildable? = nil
+  ) -> Self {
     Self(dependency: Dependency(
       appServiceWorker: AppServiceWorker(),
       userPhotoWorker: UserPhotoWorker(),
       userInfoWorker: UserInfoSceneWorker(httpClient: HTTPClient.live, signout: signout),
-      editUserIntroductionSceneBuilder: nil,
-      editUserNameSceneBuilder: nil)
+      editUserIntroductionSceneBuilder: editUserIntroductionSceneBuilder,
+      editUserNameSceneBuilder: editUserNameSceneBuilder)
     )
   }
 }
