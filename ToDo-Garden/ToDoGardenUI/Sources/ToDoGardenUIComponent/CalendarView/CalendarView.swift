@@ -348,7 +348,9 @@ extension CalendarView {
       borderWidth: Constant.CalendarView.Model.Primary.borderWidth,
       cornerRadius: Constant.CalendarView.Model.Primary.cornerRadius,
       collectionViewLayout: CollectionViewLayout(
-        itemSize: Constant.CalendarView.Model.Primary.itemSize,
+        itemSize: UIScreen.main.bounds.width > 400
+        ? CGSize(width: 37.8, height: 37.8)
+        : Constant.CalendarView.Model.Primary.itemSize,
         itemSpacing: Constant.CalendarView.Model.Primary.itemSpacing,
         lineSpacing: Constant.CalendarView.Model.Primary.lineSpacing
       )
