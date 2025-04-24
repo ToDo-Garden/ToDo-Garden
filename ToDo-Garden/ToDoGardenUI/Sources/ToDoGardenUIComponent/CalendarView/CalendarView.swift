@@ -355,6 +355,16 @@ extension CalendarView {
         lineSpacing: Constant.CalendarView.Model.Primary.lineSpacing
       )
     )
+    
+    public static let sub = Self(
+      borderWidth: Constant.CalendarView.Model.Primary.borderWidth,
+      cornerRadius: Constant.CalendarView.Model.Primary.cornerRadius,
+      collectionViewLayout: CollectionViewLayout(
+        itemSize: Constant.CalendarView.Model.Primary.itemSize,
+        itemSpacing: Constant.CalendarView.Model.Primary.itemSpacing,
+        lineSpacing: Constant.CalendarView.Model.Primary.lineSpacing
+      )
+    )
   }
 }
 

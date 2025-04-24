@@ -111,7 +111,7 @@ extension ToDoRepetitionSettingModal {
     NSLayoutConstraint.activate(
       [
         self.dateRangePicker.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-        self.dateRangePicker.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+        self.dateRangePicker.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 40),
         self.dateRangePicker.widthAnchor.constraint(equalToConstant: 336),
         self.dateRangePicker.heightAnchor.constraint(equalToConstant: 400)
       ]

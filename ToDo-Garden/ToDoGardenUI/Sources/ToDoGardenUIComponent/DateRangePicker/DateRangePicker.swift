@@ -17,7 +17,7 @@ public final class DateRangePicker: UIView {
   
   public init() {
     self.dateRangeHeaderView = DateRangePickerHeaderView()
-    self.dateRangePickerCalendar = DateRangePickerCalendar(model: CalendarView.Model.primary)
+    self.dateRangePickerCalendar = DateRangePickerCalendar(model: CalendarView.Model.sub)
     super.init(frame: CGRect.zero)
     self.setup()
   }

@@ -57,7 +57,7 @@ public final class DateRangePickerCalendar: CalendarView {
 #if DEBUG
 @available(iOS 17.0, *)
 #Preview {
-  let calendarView = DateRangePickerCalendar(model: CalendarView.Model.primary)
+  let calendarView = DateRangePickerCalendar(model: CalendarView.Model.sub)
   calendarView.widthAnchor.constraint(equalToConstant: 323).isActive = true
   return calendarView
 }
