@@ -324,7 +324,7 @@ extension CalendarView {
         ),
         self.dateCollectionView.bottomAnchor.constraint(
           equalTo: self.bottomAnchor,
-          constant: -Constant.CalendarView.Layout.CollectionView.bottomMargin
+          constant: 0
         )
       ]
     )
@@ -344,18 +344,29 @@ extension CalendarView {
     let cornerRadius: CGFloat
     let collectionViewLayout: Model.CollectionViewLayout
     
-    public static let primary = Self(
-      borderWidth: Constant.CalendarView.Model.Primary.borderWidth,
-      cornerRadius: Constant.CalendarView.Model.Primary.cornerRadius,
-      collectionViewLayout: CollectionViewLayout(
-        itemSize: UIScreen.main.bounds.width > 400
-        ? CGSize(width: 37.8, height: 37.8)
-        : Constant.CalendarView.Model.Primary.itemSize,
-        itemSpacing: Constant.CalendarView.Model.Primary.itemSpacing,
-        lineSpacing: Constant.CalendarView.Model.Primary.lineSpacing
+    // MARK: 개선 필요, 일단 임시로 해놨음.
+    public static func primary(for viewWidth: CGFloat) -> Self {
+      let calendarWidth = viewWidth - 52
+      // VC leading + trailing == 52
+      let baseItemSize: CGFloat = 30
+      let baseSpacing: CGFloat = 15
+      let baseCalendarWidth: CGFloat = 323
+      
+      let ratio = calendarWidth / baseCalendarWidth
+      let itemSize = CGSize(width: baseItemSize * ratio, height: baseItemSize * ratio)
+      let itemSpacing = baseSpacing * ratio
+      
+      return Self(
+        borderWidth: Constant.CalendarView.Model.Primary.borderWidth,
+        cornerRadius: Constant.CalendarView.Model.Primary.cornerRadius,
+        collectionViewLayout: CollectionViewLayout(
+          itemSize: itemSize,
+          itemSpacing: itemSpacing,
+          lineSpacing: itemSpacing
+        )
       )
-    )
-    
+    }
+
     public static let sub = Self(
       borderWidth: Constant.CalendarView.Model.Primary.borderWidth,
       cornerRadius: Constant.CalendarView.Model.Primary.cornerRadius,
@@ -375,17 +386,3 @@ extension CalendarView.Model {
     let lineSpacing: CGFloat
   }
 }
-
-#if DEBUG
-@available(iOS 17.0, *)
-#Preview {
-  let calendarView = CalendarView(model: .primary)
-  calendarView.widthAnchor.constraint(equalToConstant: 323).isActive = true
-  calendarView.highlightToday()
-  Task {
-    try await Task.sleep(for: .seconds(3))
-    calendarView.highlightToday()
-  }
-  return calendarView
-}
-#endif

@@ -7,6 +7,11 @@
 
 import UIKit
 
+public protocol BottomSheetDelegate: AnyObject {
+  @MainActor
+  func normalTopOffset(for bottomSheet: BottomSheet) -> CGFloat
+}
+
 public final class BottomSheet: UIView {
   public var contentView: UIView? {
     didSet {
@@ -14,30 +19,19 @@ public final class BottomSheet: UIView {
     }
   }
   
+  public var currentState: State = .normal
+  public weak var delegate: BottomSheetDelegate?
   private let grabber = Grabber()
   
-  private var topConstraint: NSLayoutConstraint!
+  public var topConstraint: NSLayoutConstraint!
   private var initialTopConstant: CGFloat = 0
   
   private var normalTopOffset: CGFloat {
-    let screenHeight = UIScreen.main.bounds.height
-    let multiplier: CGFloat
-
-    switch screenHeight {
-    case 0 ... 667:
-      multiplier = 0.63
-    case 668 ... 810:
-      multiplier = 0.52
-    case 811 ... 820:
-      multiplier = 0.55
-    default:
-      multiplier = 0.5
-    }
-    
-    return screenHeight * multiplier
+    self.delegate?.normalTopOffset(for: self) ?? UIScreen.main.bounds.height * 0.5
   }
-  private var expandedTopOffset: CGFloat! {
-    guard let superview else { return nil }
+  
+  private var expandedTopOffset: CGFloat {
+    guard let superview else { return 0.0 }
     
     return superview.frame.height * 0.1
   }
@@ -111,8 +105,10 @@ extension BottomSheet {
     
     switch sender.state {
     case  UIGestureRecognizer.State.began:
+      self.currentState = .dragging
       self.initialTopConstant = self.topConstraint.constant
     case UIGestureRecognizer.State.changed:
+      self.currentState = .dragging
       self.topConstraint.constant = self.initialTopConstant + translation.y
     case UIGestureRecognizer.State.ended, UIGestureRecognizer.State.cancelled:
       if self.handleQuickSwipe(with: velocity) {
@@ -152,7 +148,7 @@ extension BottomSheet {
       finalConstant = self.expandedTopOffset
     }
     self.topConstraint.constant = finalConstant
-
+    self.currentState = state
     UIView.animate(
       withDuration: 0.5,
       delay: 0,
@@ -212,6 +208,7 @@ extension BottomSheet {
   public enum State {
     case expanded
     case normal
+    case dragging
   }
 }
 

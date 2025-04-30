@@ -50,7 +50,7 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
   
   public init() {
     self.homeHeaderView = HomeSceneHeaderView()
-    self.calendarView = CalendarView(model: CalendarView.Model.primary)
+    self.calendarView = CalendarView(model: CalendarView.Model.primary(for: UIScreen.main.bounds.width))
     super.init(nibName: nil, bundle: nil)
     self.view.backgroundColor = UIColor.white
     self.registerBackgroundTransitionObserver()
@@ -92,11 +92,21 @@ open class HomeSceneViewController: UIViewController, HomeSceneViewControllable 
     self.fetchToDoList()
   }
   
+  open override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+    if self.bottomSheet.superview != nil,
+      self.bottomSheet.topConstraint != nil,
+      self.bottomSheet.currentState == .normal {
+      self.bottomSheet.animateBottomSheet(to: .normal)
+    }
+  }
+  
   open func setBottomSheet() {
     let toDoListViewContainer = ToDoListViewContainer()
     self.todoListView = toDoListViewContainer.toDoListView
     self.todoListView?.buttonActionDelegate = self
     self.todoListView?.cellUpdatingDelegate = self
+    self.bottomSheet.delegate = self
     self.bottomSheet.usingAutolayout()
     self.view.addSubview(self.bottomSheet)
     self.bottomSheet.contentView = self.todoListView
@@ -529,6 +539,14 @@ extension HomeSceneViewController {
       self.todoListView?.contentView.contentInset.bottom = 0
       self.todoListView?.contentView.verticalScrollIndicatorInsets.bottom = 0
     }
+  }
+}
+
+extension HomeSceneViewController: BottomSheetDelegate {
+  @MainActor
+  public func normalTopOffset(for bottomSheet: BottomSheet) -> CGFloat {
+    let calendarBottomY = self.calendarView.convert(self.calendarView.bounds, to: self.view).maxY
+    return calendarBottomY + 10
   }
 }
 
